@@ -83,7 +83,7 @@ class PullRequestUpdater
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
-            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr);
+            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr, $repository);
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
 
             $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
@@ -99,7 +99,7 @@ class PullRequestUpdater
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
         foreach ($prs as $pr) {
-            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr);
+            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr, $repository);
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
         }
     }

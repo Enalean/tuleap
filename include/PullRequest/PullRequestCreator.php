@@ -101,7 +101,7 @@ class PullRequestCreator
             $sha1_dest
         );
 
-        $merge_status = $this->pull_request_merger->detectMergeabilityStatus($executor, $pull_request);
+        $merge_status = $this->pull_request_merger->detectMergeabilityStatus($executor, $pull_request, $repository_src);
         $pull_request->setMergeStatus($merge_status);
 
         return $this->pull_request_factory->create($pull_request);

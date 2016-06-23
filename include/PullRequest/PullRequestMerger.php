@@ -25,7 +25,6 @@ use GitRepository;
 use GitRepositoryFactory;
 use Git_Command_Exception;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
-use ForgeConfig;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use FileSystemIterator;
@@ -33,6 +32,8 @@ use System_Command;
 
 class PullRequestMerger
 {
+
+    const MERGE_TEMPORARY_SUBFOLDER = '.tuleap-pr';
 
     /**
      * @var GitRepositoryFactory
@@ -49,7 +50,7 @@ class PullRequestMerger
 
     public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user)
     {
-        $temp_working_dir = $this->getUniqueRandomDirectory();
+        $temp_working_dir = $this->getUniqueRandomDirectory($repository_dest);
         $executor         = new GitExec($temp_working_dir);
 
         try {
@@ -66,13 +67,13 @@ class PullRequestMerger
     }
 
 
-    public function detectMergeabilityStatus(GitExec $git_exec, PullRequest $pull_request)
+    public function detectMergeabilityStatus(GitExec $git_exec, PullRequest $pull_request, GitRepository $repository)
     {
         try {
             if ($this->isFastForwardable($git_exec, $pull_request)) {
                 $merge_status = PullRequest::FASTFORWARD_MERGE;
             } else {
-                $merge_status = $this->detectMergeConflict($pull_request);
+                $merge_status = $this->detectMergeConflict($pull_request, $repository);
             }
         } catch (Git_Command_Exception $e) {
             $merge_status = PullRequest::UNKNOWN_MERGE;
@@ -104,9 +105,9 @@ class PullRequestMerger
         return $git_exec->isAncestor($src_ref, $dest_ref);
     }
 
-    private function detectMergeConflict(PullRequest $pull_request)
+    private function detectMergeConflict(PullRequest $pull_request, GitRepository $repository)
     {
-        $temporary_name = $this->getUniqueRandomDirectory();
+        $temporary_name = $this->getUniqueRandomDirectory($repository);
         $executor       = new GitExec($temporary_name);
         $user           = new PFUser(array('realname' => 'Tuleap Merge Resolver',
                                            'email'    => 'merger@tuleap.net'));
@@ -126,17 +127,18 @@ class PullRequestMerger
         return $merge_status;
     }
 
-    private function getUniqueRandomDirectory()
+    private function getUniqueRandomDirectory(GitRepository $repository)
     {
-        $tmp = ForgeConfig::get('codendi_cache_dir');
+        $parent_tmp = $repository->getGitRootPath() . PullRequestMerger::MERGE_TEMPORARY_SUBFOLDER;
 
-        return exec("mktemp -d -p $tmp pr_XXXXXX");
+        is_dir($parent_tmp) || mkdir($parent_tmp, 0755, true);
+        return exec("mktemp -d -p $parent_tmp pr_XXXXXX");
     }
 
     private function cleanTemporaryRepository($temporary_name)
     {
         $path       = realpath($temporary_name);
-        $check_path = strpos($path, ForgeConfig::get('codendi_cache_dir'));
+        $check_path = strpos($path, PullRequestMerger::MERGE_TEMPORARY_SUBFOLDER);
         if ($check_path !== false) {
             $cmd = new System_Command();
             $cmd->exec('rm -rf ' . escapeshellarg($path));
