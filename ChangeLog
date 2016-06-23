@@ -1,4 +1,4 @@
-Version 8.16 (Not yet release)
+Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
 	* request #8468: Unable to access svn immutable tags configuration with huge repository
 	* request #9208: When TLS is forced Tuleap must only create URL with HTTPS scheme
@@ -7,7 +7,7 @@ Version 8.16 (Not yet release)
 	* request #9222: Cannot add site admin as project member during import
 	* request #9254: Restricted users cannot access SVN plugin viewvc
 	* request #9266: Fatal error while importing scrum template
-        * request #9269: Fix the creation of new mailing list
+	* request #9269: Fix the creation of new mailing list
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
