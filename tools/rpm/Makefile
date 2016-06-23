@@ -58,6 +58,8 @@ DIST=
 ifeq ($(strip $(OS)),rhel6)
 SPEC_FILE=tuleap.rhel6.spec
 CUSTOM_SPEC_FILE=customization.rhel6.spec
+else
+$(error OS version not supported)
 endif
 
 .PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball sass node srpms dist
