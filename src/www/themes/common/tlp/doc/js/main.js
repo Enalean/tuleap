@@ -43,7 +43,6 @@
 
     function loadStylesheet(color) {
         stylesheet.textContent = '';
-        console.log(stylesheet.sheet.cssRules.length);
         var interval = setInterval(function() {
             if (stylesheet.sheet.cssRules.length) {
                 updateAllHexaColors();
