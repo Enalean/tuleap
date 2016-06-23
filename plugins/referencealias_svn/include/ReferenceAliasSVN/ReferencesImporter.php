@@ -43,6 +43,10 @@ class ReferencesImporter
 
     public function importCompatRefXML(Project $project, SimpleXMLElement $xml, Repository $repository)
     {
+        if ($xml->count() === 0) {
+            return;
+        }
+
         foreach ($xml->children() as $reference) {
             $source      = (string) $reference['source'];
             $revision_id = (int) $reference['target'];
