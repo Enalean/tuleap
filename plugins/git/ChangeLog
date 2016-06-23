@@ -1,3 +1,6 @@
+Version 4.218 - Tuleap 8.16
+    * Sort fine-grained permissions
+
 Version 4.217 - Tuleap 8.16
     * request #9272 Order of tags/branches permissions matters
 
