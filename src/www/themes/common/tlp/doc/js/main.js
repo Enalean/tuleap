@@ -18,7 +18,8 @@
  */
 
 (function colorSwitcher() {
-    var color_switchers = document.querySelectorAll('.color-switcher > li');
+    var color_switchers = document.querySelectorAll('.color-switcher > li'),
+        stylesheet      = document.getElementById('tlp-stylesheet');
 
     [].forEach.call(color_switchers, function(color_switcher) {
         color_switcher.addEventListener('click', function(event) {
@@ -32,10 +33,46 @@
 
                 document.body.classList.remove('orange', 'blue', 'green', 'red', 'grey', 'purple');
                 document.body.classList.add(color);
-                document.getElementById('tlp-stylesheet').setAttribute('href', '../dist/tlp-' + color + '.min.css');
+
+                loadStylesheet(color);
             }
         });
     });
+
+    updateAllHexaColors();
+
+    function loadStylesheet(color) {
+        stylesheet.textContent = '';
+        console.log(stylesheet.sheet.cssRules.length);
+        var interval = setInterval(function() {
+            if (stylesheet.sheet.cssRules.length) {
+                updateAllHexaColors();
+                clearInterval(interval);
+            }
+        }, 10);
+        stylesheet.textContent = '@import "../dist/tlp-' + color + '.min.css"';
+    }
+
+    function updateAllHexaColors() {
+        updateHexaColor('info');
+        updateHexaColor('success');
+        updateHexaColor('warning');
+        updateHexaColor('danger');
+    }
+
+    function updateHexaColor(name) {
+        var element = document.querySelector('.doc-color-' + name)
+        var color = document.defaultView.getComputedStyle(element, null).getPropertyValue('background-color');
+        if (color.search("rgb") !== -1) {
+            color = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            color = "#" + hex(color[1]) + hex(color[2]) + hex(color[3]);
+        }
+        document.querySelector('.doc-color-' + name + '-hexacode').innerHTML = color;
+    }
+
+    function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
 })();
 
 window.onscroll = function scrollspy() {
