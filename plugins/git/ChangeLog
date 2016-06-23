@@ -1,3 +1,6 @@
+Version 4.219 - Tuleap 8.16
+    * request #9275 Fatal error on project creation with fine grain perms in template
+
 Version 4.218 - Tuleap 8.16
     * Sort fine-grained permissions
 
