@@ -28,6 +28,7 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
+use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -229,6 +230,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
         );
 
         $validator        = new FineGrainedPatternValidator();
+        $sorter           = new FineGrainedPermissionSorter();
         $ugroup_manager   = new UGroupManager();
         $normalizer       = new PermissionsNormalizer();
         $fine_grained_dao = new FineGrainedDao();
@@ -237,7 +239,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $ugroup_manager,
             $normalizer,
             PermissionsManager::instance(),
-            $validator
+            $validator,
+            $sorter
         );
 
         $saver            = new FineGrainedPermissionSaver($fine_grained_dao);
@@ -246,7 +249,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $ugroup_manager,
             $normalizer,
             PermissionsManager::instance(),
-            $validator
+            $validator,
+            $sorter
         );
 
         $replicator = new FineGrainedPermissionReplicator($fine_grained_dao, $default_factory, $saver, $factory);

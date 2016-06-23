@@ -36,6 +36,11 @@ class DefaultFineGrainedPermissionFactory
 {
 
     /**
+     * @var FineGrainedPermissionSorter
+     */
+    private $sorter;
+
+    /**
      * @var FineGrainedPatternValidator
      */
     private $validator;
@@ -70,13 +75,15 @@ class DefaultFineGrainedPermissionFactory
         UGroupManager $ugroup_manager,
         PermissionsNormalizer $normalizer,
         PermissionsManager $permissions_manager,
-        FineGrainedPatternValidator $validator
+        FineGrainedPatternValidator $validator,
+        FineGrainedPermissionSorter $sorter
     ) {
         $this->dao                 = $dao;
         $this->ugroup_manager      = $ugroup_manager;
         $this->normalizer          = $normalizer;
         $this->permissions_manager = $permissions_manager;
         $this->validator           = $validator;
+        $this->sorter              = $sorter;
     }
 
     public function getUpdatedPermissionsFromRequest(Codendi_Request $request, Project $project)
@@ -366,7 +373,7 @@ class DefaultFineGrainedPermissionFactory
             $permissions[$permission->getId()] = $permission;
         }
 
-        return $permissions;
+        return $this->sorter->sort($permissions);
     }
 
     public function getTagsFineGrainedPermissionsForProject(Project $project)
@@ -378,7 +385,7 @@ class DefaultFineGrainedPermissionFactory
             $permissions[$permission->getId()] = $permission;
         }
 
-        return $permissions;
+        return $this->sorter->sort($permissions);
     }
 
     /**
