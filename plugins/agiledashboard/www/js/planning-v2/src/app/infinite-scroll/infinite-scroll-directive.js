@@ -23,26 +23,26 @@
  * THE SOFTWARE.
  */
 
-(function () {
-    angular
-        .module('infinite-scroll')
-        .directive('infiniteScroll', infiniteScroll);
+angular
+    .module('infinite-scroll')
+    .directive('infiniteScroll', infiniteScroll);
 
-    infiniteScroll.$inject = ['$window'];
+infiniteScroll.$inject = ['$window'];
 
-    function infiniteScroll($window) {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                var threshold = parseInt(attrs.scrollThreshold, 10) || 0,
-                    callback  = attrs.scrollCallback;
+function infiniteScroll($window) {
+    return {
+        restrict: 'A',
+        link    : link
+    };
 
-                angular.element($window).bind('scroll', function() {
-                    if (element[0].getBoundingClientRect().bottom < window.innerHeight + threshold) {
-                        scope.$apply(callback);
-                    }
-                });
+    function link(scope, element, attrs) {
+        var threshold = parseInt(attrs.scrollThreshold, 10) || 0,
+            callback  = attrs.scrollCallback;
+
+        angular.element($window).bind('scroll', function() {
+            if (element[0].getBoundingClientRect().bottom < $window.innerHeight + threshold) {
+                scope.$apply(callback);
             }
-        };
+        });
     }
-})();
+}

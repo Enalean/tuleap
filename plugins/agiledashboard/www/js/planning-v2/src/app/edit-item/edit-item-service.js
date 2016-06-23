@@ -23,13 +23,13 @@ function EditItemService(
     function showEditModal($event, backlog_item, milestone) {
         var when_left_mouse_click = 1;
 
-        var callback = function(item_id) {
+        function callback(item_id) {
             return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function() {
                 if (milestone) {
                     MilestoneService.updateInitialEffort(milestone);
                 }
             });
-        };
+        }
 
         if ($event.which === when_left_mouse_click) {
             $event.preventDefault();

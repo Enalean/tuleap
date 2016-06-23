@@ -1,5 +1,3 @@
-(function () {
-    angular.module('project', [
-        'restangular'
-    ]);
-})();
+angular.module('project', [
+    'restangular'
+]);

@@ -68,23 +68,23 @@ function CardFieldsService(
     }
 
     function cardFieldIsText(type) {
-        return type == 'text';
+        return type === 'text';
     }
 
     function cardFieldIsFile(type) {
-        return type == 'file';
+        return type === 'file';
     }
 
     function cardFieldIsCross(type) {
-        return type == 'cross';
+        return type === 'cross';
     }
 
     function cardFieldIsPermissions(type) {
-        return type == 'perm';
+        return type === 'perm';
     }
 
     function cardFieldIsUser(type) {
-        return type == 'subby' || type == 'luby';
+        return type === 'subby' || type === 'luby';
     }
 
     function getCardFieldListValues(values, filter_terms) {
@@ -124,7 +124,7 @@ function CardFieldsService(
         function getFileLink(file) {
             var file_name = highlight(_.escape(file.name), filter_terms);
 
-            return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="'+ _.escape(file.description) +'"><i class="icon-file-text-alt"></i> ' + file_name + '</a>';
+            return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="' + _.escape(file.description) + '"><i class="icon-file-text-alt"></i> ' + file_name + '</a>';
         }
 
         return $sce.trustAsHtml(_.map(file_descriptions, getFileLink).join(', '));
@@ -154,9 +154,9 @@ function CardFieldsService(
         } else {
             avatar       = '<div class="avatar"><img src="' + value.avatar_url + '" /></div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = '<a data-nodrag="true" href="' + value.user_url +'">'+ avatar + display_name +'</a>';
+            link         = '<a data-nodrag="true" href="' + value.user_url + '">' + avatar + display_name + '</a>';
         }
 
-        return $sce.trustAsHtml('<div class="user">' + link +'</div>');
+        return $sce.trustAsHtml('<div class="user">' + link + '</div>');
     }
 }

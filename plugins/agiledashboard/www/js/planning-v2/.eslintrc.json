@@ -1,0 +1,233 @@
+{
+    "plugins": [
+        "angular"
+    ],
+    "extends": [
+        // npm i -g eslint eslint-plugin-angular
+        "eslint:recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 5
+    },
+    "env": {
+        "browser": true,
+        "jasmine": true,
+        "jquery": true,
+        "node": true,
+        "angular/angular": true,
+        "angular/mocks": true
+    },
+    "globals": {
+        // jasmine-fixture
+        "affix": true,
+        // jasmine-promise-matchers,
+        "installPromiseMatchers": true,
+        // lodash
+        "_": true,
+        // moment
+        "moment": true
+    },
+    "rules": {
+        // eslint-plugin-angular rules
+        // Possible Errors
+        "angular/module-getter": 2,
+        "angular/module-setter": 2,
+        "angular/no-private-call": 2,
+        // Best Practices
+        "angular/component-limit": [2, 1],
+        "angular/controller-as": 2,
+        "angular/controller-as-route": 2,
+        "angular/controller-as-vm": [2, "self"],
+        "angular/deferred": 1,
+        "angular/di-unused": 2,
+        "angular/directive-restrict": 0, // raises error if A when configured with AE
+        "angular/empty-controller": 2,
+        "angular/no-controller": 0, // We define our controllers outside of the directive
+        "angular/no-inline-template": 1,
+        "angular/no-run-logic": 2,
+        "angular/no-services": [2, ["$http", "$resource", "Restangular"]],
+        "angular/on-watch": 2,
+        // Deprecated Angular Features
+        "angular/no-cookiestore": 2,
+        "angular/no-directive-replace": [2, {
+            "ignoreReplaceFalse": true
+        }],
+        "angular/no-http-callback": 2,
+        // Naming
+        "angular/controller-name": [2, "/[A-Z].*Controller$/"],
+        "angular/directive-name": 0,
+        "angular/file-name": [0, { // Would be useful but our directives don't follow the same pattern
+            "nameStyle": "dash"
+        }],
+        "angular/filter-name": 0, // We usually don't suffix filters with 'Filter'
+        "angular/module-name": 0,
+        "angular/service-name": [1, "/[A-Z].*Service$/"],
+        // Conventions
+        "angular/di": [2, "$inject"],
+        "angular/di-order": 0,
+        "angular/dumb-inject": 1,
+        "angular/function-type": [2, "named"],
+        "angular/module-dependency-order": [1, {
+            "grouped": true
+        }],
+        "angular/no-service-method": 0, // use service instead of factory
+        "angular/one-dependency-per-line": 2,
+        "angular/rest-service": [1, "$http"],
+        "angular/watchers-execution": [2, "$apply"],
+        // Angular Wrappers
+        "angular/angularelement": 1,
+        "angular/definedundefined": 2,
+        "angular/document-service": 2,
+        "angular/foreach": 0, // use lodash
+        "angular/interval-service": 2,
+        "angular/json-functions": 2,
+        "angular/log": 1,
+        "angular/no-angular-mock": 0,
+        "angular/no-jquery-angularelement": 2,
+        "angular/timeout-service": 2,
+        "angular/typecheck-array": 2,
+        "angular/typecheck-date": 2,
+        "angular/typecheck-function": 2,
+        "angular/typecheck-number": 2,
+        "angular/typecheck-object": 2,
+        "angular/typecheck-string": 2,
+        "angular/window-service": 2,
+        // Better for Angular
+        "no-use-before-define": 0, // As per johnpapa's styleguide, we sometimes use functions before defining them
+        // eslint rules
+        // see http://rapilabs.github.io/eslintrc-generator/
+        "no-console": 1,
+        "no-debugger": 1,
+        "no-unexpected-multiline": 2,
+        "block-scoped-var": 2,
+        "complexity": [1, 10],
+        "consistent-return": 1,
+        "curly": [2, "all"],
+        "default-case": 1,
+        "dot-notation": [2, {
+            "allowKeywords": true
+        }],
+        "dot-location": [2, "property"],
+        "eqeqeq": 2,
+        "guard-for-in": 2,
+        "no-alert": 2,
+        "no-caller": 2,
+        "no-div-regex": 2,
+        "no-else-return": 1,
+        "no-eq-null": 1,
+        "no-eval": 2,
+        "no-extend-native": 2,
+        "no-extra-bind": 2,
+        "no-fallthrough": 1,
+        "no-floating-decimal": 2,
+        "no-implicit-coercion": 2,
+        "no-implied-eval": 2,
+        "no-invalid-this": 1,
+        "no-iterator": 2,
+        "no-labels": 2,
+        "no-lone-blocks": 2,
+        "no-loop-func": 1,
+        "no-multi-spaces": [1, {
+            "exceptions": {
+                "VariableDeclarator": true,
+                "AssignmentExpression": true
+            }
+        }],
+        "no-multi-str": 2,
+        "no-native-reassign": 2,
+        "no-new-func": 2,
+        "no-new-wrappers": 2,
+        "no-new": 2,
+        "no-octal-escape": 2,
+        "no-param-reassign": 1,
+        "no-process-env": 1,
+        "no-proto": 2,
+        "no-return-assign": 2,
+        "no-script-url": 2,
+        "no-self-compare": 2,
+        "no-sequences": 2,
+        "no-throw-literal": 2,
+        "no-unreachable": 2,
+        "no-unused-expressions": 2,
+        "no-useless-call": 2,
+        "no-void": 2,
+        "no-warning-comments": 1,
+        "no-with": 2,
+        "radix": 2,
+        "vars-on-top": 0,
+        "wrap-iife": 2,
+        "yoda": 1,
+        "strict": 0,
+        "no-label-var": 2,
+        "no-shadow-restricted-names": 2,
+        "no-shadow": 1,
+        "no-undef-init": 2,
+        "no-undefined": 1,
+        "callback-return": 1,
+        "handle-callback-err": 1,
+        "no-mixed-requires": 1,
+        "no-new-require": 1,
+        "no-path-concat": 1,
+        "no-process-exit": 1,
+        "no-restricted-modules": 1,
+        "no-sync": 1,
+        "array-bracket-spacing": 1,
+        "brace-style": [2, "1tbs", {
+            "allowSingleLine": true
+        }],
+        "camelcase": 0, // use snake_case for var names
+        "comma-spacing": [2, {
+            "after": true
+        }],
+        "comma-style": [2, "last"],
+        "consistent-this": [2, "self"],
+        "eol-last": 2,
+        "func-style": [1, "declaration"],
+        "indent": [1, 4, {
+            "SwitchCase": 1
+        }],
+        "key-spacing": [1, {
+            "align": "colon",
+            "beforeColon": false,
+            "afterColon": true
+        }],
+        "lines-around-comment": 0, // conflicts with padded-blocks "never"
+        "linebreak-style": [2, "unix"],
+        "max-nested-callbacks": [1, 3],
+        "new-cap": 1,
+        "new-parens": 2,
+        "no-array-constructor": 2,
+        "no-constant-condition": 2,
+        "no-continue": 2,
+        "no-lonely-if": 1,
+        "no-multiple-empty-lines": [1, {
+            "max": 2
+        }],
+        "no-nested-ternary": 2,
+        "no-new-object": 2,
+        "no-spaced-func": 1,
+        "no-trailing-spaces": 2,
+        "no-underscore-dangle": 2,
+        "no-unneeded-ternary": 2,
+        "object-curly-spacing": [1, "always", {
+            "arraysInObjects": false,
+            "objectsInObjects": true
+        }],
+        "one-var": 0,
+        "operator-linebreak": [1, "before"],
+        "padded-blocks": [1, "never"],
+        "quote-props": [2, "as-needed"],
+        "semi-spacing": [2, {
+            "after": true
+        }],
+        "semi": [2, "always"],
+        "sort-vars": 0,
+        "keyword-spacing": 1,
+        "space-before-blocks": 1,
+        "space-before-function-paren": [1, "never"],
+        "space-in-parens": [1, "never"],
+        "space-infix-ops": 2,
+        "spaced-comment": 1,
+        "wrap-regex": 1
+    }
+}

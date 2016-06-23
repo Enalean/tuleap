@@ -18,25 +18,25 @@ TuleapHighlightFilter.$inject = [];
  * @param [caseSensitive] {boolean} optional boolean to use case-sensitive searching
  */
 function TuleapHighlightFilter() {
-  'use strict';
+    'use strict';
 
-  function isTextSearchable(text, search) {
-    return text && (search || angular.isNumber(search));
-  }
-
-  return function (text, search, caseSensitive) {
-    if (! isTextSearchable(text, search)) {
-      return text;
+    function isTextSearchable(text, search) {
+        return text && (search || angular.isNumber(search));
     }
 
-    var flags = 'g';
-    if (! caseSensitive) {
-      flags += 'i';
-    }
+    return function(text, search, caseSensitive) {
+        if (!isTextSearchable(text, search)) {
+            return text;
+        }
 
-    text   = text.toString();
-    search = _.escape(search.toString().replace(' ', '|'));
+        var flags = 'g';
+        if (!caseSensitive) {
+            flags += 'i';
+        }
 
-    return text.replace(new RegExp(search, flags), '<span class="highlight">$&</span>');
-  };
+        var text_string = text.toString();
+        search = _.escape(search.toString().replace(' ', '|'));
+
+        return text_string.replace(new RegExp(search, flags), '<span class="highlight">$&</span>');
+    };
 }
