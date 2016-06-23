@@ -31,14 +31,6 @@ docker rm rpm-builder   || true
 
 docker run -i --name srpms-builder -v "$SRC_DIR":/tuleap enalean/tuleap-buildsrpms
 
-docker run -i --name rpm-builder --volumes-from srpms-builder enalean/tuleap-buildrpms:centos5 --php php53 --folder rhel5
-docker cp rpm-builder:/rpms/RPMS/noarch "$RPM_DIR"/rhel5-53
-docker rm rpm-builder
-
-docker run -i --name rpm-builder --volumes-from srpms-builder enalean/tuleap-buildrpms:centos5 --php php --folder rhel5
-docker cp rpm-builder:/rpms/RPMS/noarch "$RPM_DIR"/rhel5
-docker rm rpm-builder
-
 docker run -i --name rpm-builder --volumes-from srpms-builder enalean/tuleap-buildrpms:centos6 --php php --folder rhel6
 docker cp rpm-builder:/rpms/RPMS/noarch "$RPM_DIR"/rhel6
 docker rm rpm-builder
