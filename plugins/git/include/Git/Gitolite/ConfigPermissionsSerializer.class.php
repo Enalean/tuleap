@@ -175,9 +175,7 @@ class Git_Gitolite_ConfigPermissionsSerializer {
             Git::PERM_WRITE
         );
 
-        if ($pattern_config) {
-            $pattern_config .= $this->removeAllUgroupForPattern($pattern_for_gitolite);
-        }
+        $pattern_config .= $this->removeAllUgroupForPattern($pattern_for_gitolite);
 
         return $pattern_config;
     }
