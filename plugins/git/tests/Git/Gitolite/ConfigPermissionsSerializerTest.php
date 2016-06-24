@@ -623,4 +623,32 @@ EOS;
 
         $this->assertEqual($config, $expected);
     }
+
+    public function itDeniesPatternIfNobodyCanWriteAndRewind()
+    {
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(1 => $this->permission_01));
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository()->returns(array(2 => $this->permission_02));
+
+        $writers          = array($this->ugroup_nobody);
+        $rewinders        = array();
+
+        $this->permission_01->setWriters($writers);
+        $this->permission_01->setRewinders($rewinders);
+
+        $this->permission_02->setWriters($writers);
+        $this->permission_02->setRewinders($rewinders);
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+
+        $config = $this->serializer->getForRepository($this->repository);
+
+        $expected = <<<EOS
+ R   = @site_active @_project_members
+ - refs/heads/master = @all
+ - refs/tags/v1 = @all
+
+EOS;
+
+        $this->assertEqual($config, $expected);
+    }
 }
