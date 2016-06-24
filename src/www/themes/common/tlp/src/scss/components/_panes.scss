@@ -20,8 +20,8 @@
 .tlp-pane {
     margin: 0 0 $tlp-spacing;
     border: 1px solid $tlp-ui-border-normal;
-    background: $tlp-ui-white;
     border-radius: 3px;
+    background: $tlp-ui-white;
 }
 
 .tlp-pane-header {
@@ -30,11 +30,11 @@
 
 .tlp-pane-title {
     margin: 0;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    text-transform: uppercase;
     color: $tlp-ui-dimmed;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
 }
 
 .tlp-pane-section {

@@ -5,6 +5,7 @@
     <title>Tuleap UI Framework</title>
 
     <link rel="stylesheet" href="../dist/tlp-blue.min.css">
+    <style id="tlp-stylesheet"></style>
 
     <link rel="stylesheet" href="css/main.min.css">
     <link rel="stylesheet" href="codemirror/5.12.2/codemirror.css">
@@ -12,8 +13,6 @@
     <link rel="stylesheet" href="codemirror/5.12.2/theme/mdn-like.css">
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <style id="tlp-stylesheet">
-    </style>
 </head>
 
 <body class="blue">
@@ -64,7 +63,21 @@
             </li>
             <li class="nav-item separator"></li>
             <li class="nav-item"><a href="#tables">Tables</a></li>
-            <li class="nav-item"><a href="#forms">Forms</a></li>
+            <li class="nav-item">
+                <a href="#forms">Forms</a>
+                <nav class="sub-nav">
+                    <ul>
+                        <li class="nav-item sub-nav-item"><a href="#forms-inputs">Inputs</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-search">Search</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-textareas">Textareas</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-selects">Selects</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-multi-selects">Multi selects</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-checkboxes">Checkboxes</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-radios">Radios</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-append-prepend">Append, prepend</a></li>
+                    </ul>
+                </nav>
+            </li>
             <li class="nav-item">
                 <a href="#buttons">Buttons</a>
                 <nav class="sub-nav">
@@ -632,13 +645,11 @@ Semantics, a large language ocean.
             <h2 class="doc-section-title">Tables <code class="code-inline">.tlp-table</code></h2>
 
             <div class="section-content">
-                <p>
-                    Use <code class="code-inline">.tlp-table-cell-numeric</code> on numeric cells to right align numeric value
-                    (header must be aligned with the content, so apply this class also on the <code class="code-inline">th</code>).
-                    <br>
-                    Use <code class="code-inline">.tlp-table-cell-actions</code> on action cells to right align the buttons and
-                    to prevent the wrapping. No title is required for this kind of column.
-                </p>
+                <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
+                <ul>
+                    <li>Use <code class="code-inline">.tlp-table-cell-numeric</code> on numeric cells to right align numeric value (header must be aligned with the content, so apply this class also on the <code class="code-inline">th</code>).</li>
+                    <li>Use <code class="code-inline">.tlp-table-cell-actions</code> on action cells to right align the buttons and to prevent the wrapping. No title is required for this kind of column.</li>
+                </ul>
 
                 <div class="demo">
                     <div class="example"></div>
@@ -770,7 +781,342 @@ Semantics, a large language ocean.
             </div>
         </section>
         <section class="doc-section" id="forms">
-            <h2 class="doc-section-title">Forms</h2>
+            <h2 class="doc-section-title">Forms <code class="code-inline">.tlp-form-element</code></h2>
+
+            <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
+            <ul>
+                <li>When it is suitable, use the good input type (<code class="code-inline">password</code>, <code class="code-inline">number</code>, <code class="code-inline">email</code>, <code class="code-inline">search</code>, <code class="code-inline">url</code>, …).</li>
+                <li>To disable a form element, use <code class="code-inline">.tlp-form-element-disabled</code> and <code class="code-inline">disabled</code> attribute.</li>
+                <li>To set a form element required, use <code class="code-inline">required</code> attribute and add <code class="code-inline">&lt;i class="fa fa-asterisk"&gt;&lt;/i&gt;</code> in the label.</li>
+                <li>To put a form element in error, use <code class="code-inline">.tlp-form-element-error</code>.</li>
+            </ul>
+
+            <section class="doc-section" id="forms-inputs">
+                <h3 class="doc-subsection-title">Inputs</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="username">Username</label>
+    <input type="text" class="tlp-input" id="username" name="username" placeholder="fox_mulder">
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="username-help">Username help</label>
+    <input type="text" class="tlp-input" id="username-help" name="username" placeholder="fox_mulder">
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="username-required">Username mandatory <i class="fa fa-asterisk"></i></label>
+    <input type="text" class="tlp-input" id="username-required" name="username" placeholder="fox_mulder" required>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="username-disabled">Username disabled</label>
+    <input type="text" class="tlp-input" id="username-disabled" name="username" placeholder="fox_mulder" disabled>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="username-error">Username error</label>
+    <input type="text" class="tlp-input" id="username-error" name="username" placeholder="fox_mulder">
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-search">
+                <h3 class="doc-subsection-title">Search</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <input type="search" class="tlp-search" placeholder="People, project…">
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <input type="search" class="tlp-search" placeholder="People, project…" disabled>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-textareas">
+                <h3 class="doc-subsection-title">Textareas</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="description">Description</label>
+    <textarea type="text" class="tlp-textarea" id="description" name="description" placeholder="I want to believe">&lt;/textarea>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="description-help">Description help</label>
+    <textarea type="text" class="tlp-textarea" id="description-help" name="description" placeholder="I want to believe">&lt;/textarea>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="description-mandatory">Description mandatory <i class="fa fa-asterisk"></i></label>
+    <textarea type="text" class="tlp-textarea" id="description-mandatory" name="description" placeholder="I want to believe" required>&lt;/textarea>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="description-disabled">Description disabled</label>
+    <textarea type="text" class="tlp-textarea" id="description-disabled" name="description" placeholder="I want to believe" disabled>&lt;/textarea>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="description-error">Description error</label>
+    <textarea type="text" class="tlp-textarea" id="description-error" name="description" placeholder="I want to believe">&lt;/textarea>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-selects">
+                <h3 class="doc-subsection-title">Selects</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area">Area</label>
+    <select class="tlp-select" id="area" name="area">
+        <option value=""></option>
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-help">Area help</label>
+    <select class="tlp-select" id="area-help" name="area">
+        <option value=""></option>
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-mandatory">Area mandatory <i class="fa fa-asterisk"></i></label>
+    <select class="tlp-select" id="area-mandatory" name="area">
+        <option value="" selected disabled>Choose your area</option>
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="area-disabled">Area disabled</label>
+    <select class="tlp-select" id="area-disabled" name="area" disabled>
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="area-error">Area error</label>
+    <select class="tlp-select" id="area-error" name="area">
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-multi-selects">
+                <h3 class="doc-subsection-title">Multi-selects</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types">Types</label>
+    <select class="tlp-select" id="types" name="types[]" multiple>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-help">Types help</label>
+    <select class="tlp-select" id="types-help" name="types[]" multiple>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-mandatory">Types mandatory <i class="fa fa-asterisk"></i></label>
+    <select class="tlp-select" id="types-mandatory" name="types[]" multiple>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="types-disabled">Types</label>
+    <select class="tlp-select" id="types-disabled" name="types[]" multiple disabled>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="types-error">Types</label>
+    <select class="tlp-select" id="types-error" name="types[]" multiple>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-checkboxes">
+                <h3 class="doc-subsection-title">Checkboxes</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe" value="1" checked> Subscribe to UFO news
+    </label>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe" value="1" checked> Subscribe to UFO news help
+    </label>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe[]" value="1"> Subscribe to UFO spaceships news multiple
+    </label>
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe[]" value="2"> Subscribe to UFO communications news multiple
+    </label>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe" value="1"> Subscribe to UFO news is mandatory <i class="fa fa-asterisk"></i>
+    </label>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe" value="1" disabled> Subscribe to UFO news disabled
+    </label>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox" name="subscribe" value="1"> Subscribe to UFO news error
+    </label>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-radios">
+                <h3 class="doc-subsection-title">Radios</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="male" checked> Male
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="female"> Female
+    </label>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="male" checked> Male
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="female"> Female
+    </label>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="male" disabled> Male disabled
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="female" disabled> Female disabled
+    </label>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="male"> Male error
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="genre" value="female"> Female error
+    </label>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-append-prepend">
+                <h3 class="doc-subsection-title">Inputs append and prepend</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+</textarea>
+                    </div>
+                </div>
+            </section>
 
             <div class="section-content">
             </div>

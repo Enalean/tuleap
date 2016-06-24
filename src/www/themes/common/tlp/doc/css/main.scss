@@ -19,6 +19,9 @@
 
 @import 'src/scss/variables/colors';
 
+$nav-width: 150px;
+$nav-margin: 30px;
+
 @mixin themable($theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger) {
     .doc-section {
         p a {
@@ -30,6 +33,7 @@
             color: darken($theme-color, 20%);
         }
 
+        // scss-lint:disable SelectorFormat
         .CodeMirror-gutters {
             border-left: 3px solid transparentize($theme-color, .8);
         }
@@ -58,28 +62,34 @@
 
 body {
     min-height: 100vh;
+    padding: 0 30px 0 ($nav-width + $nav-margin * 2);
 
     &.orange {
         @import 'src/scss/variables-orange';
         @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
     }
-    &.blue   {
+
+    &.blue {
         @import 'src/scss/variables-blue';
         @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
     }
-    &.green  {
+
+    &.green {
         @import 'src/scss/variables-green';
         @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
     }
-    &.grey   {
+
+    &.grey {
         @import 'src/scss/variables-grey';
         @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
     }
+
     &.purple {
         @import 'src/scss/variables-purple';
         @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
     }
-    &.red    {
+
+    &.red {
         @import 'src/scss/variables-red';
         @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
     }

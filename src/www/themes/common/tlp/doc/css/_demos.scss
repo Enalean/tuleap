@@ -31,12 +31,14 @@
         width: 50%;
         margin: 0 0 0 10px;
 
+        // scss-lint:disable SelectorFormat
         .CodeMirror {
             flex: 1;
             background-image: none;
             line-height: 18px;
         }
 
+        // scss-lint:disable SelectorFormat
         .CodeMirror-overlayscroll-horizontal > div,
         .CodeMirror-overlayscroll-vertical > div {
             background: $editor-scrollbar-color;

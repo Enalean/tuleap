@@ -1,0 +1,162 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-label-color: #666666;
+$tlp-form-element-height: 38px;
+$tlp-form-element-border-radius: 3px;
+$tlp-form-element-border-color: #cccccc;
+$tlp-form-element-background: #ffffff;
+$tlp-form-element-placeholder-color: #bbbbbb;
+$tlp-form-element-border-transition-duration: 150ms;
+
+.tlp-form-element {
+    margin: 0 0 $tlp-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tlp-text-muted,
+    > .tlp-text-info,
+    > .tlp-text-success,
+    > .tlp-text-warning,
+    > .tlp-text-danger {
+        margin: 3px 0 0;
+        font-size: 13px;
+    }
+
+    &.tlp-form-element-disabled {
+        opacity: .5;
+
+        > .tlp-label,
+        > .tlp-input,
+        > .tlp-search,
+        > .tlp-textarea,
+        > .tlp-select,
+        > .tlp-checkbox,
+        > .tlp-checkbox > input,
+        > .tlp-radio,
+        > .tlp-radio > input {
+            cursor: not-allowed;
+        }
+    }
+
+    &.tlp-form-element-error {
+        > .tlp-label {
+            color: $tlp-ui-danger;
+        }
+
+        > .tlp-input,
+        > .tlp-textarea,
+        > .tlp-select {
+            border-color: $tlp-ui-danger;
+            color: $tlp-ui-danger;
+        }
+    }
+}
+
+.tlp-label {
+    display: block;
+    margin: 0 0 8px;
+    color: $tlp-label-color;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    > .fa-asterisk {
+        color: $tlp-ui-danger;
+        font-size: 10px;
+        vertical-align: text-top;
+    }
+}
+
+%tlp-form-element {
+    display: block;
+    padding: 9px 12px 10px;
+    transition: border-color $tlp-form-element-border-transition-duration linear;
+    border: 1px solid $tlp-form-element-border-color;
+    border-radius: $tlp-form-element-border-radius;
+    background: $tlp-form-element-background;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+
+    // scss-lint:disable VendorPrefix
+    &::-webkit-input-placeholder,
+    &::-moz-placeholder {
+        color: $tlp-form-element-placeholder-color;
+    }
+
+    &:focus {
+        transition: border-color $tlp-form-element-border-transition-duration linear;
+        border-color: $tlp-theme-color;
+    }
+}
+
+.tlp-input {
+    @extend %tlp-form-element;
+
+    height: $tlp-form-element-height;
+}
+
+.tlp-search {
+    @extend %tlp-form-element;
+
+    height: $tlp-form-element-height;
+    padding: 9px 15px 10px 33px;
+    border-radius: $tlp-form-element-height / 2;
+    background: url('images/tlp-search-background.png') no-repeat 13px center;
+
+    // scss-lint:disable VendorPrefix
+    &::-webkit-search-decoration {
+        display: none;
+    }
+}
+
+.tlp-textarea {
+    @extend %tlp-form-element;
+
+    overflow: auto;
+}
+
+.tlp-select {
+    @extend %tlp-form-element;
+
+    height: $tlp-form-element-height;
+    padding: 8px (12px * 2 + 8px) 10px 12px;
+    background: url('images/tlp-select-background.png') no-repeat right 12px center;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::-ms-expand {
+        display: none;
+    }
+
+    &[multiple] {
+        height: auto;
+        padding: 8px 12px 10px;
+        background: none;
+    }
+}
+
+.tlp-checkbox > input,
+.tlp-radio > input {
+    margin: 0 3px 0 0;
+    vertical-align: middle;
+}

@@ -21,7 +21,7 @@
     var demo_panels = document.querySelectorAll('.demo');
 
     [].forEach.call(demo_panels, function(demo_panel) {
-        var textarea = demo_panel.querySelector('textarea'),
+        var textarea = demo_panel.querySelector('.code > textarea'),
             example  = demo_panel.querySelector('.example');
 
         if (! textarea || ! example) {

@@ -25,7 +25,7 @@ $editor-scrollbar-color: rgba(241, 241, 241, .3);
 
 main {
     min-height: 100%;
-    margin: 10px 30px 0 ($nav-width + $nav-margin * 2);
+    margin: 10px 0 0;
 }
 
 .doc-section {
@@ -69,6 +69,7 @@ main {
         }
     }
 
+    ul .code-inline,
     p .code-inline {
         font-size: 13px;
     }
