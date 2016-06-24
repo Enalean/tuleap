@@ -31,7 +31,7 @@ class HTTPRequest extends Codendi_Request {
     /**
      * @var array
      */
-    private $trusted_proxied;
+    private $trusted_proxied = array();
 
     /**
      * Constructor
@@ -191,7 +191,46 @@ class HTTPRequest extends Codendi_Request {
     }
 
     private function isFromTrustedProxy() {
-        return isset($_SERVER[self::HEADER_REMOTE_ADDR]) && isset($this->trusted_proxied[$_SERVER[self::HEADER_REMOTE_ADDR]]);
+        if (isset($_SERVER[self::HEADER_REMOTE_ADDR])) {
+            foreach ($this->trusted_proxied as $proxy => $nop) {
+                if ($this->checkIp4($_SERVER[self::HEADER_REMOTE_ADDR], $proxy)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Compares two IPv4 addresses.
+     * In case a subnet is given, it checks if it contains the request IP.
+     *
+     * @see Symfony\Component\HttpFoundation\IpUtils @ 3.2-dev (MIT license)
+     *
+     * @param string $request_ip IPv4 address to check
+     * @param string $ip        IPv4 address or subnet in CIDR notation
+     *
+     * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet.
+     */
+    public static function checkIp4($request_ip, $ip)
+    {
+        if (false !== strpos($ip, '/')) {
+            list($address, $netmask) = explode('/', $ip, 2);
+
+            if ($netmask === '0') {
+                // Ensure IP is valid - using ip2long below implicitly validates, but we need to do it manually here
+                return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+            }
+
+            if ($netmask < 0 || $netmask > 32) {
+                return false;
+            }
+        } else {
+            $address = $ip;
+            $netmask = 32;
+        }
+
+        return 0 === substr_compare(sprintf('%032b', ip2long($request_ip)), sprintf('%032b', ip2long($address)), 0, $netmask);
     }
 
     private function isOriginalProtocolSecure() {
