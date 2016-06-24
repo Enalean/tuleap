@@ -60,7 +60,7 @@ $tlp-button-secondary-outline-color: #888888;
     border: 1px solid transparent;
     border-radius: $tlp-button-radius;
     color: $tlp-button-color;
-    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    font-family: $tlp-font-family;
     font-size: $tlp-button-normal-font-size;
     font-weight: $tlp-button-normal-font-weight;
     line-height: normal;

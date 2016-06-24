@@ -17,15 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'components/layout';
-@import 'components/typography';
-@import 'components/avatars';
-@import 'components/badges';
-@import 'components/buttons';
-@import 'components/pagination';
-@import 'components/panes';
-@import 'components/alerts';
-@import 'components/tables';
-@import 'components/tabs';
-@import 'components/forms';
-@import 'components/dropdowns';
+flatpickr.init.prototype.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
+flatpickr.init.prototype.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
+flatpickr.init.prototype.l10n.firstDayOfWeek = 1;
+
+var tlp = tlp || { };
+
+tlp.datePicker = function(element, options) {
+    options = options || {};
+
+    options.weekNumbers = true;
+    options.timeFormat  = 'H:i';
+    options.time_24hr   = true;
+
+    return flatpickr(element, options);
+}

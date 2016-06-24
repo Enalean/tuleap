@@ -20,10 +20,11 @@
 @import 'fonts';
 
 $tlp-typo-default-text-color: #333333;
+$tlp-font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
 
 body {
     color: $tlp-typo-default-text-color;
-    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    font-family: $tlp-font-family;
 }
 
 h1,
