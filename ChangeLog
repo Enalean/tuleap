@@ -2,6 +2,9 @@ Version 8.17 (not released yet)
 	== Development ==
 	* request #9278: Remove CentOS 5 packages
 
+    == Plugins ==
+	* git: 4.221
+
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
 	* request #8468: Unable to access svn immutable tags configuration with huge repository
