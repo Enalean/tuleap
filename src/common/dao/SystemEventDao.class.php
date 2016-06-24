@@ -218,12 +218,19 @@ class SystemEventDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchAllMatchingEvents($limit, $offset) {
+    public function searchAllMatchingEvents($status, $limit, $offset) {
         $limit  = $this->da->escapeInt($limit);
         $offset = $this->da->escapeInt($offset);
 
+        $where = '';
+        if ($status) {
+            $status = $this->da->quoteSmart(strtoupper($status));
+            $where  = "WHERE status = $status";
+        }
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM system_event
+                $where
                 LIMIT $limit
                 OFFSET $offset";
 
