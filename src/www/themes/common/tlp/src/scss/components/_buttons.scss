@@ -22,15 +22,28 @@ $tlp-button-color: #ffffff;
 $tlp-button-box-shadow: rgba(0, 0, 0, .12);
 $tlp-button-box-shadow-timing: 75ms;
 $tlp-button-background-timing: 75ms;
+
+$tlp-button-normal-height: 38px;
 $tlp-button-normal-font-size: 16px;
-$tlp-button-normal-padding: 11px 15px;
-$tlp-button-large-font-size: 20px;
-$tlp-button-large-padding: 14px 25px;
-$tlp-button-small-font-size: 12px;
-$tlp-button-small-padding: 8px 12px;
+$tlp-button-normal-font-weight: 400;
+$tlp-button-normal-padding: 0 15px;
+
+$tlp-button-large-height: 46px;
+$tlp-button-large-font-size: 22px;
+$tlp-button-large-font-weight: 400;
+$tlp-button-large-padding: 0 25px;
+
+$tlp-button-small-height: 28px;
+$tlp-button-small-font-size: 14px;
+$tlp-button-small-font-weight: 400;
+$tlp-button-small-padding: 0 12px;
+
+$tlp-button-mini-height: 22px;
 $tlp-button-mini-font-size: 12px;
-$tlp-button-mini-padding: 5px 8px;
-$tlp-button-outline-hover-color: #fdfdfd;
+$tlp-button-mini-font-weight: 600;
+$tlp-button-mini-padding: 0 8px;
+
+$tlp-button-outline-hover-color: #fafafa;
 
 $tlp-button-secondary-background: #e9e9e9;
 $tlp-button-secondary-color: #444444;
@@ -41,13 +54,16 @@ $tlp-button-secondary-outline-color: #888888;
 
 %tlp-button {
     display: inline-block;
+    height: $tlp-button-normal-height;
     padding: $tlp-button-normal-padding;
-    transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out;
-    border: 0;
+    transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
+    border: 1px solid transparent;
     border-radius: $tlp-button-radius;
     color: $tlp-button-color;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
     font-size: $tlp-button-normal-font-size;
-    line-height: $tlp-button-normal-font-size;
+    font-weight: $tlp-button-normal-font-weight;
+    line-height: normal;
     text-decoration: none;
     white-space: nowrap;
     box-shadow: 0 1px 1px $tlp-button-box-shadow;
@@ -57,7 +73,7 @@ $tlp-button-secondary-outline-color: #888888;
     &:hover:not(:disabled):not(.disabled):not(:active),
     &:active,
     &:focus {
-        transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out;
+        transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
         box-shadow: none;
     }
 
@@ -69,16 +85,22 @@ $tlp-button-secondary-outline-color: #888888;
     }
 }
 
+/**
+ * Types
+ */
 .tlp-button-primary {
     @extend %tlp-button;
 
+    border-color: $tlp-theme-color;
     background: $tlp-theme-color;
 
     &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-theme-color, 5%);
         background: darken($tlp-theme-color, 5%);
     }
 
-    &:active {
+    &:active:not(.disabled) {
+        border-color: darken($tlp-theme-color, 10%);
         background: darken($tlp-theme-color, 10%);
     }
 
@@ -92,15 +114,18 @@ $tlp-button-secondary-outline-color: #888888;
 .tlp-button-secondary {
     @extend %tlp-button;
 
+    border-color: $tlp-button-secondary-background;
     background: $tlp-button-secondary-background;
     color: $tlp-button-secondary-color;
     box-shadow: 0 1px 1px $tlp-button-secondary-box-shadow;
 
-    &:hover:not(:disabled):not(.disabled):not(:active) {
+    &:hover:not(:disabled):not(.disabled):not(:active):not(.tlp-button-outline) {
+        border-color: darken($tlp-button-secondary-background, 5%);
         background: darken($tlp-button-secondary-background, 5%);
     }
 
-    &:active {
+    &:active:not(.disabled):not(.tlp-button-outline) {
+        border-color: darken($tlp-button-secondary-background, 10%);
         background: darken($tlp-button-secondary-background, 10%);
     }
 
@@ -114,13 +139,16 @@ $tlp-button-secondary-outline-color: #888888;
 .tlp-button-info {
     @extend %tlp-button;
 
+    border-color: $tlp-ui-info;
     background: $tlp-ui-info;
 
     &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-info, 5%);
         background: darken($tlp-ui-info, 5%);
     }
 
-    &:active {
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-info, 10%);
         background: darken($tlp-ui-info, 10%);
     }
 
@@ -134,13 +162,16 @@ $tlp-button-secondary-outline-color: #888888;
 .tlp-button-success {
     @extend %tlp-button;
 
+    border-color: $tlp-ui-success;
     background: $tlp-ui-success;
 
     &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-success, 5%);
         background: darken($tlp-ui-success, 5%);
     }
 
-    &:active {
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-success, 10%);
         background: darken($tlp-ui-success, 10%);
     }
 
@@ -154,13 +185,16 @@ $tlp-button-secondary-outline-color: #888888;
 .tlp-button-warning {
     @extend %tlp-button;
 
+    border-color: $tlp-ui-warning;
     background: $tlp-ui-warning;
 
     &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-warning, 5%);
         background: darken($tlp-ui-warning, 5%);
     }
 
-    &:active {
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-warning, 10%);
         background: darken($tlp-ui-warning, 10%);
     }
 
@@ -174,13 +208,16 @@ $tlp-button-secondary-outline-color: #888888;
 .tlp-button-danger {
     @extend %tlp-button;
 
+    border-color: $tlp-ui-danger;
     background: $tlp-ui-danger;
 
     &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-danger, 5%);
         background: darken($tlp-ui-danger, 5%);
     }
 
-    &:active {
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-danger, 10%);
         background: darken($tlp-ui-danger, 10%);
     }
 
@@ -191,27 +228,59 @@ $tlp-button-secondary-outline-color: #888888;
     }
 }
 
+/**
+ * Sizes
+ */
 .tlp-button-large {
+    height: $tlp-button-large-height;
     padding: $tlp-button-large-padding;
     font-size: $tlp-button-large-font-size;
+    font-weight: $tlp-button-large-font-weight;
 }
 
 .tlp-button-small {
+    height: $tlp-button-small-height;
     padding: $tlp-button-small-padding;
     font-size: $tlp-button-small-font-size;
+    font-weight: $tlp-button-small-font-weight;
 }
 
 .tlp-button-mini {
+    height: $tlp-button-mini-height;
     padding: $tlp-button-mini-padding;
     font-size: $tlp-button-mini-font-size;
+    font-weight: $tlp-button-mini-font-weight;
 }
 
+/**
+ * Outline
+ */
 .tlp-button-outline {
     &:hover:not(:disabled):not(.disabled):not(:active) {
         background: $tlp-button-outline-hover-color;
     }
 
-    &:active {
+    &:active:not(.disabled) {
         background: darken($tlp-button-outline-hover-color, 5%);
     }
+}
+
+/**
+ * Overrides for a.tlp-button* so they have the good heights
+ */
+a[class*="tlp-button"] {
+    height: auto;
+    line-height: $tlp-button-normal-height - 2px;
+}
+// scss-lint:disable QualifyingElement
+a.tlp-button-large[class*="tlp-button"] {
+    line-height: $tlp-button-large-height - 2px;
+}
+// scss-lint:disable QualifyingElement
+a.tlp-button-small[class*="tlp-button"] {
+    line-height: $tlp-button-small-height - 2px;
+}
+// scss-lint:disable QualifyingElement
+a.tlp-button-mini[class*="tlp-button"] {
+    line-height: $tlp-button-mini-height - 2px;
 }

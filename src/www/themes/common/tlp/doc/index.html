@@ -74,7 +74,8 @@
                         <li class="nav-item sub-nav-item"><a href="#forms-multi-selects">Multi selects</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-checkboxes">Checkboxes</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-radios">Radios</a></li>
-                        <li class="nav-item sub-nav-item"><a href="#forms-append-prepend">Append, prepend</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-prepends">Prepends</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-appends">Appends</a></li>
                     </ul>
                 </nav>
             </li>
@@ -1107,12 +1108,92 @@ Semantics, a large language ocean.
                     </div>
                 </div>
             </section>
-            <section class="doc-section" id="forms-append-prepend">
-                <h3 class="doc-subsection-title">Inputs append and prepend</h3>
+            <section class="doc-section" id="forms-prepends">
+                <h3 class="doc-subsection-title">Prepends</h3>
                 <div class="demo">
                     <div class="example"></div>
                     <div class="code">
                         <textarea>
+<div class="tlp-form-element tlp-form-element-prepend">
+    <input type="text" class="tlp-input" id="tags-prepend-icon" name="tags" placeholder="fbi, saucer, pop corn…">
+    <span class="tlp-prepend"><i class="fa fa-tags"></i></span>
+</div>
+
+<div class="tlp-form-element tlp-form-element-prepend">
+    <input type="url" class="tlp-input" id="website-prepend-text" name="website" placeholder="www.foxmulder.com">
+    <span class="tlp-prepend">https://</span>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="spaceship-prepend">Spaceship name prepend</label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <input type="text" class="tlp-input" id="spaceship-prepend" name="spaceship" placeholder="The big brown cigar">
+        <span class="tlp-prepend"><i class="fa fa-rocket"></i></span>
+    </div>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element tlp-form-element-prepend">
+    <input type="email" class="tlp-input" id="email-prepend-button" name="email" placeholder="foxmulder@fbi.gov">
+    <button type="button" class="tlp-prepend tlp-button-primary">
+        <i class="fa fa-send-o"></i> Send
+    </button>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="password-prepend-button">Password</label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <input type="password" class="tlp-input" id="password-prepend-button" name="password" placeholder="************">
+        <button type="button" class="tlp-prepend tlp-button-primary tlp-button-outline">
+            <i class="fa fa-refresh"></i> Generate
+        </button>
+    </div>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="doc-section" id="forms-appends">
+                <h3 class="doc-subsection-title">Appends</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element tlp-form-element-append">
+    <input type="text" class="tlp-input" id="tags-append-icon" name="tags" placeholder="fbi, saucer, pop corn…">
+    <span class="tlp-append"><i class="fa fa-tags"></i></span>
+</div>
+
+<div class="tlp-form-element tlp-form-element-append">
+    <input type="email" class="tlp-input" id="email-append-text" name="email" placeholder="foxmulder">
+    <span class="tlp-append">@fbi.gov</span>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="spaceship-append">Spaceship price append</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <input type="text" class="tlp-input" id="spaceship-append" name="spaceship" placeholder="1540">
+        <span class="tlp-append"><i class="fa fa-dollar"></i></span>
+    </div>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element tlp-form-element-append">
+    <input type="email" class="tlp-input" id="email-append-button" name="email" placeholder="foxmulder@fbi.gov">
+    <button type="button" class="tlp-append tlp-button-primary">
+        <i class="fa fa-send-o"></i> Send
+    </button>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="password-append-button">Password</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <input type="password" class="tlp-input" id="password-append-button" name="password" placeholder="************">
+        <button type="button" class="tlp-append tlp-button-primary tlp-button-outline">
+            <i class="fa fa-refresh"></i> Generate
+        </button>
+    </div>
+</div>
 </textarea>
                     </div>
                 </div>
