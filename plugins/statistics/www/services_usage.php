@@ -191,7 +191,7 @@ if (!$error && $request->exist('export')) {
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
     $GLOBALS['HTML']->includeCalendarScripts();
-    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('framed')));
+    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
     echo '<h1>'.$title.'</h1>';
 
     echo '<form name="form_service_usage_stats" method="get">';

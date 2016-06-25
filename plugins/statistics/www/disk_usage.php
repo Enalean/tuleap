@@ -142,7 +142,7 @@ if ($request->valid($vOffset)) {
 
 $title = 'Disk usage';
 $GLOBALS['HTML']->includeCalendarScripts();
-$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('framed')));
+$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 echo '<h1>'.$title.'</h1>';
 
 echo '

@@ -185,7 +185,7 @@ if ($request->isPost()) {
     }
 }
 
-$HTML->header(array('title'=>$Language->getText('admin_usergroup','title'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_usergroup','title'), 'main_classes' => array('tlp-framed')));
 $hp = Codendi_HTMLPurifier::instance();
 ?>
 

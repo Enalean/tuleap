@@ -29,6 +29,7 @@
         </ul>
 
         <ul>
+            <li class="nav-item"><a href="#layout">Layout</a></li>
             <li class="nav-item active">
                 <a href="#colors">Colors</a>
                 <nav class="sub-nav">
@@ -103,6 +104,134 @@
     </nav>
 
     <main>
+        <section class="doc-section" id="layout">
+            <h2 class="doc-section-title">Layout</h2>
+
+            <div class="section-content">
+                <section class="doc-section">
+                    <h3 class="doc-subsection-title">Framed content <code class="code-inline">.tlp-framed</code></h3>
+
+                    <p>By default there isn't margins on the main container; this allows you to be able to use the full
+                        with of the viewport (for example when you use <a href="#tabs">tabs</a>).
+                    </p>
+
+                    <p>However most of the time you will need to add some margins (for example when you use
+                        <a href="#panes">panes</a>). This is achieving by using
+                        <code class="code-inline">.tlp-framed</code>.
+                    </p>
+
+                    <div class="demo">
+                        <div class="example example-layout"></div>
+                        <div class="code">
+                            <textarea>
+<div>
+    <main class="tlp-framed">
+        Framed content
+    </main>
+</div>
+</textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="doc-section">
+
+                    <p>Use <code class="code-inline">.tlp-framed-vertically</code> or
+                        <code class="code-inline">.tlp-framed-horizontally</code> if you need to add margin only at the
+                        top/bottom or to the left/right of the container.</p>
+
+                    <div class="demo">
+                        <div class="example example-layout"></div>
+                        <div class="code">
+                            <textarea>
+<div>
+    <main class="tlp-framed-vertically">
+        Vertically framed content
+    </main>
+</div>
+</textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="doc-section">
+
+                    <p>Use all of them to produce complex layout.
+                        <a href="javascript:toggleMargins('layout-complex-example');"
+                           class="tlp-button-secondary tlp-button-outline tlp-button-mini"
+                        >
+                            <i class="fa fa-eye-slash"></i> Show / hide margins
+                        </a>
+                    </p>
+
+                    <div class="demo">
+                        <div class="example example-layout example-hide-margins" id="layout-complex-example"></div>
+                        <div class="code">
+                            <textarea>
+<div>
+    <main class="tlp-framed-vertically">
+        <h1 class="tlp-framed-horizontally">My title</h1>
+        <nav class="tlp-tabs">
+            <a href="javascript:;" class="tlp-tab">First</a>
+            <a href="javascript:;" class="tlp-tab">Second</a>
+        </nav>
+        <div class="tlp-framed-horizontally">
+            <section class=" tlp-pane">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">My pane</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>Here goes the content of the pane.</p>
+                </section>
+            </section>
+        </div>
+    </main>
+</div>
+</textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="doc-section">
+                    <h3 class="doc-subsection-title">Centered content <code class="code-inline">.tlp-centered</code></h3>
+
+                    <p>In order to center content, you can use the
+                        <code class="code-inline">.tlp-centered</code> on the container.</p>
+
+                    <div class="demo">
+                        <div class="example example-layout"></div>
+                        <div class="code">
+                            <textarea>
+<div>
+    <main class="tlp-centered">
+        Centered content
+    </main>
+</div>
+</textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="doc-section">
+                    <p>You can also combine <code class="code-inline">.tlp-centered</code> with
+                        <code class="code-inline">.tlp-framed</code> to add margins.</p>
+
+                    <div class="demo">
+                        <div class="example example-layout"></div>
+                        <div class="code">
+                            <textarea>
+<div>
+    <main class="tlp-centered tlp-framed">
+        Framed and centered content
+    </main>
+</div>
+</textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
         <section class="doc-section" id="colors">
             <h2 class="doc-section-title">Colors</h2>
 

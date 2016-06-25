@@ -38,7 +38,7 @@ class IMViews extends Views {
         $group_id = $request->get('group_id');
 
         if ($this->getControler()->view == 'codendi_im_admin') {
-            $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'selected_top_tab' => 'admin', 'main_classes' => array('framed')));
+            $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
         } else {
             $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $group_id,'toptab' => 'IM'));
         	if (user_ismember($request->get('group_id'))) {

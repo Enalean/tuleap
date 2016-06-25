@@ -65,7 +65,7 @@ $template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_ev
 $renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 
 $title = $Language->getText('admin_system_events', 'title');
-$HTML->header(array('title' => $title, 'main_classes' => array('framed-vertically')));
+$HTML->header(array('title' => $title, 'main_classes' => array('tlp-framed-vertically')));
 
 $available_queues = array(
     SystemEventQueue::NAME => new SystemEventQueue()

@@ -11,7 +11,7 @@ require_once('pre.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_massmail','title'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_massmail','title'), 'main_classes' => array('tlp-framed')));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/MassMail.js');
 
 // get numbers of users for each mailing

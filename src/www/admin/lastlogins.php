@@ -19,7 +19,7 @@ $res_logins = db_query("SELECT session.user_id AS user_id,"
 	. "session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 5000");
 if (db_numrows($res_logins) < 1) exit_error("No records found","There must be an error somewhere.");
 
-$HTML->header(array('title'=>$Language->getText('admin_lastlogins','title'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_lastlogins','title'), 'main_classes' => array('tlp-framed')));
 
 print '<h1>'.$Language->getText('admin_lastlogins','recent').'</h1>';
 print '<table class="tlp-table">';

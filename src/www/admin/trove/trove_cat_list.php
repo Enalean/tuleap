@@ -47,7 +47,7 @@ function printnode($nodeid, $text, $depth = 0, $delete_ok = false) {
 
 // ########################################################
 
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title'), 'main_classes' => array('framed', 'centered')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title'), 'main_classes' => array('tlp-framed', 'tlp-centered')));
 
 echo "<h1>".$Language->getText('admin_trove_cat_list','header')."</h1>";
 

@@ -56,7 +56,7 @@ function register_valid(Codendi_Request $request) {
 // ###### first check for valid login, if so, congratulate
 $HTML->includeJavascriptFile('/scripts/check_pw.js');
 if (register_valid($request)) {
-    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed'), 'main_classes' => array('framed')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed'), 'main_classes' => array('tlp-framed')));
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header_changed'); ?></h3>
 <p><?php echo $Language->getText('admin_user_changepw','msg_changed'); ?></h3>
@@ -64,7 +64,7 @@ if (register_valid($request)) {
 <p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
 <?php
 } else { // not valid registration, or first time to page
-    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title'), 'main_classes' => array('framed')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title'), 'main_classes' => array('tlp-framed')));
 
     require_once('common/event/EventManager.class.php');
     $em =& EventManager::instance();

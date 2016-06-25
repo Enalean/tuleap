@@ -71,7 +71,7 @@ class NatureConfigController {
         $title  = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
         $params = array(
             'title'        => $title,
-            'main_classes' => array('framed-vertically')
+            'main_classes' => array('tlp-framed-vertically')
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
 

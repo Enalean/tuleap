@@ -140,11 +140,11 @@ if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING){
 }
 
 if (db_numrows($res) < 1) {
-    site_admin_header(array('title'=>$msg, 'main_classes' => array('framed')));
+    site_admin_header(array('title'=>$msg, 'main_classes' => array('tlp-framed')));
     echo $msg;
 } else {
 
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending_users','title'), 'main_classes' => array('framed')));
+    site_admin_header(array('title'=>$Language->getText('admin_approve_pending_users','title'), 'main_classes' => array('tlp-framed')));
 
     ?>
     <p><?php echo $Language->getText('admin_approve_pending_users','validate_notice'); ?>

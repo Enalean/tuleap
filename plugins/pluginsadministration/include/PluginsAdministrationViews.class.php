@@ -47,7 +47,7 @@ class PluginsAdministrationViews extends Views {
 
     public function header() {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
-        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin', 'main_classes' => array('framed')));
+        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
     }
 
     function footer() {

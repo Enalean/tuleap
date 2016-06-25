@@ -1,4 +1,4 @@
-<h1 class="framed-horizontally">{{ title }}</h1>
+<h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
 {{# sections }}
     <nav class="tlp-tabs">
@@ -7,7 +7,7 @@
     </nav>
 {{/ sections }}
 
-<form  class="framed-horizontally" method="POST" action="" id="siteadmin-config">
+<form  class="tlp-framed-horizontally" method="POST" action="" id="siteadmin-config">
     <input type="hidden" name="action" value="update-emailgateway" />
     {{{ csrf_token }}}
 

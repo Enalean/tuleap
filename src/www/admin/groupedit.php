@@ -100,7 +100,7 @@ if ($request->exist('export')) {
     exit;
 }
 
-site_admin_header(array('title'=>$Language->getText('admin_groupedit','title'), 'main_classes' => array('framed')));
+site_admin_header(array('title'=>$Language->getText('admin_groupedit','title'), 'main_classes' => array('tlp-framed')));
 
 echo '<H2>'.$group->getPublicName().'</H2>' ;?>
 

@@ -57,7 +57,7 @@ class SVN_Admin_Controller {
             ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor'
         );
 
-        $GLOBALS['HTML']->header(array('title'=>'SVN', 'selected_top_tab' => 'admin', 'main_classes' => array('framed')));
+        $GLOBALS['HTML']->header(array('title'=>'SVN', 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
         $renderer->renderToPage($presenter::TEMPLATE, $presenter);
         $GLOBALS['HTML']->footer(array());
     }

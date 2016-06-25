@@ -78,7 +78,7 @@ if ($res['numrows'] == 1) {
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-site_admin_header(array('title'=>$Language->getText('admin_grouplist','title'), 'main_classes' => array('framed')));
+site_admin_header(array('title'=>$Language->getText('admin_grouplist','title'), 'main_classes' => array('tlp-framed')));
 
 print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
 if ($group_name_search !="") {

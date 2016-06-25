@@ -46,7 +46,7 @@ class MediawikiSiteAdminController {
 
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
 
-        $GLOBALS['HTML']->header(array('title'=>'Mediawiki', 'selected_top_tab' => 'admin', 'main_classes' => array('framed')));
+        $GLOBALS['HTML']->header(array('title'=>'Mediawiki', 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
         $renderer->renderToPage($presenter::TEMPLATE, $presenter);
         $GLOBALS['HTML']->footer(array());
     }

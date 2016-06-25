@@ -18,7 +18,7 @@ if (!(user_isloggedin() && user_is_super_user())) {
 
 $legal_acceptance = $request->get('legal_acceptance');
 
-$HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name'])), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name'])), 'main_classes' => array('tlp-framed')));
 
 
     if ($legal_acceptance == 'ACCEPT') {

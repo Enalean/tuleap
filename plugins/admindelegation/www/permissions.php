@@ -121,7 +121,7 @@ if ($request->isPost()) {
 }
 
 
-$GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title'), 'main_classes' => array('framed')));
+$GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title'), 'main_classes' => array('tlp-framed')));
 echo '<h1>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title').'</h1>';
 
 echo '<h2>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_grant_user_title').'</h2>';

@@ -9,7 +9,7 @@ require_once('pre.php');
 require('./site_stats_utils.php');
 
 
-$HTML->header(array('title'=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name']), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name']), 'main_classes' => array('tlp-framed')));
 
    // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));

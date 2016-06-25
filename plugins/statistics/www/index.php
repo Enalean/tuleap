@@ -36,7 +36,7 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
 }
 
 $title = 'Various statistics';
-$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('framed')));
+$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 echo '<h1>'.$title.'</h1>';
 ?>
 

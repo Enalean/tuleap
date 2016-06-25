@@ -100,7 +100,7 @@ $func = $request->get('func');
 $group = $pm->getProject(1);
 $ath = new ArtifactTypeHtml($group);
 $HTML->includeCalendarScripts();
-$HTML->header(array('title'=>$Language->getText('tracker_admin_restore','pending_deletions'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('tracker_admin_restore','pending_deletions'), 'main_classes' => array('tlp-framed')));
 $atf = new ArtifactTypeFactory($group);
 $ath->displayPendingTrackers();
 $HTML->footer(array());

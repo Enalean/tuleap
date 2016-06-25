@@ -84,7 +84,7 @@ $em->processEvent('show_pending_documents', $params);
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title'), 'main_classes' => array('framed')));
+site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title'), 'main_classes' => array('tlp-framed')));
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">

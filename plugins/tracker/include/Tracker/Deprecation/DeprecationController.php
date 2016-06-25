@@ -38,7 +38,7 @@ class DeprecationController
         $title  = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title');
         $params = array(
             'title'        => $title,
-            'main_classes' => array('framed-vertically')
+            'main_classes' => array('tlp-framed-vertically')
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
         $presenter = new DeprecationPresenter($title, $this->getDeprecatedFields());

@@ -1,4 +1,4 @@
-<h1 class="framed-horizontally">{{ title }}</h1>
+<h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
 <nav class="tlp-tabs">
     <a class="tlp-tab {{ gerrit_active }}" href="?pane=gerrit_servers_admin">{{ gerrit_tab_name }}</a>
@@ -6,7 +6,7 @@
     <a class="tlp-tab {{ gitolite_config_active }}" href="?pane=gitolite_config">{{ gitolite_config_tab_name }}</a>
 </nav>
 
-<div class="framed-horizontally">
+<div class="tlp-framed-horizontally">
     {{# manage_gerrit }}
         <div>
             {{> admin-plugin-gerrit-server }}

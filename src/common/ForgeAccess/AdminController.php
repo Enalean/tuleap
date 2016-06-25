@@ -75,7 +75,7 @@ class ForgeAccess_AdminController {
         $title  = $GLOBALS['Language']->getText('admin_main', 'configure_access_controls');
         $params = array(
             'title'        => $title,
-            'main_classes' => array('framed')
+            'main_classes' => array('tlp-framed')
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 

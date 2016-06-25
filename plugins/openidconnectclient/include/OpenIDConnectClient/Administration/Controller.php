@@ -82,7 +82,7 @@ class Controller {
         $GLOBALS['HTML']->header(
             array(
                 'title'            => $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
-                'main_classes'     => array('framed'),
+                'main_classes'     => array('tlp-framed'),
                 'selected_top_tab' => 'admin'
             )
         );

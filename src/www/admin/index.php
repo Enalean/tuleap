@@ -291,7 +291,7 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 
 // Start output
-site_admin_header(array('title'=>$Language->getText('admin_main', 'title'), 'main_classes' => array('framed')));
+site_admin_header(array('title'=>$Language->getText('admin_main', 'title'), 'main_classes' => array('tlp-framed')));
 
 $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
 echo '<h1>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).' ('.$version.')'.'</h1>';

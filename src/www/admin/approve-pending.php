@@ -68,10 +68,10 @@ if ($action=='activate') {
 $res_grp = db_query("SELECT * FROM groups WHERE status='P' ORDER BY register_time");
 
 if (db_numrows($res_grp) < 1) {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending'), 'main_classes' => array('framed')));
+    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending'), 'main_classes' => array('tlp-framed')));
     echo $Language->getText('admin_approve_pending','no_pending');
 } else {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','title'), 'main_classes' => array('framed')));
+    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','title'), 'main_classes' => array('tlp-framed')));
     $pm = ProjectManager::instance();
     while ($row_grp = db_fetch_array($res_grp)) {
 

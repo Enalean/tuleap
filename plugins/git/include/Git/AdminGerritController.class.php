@@ -63,7 +63,7 @@ class Git_AdminGerritController {
             $this->getListOfGerritServersPresenters()
         );
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('framed-vertically')));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed-vertically')));
         $renderer->renderToPage('admin-plugin', $admin_presenter);
         $GLOBALS['HTML']->footer(array());
     }

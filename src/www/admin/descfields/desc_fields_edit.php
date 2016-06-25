@@ -133,7 +133,7 @@ if ($add_desc || $update) {
 }
 
 
-$HTML->header(array('title'=>$Language->getText('admin_desc_fields', 'title'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_desc_fields', 'title'), 'main_classes' => array('tlp-framed')));
 
 echo "<H2>".$Language->getText('admin_desc_fields','header')."</H2>";
 

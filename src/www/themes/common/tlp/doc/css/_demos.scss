@@ -24,6 +24,65 @@
     .example {
         width: 50%;
         margin: 0 10px 0 0;
+
+        .tlp-centered {
+            max-width: 400px;
+        }
+
+        &:not(.example-hide-margins) {
+            .tlp-framed-vertically,
+            .tlp-framed-horizontally {
+                position: relative;
+            }
+
+            .tlp-framed-vertically::before,
+            .tlp-framed-vertically::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                width: 100%;
+                height: 20px;
+            }
+
+            .tlp-framed-vertically::before {
+                top: 0;
+            }
+
+            .tlp-framed-vertically::after {
+                bottom: 0;
+            }
+
+            .tlp-framed-horizontally::before,
+            .tlp-framed-horizontally::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                width: 20px;
+                height: 100%;
+            }
+
+            .tlp-framed-horizontally::before {
+                left: 0;
+            }
+
+            .tlp-framed-horizontally::after {
+                right: 0;
+            }
+        }
+    }
+
+    .example-layout {
+        > div {
+            min-height: 300px;
+
+            > main {
+                height: 300px;
+
+                &:not(.tlp-centered) {
+                    margin: 0;
+                }
+            }
+        }
     }
 
     .code {

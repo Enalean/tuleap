@@ -33,23 +33,6 @@ body {
     background: $main-background;
 }
 
-.framed {
-    padding: $tlp-spacing;
-}
-
-.framed-horizontally {
-    padding: 0 $tlp-spacing;
-}
-
-.framed-vertically {
-    padding: $tlp-spacing 0;
-}
-
-.centered {
-    margin: 0 auto;
-    max-width: 1200px;
-}
-
 #feedback {
     margin: 0 0 $tlp-spacing;
 }

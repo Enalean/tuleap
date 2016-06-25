@@ -52,7 +52,7 @@ if ($request->exist('Submit')) {
 	session_redirect("/admin/trove/trove_cat_list.php");
 }
 
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_add','title'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_add','title'), 'main_classes' => array('tlp-framed')));
 
 $purifier = Codendi_HTMLPurifier::instance();
 $list_of_top_level_category_ids_purified = $purifier->purify(json_encode ($list_of_top_level_category_ids));
