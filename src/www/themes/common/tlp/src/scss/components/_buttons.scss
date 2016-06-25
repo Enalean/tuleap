@@ -17,31 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-button-radius: 4px;
+
 $tlp-button-color: #ffffff;
 $tlp-button-box-shadow: rgba(0, 0, 0, .12);
 $tlp-button-box-shadow-timing: 75ms;
 $tlp-button-background-timing: 75ms;
 
 $tlp-button-normal-height: 38px;
+$tlp-button-normal-line-height: 34px;
 $tlp-button-normal-font-size: 16px;
 $tlp-button-normal-font-weight: 400;
 $tlp-button-normal-padding: 0 15px;
+$tlp-button-normal-radius: 4px;
 
 $tlp-button-large-height: 46px;
+$tlp-button-large-line-height: 42px;
 $tlp-button-large-font-size: 22px;
 $tlp-button-large-font-weight: 400;
 $tlp-button-large-padding: 0 25px;
+$tlp-button-large-radius: 4px;
 
 $tlp-button-small-height: 28px;
+$tlp-button-small-line-height: 24px;
 $tlp-button-small-font-size: 14px;
 $tlp-button-small-font-weight: 400;
 $tlp-button-small-padding: 0 12px;
+$tlp-button-small-radius: 3px;
 
 $tlp-button-mini-height: 22px;
+$tlp-button-mini-line-height: 18px;
 $tlp-button-mini-font-size: 12px;
 $tlp-button-mini-font-weight: 600;
 $tlp-button-mini-padding: 0 8px;
+$tlp-button-mini-radius: 3px;
 
 $tlp-button-outline-hover-color: #fafafa;
 
@@ -58,12 +66,12 @@ $tlp-button-secondary-outline-color: #888888;
     padding: $tlp-button-normal-padding;
     transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
     border: 1px solid transparent;
-    border-radius: $tlp-button-radius;
+    border-radius: $tlp-button-normal-radius;
     color: $tlp-button-color;
     font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
     font-size: $tlp-button-normal-font-size;
     font-weight: $tlp-button-normal-font-weight;
-    line-height: normal;
+    line-height: $tlp-button-normal-line-height;
     text-decoration: none;
     white-space: nowrap;
     box-shadow: 0 1px 1px $tlp-button-box-shadow;
@@ -82,6 +90,14 @@ $tlp-button-secondary-outline-color: #888888;
         box-shadow: none;
         cursor: not-allowed;
         opacity: .6;
+    }
+
+    > .tlp-button-icon {
+        margin: 0 4px 0 0;
+    }
+
+    > .tlp-button-icon-right {
+        margin: 0 0 0 4px;
     }
 }
 
@@ -234,22 +250,28 @@ $tlp-button-secondary-outline-color: #888888;
 .tlp-button-large {
     height: $tlp-button-large-height;
     padding: $tlp-button-large-padding;
+    border-radius: $tlp-button-large-radius;
     font-size: $tlp-button-large-font-size;
     font-weight: $tlp-button-large-font-weight;
+    line-height: $tlp-button-large-line-height;
 }
 
 .tlp-button-small {
     height: $tlp-button-small-height;
     padding: $tlp-button-small-padding;
+    border-radius: $tlp-button-small-radius;
     font-size: $tlp-button-small-font-size;
     font-weight: $tlp-button-small-font-weight;
+    line-height: $tlp-button-small-line-height;
 }
 
 .tlp-button-mini {
     height: $tlp-button-mini-height;
     padding: $tlp-button-mini-padding;
+    border-radius: $tlp-button-mini-radius;
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
+    line-height: $tlp-button-mini-line-height;
 }
 
 /**

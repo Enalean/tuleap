@@ -88,6 +88,7 @@
                         <li class="nav-item sub-nav-item"><a href="#button-disabled">Button disabled</a></li>
                         <li class="nav-item sub-nav-item"><a href="#button-types">Button types</a></li>
                         <li class="nav-item sub-nav-item"><a href="#button-sizes">Button sizes</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#button-icons">Button icons</a></li>
                         <li class="nav-item sub-nav-item"><a href="#button-outline">Button outline</a></li>
                         <li class="nav-item sub-nav-item"><a href="#button-bar">Button bar</a></li>
                     </ul>
@@ -1419,7 +1420,7 @@ Semantics, a large language ocean.
 <div class="tlp-form-element tlp-form-element-append">
     <input type="email" class="tlp-input" id="email-append-button" name="email" placeholder="foxmulder@fbi.gov">
     <button type="button" class="tlp-append tlp-button-primary">
-        <i class="fa fa-send-o"></i> Send
+        <i class="fa fa-send-o tlp-button-icon"></i> Send
     </button>
 </div>
 
@@ -1428,7 +1429,7 @@ Semantics, a large language ocean.
     <div class="tlp-form-element tlp-form-element-append">
         <input type="password" class="tlp-input" id="password-append-button" name="password" placeholder="************">
         <button type="button" class="tlp-append tlp-button-primary tlp-button-outline">
-            <i class="fa fa-refresh"></i> Generate
+            <i class="fa fa-refresh tlp-button-icon"></i> Generate
         </button>
     </div>
 </div>
@@ -1444,7 +1445,7 @@ Semantics, a large language ocean.
 <div class="tlp-form-element tlp-form-element-append">
     <input type="email" class="tlp-input tlp-input-small" id="email-append-button" name="email" placeholder="foxmulder@fbi.gov">
     <button type="button" class="tlp-append tlp-append-small tlp-button-primary tlp-button-small">
-        <i class="fa fa-send-o"></i> Send
+        <i class="fa fa-send-o tlp-button-icon"></i> Send
     </button>
 </div>
 
@@ -1459,7 +1460,7 @@ Semantics, a large language ocean.
 <div class="tlp-form-element tlp-form-element-append">
     <input type="password" class="tlp-input tlp-input-large" id="password-append-button-large" name="password" placeholder="************">
     <button type="button" class="tlp-append tlp-append-large tlp-button-primary tlp-button-outline tlp-button-large">
-        <i class="fa fa-refresh"></i> Generate
+        <i class="fa fa-refresh tlp-button-icon"></i> Generate
     </button>
 </div>
 </textarea>
@@ -1566,6 +1567,42 @@ Semantics, a large language ocean.
 </button>
 <button type="button" class="tlp-button-primary tlp-button-mini">
     Mini
+</button>
+</textarea>
+                    </div>
+                </div>
+                </section>
+
+                <section class="doc-section" id="button-icons">
+                    <h3 class="doc-subsection-title">Buttons with icon <code class="code-inline">.tlp-button-icon</code></h3>
+                    <div class="demo">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary tlp-button-large">
+    <i class="fa fa-comments tlp-button-icon"></i> Comment
+</button>
+<button type="button" class="tlp-button-primary">
+    <i class="fa fa-comments tlp-button-icon"></i> Comment
+</button>
+<button type="button" class="tlp-button-primary tlp-button-small">
+    <i class="fa fa-comments tlp-button-icon"></i> Comment
+</button>
+<button type="button" class="tlp-button-primary tlp-button-mini">
+    <i class="fa fa-comments tlp-button-icon"></i> Comment
+</button>
+<br><br>
+<button type="button" class="tlp-button-primary tlp-button-large">
+    Send some <i class="fa fa-heart tlp-button-icon-right"></i>
+</button>
+<button type="button" class="tlp-button-primary">
+    Send some <i class="fa fa-heart tlp-button-icon-right"></i>
+</button>
+<button type="button" class="tlp-button-primary tlp-button-small">
+    Send some <i class="fa fa-heart tlp-button-icon-right"></i>
+</button>
+<button type="button" class="tlp-button-primary tlp-button-mini">
+    Send some <i class="fa fa-heart tlp-button-icon-right"></i>
 </button>
 </textarea>
                     </div>

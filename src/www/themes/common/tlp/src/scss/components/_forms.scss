@@ -291,6 +291,7 @@ $tlp-form-element-border-transition-duration: 150ms;
 
 .tlp-form-element-prepend {
     > .tlp-prepend {
+        flex: 0 0 auto;
         order: 1;
         border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
 
@@ -313,6 +314,7 @@ $tlp-form-element-border-transition-duration: 150ms;
 
 .tlp-form-element-append {
     > .tlp-append {
+        flex: 0 0 auto;
         order: 2;
         border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
 
