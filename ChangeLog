@@ -1,4 +1,11 @@
-Version 8.16 (Not yet release)
+Version 8.17 (not released yet)
+	== Development ==
+	* request #9278: Remove CentOS 5 packages
+
+    == Plugins ==
+	* git: 4.221
+
+Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
 	* request #8468: Unable to access svn immutable tags configuration with huge repository
 	* request #9208: When TLS is forced Tuleap must only create URL with HTTPS scheme
@@ -6,6 +13,8 @@ Version 8.16 (Not yet release)
 	* request #9220: Unable to import big xml project archive
 	* request #9222: Cannot add site admin as project member during import
 	* request #9254: Restricted users cannot access SVN plugin viewvc
+	* request #9266: Fatal error while importing scrum template
+	* request #9269: Fix the creation of new mailing list
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
@@ -30,9 +39,9 @@ Version 8.16 (Not yet release)
 	* request #9262: Check forgeupgrade for administrator only if enabled in development.inc
 
 	== Plugins ==
-	* git: 4.211
-	* agiledashboard: 1.384
-	* tracker: 5.928
+	* git: 4.220
+	* agiledashboard: 1.385
+	* tracker: 5.935
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.20
 	* svn: 0.60

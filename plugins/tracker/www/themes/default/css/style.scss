@@ -1266,6 +1266,10 @@ div.tracker-admin-field-controls {
     > .disabled_field {
         @extend .empty_value;
     }
+
+    .display-mass-change {
+        display: none;
+    }
 }
 
 .empty_value {
@@ -3285,4 +3289,8 @@ select[name='add_notempty_condition[]'] {
     .icon-flip-horizontal {
         margin: 0 5px 0 0;
     }
+}
+
+.add-field {
+    display: none;
 }

@@ -28,14 +28,32 @@ use Codendi_Request;
 use ProjectUGroup;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
+use PermissionsManager;
+use Git;
+use Feedback;
 
 class DefaultFineGrainedPermissionFactory
 {
+
+    /**
+     * @var FineGrainedPermissionSorter
+     */
+    private $sorter;
+
+    /**
+     * @var FineGrainedPatternValidator
+     */
+    private $validator;
 
     const ADD_BRANCH_PREFIX  = 'add-branch';
     const ADD_TAG_PREFIX     = 'add-tag';
     const EDIT_BRANCH_PREFIX = 'edit-branch';
     const EDIT_TAG_PREFIX    = 'edit-tag';
+
+    /**
+     * @var PermissionsManager
+     */
+    private $permissions_manager;
 
     /**
      * @var PermissionsNormalizer
@@ -52,11 +70,20 @@ class DefaultFineGrainedPermissionFactory
      */
     private $dao;
 
-    public function __construct(FineGrainedDao $dao, UGroupManager $ugroup_manager, PermissionsNormalizer $normalizer)
-    {
-        $this->dao            = $dao;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->normalizer     = $normalizer;
+    public function __construct(
+        FineGrainedDao $dao,
+        UGroupManager $ugroup_manager,
+        PermissionsNormalizer $normalizer,
+        PermissionsManager $permissions_manager,
+        FineGrainedPatternValidator $validator,
+        FineGrainedPermissionSorter $sorter
+    ) {
+        $this->dao                 = $dao;
+        $this->ugroup_manager      = $ugroup_manager;
+        $this->normalizer          = $normalizer;
+        $this->permissions_manager = $permissions_manager;
+        $this->validator           = $validator;
+        $this->sorter              = $sorter;
     }
 
     public function getUpdatedPermissionsFromRequest(Codendi_Request $request, Project $project)
@@ -270,7 +297,16 @@ class DefaultFineGrainedPermissionFactory
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {
-                if ($pattern === '') {
+                if (! $this->validator->isPatternValid($pattern)) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::WARN,
+                        $GLOBALS['Language']->getText(
+                            'plugin_git',
+                            'fine_grained_bad_pattern',
+                            $pattern
+                        )
+                    );
+
                     continue;
                 }
 
@@ -337,7 +373,7 @@ class DefaultFineGrainedPermissionFactory
             $permissions[$permission->getId()] = $permission;
         }
 
-        return $permissions;
+        return $this->sorter->sort($permissions);
     }
 
     public function getTagsFineGrainedPermissionsForProject(Project $project)
@@ -349,7 +385,7 @@ class DefaultFineGrainedPermissionFactory
             $permissions[$permission->getId()] = $permission;
         }
 
-        return $permissions;
+        return $this->sorter->sort($permissions);
     }
 
     /**
@@ -419,7 +455,7 @@ class DefaultFineGrainedPermissionFactory
             $writers   = $this->mapUgroup($permission->getWritersUgroup(), $ugroups_mapping);
             $rewinders = $this->mapUgroup($permission->getRewindersUgroup(), $ugroups_mapping);
 
-            $new_permissions[] = new DefaultFineGrainedPermissionRepresentation(
+            $new_permissions[] = new DefaultFineGrainedPermission(
                 0,
                 $new_project_id,
                 $permission->getPatternWithoutPrefix(),
@@ -461,6 +497,41 @@ class DefaultFineGrainedPermissionFactory
             $row['pattern'],
             $this->getWritersForPermission($permission_id),
             $this->getRewindersForPermission($permission_id)
+        );
+    }
+
+    public function getDefaultBranchesFineGrainedPermissionsForProject(Project $project)
+    {
+        return array(
+            $this->buildDefaultForProject($project)
+        );
+    }
+
+    public function getDefaultTagsFineGrainedPermissionsForProject(Project $project)
+    {
+        return array(
+            $this->buildDefaultForProject($project)
+        );
+    }
+
+    private function buildDefaultForProject(Project $project)
+    {
+        $writers = array();
+        foreach ($this->permissions_manager->getAuthorizedUgroupIds($project->getID(), Git::DEFAULT_PERM_WRITE) as $id) {
+            $writers[] = $this->ugroup_manager->getById($id);
+        }
+
+        $rewinders = array();
+        foreach ($this->permissions_manager->getAuthorizedUgroupIds($project->getID(), Git::DEFAULT_PERM_WPLUS) as $id) {
+            $rewinders[] = $this->ugroup_manager->getById($id);
+        }
+
+        return new DefaultFineGrainedPermission(
+            0,
+            $project->getID(),
+            '*',
+            $writers,
+            $rewinders
         );
     }
 }

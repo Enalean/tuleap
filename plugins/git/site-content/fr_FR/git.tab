@@ -469,7 +469,6 @@ plugin_git	default_access_control_missing	Veuillez définir les permissions d'É
 plugin_git	default_permissions_title	Permissions par défaut
 plugin_git	fine_grained_permissions_title	Permissions fines
 plugin_git	fine_grained_permissions_checkbox_label	Activer les permissions fines
-plugin_git	fine_grained_permissions_warning	Chers administrateurs, les permissions fines seront bientôt prises en compte.
 plugin_git	fine_grained_permissions_fork_warning	Veuillez noter que lorsque vous créez un fork d'un seul dépôt vers un autre projet, les groupes d'utilisateurs définis manuellement ne seront pas copiés.
 plugin_git	fine_grained_permissions_tags_title	Étiquettes
 plugin_git	fine_grained_permissions_branches_title	Branches
@@ -491,3 +490,4 @@ plugin_git	fine_grained_remove_confirm	Confirmer la suppression
 plugin_git	fine_grained_bad_request	La requête n'est pas valide.
 plugin_git	fine_grained_delete_ok	Permission suprimée avec succès.
 plugin_git	fine_grained_delete_error	Erreur lors de la suppression de la permission.
+plugin_git	fine_grained_bad_pattern	L'expression $1 n'est pas bien formée. Elle ne sera pas pris en compte.

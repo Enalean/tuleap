@@ -162,7 +162,7 @@ class ProjectXMLImporter {
         $this->logger->info('Start collecting errors from file ' . $xml_file_path);
 
         $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
-        $project = $this->getProject($project_id);
+        $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
 
         return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
     }

@@ -1,3 +1,33 @@
+Version 4.221 - Tuleap 8.17
+    * request #9287 A pattern must be in read only if no writers and rewinders
+
+Version 4.220 - Tuleap 8.16
+    * Take into account permission order
+
+Version 4.219 - Tuleap 8.16
+    * request #9275 Fatal error on project creation with fine grain perms in template
+
+Version 4.218 - Tuleap 8.16
+    * Sort fine-grained permissions
+
+Version 4.217 - Tuleap 8.16
+    * request #9272 Order of tags/branches permissions matters
+
+Version 4.216 - Tuleap 8.16
+    * request #9271 gitolite rule error when Nobody or nothing is selected
+
+Version 4.215 - Tuleap 8.16
+    * story #8419: Propagate fine-grained permissions to Gitolite
+
+Version 4.214 - Tuleap 8.16
+    * story #8419: Do not stack multiple REPO_UPDATE events
+
+Version 4.213 - Tuleap 8.16
+    * story #8419: Changing global writers or rewinders does not clear fine grained ugroups
+
+Version 4.212 - Tuleap 8.16
+    * story #8419: Enable default tag and branch permission on activation in git admin
+
 Version 4.211 - Tuleap 8.16
     * story #8419 have permissions per tags/branches (Enable default tag and branch permission on activation)
 

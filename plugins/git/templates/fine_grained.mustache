@@ -11,7 +11,9 @@
     </label>
 
     {{# are_fine_grained_permissions_defined }}
-        <p class="alert">{{ fine_grained_permissions_warning }}</p>
+        {{# is_fork }}
+            <p class="alert">{{ fine_grained_permissions_fork_warning }}</p>
+        {{/ is_fork }}
 
         <h4>{{ branches_title }}</h4>
         <table class="table table-bordered git-permission-table git-fine-grained-permissions-branch">

@@ -1265,19 +1265,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
             }
         }
 
-        if ($display) {
-            $html .= '<div id="warning-deprecated-field">';
-            $html .= '<p class="alert alert-warning">';
-            $html .=  $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'warning_deprecation_for_tracker');
-            $html .= '<a href="/plugins/tracker/?group_id='. urlencode($this->getGroupId()) .'&tracker='. urlencode($this->id) .'&func=hide-deprecated-fields">';
-            if ($removable_flag) {
-                $html .= '<button type="button" class="close" aria-hidden="true">&times;</button>';
-            }
-            $html .= ' </a>';
-            $html .= '</p>';
-            $html .= '</div>';
-        }
-
         echo $html;
     }
 

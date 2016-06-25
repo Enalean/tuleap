@@ -1,3 +1,6 @@
+Version 1.385 - Tuleap 8.16
+    * request #9267 Error with grunt-contrib-sass when using symlinked artifact-modal
+
 Version 1.384 - Tuleap 8.16
     * request #9206: Activate services at import
 

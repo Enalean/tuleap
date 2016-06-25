@@ -39,7 +39,9 @@ class FineGrainedPermissionFactoryTest extends TuleapTestCase
             $this->dao,
             $this->ugroup_manager,
             $this->normalizer,
-            mock('PermissionsManager')
+            mock('PermissionsManager'),
+            new FineGrainedPatternValidator(),
+            new FineGrainedPermissionSorter()
         );
 
         $this->repository = aGitRepository()->withId(43)->build();

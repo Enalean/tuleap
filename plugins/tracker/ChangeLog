@@ -1,3 +1,24 @@
+Version 5.935 - Tuleap 8.16
+    * Disable migration and edition of computed fields v2
+
+Version 5.934 - Tuleap 8.16
+    * story #9090: It is possible to edit a computed field while doing a mass change
+
+Version 5.933 - Tuleap 8.16
+    * story #9090 have computed fields compatible with artifact links v2 (Computation field calcul correction)
+
+Version 5.932 - Tuleap 8.16
+    * request #9265: The autocomputed value displayed when a manual value is set is always wrong
+
+Version 5.931 - Tuleap 8.16
+    * story #9090: Modal V1 add computed field on submit new artifact
+
+Version 5.930 - Tuleap 8.16
+    * You can switch to autocompute even when the current manual value of the computed field is 0
+
+Version 5.929 - Tuleap 8.16
+    * request #9264: A computed field that need to be migrated can't be updated by an admin
+
 Version 5.928 - Tuleap 8.16
     * SOAP API is compatible with the new computed fields.
 

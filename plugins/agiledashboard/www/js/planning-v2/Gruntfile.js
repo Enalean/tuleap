@@ -152,11 +152,13 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: '<%=  vendor_dir %>',
-                        src: ['**/*.css'],
-                        dest: '<%=  vendor_dir %>',
+                        follow: true,
+                        cwd   : '<%=  vendor_dir %>',
+                        src   : ['**/*.css'],
+                        dest  : '<%=  vendor_dir %>',
                         filter: 'isFile',
-                        ext: ".scss"
+                        ext   : ".scss",
+                        ignore: ['*/@(node_modules|vendor|coverage)/**/*']
                     }
                 ]
             }

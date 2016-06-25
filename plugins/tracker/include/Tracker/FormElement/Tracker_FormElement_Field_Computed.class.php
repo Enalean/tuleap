@@ -24,7 +24,7 @@ use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 
-class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
+class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float implements Tracker_FormElement_Field_ReadOnly
 {
     const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
     const FIELD_VALUE_MANUAL          = 'manual_value';
@@ -36,8 +36,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             'size'  => 40,
         ),
         'fast_compute' => array(
-            'value' => null,
-            'type'  => 'upgrade_button',
+            'value' => 0,
+            'type'  => 'checkbox',
         ),
     );
 
@@ -104,7 +104,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
-    private function useFastCompute() {
+    public function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
 
@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, array &$computed_artifact_ids = array()) {
         if ($this->useFastCompute()) {
-            return $this->getFastComputedValue($artifact->getId(), $timestamp);
+            return $this->getFastComputedValue($artifact->getId(), $timestamp, true);
         }
         $computed_artifact_ids[$artifact->getId()] = true;
 
@@ -131,16 +131,25 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
     }
 
+    private function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
+    {
+        return $this->getFastComputedValue($artifact->getId(), null, true);
+    }
+
     protected function getNoValueLabel()
     {
         return "<span class='empty_value auto-computed-label'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
     }
 
-    private function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user)
+    protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
-        $computed_value = $this->getComputedValue($user, $artifact);
+        if ($stop_on_manual_value) {
+            $computed_value = $this->getComputedValue($user, $artifact);
+        } else {
+            $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
+        }
 
-        return ($computed_value) ? $computed_value : $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
+        return ($computed_value !== null) ? $computed_value : $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
     }
 
     protected function processUpdate(
@@ -165,11 +174,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
             $formElement_data['specific_properties'] = $merged_specific_properties;
             $request->set('formElement_data', $formElement_data);
-
-            $GLOBALS['Response']->addFeedback(
-                'warning',
-                $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'warning_permissions', $this->getName())
-            );
         }
 
         parent::processUpdate(
@@ -189,7 +193,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         parent::afterCreate($formElement_data);
     }
 
-    protected function getFastComputedValue($artifact_id, $timestamp = null)
+    protected function getFastComputedValue($artifact_id, $timestamp = null, $stop_on_manual_value)
     {
         $sum                   = null;
         $target_field_name     = $this->getName();
@@ -200,7 +204,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             if ($timestamp !== null) {
                 $dar = $this->getDao()->getFieldValuesAtTimestamp($artifact_ids_to_fetch, $target_field_name, $timestamp, $this->getId());
             } else {
-                $dar = $this->getDao()->getComputedFieldValues($artifact_ids_to_fetch, $target_field_name, $this->getId());
+                $dar = $this->getDao()->getComputedFieldValues($artifact_ids_to_fetch, $target_field_name, $this->getId(), $stop_on_manual_value);
             }
 
             $current_fetch_artifact = $artifact_ids_to_fetch;
@@ -327,7 +331,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         $purifier       = Codendi_HTMLPurifier::instance();
         $current_user   = UserManager::instance()->getCurrentUser();
-        $computed_value = $this->getComputedValueWithNoLabel($artifact, $current_user);
+        $computed_value = $this->getComputedValueWithNoLabel($artifact, $current_user, false);
 
         $html  = '<div class="tracker_hidden_edition_field" data-field-id="' . $purifier->purify($this->getId()) . '">
                     <div class="input-append">';
@@ -385,7 +389,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function fetchComputedInputs($displayed_value, $is_autocomputed)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '<input type="number" step="any"
+        $html     = '<input type="text"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_MANUAL . ']"
             value="' . $purifier->purify($displayed_value) . '" />';
         $html    .= '<input type="hidden"
@@ -411,7 +415,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
     {
         $current_user   = UserManager::instance()->getCurrentUser();
-        $computed_value = $this->getComputedValue($current_user, $artifact);
+        $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
 
         if ($value !== null) {
             $value = $value->getValue();
@@ -484,18 +488,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->getValueForChangeset($changeset, $current_user);
     }
 
-    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         if ($this->userCanRead($user)) {
             $artifact     = $changeset->getArtifact();
-            $manual_value = $this->getManualValueForChangeset($changeset);
-            $field_value  = $manual_value;
-            if ($manual_value === null) {
-                $field_value = $this->getComputedValueWithNoLabel($artifact, $user);
-            }
+            $manual_value = $this->getComputedValueWithNoLabel($artifact, $user, false);
+
             return array(
                 'field_name'  => $this->getName(),
                 'field_label' => $this->getLabel(),
-                'field_value' => array('value' => (string) $field_value)
+                'field_value' => array('value' => (string) $manual_value)
             );
         }
         return null;
@@ -514,7 +516,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
             $manual_value === null,
-            $this->getComputedValue($user, $changeset->getArtifact()),
+            $this->getComputedValueWithNoStopOnManualValue($changeset->getArtifact()),
             $this->getManualValueForChangeset($changeset)
         );
         return $artifact_field_value_full_representation;
@@ -636,7 +638,43 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function fetchSubmitValue() {
     }
 
-    protected function fetchSubmitValueMasschange() {
+    public function fetchSubmitMasschange()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        if ($this->userCanUpdate()) {
+            $required = $this->isRequired() ? ' <span class="highlight">*</span>' : '';
+            $html    .= '<div class="field-masschange tracker_artifact_field tracker_artifact_field-computed editable"
+                         data-field-id="'. $purifier->purify($this->getId()) . '">';
+
+            $html    .= '<div class="edition-mass-change">';
+            $html    .= '<label for="tracker_artifact_' . $purifier->purify($this->getId()) . '"
+                        title="' . $purifier->purify($this->description) . '"  class="tracker_formelement_label">' .
+                        $purifier->purify($this->getLabel()) . $required . '</label>';
+            $html    .= '<div class=" input-append">';
+            $html    .= $this->fetchSubmitValueMasschange();
+            $html    .= '</div>';
+            $html    .= '</div>';
+
+            $html    .= '<div class="display-mass-change display-mass-change-hidden">';
+            $html    .= '<button class="tracker_formelement_edit edit-mass-change-autocompute" type="button">' .
+                        $purifier->purify($this->getLabel()) . $required . '</button>';
+            $html    .= '<span class="auto-computed">';
+            $html    .= $purifier->purify(ucfirst($GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field')));
+            $html    .= '</span>';
+            $html    .= '</div>';
+
+            $html    .= '</div>';
+        }
+        return $html;
+    }
+
+    protected function fetchSubmitValueMasschange()
+    {
+        $unchanged = $GLOBALS['Language']->getText('global','unchanged');
+        $html      = $this->fetchComputedInputs($unchanged, false);
+        $html     .= $this->fetchBackToAutocomputedButton(false);
+        return $html;
     }
 
     protected function getValueDao() {
@@ -749,9 +787,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function fetchSubmit() {
         return '';
-    }
-
-    public function fetchSubmitMasschange() {
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {

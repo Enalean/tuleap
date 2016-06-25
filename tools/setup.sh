@@ -456,11 +456,7 @@ EOF
 setup_mysql_cnf() {
     echo "Creating MySQL conf file..."
     local template_file
-    if [ "$RH_MAJOR_VERSION" = "5" ]; then
-	template_file="my.cnf.rhel5.dist"
-    else
 	template_file="my.cnf.rhel6.dist"
-    fi
 
     install_dist_conf "/etc/my.cnf" "$template_file"
     substitute "/etc/my.cnf" '%PROJECT_NAME%' "$PROJECT_NAME"

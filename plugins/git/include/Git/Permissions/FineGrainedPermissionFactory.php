@@ -29,9 +29,20 @@ use PermissionsNormalizerOverrideCollection;
 use Project;
 use PermissionsManager;
 use Git;
+use Feedback;
 
 class FineGrainedPermissionFactory
 {
+
+    /**
+     * @var FineGrainedPermissionSorter
+     */
+    private $sorter;
+
+    /**
+     * @var FineGrainedPatternValidator
+     */
+    private $validator;
 
     const ADD_BRANCH_PREFIX  = 'add-branch';
     const ADD_TAG_PREFIX     = 'add-tag';
@@ -62,12 +73,16 @@ class FineGrainedPermissionFactory
         FineGrainedDao $dao,
         UGroupManager $ugroup_manager,
         PermissionsNormalizer $normalizer,
-        PermissionsManager $permissions_manager
+        PermissionsManager $permissions_manager,
+        FineGrainedPatternValidator $validator,
+        FineGrainedPermissionSorter $sorter
     ) {
         $this->dao                 = $dao;
         $this->ugroup_manager      = $ugroup_manager;
         $this->normalizer          = $normalizer;
         $this->permissions_manager = $permissions_manager;
+        $this->validator           = $validator;
+        $this->sorter              = $sorter;
     }
 
     public function getUpdatedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
@@ -281,7 +296,16 @@ class FineGrainedPermissionFactory
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {
-                if ($pattern === '') {
+                if (! $this->validator->isPatternValid($pattern)) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::WARN,
+                        $GLOBALS['Language']->getText(
+                            'plugin_git',
+                            'fine_grained_bad_pattern',
+                            $pattern
+                        )
+                    );
+
                     continue;
                 }
 
@@ -348,7 +372,7 @@ class FineGrainedPermissionFactory
             $permissions[$permission->getId()] = $permission;
         }
 
-        return $permissions;
+        return $this->sorter->sort($permissions);
     }
 
     public function getTagsFineGrainedPermissionsForRepository(GitRepository $repository)
@@ -360,7 +384,7 @@ class FineGrainedPermissionFactory
             $permissions[$permission->getId()] = $permission;
         }
 
-        return $permissions;
+        return $this->sorter->sort($permissions);
     }
 
     /**

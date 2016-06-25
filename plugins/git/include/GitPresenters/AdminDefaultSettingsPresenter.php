@@ -283,14 +283,6 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         );
     }
 
-    public function fine_grained_permissions_warning()
-    {
-        return $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_warning'
-        );
-    }
-
     public function has_branches_permissions()
     {
         return count($this->branches_permissions) > 0;

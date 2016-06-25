@@ -1,3 +1,6 @@
+7.5 - Tuleap 8.16
+    * request #9202: Make Tuleap compatible with PHP 5.6
+
 7.4 - Tuleap 8.15
     * story #9088: remove project approval mail
 
@@ -48,7 +51,7 @@
 	Types
 	-----
 	* SvnPathDetails: complex type
-	* ArrayOfSvnPathDetails: complex type 
+	* ArrayOfSvnPathDetails: complex type
 
 5.2 - Tuleap 5.2
 	What's new?
@@ -77,12 +80,12 @@
 	Methods
 	-------
 	* checkUsersExistence: When used by a Restricted User, no longer returns info about users not members of a shared project.
-        
+
         What's new ?
 	============
         Methods
 	-------
-        * loginAs 
+        * loginAs
             xsd:string loginAs (xsd:string admin_session_hash, xsd:string login_name)
             Returns the session hash for user login_name
             Returns a soap fault if the admin_session_hash is not valid, if the login_name does not exist or if this login_name is not validated and if
@@ -127,7 +130,7 @@
 	  reference_md5 MD5 of the file you submit. If not blank, it will be compared to the value computed on the server and if values differ, an error will be raised.
 
 	* getFile no longer returns deleted files.
-	
+
 	What's new ?
 	============
 	FRS
@@ -141,7 +144,7 @@
 	    Returns a soap fault if the group ID does not match with a valid project, or if the package ID
 	    does not match with the right group ID, or if the release ID does not match with the right package ID,
 	    or if the file ID does not match with the right release ID.
-	
+
 	* getFileChunk
 	  xsd:string getFileChunk(xsd:string sessionKey, xsd:int group_id, xsd:int package_id, xsd:int release_id, xsd:int file_id, xsd:int offset, xsd:int size)
 	    Returns a part (chunk) of the <strong>content</strong>, encoded in base64, of the file contained in
@@ -158,7 +161,7 @@
 	    Returns the size of the written chunk if the chunk addition succeed.
 	    Returns a soap fault if the session is not valid
 	    or if the addition failed.'
-	
+
 	Docman
 	======
 	Methods
@@ -169,8 +172,8 @@
 	    item_id of a given version version_number, if the version is not specified it will be the current one, in the project group_id.
 	    Returns an error if the group ID does not match with a valid project, or if the item ID
 	    does not match with the right group ID, or if the version number does not match with the item ID.
-	
-	
+
+
 
 	Bug fix
 	=======

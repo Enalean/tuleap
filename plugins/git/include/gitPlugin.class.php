@@ -36,6 +36,8 @@ use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\FineGrainedPatternValidator;
+use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1287,7 +1289,19 @@ class GitPlugin extends Plugin {
     private function getDefaultFineGrainedPermissionFactory()
     {
         $dao = $this->getFineGrainedDao();
-        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager(), new PermissionsNormalizer());
+        return new DefaultFineGrainedPermissionFactory(
+            $dao,
+            $this->getUGroupManager(),
+            new PermissionsNormalizer(),
+            $this->getPermissionsManager(),
+            $this->getFineGrainedPatternValidator(),
+            $this->getFineGrainedPermissionSorter()
+        );
+    }
+
+    private function getFineGrainedPermissionSorter()
+    {
+        return new FineGrainedPermissionSorter();
     }
 
     /**
@@ -1311,7 +1325,7 @@ class GitPlugin extends Plugin {
     /**
      * @return FineGrainedUpdater
      */
-    private function getFineGrainedRetriever()
+    public function getFineGrainedRetriever()
     {
         $dao = $this->getFineGrainedDao();
         return new FineGrainedRetriever($dao);
@@ -1320,15 +1334,22 @@ class GitPlugin extends Plugin {
     /**
      * @return FineGrainedUpdater
      */
-    private function getFineGrainedFactory()
+    public function getFineGrainedFactory()
     {
         $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionFactory(
             $dao,
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
-            $this->getPermissionsManager()
+            $this->getPermissionsManager(),
+            $this->getFineGrainedPatternValidator(),
+            $this->getFineGrainedPermissionSorter()
         );
+    }
+
+    public function getFineGrainedPatternValidator()
+    {
+        return new FineGrainedPatternValidator();
     }
 
     public function getGitSystemEventManager() {
