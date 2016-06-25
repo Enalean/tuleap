@@ -533,12 +533,12 @@ class SystemEventManager {
                 $html .= '<td>'. $sysevent->getOwner() .'</td>';
 
                 //status
-                $html .= '<td class="system_event_status_'. $row['status'] .'"';
+                $html .= '<td ';
                 if ($sysevent->getLog()) {
-                    $html .= ' title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+                    $html .= 'title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
                 }
                 $html .= '>';
-                $html .= $sysevent->getStatus();
+                $html .= $this->getBadge($sysevent->getStatus());
                 $html .= '</td>';
 
                 if ($full) {
@@ -594,6 +594,31 @@ class SystemEventManager {
 
         }
         return $html;
+    }
+
+    private function getBadge($status)
+    {
+        switch ($status) {
+            case SystemEvent::STATUS_RUNNING:
+                $classname = 'info';
+                break;
+            case SystemEvent::STATUS_DONE:
+                $classname = 'success';
+                break;
+            case SystemEvent::STATUS_WARNING:
+                $classname = 'warning';
+                break;
+            case SystemEvent::STATUS_ERROR:
+                $classname = 'danger';
+                break;
+            case SystemEvent::STATUS_NONE:
+            case SystemEvent::STATUS_NEW:
+            default:
+                $classname = 'secondary';
+                break;
+        }
+
+        return '<span class="tlp-badge-'. $classname .'">'. $status .'</span>';
     }
 
     /**
