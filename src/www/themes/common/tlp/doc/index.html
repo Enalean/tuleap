@@ -953,6 +953,15 @@ Semantics, a large language ocean.
     <input type="text" class="tlp-input" id="username-error" name="username" placeholder="fox_mulder">
     <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
 </div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="username-small">Username small</label>
+    <input type="text" class="tlp-input tlp-input-small" id="username-small" name="username" placeholder="fox_mulder">
+</div>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="username-large">Username large</label>
+    <input type="text" class="tlp-input tlp-input-large" id="username-large" name="username" placeholder="fox_mulder">
+</div>
 </textarea>
                     </div>
                 </div>
@@ -969,6 +978,14 @@ Semantics, a large language ocean.
 
 <div class="tlp-form-element tlp-form-element-disabled">
     <input type="search" class="tlp-search" placeholder="People, project…" disabled>
+</div>
+
+<div class="tlp-form-element">
+    <input type="search" class="tlp-search tlp-search-small" placeholder="People, project…">
+</div>
+
+<div class="tlp-form-element">
+    <input type="search" class="tlp-search tlp-search-large" placeholder="People, project…">
 </div>
 </textarea>
                     </div>
@@ -1005,6 +1022,16 @@ Semantics, a large language ocean.
     <label class="tlp-label" for="description-error">Description error</label>
     <textarea type="text" class="tlp-textarea" id="description-error" name="description" placeholder="I want to believe">&lt;/textarea>
     <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="description-small">Description small</label>
+    <textarea type="text" class="tlp-textarea tlp-textarea-small" id="description-small" name="description" placeholder="I want to believe">&lt;/textarea>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="description-large">Description large</label>
+    <textarea type="text" class="tlp-textarea tlp-textarea-large" id="description-small" name="description" placeholder="I want to believe">&lt;/textarea>
 </div>
 </textarea>
                     </div>
@@ -1069,6 +1096,26 @@ Semantics, a large language ocean.
         <option value="area-58">Area 58</option>
     </select>
     <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-small">Area small</label>
+    <select class="tlp-select tlp-select-small" id="area-small" name="area">
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-large">Area large</label>
+    <select class="tlp-select tlp-select-large" id="area-large" name="area">
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53a">Area 53a</option>
+        <option value="area-58">Area 58</option>
+    </select>
 </div>
 </textarea>
                     </div>
@@ -1136,6 +1183,29 @@ Semantics, a large language ocean.
     </select>
     <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
 </div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-small">Types small</label>
+    <select class="tlp-select tlp-select-small" id="types-small" name="types[]" multiple>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-large">Types large</label>
+    <select class="tlp-select tlp-select-large" id="types-large" name="types[]" multiple>
+        <option value="sauce">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+</div>
+
 </textarea>
                     </div>
                 </div>
@@ -1278,6 +1348,36 @@ Semantics, a large language ocean.
         </button>
     </div>
 </div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="spaceship-prepend-small">Spaceship name prepend small</label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <input type="text" class="tlp-input tlp-input-small" id="spaceship-prepend-small" name="spaceship" placeholder="The big brown cigar">
+        <span class="tlp-prepend tlp-prepend-small"><i class="fa fa-rocket"></i></span>
+    </div>
+</div>
+
+<div class="tlp-form-element tlp-form-element-prepend">
+    <input type="email" class="tlp-input tlp-input-small" id="email-prepend-button" name="email" placeholder="foxmulder@fbi.gov">
+    <button type="button" class="tlp-prepend tlp-prepend-small tlp-button-primary tlp-button-small">
+        <i class="fa fa-send-o"></i> Send
+    </button>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="spaceship-prepend-large">Spaceship name prepend large</label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <input type="text" class="tlp-input tlp-input-large" id="spaceship-prepend-large" name="spaceship" placeholder="The big brown cigar">
+        <span class="tlp-prepend tlp-prepend-large"><i class="fa fa-rocket"></i></span>
+    </div>
+</div>
+
+<div class="tlp-form-element tlp-form-element-prepend">
+    <input type="password" class="tlp-input tlp-input-large" id="password-prepend-button" name="password" placeholder="************">
+    <button type="button" class="tlp-prepend tlp-prepend-large tlp-button-primary tlp-button-outline tlp-button-large">
+        <i class="fa fa-refresh"></i> Generate
+    </button>
+</div>
 </textarea>
                     </div>
                 </div>
@@ -1301,7 +1401,7 @@ Semantics, a large language ocean.
 <div class="tlp-form-element">
     <label class="tlp-label" for="spaceship-append">Spaceship price append</label>
     <div class="tlp-form-element tlp-form-element-append">
-        <input type="text" class="tlp-input" id="spaceship-append" name="spaceship" placeholder="1540">
+        <input type="number" class="tlp-input" id="spaceship-append" name="spaceship" placeholder="1540">
         <span class="tlp-append"><i class="fa fa-dollar"></i></span>
     </div>
     <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
@@ -1322,6 +1422,36 @@ Semantics, a large language ocean.
             <i class="fa fa-refresh"></i> Generate
         </button>
     </div>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="spaceship-append-small">Spaceship price append small</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <input type="number" class="tlp-input tlp-input-small" id="spaceship-append-small" name="spaceship" placeholder="1540">
+        <span class="tlp-append tlp-append-small"><i class="fa fa-dollar"></i></span>
+    </div>
+</div>
+
+<div class="tlp-form-element tlp-form-element-append">
+    <input type="email" class="tlp-input tlp-input-small" id="email-append-button" name="email" placeholder="foxmulder@fbi.gov">
+    <button type="button" class="tlp-append tlp-append-small tlp-button-primary tlp-button-small">
+        <i class="fa fa-send-o"></i> Send
+    </button>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="spaceship-append-large">Spaceship price append large</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <input type="number" class="tlp-input tlp-input-large" id="spaceship-append-large" name="spaceship" placeholder="1540">
+        <span class="tlp-append tlp-append-large"><i class="fa fa-dollar"></i></span>
+    </div>
+</div>
+
+<div class="tlp-form-element tlp-form-element-append">
+    <input type="password" class="tlp-input tlp-input-large" id="password-append-button-large" name="password" placeholder="************">
+    <button type="button" class="tlp-append tlp-append-large tlp-button-primary tlp-button-outline tlp-button-large">
+        <i class="fa fa-refresh"></i> Generate
+    </button>
 </div>
 </textarea>
                     </div>

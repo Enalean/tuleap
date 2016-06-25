@@ -18,7 +18,12 @@
  */
 
 $tlp-label-color: #666666;
+$tlp-form-element-font-size: 14px;
 $tlp-form-element-height: 38px;
+$tlp-form-element-small-font-size: 14px;
+$tlp-form-element-small-height: 28px;
+$tlp-form-element-large-font-size: 18px;
+$tlp-form-element-large-height: 46px;
 $tlp-form-element-border-radius: 3px;
 $tlp-form-element-border-color: #cccccc;
 $tlp-form-element-background: #ffffff;
@@ -95,13 +100,13 @@ $tlp-form-element-border-transition-duration: 150ms;
  */
 %tlp-form-element {
     display: block;
-    padding: 9px 12px 10px;
+    padding: 0 12px;
     transition: border-color $tlp-form-element-border-transition-duration linear;
     border: 1px solid $tlp-form-element-border-color;
     border-radius: $tlp-form-element-border-radius;
     background: $tlp-form-element-background;
     font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: $tlp-form-element-font-size;
 
     // scss-lint:disable VendorPrefix
     &::-webkit-input-placeholder,
@@ -119,37 +124,94 @@ $tlp-form-element-border-transition-duration: 150ms;
     @extend %tlp-form-element;
 
     height: $tlp-form-element-height;
+
+    &.tlp-input-small {
+        height: $tlp-form-element-small-height;
+        padding: 0 8px;
+        font-size: $tlp-form-element-small-font-size;
+    }
+
+    &.tlp-input-large {
+        height: $tlp-form-element-large-height;
+        padding: 0 16px;
+        font-size: $tlp-form-element-large-font-size;
+    }
 }
 
 .tlp-search {
     @extend %tlp-form-element;
 
     height: $tlp-form-element-height;
-    padding: 9px 15px 10px 33px;
+    padding: 0 15px 0 33px;
     border-radius: $tlp-form-element-height / 2;
-    background: url('images/tlp-search-background.png') no-repeat 13px center;
+    background: url('images/tlp-search-background.png') no-repeat;
+    background-position: 13px center;
 
     // scss-lint:disable VendorPrefix
     &::-webkit-search-decoration {
         display: none;
+    }
+
+    &.tlp-search-small {
+        height: $tlp-form-element-small-height;
+        padding: 0 10px 0 26px;
+        border-radius: $tlp-form-element-small-height / 2;
+        background: url('images/tlp-search-small-background.png') no-repeat;
+        background-position: 10px center;
+        font-size: $tlp-form-element-small-font-size;
+    }
+
+    &.tlp-search-large {
+        height: $tlp-form-element-large-height;
+        padding: 0 22px 0 40px;
+        border-radius: $tlp-form-element-large-height / 2;
+        background-position: 20px center;
+        font-size: $tlp-form-element-large-font-size;
     }
 }
 
 .tlp-textarea {
     @extend %tlp-form-element;
 
+    padding: 9px 12px;
     overflow: auto;
+
+    &.tlp-textarea-small {
+        padding: 4px 8px;
+        font-size: $tlp-form-element-small-font-size;
+    }
+
+    &.tlp-textarea-large {
+        padding: 12px 16px;
+        font-size: $tlp-form-element-large-font-size;
+    }
 }
 
 .tlp-select {
     @extend %tlp-form-element;
 
     height: $tlp-form-element-height;
-    padding: 8px (12px * 2 + 8px) 10px 12px;
-    background: url('images/tlp-select-background.png') no-repeat right 12px center;
+    padding: 0 (12px * 2 + 8px) 0 12px;
+    background: url('images/tlp-select-background.png') no-repeat;
+    background-position: right 12px center;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
+
+    &.tlp-select-small {
+        height: $tlp-form-element-small-height;
+        padding: 0 20px 0 8px;
+        background: url('images/tlp-select-small-background.png') no-repeat;
+        background-position: right 8px center;
+        font-size: $tlp-form-element-small-font-size;
+    }
+
+    &.tlp-select-large {
+        height: $tlp-form-element-large-height;
+        padding: 0 32px 0 14px;
+        background-position: right 12px center;
+        font-size: $tlp-form-element-large-font-size;
+    }
 
     &::-ms-expand {
         display: none;
@@ -157,8 +219,12 @@ $tlp-form-element-border-transition-duration: 150ms;
 
     &[multiple] {
         height: auto;
-        padding: 8px 12px 10px;
+        padding: 8px 12px;
         background: none;
+
+        &.tlp-select-small {
+            padding: 4px 8px;
+        }
     }
 }
 
@@ -185,10 +251,25 @@ $tlp-form-element-border-transition-duration: 150ms;
         transition: border-color $tlp-form-element-border-transition-duration linear;
         background: transparentize($tlp-theme-color, .95);
         color: $tlp-theme-color;
-        font-size: 12px;
+        font-size: $tlp-form-element-font-size;
         font-weight: 600;
         vertical-align: middle;
+
+        &.tlp-prepend-small,
+        &.tlp-append-small {
+            height: $tlp-form-element-small-height;
+            padding: 0 8px;
+            font-size: $tlp-form-element-small-font-size;
+        }
+
+        &.tlp-prepend-large,
+        &.tlp-append-large {
+            height: $tlp-form-element-large-height;
+            padding: 0 16px;
+            font-size: $tlp-form-element-large-font-size;
+        }
     }
+
 }
 
 .tlp-form-element-prepend {
