@@ -42,14 +42,18 @@
     updateAllHexaColors();
 
     function loadStylesheet(color) {
-        stylesheet.textContent = '';
-        var interval = setInterval(function() {
-            if (stylesheet.sheet.cssRules.length) {
-                updateAllHexaColors();
+        var new_stylesheet  = document.createElement('link');
+        new_stylesheet.rel  = 'stylesheet';
+        new_stylesheet.href = '../dist/tlp-' + color + '.min.css';
+        var interval = setInterval(function () {
+            if (new_stylesheet.sheet.cssRules.length) {
                 clearInterval(interval);
+                stylesheet.remove();
+                stylesheet = new_stylesheet;
+                updateAllHexaColors();
             }
         }, 10);
-        stylesheet.textContent = '@import "../dist/tlp-' + color + '.min.css"';
+        document.head.insertBefore(new_stylesheet, stylesheet.nextSibling);
     }
 
     function updateAllHexaColors() {
