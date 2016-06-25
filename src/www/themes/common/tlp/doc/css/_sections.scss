@@ -17,25 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$section-padding: 40px 0;
-$sub-section-padding: 10px 0;
 $section-title-color: #666666;
 $section-sub-title-color: #a5a5a5;
 $editor-scrollbar-color: rgba(241, 241, 241, .3);
 
 main {
     min-height: 100%;
-    margin: 10px 0 0;
+    margin: 40px 0 0;
 }
 
 .doc-section {
-    margin: 0 0 60px;
-    padding: $section-padding;
+    margin: 0 0 200px;
     border-radius: 3px;
 
     .doc-section {
-        margin: 0 0 40px;
-        padding: $sub-section-padding;
+        margin: 0 0 130px;
     }
 
     .code-inline {
