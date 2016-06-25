@@ -100,6 +100,7 @@ $tlp-form-element-border-transition-duration: 150ms;
  */
 %tlp-form-element {
     display: block;
+    width: 100%;
     padding: 0 12px;
     transition: border-color $tlp-form-element-border-transition-duration linear;
     border: 1px solid $tlp-form-element-border-color;
@@ -124,6 +125,10 @@ $tlp-form-element-border-transition-duration: 150ms;
     @extend %tlp-form-element;
 
     height: $tlp-form-element-height;
+
+    &[size] {
+        width: auto;
+    }
 
     &.tlp-input-small {
         height: $tlp-form-element-small-height;
@@ -152,6 +157,10 @@ $tlp-form-element-border-transition-duration: 150ms;
         display: none;
     }
 
+    &[size] {
+        width: auto;
+    }
+
     &.tlp-search-small {
         height: $tlp-form-element-small-height;
         padding: 0 10px 0 26px;
@@ -175,6 +184,10 @@ $tlp-form-element-border-transition-duration: 150ms;
 
     padding: 9px 12px;
     overflow: auto;
+
+    &[cols] {
+        width: auto;
+    }
 
     &.tlp-textarea-small {
         padding: 4px 8px;
@@ -225,6 +238,10 @@ $tlp-form-element-border-transition-duration: 150ms;
         &.tlp-select-small {
             padding: 4px 8px;
         }
+    }
+
+    &.tlp-select-adjusted {
+        width: auto;
     }
 }
 
