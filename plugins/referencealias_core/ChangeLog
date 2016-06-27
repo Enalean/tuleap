@@ -1,3 +1,6 @@
+Version 0.7 - Tuleap 8.17
+    * story #9282 take into account relXXXX reference
+
 Version 0.6 - Tuleap 8.15
     * story #9027 Preserve links at import (typo & i18n)
 
