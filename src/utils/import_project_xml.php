@@ -22,6 +22,7 @@
 require_once 'pre.php';
 
 use Tuleap\Project\XML\Import;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -36,6 +37,11 @@ $usage_options .= 'n:'; // give me a project name override
 $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'm:'; // give me the path of the user mapping file
+$usage_options .= 'h';  // help message
+$usage_long_options = array(
+    'force::',
+    'help'
+);
 
 function usage() {
     global $argv;
@@ -52,14 +58,21 @@ Import a project structure
   -m <path>       The path of the user mapping file
   -h              Display this help
 
+Long options:
+  --force=<something>  Force something. Supported values: references.
+  --help               Display this help
+
 EOT;
     exit(1);
 }
 
-$arguments = getopt($usage_options);
+$configuration = new ImportConfig();
 
-if (isset($arguments['h'])) {
+$arguments = getopt($usage_options, $usage_long_options);
+
+if (isset($arguments['h']) || isset($arguments['help'])) {
     usage();
+    exit(0);
 }
 
 if (! isset($arguments['p'])) {
@@ -90,6 +103,10 @@ if (! isset($arguments['m'])) {
     usage();
 } else {
     $mapping_path = $arguments['m'];
+}
+
+if (isset($arguments['force']) && trim($arguments['force']) != '') {
+    $configuration->setForce($arguments['force']);
 }
 
 if(empty($project_id) && posix_geteuid() != 0) {
@@ -147,9 +164,9 @@ try {
      if (empty($project_id)) {
         $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
         $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
-        $xml_importer->importNewFromArchive($archive, $system_event_runner, $project_name_override);
+        $xml_importer->importNewFromArchive($configuration, $archive, $system_event_runner, $project_name_override);
      } else {
-        $xml_importer->importFromArchive($project_id, $archive);
+        $xml_importer->importFromArchive($configuration, $project_id, $archive);
      }
 
     $archive->cleanUp();

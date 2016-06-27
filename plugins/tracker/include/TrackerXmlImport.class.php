@@ -20,6 +20,7 @@
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\XML\MappingsRegistry;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class TrackerXmlImport {
 
@@ -188,6 +189,7 @@ class TrackerXmlImport {
      * @return Tracker[]
      */
     public function import(
+        ImportConfig $configuration,
         Project $project,
         SimpleXMLElement $xml_input,
         MappingsRegistry $registery,
@@ -263,6 +265,7 @@ class TrackerXmlImport {
                 'service_name'    => 'tracker',
                 'xml_content'     => $xml_input->trackers->references,
                 'project'         => $project,
+                'configuration'   => $configuration,
             )
         );
 

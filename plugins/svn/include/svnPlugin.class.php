@@ -305,6 +305,7 @@ class SvnPlugin extends Plugin {
 
         $svn = new XMLImporter($xml, $extraction_path, $user_finder);
         $svn->import(
+            $params['configuration'],
             $logger,
             $project,
             $this->getRepositoryManager(),

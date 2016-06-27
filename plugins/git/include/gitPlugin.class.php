@@ -1790,6 +1790,6 @@ class GitPlugin extends Plugin {
             EventManager::instance()
         );
 
-        $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+        $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
     }
 }

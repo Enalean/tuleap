@@ -69,7 +69,7 @@ class referencealias_mediawikiPlugin extends Plugin
             $logger       = new WrapperLogger($params['logger'], 'ReferenceAliasMediawikiImporter');
             $created_refs = $params['created_refs'];
             $importer     = new ReferencesImporter($this->dao, $logger);
-            $importer->importCompatRefXML($project, $xml, $created_refs);
+            $importer->importCompatRefXML($params['configuration'], $project, $xml, $created_refs);
         }
     }
 

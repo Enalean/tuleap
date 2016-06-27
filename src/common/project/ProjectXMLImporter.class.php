@@ -21,6 +21,7 @@
 require_once "account.php";
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
+use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\MappingsRegistry;
 
 /**
@@ -84,7 +85,9 @@ class ProjectXMLImporter {
         );
     }
 
-    public function importNewFromArchive(ArchiveInterface $archive,
+    public function importNewFromArchive(
+        ImportConfig $configuration,
+        ArchiveInterface $archive,
         Tuleap\Project\SystemEventRunner $event_runner,
         $project_name_override = null)
     {
@@ -98,7 +101,7 @@ class ProjectXMLImporter {
 
         $project = $this->createProject($xml_element, $event_runner);
 
-        $this->importContent($project, $xml_element, $archive->getExtractionPath());
+        $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
     }
 
     private function createProject(SimpleXMLElement $xml,
@@ -121,27 +124,27 @@ class ProjectXMLImporter {
         return $project;
     }
 
-    public function importFromArchive($project_id, ArchiveInterface $archive) {
+    public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive) {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $this->importFromXMLIntoExistingProject($project_id, $xml_element, $archive->getExtractionPath());
+        $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
     }
 
-    public function import($project_id, $xml_file_path) {
+    public function import(ImportConfig $configuration, $project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
         $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
 
-        $this->importFromXMLIntoExistingProject($project_id, $xml_element, '');
+        $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, '');
     }
 
-    private function importFromXMLIntoExistingProject($project_id, SimpleXMLElement $xml_element, $extraction_path) {
+    private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path) {
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
         $this->activateServices($project, $xml_element);
 
-        $this->importContent($project, $xml_element, $extraction_path);
+        $this->importContent($configuration, $project, $xml_element, $extraction_path);
     }
 
     private function activateServices(Project $project, SimpleXMLElement $xml_element) {
@@ -167,7 +170,7 @@ class ProjectXMLImporter {
         return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
     }
 
-    private function importContent(Project $project, SimpleXMLElement $xml_element, $extraction_path) {
+    private function importContent(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_element, $extraction_path) {
         $this->logger->info("Importing project in project ".$project->getUnixName());
 
         $user_creator = $this->user_manager->getCurrentUser();
@@ -184,7 +187,7 @@ class ProjectXMLImporter {
             new XMLImportHelper($this->user_manager));
 
         $frs_release_mapping = array();
-        $frs->import($project, $xml_element, $extraction_path, $frs_release_mapping);
+        $frs->import($configuration, $project, $xml_element, $extraction_path, $frs_release_mapping);
 
         $mappings_registery = new MappingsRegistry();
         $mappings_registery->add($frs_release_mapping, FRSXMLImporter::MAPPING_KEY);
@@ -199,6 +202,7 @@ class ProjectXMLImporter {
                 'extraction_path'     => $extraction_path,
                 'user_finder'         => $this->user_finder,
                 'mappings_registery'  => $mappings_registery,
+                'configuration'       => $configuration,
             )
         );
 
