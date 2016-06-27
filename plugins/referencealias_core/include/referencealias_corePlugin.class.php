@@ -16,6 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @codingStandardsIgnoreFile
  */
 
 require_once 'autoload.php';
@@ -24,6 +26,7 @@ require_once 'constants.php';
 use Tuleap\ReferenceAliasCore\Dao;
 use Tuleap\ReferenceAliasCore\ReferencesImporter;
 use Tuleap\ReferenceAliasCore\ReferencesBuilder;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class referencealias_corePlugin extends Plugin
 {
@@ -80,7 +83,7 @@ class referencealias_corePlugin extends Plugin
             $logger       = new WrapperLogger($params['logger'], 'ReferenceAliasCoreImporter');
             $created_refs = $params['created_refs'];
             $importer     = new ReferencesImporter($this->dao, $logger);
-            $importer->importCompatRefXML($project, $xml, $created_refs);
+            $importer->importCompatRefXML($params['configuration'], $project, $xml, $created_refs);
         }
     }
 

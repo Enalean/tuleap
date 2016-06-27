@@ -85,8 +85,7 @@ class referencealias_trackerPlugin extends Plugin
             $logger       = new WrapperLogger($params['logger'], 'ReferenceAliasTrackerImporter');
             $created_refs = $params['created_refs'];
             $importer     = new ReferencesImporter($this->dao, $logger);
-            $importer->importCompatRefXML($project, $xml, $created_refs);
-            echo "Import compat ref xml tracker";
+            $importer->importCompatRefXML($params['configuration'], $project, $xml, $created_refs);
         }
     }
 

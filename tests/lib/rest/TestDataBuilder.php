@@ -279,7 +279,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             new ProjectXMLImporterLogger()
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->import($project_id, $this->template_path.$template);
+        $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);
     }
 
     public function deleteTracker() {

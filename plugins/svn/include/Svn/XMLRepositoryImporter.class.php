@@ -29,6 +29,7 @@ use EventManager;
 use SystemEventManager;
 use System_Command_CommandException;
 use SVN_AccessFile_Writer;
+use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
@@ -81,6 +82,7 @@ class XMLRepositoryImporter
     }
 
     public function import(
+        ImportConfig $configuration,
         Logger $logger,
         Project $project,
         RepositoryManager $repository_manager,
@@ -123,7 +125,7 @@ class XMLRepositoryImporter
         }
 
         if (! empty($this->references)) {
-            $this->importReferences($logger, $repo);
+            $this->importReferences($configuration, $logger, $repo);
         }
     }
 
@@ -192,7 +194,7 @@ class XMLRepositoryImporter
         }
     }
 
-    private function importReferences(Logger $logger, Repository $repo)
+    private function importReferences(ImportConfig $configuration, Logger $logger, Repository $repo)
     {
         EventManager::instance()->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
@@ -204,6 +206,7 @@ class XMLRepositoryImporter
                 'service_name'   => self::SERVICE_NAME,
                 'xml_content'    => $this->references,
                 'project'        => $repo->getProject(),
+                'configuration'  => $configuration,
             )
         );
     }

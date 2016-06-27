@@ -134,7 +134,7 @@ XML;
         $this->package_dao->expectCallCount('createFromArray', 1);
 
         $frs_mapping = array();
-        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
     public function itShouldImportOnePackageWithOneRelease() {
@@ -181,7 +181,7 @@ XML;
         $this->release_dao->expectCallCount('createFromArray', 1);
 
         $frs_mapping = array();
-        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
     public function itShouldImportOnePackageWithOneReleaseLinkedToAnArtifact() {
@@ -216,7 +216,7 @@ XML;
         stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
 
         $frs_mapping = array();
-        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
 
         $this->assertArrayNotEmpty($frs_mapping);
         $this->assertEqual($frs_mapping[47], 'A101');
@@ -324,7 +324,7 @@ XML;
         stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
 
         $frs_mapping = array();
-        $this->frs_importer->import($project, $xml_element, $extraction_path, $frs_mapping);
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
     }
 
     private function getDefaultPackage($name) {
@@ -379,7 +379,7 @@ XML;
         expect($project_ugroup)->addUser($user)->once();
 
         $frs_mapping = array();
-        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
     public function itShouldNotImportAdministratorsIfNotMemberOfTheProject() {
@@ -413,6 +413,6 @@ XML;
         expect($project_ugroup)->addUser()->once();
 
         $frs_mapping = array();
-        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 }

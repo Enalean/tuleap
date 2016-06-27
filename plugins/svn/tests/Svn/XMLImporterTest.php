@@ -45,6 +45,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\RuleName;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class TestBackendSVN extends BackendSVN {
     private $tc; ///< @var XMLImporterTest
@@ -158,6 +159,7 @@ class XMLImporterTest extends TuleapTestCase {
 
     private function callImport(XMLImporter $importer, Project $project) {
         return $importer->import(
+            new ImportConfig(),
             $this->logger,
             $project,
             $this->repomgr,
