@@ -10,6 +10,7 @@ frs =
             element ugroup { ugroup_name }*
         } &
         element release {
+            attribute id   { xsd:integer }? &
             attribute name { xsd:string } &
             attribute time { xsd:dateTime } &
             attribute preformatted { xsd:boolean } &
