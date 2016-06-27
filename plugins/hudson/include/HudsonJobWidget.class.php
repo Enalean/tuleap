@@ -62,18 +62,20 @@ abstract class HudsonJobWidget extends HudsonWidget {
         
         $only_one_job = (count($jobs) == 1);
 	    foreach ($jobs as $job_id => $job) {
-	      	$selected = ($only_one_job)?'checked="checked"':'';
-	        $prefs .= '<input type="radio" name="' . $this->widget_id . '_job_id" value="'.$job_id.'" ' . $selected . '> ' . $job->getName() ;
-	        if (in_array($job_id, $selected_jobs_id)) {
-	        	$prefs .= ' <em>('. $GLOBALS['Language']->getText('widget_add', 'already_used') .')</em>';
-	        }
-	        $prefs .= '<br />';
+                $selected = ($only_one_job)?'checked="checked"':'';
+                $prefs .= '<input type="radio" name="' . $this->widget_id . '_job_id" value="'.$job_id.'" ' . $selected . '> ' . $job->getName() ;
+                if (in_array($job_id, $selected_jobs_id)) {
+                        $prefs .= ' <em>('. $GLOBALS['Language']->getText('widget_add', 'already_used') .')</em>';
+                }
+                $prefs .= '<br />';
 	    }
         return $prefs;
     }
+
     function hasPreferences() {
         return true;
     }
+
     function getPreferences() {
         $prefs  = '';
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';
