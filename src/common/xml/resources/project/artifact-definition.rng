@@ -132,6 +132,7 @@
       <ref name="field_int"/>
       <ref name="field_float"/>
       <ref name="field_date"/>
+      <ref name="field_computed"/>
       <ref name="field_file"/>
       <ref name="field_art_link"/>
       <ref name="field_static_list"/>
@@ -195,6 +196,32 @@
         <ref name="date_content"/>
       </optional>
     </element>
+  </define>
+  <define name="field_computed">
+    <attribute name="type">
+      <value>computed</value>
+    </attribute>
+    <optional>
+      <element name="value">
+        <optional>
+          <data type="float"/>
+        </optional>
+      </element>
+    </optional>
+    <optional>
+      <element name="manual_value">
+        <optional>
+          <data type="float"/>
+        </optional>
+      </element>
+    </optional>
+    <optional>
+      <element name="is_autocomputed">
+        <optional>
+          <data type="boolean"/>
+        </optional>
+      </element>
+    </optional>
   </define>
   <define name="field_file">
     <attribute name="type">

@@ -77,7 +77,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
-
         $previous_changeset = $artifact->getLastChangeset();
 
         /*

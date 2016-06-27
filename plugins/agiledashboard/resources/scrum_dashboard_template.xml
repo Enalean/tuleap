@@ -898,12 +898,10 @@
                 <formElement type="computed" ID="F859" rank="1">
                   <name>capacity</name>
                   <label><![CDATA[Capacity]]></label>
-                  <properties target_field_name="capacity" fast_compute="1"/>
                 </formElement>
                 <formElement type="computed" ID="F860" rank="2">
                   <name>remaining_effort</name>
                   <label><![CDATA[Remaining effort]]></label>
-                  <properties target_field_name="remaining_effort" fast_compute="1"/>
                 </formElement>
               </formElements>
             </formElement>
@@ -1080,7 +1078,6 @@
                   <name>remaining_effort</name>
                   <label><![CDATA[Total Remaining Effort]]></label>
                   <description><![CDATA[Sum of the remaining efforts of sprint's artifacts]]></description>
-                  <properties target_field_name="remaining_effort" fast_compute="1"/>
                 </formElement>
               </formElements>
             </formElement>

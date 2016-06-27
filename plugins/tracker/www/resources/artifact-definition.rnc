@@ -59,6 +59,7 @@ artifact =
             | field_int
             | field_float
             | field_date
+            | field_computed
             | field_file
             | field_art_link
             | field_static_list
@@ -89,6 +90,12 @@ artifact =
     field_date =
         attribute type { "date" },
         element value { date_content? }
+
+    field_computed =
+        attribute type { "computed" },
+        element value { xsd:float? }?,
+        element manual_value { xsd:float? }?,
+        element is_autocomputed { xsd:boolean? }?
 
     field_file =
         attribute type { "file" },

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
+
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
  */
@@ -33,6 +35,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     const FIELDTYPE_OPENLIST          = 'open_list';
     const FIELDTYPE_LIST              = 'list';
     const FIELDTYPE_ARTIFACT_LINK     = 'art_link';
+    const FIELDTYPE_COMPUTED          = 'computed';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -90,7 +93,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
                 $user_finder,
                 $xml_fields_mapping
             ),
-            self::FIELDTYPE_ARTIFACT_LINK => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($artifact_id_mapping, $logger)
+            self::FIELDTYPE_ARTIFACT_LINK => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($artifact_id_mapping, $logger),
+            self::FIELDTYPE_COMPUTED      => new XMLImportFieldStrategyComputed()
         );
     }
 

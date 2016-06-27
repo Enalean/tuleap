@@ -33,16 +33,19 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         
         $target_field_name = '';
         if (isset($row['target_field_name'])) {
-            $target_field_name = $this->da->quoteSmart($row['target_field_name']);
+            $target_field_name = $row['target_field_name'];
         }
+        $target_field_name = $this->da->quoteSmart($target_field_name);
 
         $fast_compute = 0;
         if (isset($row['fast_compute'])) {
-            $fast_compute = $this->da->escapeInt($row['fast_compute']);
+            $fast_compute = $row['fast_compute'];
         }
+        $fast_compute = $this->da->escapeInt($fast_compute);
 
         $sql = "REPLACE INTO $this->table_name (field_id, target_field_name, fast_compute)
                 VALUES ($field_id, $target_field_name, $fast_compute)";
+
         return $this->retrieve($sql);
     }
     

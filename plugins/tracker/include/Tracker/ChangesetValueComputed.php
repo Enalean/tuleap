@@ -23,9 +23,18 @@ namespace Tuleap\Tracker\Artifact;
 use Tracker_Artifact_ChangesetValue_Float;
 use PFUser;
 use Codendi_HTMLPurifier;
+use Tracker_Artifact_ChangesetValueVisitor;
 
 class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
 {
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
+        return $visitor->visitComputed($this);
+    }
 
     /**
      * Returns the value of this changeset value (integer)
