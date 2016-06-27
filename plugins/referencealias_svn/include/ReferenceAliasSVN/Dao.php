@@ -33,7 +33,7 @@ class Dao extends DataAccessObject
         $repository_id = $this->da->escapeInt($repository_id);
         $revision_id   = $this->da->escapeInt($revision_id);
 
-        $sql = "INSERT INTO plugin_referencealias_svn(source, repository_id, revision_id)
+        $sql = "REPLACE INTO plugin_referencealias_svn(source, repository_id, revision_id)
                 VALUES ($source, $repository_id, $revision_id)";
 
         return $this->update($sql);

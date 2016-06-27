@@ -33,8 +33,8 @@ class Dao extends DataAccessObject
         $source     = $this->da->quoteSmart($source);
         $target     = $this->da->quoteSmart($target);
 
-        $sql = "INSERT INTO plugin_referencealias_tracker_table
-                VALUES($source, $project_id, $target)";
+        $sql = "REPLACE INTO plugin_referencealias_tracker_table(source, project_id, target)
+                VALUES ($source, $project_id, $target)";
 
         return $this->update($sql);
     }
