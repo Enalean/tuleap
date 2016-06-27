@@ -61,12 +61,16 @@ class SystemEventResource extends AuthenticatedResource
      * @url GET
      * @access protected
      *
+     * @param string $status Number of elements displayed per page {@from path} {@choice new,done,warning,error,running}
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     *
      * @throw 403
      * @throw 406
      *
      * @return array {@type Tuleap\SystemEvent\REST\v1\SystemEventRepresentation}
      */
-    protected function get($limit = 10, $offset = 0)
+    protected function get($status = null, $limit = 10, $offset = 0)
     {
         $this->checkAccess();
         $this->checkUserIsSuperAdmin();
@@ -75,7 +79,7 @@ class SystemEventResource extends AuthenticatedResource
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $paginated_representation = $this->representation_builder->getAllMatchingEvents($limit, $offset);
+        $paginated_representation = $this->representation_builder->getAllMatchingEvents($status, $limit, $offset);
 
         $this->sendAllowHeadersForProject();
         $this->sendPaginationHeaders($limit, $offset, $paginated_representation->getTotalSize());
