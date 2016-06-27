@@ -93,7 +93,7 @@ class ArtifactTest extends RestBase {
 
             $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($response->getStatusCode(), 201);
         $artifact_xml = $response->xml();
 
         $artifact_id = (int) $artifact_xml->id;
@@ -122,7 +122,7 @@ class ArtifactTest extends RestBase {
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($response->getStatusCode(), 201);
         $artifact_xml = $response->xml();
 
         $artifact_id = (int) $artifact_xml->id;
@@ -203,7 +203,7 @@ class ArtifactTest extends RestBase {
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($response->getStatusCode(), 201);
         $artifact_xml = $response->xml();
 
         $artifact_id = (int) $artifact_xml->id;
