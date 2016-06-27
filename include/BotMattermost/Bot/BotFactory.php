@@ -21,6 +21,7 @@ namespace Tuleap\BotMattermost\Bot;
 
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
+use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
@@ -43,10 +44,7 @@ class BotFactory
         $bot_avatar_url,
         $bot_channels_names
     ) {
-        $channels_names = array_map(
-            'trim',
-            explode(PHP_EOL, $bot_channels_names)
-        );
+        $channels_names = $this->convertChannelsToArray($bot_channels_names);
         if (! $this->doesBotAlreadyExist($bot_name, $bot_webhook_url)) {
             $id = $this->dao->addBotAndChannels(
                 trim($bot_name),
@@ -70,10 +68,33 @@ class BotFactory
         );
     }
 
+    public function update(
+        $bot_name,
+        $bot_webhook_url,
+        $bot_avatar_url,
+        $bot_channels_names,
+        $bot_id
+    ) {
+        $channels_names = $this->convertChannelsToArray($bot_channels_names);
+        if (! $this->dao->updateBotAndChannels(
+            $channels_names,
+            trim($bot_name),
+            trim($bot_webhook_url),
+            trim($bot_avatar_url),
+            $bot_id
+        )) {
+            throw new CannotUpdateBotException();
+        }
+}
+
+    private function convertChannelsToArray($bot_channels_names)
+    {
+        return array_map('trim', explode(PHP_EOL, $bot_channels_names));
+    }
+
     public function deleteBotById($id)
     {
-        $dar = $this->dao->deleteBotAndChannelsByBotId($id);
-        if ($dar === false) {
+        if (! $this->dao->deleteBotAndChannelsByBotId($id)) {
             throw new CannotDeleteBotException();
         }
     }

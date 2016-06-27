@@ -25,14 +25,15 @@ use CSRFSynchronizerToken;
 use TemplateRendererFactory;
 use Feedback;
 use Valid_HTTPURI;
+use Valid_Numeric;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
+use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
-use Tuleap\BotMattermost\Presenter\adminPresenter;
-use Tuleap\BotMattermost\Presenter\adminAddBotPresenter;
+use Tuleap\BotMattermost\AdminPresenter;
 
 class AdminController
 {
@@ -49,16 +50,17 @@ class AdminController
     public function process(HTTPRequest $request)
     {
         if ($request->getCurrentUser()->isSuperUser()) {
+
             $action = $request->get('action');
             switch ($action) {
                 case 'add_bot':
                     $this->addBot($request);
                     break;
+                case 'edit_bot':
+                    $this->editBot($request);
+                    break;
                 case 'delete_bot':
                     $this->deleteBot($request);
-                    break;
-                case 'show_add_bot':
-                    $this->showAddBot($request);
                     break;
                 default:
                     $this->displayIndex();
@@ -83,19 +85,10 @@ class AdminController
         }
     }
 
-    private function displayAddBot()
-    {
-        $renderer = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_BASE_DIR.'/template');
-
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name')));
-        $renderer->renderToPage('addBot', new adminAddBotPresenter($this->csrf));
-        $GLOBALS['HTML']->footer(array());
-    }
-
     private function addBot(HTTPRequest $request)
     {
         $this->csrf->check();
-        if ($this->validPostArgumentForAddBot($request)) {
+        if ($this->validPostArgument($request)) {
             try {
                 $this->bot_factory->save(
                         $request->get('bot_name'),
@@ -116,21 +109,40 @@ class AdminController
     private function deleteBot(HTTPRequest $request)
     {
         $this->csrf->check();
-        try {
-            $this->bot_factory->deleteBotById($request->get('id'));
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost','alert_success_delete_bot'));
-        } catch (CannotDeleteBotException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+        $id = $request->get('bot_id');
+        if ($this->validBotId($id)) {
+            try {
+                $this->bot_factory->deleteBotById($id);
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost','alert_success_delete_bot'));
+            } catch (CannotDeleteBotException $e) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+            }
         }
         $this->displayIndex();
     }
 
-    private function showAddBot(HTTPRequest $request)
+    private function editBot(HTTPRequest $request)
     {
-        $this->displayAddBot();
+        $this->csrf->check();
+        $id = $request->get('bot_id');
+        if ($this->validPostArgument($request) && $this->validBotId($id)) {
+            try {
+                $this->bot_factory->update(
+                    $request->get('bot_name'),
+                    $request->get('webhook_url'),
+                    $request->get('avatar_url'),
+                    $request->get('channels_names'),
+                    $id
+                );
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_edit_bot'));
+            } catch (CannotUpdateBotException $e) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+            }
+        }
+        $this->displayIndex();
     }
 
-    private function validPostArgumentForAddBot(HTTPRequest $request)
+    private function validPostArgument(HTTPRequest $request)
     {
         if (! $request->existAndNonEmpty('bot_name') || ! $request->existAndNonEmpty('webhook_url')) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_empty_input'));
@@ -158,6 +170,17 @@ class AdminController
             return true;
         } else {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_url'));
+            return false;
+        }
+    }
+
+    private function validBotId($id)
+    {
+
+        if ($this->bot_factory->getBotById($id)) {
+            return true;
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_id'));
             return false;
         }
     }

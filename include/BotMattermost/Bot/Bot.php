@@ -71,4 +71,9 @@ class Bot {
     {
         return implode(' | ', $this->channels_names);
     }
+
+    public function getOneChannelNamePerRow()
+    {
+        return implode(PHP_EOL, $this->channels_names);
+    }
 }

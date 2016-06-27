@@ -1,0 +1,37 @@
+<div id="admin-config-bot-add"
+    class="modal hide fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="admin-config-bot-add-title"
+    aria-hidden="true"
+>
+
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+        <h3 id="configuration-edit-bot-title">{{ modal_add_title }}</h3>
+    </div>
+
+    <form method="POST" action="?action=add_bot" >
+        {{{ csrf_input }}}
+
+        <div class="modal-body">
+            <label for="bot-mattermost-name">{{ label_bot_name }}</label>
+            <input id="bot-mattermost-name" type="text" name="bot_name" placeholder= "{{ input_bot_name }}" required>
+
+            <label for="bot-mattermost-webhook-url">{{ label_hook_url }}</label>
+            <input id="bot-mattermost-webhook-url" type="url" name="webhook_url" placeholder="{{ input_url }}" required pattern="{{ pattern_url }}">
+
+            <label for="bot-mattermost-avatar-url">{{ label_avatar_url }}</label>
+            <input id="bot-mattermost-avatar-url" type="url" name="avatar_url" placeholder="{{ input_url }}" pattern="{{ pattern_url }}">
+
+            <label for="bot-mattermost-channels-names">{{ label_channels_names }}</label>
+            <textarea id="bot-mattermost-channels-names" type="text" name="channels_names" rows="3"></textarea>
+            <div><span class="bot-mattermost-modal-help-info">{{ text_area_channels_names_help }}</span></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ button_close }}</button>
+            <button type="submit" class="btn btn-primary">{{ button_submit }}</button>
+        </div>
+    </form>
+
+</div>

@@ -4,18 +4,24 @@ plugin_botmattermost	descriptor_name	Bot Mattermost
 
 plugin_botmattermost	alert_success_add_bot	Bot added successfully
 plugin_botmattermost	alert_success_delete_bot	Bot successfully deleted
+plugin_botmattermost	alert_success_edit_bot	Bot successfully edited
 
 plugin_botmattermost	alert_error_empty_input	The name and the webhook URL input must be filled
 plugin_botmattermost	alert_error_invalid_url	Invalid URL
+plugin_botmattermost	alert_error_invalid_id	Invalid bot ID
 plugin_botmattermost	alert_error_bot_already_exist	A bot with the same name and the same webhook URL already exists
 plugin_botmattermost	alert_error_bot_not_found	No bot found
 plugin_botmattermost	alert_error_channels_not_found	No channels found
 plugin_botmattermost	alert_error_add_bot	Failed to add the bot and its associated channels
 plugin_botmattermost	alert_error_delete_bot	Failed to delete the bot and its associated channels
+plugin_botmattermost	alert_error_update_bot	Failed to update the bot and its associated channels
 
 
 plugin_botmattermost	configuration_title	Bot Mattermost Configuration
 plugin_botmattermost	configuration_legend_bot	Bot Configuration
+plugin_botmattermost	configuration_modal_edit_title	Edit bot
+plugin_botmattermost	configuration_modal_add_title	Add bot
+plugin_botmattermost	configuration_modal_delete_title	Delete bot
 plugin_botmattermost	configuration_label_bot_name	Bot name
 plugin_botmattermost	configuration_label_hook_url	Webhook channel URL
 plugin_botmattermost	configuration_label_avatar_url	Avatar URL
@@ -24,8 +30,12 @@ plugin_botmattermost	configuration_input_bot_name	Bot name...
 plugin_botmattermost	configuration_input_url	https://...
 plugin_botmattermost	configuration_input_avatar_url	Avatar link...
 plugin_botmattermost	configuration_text_area_channels_names_help	Add one channel name per row
+
 plugin_botmattermost	configuration_button_add_bot	Add bot
 plugin_botmattermost	configuration_button_submit	Submit
+plugin_botmattermost	configuration_button_close	Close
+plugin_botmattermost	configuration_button_delete	Delete
+plugin_botmattermost	configuration_button_edit	Edit
 
 plugin_botmattermost	configuration_empty_list	No results
 plugin_botmattermost	configuration_table_title	Bots list
@@ -34,6 +44,4 @@ plugin_botmattermost	configuration_table_col_webhook_url	Webhook URL
 plugin_botmattermost	configuration_table_col_channels	Channels
 plugin_botmattermost	configuration_table_col_avatar	Avatar
 
-plugin_botmattermost	configuration_confirm_delete_bot	Are you sure you want to delete the bot
-
-plugin_botmattermost	delete	Delete
+plugin_botmattermost	configuration_modal_delete_bot_content	This deletion can't be undone. Please confirm the bot deletion.

@@ -44,7 +44,7 @@ class BotDao extends DataAccessObject
             $this->da->rollback();
             return false;
         } else {
-            $dar = $this->addChannels($id, $bot_channels_names);
+            $dar = $this->addChannels($bot_channels_names, $id);
             if($dar === false) {
                 $this->da->rollback();
                 return false;
@@ -66,11 +66,11 @@ class BotDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    private function addChannels($bot_id, $bot_channels_names)
+    private function addChannels(array $bot_channels_names, $bot_id)
     {
         $channels = array();
         foreach($bot_channels_names as $bot_channel_name) {
-            $channels[] = $this->getChannelValueSql($bot_id, $bot_channel_name);
+            $channels[] = $this->getChannelValueSqlForInsert($bot_channel_name, $bot_id);
         }
 
         $sql = "INSERT INTO plugin_botmattermost_channel (bot_id, name)
@@ -79,7 +79,7 @@ class BotDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    private function getChannelValueSql($bot_id, $bot_channel_name)
+    private function getChannelValueSqlForInsert($bot_channel_name, $bot_id)
     {
         $id           = $this->da->escapeInt($bot_id);
         $channel_name = $this->da->quoteSmart($bot_channel_name);
@@ -124,6 +124,68 @@ class BotDao extends DataAccessObject
                 WHERE bot_id = $id";
 
         return $this->update($sql);
+    }
+
+    public function updateBotAndChannels(
+        array $channels_names,
+        $name,
+        $webhook_url,
+        $avatar_url,
+        $id
+    ) {
+        $this->da->startTransaction();
+
+        if(! $this->updateBot($name, $webhook_url, $avatar_url, $id)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        if(! $this->updateChannels($channels_names, $id)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
+    }
+
+    public function updateBot($bot_name, $bot_webhook_url, $bot_avatar_url, $id)
+    {
+        $name        = $this->da->quoteSmart($bot_name);
+        $webhook_url = $this->da->quoteSmart($bot_webhook_url);
+        $avatar_url  = $this->da->quoteSmart($bot_avatar_url);
+        $id          = $this->da->escapeInt($id);
+
+        $sql = "UPDATE plugin_botmattermost_bot
+                SET name = $name,
+                    webhook_url = $webhook_url,
+                    avatar_url = $avatar_url
+                WHERE id = $id";
+
+        return $this->update($sql);
+    }
+
+    private function updateChannels(array $channels_names, $id)
+    {
+        $id = $this->da->escapeInt($id);
+        if (! $this->deleteChannelsByBotId($id)) {
+            return false;
+        }
+        if ($this->hasValue($channels_names)) {
+            if(! $this->addChannels($channels_names, $id)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function hasValue(array $array)
+    {
+        if (empty($array)) {
+            return false;
+        }
+
+        return (trim(implode('', $array)) !== '');
     }
 
     public function searchBotByNameAndByWebhookUrl($bot_name, $bot_webhook_url)
