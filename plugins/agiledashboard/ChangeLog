@@ -1,3 +1,6 @@
+Version 1.387 - Tuleap 8.17
+    * request #9230 Artifact API doesn't follow RFC
+
 Version 1.386 - Tuleap 8.17
     * story #9184: New event to add new configuration pane on AgileDashboard
 

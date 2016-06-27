@@ -1,3 +1,6 @@
+Version 5.938 - Tuleap 8.17
+    * request #9230 Artifact API doesn't follow RFC
+
 Version 5.937 - Tuleap 8.17
     * story #9090: Computed field in modal V1 is broken
 

@@ -7,9 +7,9 @@ Version 8.17 (not released yet)
 
     == Plugins ==
 	* git: 4.221
-	* tracker: 5.937
+	* tracker: 5.938
 	* referencealias_core: 0.7
-	* agiledashboard: 1.386
+	* agiledashboard: 1.387
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
