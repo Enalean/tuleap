@@ -97,6 +97,8 @@ function ExecutionListCtrl(
             ExecutionRestService.leaveTestExecution(execution_id);
             ExecutionService.removeViewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
         }
+
+        ExecutionService.removeAllPresencesOnCampaign();
     });
 
     $scope.$on('execution-detail-destroy', function() {

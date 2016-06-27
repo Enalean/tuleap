@@ -709,6 +709,27 @@ describe ('ExecutionService - ', function () {
         });
     });
 
+    describe("removeAllPresencesOnCampaign() -", function() {
+        it("Given that executions with user_two on, when I remove all from campaign, then there is nobody on campaign", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url'
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: 'Test',
+                avatar_url: 'url'
+            };
+
+            ExecutionService.presences_on_campaign = [user_one, user_two];
+            ExecutionService.removeAllPresencesOnCampaign(user_one);
+
+            expect(ExecutionService.presences_on_campaign).toEqual([]);
+        });
+    });
+
     describe("updatePresenceOnCampaign() -", function() {
         it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function () {
             var user_one = {

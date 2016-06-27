@@ -32,6 +32,7 @@ function ExecutionService(
         addTestExecutions                 : addTestExecutions,
         updateTestExecution               : updateTestExecution,
         updatePresenceOnCampaign          : updatePresenceOnCampaign,
+        removeAllPresencesOnCampaign      : removeAllPresencesOnCampaign,
         viewTestExecution                 : viewTestExecution,
         removeAllViewTestExecution        : removeAllViewTestExecution,
         removeViewTestExecution           : removeViewTestExecution,
@@ -254,6 +255,10 @@ function ExecutionService(
                 return presence.id === user.id;
             });
         }
+    }
+
+    function removeAllPresencesOnCampaign() {
+        self.presences_on_campaign = [];
     }
 
     function displayPresencesByExecution(execution_id, presences) {
