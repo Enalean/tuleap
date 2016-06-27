@@ -543,34 +543,39 @@ class UserDao extends DataAccessObject {
      * Suspend account of user who is no more member of any project
      *
      */
-    function suspendUserNotProjectMembers($time){
-        $dar = $this->returnNotProjectMembers();
+    public function suspendUserNotProjectMembers($time)
+    {
+        $logger = $this->getLogger();
+        $dar    = $this->returnNotProjectMembers();
         if ($dar){
             //we should verify the delay for it user has been no more belonging to any project
             foreach ($dar as $row){
+                $user_id = $row['user_id'];
+                $logger->debug("Checking user #$user_id");
                 //we split the treatment in two methods to distinguish between 0 row returned
                 //by the fact that there is no "removed user" entry for this user_id and the case
                 //where it is the result of comparing the date
-                $res = $this->delayForBeingNotProjectMembers($row['user_id']);
+                $res = $this->delayForBeingNotProjectMembers($user_id);
                 if($res && !$res->isError()){
                     //user is not member of any project yet
                     if ($res->rowCount() == 0) {
+                        $logger->debug("User #$user_id never project member");
                         //Verify add_date
-                        $resultat = $this->delayForBeingSubscribed($row['user_id'],$time);
-                        if ($resultat && !$resultat->isError() && $resultat->rowCount() == 1){
-                            $condition = 'user.user_id = '.$this->da->escapeInt($row['user_id']);
-                            return $this->suspendAccount($condition);
+                        $resultat = $this->delayForBeingSubscribed($user_id, $time);
+                        if ($resultat && ! $resultat->isError() && $resultat->rowCount() == 1){
+                            $this->suspendUser($user_id);
                         }else{
-                            return;
+                            $logger->debug("User #$user_id not in delay, continue");
+                            continue;
                         }
                     } else {
                         //verify if delay has not expired yet
                         $rowLastRemove = $res->current();
                         if ($rowLastRemove['date'] > $time ){
-                            return;
+                            $logger->debug("User #$user_id not in delay, continue");
+                            continue;
                         } else {
-                            $condition = 'user.user_id = '.$this->da->escapeInt($row['user_id']);
-                            return $this->suspendAccount($condition);
+                            $this->suspendUser($user_id);
                         }
                     }
 
@@ -578,6 +583,22 @@ class UserDao extends DataAccessObject {
             }
         }
         return;
+    }
+
+    protected function getLogger()
+    {
+        return new BackendLogger();
+    }
+
+    private function suspendUser($user_id)
+    {
+        $logger = $this->getLogger();
+        $logger->debug("User #$user_id will be suspended");
+
+        $condition = 'user.user_id = '.$this->da->escapeInt($user_id);
+        if (! $this->suspendAccount($condition)) {
+            $logger->error("Error while suspending user #$user_id");
+        }
     }
 
     /**

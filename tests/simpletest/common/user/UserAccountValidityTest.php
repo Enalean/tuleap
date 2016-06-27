@@ -21,12 +21,17 @@
 require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
 
-Mock::generatePartial('UserDao',
-                      'UserDaoTestValidity',
-                      array('suspendAccount',
-                      'returnNotProjectMembers',
-                      'delayForBeingNotProjectMembers',
-                      'delayForBeingSubscribed'));
+Mock::generatePartial(
+    'UserDao',
+    'UserDaoTestValidity',
+    array(
+        'suspendAccount',
+        'returnNotProjectMembers',
+        'delayForBeingNotProjectMembers',
+        'delayForBeingSubscribed',
+        'getLogger'
+    )
+);
 
 require_once('common/user/UserManager.class.php');
 Mock::generatePartial('UserManager', 
@@ -42,7 +47,8 @@ Mock::generate('DataAccess');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-class UserAccountValidityTest extends UnitTestCase {
+class UserAccountValidityTest extends TuleapTestCase
+{
 
     function __construct($name = 'User Account Validity test') {
         parent::__construct($name);
@@ -116,8 +122,10 @@ class UserAccountValidityTest extends UnitTestCase {
         $darUser->setReturnValue('current', array('user_id' => 112));
                  
         $dao = new UserDaoTestValidity($this);
+
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('getLogger', mock('BackendLogger'));
         
         $darRemovedDate = new MockDataAccessResult($this); 
         $darRemovedDate->setReturnValueAt(0, 'valid', true);
@@ -147,6 +155,7 @@ class UserAccountValidityTest extends UnitTestCase {
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('getLogger', mock('BackendLogger'));
         
         $darRemovedDate = new MockDataAccessResult($this); 
         $darRemovedDate->setReturnValueAt(0, 'valid', true);
@@ -171,6 +180,7 @@ class UserAccountValidityTest extends UnitTestCase {
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('getLogger', mock('BackendLogger'));
                 
         $darNewMember = new MockDataAccessResult($this); 
         $darNewMember->setReturnValueAt(0, 'valid', true);
@@ -208,6 +218,7 @@ class UserAccountValidityTest extends UnitTestCase {
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('getLogger', mock('BackendLogger'));
                 
         $darNewMember = new MockDataAccessResult($this); 
         $darNewMember->setReturnValueAt(0, 'valid', true);
@@ -231,4 +242,3 @@ class UserAccountValidityTest extends UnitTestCase {
         $dao->suspendUserNotProjectMembers(1258307747);
     }
 }
-?>
