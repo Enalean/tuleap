@@ -29,6 +29,7 @@ use ForgeConfig;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use FileSystemIterator;
+use System_Command;
 
 class PullRequestMerger
 {
@@ -134,22 +135,11 @@ class PullRequestMerger
 
     private function cleanTemporaryRepository($temporary_name)
     {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                $temporary_name,
-                FileSystemIterator::SKIP_DOTS
-            ),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($iterator as $filename => $file_information) {
-            if ($file_information->isDir()) {
-                rmdir($filename);
-            } else {
-                unlink($filename);
-            }
+        $path       = realpath($temporary_name);
+        $check_path = strpos($path, ForgeConfig::get('codendi_cache_dir'));
+        if ($check_path !== false) {
+            $cmd = new System_Command();
+            $cmd->exec('rm -rf ' . escapeshellarg($path));
         }
-
-        rmdir($temporary_name);
     }
 }
