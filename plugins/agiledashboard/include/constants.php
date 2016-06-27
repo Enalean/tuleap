@@ -38,6 +38,23 @@ define('AGILEDASHBOARD_RESOURCE_DIR', dirname(__FILE__).'/../resources');
  */
 define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
 
+
+/**
+ * Get the additional panes in the agiledashboard configuration
+ *
+ * Expected results
+ *
+ * Parameters:
+ * 'additional_panes' => List of additional pane
+ *
+ * Expected results
+ * $params['additional_panes']['pane_name_for_url'] = array (
+ *     'title'  => The pane title
+ *     'output' => The content of the pane
+ * );
+ */
+define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN', 'agiledashboard_event_additional_panes_admin');
+
 /**
  * Get the pane to display on agile dashboard index page
  *

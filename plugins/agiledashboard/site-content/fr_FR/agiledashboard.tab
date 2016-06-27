@@ -7,6 +7,7 @@ plugin_agiledashboard	service_desc_key	Dashboard agile
 plugin_agiledashboard	Admin	Administration du dashboard agile
 plugin_agiledashboard	AdminScrum	Administration Scrum du dashboard agile
 plugin_agiledashboard	AdminKanban	Administration Kanban du dashboard agile
+plugin_agiledashboard	AdminAdditionalPane	Administration du dashboard agile
 plugin_agiledashboard	cannot_create_planning	Vous ne pouvez plus créer de planning soit:
 plugin_agiledashboard	cannot_create_planning_no_trackers	parce qu'il n'y a pas de trackers
 plugin_agiledashboard	cannot_create_planning_hierarchy	ou alors tous les trackers "planning" potentiels ($1) sont déjà utilisés par une configuration (ci-dessous).
@@ -173,6 +174,7 @@ plugin_agiledashboard	kanban_tracker_used	Le tracker est déjà utilisé par un 
 plugin_agiledashboard	no_tracker_selected	Aucun tracker n'a été sélectionné.
 plugin_agiledashboard	no_tracker_available	Aucun tracker n'est disponible.
 plugin_agiledashboard	kanban_not_found	Le Kanban requis n'a pas pu être trouvé.
+plugin_agiledashboard	content_not_found	Aucun contenu n'a été trouvé.
 
 plugin_agiledashboard_first_kanban	error_existing_tracker	Un outil de suivi existant ($1) a empêché la création d'une première instance de kanban.
 plugin_agiledashboard_first_kanban	internal_error	Une erreur interne a empêché la création d'une première instance de kanban.

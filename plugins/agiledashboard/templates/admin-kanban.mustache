@@ -8,6 +8,11 @@
         <li class="active">
             <a href="?group_id={{ group_id }}&action=admin&pane=kanban">{{ kanban_label }}</a>
         </li>
+        {{# additional_panes }}
+            <li>
+                <a href="?group_id={{ group_id }}&action=admin&pane={{ name }}">{{ title }}</a>
+            </li>
+        {{/ additional_panes }}
     </ul>
 
     <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST">

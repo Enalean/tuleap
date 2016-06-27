@@ -162,8 +162,11 @@ class AgileDashboardRouter {
                 break;
             case 'admin':
                 if ($this->userIsAdmin($request)) {
+                    $additional_panes = $this->buildController($request)->getAdditionalPanesAdmin();
                     if ($request->get('pane') === 'kanban') {
                         $this->renderAction($this->buildController($request), 'adminKanban', $request);
+                    } else if (isset($additional_panes[$request->get('pane')])) {
+                        $this->renderAction($this->buildController($request), 'adminAdditionalPane', $request);
                     } else {
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);
                     }
@@ -215,16 +218,17 @@ class AgileDashboardRouter {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'exportToFile' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'adminScrum'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminScrum'),
-            'adminKanban'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminKanban'),
-            'new_'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'importForm'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'edit'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
-            'show'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showTop'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showKanban'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_show')
+            'index'               => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'exportToFile'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'adminScrum'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminScrum'),
+            'adminKanban'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminKanban'),
+            'adminAdditionalPane' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminAdditionalPane'),
+            'new_'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'importForm'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'edit'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
+            'show'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showTop'             => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showKanban'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_show')
         );
 
         return $header_title[$action_name];
