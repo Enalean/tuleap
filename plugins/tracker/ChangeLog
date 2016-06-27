@@ -1,3 +1,6 @@
+Version 5.936 - Tuleap 8.17
+    * Re-enable migration and edition of computed fields v2
+
 Version 5.935 - Tuleap 8.16
     * Disable migration and edition of computed fields v2
 
