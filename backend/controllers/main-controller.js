@@ -23,16 +23,28 @@ if (typeof define !== 'function') {
 
 define([
     'body-parser',
-    '../services/communication-service'
+    '../services/communication-service',
+    '../services/scores-service',
+    '../modules/rooms',
+    '../modules/rights',
+    '../modules/scores',
+    '../modules/jwt'
 ], function (
     bodyParser,
-    CommunicationService
+    CommunicationService,
+    ScoresService,
+    Rooms,
+    Rights,
+    Scores,
+    JWT
 ) {
 
-    var CommunicationController = function (io, app, config) {
+    var MainController = function (io, app, config) {
         var jsonParser           = bodyParser.json();
-        var communicationService = new CommunicationService(config);
-        communicationService.clearScoresInTwoDays();
+        var rooms                = new Rooms(new Rights(), new Scores());
+        var jwt                  = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
+        var communicationService = new CommunicationService(rooms, jwt);
+        var scoresService        = new ScoresService(rooms.scores);
 
         /**
          * Connection Websocket on namespace trafficlights
@@ -51,6 +63,7 @@ define([
 
                 if (socket.auth) {
                     communicationService.emitPresences(socket);
+                    scoresService.clearScoresInSeveralDays();
                 } else {
                     console.log("Disconnecting socket ", socket.id);
                     socket.disconnect('unauthorized');
@@ -131,5 +144,5 @@ define([
         }
     };
 
-    return CommunicationController;
+    return MainController;
 });

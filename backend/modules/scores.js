@@ -180,6 +180,7 @@ define([
          * of user scores
          */
         self.removeAll = function() {
+            delete self.user_scores_collection;
             self.user_scores_collection = {};
         };
 

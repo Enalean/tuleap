@@ -52,5 +52,5 @@ try {
 /**
  * Load main controller
  */
-var CommunicationController = require('./backend/controllers/communication-controller');
-new CommunicationController(io, app, config);
+var MainController = require('./backend/controllers/main-controller');
+new MainController(io, app, config);

@@ -24,37 +24,17 @@ if (typeof define !== 'function') {
 define([
     'lodash',
     'moment',
-    '../../package.json',
-    '../modules/jwt',
-    '../modules/rooms',
-    '../modules/rights',
-    '../modules/scores'
+    '../../package.json'
 ], function (
     _,
     moment,
-    packageJson,
-    JWT,
-    Rooms,
-    Rights,
-    Scores
+    packageJson
 ) {
-    var CommunicationService = function (config) {
+    var CommunicationService = function (rooms, jwt) {
         var self = this;
 
-        self.jwt   = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
-        self.rooms = new Rooms(new Rights(), new Scores());
-
-        /**
-         * @access public
-         *
-         * Function to clear scores for
-         * each room id
-         */
-        self.clearScoresInTwoDays = function() {
-            setInterval(function() {
-                self.rooms.scores.removeAll();
-            }, moment.duration(7, 'days'));
-        };
+        self.jwt   = jwt;
+        self.rooms = rooms;
 
         /**
          * @access public

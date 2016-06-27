@@ -21,11 +21,21 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-define(['convict', 'optimist', 'jsonfile'], function (convict, optimist, jsonfile) {
+define([
+    'convict',
+    'optimist',
+    'jsonfile'
+], function (
+    convict,
+    optimist,
+    jsonfile
+) {
 
     var config = function () {
-        this.conf = convict({});
-        this.argv = optimist.argv;
+        var self = this;
+
+        self.conf = convict({});
+        self.argv = optimist.argv;
 
         /**
          * @access public
@@ -34,19 +44,19 @@ define(['convict', 'optimist', 'jsonfile'], function (convict, optimist, jsonfil
          * configurations and user config
          * file
          */
-        this.init = function() {
+        self.init = function() {
             var defaultConfig = require('./config.json');
-            this.conf.load(defaultConfig);
+            self.conf.load(defaultConfig);
 
-            if(this.argv.config) {
+            if(self.argv.config) {
                 var config;
                 try {
-                    config = jsonfile.readFileSync(this.argv.config);
+                    config = jsonfile.readFileSync(self.argv.config);
                 } catch (e) {
                     console.log('The json config file isn\'t valid.');
                 }
                 if(config) {
-                    this.conf.load(config);
+                    self.conf.load(config);
                 }
             }
         };
@@ -57,10 +67,10 @@ define(['convict', 'optimist', 'jsonfile'], function (convict, optimist, jsonfil
          * Function to drop the root
          * privileges to not be run as root
          */
-        this.dropRootPrivileges = function () {
+        self.dropRootPrivileges = function () {
             if (process.setgid) {
                 try {
-                    process.setgid(this.conf.get('process_gid'));
+                    process.setgid(self.conf.get('process_gid'));
                     console.log('New gid: ' + process.getgid());
                 }
                 catch (err) {
@@ -70,7 +80,7 @@ define(['convict', 'optimist', 'jsonfile'], function (convict, optimist, jsonfil
 
             if (process.setuid) {
                 try {
-                    process.setuid(this.conf.get('process_uid'));
+                    process.setuid(self.conf.get('process_uid'));
                     console.log('New uid: ' + process.getuid());
                 }
                 catch (err) {
