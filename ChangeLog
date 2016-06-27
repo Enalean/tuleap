@@ -1,4 +1,7 @@
 Version 8.17 (not released yet)
+	== Enhancement ==
+	* request #9113: Be able to filter system events by status
+
 	== Development ==
 	* request #9278: Remove CentOS 5 packages
 
