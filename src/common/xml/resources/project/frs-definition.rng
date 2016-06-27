@@ -33,6 +33,11 @@
             <zeroOrMore>
               <element name="release">
                 <interleave>
+                  <optional>
+                    <attribute name="id">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
                   <attribute name="name">
                     <data type="string"/>
                   </attribute>

@@ -179,7 +179,7 @@ class FRSXMLImporter {
 
         foreach($xml_pkg->children() as $xml_rel) {
             if($xml_rel->getName() != "release") continue;
-            $this->importRelease($project, $package, $xml_rel, $extraction_path, $frs_release_mapping);
+            $this->importRelease($project, $package, $xml_rel, $extraction_path, $frs_release_mapping, $created_id_map);
         }
         if($id != null) {
             if(isset($created_id_map[$id])) {
@@ -195,10 +195,12 @@ class FRSXMLImporter {
         FRSPackage $package,
         SimpleXMLElement $xml_rel,
         $extraction_path,
-        array &$frs_release_mapping
+        array &$frs_release_mapping,
+        array &$created_id_map
     ) {
         $user  = $this->user_finder->getUser($xml_rel->user);
         $attrs = $xml_rel->attributes();
+        $id    = isset($attrs['id']) ? (string) $attrs['id'] : null;
 
         $release = new FRSRelease();
         $release->setProject($project);
@@ -228,6 +230,14 @@ class FRSXMLImporter {
 
         foreach($xml_rel->xpath('file') as $xml_file) {
             $this->importFile($project, $release, $user, $xml_file, $extraction_path);
+        }
+
+        if($id != null) {
+            if(isset($created_id_map['release'][$id])) {
+                $this->logger->error("You already referenced a release with the id $id.");
+            } else {
+                $created_id_map['release'][$id] = $release->getReleaseID();
+            }
         }
     }
 

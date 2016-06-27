@@ -21,9 +21,10 @@
 namespace Tuleap\ReferenceAliasCore;
 
 use Project;
+use ProjectManager;
 use Reference;
 use ReferenceInstance;
-use ProjectManager;
+use ReferenceManager;
 
 class ReferencesBuilder
 {
@@ -67,7 +68,8 @@ class ReferencesBuilder
                 'regexp' => '/
                     (?<![_a-zA-Z0-9])  # ensure the pattern is not following digits or letters
                     (?P<ref>
-                        (?P<key>pkg)
+                        (?P<key>'. ReferencesImporter::XREF_PKG .'
+                            |'. ReferencesImporter::XREF_REL .')
                         (?P<val>[0-9]+)
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters
@@ -113,18 +115,21 @@ class ReferencesBuilder
             return null;
         }
 
-        $target     = $row["target"];
-        $project_id = $row["project_id"];
-
+        $target      = $row["target"];
+        $project_id  = $row["project_id"];
+        $base_id     = 0;
+        $description = '';
+        $visibility  = 'P';
+        $service     = 'frs';
+        $is_used     = 1;
         switch ($keyword) {
-            case 'pkg':
-                $base_id     = 0;
-                $description = '';
+            case ReferencesImporter::XREF_PKG:
                 $url         = "/file/showfiles.php?group_id=$project_id#p_$target";
-                $visibility  = 'P';
-                $service     = 'frs';
                 $nature      = 'package';
-                $is_used     = 1;
+                break;
+            case ReferencesImporter::XREF_REL:
+                $url         = "/file/shownotes.php?release_id=$target";
+                $nature      = ReferenceManager::REFERENCE_NATURE_RELEASE;
                 break;
             default:
                 return null;

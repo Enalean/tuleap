@@ -21,7 +21,6 @@
 namespace Tuleap\ReferenceAliasCore;
 
 use Logger;
-use WrapperLogger;
 use Project;
 use SimpleXMLElement;
 
@@ -33,7 +32,13 @@ class ReferencesImporter
     /** @var Logger */
     private $logger;
 
-    const XREF_PCK = 'pkg';
+    const XREF_PKG = 'pkg';
+    const XREF_REL = 'rel';
+
+    private $xref_kind = array(
+        self::XREF_PKG => 'package',
+        self::XREF_REL => 'release',
+    );
 
     public function __construct(Dao $dao, Logger $logger)
     {
@@ -47,10 +52,10 @@ class ReferencesImporter
             $source = (string) $reference['source'];
             $target = (string) $reference['target'];
             $target_on_system = null;
-            $xref_kind = $this->cross_ref_kind($source);
+            $xref_kind = $this->crossRefKind($source);
 
-            if ($xref_kind === self::XREF_PCK) {
-                $object_type = 'package';
+            if (isset($this->xref_kind[$xref_kind])) {
+                $object_type = $this->xref_kind[$xref_kind];
             } else {
                 $this->logger->warn("Cross reference kind '$xref_kind' for $source not supported");
                 continue;
@@ -77,7 +82,7 @@ class ReferencesImporter
         }
     }
 
-    private function cross_ref_kind($xref)
+    private function crossRefKind($xref)
     {
         $matches = array();
         if (preg_match('/^([a-zA-Z]*)/', $xref, $matches)) {
