@@ -29,6 +29,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -255,6 +256,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
 
         $replicator = new FineGrainedPermissionReplicator($fine_grained_dao, $default_factory, $saver, $factory);
 
+        $history_formatter = new HistoryValueFormatter(PermissionsManager::instance(), new UGroupManager());
+
         return new GitRepositoryManager(
             $repository_factory,
             $git_system_event_manager,
@@ -262,7 +265,9 @@ class GitDataBuilder extends REST_TestDataBuilder {
             '/tmp',
             new GitRepositoryMirrorUpdater($mirror_data_mapper, new ProjectHistoryDao()),
             $mirror_data_mapper,
-            $replicator
+            $replicator,
+            new ProjectHistoryDao(),
+            $history_formatter
         );
     }
 

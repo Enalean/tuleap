@@ -39,7 +39,9 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver'),
             mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory'),
             mock('Tuleap\Git\Permissions\FineGrainedDao'),
-            mock('Tuleap\Git\Permissions\FineGrainedRetriever')
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock('ProjectHistoryDao')
         );
     }
 

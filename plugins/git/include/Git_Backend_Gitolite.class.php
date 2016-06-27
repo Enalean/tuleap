@@ -206,7 +206,12 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     private function savePermission(GitRepository $repository, $type, array $perms) {
         try {
             if (isset($perms[$type]) && is_array($perms[$type])) {
-                $override_collection = PermissionsManager::instance()->savePermissions($repository->getProject(), $repository->getId(), $type, $perms[$type]);
+                $override_collection = PermissionsManager::instance()->savePermissionsWithoutHistory(
+                    $repository->getProject(),
+                    $repository->getId(),
+                    $type,
+                    $perms[$type]
+                );
                 $override_collection->emitFeedback($type);
             }
             return true;

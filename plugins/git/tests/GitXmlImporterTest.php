@@ -86,7 +86,9 @@ class GitXmlImporterTest extends TuleapTestCase {
             parent::getTmpDir(),
             $this->mirror_updater,
             $this->mirror_data_mapper,
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('ProjectHistoryDao'),
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
         );
 
         $restricted_plugin_dao = mock('RestrictedPluginDao');

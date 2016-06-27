@@ -38,6 +38,7 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1232,7 +1233,8 @@ class GitPlugin extends Plugin {
             new CITokenManager(new CITokenDao()),
             $this->getFineGrainedPermissionDestructor(),
             $this->getFineGrainedRepresentationBuilder(),
-            $this->getFineGrainedPermissionReplicator()
+            $this->getFineGrainedPermissionReplicator(),
+            $this->getHistoryValueFormatter()
         );
     }
 
@@ -1343,6 +1345,14 @@ class GitPlugin extends Plugin {
         return new FineGrainedPatternValidator();
     }
 
+    private function getHistoryValueFormatter()
+    {
+        return new HistoryValueFormatter(
+            $this->getPermissionsManager(),
+            $this->getUGroupManager()
+        );
+    }
+
     public function getGitSystemEventManager() {
         return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
     }
@@ -1358,7 +1368,9 @@ class GitPlugin extends Plugin {
             $this->getConfigurationParameter('git_backup_dir'),
             new GitRepositoryMirrorUpdater($this->getMirrorDataMapper(), new ProjectHistoryDao()),
             $this->getMirrorDataMapper(),
-            $this->getFineGrainedPermissionReplicator()
+            $this->getFineGrainedPermissionReplicator(),
+            new ProjectHistoryDao(),
+            $this->getHistoryValueFormatter()
         );
     }
 
@@ -1389,7 +1401,9 @@ class GitPlugin extends Plugin {
             $this->getDefaultFineGrainedPermissionSaver(),
             $this->getDefaultFineGrainedPermissionFactory(),
             $this->getFineGrainedDao(),
-            $this->getFineGrainedRetriever()
+            $this->getFineGrainedRetriever(),
+            $this->getHistoryValueFormatter(),
+            new ProjectHistoryDao()
         );
     }
 

@@ -235,6 +235,16 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @throws PermissionDaoException
      */
     public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids) {
+        return $this->doSavePermissions($project, $object_id, $permission_type, $ugroup_ids, true);
+    }
+
+    public function savePermissionsWithoutHistory(Project $project, $object_id, $permission_type, array $ugroup_ids)
+    {
+        return $this->doSavePermissions($project, $object_id, $permission_type, $ugroup_ids, false);
+    }
+
+    private function doSavePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids, $add_history)
+    {
         $normalizer            = new PermissionsNormalizer();
         $override_collection   = new PermissionsNormalizerOverrideCollection();
         $normalized_ugroup_ids = $normalizer->getNormalizedUGroupIds($project, $ugroup_ids, $override_collection);
@@ -248,7 +258,11 @@ class PermissionsManager implements IPermissionsManagerNG {
                 throw new PermissionDaoException("Database issue while addPermission $permission_type, $object_id, $ugroup_id: ".$this->_permission_dao->getDa()->getErrorMessage());
             }
         }
-        $this->_permission_dao->addHistory($project->getID(), $permission_type, $object_id);
+
+        if ($add_history) {
+            $this->_permission_dao->addHistory($project->getID(), $permission_type, $object_id);
+        }
+
         return $override_collection;
     }
 

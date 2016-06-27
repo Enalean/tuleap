@@ -26,12 +26,23 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 /**
  * This class manages permissions for the Git service
  */
 class GitPermissionsManager
 {
+
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $history_dao;
+
+    /**
+     * @var HistoryValueFormatter
+     */
+    private $history_value_formatter;
 
     /**
      * @var FineGrainedRetriever
@@ -82,7 +93,9 @@ class GitPermissionsManager
         DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         FineGrainedDao $fine_grained_dao,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        HistoryValueFormatter $history_value_formatter,
+        ProjectHistoryDao $history_dao
     ) {
         $this->permissions_manager          = PermissionsManager::instance();
         $this->git_permission_dao           = $git_permission_dao;
@@ -92,6 +105,8 @@ class GitPermissionsManager
         $this->default_fine_grained_factory = $default_fine_grained_factory;
         $this->fine_grained_dao             = $fine_grained_dao;
         $this->fine_grained_retriever       = $fine_grained_retriever;
+        $this->history_value_formatter      = $history_value_formatter;
+        $this->history_dao                  = $history_dao;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project) {
@@ -221,6 +236,13 @@ class GitPermissionsManager
             $enable_fine_grained_permissions
         );
 
+        $this->history_dao->groupAddHistory(
+            'perm_granted_for_object',
+            $this->history_value_formatter->formatValueForProject($project),
+            $project_id,
+            array($project_id)
+        );
+
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             $GLOBALS['Language']->getText('plugin_git', 'default_access_control_saved')
@@ -335,7 +357,7 @@ class GitPermissionsManager
     private function saveDefaultPermission(Project $project, array $ugroup_ids, $permission)
     {
         $this->permissions_manager->clearPermission($permission, $project->getId());
-        $override_collection = $this->permissions_manager->savePermissions(
+        $override_collection = $this->permissions_manager->savePermissionsWithoutHistory(
             $project,
             $project->getID(),
             $permission,

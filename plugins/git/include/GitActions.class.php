@@ -31,6 +31,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 /**
  * GitActions
@@ -39,6 +40,11 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
  */
 class GitActions extends PluginActions
 {
+
+    /**
+     * @var HistoryValueFormatter
+     */
+    private $history_value_formatter;
 
     /**
      * @var FineGrainedRetriever
@@ -165,7 +171,8 @@ class GitActions extends PluginActions
         FineGrainedPermissionSaver $fine_grained_permission_saver,
         CITokenManager $ci_token_manager,
         FineGrainedPermissionReplicator $fine_grained_replicator,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        HistoryValueFormatter $history_value_formatter
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -192,6 +199,7 @@ class GitActions extends PluginActions
         $this->ci_token_manager              = $ci_token_manager;
         $this->fine_grained_replicator       = $fine_grained_replicator;
         $this->fine_grained_retriever        = $fine_grained_retriever;
+        $this->history_value_formatter       = $history_value_formatter;
     }
 
     protected function getText($key, $params = array()) {
@@ -273,6 +281,13 @@ class GitActions extends PluginActions
                 "git_repo_create",
                 $repository_name,
                 $project_id
+            );
+
+            $this->history_dao->groupAddHistory(
+                'perm_granted_for_git_repository',
+                $this->history_value_formatter->formatValueForRepository($repository),
+                $project_id,
+                array($repository_name)
             );
 
             $this->ci_token_manager->generateNewTokenForRepository($repository);
@@ -910,6 +925,13 @@ class GitActions extends PluginActions
             foreach ($updated_permissions as $permission) {
                 $this->fine_grained_permission_saver->updateRepositoryPermission($permission);
             }
+
+            $this->history_dao->groupAddHistory(
+                'perm_granted_for_git_repository',
+                $this->history_value_formatter->formatValueForRepository($repository),
+                $projectId,
+                array($repository->getName())
+            );
 
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
 

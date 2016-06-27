@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 require_once 'PathJoinUtil.php';
 
@@ -28,6 +29,16 @@ require_once 'PathJoinUtil.php';
  * It works in close cooperation with GitRepositoryFactory (to instanciate repo)
  */
 class GitRepositoryManager {
+
+    /**
+     * @var HistoryValueFormatter
+     */
+    private $history_value_formatter;
+
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $history_dao;
 
     /**
      * @var FineGrainedPermissionReplicator
@@ -81,7 +92,9 @@ class GitRepositoryManager {
         $backup_directory,
         GitRepositoryMirrorUpdater $mirror_updater,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        FineGrainedPermissionReplicator $fine_grained_replicator
+        FineGrainedPermissionReplicator $fine_grained_replicator,
+        ProjectHistoryDao $history_dao,
+        HistoryValueFormatter $history_value_formatter
     ) {
         $this->repository_factory       = $repository_factory;
         $this->git_system_event_manager = $git_system_event_manager;
@@ -91,6 +104,8 @@ class GitRepositoryManager {
         $this->mirror_data_mapper       = $mirror_data_mapper;
         $this->system_command           = new System_Command();
         $this->fine_grained_replicator  = $fine_grained_replicator;
+        $this->history_dao              = $history_dao;
+        $this->history_value_formatter  = $history_value_formatter;
     }
 
     /**
@@ -186,6 +201,13 @@ class GitRepositoryManager {
             } else {
                 $this->fine_grained_replicator->replicateRepositoryPermissions($repository, $clone);
             }
+
+            $this->history_dao->groupAddHistory(
+                'perm_granted_for_git_repository',
+                $this->history_value_formatter->formatValueForRepository($clone),
+                $to_project->getID(),
+                array($clone->getName())
+            );
 
             $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
         } else {
