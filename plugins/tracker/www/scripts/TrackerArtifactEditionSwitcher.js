@@ -54,6 +54,11 @@ tuleap.tracker.artifact.editionSwitcher = function() {
             if (field.find('.highlight').size() > 0 && field.find('.empty_value').size() > 0) {
                 toggleField(field);
             }
+
+            var is_legacy = field.find('.auto-computed-label').attr('data-is-legacy');
+            if (is_legacy) {
+                $(field).removeClass('editable');
+            }
         });
     };
 
