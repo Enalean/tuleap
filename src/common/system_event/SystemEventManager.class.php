@@ -520,6 +520,7 @@ class SystemEventManager {
 
         $events = $this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type);
         list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
+        $nb_displayed = count($events);
         foreach($events as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
                 $html .= '<tr>';
@@ -567,29 +568,14 @@ class SystemEventManager {
         $html .= '</tbody></table>';
         if ($full) {
             //Pagination
-            $nb_of_pages = ceil($num_total_rows / $limit);
-            $current_page = round($offset / $limit);
-            $width = 10;
-            $pagination = new Tuleap\Layout\PaginationPresenter();
-            for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
-                if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                    $label = $i + 1;
-                    $url = '?'. http_build_query(array(
-                        'offset'        => (int)($i * $limit),
-                        'filter_status' => $filter_status,
-                        'filter_type'   => $filter_type,
-                        'queue'         => $queue
-                    ));
-                    if ($i == $current_page) {
-                        $pagination->addActiveStep($url, $label);
-                    } else {
-                        $pagination->addStep($url, $label);
-                    }
-                } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
-                    $pagination->addDisabledStep('javascript:;', '...');
-                }
-            }
-            $renderer = TemplateRendererFactory::build()->getRenderer($GLOBALS['tuleap_dir'] .'/src/templates');
+            $default_params = array(
+                'filter_status' => $filter_status,
+                'filter_type'   => $filter_type,
+                'queue'         => $queue
+            );
+            $pagination = new Tuleap\Layout\PaginationPresenter($limit, $offset, $nb_displayed, $num_total_rows, '/admin/system_events/', $default_params);
+            $renderer   = TemplateRendererFactory::build()->getRenderer($GLOBALS['tuleap_dir'] .'/src/templates/common');
+
             $html .= $renderer->renderToString('pagination', $pagination);
 
         }

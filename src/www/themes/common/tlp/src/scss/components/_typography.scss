@@ -43,6 +43,7 @@ h6 {
 }
 
 h1 {
+    margin: 0 0 $tlp-title-spacing;
     font-size: 46px;
     font-weight: 400;
 
@@ -125,6 +126,10 @@ a {
     color: $tlp-theme-color;
 }
 
+strong {
+    font-weight: 700;
+}
+
 blockquote {
     margin: 0 0 $tlp-spacing;
     padding: 0 0 0 $tlp-spacing / 2;
@@ -133,23 +138,32 @@ blockquote {
     line-height: 24px;
 }
 
+%tlp-text {
+    line-height: 16px;
+}
+
 .tlp-text-muted {
+    @extend %tlp-text;
     color: $tlp-ui-dimmed;
 }
 
 .tlp-text-info {
+    @extend %tlp-text;
     color: $tlp-ui-info;
 }
 
 .tlp-text-success {
+    @extend %tlp-text;
     color: $tlp-ui-success;
 }
 
 .tlp-text-warning {
+    @extend %tlp-text;
     color: $tlp-ui-warning;
 }
 
 .tlp-text-danger {
+    @extend %tlp-text;
     color: $tlp-ui-danger;
 }
 

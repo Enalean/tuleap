@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) STMicroelectronics, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($) {
-    $('.tooltip_selector').tooltip({
-        container: 'table',
-        html: true
-    });
-})(jQuery);
+namespace Tuleap\User\Admin;
+
+class UserListPresenter
+{
+
+    public $title;
+    public $context;
+    public $search_fields;
+    public $results;
+    public $new_user;
+
+    public function __construct(
+        $title,
+        $context,
+        UserListSearchFieldsPresenter $search_fields,
+        UserListResultsPresenter $results
+    ) {
+        $this->title         = $title;
+        $this->context       = $context;
+        $this->search_fields = $search_fields;
+        $this->results       = $results;
+        $this->new_user      = $GLOBALS['Language']->getText('admin_main', 'new_user');
+    }
+}

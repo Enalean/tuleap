@@ -2,7 +2,7 @@
 #  *
 #  * Admin scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -18,7 +18,7 @@ admin_main	header		Administrative functions
 admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
 admin_main	header_user	User administration
 admin_main	display_user	Display users beginning with :
-admin_main	search_user	Search (email, user name, real name, user id) :
+admin_main	search_user	User
 admin_main	search	Search
 admin_main	export_csv	Export CSV
 admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) status</a>
@@ -71,7 +71,7 @@ admin_main	last3months_users	Last 3 months
 admin_main	mode_lab_users	Active or restricted users with mode lab enabled
 admin_main	stat_projects	Projects statistics
 admin_main	stat_users	Users statistics
-admin_main	status_user	Per status 
+admin_main	status_user	Per status
 admin_main	statusactif_user	active
 admin_main	statusrestricted_user	restricted
 admin_main	statushold_user	hold
@@ -144,7 +144,7 @@ admin_approve_license	error	Only site administrators can browse this page
 #-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
-admin_approve_pending	title	Approving Pending Projects	
+admin_approve_pending	title	Approving Pending Projects
 admin_approve_pending	no_pending	No Pending Projects to Approve
 admin_approve_pending	approve	Approve Project
 admin_approve_pending	delete	Delete Project
@@ -175,7 +175,7 @@ admin_approve_pending_users	reg_date	Registration Date
 admin_approve_pending_users	validate	Validate
 admin_approve_pending_users	account	account
 admin_approve_pending_users	ok	Ok
-admin_approve_pending_users	all_accounts	all accounts 
+admin_approve_pending_users	all_accounts	all accounts
 admin_approve_pending_users	status	with status
 admin_approve_pending_users	status_restricted	restricted
 admin_approve_pending_users	status_standard	standard
@@ -254,7 +254,7 @@ admin_lastlogins	recent	Most Recent Logins
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php
 #
-admin_massmail_execute	post_recvd	Received Post. Making Query	
+admin_massmail_execute	post_recvd	Received Post. Making Query
 admin_massmail_execute	mailing	Beginning mailings to $1 distinct email addresses
 admin_massmail_execute	sending	sending to
 admin_massmail_execute	done	Done!
@@ -270,8 +270,8 @@ admin_massmail	warning	Be <b>very</b> careful with this form, because submitting
 admin_massmail	to_preview	Send preview to
 admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
 admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"
-admin_massmail	to_devel	Send only to project developers 
-admin_massmail	to_proj_admin	Send only to project administrators 
+admin_massmail	to_devel	Send only to project developers
+admin_massmail	to_proj_admin	Send only to project administrators
 admin_massmail	to_site_admin	Send only to site administrators
 admin_massmail	to_all	Send to all users, regardless of their preferences
 admin_massmail	subject	Subject
@@ -310,9 +310,9 @@ admin_user_changepw	error_userid	Internal error: no user ID
 admin_user_changepw	error_nopasswd	You must supply a password.
 admin_user_changepw	error_passwd	Passwords do not match.
 admin_user_changepw	error_update	Internal error: Could not update password.
-admin_user_changepw	title_changed	Successfully Changed Password	
+admin_user_changepw	title_changed	Successfully Changed Password
 admin_user_changepw	header_changed	Password Change Confirmation
-admin_user_changepw	msg_changed	The user's password has been changed. 
+admin_user_changepw	msg_changed	The user's password has been changed.
 admin_user_changepw	title	Change Password
 admin_user_changepw	ldap_warning	WARNING: Changing the password here won't change the LDAP password!
 admin_user_changepw	header	Password Change
@@ -377,7 +377,7 @@ admin_userlist	user_suspended	User Updated to SUSPEND Status
 admin_userlist	user_restricted	User Updated to RESTRICTED Status
 admin_userlist	error_uid	Error - Can't find user with ID $1
 admin_userlist	error_noadd	Error - Can't add user to group
-admin_userlist	user_list	User List for
+admin_userlist	user_list	Users
 admin_userlist	all_groups	All Projects
 admin_userlist	group	Project $1
 admin_userlist	uid_toadd	User ID to add
@@ -394,12 +394,22 @@ admin_userlist	restrict	Restrict
 admin_userlist	delete	Delete
 admin_userlist	suspend	Suspend
 admin_userlist	status	Status
-admin_userlist	active_sessions	There are currently $1 active sessions. You can <input type="submit" class="tlp-button-secondary tlp-button-small" name="reset_all_sessions" value="purge all current sessions" onclick="return confirm('Are you sure that you want to force the reconnection for all of your users?');" />. This will force all users to login.
-admin_userlist	nb_projects	Nb of projects
+admin_userlist	active_sessions_label	Purge all current sessions
+admin_userlist	active_sessions_confirm	Are you sure that you want to force the reconnection for all ($1) users? This will force all users to login.
+admin_userlist	nb_projects	# Projects
 admin_userlist	not_member_of	Not member of any project
 admin_userlist	member_of	Member of $1 project(s)
 admin_userlist	admin_of	Admin of $1 project(s)
 admin_userlist	id_user	Id user
+admin_userlist	any	Any
+admin_userlist	filter	Filter
+admin_userlist	matching_users	Matching users
+admin_userlist	export_csv	CSV export
+admin_userlist	profile	Profile
+admin_userlist	no_matching_users	There isn't any matching users
+admin_userlist	name	Name
+admin_userlist	login	Login
+admin_userlist	filter_name	Email, name, id
 
 #
 #-----------------------------------------------
@@ -477,7 +487,7 @@ admin_servers	info_notupdated	Server <em>$1</em> has not been updated
 #
 admin_desc_fields	title	Description Fields Edition
 admin_desc_fields	header	Description Fields Edition
-admin_desc_fields	header_add	Add a Description Field 
+admin_desc_fields	header_add	Add a Description Field
 admin_desc_fields	desc_name	Field Name
 admin_desc_fields	desc_description	Field Description
 admin_desc_fields	desc_required	Is Required
@@ -510,7 +520,7 @@ admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration Queue
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
 #
-admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a> 
+admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a>
 admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/codendi/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
 
 admin_generic_user	title	Generic user

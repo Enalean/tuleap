@@ -1,4 +1,7 @@
 {
   "label": "Tables",
-  "shortcode": ".tlp-table"
+  "children": [
+    "tables",
+    "empty"
+  ]
 }

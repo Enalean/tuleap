@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,5 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-spacing: 20px;
-$tlp-title-spacing: 30px;
+namespace Tuleap\Layout;
+
+class SidebarPresenter
+{
+    public $classname;
+    public $content;
+
+    public function __construct($classname, $content)
+    {
+        $this->classname = $classname;
+        $this->content   = $content;
+    }
+}

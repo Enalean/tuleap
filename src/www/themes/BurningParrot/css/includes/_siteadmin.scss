@@ -39,3 +39,81 @@
     text-align: left;
     white-space: nowrap;
 }
+
+#siteadmin-userlist {
+    display: flex;
+    align-items: flex-start;
+}
+
+#siteadmin-userlist-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 $tlp-title-spacing;
+}
+
+#siteadmin-userlist-header-title {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-userlist-filter {
+    margin: 0 $tlp-spacing 0 0;
+    width: 300px;
+}
+
+#siteadmin-userlist-filter-button {
+    text-align: center;
+}
+
+#siteadmin-userlist-result {
+    width: 100%;
+}
+
+.siteadmin-userlist-result-name {
+    display: flex;
+    align-items: center;
+}
+
+.siteadmin-userlist-result-name-avatar {
+    margin: 0 ($tlp-spacing / 2) 0 0;
+}
+
+.siteadmin-userlist-result-nb {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+#siteadmin-userlist-result-table {
+    margin: 0 0 $tlp-spacing;
+}
+
+.siteadmin-userlist-result-table-adminof {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.siteadmin-userlist-result-table-sort {
+    display: block;
+}
+
+.siteadmin-userlist-result-table-sort-icon {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+.siteadmin-sidebar {
+    align-self: stretch;
+    min-width: 260px;
+    background: #293e45;
+    color: #d4d7e1;
+}
+
+@media screen and (max-width: 1200px) {
+    #siteadmin-userlist {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+    }
+
+    #siteadmin-userlist-filter {
+        margin: 0 0 $tlp-spacing;
+        width: 100%;
+    }
+}

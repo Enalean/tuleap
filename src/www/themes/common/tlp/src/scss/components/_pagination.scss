@@ -17,46 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-pagination-radius: 4px;
-$tlp-pagination-color: #888888;
+$tlp-pagination-margin: 2px;
 
 .tlp-pagination {
-    display: flex;
+    text-align: center;
 }
 
-.tlp-pagination-step {
-    padding: 10px 15px;
-    border: 1px solid $tlp-ui-border-normal;
-    border-right: 0;
-    background: $tlp-ui-white;
-    color: $tlp-pagination-color;
-    font-size: 14px;
-    text-decoration: none;
-
-    &:hover {
-        background: transparentize($tlp-theme-color, .9);
-        color: $tlp-theme-color;
-    }
-
-    &:first-child {
-        border-radius: $tlp-pagination-radius 0 0 $tlp-pagination-radius;
-    }
-
-    &:last-child {
-        border-right: 1px solid $tlp-ui-border-normal;
-        border-radius: 0 $tlp-pagination-radius $tlp-pagination-radius 0;
-    }
+.tlp-pagination-button {
+    width: 40px;
+    margin: 0 $tlp-pagination-margin;
 }
 
-.tlp-pagination-step-active {
-    background: transparentize($tlp-theme-color, .9);
-    color: $tlp-theme-color;
-    cursor: default;
+.tlp-pagination-pages {
+    margin: 0 ($tlp-spacing - 2 * $tlp-pagination-margin);
+    font-size: 12px;
 }
 
-.tlp-pagination-step-disabled,
-.tlp-pagination-step-disabled:hover {
-    background: $tlp-ui-white;
-    color: $tlp-pagination-color;
-    cursor: default;
+.tlp-pagination-number {
+    margin: 0 $tlp-pagination-margin;
+    font-size: 16px;
+    font-weight: 600;
 }

@@ -24,6 +24,7 @@ use HTTPRequest;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 
 class HeaderPresenterBuilder
@@ -46,6 +47,9 @@ class HeaderPresenterBuilder
     /** @var array */
     private $main_classes;
 
+    /** @var SidebarPresenter */
+    private $sidebar;
+
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
         HTTPRequest $request,
@@ -53,7 +57,8 @@ class HeaderPresenterBuilder
         $imgroot,
         $title,
         $feedback_logs,
-        $main_classes
+        $main_classes,
+        $sidebar
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->request                  = $request;
@@ -61,6 +66,7 @@ class HeaderPresenterBuilder
         $this->imgroot                  = $imgroot;
         $this->title                    = $title;
         $this->main_classes             = $main_classes;
+        $this->sidebar                  = $sidebar;
 
         $color = $this->getMainColor();
 
@@ -74,7 +80,8 @@ class HeaderPresenterBuilder
             $color,
             $this->getStylesheets($color),
             $feedback_logs,
-            $this->getMainClassesAsString()
+            $this->getMainClassesAsString(),
+            $this->sidebar
         );
     }
 

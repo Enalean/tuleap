@@ -10,7 +10,7 @@ admin_main	header		Fonctions d'administration
 admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
 admin_main	header_user	Administration des utilisateurs
 admin_main	display_user	Afficher les utilisateurs commençant par :
-admin_main	search_user	Chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
+admin_main	search_user	Utilisateur
 admin_main	search	Chercher
 admin_main	export_csv	Export CSV
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
@@ -42,7 +42,7 @@ admin_main	mail_engine	Envoi d'e-mails en masse
 admin_main	header_sstat	Statistiques site
 admin_main	header_plugins	Plugins
 admin_main	servers	Serveurs
-admin_main	servers_admin	Administration des serveurs 
+admin_main	servers_admin	Administration des serveurs
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
 admin_main	sstat_reg_g	Projets enregistrés
 admin_main	sstat_reg_act_g	Projets enregistrés actifs
@@ -60,10 +60,10 @@ admin_main	lastday_users	Les dernières 24 heures
 admin_main	lastweek_users	La semaine dernière
 admin_main	lastmonth_users	Le mois dernier
 admin_main	last3months_users	Les 3 derniers mois
-admin_main	mode_lab_users	Utilisateurs actifs ou restreints avec le mode lab activé 
+admin_main	mode_lab_users	Utilisateurs actifs ou restreints avec le mode lab activé
 admin_main	stat_projects	Statistiques des projets
 admin_main	stat_users	Statistiques des utilisateurs
-admin_main	status_user	Par status 
+admin_main	status_user	Par status
 admin_main	statusactif_user	actif(s)
 admin_main	statusrestricted_user	restreint(s)
 admin_main	statushold_user	suspendu(s)
@@ -136,7 +136,7 @@ admin_approve_license	error	Seuls les administrateurs du site ont accès à cett
 #-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
-admin_approve_pending	title	Approbation des projets en attente	
+admin_approve_pending	title	Approbation des projets en attente
 admin_approve_pending	no_pending	Aucun projet en attente à approuver
 admin_approve_pending	approve	Approuver le projet
 admin_approve_pending	delete	Détruire le projet
@@ -167,7 +167,7 @@ admin_approve_pending_users	reg_date	Date d'enregistrement
 admin_approve_pending_users	validate	Valider
 admin_approve_pending_users	account	le compte
 admin_approve_pending_users	ok	Ok
-admin_approve_pending_users	all_accounts	tous les comptes 
+admin_approve_pending_users	all_accounts	tous les comptes
 admin_approve_pending_users	status	avec le statut
 admin_approve_pending_users	status_restricted	restreint
 admin_approve_pending_users	status_standard	standard
@@ -212,8 +212,8 @@ admin_groupedit	grp_name	Nom du projet
 admin_groupedit	unix_grp	Nom du groupe unix
 admin_groupedit	description	Description
 admin_groupedit	built_from_template	Créé à partir du patron
-admin_groupedit	rename_project_title	Renommage du Projet	
-admin_groupedit	rename_project_label	Renommage du Projet en 
+admin_groupedit	rename_project_title	Renommage du Projet
+admin_groupedit	rename_project_label	Renommage du Projet en
 admin_groupedit	rename_project_msg	Le changement du nom du projet sur le système va être traité dans quelques instants ($1 -> $2).
 admin_groupedit	rename_project_warn	La mise à jour du nom du projet ne sera effective qu'après le traitement de l'événement système correspondant.
 admin_groupedit	rename_project_already_queued	Il y a déjà une opération de renommage prévue pour ce projet. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
@@ -261,8 +261,8 @@ admin_massmail	warning	Soyez <b>très</b> vigilant avec ce formulaire car son ut
 admin_massmail	to_preview	Envoyer un aperçu à
 admin_massmail	to_additional	Envoyer uniquement aux abonnés de l'option "Courrier électronique supplémentaire au sujet de la communauté"
 admin_massmail	to_update	Envoyer uniquement aux abonnés de l'option "Courrier électronique à propos des mises à jour du site"
-admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets 
-admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets 
+admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets
+admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets
 admin_massmail	to_site_admin	Envoyer uniquement aux administrateurs du site
 admin_massmail	to_all	Envoyer à tous les utilisateurs quelles que soient leurs préférences
 admin_massmail	subject	Objet
@@ -303,7 +303,7 @@ admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
 admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu être mis à jour.
 admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe
-admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié. 
+admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié.
 admin_user_changepw	title	Changement de mot de passe
 admin_user_changepw	ldap_warning	ATTENTION&nbsp;: Changer le mot de passe ici ne changera pas le mot de passe LDAP !
 admin_user_changepw	header	Changement du mot de passe
@@ -327,7 +327,7 @@ admin_usergroup	error_nogid	ID groupe manquant !
 admin_usergroup	error_add_ug	Erreur lors de l'ajout d'un utilisateur au groupe
 admin_usergroup	success_add_ug	Utilisateur ajouté au groupe avec succès
 admin_usergroup	error_member	L'utilisateur est déjà membre du groupe $1
-admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur 
+admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur
 admin_usergroup	account_info	Information sur le compte Unix
 admin_usergroup	shell	Shell
 admin_usergroup	email	E-mail
@@ -368,7 +368,7 @@ admin_userlist	user_suspended	Utilisateur mis à jour avec le statut SUSPENDU
 admin_userlist	user_restricted	Utilisateur mis à jour avec le statut RESTREINT
 admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
 admin_userlist	error_noadd	Erreur - Impossibilité d'ajouter l'utilisateur au groupe
-admin_userlist	user_list	Liste des utilisateurs pour
+admin_userlist	user_list	Utilisateurs
 admin_userlist	all_groups	Tous les projets
 admin_userlist	group	Projet $1
 admin_userlist	uid_toadd	ID utilisateur à ajouter
@@ -385,12 +385,22 @@ admin_userlist	restrict	Restreindre
 admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre
 admin_userlist	status	Statut
-admin_userlist	active_sessions	Il y a actuellement $1 sessions active. Vous pouvez <input type="submit" class="tlp-button-secondary tlp-button-small" value="purger toutes les sessions en cours" name="reset_all_sessions" onclick="return confirm('Êtes-vous sûr de vouloir obliger tous vos utilisateurs à se reconnecter ?');" />. Ceci forcera la reconnexion de tous les utilisateurs.
-admin_userlist	nb_projects	Nb de projets
+admin_userlist	active_sessions_label	Purger toutes les sessions en cours
+admin_userlist	active_sessions_confirm	Êtes-vous sûr de vouloir obliger tous vos utilisateurs ($1) à se reconnecter ?
+admin_userlist	nb_projects	# Projets
 admin_userlist	not_member_of	Membre d'aucun projet
 admin_userlist	member_of	Membre de $1 projet(s)
 admin_userlist	admin_of	Admin de $1 projet(s)
 admin_userlist	id_user	Id utilisateur
+admin_userlist	any	Tous
+admin_userlist	filter	Filtre
+admin_userlist	matching_users	Utilisateurs correspondants au filtre
+admin_userlist	export_csv	Export CSV
+admin_userlist	profile	Profile
+admin_userlist	no_matching_users	Il n'y a aucun utilisateur qui correspond au filtre
+admin_userlist	name	Nom
+admin_userlist	login	Login
+admin_userlist	filter_name	Email, nom, id
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
@@ -466,7 +476,7 @@ admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
 #
 admin_desc_fields	title	Edition des Champs de Description
 admin_desc_fields	header	Edition des Champs de Description
-admin_desc_fields	header_add	Ajouter un Champ de Description 
+admin_desc_fields	header_add	Ajouter un Champ de Description
 admin_desc_fields	desc_name	Nom du champ de description
 admin_desc_fields	desc_description	Description du champ
 admin_desc_fields	desc_required	Obligatoire

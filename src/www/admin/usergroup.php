@@ -18,6 +18,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $request = HTTPRequest::instance();
 $um      = UserManager::instance();
 $em      = EventManager::instance();
+$siteadmin = new \Tuleap\Admin\AdminPageRenderer();
 
 $user_id = null;
 $user    = null;
@@ -185,7 +186,7 @@ if ($request->isPost()) {
     }
 }
 
-$HTML->header(array('title'=>$Language->getText('admin_usergroup','title'), 'main_classes' => array('tlp-framed')));
+$siteadmin->header($Language->getText('admin_usergroup', 'title'));
 $hp = Codendi_HTMLPurifier::instance();
 ?>
 

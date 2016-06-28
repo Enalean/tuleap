@@ -290,6 +290,13 @@ $tlp-button-secondary-outline-color: #888888;
 }
 
 /**
+ * Wide
+ */
+.tlp-button-wide {
+    width: 100%;
+}
+
+/**
  * Overrides for a.tlp-button* so they have the good heights
  */
 a[class*="tlp-button"] {

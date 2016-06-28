@@ -67,6 +67,7 @@ global	begin	Begin
 global	end	End
 global	next	Next
 global	prev	Previous
+global	of	of
 global	printer_version	Printer version
 global	error	Error
 global	help	Help

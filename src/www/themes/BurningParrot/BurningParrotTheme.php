@@ -60,6 +60,7 @@ class BurningParrotTheme extends BaseLayout
     {
         $header_presenter_builder = new HeaderPresenterBuilder();
         $main_classes             = isset($params['main_classes']) ? $params['main_classes'] : array();
+        $sidebar                  = isset($params['sidebar']) ? $params['sidebar'] : array();
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
@@ -68,7 +69,8 @@ class BurningParrotTheme extends BaseLayout
             $this->imgroot,
             $params['title'],
             $this->_feedback->logs,
-            $main_classes
+            $main_classes,
+            $sidebar
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

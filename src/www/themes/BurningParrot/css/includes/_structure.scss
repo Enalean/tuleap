@@ -25,11 +25,16 @@ body {
     flex-direction: column;
     min-height: 100vh;
     padding: $navbar-height 0 0;
+    background: $tlp-theme-background-color;
 }
 
 #main-container {
+    display: flex;
     flex: 1 1 auto;
-    background: $tlp-theme-background-color;
+}
+
+main[role=main] {
+    width: 100%;
 }
 
 #feedback {

@@ -67,6 +67,7 @@ global	begin	Début
 global	end	Fin
 global	next	Suivant
 global	prev	Précédent
+global	of	sur
 global	printer_version	Version imprimable
 global	error	Erreur
 global	help	Aide

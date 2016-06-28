@@ -21,6 +21,7 @@
 namespace Tuleap\Theme\BurningParrot;
 
 use ThemeVariantColor;
+use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Codendi_HTMLPurifier;
 use Feedback;
@@ -54,6 +55,9 @@ class HeaderPresenter
     /** @var string */
     public $main_classes;
 
+    /** @var SidebarPresenter */
+    public $sidebar;
+
     public function __construct(
         $title,
         $imgroot,
@@ -61,7 +65,8 @@ class HeaderPresenter
         ThemeVariantColor $color,
         array $stylesheets,
         array $feedback_logs,
-        $main_classes
+        $main_classes,
+        $sidebar
     ) {
         $this->title            = html_entity_decode($title);
         $this->imgroot          = $imgroot;
@@ -70,6 +75,7 @@ class HeaderPresenter
         $this->color_name       = $color->getName();
         $this->color_code       = $color->getHexaCode();
         $this->main_classes     = $main_classes;
+        $this->sidebar          = $sidebar;
 
         $this->buildFeedbacks($feedback_logs);
 
