@@ -77,6 +77,7 @@
                         <li class="nav-item sub-nav-item"><a href="#forms-radios">Radios</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-prepends">Prepends</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-appends">Appends</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-datetime">Date/time picker</a></li>
                     </ul>
                 </nav>
             </li>
@@ -1467,6 +1468,40 @@ Semantics, a large language ocean.
                     </div>
                 </div>
             </section>
+            <section class="doc-section" id="forms-datetime">
+                <h3 class="doc-subsection-title">Date/time picker <code class="code-inline">.tlp-input-date</code></h3>
+
+                <p>Date/time picker is based on <a href="https://chmln.github.io/flatpickr/">flatpickr</a>.</p>
+                <p>You need to explicitely activate the date picker by calling
+                    <code class="code-inline">tlp.datePicker(element);</code> in your javascript.</p>
+
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label for="date-picker" class="tlp-label">Pick a date</label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <input type="text" id="date-picker" class="tlp-input tlp-input-date" placeholder="2016-06-23" size="10">
+        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+    </div>
+</div>
+<div class="tlp-form-element">
+    <label for="datetime-picker" class="tlp-label">Pick a date and a time</label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <input type="text"
+           id="datetime-picker"
+           class="tlp-input tlp-input-date"
+           data-enabletime="true"
+           placeholder="2016-06-23 13:37"
+           size="16">
+        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+    </div>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
 
             <div class="section-content">
             </div>
@@ -1752,6 +1787,8 @@ Semantics, a large language ocean.
         </section>
     </main>
 
+    <script type="text/javascript" src="../dist/tlp.en_US.min.js"></script>
+    <script type="text/javascript" src="js/polyfills.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script src="codemirror/5.12.2/codemirror-compressed.js"></script>
     <script type="text/javascript" src="js/editors.js"></script>

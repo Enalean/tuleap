@@ -43,6 +43,10 @@
 
         function updatePreview() {
             example.innerHTML = editor.getValue();
+            var datepickers = example.querySelectorAll('.tlp-input-date');
+            [].forEach.call(datepickers, function (datepicker) {
+                tlp.datePicker(datepicker);
+            });
         }
         setTimeout(updatePreview, 10);
     });

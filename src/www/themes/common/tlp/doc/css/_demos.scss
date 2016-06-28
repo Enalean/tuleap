@@ -37,11 +37,11 @@
 
             .tlp-framed-vertically::before,
             .tlp-framed-vertically::after {
-                content: '';
                 position: absolute;
                 left: 0;
                 width: 100%;
                 height: 20px;
+                content: '';
             }
 
             .tlp-framed-vertically::before {
@@ -54,11 +54,11 @@
 
             .tlp-framed-horizontally::before,
             .tlp-framed-horizontally::after {
-                content: '';
                 position: absolute;
                 top: 0;
                 width: 20px;
                 height: 100%;
+                content: '';
             }
 
             .tlp-framed-horizontally::before {
@@ -77,10 +77,10 @@
 
             > main {
                 height: 300px;
+            }
 
-                &:not(.tlp-centered) {
-                    margin: 0;
-                }
+            > main:not(.tlp-centered) {
+                margin: 0;
             }
         }
     }

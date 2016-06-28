@@ -17,19 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var pkg        = require('./package.json');
-var gulp       = require('gulp');
-var sass       = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
-var concat     = require('gulp-concat');
-var uglify     = require('gulp-uglify');
-var scsslint   = require('gulp-scss-lint');
-var rename     = require('gulp-rename');
-var header     = require('gulp-header');
-var replace    = require('gulp-replace');
+var pkg         = require('./package.json');
+var gulp        = require('gulp');
+var sass        = require('gulp-sass');
+var sourcemaps  = require('gulp-sourcemaps');
+var concat      = require('gulp-concat');
+var uglify      = require('gulp-uglify');
+var scsslint    = require('gulp-scss-lint');
+var rename      = require('gulp-rename');
+var header      = require('gulp-header');
+var replace     = require('gulp-replace');
+var streamqueue = require('streamqueue');
 
-var colors = ['orange', 'blue', 'green', 'red', 'grey', 'purple'];
-var banner = [
+var locales = ['en_US', 'fr_FR'];
+var colors  = ['orange', 'blue', 'green', 'red', 'grey', 'purple'];
+var banner  = [
    '/**',
    ' * <%= pkg.name %> v<%= pkg.version %>',
    ' *',
@@ -59,9 +61,10 @@ gulp.task('watch', ['sass:watch', 'js:watch']);
 /************************************************
  * SASS
  ***********************************************/
-gulp.task('sass', ['sass:lint', 'sass:compress']);
+gulp.task('sass', ['sass:lint', 'sass:compress', 'sass:doc']);
 
-gulp.task('sass:watch', function () {
+gulp.task('sass:watch', ['sass'], function () {
+    gulp.watch('./doc/css/**/*.scss', ['sass:doc']);
     gulp.watch('./src/scss/**/*.scss', ['sass']);
 });
 
@@ -95,16 +98,17 @@ gulp.task('sass:doc', function () {
 });
 
 function compressForAGivenColor(color) {
-    return gulp.src('./src/scss/tlp-' + color + '.scss')
+    var tlp_files = gulp.src('./src/scss/tlp-' + color + '.scss')
         .pipe(
             sass({
                 outputStyle: 'compressed'
             })
         .on('error', sass.logError))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(header(banner, { pkg: pkg }))
+        .pipe(header(banner, { pkg: pkg }));
+    var vendor_files = gulp.src('./src/vendor/**/*.css');
+
+    return streamqueue({ objectMode: true }, tlp_files, vendor_files)
+        .pipe(concat('tlp-' + color + '.min.css'))
         .pipe(gulp.dest('./dist'));
 }
 
@@ -114,19 +118,27 @@ function compressForAGivenColor(color) {
 gulp.task('js', ['js:compile']);
 
 gulp.task('js:watch', function () {
-    gulp.watch('./src/js/*.js', ['js']);
+    gulp.watch('./src/js/**/*.js', ['js']);
 });
 
-gulp.task('js:compile', function() {
-    return gulp.src('./src/js/*.js')
-        .pipe(concat('tlp.js'))
-        .pipe(uglify())
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(header(banner, { pkg: pkg }))
-        .pipe(gulp.dest('./dist'));
+gulp.task('js:compile', locales.map(function (locale) { return 'js:compile-' + locale; }));
+
+locales.forEach(function (locale) {
+    gulp.task('js:compile-' + locale, function () {
+        compileForAGivenLocale(locale);
+    });
 });
+
+function compileForAGivenLocale(locale) {
+    var tlp_files    = gulp.src('./src/js/**/*.js').pipe(uglify()).pipe(header(banner, { pkg: pkg })),
+        vendor_files = gulp.src('./src/vendor/**/*.js'),
+        overrides    = gulp.src('./src/vendor-overrides/**/*.js').pipe(uglify()).pipe(header(banner, { pkg: pkg })),
+        locale_files = gulp.src('./src/vendor-i18n/' + locale + '/**/*.js').pipe(uglify());
+
+    return streamqueue({ objectMode: true }, tlp_files, vendor_files, overrides, locale_files)
+        .pipe(concat('tlp.' + locale +'.min.js'))
+        .pipe(gulp.dest('./dist'));
+}
 
 /************************************************
  * Assets

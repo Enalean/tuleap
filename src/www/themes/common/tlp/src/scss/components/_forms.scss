@@ -106,7 +106,7 @@ $tlp-form-element-border-transition-duration: 150ms;
     border: 1px solid $tlp-form-element-border-color;
     border-radius: $tlp-form-element-border-radius;
     background: $tlp-form-element-background;
-    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    font-family: $tlp-font-family;
     font-size: $tlp-form-element-font-size;
 
     // scss-lint:disable VendorPrefix
