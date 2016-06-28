@@ -104,6 +104,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
+    public function canBeUsedForLegacyAutocomputeCalculation()
+    {
+        return false;
+    }
+
     public function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
@@ -143,7 +148,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
-        if ($stop_on_manual_value) {
+        if ($stop_on_manual_value || $this->getDeprecationRetriever()->isALegacyField($this)) {
             $computed_value = $this->getComputedValue($user, $artifact);
         } else {
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
@@ -418,7 +423,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
     {
-        $current_user   = UserManager::instance()->getCurrentUser();
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
+            $value = $this->getComputedValue($current_user, $artifact);
+            return '<div class="auto-computed-label computed-legacy">'.  $purifier->purify($value) . '</div>';
+        }
+
         $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
 
         if ($value !== null) {
@@ -428,17 +440,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if (! $computed_value) {
             $computed_value = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
         }
-
-        $purifier = Codendi_HTMLPurifier::instance();
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
 
         if ($value === null) {
             $value = $html_computed_value;
-        }
-
-        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
-            return '<div class="auto-computed-label computed-legacy">'. $value. '</div>';
         }
 
         return $this->fetchFieldReadOnly($value, $html_computed_value);

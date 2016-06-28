@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -267,6 +267,11 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         }
 
         return $decorators[$value_id]->css(null);
+    }
+
+    public function canBeUsedForLegacyAutocomputeCalculation()
+    {
+        return false;
     }
 
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
