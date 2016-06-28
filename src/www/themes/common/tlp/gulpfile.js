@@ -63,33 +63,37 @@ gulp.task('watch', ['sass:watch', 'js:watch']);
  ***********************************************/
 gulp.task('sass', ['sass:lint', 'sass:compress', 'sass:doc']);
 
-gulp.task('sass:watch', ['sass'], function () {
+gulp.task('sass:watch', ['sass'], function() {
     gulp.watch('./doc/css/**/*.scss', ['sass:doc']);
     gulp.watch('./src/scss/**/*.scss', ['sass']);
 });
 
-gulp.task('sass:lint', function () {
-    return gulp.src('./src/scss/*.scss')
+gulp.task('sass:lint', function() {
+    return gulp.src('./src/scss/**/*.scss')
         .pipe(scsslint({
             'config': '.scss-lint.yml'
-        }))
+        }));
 });
 
 gulp.task('sass:compress', colors.map(function (color) { return 'sass:compress-' + color; }));
 
 colors.forEach(function (color) {
-    gulp.task('sass:compress-' + color, function () {
+    gulp.task('sass:compress-' + color, function() {
         return compressForAGivenColor(color);
     });
 });
 
-gulp.task('sass:doc', function () {
+gulp.task('sass:doc', function() {
     return gulp.src('./doc/css/*.scss')
+        .pipe(scsslint({
+            'config': '.scss-lint.yml'
+        }))
         .pipe(
             sass({
                 outputStyle: 'compressed'
             })
-        .on('error', sass.logError))
+            .on('error', sass.logError)
+        )
         .pipe(rename({
             suffix: '.min'
         }))
@@ -103,7 +107,8 @@ function compressForAGivenColor(color) {
             sass({
                 outputStyle: 'compressed'
             })
-        .on('error', sass.logError))
+            .on('error', sass.logError)
+        )
         .pipe(header(banner, { pkg: pkg }));
     var vendor_files = gulp.src('./src/vendor/**/*.css');
 
@@ -117,14 +122,14 @@ function compressForAGivenColor(color) {
  ***********************************************/
 gulp.task('js', ['js:compile']);
 
-gulp.task('js:watch', function () {
+gulp.task('js:watch', function() {
     gulp.watch('./src/js/**/*.js', ['js']);
 });
 
 gulp.task('js:compile', locales.map(function (locale) { return 'js:compile-' + locale; }));
 
 locales.forEach(function (locale) {
-    gulp.task('js:compile-' + locale, function () {
+    gulp.task('js:compile-' + locale, function() {
         compileForAGivenLocale(locale);
     });
 });

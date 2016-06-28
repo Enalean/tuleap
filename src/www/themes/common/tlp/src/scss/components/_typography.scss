@@ -112,8 +112,8 @@ p {
 
 ul,
 ol {
-    padding: 0 0 0 1.5 * $tlp-spacing;
     margin: 0 0 $tlp-spacing;
+    padding: 0 0 0 1.5 * $tlp-spacing;
     line-height: 24px;
 
     &:last-child {

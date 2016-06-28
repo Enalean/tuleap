@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.tlp-framed {
-    padding: $tlp-spacing;
-}
+var tlp = tlp || { };
 
-.tlp-framed-horizontally {
-    padding: 0 $tlp-spacing;
-}
+tlp.select2 = function(element, options) {
+    options = options || {};
 
-.tlp-framed-vertically {
-    padding: $tlp-spacing 0;
-}
+    options.theme = 'tlp-select2';
 
-.tlp-centered {
-    max-width: 1200px;
-    margin: 0 auto;
+    if (element && element.classList.contains('tlp-select-small')) {
+        options.theme = 'tlp-select2-small';
+    } else if (element && element.classList.contains('tlp-select-large')) {
+        options.theme = 'tlp-select2-large';
+    }
+
+    jQuery(element).select2(options);
 }

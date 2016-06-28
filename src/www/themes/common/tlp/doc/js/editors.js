@@ -36,7 +36,7 @@
             mode: 'text/html',
             scrollbarStyle: 'overlay'
         });
-        editor.on("change", function() {
+        editor.on('change', function() {
             clearTimeout(delay);
             delay = setTimeout(updatePreview, 300);
         });
@@ -46,6 +46,40 @@
             var datepickers = example.querySelectorAll('.tlp-input-date');
             [].forEach.call(datepickers, function (datepicker) {
                 tlp.datePicker(datepicker);
+            });
+
+            tlp.select2(document.querySelector('#area-select2'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#area-select2-adjusted'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#area-without-autocomplete'), {
+                placeholder: 'Choose an area',
+                allowClear: true,
+                minimumResultsForSearch: Infinity
+            });
+            tlp.select2(document.querySelector('#area-select2-help'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#area-select2-mandatory'), {
+                placeholder: 'Choose an area'
+            });
+            tlp.select2(document.querySelector('#area-select2-disabled'));
+            tlp.select2(document.querySelector('#area-select2-error'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#area-select2-small'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#area-select2-large'), {
+                placeholder: 'Choose an area',
+                allowClear: true
             });
         }
         setTimeout(updatePreview, 10);
