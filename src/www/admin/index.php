@@ -159,8 +159,14 @@ $wUser->setContent('
   <li>'.$Language->getText('admin_main', 'all_users',array("userlist.php")).'</li>
   <li>'.$Language->getText('admin_main', 'search_user').'
     <form name="usersrch" action="userlist.php" method="get" class="form-inline">
-      <input type="text" name="user_name_search" class="user_name_search" />
-      <input type="submit" class="tlp-button-secondary" value="'.$Language->getText('admin_main', 'search').'">
+      <div class="tlp-form-element">
+        <div class="tlp-form-element tlp-form-element-append">
+          <input type="text" name="user_name_search" class="user_name_search tlp-input">
+          <button type="submit" class="tlp-append tlp-button-primary tlp-button-outline">
+            <i class="fa fa-search tlp-button-icon"></i> '.$Language->getText('admin_main', 'search').'
+          </button>
+        </div>
+      </div>
     </form>
   </li>
   <li>'.$Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")).' '.$user_approval.'</li>
@@ -185,8 +191,14 @@ $wProject->setContent('
   <li>'.$Language->getText('admin_main', 'all_groups', array("grouplist.php")).'</li>
   <li>'.$Language->getText('admin_main', 'search_group').'
     <form name="gpsrch" action="grouplist.php" method="get" class="form-inline">
-      <input type="text" name="group_name_search" class="group_name_search" />
-      <input type="submit" class="tlp-button-secondary" value="'.$Language->getText('admin_main', 'search').'">
+      <div class="tlp-form-element">
+        <div class="tlp-form-element tlp-form-element-append">
+          <input type="text" name="group_name_search" class="tlp-input group_name_search" />
+          <button type="submit" class="tlp-append tlp-button-primary tlp-button-outline">
+            <i class="fa fa-search tlp-button-icon"></i> '.$Language->getText('admin_main', 'search').'
+          </button>
+        </div>
+      </div>
     </form>
   </li>
   <li>'.$Language->getText('admin_main', 'incomplete_group', array("grouplist.php?status=I")).'</li>
