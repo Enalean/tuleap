@@ -184,6 +184,7 @@ class ArtifactTemporaryFilesResource {
      * </pre>
      *
      * @url POST
+     * @status 201
      * @param string $name          Name of the file {@from body}
      * @param string $mimetype      Mime-Type of the file {@from body}
      * @param string $content       First chunk of the file (base64-encoded) {@from body}

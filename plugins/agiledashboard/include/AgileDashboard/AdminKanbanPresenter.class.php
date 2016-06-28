@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,16 +32,21 @@ class AdminKanbanPresenter {
     /** @var bool */
     public $has_kanban;
 
+    /** @var array */
+    private $additional_panes;
+
     public function __construct(
         $group_id,
         $kanban_activated,
         $kanban_title,
-        $has_kanban
+        $has_kanban,
+        array $additional_panes
     ) {
         $this->group_id         = $group_id;
         $this->kanban_activated = $kanban_activated;
         $this->kanban_title     = $kanban_title;
         $this->has_kanban       = $has_kanban;
+        $this->additional_panes = $additional_panes;
     }
 
     public function config_title() {
@@ -91,5 +96,10 @@ class AdminKanbanPresenter {
     public function token() {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         return $token->fetchHTMLInput();
+    }
+
+    public function additional_panes()
+    {
+        return array_values($this->additional_panes);
     }
 }

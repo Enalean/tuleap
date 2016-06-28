@@ -11,6 +11,10 @@ repo    gitolite-admin
     RW+     =   id_rsa_gl-adm
 {{/ has_mirror }}
 
+# Codendiadm has write access to all repositories to merge pull requests
+repo @all
+    RW = id_rsa_gl-adm
+
 {{# project_names }}
 include "projects/{{ . }}.conf"
 {{/ project_names }}

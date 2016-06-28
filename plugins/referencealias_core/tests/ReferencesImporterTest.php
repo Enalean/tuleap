@@ -47,6 +47,22 @@ XML;
         $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
     }
 
+    public function testItShouldAddRelLinks()
+    {
+        $xml = <<<XML
+            <references>
+                <reference source="rel4567" target="3"/>
+                <reference source="rel34"   target="4"/>
+            </references>
+XML;
+        $xml = new \SimpleXMLElement($xml);
+        $created_references = array('release' => array('3' => '6778', '4' => '6779'));
+
+        stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
+        expect($this->dao)->insertRef()->count(2);
+        $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
+    }
+
     public function testItShouldNotAddIfTargetIsUnknown()
     {
         $xml = <<<XML

@@ -84,7 +84,7 @@ class ArtifactFilesTest extends RestBase {
         $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
         $response = $this->getResponse($request);
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($response->getStatusCode(), 201);
 
         $file_representation = $response->json();
 
@@ -300,7 +300,7 @@ class ArtifactFilesTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->post('artifacts' , null, $params));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($response->getStatusCode(), 201);
         $posted_artifact = $response->json();
 
         $response = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));

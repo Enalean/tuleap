@@ -1,9 +1,19 @@
 Version 8.17 (not released yet)
+	== Enhancement ==
+	* request #9113: Be able to filter system events by status
+
+	== Bug fix ==
+	* request #9289: Root daily is not able to suspend multiple users
+
 	== Development ==
 	* request #9278: Remove CentOS 5 packages
 
-    == Plugins ==
-	* git: 4.221
+	== Plugins ==
+	* git: 4.222
+	* tracker: 5.938
+	* referencealias_core: 0.7
+	* agiledashboard: 1.387
+	* hudson: 1.30
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==

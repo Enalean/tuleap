@@ -891,6 +891,7 @@ class KanbanResource extends AuthenticatedResource {
      * static values.
      *
      * @url POST {id}/columns
+     * @status 201
      *
      * @param string                         $id     Id of the Kanban
      * @param KanbanColumnPOSTRepresentation $column The created kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPOSTRepresentation}
@@ -899,8 +900,6 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 401
      * @throws 403
      * @throws 404
-     *
-     * @status 201
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation
      */

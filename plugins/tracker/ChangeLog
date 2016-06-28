@@ -1,3 +1,12 @@
+Version 5.938 - Tuleap 8.17
+    * request #9230 Artifact API doesn't follow RFC
+
+Version 5.937 - Tuleap 8.17
+    * story #9090: Computed field in modal V1 is broken
+
+Version 5.936 - Tuleap 8.17
+    * Re-enable migration and edition of computed fields v2
+
 Version 5.935 - Tuleap 8.16
     * Disable migration and edition of computed fields v2
 

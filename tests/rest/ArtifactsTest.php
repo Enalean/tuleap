@@ -57,8 +57,8 @@ class ArtifactsTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
-        $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertRegExp('/.+ GMT$/', $response->getHeader('Last-Modified')->normalize()->__toString(), 'Last-Modified must be RFC1123 complient');
         $this->assertNotNull($response->getHeader('Etag'));
         $this->assertNotNull($response->getHeader('Location'));
 
@@ -82,7 +82,7 @@ class ArtifactsTest extends RestBase {
 
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
-        $this->assertNotNull($response->getHeader('Location'));
+        $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
 
         $fields = $artifact['values'];
 

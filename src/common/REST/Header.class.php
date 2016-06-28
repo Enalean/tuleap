@@ -20,6 +20,8 @@
 namespace Tuleap\REST;
 
 use ForgeConfig;
+use DateTime;
+use DateTimeZone;
 
 class Header {
     const GET     = 'GET';
@@ -44,8 +46,23 @@ class Header {
     const X_DISK_USAGE                = 'X-DISK-USAGE';
     const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
+    const RFC1123 = 'D, d M Y H:i:s \G\M\T';
+
+    /**
+     * Sends headers in RFC1123 compliant format
+     * See https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+     *
+     * Be careful, if you don't specify the timezone, despite usage of RFC1123
+     * const, the resulting string won't ends with GMT and this might be a
+     * problem with clients or proxy that follow RFC very strictly.
+     *
+     * @param int $timestamp
+     */
     public static function lastModified($timestamp) {
-        self::sendHeader(self::LAST_MODIFIED, date('c', $timestamp));
+        $time = new DateTime();
+        $time->setTimestamp($timestamp);
+        $time->setTimezone(new DateTimeZone('GMT'));
+        self::sendHeader(self::LAST_MODIFIED, $time->format(self::RFC1123));
     }
 
     public static function ETag($hash) {

@@ -832,6 +832,7 @@ class MilestoneResource extends AuthenticatedResource {
      * }
      *
      * @url POST {id}/backlog
+     * @status 201
      *
      * @param int                  $id   Id of the milestone
      * @param BacklogItemReference $item Reference of the Backlog Item {@from body} {@type BacklogItemReference}

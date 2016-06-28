@@ -49,6 +49,7 @@ class TokenResource {
      * Generate a token for authentication for the current user
      *
      * @url POST
+     * @status 201
      *
      * @throws 400
      * @throws 500

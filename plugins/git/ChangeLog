@@ -1,3 +1,6 @@
+Version 4.222 - Tuleap 8.17
+    * tasks #9290: update gitolite.conf template for pull requests rights
+
 Version 4.221 - Tuleap 8.17
     * request #9287 A pattern must be in read only if no writers and rewinders
 
