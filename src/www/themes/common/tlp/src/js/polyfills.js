@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'components/layout';
-@import 'components/typography';
-@import 'components/avatars';
-@import 'components/badges';
-@import 'components/buttons';
-@import 'components/pagination';
-@import 'components/panes';
-@import 'components/alerts';
-@import 'components/tables';
-@import 'components/tabs';
-@import 'components/forms';
-@import 'components/dropdowns';
-@import 'components/modal';
+'use strict';
+
+(() => {
+    if (typeof window.CustomEvent !== 'function') {
+        CustomEvent.prototype = window.Event.prototype;
+
+        window.CustomEvent = CustomEvent;
+    }
+
+    function CustomEvent(event, { bubbles = false, cancelable = false, detail = undefined }) {
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent(event, bubbles, cancelable, detail);
+        return evt;
+    }
+})();

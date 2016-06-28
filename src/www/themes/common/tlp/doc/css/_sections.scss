@@ -38,7 +38,6 @@ main {
         padding: 5px 5px 3px;
         font-family: Monaco, Courier, monospace;
         font-weight: 400;
-        text-transform: lowercase;
     }
 
     .doc-section-title {
@@ -51,6 +50,7 @@ main {
             position: relative;
             top: -2px;
             font-size: 16px;
+            text-transform: lowercase;
         }
     }
 
@@ -62,6 +62,7 @@ main {
 
         .code-inline {
             font-size: 13px;
+            text-transform: lowercase;
         }
     }
 

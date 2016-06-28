@@ -92,6 +92,20 @@ $nav-margin: 30px;
             border: 1px solid $tlp-ui-border-normal;
         }
     }
+
+    .example-modal-static .tlp-modal {
+
+        > .tlp-modal-body {
+            border-right-color: $tlp-ui-border-normal;
+            border-left-color: $tlp-ui-border-normal;
+        }
+
+        > .tlp-modal-footer {
+            border-right-color: $tlp-ui-border-normal;
+            border-bottom-color: $tlp-ui-border-normal;
+            border-left-color: $tlp-ui-border-normal;
+        }
+    }
 }
 
 body {

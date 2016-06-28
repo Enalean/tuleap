@@ -71,6 +71,30 @@
         }
     }
 
+    .example-modal-static {
+        .tlp-modal {
+            display: flex;
+            position: relative;
+            width: auto;
+            margin: 0;
+            transform: unset;
+            opacity: 1;
+            z-index: 1;
+
+            > .tlp-modal-body {
+                border: 1px solid transparent;
+                border-top: 0;
+                border-bottom: 0;
+            }
+
+            > .tlp-modal-footer {
+                border-right: 1px solid transparent;
+                border-bottom: 1px solid transparent;
+                border-left: 1px solid transparent;
+            }
+        }
+    }
+
     .example-layout {
         > div {
             min-height: 300px;

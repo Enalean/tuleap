@@ -81,6 +81,14 @@
                 placeholder: 'Choose an area',
                 allowClear: true
             });
+
+            var modal_buttons = example.querySelectorAll('[data-target^=modal-]');
+            [].forEach.call(modal_buttons, function (button) {
+                var modal = tlp.modal(document.getElementById(button.dataset.target), {});
+                button.addEventListener('click', function () {
+                    modal.toggle();
+                });
+            });
         }
         setTimeout(updatePreview, 10);
     });

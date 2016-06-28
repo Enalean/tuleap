@@ -80,7 +80,7 @@
 
 window.toggleMargins = function (id) {
     document.getElementById(id).classList.toggle('example-hide-margins');
-}
+};
 
 window.onscroll = function scrollspy() {
     var sections        = document.querySelectorAll('.doc-section'),

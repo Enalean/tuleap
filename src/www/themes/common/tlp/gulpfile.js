@@ -28,6 +28,7 @@ var rename      = require('gulp-rename');
 var header      = require('gulp-header');
 var replace     = require('gulp-replace');
 var streamqueue = require('streamqueue');
+var babel       = require('gulp-babel');
 
 var locales = ['en_US', 'fr_FR'];
 var colors  = ['orange', 'blue', 'green', 'red', 'grey', 'purple'];
@@ -135,7 +136,10 @@ locales.forEach(function (locale) {
 });
 
 function compileForAGivenLocale(locale) {
-    var tlp_files    = gulp.src('./src/js/**/*.js').pipe(uglify()).pipe(header(banner, { pkg: pkg })),
+    var tlp_files    = gulp.src('./src/js/**/*.js')
+        .pipe(babel({ presets: ['es2015'] }))
+        .pipe(uglify())
+        .pipe(header(banner, { pkg: pkg })),
         vendor_files = gulp.src('./src/vendor/**/*.js'),
         overrides    = gulp.src('./src/vendor-overrides/**/*.js').pipe(uglify()).pipe(header(banner, { pkg: pkg })),
         locale_files = gulp.src('./src/vendor-i18n/' + locale + '/**/*.js').pipe(uglify());

@@ -27,3 +27,17 @@ Load this javascript file before </body>:
   </body>
 </html>
 ```
+
+Troubleshootings
+----------------
+
+Error: watch … ENOSPC
+'''''''''''''''''''''
+
+You may need to issue this command on linux if you get ENOSPC error while launching `gulp watch`:
+
+```
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+```
+
+https://github.com/gulpjs/gulp/issues/217
