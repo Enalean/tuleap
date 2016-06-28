@@ -71,43 +71,109 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
     }
 
+}
+
+class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
+{
+    private $artifact;
+    private $old_value;
+    private $field;
+
+    public function setUp()
+    {
+        $this->artifact  = mock('Tracker_Artifact');
+        $this->old_value = mock('Tuleap\Tracker\Artifact\ChangesetValueComputed');
+
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getNumeric'));
+    }
+
+
     public function itDetectsChangeWhenBackToAutocompute()
     {
-        $artifact        = mock('Tracker_Artifact');
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
-        stub($changeset_value)->getNumeric()->returns(1);
+        stub($this->old_value)->getNumeric()->returns(1.0);
         $submitted_value = array(
             'manual_value'    => '',
             'is_autocomputed' => true
         );
 
-        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $submitted_value));
     }
 
     public function itDetectsChangeWhenBackToManualValue()
     {
-        $artifact        = mock('Tracker_Artifact');
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
-        stub($changeset_value)->getNumeric()->returns('');
+        stub($this->old_value)->getNumeric()->returns(null);
         $submitted_value = array(
             'manual_value'    => '123',
             'is_autocomputed' => false
         );
 
-        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $submitted_value));
     }
 
     public function itDetectsChangeWhenBackToAutocomputeWhenManualValueIs0()
     {
-        $artifact        = mock('Tracker_Artifact');
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
-        stub($changeset_value)->getNumeric()->returns(0);
+        stub($this->old_value)->getNumeric()->returns(0.0);
         $submitted_value = array(
             'manual_value'    => '',
             'is_autocomputed' => true
         );
 
-        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $submitted_value));
+    }
+
+    public function itHasChangesWhenANewManualValueIsSet()
+    {
+        stub($this->old_value)->getNumeric()->returns(7.0);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => 5
+        );
+
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesWhenANewManualValueIsEqualToOldChangesetValue()
+    {
+        stub($this->old_value)->getNumeric()->returns(7.0);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => 7
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesIfYouAreStillInAutocomputedMode()
+    {
+        stub($this->old_value)->getNumeric()->returns(null);
+        $new_value = array(
+            'is_autocomputed' => '1',
+            'manual_value'    => ''
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesWhenANewManualIsAStringAndValueIsEqualToOldChangesetValue()
+    {
+        stub($this->old_value)->getNumeric()->returns(7.0);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => '7'
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itCanAdd0ToManualValueFromAutocomputed()
+    {
+        stub($this->old_value)->getNumeric()->returns(null);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => '0'
+        );
+
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
     }
 }
 

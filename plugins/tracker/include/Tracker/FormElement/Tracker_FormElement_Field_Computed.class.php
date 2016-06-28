@@ -403,11 +403,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
-    {
-        return $this->getValueDao()->create($changeset_value_id, $value);
-    }
-
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -718,7 +713,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new ComputedDao();
     }
 
@@ -726,10 +722,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     public function fetchRawValueFromChangeset($changeset) {
-    }
-
-    protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
-        return $this->getValueDao()->keep($previous_changesetvalue->getId(), $changeset_value_id);
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed)
@@ -761,57 +753,47 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $factory_builder::build();
     }
 
-    /**
-     * Save the value submitted by the user in the new changeset
-     *
-     * @param Tracker_Artifact           $artifact         The artifact
-     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
-     * @param int                        $new_changeset_id The id of the new changeset
-     * @param mixed                      $value  The value submitted by the user
-     * @param boolean $is_submission true if artifact submission, false if artifact update
-     *
-     * @return bool true if success
-     */
-    public function saveNewChangeset(
-        $artifact,
-        $old_changeset,
-        $new_changeset_id,
-        $value,
-        PFUser $submitter,
-        $is_submission = false,
-        $bypass_permissions = false
-    ) {
-        if ($this->getDeprecationRetriever()->isALegacyField($this) || ! $this->userCanUpdate($submitter)) {
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $user = UserManager::instance()->getCurrentUser();
+        if ($this->getDeprecationRetriever()->isALegacyField($this) || ! $this->userCanUpdate($user)) {
             return true;
         }
+        $new_value = $this->getStorableValue($value);
 
-        $new_value = '';
+        return $this->getValueDao()->create($changeset_value_id, $new_value);
+    }
+
+    private function getStorableValue(array $value)
+    {
+         $new_value = '';
 
         if (isset($value[self::FIELD_VALUE_MANUAL])) {
             $new_value = $value[self::FIELD_VALUE_MANUAL];
         }
 
-        return parent::saveNewChangeset(
-            $artifact,
-            $old_changeset,
-            $new_changeset_id,
-            $new_value,
-            $submitter,
-            $is_submission,
-            $bypass_permissions
-        );
+        return $new_value;
     }
 
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
     {
-        if ($old_value->getNumeric() === 0 && $new_value === '') {
+        $new_value = $this->getStorableValue($value);
+
+        if ($previous_changeset_value->getNumeric() === null && $new_value === '') {
+            return false;
+        }
+
+        if ($previous_changeset_value->getNumeric() === null && $new_value !== '') {
             return true;
         }
 
-        return $old_value->getNumeric() != $new_value;
+        if ($new_value === '' && $previous_changeset_value->getNumeric() === 0.0) {
+            return true;
+        }
+
+        return  (float) $previous_changeset_value->getNumeric() !== (float) $new_value;
     }
 
     public function getSoapAvailableValues() {
