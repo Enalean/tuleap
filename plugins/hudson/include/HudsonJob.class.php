@@ -116,8 +116,12 @@ class HudsonJob {
         return $this->getDomJob()->getName();
     }
     function getName() {
-        if (!$this->name) {
-            $this->name = $this->getDomJob()->name;
+        try {
+            if (!$this->name) {
+                $this->name = $this->getDomJob()->name;
+            }
+        } catch (Exception $e) {
+
         }
         return $this->name;
     }
