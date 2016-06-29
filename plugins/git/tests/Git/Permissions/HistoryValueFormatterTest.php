@@ -49,9 +49,11 @@ class HistoryValueFormatterTest extends TuleapTestCase
 
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
+        $this->retriever           = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
         $this->formatter           = new HistoryValueFormatter(
             $this->permissions_manager,
-            $this->ugroup_manager
+            $this->ugroup_manager,
+            $this->retriever
         );
 
         stub($this->ugroup_manager)->getUgroupsById($this->project)->returns(array(
@@ -133,6 +135,44 @@ EOS;
 Read: Contributors
 Write: Developers
 Rewind: Admins
+EOS;
+
+        $result = $this->formatter->formatValueForProject($this->project);
+
+        $this->assertEqual($result, $expected_result);
+    }
+
+    public function itDoesNotExportWriteAndRewindIfRepositoryUsesFineGrainedPermissions()
+    {
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
+            $this->project,
+            1,
+            Git::PERM_READ
+        )->returns(array(101));
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->migrated_repository)->returns(true);
+
+        $expected_result = <<<EOS
+Read: Contributors
+EOS;
+
+        $result = $this->formatter->formatValueForRepository($this->migrated_repository);
+
+        $this->assertEqual($result, $expected_result);
+    }
+
+    public function itDoesNotExportWriteAndRewindIfProjectUsesFineGrainedPermissions()
+    {
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
+            $this->project,
+            101,
+            Git::DEFAULT_PERM_READ
+        )->returns(array(101));
+
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+
+        $expected_result = <<<EOS
+Read: Contributors
 EOS;
 
         $result = $this->formatter->formatValueForProject($this->project);

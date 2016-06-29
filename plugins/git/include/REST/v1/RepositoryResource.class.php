@@ -133,7 +133,8 @@ class RepositoryResource extends AuthenticatedResource {
         $fine_grained_retriever                = new FineGrainedRetriever($fine_grained_dao);
         $history_formatter                     = new HistoryValueFormatter(
             PermissionsManager::instance(),
-            new UGroupManager()
+            new UGroupManager(),
+            $fine_grained_retriever
         );
 
         $git_permission_manager = new GitPermissionsManager(

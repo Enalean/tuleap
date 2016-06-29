@@ -33,6 +33,11 @@ class HistoryValueFormatter
 {
 
     /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
+
+    /**
      * @var UGroupManager
      */
     private $ugroup_manager;
@@ -43,18 +48,23 @@ class HistoryValueFormatter
     private $permissions_manager;
 
     public function __construct(
-        PermissionsManager $permissions_manager,
-        UGroupManager      $ugroup_manager
+        PermissionsManager   $permissions_manager,
+        UGroupManager        $ugroup_manager,
+        FineGrainedRetriever $fine_grained_retriever
     ) {
-        $this->permissions_manager = $permissions_manager;
-        $this->ugroup_manager      = $ugroup_manager;
+        $this->permissions_manager    = $permissions_manager;
+        $this->ugroup_manager         = $ugroup_manager;
+        $this->fine_grained_retriever = $fine_grained_retriever;
     }
 
     public function formatValueForProject(Project $project)
     {
         $value = $this->getReadersForProject($project);
-        $value .= $this->getWritersForProject($project);
-        $value .= $this->getRewindersForProject($project);
+
+        if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {
+            $value .= $this->getWritersForProject($project);
+            $value .= $this->getRewindersForProject($project);
+        }
 
         return trim($value);
     }
@@ -63,7 +73,9 @@ class HistoryValueFormatter
     {
         $value = $this->getReadersForRepository($repository);
 
-        if (! $repository->isMigratedToGerrit()) {
+        if (! $repository->isMigratedToGerrit() &&
+            ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)
+        ) {
             $value .= $this->getWritersForRepository($repository);
             $value .= $this->getRewindersForRepository($repository);
         }
