@@ -45,7 +45,9 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
             $this->backup_directory,
             $this->mirror_updater,
             $this->mirror_data_mapper,
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('ProjectHistoryDao'),
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
         );
     }
 
@@ -111,7 +113,9 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
             $this->backup_directory,
             $this->mirror_updater,
             $this->mirror_data_mapper,
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('ProjectHistoryDao'),
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
         );
     }
 
@@ -201,7 +205,9 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
                 $this->backup_directory,
                 $this->mirror_updater,
                 $this->mirror_data_mapper,
-                mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator')
+                mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+                mock('ProjectHistoryDao'),
+                mock('Tuleap\Git\Permissions\HistoryValueFormatter')
             )
         );
     }
@@ -306,7 +312,9 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
                 $this->backup_directory,
                 $this->mirror_updater,
                 $this->mirror_data_mapper,
-                mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator')
+                mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+                mock('ProjectHistoryDao'),
+                mock('Tuleap\Git\Permissions\HistoryValueFormatter')
             )
         );
 
