@@ -1,3 +1,6 @@
+Version 5.939 - Tuleap 8.17
+    * request #9293 Calcul computed field V2 error when using slow computed calcul
+
 Version 5.938 - Tuleap 8.17
     * request #9230 Artifact API doesn't follow RFC
 
