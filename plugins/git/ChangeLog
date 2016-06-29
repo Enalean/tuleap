@@ -1,3 +1,6 @@
+Version 4.223 - Tuleap 8.17
+    * story #8425: Save more comprehensive Git logs in project history
+
 Version 4.222 - Tuleap 8.17
     * tasks #9290: update gitolite.conf template for pull requests rights
 
