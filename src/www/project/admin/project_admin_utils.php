@@ -329,7 +329,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                                      'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
             $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
         } else {
-            $html .= $hp->purify($val);
+            $html .= $hp->purify($val, CODENDI_PURIFIER_BASIC);
             $user = UserManager::instance()->getUserByUserName($row['user_name']);
             $html .= '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).
             '</TD><TD>'.UserHelper::instance()->getLinkOnUser($user).'</TD></TR>';
