@@ -3,6 +3,7 @@ Version 8.17 (not released yet)
 	* request #9113: Be able to filter system events by status
 	* story #8425: Comprehensive git permissions changes log
 		- Enhance displaying of project history
+	* request #9280: $sys_trusted_proxies should allow a subnet
 
 	== Bug fix ==
 	* request #9289: Root daily is not able to suspend multiple users
