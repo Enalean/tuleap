@@ -1298,7 +1298,7 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * @return FineGrainedUpdater
+     * @return FineGrainedPermissionSaver
      */
     private function getFineGrainedPermissionSaver()
     {
@@ -1316,7 +1316,7 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * @return FineGrainedUpdater
+     * @return FineGrainedRetriever
      */
     public function getFineGrainedRetriever()
     {
@@ -1325,7 +1325,7 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * @return FineGrainedUpdater
+     * @return FineGrainedPermissionFactory
      */
     public function getFineGrainedFactory()
     {
@@ -1349,7 +1349,8 @@ class GitPlugin extends Plugin {
     {
         return new HistoryValueFormatter(
             $this->getPermissionsManager(),
-            $this->getUGroupManager()
+            $this->getUGroupManager(),
+            $this->getFineGrainedRetriever()
         );
     }
 
