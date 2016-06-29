@@ -1,3 +1,6 @@
+Version 4.224 - Tuleap 8.17
+    * Does not log WRITE and REWIND if fine grained permissions are used
+
 Version 4.223 - Tuleap 8.17
     * story #8425: Save more comprehensive Git logs in project history
 
