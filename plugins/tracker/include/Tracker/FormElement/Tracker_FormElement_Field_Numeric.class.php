@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -38,6 +39,11 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             'size'  => 40,
         ),
     );
+
+    public function canBeUsedForLegacyAutocomputeCalculation()
+    {
+        return true;
+    }
 
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
