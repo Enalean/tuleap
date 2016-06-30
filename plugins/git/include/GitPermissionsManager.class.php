@@ -388,4 +388,32 @@ class GitPermissionsManager
         );
     }
 
+    /**
+     * @return array
+     */
+    public function getRepositoryGlobalPermissions(GitRepository $repository)
+    {
+        $permissions =  array(
+            Git::PERM_READ => $this->getGlobalPermission($repository, Git::PERM_READ)
+        );
+
+        if (! $repository->isMigratedToGerrit() &&
+            ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)
+        ) {
+            $permissions[Git::PERM_WRITE] = $this->getGlobalPermission($repository, Git::PERM_WRITE);
+            $permissions[Git::PERM_WPLUS] = $this->getGlobalPermission($repository, Git::PERM_WPLUS);
+        }
+
+        return $permissions;
+    }
+
+    private function getGlobalPermission(GitRepository $repository, $permission_name)
+    {
+        return $this->permissions_manager->getAuthorizedUGroupIdsForProject(
+            $repository->getProject(),
+            $repository->getId(),
+            $permission_name
+        );
+    }
+
 }

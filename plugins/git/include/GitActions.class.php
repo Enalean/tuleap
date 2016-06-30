@@ -32,6 +32,7 @@ use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
 
 /**
  * GitActions
@@ -40,6 +41,11 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
  */
 class GitActions extends PluginActions
 {
+
+    /**
+     * @var PermissionChangesDetector
+     */
+    private $permission_changes_detector;
 
     /**
      * @var HistoryValueFormatter
@@ -172,7 +178,8 @@ class GitActions extends PluginActions
         CITokenManager $ci_token_manager,
         FineGrainedPermissionReplicator $fine_grained_replicator,
         FineGrainedRetriever $fine_grained_retriever,
-        HistoryValueFormatter $history_value_formatter
+        HistoryValueFormatter $history_value_formatter,
+        PermissionChangesDetector $permission_changes_detector
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -200,6 +207,7 @@ class GitActions extends PluginActions
         $this->fine_grained_replicator       = $fine_grained_replicator;
         $this->fine_grained_retriever        = $fine_grained_retriever;
         $this->history_value_formatter       = $history_value_formatter;
+        $this->permission_changes_detector   = $permission_changes_detector;
     }
 
     protected function getText($key, $params = array()) {
@@ -895,10 +903,21 @@ class GitActions extends PluginActions
         }
 
         try {
+            $are_there_changes = false;
             $repository->save();
             if ( !empty($repoAccess) ) {
                 //TODO use Polymorphism to handle this
                 if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+
+                    $are_there_changes = $this->permission_changes_detector->areThereChangesInPermissionsForRepository(
+                        $repository,
+                        $repoAccess,
+                        $enable_fine_grained_permissions,
+                        $added_branches_permissions,
+                        $added_tags_permissions,
+                        $updated_permissions
+                    );
+
                     $repository->getBackend()->savePermissions($repository, $repoAccess);
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
@@ -926,12 +945,14 @@ class GitActions extends PluginActions
                 $this->fine_grained_permission_saver->updateRepositoryPermission($permission);
             }
 
-            $this->history_dao->groupAddHistory(
-                'perm_granted_for_git_repository',
-                $this->history_value_formatter->formatValueForRepository($repository),
-                $projectId,
-                array($repository->getName())
-            );
+            if ($are_there_changes) {
+                $this->history_dao->groupAddHistory(
+                    'perm_granted_for_git_repository',
+                    $this->history_value_formatter->formatValueForRepository($repository),
+                    $projectId,
+                    array($repository->getName())
+                );
+            }
 
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
