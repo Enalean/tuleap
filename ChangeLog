@@ -12,7 +12,7 @@ Version 8.17 (not released yet)
 	* request #9278: Remove CentOS 5 packages
 
 	== Plugins ==
-	* git: 4.224
+	* git: 4.225
 	* tracker: 5.940
 	* referencealias_core: 0.7
 	* agiledashboard: 1.387

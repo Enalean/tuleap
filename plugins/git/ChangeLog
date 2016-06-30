@@ -1,3 +1,6 @@
+Version 4.225 - Tuleap 8.17
+    * Take into account fine grained permissions for project
+
 Version 4.224 - Tuleap 8.17
     * Does not log WRITE and REWIND if fine grained permissions are used
 
