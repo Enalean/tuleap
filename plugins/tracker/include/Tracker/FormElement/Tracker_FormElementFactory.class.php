@@ -349,7 +349,6 @@ class Tracker_FormElementFactory {
         if (
             $field
             && $field instanceof Tracker_FormElement_IComputeValues
-            && $field->canBeUsedForLegacyAutocomputeCalculation()
         ) {
             return $field;
         }

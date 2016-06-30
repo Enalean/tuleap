@@ -291,7 +291,6 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                     WHERE parent_art.id IN ($source_ids) AND value IS NOT NULL
                 ORDER BY value DESC";
 
-
         return $this->retrieve($sql);
     }
 

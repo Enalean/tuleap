@@ -104,11 +104,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
-    public function canBeUsedForLegacyAutocomputeCalculation()
-    {
-        return false;
-    }
-
     public function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
@@ -122,8 +117,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @return float|null if there are no data (/!\ it's on purpose, otherwise we can mean to distinguish if there is data but 0 vs no data at all, for the graph plot)
      */
-    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, array &$computed_artifact_ids = array()) {
-        if ($this->useFastCompute()) {
+    public function getComputedValue(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $timestamp = null,
+        array &$computed_artifact_ids = array(),
+        $use_fast_compute = true
+    ) {
+        if ($use_fast_compute) {
             return $this->getFastComputedValue($artifact->getId(), $timestamp, true);
         }
         $computed_artifact_ids[$artifact->getId()] = true;
@@ -149,7 +150,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
         if ($stop_on_manual_value || $this->getDeprecationRetriever()->isALegacyField($this)) {
-            $computed_value = $this->getComputedValue($user, $artifact);
+            $empty_array = array();
+            $computed_value = $this->getComputedValue($user, $artifact, null, $empty_array, $this->useFastCompute());
         } else {
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         }
@@ -282,7 +284,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function getFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, array &$computed_artifact_ids) {
         $field = $this->getTargetField($user, $artifact);
         if ($field) {
-            return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids);
+            return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids, false);
         }
         return null;
     }
@@ -427,7 +429,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $current_user = UserManager::instance()->getCurrentUser();
 
         if ($this->getDeprecationRetriever()->isALegacyField($this)) {
-            $value = $this->getComputedValue($current_user, $artifact);
+            $empty_array = array();
+            $value = $this->getComputedValue($current_user, $artifact, null, $empty_array, $this->useFastCompute());
             return '<div class="auto-computed-label computed-legacy">'.  $purifier->purify($value) . '</div>';
         }
 
@@ -542,7 +545,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($changeset && $changeset->getNumeric() !== null) {
             return $changeset->getNumeric();
         } else {
-            return $this->getComputedValue($user, $artifact_changeset->getArtifact());
+            $empty_array = array();
+            return $this->getComputedValue($user, $artifact_changeset->getArtifact(), null, $empty_array, $this->useFastCompute());
         }
     }
 
@@ -844,7 +848,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
 
         if ($value === false) {
-            $value = $this->getComputedValue($user, $artifact, $timestamp);
+            $empty_array = array();
+            $value = $this->getComputedValue($user, $artifact, $timestamp, null, $empty_array, $this->useFastCompute());
             $dao->saveCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp, $value);
         }
 
