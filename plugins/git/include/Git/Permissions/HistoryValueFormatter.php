@@ -33,6 +33,11 @@ class HistoryValueFormatter
 {
 
     /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_factory;
+
+    /**
      * @var FineGrainedRetriever
      */
     private $fine_grained_retriever;
@@ -50,11 +55,13 @@ class HistoryValueFormatter
     public function __construct(
         PermissionsManager   $permissions_manager,
         UGroupManager        $ugroup_manager,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
     ) {
-        $this->permissions_manager    = $permissions_manager;
-        $this->ugroup_manager         = $ugroup_manager;
-        $this->fine_grained_retriever = $fine_grained_retriever;
+        $this->permissions_manager          = $permissions_manager;
+        $this->ugroup_manager               = $ugroup_manager;
+        $this->fine_grained_retriever       = $fine_grained_retriever;
+        $this->default_fine_grained_factory = $default_fine_grained_factory;
     }
 
     public function formatValueForProject(Project $project)
@@ -64,6 +71,8 @@ class HistoryValueFormatter
         if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {
             $value .= $this->getWritersForProject($project);
             $value .= $this->getRewindersForProject($project);
+        } else {
+            $value .= $this->getFineGrainedForProject($project);
         }
 
         return trim($value);
@@ -187,5 +196,42 @@ class HistoryValueFormatter
         );
 
         return $this->getUgroups($project, $ugroup_ids);
+    }
+
+    private function getFineGrainedForProject($project)
+    {
+        $fine_grained_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project) +
+            $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
+
+        return $this->formatProjectFineGrainedPermission($fine_grained_permissions);
+    }
+
+    private function formatProjectFineGrainedPermission(array $fine_grained_permissions)
+    {
+        $value = '';
+        foreach ($fine_grained_permissions as $permission) {
+            $value .= $this->formatProjectFineGrainedPermissionWriters($permission);
+            $value .= $this->formatProjectFineGrainedPermissionRewinders($permission);
+        }
+
+        return $value;
+    }
+
+    private function formatProjectFineGrainedPermissionWriters(DefaultFineGrainedPermission $permission)
+    {
+        if (count($permission->getWritersUgroup()) === 0) {
+            return '';
+        }
+
+        return $permission->getPattern() . ' ' . $this->formatUgroups($permission->getWritersUgroup(), 'Write');
+    }
+
+    private function formatProjectFineGrainedPermissionRewinders(DefaultFineGrainedPermission $permission)
+    {
+        if (count($permission->getRewindersUgroup()) === 0) {
+            return '';
+        }
+
+        return $permission->getPattern() . ' ' . $this->formatUgroups($permission->getRewindersUgroup(), 'Rewind');
     }
 }

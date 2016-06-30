@@ -1350,7 +1350,8 @@ class GitPlugin extends Plugin {
         return new HistoryValueFormatter(
             $this->getPermissionsManager(),
             $this->getUGroupManager(),
-            $this->getFineGrainedRetriever()
+            $this->getFineGrainedRetriever(),
+            $this->getDefaultFineGrainedPermissionFactory()
         );
     }
 

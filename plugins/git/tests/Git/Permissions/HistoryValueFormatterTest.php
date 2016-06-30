@@ -50,10 +50,13 @@ class HistoryValueFormatterTest extends TuleapTestCase
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
         $this->retriever           = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
+        $this->default_factory     = mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory');
+
         $this->formatter           = new HistoryValueFormatter(
             $this->permissions_manager,
             $this->ugroup_manager,
-            $this->retriever
+            $this->retriever,
+            $this->default_factory
         );
 
         stub($this->ugroup_manager)->getUgroupsById($this->project)->returns(array(
@@ -161,7 +164,7 @@ EOS;
         $this->assertEqual($result, $expected_result);
     }
 
-    public function itDoesNotExportWriteAndRewindIfProjectUsesFineGrainedPermissions()
+    public function itExportsValueWithFineGrainedPermissionsForProject()
     {
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
             $this->project,
@@ -169,11 +172,36 @@ EOS;
             Git::DEFAULT_PERM_READ
         )->returns(array(101));
 
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
-
         $expected_result = <<<EOS
 Read: Contributors
+refs/heads/master Write: Developers
+refs/heads/master Rewind: Admins
+refs/tags/* Write: Contributors
 EOS;
+
+        $branch_fine_grained_permission = new DefaultFineGrainedPermission(
+            1,
+            101,
+            'refs/heads/master',
+            array($this->ugroup_02),
+            array($this->ugroup_03)
+        );
+
+        $tag_fine_grained_permission = new DefaultFineGrainedPermission(
+            2,
+            101,
+            'refs/tags/*',
+            array($this->ugroup_01),
+            array()
+        );
+
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+
+        stub($this->default_factory)->getBranchesFineGrainedPermissionsForProject($this->project)
+            ->returns(array(1 => $branch_fine_grained_permission));
+
+        stub($this->default_factory)->getTagsFineGrainedPermissionsForProject($this->project)
+            ->returns(array(2 => $tag_fine_grained_permission));
 
         $result = $this->formatter->formatValueForProject($this->project);
 

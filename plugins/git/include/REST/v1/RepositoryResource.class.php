@@ -134,7 +134,8 @@ class RepositoryResource extends AuthenticatedResource {
         $history_formatter                     = new HistoryValueFormatter(
             PermissionsManager::instance(),
             new UGroupManager(),
-            $fine_grained_retriever
+            $fine_grained_retriever,
+            $default_fine_grained_permission_factory
         );
 
         $git_permission_manager = new GitPermissionsManager(
