@@ -261,7 +261,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $history_formatter = new HistoryValueFormatter(
             PermissionsManager::instance(),
             new UGroupManager(),
-            $retriever
+            $retriever,
+            $default_factory
         );
 
         return new GitRepositoryManager(
