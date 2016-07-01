@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 8.17
+    * story #9283: allow to update references during an import
+
 Version 0.8 - Tuleap 8.17
     * story #9283: allow to pass a parameter that force references update
 
