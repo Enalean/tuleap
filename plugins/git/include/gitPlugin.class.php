@@ -39,6 +39,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1234,7 +1235,16 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedPermissionDestructor(),
             $this->getFineGrainedRepresentationBuilder(),
             $this->getFineGrainedPermissionReplicator(),
-            $this->getHistoryValueFormatter()
+            $this->getHistoryValueFormatter(),
+            $this->getPermissionChangesDetector()
+        );
+    }
+
+    private function getPermissionChangesDetector()
+    {
+        return new PermissionChangesDetector(
+            $this->getGitPermissionsManager(),
+            $this->getFineGrainedRetriever()
         );
     }
 

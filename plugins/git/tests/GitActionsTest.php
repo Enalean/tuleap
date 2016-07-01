@@ -81,7 +81,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Tuleap\Git\CIToken\Manager'),
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-                mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+                mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+                mock('Tuleap\Git\Permissions\PermissionChangesDetector')
             )
         );
     }
@@ -500,7 +501,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Tuleap\Git\CIToken\Manager'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector')
         );
     }
 
@@ -567,7 +569,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Tuleap\Git\CIToken\Manager'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector')
         );
     }
 
@@ -723,7 +726,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Tuleap\Git\CIToken\Manager'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector')
         );
 
     }

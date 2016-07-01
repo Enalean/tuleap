@@ -35,6 +35,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
 
 /**
  * Git
@@ -211,6 +212,11 @@ class Git extends PluginController {
      */
     private $history_value_formatter;
 
+    /**
+     * @var PermissionChangesDetector
+     */
+    private $permission_changes_detector;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -242,7 +248,8 @@ class Git extends PluginController {
         FineGrainedPermissionDestructor $fine_grained_permission_destructor,
         FineGrainedRepresentationBuilder $fine_grained_builder,
         FineGrainedPermissionReplicator $fine_grained_replicator,
-        HistoryValueFormatter $history_value_formatter
+        HistoryValueFormatter $history_value_formatter,
+        PermissionChangesDetector $permission_changes_detector
     ) {
         parent::__construct($user_manager, $request);
 
@@ -314,6 +321,7 @@ class Git extends PluginController {
         $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
         $this->fine_grained_builder                    = $fine_grained_builder;
         $this->history_value_formatter                 = $history_value_formatter;
+        $this->permission_changes_detector             = $permission_changes_detector;
     }
 
     protected function instantiateView() {
@@ -1361,7 +1369,8 @@ class Git extends PluginController {
             $this->ci_token_manager,
             $this->fine_grained_replicator,
             $this->fine_grained_retriever,
-            $this->history_value_formatter
+            $this->history_value_formatter,
+            $this->permission_changes_detector
         );
     }
 
