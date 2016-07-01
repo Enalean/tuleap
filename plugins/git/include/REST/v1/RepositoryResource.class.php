@@ -141,13 +141,8 @@ class RepositoryResource extends AuthenticatedResource {
         $git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->git_system_event_manager,
-            $fine_grained_updater,
-            $default_fine_grained_permission_saver,
-            $default_fine_grained_permission_factory,
             $fine_grained_dao,
-            $fine_grained_retriever,
-            $history_formatter,
-            new ProjectHistoryDao()
+            $fine_grained_retriever
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
