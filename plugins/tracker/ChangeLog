@@ -1,3 +1,7 @@
+Version 5.943 - Tuleap 8.17
+    * When a computed field isn't migrated, it is still a read-only field
+
+
 Version 5.942 - Tuleap 8.17
     * request #9298 Burndown is broken and doesn't displays graph anymore
 
