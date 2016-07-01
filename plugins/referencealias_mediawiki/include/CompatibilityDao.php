@@ -32,7 +32,7 @@ class CompatibilityDao extends DataAccessObject
         $source     = $this->da->quoteSmart($source);
         $target     = $this->da->quoteSmart($target);
 
-        $sql = "INSERT INTO plugin_referencealias_mediawiki_table
+        $sql = "REPLACE INTO plugin_referencealias_mediawiki_table(source, project_id, target)
                 VALUES($source, $project_id, $target)";
 
         return $this->update($sql);

@@ -57,10 +57,12 @@ class ReferencesImporter
                 continue;
             }
 
-            $row = $this->dao->getRef($source)->getRow();
-            if (!empty($row)) {
-                $this->logger->warn("The source $source already exists in the database. It will not be imported.");
-                continue;
+            if (! $configuration->isForce('references')) {
+                $row = $this->dao->getRef($source)->getRow();
+                if (!empty($row)) {
+                    $this->logger->warn("The source $source already exists in the database. It will not be imported.");
+                    continue;
+                }
             }
 
             if (! $this->dao->insertRef($project, $source, $target)) {

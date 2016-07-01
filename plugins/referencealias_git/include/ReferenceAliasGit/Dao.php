@@ -32,7 +32,7 @@ class Dao extends DataAccessObject
         $repository_id = $this->da->escapeInt($repository_id);
         $sha1          = $this->da->quoteSmart($sha1);
 
-        $sql = "INSERT INTO plugin_referencealias_git(source, repository_id, sha1)
+        $sql = "REPLACE INTO plugin_referencealias_git(source, repository_id, sha1)
                 VALUES ($source, $repository_id, UNHEX($sha1))";
 
         return $this->update($sql);
