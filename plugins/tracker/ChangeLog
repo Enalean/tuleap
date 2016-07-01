@@ -1,3 +1,6 @@
+Version 5.944 - Tuleap 8.17
+    * story #9090: Correct failed tests
+
 Version 5.943 - Tuleap 8.17
     * When a computed field isn't migrated, it is still a read-only field
 
