@@ -1,3 +1,6 @@
+Version 0.6 - Tuleap 8.17
+    * story #9283: allow to pass a parameter that force references update
+
 Version 0.5 - Tuleap 8.15
     * Add planXXX reference alias
 
