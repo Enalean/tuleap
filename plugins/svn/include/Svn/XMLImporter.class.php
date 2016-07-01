@@ -25,7 +25,7 @@ use SimpleXMLElement;
 use Project;
 use SystemEventManager;
 use User\XML\Import\IFindUserFromXMLReference;
-use Tuleap\Svn\Dao;
+use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
@@ -56,6 +56,7 @@ class XMLImporter {
     }
 
     public function import(
+        ImportConfig $configuration,
         Logger $logger,
         Project $project,
         RepositoryManager $repository_manager,
@@ -67,13 +68,15 @@ class XMLImporter {
         $logger->info("[svn] Importing " . count($this->repositories_data) . " SVN repositories");
         foreach($this->repositories_data as $repo) {
             $repo->import(
+                $configuration,
                 $logger,
                 $project,
                 $repository_manager,
                 $system_event_manager,
                 $accessfile_history_creator,
                 $mail_notification_manager,
-                $rule_name);
+                $rule_name
+            );
         }
         $logger->info("[svn] Subversion Import Finished");
     }

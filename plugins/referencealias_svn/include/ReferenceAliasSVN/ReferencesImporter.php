@@ -24,6 +24,7 @@ use Logger;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class ReferencesImporter
 {
@@ -41,7 +42,7 @@ class ReferencesImporter
         $this->logger = $logger;
     }
 
-    public function importCompatRefXML(Project $project, SimpleXMLElement $xml, Repository $repository)
+    public function importCompatRefXML(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, Repository $repository)
     {
         foreach ($xml->children() as $reference) {
             $source      = (string) $reference['source'];

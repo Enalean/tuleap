@@ -63,7 +63,7 @@ class referencealias_gitPlugin extends Plugin
             $logger     = new WrapperLogger($params['logger'], 'ReferenceAliasGitImporter');
             $importer   = new ReferencesImporter($this->getCompatDao(), $logger);
 
-            $importer->importCompatRefXML($params['project'], $params['xml_content'], $repository);
+            $importer->importCompatRefXML($params['configuration'], $params['project'], $params['xml_content'], $repository);
         }
     }
 

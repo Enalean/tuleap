@@ -24,6 +24,7 @@ namespace Tuleap\ReferenceAliasTracker;
 use Logger;
 use Project;
 use SimpleXMLElement;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class ReferencesImporter
 {
@@ -43,7 +44,7 @@ class ReferencesImporter
         $this->logger = $logger;
     }
 
-    public function importCompatRefXML(Project $project, SimpleXMLElement $xml, array $created_refs)
+    public function importCompatRefXML(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, array $created_refs)
     {
         foreach ($xml->children() as $reference) {
             $source = (string) $reference['source'];

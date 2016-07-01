@@ -19,6 +19,7 @@
  */
 
 use Tuleap\XML\MappingsRegistry;
+use Tuleap\Project\XML\Import;
 
 class ProjectXMLImporterTest extends TuleapTestCase {
 
@@ -31,6 +32,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     private $xml_content;
     private $user_manager;
     private $logger;
+    private $configuration;
 
     /** @var ProjectXMLImporter */
     private $xml_importer;
@@ -63,6 +65,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->xml_content = new SimpleXMLElement(file_get_contents($this->xml_file_path));
 
         $this->mapping_registery = new MappingsRegistry();
+
+        $this->configuration = new Import\ImportConfig();
     }
 
     public function itAsksToPluginToImportInformationsFromTheGivenXml() {
@@ -77,23 +81,24 @@ class ProjectXMLImporterTest extends TuleapTestCase {
                 'extraction_path'     => '',
                 'user_finder'         => $this->user_finder,
                 'mappings_registery'  => $this->mapping_registery,
+                'configuration'       => $this->configuration,
             )
         )->once();
 
-        $this->xml_importer->import(369, $this->xml_file_path);
+        $this->xml_importer->import($this->configuration, 369, $this->xml_file_path);
     }
 
     public function itAsksProjectManagerForTheProject() {
         stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
         expect($this->project_manager)->getValidProjectByShortNameOrId(122)->once();
-        $this->xml_importer->import(122, $this->xml_file_path);
+        $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
     }
 
     public function itStopsIfNoProjectIsFound() {
         stub($this->project_manager)->getValidProjectByShortNameOrId()->throws(new Project_NotFoundException());
         $this->expectException();
 
-        $this->xml_importer->import(122, $this->xml_file_path);
+        $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
     }
 
     public function itImportsProjectDataWithUgroups() {
@@ -127,7 +132,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $ug02->expectCallCount('addUser', 1);
         $ug03->expectCallCount('addUser', 0);
 
-        $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
+        $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_ugroups);
     }
 
     public function itDoesNotImportsExistingUgroups() {
@@ -159,7 +164,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $ug02->expectCallCount('addUser', 0);
         $ug03->expectCallCount('addUser', 0);
 
-        $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
+        $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_ugroups);
     }
 
     public function itDoesNotStopIfUserIsAlreadyProjectMember() {
@@ -176,6 +181,6 @@ class ProjectXMLImporterTest extends TuleapTestCase {
 
         //No exception must be raised --> nothing to assert
 
-        $this->xml_importer->import(122, $this->xml_file_path_with_members);
+        $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_members);
     }
 }

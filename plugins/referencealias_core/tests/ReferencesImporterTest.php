@@ -19,6 +19,8 @@
  */
 namespace Tuleap\ReferenceAliasCore;
 
+use Tuleap\Project\XML\Import\ImportConfig;
+
 include 'bootstrap.php';
 
 class ReferencesImporterTest extends \TuleapTestCase
@@ -44,7 +46,7 @@ XML;
 
         stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->count(2);
-        $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $xml, $created_references);
     }
 
     public function testItShouldAddRelLinks()
@@ -60,7 +62,7 @@ XML;
 
         stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->count(2);
-        $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $xml, $created_references);
     }
 
     public function testItShouldNotAddIfTargetIsUnknown()
@@ -75,7 +77,7 @@ XML;
 
         stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->never();
-        $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $xml, $created_references);
     }
 
     public function testItShouldNotAddUnknownReferences()
@@ -90,6 +92,6 @@ XML;
 
         stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->never();
-        $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $xml, $created_references);
     }
 }
