@@ -25,7 +25,7 @@ use Git;
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class PermissionChangesDetectorTest extends TuleapTestCase
+class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 {
     /**
      * @var PermissionChangesDetector
@@ -191,6 +191,195 @@ class PermissionChangesDetectorTest extends TuleapTestCase
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
             array(Git::PERM_READ => array('3'), Git::PERM_WRITE => array('4')),
+            false,
+            array(),
+            array(),
+            array()
+        );
+
+        $this->assertFalse($has_changes);
+    }
+}
+
+class PermissionChangesDetectorForProjectTest extends TuleapTestCase
+{
+    public function setUp()
+    {
+        $this->git_permission_manager = mock('GitPermissionsManager');
+        $this->retriever              = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
+
+        $this->detector = new PermissionChangesDetector(
+            $this->git_permission_manager,
+            $this->retriever
+        );
+
+        $this->project = stub('Project')->getId()->returns(101);
+
+        $this->default_branch_fine_grained_permission = new DefaultFineGrainedPermission(
+            1,
+            101,
+            'refs/heads/master',
+            array(),
+            array()
+        );
+
+        $this->default_tag_fine_grained_permission = new DefaultFineGrainedPermission(
+            2,
+            101,
+            'refs/tags/*',
+            array(),
+            array()
+        );
+    }
+
+    public function itDetectsChangesForProjectIfABranchPermissionIsAdded()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array(),
+            array(),
+            array(),
+            'on',
+            array($this->default_branch_fine_grained_permission),
+            array(),
+            array()
+        );
+
+        $this->assertTrue($has_changes);
+    }
+
+    public function itDetectsChangesForProjectIfATagPermissionIsAdded()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array(),
+            array(),
+            array(),
+            'on',
+            array(),
+            array($this->default_tag_fine_grained_permission),
+            array()
+        );
+
+        $this->assertTrue($has_changes);
+    }
+
+    public function itDetectsChangesForProjectIfAtLeastOneFineGrainedPermissionIsUpdated()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array(),
+            array(),
+            array(),
+            'on',
+            array(),
+            array(),
+            array($this->default_branch_fine_grained_permission)
+        );
+
+        $this->assertTrue($has_changes);
+    }
+
+    public function itDetectsChangesForProjectIfFineGrainedPermissionAreEnabled()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(false);
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array(),
+            array(),
+            array(),
+            'on',
+            array(),
+            array(),
+            array()
+        );
+
+        $this->assertTrue($has_changes);
+    }
+
+    public function itDetectsChangesForProjectIfFineGrainedPermissionAreDisabled()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array(),
+            array(),
+            array(),
+            false,
+            array(),
+            array(),
+            array()
+        );
+
+        $this->assertTrue($has_changes);
+    }
+
+    public function itDetectsChangesForProjectIfGlobalPermissionAreChanged()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(false);
+        stub($this->git_permission_manager)->getProjectGlobalPermissions($this->project)->returns(array(
+            Git::DEFAULT_PERM_READ => array('3'),
+            Git::DEFAULT_PERM_WRITE => array('4'),
+            Git::DEFAULT_PERM_WPLUS => array(),
+        ));
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array('3', '101'),
+            array('4'),
+            array(),
+            false,
+            array(),
+            array(),
+            array()
+        );
+
+        $this->assertTrue($has_changes);
+    }
+
+    public function itDoesNotDetectChangesForProjectIfNothingChangedWithFineGrainedPermissions()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+        stub($this->git_permission_manager)->getProjectGlobalPermissions($this->project)->returns(array(
+            Git::DEFAULT_PERM_READ => array('3')
+        ));
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array('3'),
+            array(),
+            array(),
+            'on',
+            array(),
+            array(),
+            array()
+        );
+
+        $this->assertFalse($has_changes);
+    }
+
+    public function itDoesNotDetectChangesForProjectIfNothingChangedWithoutFineGrainedPermissions()
+    {
+        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(false);
+        stub($this->git_permission_manager)->getProjectGlobalPermissions($this->project)->returns(array(
+            Git::DEFAULT_PERM_READ => array('3'),
+            Git::DEFAULT_PERM_WRITE => array('4'),
+            Git::DEFAULT_PERM_WPLUS => array(),
+        ));
+
+        $has_changes = $this->detector->areThereChangesInPermissionsForProject(
+            $this->project,
+            array('3'),
+            array('4'),
+            array(),
             false,
             array(),
             array(),

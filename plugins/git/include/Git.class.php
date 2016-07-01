@@ -193,7 +193,7 @@ class Git extends PluginController {
      */
     private $ci_token_manager;
 
-    /*
+    /**
      * @var FineGrainedPermissionDestructor
      */
     private $fine_grained_permission_destructor;
@@ -222,6 +222,11 @@ class Git extends PluginController {
      * @var DefaultPermissionsUpdater
      */
     private $default_permission_updater;
+
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $history_dao;
 
     public function __construct(
         GitPlugin $plugin,
@@ -256,7 +261,8 @@ class Git extends PluginController {
         FineGrainedPermissionReplicator $fine_grained_replicator,
         HistoryValueFormatter $history_value_formatter,
         PermissionChangesDetector $permission_changes_detector,
-        DefaultPermissionsUpdater $default_permission_updater
+        DefaultPermissionsUpdater $default_permission_updater,
+        ProjectHistoryDao $history_dao
     ) {
         parent::__construct($user_manager, $request);
 
@@ -330,6 +336,7 @@ class Git extends PluginController {
         $this->history_value_formatter                 = $history_value_formatter;
         $this->permission_changes_detector             = $permission_changes_detector;
         $this->default_permission_updater              = $default_permission_updater;
+        $this->history_dao                             = $history_dao;
     }
 
     protected function instantiateView() {
@@ -1099,6 +1106,14 @@ class Git extends PluginController {
                 );
 
                 $this->emitFeedbackForPermissionDeletion($deleted);
+
+                $this->history_dao->groupAddHistory(
+                    'perm_granted_for_git_repository',
+                    $this->history_value_formatter->formatValueForRepository($repository),
+                    $this->groupId,
+                    array($repository->getName())
+                );
+
                 $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
@@ -1119,6 +1134,13 @@ class Git extends PluginController {
                 );
 
                 $this->emitFeedbackForPermissionDeletion($deleted);
+
+                $this->history_dao->groupAddHistory(
+                    'perm_granted_for_object',
+                    $this->history_value_formatter->formatValueForProject($this->request->getProject()),
+                    $this->groupId,
+                    array($this->groupId)
+                );
 
                 $this->addDefaultSettingsView();
                 break;
@@ -1343,8 +1365,6 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        $history_dao = new ProjectHistoryDao();
-
         return new $action(
             $this,
             $this->git_system_event_manager,
@@ -1361,13 +1381,13 @@ class Git extends PluginController {
             $this->logger,
             $this->backend_gitolite,
             $this->mirror_data_mapper,
-            $history_dao,
-            new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $history_dao),
+            $this->history_dao,
+            new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $this->history_dao),
             new MigrationHandler(
                 $this->git_system_event_manager,
                 $this->gerrit_server_factory,
                 $this->driver_factory,
-                $history_dao,
+                $this->history_dao,
                 $this->project_creator_status
             ),
             $this->gerrit_can_migrate_checker,

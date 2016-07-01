@@ -1238,7 +1238,8 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedPermissionReplicator(),
             $this->getHistoryValueFormatter(),
             $this->getPermissionChangesDetector(),
-            $this->getDefaultPermissionsUpdater()
+            $this->getDefaultPermissionsUpdater(),
+            new ProjectHistoryDao()
         );
     }
 
@@ -1251,7 +1252,8 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedRetriever(),
             $this->getDefaultFineGrainedPermissionFactory(),
             $this->getFineGrainedUpdater(),
-            $this->getDefaultFineGrainedPermissionSaver()
+            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getPermissionChangesDetector()
         );
     }
 
