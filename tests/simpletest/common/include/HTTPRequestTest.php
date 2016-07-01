@@ -462,6 +462,7 @@ abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
     }
 }
 
+// Tests inspired from From Symfony\Component\HttpFoundation\Tests\IpUtilsTest @ 3.2-dev
 class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerURLTests {
 
     public function setUp() {
@@ -471,6 +472,15 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
 
         ForgeConfig::set('sys_default_domain', 'meow.bzh');
         ForgeConfig::set('sys_https_host',     'meow.bzh');
+    }
+
+    public function tearDown()
+    {
+        unset($_SERVER['HTTP_HOST']);
+        unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
+        unset($_SERVER['REMOTE_ADDR']);
+        unset($_SERVER['HTTPS']);
+        parent::tearDown();
     }
 
     public function itDoesntTakeHostWhenForwardedProtoIsSetByAnUntrustedProxy() {
@@ -486,6 +496,87 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
 
         $this->request->setTrustedProxies(array('192.168.1.1'));
+        $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
+    }
+
+    public function itAllowsCIDRNotation() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('192.168.1.1/1'));
+        $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
+    }
+
+    public function itAllowsCIDRNotationWithSlash24() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('192.168.1.1/24'));
+        $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
+    }
+
+    public function itDoesntAllowsNotMatchingCIDRNotation() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('1.2.3.4/1'));
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itDoesntAllowsInvalidSubnet() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('192.168.1.1/33'));
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itAllowsWhenAtLeastOneSubnetMatches() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('1.2.3.4/1', '192.168.1.0/24'));
+        $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
+    }
+
+    public function itDoesntAllowsWhenNoSubnetMatches() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('1.2.3.4/1', '4.3.2.1/1'));
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itDoesntAllowsInvalidCIDRNotation() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '1.2.3.4';
+
+        $this->request->setTrustedProxies(array('256.256.256/0'));
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itAllowsWithExtremCIDRNotation1() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '1.2.3.4';
+
+        $this->request->setTrustedProxies(array('0.0.0.0/0'));
+        $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
+    }
+
+    public function itAllowsWithExtremCIDRNotation2() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '1.2.3.4';
+
+        $this->request->setTrustedProxies(array('192.168.1.0/0'));
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 }

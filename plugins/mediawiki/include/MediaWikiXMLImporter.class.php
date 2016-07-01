@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Import\ImportConfig;
+
 class MediaWikiXMLImporter
 {
     const SERVICE_NAME = 'mediawiki';
@@ -76,12 +78,14 @@ class MediaWikiXMLImporter
     /**
      * Populate the MediaWiki with the given pages.
      * Returns true in case of success, false otherwise.
+     *
+     * @var ImportConfig
      * @var Project
      * @var SimpleXMLElement
      * @var String
      * @return boolean
      */
-    public function import(Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path)
+    public function import(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path)
     {
         $xml_mediawiki = $xml_input->mediawiki;
         if (!$xml_mediawiki) {
@@ -114,7 +118,7 @@ class MediaWikiXMLImporter
             $this->logger->error("Could not get sys_http_user, permission problems may occur on $mediawiki_storage_path");
         }
 
-        $this->importReferences($project, $xml_mediawiki->references);
+        $this->importReferences($configuration, $project, $xml_mediawiki->references);
     }
 
     private function importPages(Project $project, $backup_path) {
@@ -181,7 +185,7 @@ class MediaWikiXMLImporter
         return $ugroup_ids;
     }
 
-    private function importReferences(Project $project, SimpleXMLElement $xml_references)
+    private function importReferences(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_references)
     {
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
@@ -190,7 +194,8 @@ class MediaWikiXMLImporter
                 'created_refs'   => array(),
                 'service_name'   => self::SERVICE_NAME,
                 'xml_content'    => $xml_references,
-                'project'        => $project
+                'project'        => $project,
+                'configuration'  => $configuration,
             )
         );
     }

@@ -23,6 +23,7 @@ namespace Tuleap\ReferenceAliasCore;
 use Logger;
 use Project;
 use SimpleXMLElement;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class ReferencesImporter
 {
@@ -46,7 +47,7 @@ class ReferencesImporter
         $this->logger = $logger;
     }
 
-    public function importCompatRefXML(Project $project, SimpleXMLElement $xml, array $created_refs)
+    public function importCompatRefXML(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, array $created_refs)
     {
         foreach ($xml->children() as $reference) {
             $source = (string) $reference['source'];
@@ -68,10 +69,12 @@ class ReferencesImporter
                 continue;
             }
 
-            $row = $this->dao->getRef($source)->getRow();
-            if (!empty($row)) {
-                $this->logger->warn("The source $source already exists in the database. It will not be imported.");
-                continue;
+            if (! $configuration->isForce('references')) {
+                $row = $this->dao->getRef($source)->getRow();
+                if (!empty($row)) {
+                    $this->logger->warn("The source $source already exists in the database. It will not be imported.");
+                    continue;
+                }
             }
 
             if (! $this->dao->insertRef($project, $source, $target_on_system)) {

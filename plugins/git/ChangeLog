@@ -1,3 +1,24 @@
+Version 4.228 - Tuleap 8.17
+    * Extract save of default permission in a dedicated object.
+
+Version 4.227 - Tuleap 8.17
+    * Log history for repository only if there are changes in permissions
+
+
+
+
+Version 4.226 - Tuleap 8.17
+    * story #9283: allow to pass a parameter that force references update
+
+Version 4.225 - Tuleap 8.17
+    * Take into account fine grained permissions for project
+
+Version 4.224 - Tuleap 8.17
+    * Does not log WRITE and REWIND if fine grained permissions are used
+
+Version 4.223 - Tuleap 8.17
+    * story #8425: Save more comprehensive Git logs in project history
+
 Version 4.222 - Tuleap 8.17
     * tasks #9290: update gitolite.conf template for pull requests rights
 

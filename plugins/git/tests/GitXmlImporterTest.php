@@ -86,7 +86,9 @@ class GitXmlImporterTest extends TuleapTestCase {
             parent::getTmpDir(),
             $this->mirror_updater,
             $this->mirror_data_mapper,
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('ProjectHistoryDao'),
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter')
         );
 
         $restricted_plugin_dao = mock('RestrictedPluginDao');
@@ -180,7 +182,7 @@ class GitXmlImporterTest extends TuleapTestCase {
             </project>
 XML;
         $xml_element = new SimpleXMLElement($xml);
-        $res = $this->importer->import($this->project, mock('PFUSer'), $xml_element, parent::getTmpDir());
+        $res = $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml_element, parent::getTmpDir());
 
         $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
         $nb_commit = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
@@ -355,6 +357,6 @@ XML;
     }
 
     private function import($xml) {
-        return $this->importer->import($this->project, mock('PFUSer'), $xml, parent::getTmpDir());
+        return $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml, parent::getTmpDir());
     }
 }

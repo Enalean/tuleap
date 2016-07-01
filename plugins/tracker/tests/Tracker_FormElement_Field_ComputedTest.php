@@ -30,7 +30,10 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         parent::setUp();
         $this->user  = mock('PFUser');
         $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
+        $this->field = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_Computed',
+            array('getProperty', 'getDao')
+        );
         stub($this->field)->getProperty('target_field_name')->returns('effort');
         stub($this->field)->getProperty('fast_compute')->returns(0);
         stub($this->field)->getDao()->returns($this->dao);
@@ -48,7 +51,8 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function itComputesDirectValues() {
+    public function itComputesDirectValues()
+    {
         stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5),
             array('id' => 751, 'type' => 'int', 'int_value' => 15)
@@ -57,8 +61,9 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
         stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
 
-        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
+        $artifact    = stub('Tracker_Artifact')->getId()->returns(233);
+        $empty_array = array();
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact, null, $empty_array, false));
     }
 
     public function itReturnsNullWhenThereAreNoDataBecauseNoDataMeansNoPlotOnChart() {
@@ -71,43 +76,145 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
     }
 
+}
+
+class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
+{
+    private $artifact;
+    private $old_value;
+    private $field;
+
+    public function setUp()
+    {
+        $this->artifact  = mock('Tracker_Artifact');
+        $this->old_value = mock('Tuleap\Tracker\Artifact\ChangesetValueComputed');
+
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getNumeric', 'getDeprecationRetriever'));
+    }
+
+
     public function itDetectsChangeWhenBackToAutocompute()
     {
-        $artifact        = mock('Tracker_Artifact');
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
-        stub($changeset_value)->getNumeric()->returns(1);
+        stub($this->old_value)->getNumeric()->returns(1.0);
         $submitted_value = array(
             'manual_value'    => '',
             'is_autocomputed' => true
         );
 
-        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $submitted_value));
     }
 
     public function itDetectsChangeWhenBackToManualValue()
     {
-        $artifact        = mock('Tracker_Artifact');
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
-        stub($changeset_value)->getNumeric()->returns('');
+        stub($this->old_value)->getNumeric()->returns(null);
         $submitted_value = array(
             'manual_value'    => '123',
             'is_autocomputed' => false
         );
 
-        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $submitted_value));
     }
 
     public function itDetectsChangeWhenBackToAutocomputeWhenManualValueIs0()
     {
-        $artifact        = mock('Tracker_Artifact');
-        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
-        stub($changeset_value)->getNumeric()->returns(0);
+        stub($this->old_value)->getNumeric()->returns(0.0);
         $submitted_value = array(
             'manual_value'    => '',
             'is_autocomputed' => true
         );
 
-        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $submitted_value));
+    }
+
+    public function itHasChangesWhenANewManualValueIsSet()
+    {
+        stub($this->old_value)->getNumeric()->returns(7.0);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => 5
+        );
+
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesWhenANewManualValueIsEqualToOldChangesetValue()
+    {
+        stub($this->old_value)->getNumeric()->returns(7.0);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => 7
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesIfYouAreStillInAutocomputedMode()
+    {
+        stub($this->old_value)->getNumeric()->returns(null);
+        $new_value = array(
+            'is_autocomputed' => '1',
+            'manual_value'    => ''
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itHasNotChangesWhenANewManualIsAStringAndValueIsEqualToOldChangesetValue()
+    {
+        stub($this->old_value)->getNumeric()->returns(7.0);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => '7'
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itCanAdd0ToManualValueFromAutocomputed()
+    {
+        stub($this->old_value)->getNumeric()->returns(null);
+        $new_value = array(
+            'is_autocomputed' => '',
+            'manual_value'    => '0'
+        );
+
+        $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itIsNotSubmitableIfItsALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(true);
+
+        $this->assertFalse($this->field->isSubmitable());
+    }
+
+    public function itIsSubmitableIfItsNotALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
+
+        $this->assertTrue($this->field->isSubmitable());
+    }
+
+    public function itIsNotUpdatableIfItsALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(true);
+
+        $this->assertFalse($this->field->isUpdateable());
+    }
+
+    public function itIsUpdatableIfItsNotALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
+
+        $this->assertTrue($this->field->isUpdateable());
     }
 }
 
@@ -150,7 +257,8 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function itComputesRecursively() {
+    public function itComputesRecursively()
+    {
         $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
         $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
         $row_766 = array('id' => 766, 'type' => 'computed');
@@ -172,10 +280,12 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
 
-        $this->assertEqual(25, $this->field->getComputedValue($this->user, $this->artifact));
+        $empty_array = array();
+        $this->assertEqual(25, $this->field->getComputedValue($this->user, $this->artifact, null, $empty_array, false));
     }
 
-    public function itDoesntMakeLoopInGraph() {
+    public function itDoesntMakeLoopInGraph()
+    {
         $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
         $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
         $row_752 = array('id' => 752, 'type' => 'int', 'int_value' => 10);
@@ -209,10 +319,12 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
 
-        $this->assertEqual(40, $this->field->getComputedValue($this->user, $this->artifact));
+        $empty_array = array();
+        $this->assertEqual(40, $this->field->getComputedValue($this->user, $this->artifact, null, $empty_array, false));
     }
 
-    public function itDoesntCountTwiceTheFinalData() {
+    public function itDoesntCountTwiceTheFinalData()
+    {
         $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
         $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
         $row_766 = array('id' => 766, 'type' => 'computed');
@@ -238,7 +350,8 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
 
-        $this->assertEqual(20, $this->field->getComputedValue($this->user, $this->artifact));
+        $empty_array = array();
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $this->artifact, null, $empty_array, false));
     }
 
     private function getArtifact($id) {

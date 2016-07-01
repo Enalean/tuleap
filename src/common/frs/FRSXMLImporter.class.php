@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Import\ImportConfig;
+
 class FRSXMLImporter {
 
     const MAPPING_KEY = 'frs_release_mapping';
@@ -107,7 +109,7 @@ class FRSXMLImporter {
         return $this->permission_manager;
     }
 
-    public function import(Project $project, SimpleXMLElement $xml, $extraction_path, array &$frs_release_mapping)
+    public function import(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, $extraction_path, array &$frs_release_mapping)
     {
         $xml_frs = $xml->frs;
         if(!$xml_frs) {
@@ -132,6 +134,7 @@ class FRSXMLImporter {
                 'service_name'    => 'frs',
                 'xml_content'     => $xml->frs->references,
                 'project'         => $project,
+                'configuration'   => $configuration,
             )
         );
         return true;

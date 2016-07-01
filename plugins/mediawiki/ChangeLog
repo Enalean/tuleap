@@ -1,3 +1,6 @@
+Version 0.117 - Tuleap 8.17
+    * story #9283: allow to pass a parameter that force references update
+
 Version 0.116 - Tuleap 8.16
     * request #9206: Activate services at import
 

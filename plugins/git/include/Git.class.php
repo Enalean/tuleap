@@ -34,6 +34,9 @@ use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
+use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 
 /**
  * Git
@@ -205,6 +208,21 @@ class Git extends PluginController {
      */
     private $fine_grained_replicator;
 
+    /**
+     * @var HistoryValueFormatter
+     */
+    private $history_value_formatter;
+
+    /**
+     * @var PermissionChangesDetector
+     */
+    private $permission_changes_detector;
+
+    /**
+     * @var DefaultPermissionsUpdater
+     */
+    private $default_permission_updater;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -235,7 +253,10 @@ class Git extends PluginController {
         CITokenManager $ci_token_manager,
         FineGrainedPermissionDestructor $fine_grained_permission_destructor,
         FineGrainedRepresentationBuilder $fine_grained_builder,
-        FineGrainedPermissionReplicator $fine_grained_replicator
+        FineGrainedPermissionReplicator $fine_grained_replicator,
+        HistoryValueFormatter $history_value_formatter,
+        PermissionChangesDetector $permission_changes_detector,
+        DefaultPermissionsUpdater $default_permission_updater
     ) {
         parent::__construct($user_manager, $request);
 
@@ -306,6 +327,9 @@ class Git extends PluginController {
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
         $this->fine_grained_builder                    = $fine_grained_builder;
+        $this->history_value_formatter                 = $history_value_formatter;
+        $this->permission_changes_detector             = $permission_changes_detector;
+        $this->default_permission_updater              = $default_permission_updater;
     }
 
     protected function instantiateView() {
@@ -878,7 +902,7 @@ class Git extends PluginController {
                 break;
             case 'admin-default-access-rights':
                 if ($this->request->get('save')) {
-                    $this->permissions_manager->updateProjectDefaultPermissions($this->request);
+                    $this->default_permission_updater->updateProjectDefaultPermissions($this->request);
                 }
 
                 $this->addDefaultSettingsView();
@@ -1352,7 +1376,9 @@ class Git extends PluginController {
             $this->fine_grained_permission_saver,
             $this->ci_token_manager,
             $this->fine_grained_replicator,
-            $this->fine_grained_retriever
+            $this->fine_grained_retriever,
+            $this->history_value_formatter,
+            $this->permission_changes_detector
         );
     }
 

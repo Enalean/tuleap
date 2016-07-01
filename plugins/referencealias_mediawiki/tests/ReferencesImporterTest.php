@@ -21,6 +21,7 @@
 namespace Tuleap\ReferenceAliasMediawiki;
 
 use SimpleXMLElement;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 include 'bootstrap.php';
 
@@ -49,7 +50,7 @@ XML;
 
         expect($this->dao)->insertRef($project, "wiki76532", "HomePage")->once();
 
-        $this->importer->importCompatRefXML($project, $simple_xml, array());
+        $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, array());
     }
 
     public function testItShouldNotAddUnknownReferences()
@@ -65,6 +66,6 @@ XML;
 
         expect($this->dao)->insertRef()->never();
 
-        $this->importer->importCompatRefXML(mock('Project'), $simple_xml, array());
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $simple_xml, array());
     }
 }

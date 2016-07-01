@@ -1,3 +1,9 @@
+Version 0.5 - Tuleap 8.17
+    * story #9283: allow to update references during an import
+
+Version 0.4 - Tuleap 8.17
+    * story #9283: allow to pass a parameter that force references update
+
 Version 0.3 - Tuleap 8.15
     * story #9027 Preserve links at import (typo & i18n)
 

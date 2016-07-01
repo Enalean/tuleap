@@ -44,21 +44,9 @@ class GitPermissionsManager
     private $fine_grained_dao;
 
     /**
-     * @var DefaultFineGrainedPermissionFactory
-     */
-    private $default_fine_grained_factory;
-
-    /**
      * @var DefaultFineGrainedPermissionSaver
      */
     private $default_fine_grained_saver;
-
-    /**
-     * @var FineGrainedUpdater
-     */
-    private $fine_grained_updater;
-
-    const REQUEST_KEY = 'default_access_rights';
 
     /**
      * @var Git_SystemEventManager
@@ -78,18 +66,12 @@ class GitPermissionsManager
     public function __construct(
         Git_PermissionsDao $git_permission_dao,
         Git_SystemEventManager $git_system_event_manager,
-        FineGrainedUpdater $fine_grained_updater,
-        DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         FineGrainedDao $fine_grained_dao,
         FineGrainedRetriever $fine_grained_retriever
     ) {
         $this->permissions_manager          = PermissionsManager::instance();
         $this->git_permission_dao           = $git_permission_dao;
         $this->git_system_event_manager     = $git_system_event_manager;
-        $this->fine_grained_updater         = $fine_grained_updater;
-        $this->default_fine_grained_saver   = $default_fine_grained_saver;
-        $this->default_fine_grained_factory = $default_fine_grained_factory;
         $this->fine_grained_dao             = $fine_grained_dao;
         $this->fine_grained_retriever       = $fine_grained_retriever;
     }
@@ -166,185 +148,6 @@ class GitPermissionsManager
         return $projects_ids;
     }
 
-    private function isDisablingFineGrainedPermissions(Project $project, $enable_fine_grained_permissions)
-    {
-        return (
-            $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)
-            && ! $enable_fine_grained_permissions
-        );
-    }
-
-    private function isEnablingFineGrainedPermissions(Project $project, $enable_fine_grained_permissions)
-    {
-        return (
-            ! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)
-            && $enable_fine_grained_permissions
-        );
-    }
-
-    public function updateProjectDefaultPermissions(Codendi_Request $request)
-    {
-        $project    = $request->getProject();
-        $project_id = $project->getID();
-
-        $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access-rights");
-        $csrf->check();
-
-        $read_ugroup_ids                 = array();
-        $write_ugroup_ids                = array();
-        $rewind_ugroup_ids               = array();
-        $ugroup_ids                      = $request->get(self::REQUEST_KEY);
-        $enable_fine_grained_permissions = $request->get('use-fine-grained-permissions');
-
-        if ($ugroup_ids) {
-            $read_ugroup_ids   = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_READ);
-            $write_ugroup_ids  = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_WRITE);
-            $rewind_ugroup_ids = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_WPLUS);
-        }
-
-        if ($this->isDisablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
-            && empty($write_ugroup_ids)
-        ) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'default_access_control_missing')
-            );
-            return false;
-        }
-
-        $this->updateDefaultFineGrainedPermissions(
-            $project,
-            $request,
-            $read_ugroup_ids,
-            $write_ugroup_ids,
-            $rewind_ugroup_ids,
-            $enable_fine_grained_permissions
-        );
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            $GLOBALS['Language']->getText('plugin_git', 'default_access_control_saved')
-        );
-    }
-
-    private function updateDefaultFineGrainedPermissions(
-        Project $project,
-        Codendi_Request $request,
-        array $read_ugroup_ids,
-        array $write_ugroup_ids,
-        array $rewind_ugroup_ids,
-        $enable_fine_grained_permissions
-    ) {
-        $current_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project)
-            + $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
-
-        $updated_permissions        = array();
-        $added_tags_permissions     = array();
-        $added_branches_permissions = array();
-
-        if ($this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions) &&
-            count($current_permissions) === 0
-        ) {
-            $added_tags_permissions     = $this->default_fine_grained_factory->getDefaultTagsFineGrainedPermissionsForProject($project);
-            $added_branches_permissions = $this->default_fine_grained_factory->getDefaultBranchesFineGrainedPermissionsForProject($project);
-        } else {
-            if ($enable_fine_grained_permissions &&
-                ! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
-            ) {
-                $updated_permissions = $this->default_fine_grained_factory->getUpdatedPermissionsFromRequest(
-                    $request,
-                    $project
-                );
-            }
-
-            $added_branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsFromRequest(
-                $request,
-                $project
-            );
-
-            $added_tags_permissions = $this->default_fine_grained_factory->getTagsFineGrainedPermissionsFromRequest(
-                $request,
-                $project
-            );
-        }
-
-        $this->saveDefaultPermissionIfNotEmpty(
-            $project,
-            $read_ugroup_ids,
-            Git::DEFAULT_PERM_READ
-        );
-
-        $this->saveDefaultPermissionIfNotEmpty(
-            $project,
-            $write_ugroup_ids,
-            Git::DEFAULT_PERM_WRITE
-        );
-
-        if ($enable_fine_grained_permissions) {
-            $this->fine_grained_updater->enableProject($project);
-
-            $this->saveDefaultPermissionIfNotEmpty(
-                $project,
-                $rewind_ugroup_ids,
-                Git::DEFAULT_PERM_WPLUS
-            );
-        } else {
-            $this->fine_grained_updater->disableProject($project);
-
-            $this->saveDefaultPermission(
-                $project,
-                $rewind_ugroup_ids,
-                Git::DEFAULT_PERM_WPLUS
-            );
-        }
-
-        foreach ($added_branches_permissions as $added_branch_permission) {
-            $this->default_fine_grained_saver->saveBranchPermission($added_branch_permission);
-        }
-
-        foreach ($added_tags_permissions as $added_tag_permission) {
-            $this->default_fine_grained_saver->saveTagPermission($added_tag_permission);
-        }
-
-        foreach ($updated_permissions as $permission) {
-            $this->default_fine_grained_saver->updateDefaultPermission($permission);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    private function getUgroupIdsForPermission(array $ugroup_ids, $permission)
-    {
-        $ugroup_ids_for_permission = array();
-
-        if (isset($ugroup_ids[$permission]) && is_array($ugroup_ids[$permission])) {
-            $ugroup_ids_for_permission = $ugroup_ids[$permission];
-        }
-
-        return $ugroup_ids_for_permission;
-    }
-
-    private function saveDefaultPermissionIfNotEmpty(Project $project, array $ugroups_ids, $permission)
-    {
-        if (! empty($ugroups_ids)) {
-            $this->saveDefaultPermission($project, $ugroups_ids, $permission);
-        }
-    }
-
-    private function saveDefaultPermission(Project $project, array $ugroup_ids, $permission)
-    {
-        $this->permissions_manager->clearPermission($permission, $project->getId());
-        $override_collection = $this->permissions_manager->savePermissions(
-            $project,
-            $project->getID(),
-            $permission,
-            $ugroup_ids
-        );
-
-        $override_collection->emitFeedback($permission);
-    }
-
     /**
      * @return array
      */
@@ -362,6 +165,34 @@ class GitPermissionsManager
         return $this->permissions_manager->getAuthorizedUGroupIdsForProject(
             $project,
             $project->getID(),
+            $permission_name
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getRepositoryGlobalPermissions(GitRepository $repository)
+    {
+        $permissions =  array(
+            Git::PERM_READ => $this->getGlobalPermission($repository, Git::PERM_READ)
+        );
+
+        if (! $repository->isMigratedToGerrit() &&
+            ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)
+        ) {
+            $permissions[Git::PERM_WRITE] = $this->getGlobalPermission($repository, Git::PERM_WRITE);
+            $permissions[Git::PERM_WPLUS] = $this->getGlobalPermission($repository, Git::PERM_WPLUS);
+        }
+
+        return $permissions;
+    }
+
+    private function getGlobalPermission(GitRepository $repository, $permission_name)
+    {
+        return $this->permissions_manager->getAuthorizedUGroupIdsForProject(
+            $repository->getProject(),
+            $repository->getId(),
             $permission_name
         );
     }

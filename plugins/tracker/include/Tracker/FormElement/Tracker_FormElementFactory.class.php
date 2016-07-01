@@ -343,9 +343,13 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement_IComputeValues
      */
-    public function getComputableFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
+    public function getComputableFieldByNameForUser($tracker_id, $field_name, PFUser $user)
+    {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
-        if ($field && $field instanceof Tracker_FormElement_IComputeValues) {
+        if (
+            $field
+            && $field instanceof Tracker_FormElement_IComputeValues
+        ) {
             return $field;
         }
         return null;

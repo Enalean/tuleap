@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Import\ImportConfig;
+
 class GitXmlImporter {
 
     const READ_TAG   = 'read';
@@ -107,7 +109,7 @@ class GitXmlImporter {
      * @var String
      * @return boolean
      */
-    public function import(Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path) {
+    public function import(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path) {
         $xml_git = $xml_input->git;
         if(!$xml_git) {
             $this->logger->debug('No git node found into xml.');
@@ -118,7 +120,7 @@ class GitXmlImporter {
         $this->logger->debug("Found $nb_repo repository(ies) to import.");
 
         foreach($xml_git->repository as $repository) {
-            $this->importRepository($project, $creator, $repository, $extraction_path);
+            $this->importRepository($configuration, $project, $creator, $repository, $extraction_path);
         }
 
         $this->importAdmins($project, $xml_git->{"ugroups-admin"});
@@ -136,7 +138,7 @@ class GitXmlImporter {
         $this->permission_manager->savePermissions($project, $project->getId(), Git::PERM_ADMIN, $ugroup_ids);
     }
 
-    private function importRepository(Project $project, PFUser $creator, SimpleXMLElement $repository_xmlnode, $extraction_path) {
+    private function importRepository(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $repository_xmlnode, $extraction_path) {
         $repository_info = $repository_xmlnode->attributes();
         $this->logger->debug("Importing {$repository_info['name']} using {$repository_info['bundle-path']}");
         $description = isset($repository_info['description']) ? (string) $repository_info['description'] : GitRepository::DEFAULT_DESCRIPTION;
@@ -149,7 +151,7 @@ class GitXmlImporter {
             $this->importPermissions($project, $repository_xmlnode, $repository);
         } else {
             $this->importPermissions($project, $repository_xmlnode->permissions, $repository);
-            $this->importReferences($project, $repository_xmlnode->references, $repository);
+            $this->importReferences($configuration, $project, $repository_xmlnode->references, $repository);
         }
         $this->system_event_manager->queueProjectsConfigurationUpdate(array($project->getGroupId()));
     }
@@ -239,7 +241,7 @@ class GitXmlImporter {
         return $ugroup_ids;
     }
 
-    private function importReferences(Project $project, SimpleXMLElement $xml_references, GitRepository $repository)
+    private function importReferences(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_references, GitRepository $repository)
     {
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
@@ -250,7 +252,8 @@ class GitXmlImporter {
                 ),
                 'service_name'   => self::SERVICE_NAME,
                 'xml_content'    => $xml_references,
-                'project'        => $project
+                'project'        => $project,
+                'configuration'  => $configuration,
             )
         );
     }

@@ -38,6 +38,9 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
+use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1241,7 +1244,31 @@ class GitPlugin extends Plugin {
             new CITokenManager(new CITokenDao()),
             $this->getFineGrainedPermissionDestructor(),
             $this->getFineGrainedRepresentationBuilder(),
-            $this->getFineGrainedPermissionReplicator()
+            $this->getFineGrainedPermissionReplicator(),
+            $this->getHistoryValueFormatter(),
+            $this->getPermissionChangesDetector(),
+            $this->getDefaultPermissionsUpdater()
+        );
+    }
+
+    private function getDefaultPermissionsUpdater()
+    {
+        return new DefaultPermissionsUpdater(
+            $this->getPermissionsManager(),
+            new ProjectHistoryDao(),
+            $this->getHistoryValueFormatter(),
+            $this->getFineGrainedRetriever(),
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getFineGrainedUpdater(),
+            $this->getDefaultFineGrainedPermissionSaver()
+        );
+    }
+
+    private function getPermissionChangesDetector()
+    {
+        return new PermissionChangesDetector(
+            $this->getGitPermissionsManager(),
+            $this->getFineGrainedRetriever()
         );
     }
 
@@ -1305,7 +1332,7 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * @return FineGrainedUpdater
+     * @return FineGrainedPermissionSaver
      */
     private function getFineGrainedPermissionSaver()
     {
@@ -1323,7 +1350,7 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * @return FineGrainedUpdater
+     * @return FineGrainedRetriever
      */
     public function getFineGrainedRetriever()
     {
@@ -1332,7 +1359,7 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * @return FineGrainedUpdater
+     * @return FineGrainedPermissionFactory
      */
     public function getFineGrainedFactory()
     {
@@ -1352,6 +1379,16 @@ class GitPlugin extends Plugin {
         return new FineGrainedPatternValidator();
     }
 
+    private function getHistoryValueFormatter()
+    {
+        return new HistoryValueFormatter(
+            $this->getPermissionsManager(),
+            $this->getUGroupManager(),
+            $this->getFineGrainedRetriever(),
+            $this->getDefaultFineGrainedPermissionFactory()
+        );
+    }
+
     public function getGitSystemEventManager() {
         return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
     }
@@ -1367,7 +1404,9 @@ class GitPlugin extends Plugin {
             $this->getConfigurationParameter('git_backup_dir'),
             new GitRepositoryMirrorUpdater($this->getMirrorDataMapper(), new ProjectHistoryDao()),
             $this->getMirrorDataMapper(),
-            $this->getFineGrainedPermissionReplicator()
+            $this->getFineGrainedPermissionReplicator(),
+            new ProjectHistoryDao(),
+            $this->getHistoryValueFormatter()
         );
     }
 
@@ -1394,9 +1433,6 @@ class GitPlugin extends Plugin {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->getGitSystemEventManager(),
-            $this->getFineGrainedUpdater(),
-            $this->getDefaultFineGrainedPermissionSaver(),
-            $this->getDefaultFineGrainedPermissionFactory(),
             $this->getFineGrainedDao(),
             $this->getFineGrainedRetriever()
         );
@@ -1799,6 +1835,6 @@ class GitPlugin extends Plugin {
             EventManager::instance()
         );
 
-        $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+        $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
     }
 }

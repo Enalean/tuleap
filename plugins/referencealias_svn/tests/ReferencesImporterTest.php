@@ -19,9 +19,9 @@
  */
 namespace Tuleap\ReferenceAliasSVN;
 
-include 'bootstrap.php';
+use Tuleap\Project\XML\Import\ImportConfig;
 
-use Tuleap\Svn\Repository\Repository;
+include 'bootstrap.php';
 
 class ReferencesImporterTest extends \TuleapTestCase
 {
@@ -47,7 +47,7 @@ XML;
 
         expect($this->dao)->insertRef('cmmt12', 123, 2)->once();
 
-        $this->importer->importCompatRefXML(mock('Project'), $simple_xml, $this->repository);
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $simple_xml, $this->repository);
     }
 
     public function testItShouldNotAddUnknownReferences()
@@ -63,6 +63,6 @@ XML;
 
         expect($this->dao)->insertRef()->never();
 
-        $this->importer->importCompatRefXML(mock('Project'), $simple_xml, $this->repository);
+        $this->importer->importCompatRefXML(new ImportConfig(), mock('Project'), $simple_xml, $this->repository);
     }
 }

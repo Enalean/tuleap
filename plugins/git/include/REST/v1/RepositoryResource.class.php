@@ -66,6 +66,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use PermissionsManager;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 include_once('www/project/admin/permissions.php');
 
@@ -130,13 +131,16 @@ class RepositoryResource extends AuthenticatedResource {
         $default_fine_grained_permission_saver = new DefaultFineGrainedPermissionSaver($fine_grained_dao);
         $fine_grained_updater                  = new FineGrainedUpdater($fine_grained_dao);
         $fine_grained_retriever                = new FineGrainedRetriever($fine_grained_dao);
+        $history_formatter                     = new HistoryValueFormatter(
+            PermissionsManager::instance(),
+            new UGroupManager(),
+            $fine_grained_retriever,
+            $default_fine_grained_permission_factory
+        );
 
         $git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->git_system_event_manager,
-            $fine_grained_updater,
-            $default_fine_grained_permission_saver,
-            $default_fine_grained_permission_factory,
             $fine_grained_dao,
             $fine_grained_retriever
         );

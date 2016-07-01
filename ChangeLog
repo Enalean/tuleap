@@ -1,6 +1,9 @@
 Version 8.17 (not released yet)
 	== Enhancement ==
 	* request #9113: Be able to filter system events by status
+	* story #8425: Comprehensive git permissions changes log
+		- Enhance displaying of project history
+	* request #9280: $sys_trusted_proxies should allow a subnet
 
 	== Bug fix ==
 	* request #9289: Root daily is not able to suspend multiple users
@@ -9,11 +12,18 @@ Version 8.17 (not released yet)
 	* request #9278: Remove CentOS 5 packages
 
 	== Plugins ==
-	* git: 4.222
-	* tracker: 5.938
-	* referencealias_core: 0.7
+	* git: 4.228
+	* tracker: 5.944
+	* referencealias_core: 0.9
 	* agiledashboard: 1.387
 	* hudson: 1.30
+	* graphontrackersv5: 5.23
+	* mediawiki: 0.117
+	* referencealias_git: 0.5
+	* referencealias_mediawiki: 0.6
+	* referencealias_svn: 0.5
+	* referencealias_tracker: 0.7
+	* svn: 0.61
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==

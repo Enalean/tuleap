@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,10 @@
  */
 
 /**
- * I'm implemented by fields that are able to produce a numerical value 
+ * I'm implemented by fields that are able to produce a numerical value
  */
-interface Tracker_FormElement_IComputeValues {
+interface Tracker_FormElement_IComputeValues
+{
     
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
@@ -36,5 +37,3 @@ interface Tracker_FormElement_IComputeValues {
 
     public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);
 }
-
-?>

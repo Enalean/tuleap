@@ -104,6 +104,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
+    public function isSubmitable()
+    {
+        return parent::isSubmitable() && ! $this->getDeprecationRetriever()->isALegacyField($this);
+    }
+
+    public function isUpdateable()
+    {
+        return parent::isUpdateable() && ! $this->getDeprecationRetriever()->isALegacyField($this);
+    }
+
     public function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
@@ -117,8 +127,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @return float|null if there are no data (/!\ it's on purpose, otherwise we can mean to distinguish if there is data but 0 vs no data at all, for the graph plot)
      */
-    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, array &$computed_artifact_ids = array()) {
-        if ($this->useFastCompute()) {
+    public function getComputedValue(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $timestamp = null,
+        array &$computed_artifact_ids = array(),
+        $use_fast_compute = true
+    ) {
+        if ($use_fast_compute) {
             return $this->getFastComputedValue($artifact->getId(), $timestamp, true);
         }
         $computed_artifact_ids[$artifact->getId()] = true;
@@ -143,8 +159,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
-        if ($stop_on_manual_value) {
-            $computed_value = $this->getComputedValue($user, $artifact);
+        if ($stop_on_manual_value || $this->getDeprecationRetriever()->isALegacyField($this)) {
+            $empty_array = array();
+            $computed_value = $this->getComputedValue($user, $artifact, null, $empty_array, $this->useFastCompute());
         } else {
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         }
@@ -277,7 +294,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function getFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, array &$computed_artifact_ids) {
         $field = $this->getTargetField($user, $artifact);
         if ($field) {
-            return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids);
+            return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids, false);
         }
         return null;
     }
@@ -403,11 +420,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
-    {
-        return $this->getValueDao()->create($changeset_value_id, $value);
-    }
-
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -418,7 +430,15 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
     {
-        $current_user   = UserManager::instance()->getCurrentUser();
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
+            $empty_array = array();
+            $value = $this->getComputedValue($current_user, $artifact, null, $empty_array, $this->useFastCompute());
+            return '<div class="auto-computed-label computed-legacy">'.  $purifier->purify($value) . '</div>';
+        }
+
         $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
 
         if ($value !== null) {
@@ -428,17 +448,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if (! $computed_value) {
             $computed_value = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
         }
-
-        $purifier = Codendi_HTMLPurifier::instance();
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
 
         if ($value === null) {
             $value = $html_computed_value;
-        }
-
-        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
-            return '<div class="auto-computed-label computed-legacy">'. $value. '</div>';
         }
 
         return $this->fetchFieldReadOnly($value, $html_computed_value);
@@ -536,7 +550,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($changeset && $changeset->getNumeric() !== null) {
             return $changeset->getNumeric();
         } else {
-            return $this->getComputedValue($user, $artifact_changeset->getArtifact());
+            $empty_array = array();
+            return $this->getComputedValue($user, $artifact_changeset->getArtifact(), null, $empty_array, $this->useFastCompute());
         }
     }
 
@@ -718,7 +733,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new ComputedDao();
     }
 
@@ -726,10 +742,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     public function fetchRawValueFromChangeset($changeset) {
-    }
-
-    protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
-        return $this->getValueDao()->keep($previous_changesetvalue->getId(), $changeset_value_id);
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed)
@@ -745,7 +757,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $changeset_value;
     }
 
-    private function getDeprecationRetriever()
+    /**
+     * protected for test purpose
+     */
+    protected function getDeprecationRetriever()
     {
         return new DeprecationRetriever(
             new Dao(),
@@ -761,57 +776,47 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $factory_builder::build();
     }
 
-    /**
-     * Save the value submitted by the user in the new changeset
-     *
-     * @param Tracker_Artifact           $artifact         The artifact
-     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
-     * @param int                        $new_changeset_id The id of the new changeset
-     * @param mixed                      $value  The value submitted by the user
-     * @param boolean $is_submission true if artifact submission, false if artifact update
-     *
-     * @return bool true if success
-     */
-    public function saveNewChangeset(
-        $artifact,
-        $old_changeset,
-        $new_changeset_id,
-        $value,
-        PFUser $submitter,
-        $is_submission = false,
-        $bypass_permissions = false
-    ) {
-        if ($this->getDeprecationRetriever()->isALegacyField($this) || ! $this->userCanUpdate($submitter)) {
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $user = UserManager::instance()->getCurrentUser();
+        if ($this->getDeprecationRetriever()->isALegacyField($this) || ! $this->userCanUpdate($user)) {
             return true;
         }
+        $new_value = $this->getStorableValue($value);
 
-        $new_value = '';
+        return $this->getValueDao()->create($changeset_value_id, $new_value);
+    }
+
+    private function getStorableValue(array $value)
+    {
+         $new_value = '';
 
         if (isset($value[self::FIELD_VALUE_MANUAL])) {
             $new_value = $value[self::FIELD_VALUE_MANUAL];
         }
 
-        return parent::saveNewChangeset(
-            $artifact,
-            $old_changeset,
-            $new_changeset_id,
-            $new_value,
-            $submitter,
-            $is_submission,
-            $bypass_permissions
-        );
+        return $new_value;
     }
 
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
     {
-        if ($old_value->getNumeric() === 0 && $new_value === '') {
+        $new_value = $this->getStorableValue($value);
+
+        if ($previous_changeset_value->getNumeric() === null && $new_value === '') {
+            return false;
+        }
+
+        if ($previous_changeset_value->getNumeric() === null && $new_value !== '') {
             return true;
         }
 
-        return $old_value->getNumeric() != $new_value;
+        if ($new_value === '' && $previous_changeset_value->getNumeric() === 0.0) {
+            return true;
+        }
+
+        return  (float) $previous_changeset_value->getNumeric() !== (float) $new_value;
     }
 
     public function getSoapAvailableValues() {
@@ -838,7 +843,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
 
         if ($value === false) {
-            $value = $this->getComputedValue($user, $artifact, $timestamp);
+            $empty_array = array();
+            $value = $this->getComputedValue($user, $artifact, $timestamp, null, $empty_array, $this->useFastCompute());
             $dao->saveCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp, $value);
         }
 

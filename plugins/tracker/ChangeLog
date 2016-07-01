@@ -1,3 +1,22 @@
+Version 5.944 - Tuleap 8.17
+    * story #9090: Correct failed tests
+
+Version 5.943 - Tuleap 8.17
+    * When a computed field isn't migrated, it is still a read-only field
+
+
+Version 5.942 - Tuleap 8.17
+    * request #9298 Burndown is broken and doesn't displays graph anymore
+
+Version 5.941 - Tuleap 8.17
+    * story #9283: allow to pass a parameter that force references update
+
+Version 5.940 - Tuleap 8.17
+    * You should be able to back to an autocomputed value, even if manual value is 0
+
+Version 5.939 - Tuleap 8.17
+    * request #9293 Calcul computed field V2 error when using slow computed calcul
+
 Version 5.938 - Tuleap 8.17
     * request #9230 Artifact API doesn't follow RFC
 

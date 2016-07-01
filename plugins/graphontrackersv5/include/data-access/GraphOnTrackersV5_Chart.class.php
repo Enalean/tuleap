@@ -191,14 +191,14 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly) {
-        $html = '';
-
-        $add_to_dashboard_params = array(
-            'action' => 'widget',
-            'chart' => array(
+        $csrf_token_widget_management = new CSRFSynchronizerToken('widget_management');
+        $add_to_dashboard_params      = array(
+            'action'                                      => 'widget',
+            'chart'                                       => array(
                 'title'    => $this->getTitle(),
-                'chart_id' => $this->getId()
+                'chart_id' => $this->getId(),
             ),
+            $csrf_token_widget_management->getTokenName() => $csrf_token_widget_management->getToken()
         );
 
         $url = '?'. http_build_query(array(
