@@ -32,7 +32,7 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
         $this->field = TestHelper::getPartialMock(
             'Tracker_FormElement_Field_Computed',
-            array('getProperty', 'getDao', 'getDeprecationRetriever')
+            array('getProperty', 'getDao')
         );
         stub($this->field)->getProperty('target_field_name')->returns('effort');
         stub($this->field)->getProperty('fast_compute')->returns(0);
@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
         $this->artifact  = mock('Tracker_Artifact');
         $this->old_value = mock('Tuleap\Tracker\Artifact\ChangesetValueComputed');
 
-        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getNumeric'));
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getNumeric', 'getDeprecationRetriever'));
     }
 
 
