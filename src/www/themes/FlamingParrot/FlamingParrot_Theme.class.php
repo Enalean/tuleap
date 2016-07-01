@@ -51,12 +51,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->includeJavascriptFile('/themes/FlamingParrot/js/navbar.js');
-        $this->includeJavascriptFile('/themes/FlamingParrot/js/sidebar.js');
-        $this->includeJavascriptFile('/themes/FlamingParrot/js/motd.js');
-        $this->includeJavascriptFile('/themes/FlamingParrot/js/keymaster/keymaster.js');
-        $this->includeJavascriptFile('/themes/FlamingParrot/js/keymaster-sequence/keymaster.sequence.min.js');
-        $this->includeJavascriptFile('/themes/FlamingParrot/js/keyboard-navigation.js');
+        $this->includeJavascriptFile('/assets/flamingparrot.'.$this->getVersion().'.js');
     }
 
     private function render($template_name, $presenter) {
@@ -126,13 +121,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     }
 
     protected function includeSubsetOfCombined() {
-        parent::includeSubsetOfCombined();
-        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-dropdown.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-modal.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/jscrollpane/jquery.mousewheel.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/jscrollpane/jquery.jscrollpane.min.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/tuleap/listFilter.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/codendi/Tooltip.js"></script>';
+        echo '<script type="text/javascript" src="/assets/tuleap_subset_flamingparrot.'.$this->getVersion().'.js"></script>'."\n";
     }
 
     protected function displayCommonStylesheetElements($params) {

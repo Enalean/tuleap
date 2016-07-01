@@ -415,15 +415,6 @@ $sys_default_theme_variant = 'FlamingParrot_Orange';
 // * FlamingParrot_DarkRed
 $sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,FlamingParrot_Green,FlamingParrot_BlueGrey,FlamingParrot_Purple,FlamingParrot_Red,FlamingParrot_DarkOrange,FlamingParrot_DarkBlue,FlamingParrot_DarkGreen,FlamingParrot_DarkBlueGrey,FlamingParrot_DarkPurple,FlamingParrot_DarkRed';
 
-
-// Define an alternative directory for javascript combined files
-//
-// If you want to activate that (probably useful only in dev you must define
-// a new apache alias in /etc/httpd/conf.d/tuleap-plugins/tuleap-combined.conf
-// see src/etc/combined.conf.dist for reference
-//
-// $sys_combined_dir = $codendi_cache_dir . '/combined';
-
 // Set the reporting level for logging
 //
 //  Possible levels:

@@ -48,6 +48,10 @@ class Layout extends Response {
      */
     protected $purifier;
 
+    private $javascript;
+
+    private $version;
+
     //Define all the icons for this theme
     var $icons = array('Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
@@ -1238,14 +1242,6 @@ class Layout extends Response {
         return ! isset($params[self::INCLUDE_FAT_COMBINED]) || $params[self::INCLUDE_FAT_COMBINED] == true;
     }
 
-    public function getCombinedDirectory() {
-        $combined_dir = ForgeConfig::get('sys_combined_dir');
-        if (! is_dir($combined_dir)) {
-            $combined_dir = $GLOBALS['codendi_dir'] . '/src/www/scripts/combined';
-        }
-        return $combined_dir;
-    }
-
     /**
      * Display the Javascript code to be included in <head>
      *
@@ -1256,16 +1252,15 @@ class Layout extends Response {
      * @see includeJavascriptSnippet
      */
     public function displayJavascriptElements($params) {
-        $c = new Combined($this->getCombinedDirectory());
         if ($this->shouldIncludeFatCombined($params)) {
-            echo $c->getScripts(array('/scripts/codendi/common.js'));
+            echo '<script type="text/javascript" src="/assets/tuleap.'.$this->getVersion().'.js"></script>'."\n";
         } else {
             $this->includeSubsetOfCombined();
         }
 
         $ckeditor_path = '/scripts/ckeditor-4.3.2/';
         echo '<script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
-              <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>';
+              <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>'."\n";
 
         //Javascript i18n
         echo '<script type="text/javascript">'."\n";
@@ -1273,20 +1268,18 @@ class Layout extends Response {
         echo '
         codendi.imgroot = \''. $this->imgroot .'\';
         '. $this->changeColorpickerPalette() .'
-        </script>';
+        </script>'."\n";
 
         if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
-            echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
+            echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>'."\n";
         }
 
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent("javascript_file", null);
 
         foreach ($this->javascript as $js) {
             if (isset($js['file'])) {
-                if (!$c->isCombined($js['file'])) {
-                    echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
-                }
+                echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
             } else {
                 if (isset($js['snippet'])) {
                     echo '<script type="text/javascript">'."\n";
@@ -1304,11 +1297,7 @@ class Layout extends Response {
     }
 
     protected function includeSubsetOfCombined() {
-        echo '<script type="text/javascript" src="/scripts/jquery/jquery-2.1.1.min.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-tooltip.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-popover.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-button.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/tuleap/project-privacy-tooltip.js"></script>';
+        echo '<script type="text/javascript" src="/assets/tuleap_subset.'.$this->getVersion().'.js"></script>'."\n";
     }
 
     /**
@@ -1576,8 +1565,7 @@ class Layout extends Response {
 
         global $Language;
 
-        // Codendi version number
-        $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+        $version = $this->getVersion();
 
         echo '<footer class="footer">';
         include($Language->getContent('layout/footer'));
@@ -2598,5 +2586,11 @@ class Layout extends Response {
     public function canDisplayStandardHomepage() {
         return false;
     }
+
+    protected function getVersion() {
+        if ($this->version === null) {
+            $this->version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+        }
+        return $this->version;
+    }
 }
-?>

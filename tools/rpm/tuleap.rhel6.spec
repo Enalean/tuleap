@@ -952,6 +952,7 @@ fi
 %{APP_DIR}/src/www/api/VERSION
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/reference
+%{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/docman
