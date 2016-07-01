@@ -48,7 +48,8 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function itComputesDirectValues() {
+    public function itComputesDirectValues()
+    {
         stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5),
             array('id' => 751, 'type' => 'int', 'int_value' => 15)
@@ -57,8 +58,9 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
         stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
 
-        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
+        $artifact    = stub('Tracker_Artifact')->getId()->returns(233);
+        $empty_array = array();
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact, null, $empty_array, false));
     }
 
     public function itReturnsNullWhenThereAreNoDataBecauseNoDataMeansNoPlotOnChart() {
@@ -216,7 +218,8 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function itComputesRecursively() {
+    public function itComputesRecursively()
+    {
         $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
         $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
         $row_766 = array('id' => 766, 'type' => 'computed');
@@ -238,10 +241,12 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
 
-        $this->assertEqual(25, $this->field->getComputedValue($this->user, $this->artifact));
+        $empty_array = array();
+        $this->assertEqual(25, $this->field->getComputedValue($this->user, $this->artifact, null, $empty_array, false));
     }
 
-    public function itDoesntMakeLoopInGraph() {
+    public function itDoesntMakeLoopInGraph()
+    {
         $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
         $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
         $row_752 = array('id' => 752, 'type' => 'int', 'int_value' => 10);
@@ -275,10 +280,12 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
 
-        $this->assertEqual(40, $this->field->getComputedValue($this->user, $this->artifact));
+        $empty_array = array();
+        $this->assertEqual(40, $this->field->getComputedValue($this->user, $this->artifact, null, $empty_array, false));
     }
 
-    public function itDoesntCountTwiceTheFinalData() {
+    public function itDoesntCountTwiceTheFinalData()
+    {
         $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
         $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
         $row_766 = array('id' => 766, 'type' => 'computed');
@@ -304,7 +311,8 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
 
-        $this->assertEqual(20, $this->field->getComputedValue($this->user, $this->artifact));
+        $empty_array = array();
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $this->artifact, null, $empty_array, false));
     }
 
     private function getArtifact($id) {

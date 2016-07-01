@@ -36,6 +36,4 @@ interface Tracker_FormElement_IComputeValues
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);
 
     public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);
-
-    public function canBeUsedForLegacyAutocomputeCalculation();
 }

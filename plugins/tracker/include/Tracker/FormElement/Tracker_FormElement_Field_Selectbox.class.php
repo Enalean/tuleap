@@ -269,11 +269,6 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $decorators[$value_id]->css(null);
     }
 
-    public function canBeUsedForLegacyAutocomputeCalculation()
-    {
-        return false;
-    }
-
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
         if ($this->userCanRead($user)) {
             return $this->getCurrentValue($artifact);

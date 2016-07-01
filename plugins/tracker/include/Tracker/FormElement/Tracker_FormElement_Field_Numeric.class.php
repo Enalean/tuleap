@@ -40,11 +40,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         ),
     );
 
-    public function canBeUsedForLegacyAutocomputeCalculation()
-    {
-        return true;
-    }
-
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      *
