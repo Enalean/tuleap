@@ -72,6 +72,7 @@
                         <li class="nav-item sub-nav-item"><a href="#forms-search">Search</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-textareas">Textareas</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-selects">Selects</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#forms-select2">Select2</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-multi-selects">Multi selects</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-checkboxes">Checkboxes</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-radios">Radios</a></li>
@@ -1152,6 +1153,239 @@ Semantics, a large language ocean.
                     </div>
                 </div>
             </section>
+            <section class="doc-section" id="forms-select2">
+                <h3 class="doc-subsection-title">Select2</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2">Area</label>
+    <select class="tlp-select" id="area-select2" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2'), {
+    placeholder: 'Choose an area',
+    allowClear: true
+});
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-adjusted">Area adjusted</label>
+    <select class="tlp-select tlp-select-adjusted" id="area-select2-adjusted" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-adjusted'), {
+    placeholder: 'Choose an area',
+    allowClear: true
+});
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-without-autocomplete">Area without autocomplete</label>
+    <select class="tlp-select" id="area-without-autocomplete" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-without-autocomplete'), {
+    placeholder: 'Choose an area',
+    allowClear: true,
+    minimumResultsForSearch: Infinity
+});
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-help">Area help</label>
+    <select class="tlp-select" id="area-select2-help" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-help'), {
+    placeholder: 'Choose an area',
+    allowClear: true
+});
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-mandatory">Area mandatory <i class="fa fa-asterisk"></i></label>
+    <select class="tlp-select" id="area-select2-mandatory" name="area" required>
+        <option value="" selected disabled>Choose your area</option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-mandatory'), {
+    placeholder: 'Choose an area'
+});
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="area-select2-disabled">Area disabled</label>
+    <select class="tlp-select" id="area-select2-disabled" name="area" disabled>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-disabled'));
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="area-select2-error">Area error</label>
+    <select class="tlp-select" id="area-select2-error" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-error'), {
+    placeholder: 'Choose an area',
+    allowClear: true
+});
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-small">Area small</label>
+    <select class="tlp-select tlp-select-small" id="area-select2-small" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-small'), {
+    placeholder: 'Choose an area',
+    allowClear: true
+});
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-large">Area large</label>
+    <select class="tlp-select tlp-select-large" id="area-select2-large" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+tlp.select2(document.querySelector('#area-select2-large'), {
+    placeholder: 'Choose an area',
+    allowClear: true
+});
+    </script>
+</div>
+
+</textarea>
+                    </div>
+                </div>
+            </section>
             <section class="doc-section" id="forms-multi-selects">
                 <h3 class="doc-subsection-title">Multi-selects</h3>
                 <div class="demo">
@@ -1468,6 +1702,7 @@ Semantics, a large language ocean.
                     </div>
                 </div>
             </section>
+
             <section class="doc-section" id="forms-datetime">
                 <h3 class="doc-subsection-title">Date/time picker <code class="code-inline">.tlp-input-date</code></h3>
 
@@ -1502,10 +1737,8 @@ Semantics, a large language ocean.
                     </div>
                 </div>
             </section>
-
-            <div class="section-content">
-            </div>
         </section>
+
         <section class="doc-section" id="buttons">
             <h2 class="doc-section-title">Buttons</h2>
 
