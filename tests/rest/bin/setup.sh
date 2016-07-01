@@ -117,6 +117,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/04-public-member
     load_project /usr/share/tuleap/tests/rest/_fixtures/05-pbi
     load_project /usr/share/tuleap/tests/rest/_fixtures/06-dragndrop
+    load_project /usr/share/tuleap/tests/rest/_fixtures/07-computedfield
 
     echo "Load initial data"
     php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php ng
