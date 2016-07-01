@@ -55,16 +55,20 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         $this->dao = new Dao();
         $this->inline_comments_dao = mock('Tuleap\PullRequest\InlineComment\Dao');
+        $this->git_repository_factory = mock('GitRepositoryFactory');
         $this->pull_request_updater = new PullRequestUpdater(
             new Factory($this->dao),
+            mock('Tuleap\PullRequest\PullRequestMerger'),
             $this->inline_comments_dao,
             mock('Tuleap\PullRequest\InlineComment\InlineCommentUpdater'),
             new FileUniDiffBuilder(),
-            mock('Tuleap\PullRequest\Timeline\TimelineEventCreator')
+            mock('Tuleap\PullRequest\Timeline\TimelineEventCreator'),
+            $this->git_repository_factory
         );
 
         $this->git_exec = mock('\Tuleap\PullRequest\GitExec');
-        $this->user     = mock('User')->getId()->returns(1337);
+        $this->user     = mock('PFUser');
+        stub($this->user)->getId()->returns(1337);
     }
 
     public function tearDown()
@@ -76,9 +80,9 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
     public function itUpdatesSourceBranchInPRs()
     {
-        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2');
-        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2');
-        $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'dev', 'sha2');
+        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0);
+        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2', 0);
+        $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'other', 'sha2', 0);
 
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
@@ -98,8 +102,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
     public function itDoesNotUpdateSourceBranchOfOtherRepositories()
     {
-        $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2');
-        $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2');
+        $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2', 0);
+        $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2', 0);
 
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
@@ -117,8 +121,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
     public function itDoesNotUpdateClosedPRs()
     {
-        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2');
-        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'dev', 'sha2');
+        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'master', 'sha2', 0);
+        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'dev', 'sha2', 0);
 
         $this->dao->markAsMerged($pr1_id);
         $this->dao->markAsAbandoned($pr2_id);

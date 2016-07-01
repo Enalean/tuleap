@@ -213,7 +213,6 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->rm($file2_path);
         file_put_contents($file1_path, "Contenu\nContenu2");
         $this->git_exec->add($file1_path);
-        $this->git_exec->add($file2_path);
         $this->git_exec->commit("rm $file2_path & modify $file1_path");
 
         $short_stat = $this->git_exec->getShortStat('master', 'dev');
@@ -237,7 +236,6 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->rm($file2_path);
         file_put_contents($file1_path, "Contenu\nContenu2");
         $this->git_exec->add($file1_path);
-        $this->git_exec->add($file2_path);
         $this->git_exec->commit("rm $file2_path & modify $file1_path");
 
         $short_stat = $this->git_exec->getFileDiffStat('master', 'dev', $file1_path);

@@ -73,7 +73,7 @@ class PullRequestCloserTest extends TuleapTestCase
 
         $this->dao                 = mock('Tuleap\PullRequest\Dao');
         $this->factory             = new Factory($this->dao);
-        $this->pull_request_closer = new PullRequestCloser($this->factory);
+        $this->pull_request_closer = new PullRequestCloser($this->factory, mock('Tuleap\PullRequest\PullRequestMerger'));
         $this->git_repository      = stub('GitRepository')->getFullPath()->returns($this->git_repository_dir);
         $this->git_exec            = new GitExec($this->git_repository_dir);
 
@@ -191,6 +191,8 @@ class PullRequestCloserTest extends TuleapTestCase
             null,
             'master',
             $chat_ouane_master,
+            null,
+            null,
             'M'
         );
 
@@ -222,6 +224,8 @@ class PullRequestCloserTest extends TuleapTestCase
             null,
             'master',
             $chat_ouane_master,
+            null,
+            null,
             'A'
         );
 
@@ -254,6 +258,8 @@ class PullRequestCloserTest extends TuleapTestCase
             72,
             'master',
             $chat_ouane_master,
+            null,
+            null,
             'R'
         );
 
@@ -294,6 +300,8 @@ class PullRequestCloserTest extends TuleapTestCase
             72,
             'dev',
             $chat_ouane_dev,
+            null,
+            null,
             'R'
         );
 
@@ -331,6 +339,8 @@ class PullRequestCloserTest extends TuleapTestCase
             72,
             'master',
             $chat_ouane_master,
+            null,
+            null,
             'M'
         );
 
@@ -362,6 +372,8 @@ class PullRequestCloserTest extends TuleapTestCase
             72,
             'master',
             $chat_ouane_master,
+            null,
+            null,
             'A'
         );
 
