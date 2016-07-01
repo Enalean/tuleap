@@ -309,7 +309,8 @@ class pullrequestPlugin extends Plugin
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
                     new FileUnidiffBuilder(),
-                    $this->getTimelineEventCreator()
+                    $this->getTimelineEventCreator(),
+                    $this->getRepositoryFactory()
                 );
                 $pull_request_updater->updatePullRequests($user, $git_exec, $repository, $branch_name, $new_rev);
             }

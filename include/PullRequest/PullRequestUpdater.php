@@ -31,6 +31,7 @@ use ForgeConfig;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use FileSystemIterator;
+use GitRepositoryFactory;
 
 class PullRequestUpdater
 {
@@ -60,13 +61,19 @@ class PullRequestUpdater
      */
     private $timeline_event_creator;
 
+    /**
+     * GitRepositoryFactory
+     */
+    private $git_repository_factory;
+
     public function __construct(
         Factory $pull_request_factory,
         PullRequestMerger $pull_request_merger,
         InlineCommentDao $inline_comment_dao,
         InlineCommentUpdater $inline_comment_updater,
         FileUniDiffBuilder $diff_builder,
-        TimelineEventCreator $timeline_event_creator
+        TimelineEventCreator $timeline_event_creator,
+        GitRepositoryFactory $git_repository_factory
     )
     {
         $this->pull_request_factory   = $pull_request_factory;
@@ -75,6 +82,7 @@ class PullRequestUpdater
         $this->inline_comment_updater = $inline_comment_updater;
         $this->diff_builder           = $diff_builder;
         $this->timeline_event_creator = $timeline_event_creator;
+        $this->git_repository_factory = $git_repository_factory;
     }
 
     public function updatePullRequests(PFUser $user, GitExec $git_exec, GitRepository $repository, $branch_name, $new_rev)
@@ -96,7 +104,9 @@ class PullRequestUpdater
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
         foreach ($prs as $pr) {
-            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr, $pr->getSha1Src(), $repository);
+            $pr_repository = $this->git_repository_factory->getRepositoryById($pr->getRepositoryId());
+            $pr_git_exec   = new GitExec($pr_repository->getFullPath(), $pr_repository->getFullPath());
+            $merge_status  = $this->pull_request_merger->detectMergeabilityStatus($pr_git_exec, $pr, $pr->getSha1Src(), $pr_repository);
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
         }
     }
