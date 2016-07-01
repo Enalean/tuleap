@@ -40,6 +40,7 @@ use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
+use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1236,7 +1237,21 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedRepresentationBuilder(),
             $this->getFineGrainedPermissionReplicator(),
             $this->getHistoryValueFormatter(),
-            $this->getPermissionChangesDetector()
+            $this->getPermissionChangesDetector(),
+            $this->getDefaultPermissionsUpdater()
+        );
+    }
+
+    private function getDefaultPermissionsUpdater()
+    {
+        return new DefaultPermissionsUpdater(
+            $this->getPermissionsManager(),
+            new ProjectHistoryDao(),
+            $this->getHistoryValueFormatter(),
+            $this->getFineGrainedRetriever(),
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getFineGrainedUpdater(),
+            $this->getDefaultFineGrainedPermissionSaver()
         );
     }
 
@@ -1409,13 +1424,8 @@ class GitPlugin extends Plugin {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->getGitSystemEventManager(),
-            $this->getFineGrainedUpdater(),
-            $this->getDefaultFineGrainedPermissionSaver(),
-            $this->getDefaultFineGrainedPermissionFactory(),
             $this->getFineGrainedDao(),
-            $this->getFineGrainedRetriever(),
-            $this->getHistoryValueFormatter(),
-            new ProjectHistoryDao()
+            $this->getFineGrainedRetriever()
         );
     }
 
