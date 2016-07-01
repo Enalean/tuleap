@@ -82,6 +82,42 @@
                 allowClear: true
             });
 
+            tlp.select2(document.querySelector('#types-select2'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#typess-select2'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#types-select2-adjusted'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#types-select2-help'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#types-select2-mandatory'), {
+                placeholder: 'Choose a type'
+            });
+            tlp.select2(document.querySelector('#types-select2-disabled'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#types-select2-error'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#types-select2-small'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#types-select2-large'), {
+                placeholder: 'Choose a type',
+                allowClear: true
+            });
+
             var modal_buttons = example.querySelectorAll('[data-target^=modal-]');
             [].forEach.call(modal_buttons, function (button) {
                 var modal = tlp.modal(document.getElementById(button.dataset.target), {});

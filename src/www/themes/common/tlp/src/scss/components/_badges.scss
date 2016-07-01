@@ -20,6 +20,7 @@
 $tlp-badge-radius: 15px;
 $tlp-badge-color: #ffffff;
 $tlp-badge-font-size: 12px;
+$tlp-badge-line-height: 12px;
 $tlp-badge-font-weight: 600;
 $tlp-badge-padding: 6px 9px 6px;
 
@@ -35,6 +36,7 @@ $tlp-badge-secondary-outline-color: #888888;
     color: $tlp-badge-color;
     font-size: $tlp-badge-font-size;
     font-weight: $tlp-badge-font-weight;
+    line-height: $tlp-badge-line-height;
     white-space: nowrap;
     vertical-align: middle;
 }

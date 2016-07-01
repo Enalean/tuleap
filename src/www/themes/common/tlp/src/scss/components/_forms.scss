@@ -56,6 +56,7 @@ $tlp-form-element-select-small-background-size: 6px;
     &.tlp-form-element-disabled {
         opacity: .5;
 
+        // scss-lint:disable SelectorFormat
         > .tlp-label,
         > .tlp-input,
         > .tlp-search,
@@ -65,24 +66,32 @@ $tlp-form-element-select-small-background-size: 6px;
         > .tlp-checkbox > input,
         > .tlp-radio,
         > .tlp-radio > input,
-        .select2-container--tlp.select2-container--disabled .select2-selection--single,
-        .select2-container--tlp-small.select2-container--disabled .select2-selection--single,
-        .select2-container--tlp-large.select2-container--disabled .select2-selection--single {
+        > .select2-container.select2-container--disabled .select2-selection--single,
+        > .select2-container.select2-container--disabled .select2-selection--multiple,
+        > .select2-container.select2-container--disabled .select2-selection__clear {
             cursor: not-allowed;
         }
     }
+
 
     &.tlp-form-element-error {
         > .tlp-label {
             color: $tlp-ui-danger;
         }
 
+        // scss-lint:disable SelectorFormat
+        // scss-lint:disable SelectorDepth
         > .tlp-input,
         > .tlp-textarea,
         > .tlp-select,
         .select2-container--tlp-select2 .select2-selection--single,
         .select2-container--tlp-select2-small .select2-selection--single,
-        .select2-container--tlp-select2-large .select2-selection--single, {
+        .select2-container--tlp-select2-large .select2-selection--single,
+        .select2-container--tlp-select2 .select2-selection--multiple,
+        .select2-container--tlp-select2-small .select2-selection--multiple,
+        .select2-container--tlp-select2-large .select2-selection--multiple,
+        .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
+        .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove:hover::before {
             border-color: $tlp-ui-danger;
             color: $tlp-ui-danger;
         }
@@ -263,18 +272,22 @@ $tlp-form-element-select-small-background-size: 6px;
 
 // scss-lint:disable SelectorFormat
 // scss-lint:disable NestingDepth
+// scss-lint:disable PlaceholderInExtend
 %tlp-select2 {
-    &.select2-container--disabled .select2-selection--single:focus {
+    &.select2-container--disabled .select2-selection--single:focus,
+    &.select2-container--disabled .select2-selection--multiple:focus {
         border-color: $tlp-form-element-border-color;
     }
 
     &.select2-container--open {
-        &.select2-container--above .select2-selection--single {
+        &.select2-container--above .select2-selection--single,
+        &.select2-container--above .select2-selection--multiple {
             border-radius: 0 0 $tlp-form-element-border-radius $tlp-form-element-border-radius;
             border-color: $tlp-theme-color;
         }
 
-        &.select2-container--below .select2-selection--single {
+        &.select2-container--below .select2-selection--single,
+        &.select2-container--below .select2-selection--multiple {
             border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
             border-color: $tlp-theme-color;
         }
@@ -306,14 +319,78 @@ $tlp-form-element-select-small-background-size: 6px;
             .select2-selection__placeholder {
                 color: $tlp-form-element-placeholder-color;
             }
+        }
+    }
+
+    .select2-selection--multiple {
+        @extend %tlp-form-element;
+
+        min-height: $tlp-form-element-height;
+        padding: 0 $tlp-form-element-padding-horizontal 5px 6px;
+
+        .select2-selection__rendered {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+
+            .select2-selection__choice {
+                @extend %tlp-badge;
+                @extend .tlp-badge-primary.tlp-badge-outline;
+
+                flex: 0 0 auto;
+                margin: 5px 5px 0 0;
+
+                .select2-selection__choice__remove {
+                    display: inline-block;
+                    width: 12px;
+                    margin: 0 2px 0 0;
+                    font-size: 0;
+                    line-height: 0;
+
+                    &::before {
+                        font-family: 'FontAwesome';
+                        font-size: 12px;
+                        font-weight: 400;
+                        text-align: center;
+                        content: '\f00d';
+                    }
+
+                    &:hover::before {
+                        width: 12px;
+                        color: $tlp-theme-color;
+                        content: '\f057';
+                    }
+                }
+            }
+
+            .select2-search--inline {
+                flex: 1 1 auto;
+                order: 2;
+                list-style-type: none;
+
+                .select2-search__field {
+                    margin: 9px 0 0;
+                    background: transparent;
+                    font-family: $tlp-font-family;
+                }
+            }
 
             .select2-selection__clear {
-                float: right;
-                font-size: 18px;
-                line-height: 14px;
-                cursor: pointer;
+                flex: 0 0 auto;
+                order: 3;
+                margin: 4px 0 0;
             }
         }
+    }
+
+    .select2-selection__clear {
+        float: right;
+        font-size: 18px;
+        line-height: 14px;
+        cursor: pointer;
     }
 
     .select2-dropdown {
@@ -321,9 +398,8 @@ $tlp-form-element-select-small-background-size: 6px;
         border-color: $tlp-theme-color;
         box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
-
         .select2-search--dropdown {
-            padding: $tlp-form-element-padding-horizontal $tlp-form-element-padding-horizontal 0;
+            padding: $tlp-form-element-padding-horizontal;
 
             .select2-search__field {
                 @extend %tlp-form-element;
@@ -334,19 +410,16 @@ $tlp-form-element-select-small-background-size: 6px;
             }
         }
 
-        .select2-results .select2-results__options {
-            margin: $tlp-form-element-padding-horizontal 0 0;
-        }
-
         .select2-results__option {
+            padding: 6px $tlp-form-element-padding-horizontal;
             font-size: $tlp-form-element-small-font-size;
             line-height: normal;
 
             &[role="group"] {
-                margin: 0 0 $tlp-spacing;
+                margin: $tlp-form-element-padding-horizontal 0 0;
                 padding: 0;
 
-                &:last-child {
+                &:first-child {
                     margin: 0;
                 }
 
@@ -360,6 +433,14 @@ $tlp-form-element-select-small-background-size: 6px;
 
                 .select2-results__options--nested > .select2-results__option {
                     padding: 6px $tlp-form-element-padding-horizontal 6px $tlp-form-element-padding-horizontal * 2;
+
+                    &[aria-selected="true"] {
+                        padding: 6px $tlp-form-element-padding-horizontal 6px 44px;
+
+                        &::before {
+                            left: $tlp-form-element-padding-horizontal * 2;
+                        }
+                    }
                 }
             }
 
@@ -368,10 +449,37 @@ $tlp-form-element-select-small-background-size: 6px;
                 color: $tlp-ui-white;
             }
 
+            &[aria-selected="true"] {
+                position: relative;
+                padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
+                color: $tlp-theme-color;
+
+                &::before {
+                    position: absolute;
+                    top: 8px;
+                    left: $tlp-form-element-padding-horizontal;
+                    font-family: 'FontAwesome';
+                    content: '\f00c';
+                }
+
+                &.select2-results__option--highlighted {
+                    color: $tlp-ui-white;
+                }
+            }
+
             &[aria-disabled] {
                 color: $tlp-ui-dimmed;
                 cursor: not-allowed;
             }
+
+            &.select2-results__message {
+                padding: $tlp-form-element-padding-horizontal;
+                color: $tlp-ui-dimmed;
+            }
+        }
+
+        .select2-search--hide + .select2-results .select2-results__option:first-child[role="group"] {
+            padding: $tlp-form-element-padding-horizontal 0 0;
         }
     }
 }
@@ -391,6 +499,26 @@ span.select2-container--tlp-select2-small {
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
     }
+
+    .select2-selection--multiple {
+        min-height: $tlp-form-element-small-height;
+        padding: 0 $tlp-form-element-small-padding-horizontal;
+
+        .select2-selection__rendered {
+            .select2-selection__choice {
+                margin: 1px 3px 0 0;
+                padding: 2px 8px;
+            }
+
+            .select2-selection__clear {
+                margin: 0;
+            }
+
+            .select2-search--inline .select2-search__field {
+                margin: 4px 0 0;
+            }
+        }
+    }
 }
 
 span.select2-container--tlp-select2-large {
@@ -405,6 +533,43 @@ span.select2-container--tlp-select2-large {
         .select2-selection__rendered .select2-selection__clear {
             font-size: 22px;
             line-height: 17px;
+        }
+    }
+
+    .select2-selection--multiple {
+        min-height: $tlp-form-element-large-height;
+        padding: 0 $tlp-form-element-large-padding-horizontal;
+
+        .select2-selection__rendered {
+            padding: 6px 0;
+
+            .select2-selection__choice {
+                margin: 2px 8px 2px 0;
+                padding: 7px 12px;
+                font-size: $tlp-form-element-large-font-size;
+                font-weight: 400;
+
+                .select2-selection__choice__remove {
+                    position: relative;
+                    top: -1px;
+                    margin: 0 4px 0 0;
+
+                    &::before {
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .select2-selection__clear {
+                margin: 0;
+                font-size: 22px;
+                line-height: 17px;
+            }
+
+            .select2-search--inline .select2-search__field {
+                margin: 3px 0 0;
+                font-size: $tlp-form-element-large-font-size;
+            }
         }
     }
 }
