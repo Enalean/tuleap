@@ -43,6 +43,8 @@ PLUGIN_REFERENCEALIAS_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/referen
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 
+ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/agiledashboard/www/js/kanban plugins/frs/www/js/angular
+
 ifdef GIT_BRANCH
 TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
 RELEASE = $(word 2, $(TAG_RELEASE))
@@ -102,18 +104,15 @@ sass:
 	$(MAKE) -C $(BASE_DIR) sass
 
 node:
-	cd $(BASE_DIR)/plugins/agiledashboard/www/js/planning-v2 &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
-		npm run build &&\
-	cd $(BASE_DIR)/plugins/agiledashboard/www/js/kanban &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
-		npm run build &&\
-	cd $(BASE_DIR)/plugins/frs/www/js/angular &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
-		npm run build
+	cd $(BASE_DIR) &&\
+	    npm install &&\
+	    npm run build &&\
+	for directory in $(ANGULAR_APPS_TO_BUILD); do\
+	    cd $(BASE_DIR)/$$directory &&\
+	    npm install &&\
+	    bower install --allow-root --config.interactive=false &&\
+	    npm run build; \
+	done
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep sass
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)

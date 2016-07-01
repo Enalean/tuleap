@@ -51,7 +51,7 @@ class DocmanPlugin extends Plugin {
         parent::__construct($id);
 
         $this->_addHook('cssfile',                           'cssFile',                           false);
-        $this->_addHook('javascript_file',                   'jsFile',                            false);
+        $this->_addHook('javascript_file');
         $this->_addHook('logs_daily',                        'logsDaily',                         false);
         $this->_addHook('permission_get_name',               'permission_get_name',               false);
         $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
@@ -98,7 +98,6 @@ class DocmanPlugin extends Plugin {
 
         $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->_addHook('project_is_deleted',              'project_is_deleted',          false);
-        $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
@@ -251,21 +250,18 @@ class DocmanPlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+        if ($this->currentRequestIsForPlugin() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
     
-    function jsFile($params) {
+    function javascript_file($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/docman.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/embedded_file.js"></script>'."\n";
+        if ($this->currentRequestIsForPlugin()) {
+            echo $this->getMinifiedAssetHTML()."\n";
         }
     }
 
@@ -859,17 +855,6 @@ class DocmanPlugin extends Plugin {
             $this->controller[$controller]->setRequest($request);
         }
         return $this->controller[$controller];
-    }
-
-    /**
-     * Append scripts to the combined JS file
-     *
-     * @param Array $params parameters of the hook
-     *
-     * @return Void
-     */
-    public function combinedScripts($params) {
-        $params['scripts'] = array_merge($params['scripts'], array($this->getPluginPath().'/scripts/ApprovalTableReminder.js'));
     }
 
     public function fulltextsearch_event_fetch_all_document_search_types($params) {

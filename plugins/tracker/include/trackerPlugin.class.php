@@ -51,7 +51,6 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
-        $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
         $this->_addHook(Event::JAVASCRIPT,                     'javascript',                        false);
         $this->_addHook(Event::TOGGLE,                         'toggle',                            false);
         $this->_addHook(Event::SERVICE_PUBLIC_AREAS,           'service_public_areas',              false);
@@ -193,7 +192,10 @@ class trackerPlugin extends Plugin {
 
     public function javascript_file($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
+        }
+        if ($this->currentRequestIsForPlugin()) {
+            echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }
 
@@ -220,41 +222,6 @@ class trackerPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                '/plugins/tracker/scripts/TrackerReports.js',
-                '/plugins/tracker/scripts/TrackerEmailCopyPaste.js',
-                '/plugins/tracker/scripts/TrackerReportsSaveAsModal.js',
-                '/plugins/tracker/scripts/TrackerBinds.js',
-                '/plugins/tracker/scripts/ReorderColumns.js',
-                '/plugins/tracker/scripts/TrackerTextboxLists.js',
-                '/plugins/tracker/scripts/TrackerAdminFields.js',
-                '/plugins/tracker/scripts/TrackerArtifact.js',
-                '/plugins/tracker/scripts/TrackerArtifactEmailActions.js',
-                '/plugins/tracker/scripts/TrackerArtifactLink.js',
-                '/plugins/tracker/scripts/TrackerCreate.js',
-                '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
-                '/plugins/tracker/scripts/TrackerDateReminderForms.js',
-                '/plugins/tracker/scripts/TrackerTriggers.js',
-                '/plugins/tracker/scripts/SubmissionKeeper.js',
-                '/plugins/tracker/scripts/TrackerFieldDependencies.js',
-                '/plugins/tracker/scripts/TrackerRichTextEditor.js',
-                '/plugins/tracker/scripts/artifactChildren.js',
-                '/plugins/tracker/scripts/load-artifactChildren.js',
-                '/plugins/tracker/scripts/modal-in-place.js',
-                '/plugins/tracker/scripts/TrackerArtifactEditionSwitcher.js',
-                '/plugins/tracker/scripts/FixAggregatesHeaderHeight.js',
-                '/plugins/tracker/scripts/TrackerSettings.js',
-                '/plugins/tracker/scripts/TrackerCollapseFieldset.js',
-                '/plugins/tracker/scripts/TrackerArtifactReferences.js',
-                '/plugins/tracker/scripts/CopyArtifact.js',
-                '/plugins/tracker/scripts/tracker-report-nature-column.js'
-            )
-        );
     }
 
     public function javascript($params) {

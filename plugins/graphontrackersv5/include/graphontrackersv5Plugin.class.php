@@ -69,7 +69,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
             $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
-            $this->addHook(Event::COMBINED_SCRIPTS);
+            $this->addHook('javascript_file');
         }
         $this->allowedForProject = array();
     }
@@ -349,19 +349,10 @@ class GraphOnTrackersV5Plugin extends Plugin {
         );
     }
 
-    public function combined_scripts($params) {
-        $scripts_path = $this->getPluginPath() .'/scripts/';
-
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                $scripts_path .'graphs.js',
-                $scripts_path .'graphs.js',
-                $scripts_path .'graphs-pie.js',
-                $scripts_path .'graphs-bar.js',
-                $scripts_path .'graphs-groupedbar.js',
-                $scripts_path .'loadGraphs.js'
-            )
-        );
+    public function javascript_file() {
+        $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
+        if ($tracker_plugin->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
+            echo $this->getMinifiedAssetHTML()."\n";
+        }
     }
 }

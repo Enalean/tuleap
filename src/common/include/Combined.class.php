@@ -105,7 +105,6 @@ class Combined {
             '/scripts/tuleap/textarea_rte.js',
             '/scripts/admin/system_events.js',
         );
-        EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
 
         $arr[] = '/scripts/d3/d3.min.js';//last - incompatible with IE7
 
