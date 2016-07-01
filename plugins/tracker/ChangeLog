@@ -1,3 +1,6 @@
+Version 5.942 - Tuleap 8.17
+    * request #9298 Burndown is broken and doesn't displays graph anymore
+
 Version 5.941 - Tuleap 8.17
     * story #9283: allow to pass a parameter that force references update
 
