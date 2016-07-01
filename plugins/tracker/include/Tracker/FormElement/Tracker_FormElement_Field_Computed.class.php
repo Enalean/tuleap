@@ -104,6 +104,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
+    public function isSubmitable()
+    {
+        return parent::isSubmitable() && ! $this->getDeprecationRetriever()->isALegacyField($this);
+    }
+
+    public function isUpdateable()
+    {
+        return parent::isUpdateable() && ! $this->getDeprecationRetriever()->isALegacyField($this);
+    }
+
     public function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
@@ -747,7 +757,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $changeset_value;
     }
 
-    private function getDeprecationRetriever()
+    /**
+     * protected for test purpose
+     */
+    protected function getDeprecationRetriever()
     {
         return new DeprecationRetriever(
             new Dao(),

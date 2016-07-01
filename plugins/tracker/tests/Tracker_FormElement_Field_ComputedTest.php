@@ -30,7 +30,10 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         parent::setUp();
         $this->user  = mock('PFUser');
         $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
+        $this->field = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_Computed',
+            array('getProperty', 'getDao', 'getDeprecationRetriever')
+        );
         stub($this->field)->getProperty('target_field_name')->returns('effort');
         stub($this->field)->getProperty('fast_compute')->returns(0);
         stub($this->field)->getDao()->returns($this->dao);
@@ -176,6 +179,42 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
         );
 
         $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
+    }
+
+    public function itIsNotSubmitableIfItsALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(true);
+
+        $this->assertFalse($this->field->isSubmitable());
+    }
+
+    public function itIsSubmitableIfItsNotALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
+
+        $this->assertTrue($this->field->isSubmitable());
+    }
+
+    public function itIsNotUpdatableIfItsALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(true);
+
+        $this->assertFalse($this->field->isUpdateable());
+    }
+
+    public function itIsUpdatableIfItsNotALegacyField()
+    {
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
+
+        $this->assertTrue($this->field->isUpdateable());
     }
 }
 
