@@ -34,21 +34,15 @@ tuleap.core = tuleap.core || { };
         var excluded_element;
 
         var filterProjects = function (value) {
-            var elements_array = [];
-            document.querySelectorAll(list_element).forEach(function(element) {
-                elements_array.push(element);
-            });
-            var elements_to_show = elements_array.filter(function(element) {
-                return caseInsensitiveContains(getChildTagAWithText(element), value);
-            });
+            var matching_elements = document.querySelectorAll(list_element);
 
-            for (var i = 0, n = elements_array.length; i < n; i++) {
-                if (elements_to_show.indexOf(elements_array[i]) >= 0) {
-                    elements_array[i].style.display = 'inherit';
+            [].forEach.call(matching_elements, function(element) {
+                if (caseInsensitiveContains(getChildTagAWithText(element), value)) {
+                    element.style.display = 'inherit';
                 } else {
-                    elements_array[i].style.display = 'none';
+                    element.style.display = 'none';
                 }
-            }
+            });
         };
 
         var getChildTagAWithText = function(parent) {

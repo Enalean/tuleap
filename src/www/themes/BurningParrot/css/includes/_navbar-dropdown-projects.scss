@@ -1,6 +1,10 @@
 $nav-dropdown-content-projects-content-padding: 10px 20px;
 $nav-dropdown-content-border: 1px solid #cccccc;
 
+#nav-dropdown-content-projects-filter-projects {
+    margin: 0 $tlp-spacing 0 0;
+}
+
 .nav-dropdown-content-projects-adaptable {
     max-height: 60vh;
     border-right: $nav-dropdown-content-border;
@@ -74,7 +78,6 @@ $nav-dropdown-content-border: 1px solid #cccccc;
 .nav-dropdown-content-projects-list-project-name:hover,
 .nav-dropdown-content-projects-list-project-name-hover {
     color: $tlp-theme-color;
-    font-weight: 600;
 }
 
 .nav-dropdown-content-projects-list-project-name-access {
