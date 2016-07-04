@@ -30,7 +30,13 @@ use Project;
 
 class DefaultPermissionsUpdater
 {
+
     const REQUEST_KEY = 'default_access_rights';
+
+    /**
+     * @var PermissionChangesDetector
+     */
+    private $permission_changes_detector;
 
     /**
      * @var DefaultFineGrainedPermissionSaver
@@ -74,7 +80,8 @@ class DefaultPermissionsUpdater
         FineGrainedRetriever $fine_grained_retriever,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         FineGrainedUpdater $fine_grained_updater,
-        DefaultFineGrainedPermissionSaver $default_fine_grained_saver
+        DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
+        PermissionChangesDetector $permission_changes_detector
     ) {
         $this->permissions_manager          = $permissions_manager;
         $this->history_dao                  = $history_dao;
@@ -83,6 +90,7 @@ class DefaultPermissionsUpdater
         $this->default_fine_grained_factory = $default_fine_grained_factory;
         $this->fine_grained_updater         = $fine_grained_updater;
         $this->default_fine_grained_saver   = $default_fine_grained_saver;
+        $this->permission_changes_detector  = $permission_changes_detector;
     }
 
     public function updateProjectDefaultPermissions(Codendi_Request $request)
@@ -115,7 +123,7 @@ class DefaultPermissionsUpdater
             return false;
         }
 
-        $this->updateDefaultFineGrainedPermissions(
+        $are_there_changes = $this->updateDefaultFineGrainedPermissions(
             $project,
             $request,
             $read_ugroup_ids,
@@ -124,12 +132,14 @@ class DefaultPermissionsUpdater
             $enable_fine_grained_permissions
         );
 
-        $this->history_dao->groupAddHistory(
-            'perm_granted_for_object',
-            $this->history_value_formatter->formatValueForProject($project),
-            $project_id,
-            array($project_id)
-        );
+        if ($are_there_changes) {
+            $this->history_dao->groupAddHistory(
+                'perm_granted_for_object',
+                $this->history_value_formatter->formatValueForProject($project),
+                $project_id,
+                array($project_id)
+            );
+        }
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -178,6 +188,17 @@ class DefaultPermissionsUpdater
             );
         }
 
+        $are_there_changes = $this->permission_changes_detector->areThereChangesInPermissionsForProject(
+            $project,
+            $read_ugroup_ids,
+            $write_ugroup_ids,
+            $rewind_ugroup_ids,
+            $enable_fine_grained_permissions,
+            $added_branches_permissions,
+            $added_tags_permissions,
+            $updated_permissions
+        );
+
         $this->saveDefaultPermissionIfNotEmpty(
             $project,
             $read_ugroup_ids,
@@ -219,6 +240,8 @@ class DefaultPermissionsUpdater
         foreach ($updated_permissions as $permission) {
             $this->default_fine_grained_saver->updateDefaultPermission($permission);
         }
+
+        return $are_there_changes;
     }
 
     private function isEnablingFineGrainedPermissions(Project $project, $enable_fine_grained_permissions)
