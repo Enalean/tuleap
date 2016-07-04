@@ -29,7 +29,8 @@ $tlp-modal-transition: 150ms ease-out;
     left: 0;
     flex-direction: column;
     width: 600px;
-    margin: (2 * $tlp-spacing) auto;
+    max-height: 90vh;
+    margin: 5vh auto;
     transform: translateY(-25%);
     transition: opacity $tlp-modal-transition,
         transform $tlp-modal-transition,
@@ -50,6 +51,29 @@ $tlp-modal-transition: 150ms ease-out;
     }
 }
 
+.tlp-modal-danger > .tlp-modal-header {
+    background: $tlp-ui-danger;
+}
+
+.tlp-modal-warning > .tlp-modal-header {
+    background: $tlp-ui-warning;
+}
+
+.tlp-modal-success > .tlp-modal-header {
+    background: $tlp-ui-success;
+}
+
+.tlp-modal-info > .tlp-modal-header {
+    background: $tlp-ui-info;
+}
+
+.tlp-modal-full-screen {
+    width: calc(100% - 2 * #{$tlp-spacing});
+    height: calc(100% - 2 * #{$tlp-spacing});
+    max-height: calc(100% - 2 * #{$tlp-spacing});
+    margin: $tlp-spacing;
+}
+
 .tlp-modal-header {
     display: flex;
     align-items: center;
@@ -58,7 +82,7 @@ $tlp-modal-transition: 150ms ease-out;
     padding: $tlp-modal-padding;
     border-top-left-radius: $tlp-modal-radius;
     border-top-right-radius: $tlp-modal-radius;
-    background-color: $tlp-theme-color;
+    background: $tlp-theme-color;
     color: $tlp-ui-white;
 }
 
@@ -78,7 +102,8 @@ $tlp-modal-transition: 150ms ease-out;
 }
 
 .tlp-modal-body {
-    max-height: 50vh;
+    height: 100%;
+    max-height: 70vh;
     padding: $tlp-modal-padding;
     background: $tlp-ui-white;
     overflow-y: auto;
