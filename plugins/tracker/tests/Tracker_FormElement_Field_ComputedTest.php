@@ -683,7 +683,11 @@ class Tracker_FormElement_Field_Computed_RESTValueTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array());
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getDeprecationRetriever'));
+
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
     }
 
     public function itReturnsValueWhenCorrectlyFormatted()
