@@ -346,7 +346,7 @@ class Tracker_FormElement_Field_Computed_BackToAutoComputed extends TuleapTestCa
         $this->field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
-    public function itReturnsEmptyWhenNaManualValueIsSetAndNoChildrenExists()
+    public function itReturnsNullWhenNoManualValueIsSetAndNoChildrenExists()
     {
         stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(null);
 
@@ -355,12 +355,13 @@ class Tracker_FormElement_Field_Computed_BackToAutoComputed extends TuleapTestCa
         $changeset = stub($changeset)->getId()->returns(101);
 
         stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
-        expect($this->field)->getFieldEmptyMessage()->once();
 
-        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+        $result = $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+
+        $this->assertIdentical(null, $result);
     }
 
-    public function itCalculatesAutoomputedAndintFieldsEvenIfAParentIsSet()
+    public function itCalculatesAutocomputedAndintFieldsEvenIfAParentIsSet()
     {
         stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 10),

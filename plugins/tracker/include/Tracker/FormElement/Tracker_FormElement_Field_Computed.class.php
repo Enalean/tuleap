@@ -195,10 +195,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
 
         if (count($artifact_ids_to_fetch) === 0) {
-            return $this->getFieldEmptyMessage();
+            return null;
         }
 
-        return $this->getStandardCalculationMode($artifact_ids_to_fetch, null, true);
+        return $this->getStandardCalculationMode($artifact_ids_to_fetch);
     }
 
     public function getStopAtManualSetFieldMode(array $artifact_ids)
@@ -515,7 +515,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $value = $value->getValue();
         }
 
-        if (! $computed_value) {
+        if ($computed_value === null) {
             $computed_value = $this->getFieldEmptyMessage();
         }
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
@@ -611,6 +611,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $this->getComputedValueWithNoStopOnManualValue($changeset->getArtifact()),
             $this->getManualValueForChangeset($changeset)
         );
+
         return $artifact_field_value_full_representation;
     }
 
@@ -631,7 +632,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function getManualValueForChangeset(Tracker_Artifact_Changeset $artifact_changeset)
     {
         $changeset_value = $artifact_changeset->getValue($this);
-        if ($changeset_value && $changeset_value->getNumeric()) {
+        if ($changeset_value && $changeset_value->getNumeric() !== null) {
             return $changeset_value->getNumeric();
         }
 
