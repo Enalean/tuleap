@@ -1,3 +1,6 @@
+Version 1.388 - Tuleap 8.17
+    * request #9306 Error while creating AgileDashboard
+
 Version 1.387 - Tuleap 8.17
     * request #9230 Artifact API doesn't follow RFC
 
