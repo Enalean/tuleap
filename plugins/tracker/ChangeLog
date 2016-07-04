@@ -1,3 +1,6 @@
+Version 5.946 - Tuleap 8.17
+    * story #9090 have computed fields compatible with artifact links v2 (A non migrated field shouldn't be updatable)
+
 Version 5.945 - Tuleap 8.17
     * Fix fatal error on AgileDashboard
 
