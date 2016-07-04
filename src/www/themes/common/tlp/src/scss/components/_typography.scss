@@ -152,3 +152,31 @@ blockquote {
 .tlp-text-danger {
     color: $tlp-ui-danger;
 }
+
+%tlp-code {
+    background: transparentize($tlp-theme-color, .95);
+    color: $tlp-theme-color;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+code {
+    @extend %tlp-code;
+
+    padding: 3px;
+    border-radius: 3px;
+}
+
+pre {
+    @extend %tlp-code;
+
+    padding: 5px 3px 5px $tlp-spacing / 2;
+    border-left: 5px solid transparentize($tlp-theme-color, .5);
+
+    code {
+        padding: 0;
+        background: none;
+    }
+}
