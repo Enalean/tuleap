@@ -255,6 +255,7 @@ plugin_git	tree_view_by	$1 by $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1
+project_admin_utils	default_git_perms_granted_for_project	Default git permissions granted for project $1
 
 plugin_git	fork_repository_exists	Repository $1 already exists on target, skipped.
 plugin_git	fork_repository_invalid_namespace	Invalid namespace, please only use alphanumeric characters.

@@ -60,6 +60,8 @@ class Git extends PluginController {
     const REFERENCE_KEYWORD = 'git';
     const REFERENCE_NATURE  = 'git_commit';
 
+    const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
+
     /**
      * Lists all git-related permission types.
      *
@@ -1136,7 +1138,7 @@ class Git extends PluginController {
                 $this->emitFeedbackForPermissionDeletion($deleted);
 
                 $this->history_dao->groupAddHistory(
-                    'perm_granted_for_object',
+                    self::DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT,
                     $this->history_value_formatter->formatValueForProject($this->request->getProject()),
                     $this->groupId,
                     array($this->groupId)

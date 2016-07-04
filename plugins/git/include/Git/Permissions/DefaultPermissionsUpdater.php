@@ -134,7 +134,7 @@ class DefaultPermissionsUpdater
 
         if ($are_there_changes) {
             $this->history_dao->groupAddHistory(
-                'perm_granted_for_object',
+                Git::DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT,
                 $this->history_value_formatter->formatValueForProject($project),
                 $project_id,
                 array($project_id)
