@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Import\ImportConfig;
+
 class AgileDashboard_FirstScrumCreator {
 
     /** @var Project */
@@ -68,8 +70,10 @@ class AgileDashboard_FirstScrumCreator {
             return;
         }
 
+        $config = new ImportConfig();
+
         try {
-            $this->xml_importer->import($this->project->getId(), $this->template_path);
+            $this->xml_importer->import($config, $this->project->getId(), $this->template_path);
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard_first_scrum', 'created'));
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('plugin_agiledashboard_first_scrum', 'internal_error'));
