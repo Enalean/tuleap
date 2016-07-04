@@ -51,12 +51,14 @@ class HistoryValueFormatterTest extends TuleapTestCase
         $this->ugroup_manager      = mock('UGroupManager');
         $this->retriever           = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
         $this->default_factory     = mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory');
+        $this->factory             = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
 
         $this->formatter           = new HistoryValueFormatter(
             $this->permissions_manager,
             $this->ugroup_manager,
             $this->retriever,
-            $this->default_factory
+            $this->default_factory,
+            $this->factory
         );
 
         stub($this->ugroup_manager)->getUgroupsById($this->project)->returns(array(
@@ -145,7 +147,7 @@ EOS;
         $this->assertEqual($result, $expected_result);
     }
 
-    public function itDoesNotExportWriteAndRewindIfRepositoryUsesFineGrainedPermissions()
+    public function itExportsValueWithFineGrainedPermissionsForRepository()
     {
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
             $this->project,
@@ -153,11 +155,36 @@ EOS;
             Git::PERM_READ
         )->returns(array(101));
 
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->migrated_repository)->returns(true);
-
         $expected_result = <<<EOS
 Read: Contributors
+refs/heads/master Write: Developers
+refs/heads/master Rewind: Admins
+refs/tags/* Write: Contributors
 EOS;
+
+        $branch_fine_grained_permission = new FineGrainedPermission(
+            1,
+            1,
+            'refs/heads/master',
+            array($this->ugroup_02),
+            array($this->ugroup_03)
+        );
+
+        $tag_fine_grained_permission = new FineGrainedPermission(
+            2,
+            1,
+            'refs/tags/*',
+            array($this->ugroup_01),
+            array()
+        );
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->migrated_repository)->returns(true);
+
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository($this->migrated_repository)
+            ->returns(array(1 => $branch_fine_grained_permission));
+
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository($this->migrated_repository)
+            ->returns(array(2 => $tag_fine_grained_permission));
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 

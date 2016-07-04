@@ -53,20 +53,11 @@ use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
-use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedDao;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
-use UGroupManager;
 use Git_Exec;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
-use PermissionsNormalizer;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
-use PermissionsManager;
-use Tuleap\Git\Permissions\FineGrainedPatternValidator;
-use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
-use Tuleap\Git\Permissions\HistoryValueFormatter;
 
 include_once('www/project/admin/permissions.php');
 
@@ -118,25 +109,8 @@ class RepositoryResource extends AuthenticatedResource {
             $project_manager
         );
 
-        $fine_grained_dao                        = new FineGrainedDao();
-        $default_fine_grained_permission_factory = new DefaultFineGrainedPermissionFactory(
-            $fine_grained_dao,
-            new UGroupManager(),
-            new PermissionsNormalizer(),
-            PermissionsManager::instance(),
-            new FineGrainedPatternValidator(),
-            new FineGrainedPermissionSorter()
-        );
-
-        $default_fine_grained_permission_saver = new DefaultFineGrainedPermissionSaver($fine_grained_dao);
-        $fine_grained_updater                  = new FineGrainedUpdater($fine_grained_dao);
-        $fine_grained_retriever                = new FineGrainedRetriever($fine_grained_dao);
-        $history_formatter                     = new HistoryValueFormatter(
-            PermissionsManager::instance(),
-            new UGroupManager(),
-            $fine_grained_retriever,
-            $default_fine_grained_permission_factory
-        );
+        $fine_grained_dao       = new FineGrainedDao();
+        $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
 
         $git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),

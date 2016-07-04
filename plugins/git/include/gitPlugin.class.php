@@ -1378,7 +1378,8 @@ class GitPlugin extends Plugin {
             $this->getPermissionsManager(),
             $this->getUGroupManager(),
             $this->getFineGrainedRetriever(),
-            $this->getDefaultFineGrainedPermissionFactory()
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getFineGrainedFactory()
         );
     }
 

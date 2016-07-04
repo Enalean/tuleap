@@ -262,7 +262,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             PermissionsManager::instance(),
             new UGroupManager(),
             $retriever,
-            $default_factory
+            $default_factory,
+            $factory
         );
 
         return new GitRepositoryManager(

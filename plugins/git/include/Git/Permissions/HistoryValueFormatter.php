@@ -33,6 +33,11 @@ class HistoryValueFormatter
 {
 
     /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_factory;
+
+    /**
      * @var DefaultFineGrainedPermissionFactory
      */
     private $default_fine_grained_factory;
@@ -56,12 +61,14 @@ class HistoryValueFormatter
         PermissionsManager   $permissions_manager,
         UGroupManager        $ugroup_manager,
         FineGrainedRetriever $fine_grained_retriever,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        FineGrainedPermissionFactory $fine_grained_factory
     ) {
         $this->permissions_manager          = $permissions_manager;
         $this->ugroup_manager               = $ugroup_manager;
         $this->fine_grained_retriever       = $fine_grained_retriever;
         $this->default_fine_grained_factory = $default_fine_grained_factory;
+        $this->fine_grained_factory         = $fine_grained_factory;
     }
 
     public function formatValueForProject(Project $project)
@@ -87,6 +94,8 @@ class HistoryValueFormatter
         ) {
             $value .= $this->getWritersForRepository($repository);
             $value .= $this->getRewindersForRepository($repository);
+        } elseif ($this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)) {
+            $value .= $this->getFineGrainedForRepository($repository);
         }
 
         return trim($value);
@@ -227,6 +236,43 @@ class HistoryValueFormatter
     }
 
     private function formatProjectFineGrainedPermissionRewinders(DefaultFineGrainedPermission $permission)
+    {
+        if (count($permission->getRewindersUgroup()) === 0) {
+            return '';
+        }
+
+        return $permission->getPattern() . ' ' . $this->formatUgroups($permission->getRewindersUgroup(), 'Rewind');
+    }
+
+    private function getFineGrainedForRepository(GitRepository $repository)
+    {
+        $fine_grained_permissions = $this->fine_grained_factory->getBranchesFineGrainedPermissionsForRepository($repository) +
+            $this->fine_grained_factory->getTagsFineGrainedPermissionsForRepository($repository);
+
+        return $this->formatRepositoryFineGrainedPermission($fine_grained_permissions);
+    }
+
+    private function formatRepositoryFineGrainedPermission(array $fine_grained_permissions)
+    {
+        $value = '';
+        foreach ($fine_grained_permissions as $permission) {
+            $value .= $this->formatRepositoryFineGrainedPermissionWriters($permission);
+            $value .= $this->formatRepositoryFineGrainedPermissionRewinders($permission);
+        }
+
+        return $value;
+    }
+
+    private function formatRepositoryFineGrainedPermissionWriters(FineGrainedPermission $permission)
+    {
+        if (count($permission->getWritersUgroup()) === 0) {
+            return '';
+        }
+
+        return $permission->getPattern() . ' ' . $this->formatUgroups($permission->getWritersUgroup(), 'Write');
+    }
+
+    private function formatRepositoryFineGrainedPermissionRewinders(FineGrainedPermission $permission)
     {
         if (count($permission->getRewindersUgroup()) === 0) {
             return '';
