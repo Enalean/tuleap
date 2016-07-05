@@ -1,3 +1,6 @@
+Version 5.949 - Tuleap 8.17
+    * Fix REST representation when manual value is 0
+
 Version 5.948 - Tuleap 8.17
     * request #9307 Computed fields have to take into account numeric values from selectboxes
 
