@@ -1,3 +1,6 @@
+Version 5.948 - Tuleap 8.17
+    * request #9307 Computed fields have to take into account numeric values from selectboxes
+
 Version 5.947 - Tuleap 8.17
     * story #9090 have computed fields compatible with artifact links v2 (When you have a manual value, you should see the correct autocomputed value in field edition)
 
