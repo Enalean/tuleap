@@ -1,3 +1,6 @@
+Version 5.947 - Tuleap 8.17
+    * story #9090 have computed fields compatible with artifact links v2 (When you have a manual value, you should see the correct autocomputed value in field edition)
+
 Version 5.946 - Tuleap 8.17
     * story #9090 have computed fields compatible with artifact links v2 (A non migrated field shouldn't be updatable)
 
