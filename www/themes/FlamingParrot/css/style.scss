@@ -18,7 +18,7 @@
         }
     }
 
-    .pull-request-event.from-pr-author {
+    .pull-request-event:not(.inline-comment) {
         border-color: transparentize($main, .7);
     }
 

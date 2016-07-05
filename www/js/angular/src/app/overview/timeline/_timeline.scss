@@ -1,5 +1,7 @@
 #timeline {
     padding: 0 15px;
+    border-top: 1px solid #f3f3f3;
+    background: #fcfcfc;
 
     > h3 {
         margin-bottom: 20px;
@@ -48,35 +50,16 @@
 .pull-request-event {
     display: flex;
     float: left;
-    width: 65%;
+    width: 55%;
     margin: 0 0 15px;
     padding: 15px;
     border-radius: 3px;
+    background: #ffffff;
     border: 1px solid #ebebeb;
 
     &.loading {
         height: 16px;
         background: url('loader-mini.gif') no-repeat center center;
-    }
-
-    &.inline-comment {
-        background-color: #D0D0FF;
-
-        &.is-outdated {
-            background-color: #E6E6E6;
-            .pull-request-event-content {
-                text-decoration: line-through;
-            }
-        }
-    }
-
-    &.timeline-event p {
-        color: #888888;
-        font-style: italic;
-    }
-
-    .pull-request-event-file-path {
-        color: #AAA;
     }
 
     > .avatar {
@@ -85,15 +68,30 @@
     }
 
     > .pull-request-event-content {
-        flex: 1 0 auto;
+        flex: 1;
 
-        > .pull-request-event-author {
-            font-size: 13px;
-        }
+        > .pull-request-event-content-info {
+            display: flex;
 
-        > .pull-request-event-date {
-            font-size: 11px;
-            color: #888888;
+            > .pull-request-event-author {
+                flex: 0 0 auto;
+                margin: 0 5px 0 0;
+                font-size: 13px;
+            }
+
+            > .pull-request-event-date {
+                flex: 0 0 auto;
+                margin: 0 5px 0 0;
+                font-size: 11px;
+                color: #888888;
+            }
+
+            > .pull-request-event-file-path {
+                flex: 1 0 auto;
+                color: #aaaaaa;
+                text-align: right;
+                font-size: 11px;
+            }
         }
 
         > p {
@@ -104,15 +102,39 @@
 
     &:not(.from-pr-author) {
         float: right;
+    }
+
+    &.inline-comment {
+        padding: 5px 15px;
 
         > .avatar {
-            order: 2;
-            margin: 0 0 0 15px;
+            width: 25px;
+            height: 25px;
+            margin: 5px 13px 0 0;
         }
 
         > .pull-request-event-content {
-            order: 1;
-            text-align: right;
+            > .pull-request-event-content-info > .pull-request-event-author {
+                font-size: 11px;
+            }
+
+            > p {
+                margin: 0;
+                font-size: 11px;
+            }
         }
+    }
+
+    &.is-outdated {
+        background-color: #f7f7f7;
+
+        .pull-request-event-content {
+            font-style: italic;
+        }
+    }
+
+    &.timeline-event p {
+        color: #888888;
+        font-style: italic;
     }
 }
