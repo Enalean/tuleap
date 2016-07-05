@@ -187,7 +187,7 @@ class ReportsResource extends AuthenticatedResource {
             if ($with_all_field_values) {
                 return $builder->getArtifactRepresentationWithFieldValues($user, $artifact);
             } else {
-                return $builder->getArtifactRepresentation($artifact);
+                return $builder->getArtifactRepresentation($user, $artifact);
             }
         };
 

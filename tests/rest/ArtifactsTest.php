@@ -86,6 +86,24 @@ class ArtifactsTest extends RestBase {
 
         $fields = $artifact['values'];
 
+        $this->assertTrue(is_int($artifact['id']));
+        $this->assertTrue(is_int($artifact['submitted_by']));
+
+        $this->assertTrue(is_string($artifact['uri']));
+        $this->assertTrue(is_string($artifact['xref']));
+        $this->assertTrue(is_string($artifact['submitted_on']));
+        $this->assertTrue(is_string($artifact['html_url']));
+        $this->assertTrue(is_string($artifact['changesets_uri']));
+        $this->assertTrue(is_string($artifact['last_modified_date']));
+        $this->assertTrue(is_string($artifact['status']));
+        $this->assertTrue(is_string($artifact['title']));
+
+        $this->assertTrue(is_array($artifact['assignees']));
+
+        $this->assertTrue(is_array($artifact['tracker']));
+        $this->assertTrue(is_array($artifact['project']));
+        $this->assertTrue(is_array($artifact['submitted_by_user']));
+
         foreach($fields as $field) {
             switch($field['type']) {
                 case 'string':

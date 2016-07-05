@@ -56,6 +56,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact) {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
         $artifact_representation->build(
+            $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
             null
@@ -74,6 +75,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact) {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
         $artifact_representation->build(
+            $user,
             $artifact,
             null,
             $this->getFieldValuesIndexedByName($user, $artifact)
@@ -92,6 +94,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact) {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
         $artifact_representation->build(
+            $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
             $this->getFieldValuesIndexedByName($user, $artifact)
@@ -107,9 +110,10 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      * @param Tracker_Artifact $artifact
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
-    public function getArtifactRepresentation(Tracker_Artifact $artifact) {
+    public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact) {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
         $artifact_representation->build(
+            $user,
             $artifact,
             null,
             null
