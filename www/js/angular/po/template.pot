@@ -26,6 +26,7 @@ msgid "Binary file"
 msgstr ""
 
 #: src/app/overview/merge-modal/merge-modal.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Cancel"
 msgstr ""
 
@@ -41,6 +42,10 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Description"
+msgstr ""
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion"
 msgstr ""
@@ -49,12 +54,16 @@ msgstr ""
 msgid "Discussion has not started yet"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Edit message"
+msgstr ""
+
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid "failure on {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgid "Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
 msgstr ""
 
 #: src/app/pull-request/pull-request.tpl.html
@@ -117,6 +126,10 @@ msgstr ""
 msgid "Requester"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Save changes"
+msgstr ""
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Say something…"
 msgstr ""
@@ -126,9 +139,13 @@ msgid "Show details"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid "success on {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgid "Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid "unknown"
+msgid "Title"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Unknown"
 msgstr ""
