@@ -77,7 +77,11 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         $source_ids   = $this->da->escapeIntImplode($source_ids);
         $target_name = $this->da->quoteSmart($target_name);
 
-        $sql = "SELECT linked_art.*, f_compute.formElement_type as type, cv_compute_i.value as int_value, cv_compute_f.`value` as float_value
+        $sql = "SELECT linked_art.*,
+                    f_compute.formElement_type as type,
+                    cv_compute_i.value as int_value,
+                    cv_compute_f.`value` as float_value,
+                    tracker_field_list_bind_static_value.label as sb_value
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        f           ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
                     INNER JOIN tracker_changeset_value              cv          ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
@@ -92,6 +96,14 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         tracker_changeset_value cs_compute_f
                         INNER JOIN tracker_changeset_value_float cv_compute_f ON (cv_compute_f.changeset_value_id = cs_compute_f.id)
                     ) ON (cs_compute_f.changeset_id = linked_art.last_changeset_id AND cs_compute_f.field_id = f_compute.id)
+                    LEFT JOIN (
+                        tracker_changeset_value AS cs_compute_list
+                        INNER JOIN tracker_changeset_value_list AS cv_compute_list ON (cv_compute_list.changeset_value_id = cs_compute_list.id)
+                        INNER JOIN tracker_field_list_bind_static_value
+                            ON (cv_compute_list.bindvalue_id = tracker_field_list_bind_static_value.id
+                                AND tracker_field_list_bind_static_value.label REGEXP '^[[:digit:]]+([.][[:digit:]]+)?$'
+                            )
+                    ) ON (cs_compute_list.changeset_id = linked_art.last_changeset_id AND cs_compute_list.field_id = f_compute.id)
                 WHERE parent_art.id IN ($source_ids)";
 
         return $this->retrieve($sql);
@@ -136,13 +148,14 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                 ";
         }
 
-        $sql = "SELECT linked_art.id                     AS id,
-                    artifact_link_field.formElement_type AS type,
-                    integer_value.value                  AS int_value,
-                    float_value.value                    AS float_value,
-                    $manual_selection                    AS value,
-                    linked_art.tracker_id                AS tracker_id,
-                    parent_art.id                        AS parent_id,
+        $sql = "SELECT linked_art.id                           AS id,
+                    artifact_link_field.formElement_type       AS type,
+                    integer_value.value                        AS int_value,
+                    float_value.value                          AS float_value,
+                    tracker_field_list_bind_static_value.label AS sb_value,
+                    $manual_selection                          AS value,
+                    linked_art.tracker_id                      AS tracker_id,
+                    parent_art.id                              AS parent_id,
                     parent_art.last_changeset_id,
                     parent_value.field_id AS parent_value_field_id,
                     value.field_id AS value_field_id,
@@ -204,6 +217,17 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                     float_changeset.changeset_id = linked_art.last_changeset_id
                     AND float_changeset.field_id = artifact_link_field.id
                 )
+                LEFT JOIN (
+                    tracker_changeset_value AS cs_compute_list
+                    INNER JOIN tracker_changeset_value_list AS cv_compute_list ON (cv_compute_list.changeset_value_id = cs_compute_list.id)
+                    INNER JOIN tracker_field_list_bind_static_value
+                        ON (cv_compute_list.bindvalue_id = tracker_field_list_bind_static_value.id
+                            AND tracker_field_list_bind_static_value.label REGEXP '^[[:digit:]]+([.][[:digit:]]+)?$'
+                        )
+                ) ON (
+                    cs_compute_list.changeset_id = linked_art.last_changeset_id
+                    AND cs_compute_list.field_id = artifact_link_field.id
+                )
                 WHERE parent_art.id IN ($source_ids)
                 ORDER BY manual.value DESC";
 
@@ -248,7 +272,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         parent_art.id AS parent_id, linked_art.*,parent_art.last_changeset_id,
                         artifact_link_field.id               AS artifact_link_field,
                         ''                                  AS value_field_id,
-                        f.id                      AS other_field_id
+                        f.id                      AS other_field_id,
+                        tracker_field_list_bind_static_value.label AS sb_value
                     FROM tracker_artifact parent_art
                         INNER JOIN tracker_changeset                    cs_parent_art1 ON (cs_parent_art1.artifact_id = parent_art.id AND cs_parent_art1.submitted_on <= $timestamp)
                         LEFT JOIN  tracker_changeset                    cs_parent_art2 ON (cs_parent_art2.artifact_id = parent_art.id AND cs_parent_art1.id < cs_parent_art2.id AND cs_parent_art2.submitted_on <= $timestamp)
@@ -267,6 +292,17 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                             tracker_changeset_value cs_compute_f
                             INNER JOIN tracker_changeset_value_float cv_compute_f ON (cv_compute_f.changeset_value_id = cs_compute_f.id)
                         ) ON (cs_compute_f.changeset_id = cs_linked_art1.id AND cs_compute_f.field_id = artifact_link_field.id)
+                        LEFT JOIN (
+                            tracker_changeset_value AS cs_compute_list
+                            INNER JOIN tracker_changeset_value_list AS cv_compute_list ON (cv_compute_list.changeset_value_id = cs_compute_list.id)
+                            INNER JOIN tracker_field_list_bind_static_value
+                                ON (cv_compute_list.bindvalue_id = tracker_field_list_bind_static_value.id
+                                    AND tracker_field_list_bind_static_value.label REGEXP '^[[:digit:]]+([.][[:digit:]]+)?$'
+                                )
+                        ) ON (
+                            cs_compute_list.changeset_id = cs_linked_art1.id
+                            AND cs_compute_list.field_id = artifact_link_field.id
+                        )
                     WHERE parent_art.id IN ($source_ids)
                     AND (cs_parent_art2.id IS NULL AND cs_linked_art2.id IS NULL)
                 UNION
@@ -275,7 +311,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         parent_art.id AS parent_id, parent_art.*, parent_art.last_changeset_id,
                         ''                                   AS artifact_link_field,
                         cv.field_id                          AS value_field_id,
-                        f.id                                 AS other_field_id
+                        f.id                                 AS other_field_id,
+                        NULL                                 AS sb_value
                      FROM tracker_artifact parent_art
                     INNER JOIN tracker_field               f
                         ON (
