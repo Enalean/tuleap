@@ -1,3 +1,6 @@
+Version 4.231 - Tuleap 8.17
+    * Display a more readable title for projet permission in history
+
 Version 4.230 - Tuleap 8.17
     * Take into account fine grained permissions for repository
 
