@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
 /**
  * I visit ChangesetValue objects
@@ -35,4 +36,5 @@ interface Tracker_Artifact_ChangesetValueVisitor {
     public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value);
     public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value);
     public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value);
+    public function visitComputed(ChangesetValueComputed $changeset_value);
 }

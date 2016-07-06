@@ -279,7 +279,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         parent::afterCreate($formElement_data);
     }
 
-    private function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
+    public function exportPropertiesToXML(&$root)
+    {
+    }
+
+    protected function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
     {
         $sum                   = null;
         $target_field_name     = $this->getName();
