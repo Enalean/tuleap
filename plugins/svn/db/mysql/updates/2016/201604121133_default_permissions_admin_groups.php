@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Sogilis 2016. All rights reserved
+ * Copyright (c) Enalean 2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
