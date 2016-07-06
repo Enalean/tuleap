@@ -1,27 +1,28 @@
 <div id="modified-files">
     <h3><i class="icon-copy"></i> <span translate>Modified Files</span> <span class="badge">{{ files.files.length }}</span></h3>
 
-    <div class="modified-files">
-        <table class="table table-bordered table-hover">
-            <tbody>
-                <tr ng-if="files.loading_files">
-                    <td class="loading"></td>
-                </tr>
-
-                <tr ng-repeat="file in files.files track by $index" ui-sref="diff({id: {{ files.pull_request.id }} , file_path: '{{ file.path }}'})">
-                    <td class="file">
-                        <span class="status status-{{ file.status }}">{{ file.status }}</span> {{ file.path }}
-                    </td>
-                    <td class="changes lines-added">
-                        <span ng-show="file.lines_added > 0" class="text-success">+{{ file.lines_added }}</span>
-                    </td>
-                    <td class="changes lines-removed">
-                        <span ng-show="file.lines_removed > 0" class="text-error">-{{ file.lines_removed }}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="file-switcher">
+        <ui-select ng-if="! files.loading_files" ng-model="files.selected_file" search-enabled="false" on-select="files.loadFile($item)">
+            <ui-select-match>
+                <div class="file">
+                    <span class="status status-{{ $select.selected.status }}">{{ $select.selected.status }}</span>
+                    <span class="path">{{ $select.selected.path }}</span>
+                    <span class="changes lines-added text-success" ng-class="{ 'show-changes': $select.selected.lines_added > 0}">+{{ $select.selected.lines_added }}</span>
+                    <span class="changes lines-removed text-error" ng-class="{ 'show-changes': $select.selected.lines_removed > 0}">-{{ $select.selected.lines_removed }}</span>
+                </div>
+            </ui-select-match>
+            <ui-select-choices repeat="file in (files.files | filter: $select.search) track by file.path">
+                <div class="file">
+                    <span class="status status-{{ file.status }}">{{ file.status }}</span>
+                    <span class="path">{{ file.path }}</span>
+                    <span class="changes lines-added text-success" ng-class="{ 'show-changes': file.lines_added > 0}">+{{ file.lines_added }}</span>
+                    <span class="changes lines-removed text-error" ng-class="{ 'show-changes': file.lines_removed > 0}">-{{ file.lines_removed }}</span>
+                </div>
+            </ui-select-choices>
+        </ui-select>
     </div>
+
+    <div ng-if="files.loading_files" class="loading"></div>
 </div>
 
 <div ui-view="file-diff" ng-if="! files.loading_files"></div>

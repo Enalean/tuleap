@@ -47,16 +47,16 @@ function MainController(
                 repository_id,
                 PullRequestsService.pull_requests_pagination.limit,
                 PullRequestsService.pull_requests_pagination.offset)
-            .then(function(pullRequests) {
-                var wantedPullRequestId = ($state.includes('pull-request')) ? parseInt($state.params.id, 10) : pullRequests[0].id;
-                SharedPropertiesService.setPullRequest(lodash.find(pullRequests, { id: wantedPullRequestId }));
+            .then(function(pull_requests) {
+                var wanted_pull_request_id = ($state.includes('pull-request')) ? parseInt($state.params.id, 10) : pull_requests[0].id;
+                SharedPropertiesService.setPullRequest(lodash.find(pull_requests, { id: wanted_pull_request_id }));
             });
     }
 
     function redirectToOverview() {
         if (lodash.includes(['pull-requests', 'pull-request'], $state.current.name)) {
-            var prId = SharedPropertiesService.getPullRequest().id;
-            $state.go('overview', { id: prId });
+            var pull_request_id = SharedPropertiesService.getPullRequest().id;
+            $state.go('overview', { id: pull_request_id });
         }
     }
 }

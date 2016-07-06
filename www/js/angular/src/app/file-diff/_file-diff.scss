@@ -1,7 +1,12 @@
 #file-diff {
-    margin: 0 0 100px;
+    margin: 0 0 50px;
     padding: 15px;
     box-sizing: border-box;
+
+    > .loading {
+        height: 50px;
+        background: url('loader.gif') no-repeat center center;
+    }
 
     .diff-file-title {
         display: flex;
@@ -45,7 +50,7 @@
     }
 
     .CodeMirror {
-        height: 500px;
+        height: auto;
         border: 1px solid #dddddd;
         border-radius: 3px;
 
