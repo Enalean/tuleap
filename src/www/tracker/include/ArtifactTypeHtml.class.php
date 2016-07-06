@@ -11,7 +11,6 @@
 //
 
 require_once('common/tracker/ArtifactType.class.php');
-require_once('HTML_Graphs.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 
