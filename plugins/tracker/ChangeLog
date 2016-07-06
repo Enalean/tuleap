@@ -1,3 +1,6 @@
+Version 5.951 - Tuleap 8.17
+    * Give a more accurate warning for deprecated fields
+
 Version 5.950 - Tuleap 8.17
     * Import/export XML
 
