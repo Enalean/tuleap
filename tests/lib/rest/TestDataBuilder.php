@@ -88,7 +88,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->activatePlugin('cardwall');
         PluginManager::instance()->invalidateCache();
         PluginManager::instance()->loadPlugins();
+        return $this;
+    }
 
+    public function instanciateFactories() {
         $this->tracker_artifact_factory    = Tracker_ArtifactFactory::instance();
         $this->tracker_formelement_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory             = TrackerFactory::instance();

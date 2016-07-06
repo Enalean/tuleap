@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    unix-name="private-member" full-name="Private member" description="For test" access="private">
+    <long-description>A test project</long-description>
+    <services>
+        <service shortname="plugin_tracker" enabled="true" />
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_2</member>
+                <member format="username">rest_api_tester_3</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="static_ugroup_1" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="static_ugroup_2" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_2</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>
