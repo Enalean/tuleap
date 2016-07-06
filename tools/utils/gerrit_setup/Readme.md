@@ -47,7 +47,13 @@ Initialize replication
 
 you@workstation $> make start-gerrit
 
-Pitfalls
---------
+Replication
+------------
 
-As of today, replication is broken
+In your gerrit container :
+
+* gerrit@tuleap_gerrit_1 => ssh gitolite@tuleap_web_1 (to add in known hosts)
+* edit replication.conf to add the remote tuleap_web_1
+* restart gerrit
+
+/!\ Be careful, a repository that does not grant replication ugroup as reader for refs/* will not be able to replicate.
