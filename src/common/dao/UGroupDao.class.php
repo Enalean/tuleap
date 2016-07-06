@@ -125,15 +125,59 @@ class UGroupDao extends DataAccessObject {
     /**
      * Return all UGroups the user belongs to (cross projects)
      *
-     * @param Integrer $userId Id of user
+     * @param Integrer $user_id Id of user
      * 
      * @return DataAccessResult
      */
-    function searchByUserId($userId) {
-        $sql = 'SELECT ug.*'.
-               ' FROM ugroup_user ug_u'.
-               '  JOIN ugroup ug USING (ugroup_id)'.
-               ' WHERE ug_u.user_id = '.$this->da->quoteSmart($userId);
+    public function searchByUserId($user_id) {
+        $user_id = $this->da->quoteSmart($user_id);
+
+        $sql = "SELECT ug.*
+                FROM ugroup_user AS ug_u
+                    INNER JOIN ugroup AS ug USING (ugroup_id)
+                WHERE ug_u.user_id = $user_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchByUserIdTakingAccountUserProjectMembership($user_id)
+    {
+        $user_id      = $this->da->quoteSmart($user_id);
+        $restricted   = $this->da->quoteSmart(ForgeAccess::RESTRICTED);
+        $unrestricted = $this->da->quoteSmart(Project::ACCESS_PUBLIC_UNRESTRICTED);
+        $public       = $this->da->quoteSmart(Project::ACCESS_PUBLIC);
+        $private      = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+
+        $sql = "SELECT ug.*
+                FROM ugroup_user AS ug_u
+                     INNER JOIN user USING (user_id)
+                     INNER JOIN ugroup AS ug USING (ugroup_id)
+                     INNER JOIN groups AS g USING (group_id)
+                     LEFT JOIN user_group USING(group_id, user_id)
+                     INNER JOIN forgeconfig ON (forgeconfig.name = 'access_mode')
+                WHERE ug_u.user_id = $user_id
+                  AND (
+                    (
+                        forgeconfig.value = $restricted
+                        AND (
+                            user_group.group_id IS NOT NULL
+                            OR
+                            user.status = 'A' AND g.access IN ($public, $unrestricted)
+                            OR
+                            user.status = 'R' AND g.access = $unrestricted
+                        )
+                    )
+                    OR
+                    (
+                        forgeconfig.value <> $restricted
+                        AND (
+                            user_group.group_id IS NOT NULL
+                            OR
+                            g.access <> ($private)
+                        )
+                    )
+                  )";
+
         return $this->retrieve($sql);
     }
 

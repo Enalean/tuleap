@@ -4,7 +4,7 @@ project_attributes =
     attribute unix-name { xsd:string { pattern = "[a-zA-Z0-9_\-]+" } },
     attribute full-name { xsd:string },
     attribute description { xsd:string },
-    attribute access { xsd:string { pattern = "(public|private)" } }
+    attribute access { xsd:string { pattern = "(public|private|unrestricted)" } }
 
 project_tags =
     element long-description { xsd:string } &

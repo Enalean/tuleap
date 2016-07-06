@@ -115,6 +115,19 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
+                    'id'           => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID,
+                    'user_url'     => '/users/rest_api_restricted_1',
+                    'email'        => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_EMAIL,
+                    'real_name'    => '',
+                    'display_name' => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME,
+                    'ldap_id'      => '',
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'R',
+                    'is_anonymous' => false
+                ),
+                array(
                     'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
                     'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
                     'user_url'     => '/users/rest_api_tester_1',
@@ -253,13 +266,25 @@ class UserGroupTest extends RestBase {
         $put_resource = json_encode(array(
             array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
             array('id' => REST_TestDataBuilder::TEST_USER_2_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_3_ID)
+            array('id' => REST_TestDataBuilder::TEST_USER_3_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID)
         ));
 
         $response_put = $this->getResponse($this->client->put(
             'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
             null,
             $put_resource
+        ));
+
+        $response_put = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID.'/users',
+            null,
+            json_encode(array(
+                array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
+                array('id' => REST_TestDataBuilder::TEST_USER_5_ID),
+                array('id' => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID),
+                array('id' => REST_TestDataBuilder::TEST_USER_RESTRICTED_2_ID)
+            ))
         ));
     }
 
@@ -353,7 +378,7 @@ class UserGroupTest extends RestBase {
             $put_resource)
         );
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**

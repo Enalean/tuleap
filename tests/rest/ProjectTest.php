@@ -585,6 +585,14 @@ class ProjectTest extends RestBase {
                 'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2'
+            ),
+            9 => array(
+                'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
+                'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
+                'label' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
+                'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID.'/users',
+                'key' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
+                'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL
             )
         );
 

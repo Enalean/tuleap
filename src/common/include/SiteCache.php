@@ -80,7 +80,7 @@ class SiteCache {
     }
 
     private function recreateDirectory($directory) {
-        if (! is_dir($directory)) {
+        if (! is_dir(realpath($directory))) {
             $this->logger->info('Recreating ' . $directory);
             mkdir($directory, 0755, true);
         }
@@ -92,7 +92,7 @@ class SiteCache {
     public function restoreOwnership() {
         $backend = Backend::instance();
 
-        $cache_directory = ForgeConfig::get('codendi_cache_dir');
+        $cache_directory = realpath(ForgeConfig::get('codendi_cache_dir'));
         if ($cache_directory === false || $cache_directory === '') {
             $this->logger->error('codendi_cache_dir parameter is invalid, please check your configuration');
             return;
