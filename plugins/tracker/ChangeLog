@@ -1,3 +1,6 @@
+Version 5.950 - Tuleap 8.17
+    * Import/export XML
+
 Version 5.949 - Tuleap 8.17
     * Fix REST representation when manual value is 0
 
