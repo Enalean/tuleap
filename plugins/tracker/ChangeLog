@@ -1,3 +1,6 @@
+Version 5.954 - Tuleap 8.17
+    * Fix wrong computed calculation
+
 Version 5.953 - Tuleap 8.17
     * request #9308 Logrotated files must be readable by app user
 
