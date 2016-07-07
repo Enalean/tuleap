@@ -1,3 +1,6 @@
+Version 5.952 - Tuleap 8.17
+    * request #9309: Infinite recursion when artifact hierarchy graph is cyclic
+
 Version 5.951 - Tuleap 8.17
     * Give a more accurate warning for deprecated fields
 
