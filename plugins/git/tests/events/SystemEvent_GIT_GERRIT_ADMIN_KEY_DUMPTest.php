@@ -71,6 +71,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            '',
             $auth_type
         );
         stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);

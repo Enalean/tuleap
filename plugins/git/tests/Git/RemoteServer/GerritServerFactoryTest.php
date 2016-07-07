@@ -53,17 +53,18 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->dar_1 = array(
-            'id'                => $this->server_id,
-            'host'              => $this->host,
-            'ssh_port'          => $this->ssh_port,
-            'http_port'         => $this->http_port,
-            'login'             => $this->login,
-            'identity_file'     => $this->identity_file,
-            'ssh_key'           => $this->replication_key,
-            'use_ssl'           => $this->use_ssl,
-            'gerrit_version'    => $this->gerrit_version,
-            'http_password'     => $this->http_password,
-            'auth_type'         => $this->auth_type,
+            'id'                   => $this->server_id,
+            'host'                 => $this->host,
+            'ssh_port'             => $this->ssh_port,
+            'http_port'            => $this->http_port,
+            'login'                => $this->login,
+            'identity_file'        => $this->identity_file,
+            'ssh_key'              => $this->replication_key,
+            'use_ssl'              => $this->use_ssl,
+            'gerrit_version'       => $this->gerrit_version,
+            'http_password'        => $this->http_password,
+            'auth_type'            => $this->auth_type,
+            'replication_password' => '',
         );
         $this->dar_2 = array(
             'id'                => $this->alternate_server_id,
@@ -77,6 +78,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'gerrit_version'    => $this->alternate_gerrit_version,
             'http_password'     => $this->http_password,
             'auth_type'         => $this->auth_type,
+            'replication_password' => '',
         );
 
         $git_dao   = mock('GitDao');
@@ -102,6 +104,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->use_ssl,
             $this->gerrit_version,
             $this->http_password,
+            '',
             $this->auth_type
         );
         $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
@@ -115,6 +118,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->use_ssl,
             $this->alternate_gerrit_version,
             $this->http_password,
+            '',
             $this->auth_type
         );
         stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
@@ -247,6 +251,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->use_ssl,
             $this->gerrit_version,
             $this->http_password,
+            '',
             $this->auth_type
         );
         stub($this->dao)->save()->returns(113);

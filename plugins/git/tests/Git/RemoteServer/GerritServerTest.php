@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,17 +23,18 @@ require_once dirname(__FILE__).'/../../bootstrap.php';
 class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
 
     public function itDoesNotNeedToCustomizeSSHConfigOfCodendiadmOrRoot() {
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = 'le_http_port';
-        $ssh_port           = 'le_ssh_port';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = false;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = 'le_http_port';
+        $ssh_port             = 'le_ssh_port';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = false;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -46,6 +47,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
 
@@ -54,17 +56,18 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
     }
 
     public function itPrunesDefaultHTTPPortForAdminUrl() {
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = '80';
-        $ssh_port           = 'le_ssh_port';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = false;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = '80';
+        $ssh_port             = 'le_ssh_port';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = false;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -77,6 +80,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
 
@@ -84,17 +88,18 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
     }
 
     public function itUseTheCustomHTTPPortForAdminUrl() {
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = '8080';
-        $ssh_port           = 'le_ssh_port';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = false;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = '8080';
+        $ssh_port             = 'le_ssh_port';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = false;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -107,23 +112,25 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
         $this->assertEqual($server->getProjectAdminUrl('gerrit_project_name'), 'http://le_host:8080/#/admin/projects/gerrit_project_name');
     }
 
     public function itGivesTheUrlToProjectRequests() {
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = '8080';
-        $ssh_port           = 'le_ssh_port';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = false;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = '8080';
+        $ssh_port             = 'le_ssh_port';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = false;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -136,6 +143,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
 
@@ -143,17 +151,18 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
     }
 
      public function itGivesTheUrlWithHTTPSToProjectRequestsIfWeUseSSL() {
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = '8080';
-        $ssh_port           = 'le_ssh_port';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = true;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = '8080';
+        $ssh_port             = 'le_ssh_port';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = true;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -166,23 +175,25 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
         $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'https://le_host:8080/#/q/project:gerrit_project_name,n,z');
     }
 
     public function itGivesTheReplicationKeyToProjectRequests() {
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = '8080';
-        $ssh_port           = 'le_ssh_port';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = false;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = '8080';
+        $ssh_port             = 'le_ssh_port';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = false;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -195,6 +206,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
 
@@ -207,17 +219,18 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $id                 = 1;
-        $host               = 'le_host';
-        $http_port          = '8080';
-        $ssh_port           = '29418';
-        $login              = 'le_login';
-        $identity_file      = 'le_identity_file';
-        $replication_key    = '';
-        $use_ssl            = false;
-        $gerrit_version     = '2.5';
-        $http_password      = '1234';
-        $auth_type          = 'Digest';
+        $id                   = 1;
+        $host                 = 'le_host';
+        $http_port            = '8080';
+        $ssh_port             = '29418';
+        $login                = 'le_login';
+        $identity_file        = 'le_identity_file';
+        $replication_key      = '';
+        $use_ssl              = false;
+        $gerrit_version       = '2.5';
+        $http_password        = '1234';
+        $auth_type            = 'Digest';
+        $replication_password = '';
 
         $this->server = new Git_RemoteServer_GerritServer(
             $id,
@@ -230,6 +243,7 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
 

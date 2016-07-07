@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+
 class Git_HTTP_CommandFactory {
 
+    /**
+     * @var ReplicationHTTPUserAuthenticator
+     */
+    private $authenticator;
 
     /**
      * @var Logger
@@ -46,19 +52,34 @@ class Git_HTTP_CommandFactory {
      */
     private $url_verification;
 
-    public function __construct(GitRepositoryFactory $repository_factory, User_LoginManager $login_manager, PermissionsManager $permissions_manager, URLVerification $url_verification, Logger $logger) {
-        $this->repository_factory  = $repository_factory;
-        $this->login_manager       = $login_manager;
-        $this->permissions_manager = $permissions_manager;
-        $this->logger              = $logger;
-        $this->url_verification    = $url_verification;
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
+    public function __construct(
+        GitRepositoryFactory $repository_factory,
+        User_LoginManager $login_manager,
+        PermissionsManager $permissions_manager,
+        URLVerification $url_verification,
+        Logger $logger,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        ReplicationHTTPUserAuthenticator $authenticator
+    ) {
+        $this->repository_factory    = $repository_factory;
+        $this->login_manager         = $login_manager;
+        $this->permissions_manager   = $permissions_manager;
+        $this->logger                = $logger;
+        $this->url_verification      = $url_verification;
+        $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->authenticator         = $authenticator;
     }
 
     public function getCommandForRepository(GitRepository $repository, Git_URL $url) {
         $command = $this->getGitHttpBackendCommand();
         if ($this->needAuthentication($repository, $url)) {
             $this->logger->debug('Repository '.$repository->getFullName().' need authentication');
-            $command = $this->authenticate($command);
+            $command = $this->authenticate($repository, $command);
         }
         $command->setPathInfo($url->getPathInfo());
         $command->setQueryString($url->getQueryString());
@@ -76,7 +97,8 @@ class Git_HTTP_CommandFactory {
         return $command;
     }
 
-    private function needAuthentication(GitRepository $repository, Git_URL $url) {
+    private function needAuthentication(GitRepository $repository, Git_URL $url)
+    {
         return $this->url_verification->doesPlatformRequireLogin() ||
             $this->isGitPush($url) ||
             ! $this->canBeReadByAnonymous($repository) ||
@@ -107,12 +129,28 @@ class Git_HTTP_CommandFactory {
         exit;
     }
 
-    private function authenticate(Git_HTTP_Command $command) {
-        if (! isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] == '') {
+    private function authenticate(GitRepository $repository, Git_HTTP_Command $command)
+    {
+        if (! isset($_SERVER['PHP_AUTH_USER']) ||
+            $_SERVER['PHP_AUTH_USER'] == '' ||
+            ! isset($_SERVER['PHP_AUTH_PW']) ||
+            $_SERVER['PHP_AUTH_PW'] == ''
+        ) {
             $this->basicAuthenticationChallenge();
         } else {
             try {
-                $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+                $gerrit_server_id = $repository->getRemoteServerId();
+                $gerrit_server    = $this->gerrit_server_factory->getServerById($gerrit_server_id);
+
+                $user = $this->authenticator->authenticate(
+                    $gerrit_server,
+                    $_SERVER['PHP_AUTH_USER'],
+                    $_SERVER['PHP_AUTH_PW']
+                );
+
+                if (! $user) {
+                    $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+                }
 
                 $this->logger->debug('LOGGED AS '.$user->getUnixName());
 
@@ -124,7 +162,7 @@ class Git_HTTP_CommandFactory {
         }
     }
 
-    private function getGitoliteCommand(PFUser $user, Git_HTTP_Command $command) {
+    private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command) {
          if (is_file('/usr/share/gitolite3/gitolite-shell')) {
             return new Git_HTTP_CommandGitolite3($user, $command);
         }

@@ -43,6 +43,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $auth_type     = 'Digest';
 
+    protected $replication_password = '';
+
     /** @var Git_Driver_Gerrit_RemoteSSHConfig */
     private $config;
 
@@ -72,6 +74,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             $this->use_ssl,
             $this->gerrit_version,
             $this->http_password,
+            $this->replication_password,
             $this->auth_type
         );
     }
