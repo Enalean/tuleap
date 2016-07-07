@@ -1,3 +1,6 @@
+Version 4.233 - Tuleap 8.17
+    * Remove Sogilis copyright
+
 Version 4.232 - Tuleap 8.17
     * request #9308 Logrotated files must be readable by app user
 

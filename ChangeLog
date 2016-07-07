@@ -12,18 +12,18 @@ Version 8.17 (not released yet)
 	* request #9278: Remove CentOS 5 packages
 
 	== Plugins ==
-	* git: 4.232
-	* tracker: 5.954
-	* referencealias_core: 0.10
+	* git: 4.233
+	* tracker: 5.955
+	* referencealias_core: 0.11
 	* agiledashboard: 1.389
 	* hudson: 1.30
 	* graphontrackersv5: 5.23
-	* mediawiki: 0.117
+	* mediawiki: 0.118
 	* referencealias_git: 0.6
-	* referencealias_mediawiki: 0.7
+	* referencealias_mediawiki: 0.8
 	* referencealias_svn: 0.6
-	* referencealias_tracker: 0.8
-	* svn: 0.61
+	* referencealias_tracker: 0.9
+	* svn: 0.62
 	* fulltextsearch: 0.133
 
 Version 8.16 (Thursday, June 23rd 2016)
