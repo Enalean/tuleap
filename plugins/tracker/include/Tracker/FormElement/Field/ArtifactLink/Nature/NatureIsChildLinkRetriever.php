@@ -51,12 +51,21 @@ class NatureIsChildLinkRetriever {
     /** @return ParentOfArtifactCollection */
     public function getParentsHierarchy(Tracker_Artifact $artifact) {
         $collection = new ParentOfArtifactCollection();
-        $this->addParentsOfArtifactToCollection($artifact, $collection);
+        $this->addParentsOfArtifactToCollection($artifact, $collection, array());
 
         return $collection;
     }
 
-    private function addParentsOfArtifactToCollection(Tracker_Artifact $artifact, ParentOfArtifactCollection $collection) {
+    private function addParentsOfArtifactToCollection(
+        Tracker_Artifact $artifact,
+        ParentOfArtifactCollection $collection,
+        array $already_seen_artifacts
+    ) {
+        if (isset($already_seen_artifacts[$artifact->getId()])) {
+            return;
+        }
+        $already_seen_artifacts[$artifact->getId()] = 1;
+
         $parents = array();
         foreach ($this->artifact_link_dao->searchIsChildReverseLinksById($artifact->getId()) as $row) {
             $parents[] = $this->factory->getArtifactById($row['artifact_id']);
@@ -67,7 +76,7 @@ class NatureIsChildLinkRetriever {
             if (count($parents) > 1) {
                 $collection->setIsGraph(true);
             } else {
-                $this->addParentsOfArtifactToCollection($parents[0], $collection);
+                $this->addParentsOfArtifactToCollection($parents[0], $collection, $already_seen_artifacts);
             }
         }
     }
