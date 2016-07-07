@@ -1,3 +1,6 @@
+Version 0.133 - Tuleap 8.17
+    * request #9308 Logrotated files must be readable by app user
+
 Version 0.132 - Tuleap 8.16
     * request #9228: Do not stack multiple FTS reindex event
 

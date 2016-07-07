@@ -12,8 +12,8 @@ Version 8.17 (not released yet)
 	* request #9278: Remove CentOS 5 packages
 
 	== Plugins ==
-	* git: 4.231
-	* tracker: 5.952
+	* git: 4.232
+	* tracker: 5.953
 	* referencealias_core: 0.10
 	* agiledashboard: 1.389
 	* hudson: 1.30
@@ -24,6 +24,7 @@ Version 8.17 (not released yet)
 	* referencealias_svn: 0.6
 	* referencealias_tracker: 0.8
 	* svn: 0.61
+	* fulltextsearch: 0.133
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==

@@ -1,3 +1,6 @@
+Version 5.953 - Tuleap 8.17
+    * request #9308 Logrotated files must be readable by app user
+
 Version 5.952 - Tuleap 8.17
     * request #9309: Infinite recursion when artifact hierarchy graph is cyclic
 

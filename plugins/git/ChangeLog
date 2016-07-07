@@ -1,3 +1,6 @@
+Version 4.232 - Tuleap 8.17
+    * request #9308 Logrotated files must be readable by app user
+
 Version 4.231 - Tuleap 8.17
     * Display a more readable title for projet permission in history
 
