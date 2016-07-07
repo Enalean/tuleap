@@ -490,7 +490,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', 'Build and minify the app', function() {
         return grunt.task.run([
-            'test',
             'prepare',
             'compile'
         ]);
@@ -509,6 +508,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('coverage', 'Run unit tests and display test coverage results on your browser', function() {
         return grunt.task.run([
+            'html2js',
             'karmaconfig',
             'clean:coverage',
             'karma:coverage',

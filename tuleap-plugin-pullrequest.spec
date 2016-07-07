@@ -28,14 +28,14 @@ Pullrequest management for Tuleap
 %build
 # Backend
 npm install
-grunt
+npm run build
 find www/themes -name '*.scss' | xargs rm -f
 
 # Frontend
 cd www/js/angular
 npm install
 bower install
-grunt
+npm run build
 
 #
 # Install

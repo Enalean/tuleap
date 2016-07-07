@@ -1,8 +1,19 @@
 FROM centos:7
 
 RUN yum install -y make rpm-build tar git fontconfig epel-release \
-    && yum install -y nodejs npm rubygem-sass \
-    && npm install -g grunt-cli bower
+    && yum install -y nodejs npm rubygem-sass
+
+# This is used by bower to disable interactive mode
+ENV CI true
+
+# Disable cli progress animation in npm
+RUN npm install --global npm \
+    && npm config set progress false
+
+# Install base node modules
+RUN npm install --global \
+    bower \
+    phantomjs-prebuilt
 
 WORKDIR /tuleap/plugins/pullrequest
 VOLUME ["/tulap/plugins/pullrequest"]
