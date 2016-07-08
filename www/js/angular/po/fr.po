@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.5\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
@@ -111,15 +111,6 @@ msgstr ""
 "des conflits avec la destination. Résolvez ces conflits via la ligne de "
 "commande et mettez à jour la pull request."
 
-#: src/app/overview/overview.tpl.html
-msgid ""
-"Pull request destination has diverged. Merge will not resolve in a fast-"
-"forward. Be careful if you merge now or update your pull request."
-msgstr ""
-"La destination de la pull request a divergé. L’intégration ne sera pas en "
-"fast-forward. Soyez prudent si vous intégrez maintenant ou mettez à jour "
-"votre pull request."
-
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid ""
 "Pull request destination has diverged. Merge will not resolve in a fast-"
@@ -165,3 +156,11 @@ msgstr "succès le {{ overview.pull_request.last_build_date | date: 'short' }}"
 #: src/app/overview/overview.tpl.html
 msgid "unknown"
 msgstr "inconnu"
+
+#~ msgid ""
+#~ "Pull request destination has diverged. Merge will not resolve in a fast-"
+#~ "forward. Be careful if you merge now or update your pull request."
+#~ msgstr ""
+#~ "La destination de la pull request a divergé. L’intégration ne sera pas en "
+#~ "fast-forward. Soyez prudent si vous intégrez maintenant ou mettez à jour "
+#~ "votre pull request."

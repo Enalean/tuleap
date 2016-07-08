@@ -97,10 +97,6 @@ msgstr ""
 msgid "Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request."
 msgstr ""
 
-#: src/app/overview/overview.tpl.html
-msgid "Pull request destination has diverged. Merge will not resolve in a fast-forward. Be careful if you merge now or update your pull request."
-msgstr ""
-
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request."
 msgstr ""
