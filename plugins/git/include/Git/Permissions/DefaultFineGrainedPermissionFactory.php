@@ -165,6 +165,10 @@ class DefaultFineGrainedPermissionFactory
         array &$updated_permissions
     ) {
         foreach ($remaining_permissions as $permission_id => $permission) {
+            if (! $this->hasChangesInWriters($permission, array())) {
+                continue;
+            }
+
             if (! isset($updated_permissions[$permission_id])) {
                 $updated_permissions[$permission_id] = $permission;
             }
@@ -244,6 +248,10 @@ class DefaultFineGrainedPermissionFactory
         array &$updated_permissions
     ) {
         foreach ($remaining_permissions as $permission_id => $permission) {
+            if (! $this->hasChangesInRewinders($permission, array())) {
+                continue;
+            }
+
             if (! isset($updated_permissions[$permission_id])) {
                 $updated_permissions[$permission_id] = $permission;
             }

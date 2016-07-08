@@ -25,7 +25,7 @@ use \Guzzle\Http\Client;
 use \Test\Rest\RequestWrapper;
 
 class RestBase extends PHPUnit_Framework_TestCase {
-    protected $base_url  = 'http://localhost:8089/api/v1';
+    protected $base_url  = 'http://localhost/api/v1';
 
     /**
      * @var Client
@@ -44,6 +44,9 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     public function __construct() {
         parent::__construct();
+        if (isset($_ENV['TULEAP_HOST'])) {
+            $this->base_url = $_ENV['TULEAP_HOST'].'/api/v1';
+        }
         $this->rest_request = new RequestWrapper();
     }
 

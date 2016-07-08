@@ -1,3 +1,9 @@
+Version 0.8 - Tuleap 8.17
+    * Remove Sogilis copyright
+
+Version 0.7 - Tuleap 8.17
+    * request #9274 Warning on project import
+
 Version 0.6 - Tuleap 8.17
     * story #9283: allow to update references during an import
 

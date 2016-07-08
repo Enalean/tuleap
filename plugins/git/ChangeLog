@@ -1,3 +1,18 @@
+Version 4.233 - Tuleap 8.17
+    * Remove Sogilis copyright
+
+Version 4.232 - Tuleap 8.17
+    * request #9308 Logrotated files must be readable by app user
+
+Version 4.231 - Tuleap 8.17
+    * Display a more readable title for projet permission in history
+
+Version 4.230 - Tuleap 8.17
+    * Take into account fine grained permissions for repository
+
+Version 4.229 - Tuleap 8.17
+    * Log history for project only if there are changes in permissions
+
 Version 4.228 - Tuleap 8.17
     * Extract save of default permission in a dedicated object.
 

@@ -1,3 +1,36 @@
+Version 5.955 - Tuleap 8.17
+    * Remove Sogilis copyright
+
+Version 5.954 - Tuleap 8.17
+    * Fix wrong computed calculation
+
+Version 5.953 - Tuleap 8.17
+    * request #9308 Logrotated files must be readable by app user
+
+Version 5.952 - Tuleap 8.17
+    * request #9309: Infinite recursion when artifact hierarchy graph is cyclic
+
+Version 5.951 - Tuleap 8.17
+    * Give a more accurate warning for deprecated fields
+
+Version 5.950 - Tuleap 8.17
+    * Import/export XML
+
+Version 5.949 - Tuleap 8.17
+    * Fix REST representation when manual value is 0
+
+Version 5.948 - Tuleap 8.17
+    * request #9307 Computed fields have to take into account numeric values from selectboxes
+
+Version 5.947 - Tuleap 8.17
+    * story #9090 have computed fields compatible with artifact links v2 (When you have a manual value, you should see the correct autocomputed value in field edition)
+
+Version 5.946 - Tuleap 8.17
+    * story #9090 have computed fields compatible with artifact links v2 (A non migrated field shouldn't be updatable)
+
+Version 5.945 - Tuleap 8.17
+    * Fix fatal error on AgileDashboard
+
 Version 5.944 - Tuleap 8.17
     * story #9090: Correct failed tests
 

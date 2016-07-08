@@ -25,7 +25,15 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class ProjectBacklogV2Test extends RestBase {
 
-    protected $base_url  = 'http://localhost:8089/api/v2';
+    protected $base_url  = 'http://localhost/api/v2';
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (isset($_ENV['TULEAP_HOST'])) {
+            $this->base_url = $_ENV['TULEAP_HOST'].'/api/v2';
+        }
+    }
 
     protected function getResponse($request) {
         return $this->getResponseByToken(

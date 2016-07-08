@@ -24,6 +24,8 @@ namespace Tuleap\Git\Permissions;
 use GitPermissionsManager;
 use GitRepository;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Git;
+use Project;
 
 class PermissionChangesDetector
 {
@@ -46,6 +48,24 @@ class PermissionChangesDetector
         $this->fine_grained_retriever  = $fine_grained_retriever;
     }
 
+    public function areThereChangesInPermissionsForProject(
+        Project $project,
+        array $read_ugroup_ids,
+        array $write_ugroup_ids,
+        array $rewind_ugroup_ids,
+        $enable_fine_grained_permissions,
+        array $added_branches_permissions,
+        array $added_tags_permissions,
+        array $updated_permissions
+    ) {
+
+        return $this->areThereChangesInFineGrainedPermissionsEnablingForProject($project, $enable_fine_grained_permissions) ||
+            $this->areThereChangesInGlobalPermissionsForProject($project, $read_ugroup_ids, $write_ugroup_ids, $rewind_ugroup_ids) ||
+            count($added_branches_permissions) > 0 ||
+            count($added_tags_permissions) > 0 ||
+            count($updated_permissions) > 0;
+    }
+
     public function areThereChangesInPermissionsForRepository(
         GitRepository $repository,
         array $repoAccess,
@@ -55,25 +75,68 @@ class PermissionChangesDetector
         array $updated_permissions
     ) {
 
-        return $this->areThereChangesInFineGrainedPermissionsEnabling($repository, $enable_fine_grained_permissions) ||
-            $this->areThereChangesInGlobalPermissions($repository, $repoAccess) ||
+        return $this->areThereChangesInFineGrainedPermissionsEnablingForRepository($repository, $enable_fine_grained_permissions) ||
+            $this->areThereChangesInGlobalPermissionsForRepository($repository, $repoAccess) ||
             count($added_branches_permissions) > 0 ||
             count($added_tags_permissions) > 0 ||
             count($updated_permissions) > 0;
     }
 
-    private function areThereChangesInGlobalPermissions(
+    private function areThereChangesInGlobalPermissionsForRepository(
         GitRepository $repository,
         array $repoAccess
     ) {
         return $repoAccess != $this->git_permissions_manager->getRepositoryGlobalPermissions($repository);
     }
 
-    private function areThereChangesInFineGrainedPermissionsEnabling(
+    private function areThereChangesInFineGrainedPermissionsEnablingForRepository(
         GitRepository $repository,
         $enable_fine_grained_permissions
     ) {
         return (bool) $enable_fine_grained_permissions !=
             $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository);
+    }
+
+    private function areThereChangesInFineGrainedPermissionsEnablingForProject(
+        Project $project,
+        $enable_fine_grained_permissions
+    ) {
+        return (bool) $enable_fine_grained_permissions !=
+            $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project);
+    }
+
+    private function areThereChangesInGlobalPermissionsForProject(
+        Project $project,
+        array $read_ugroup_ids,
+        array $write_ugroup_ids,
+        array $rewind_ugroup_ids
+    ) {
+
+        $all_permissions = $this->buildDefaultPermissions(
+            $project,
+            $read_ugroup_ids,
+            $write_ugroup_ids,
+            $rewind_ugroup_ids
+        );
+
+        return $all_permissions != $this->git_permissions_manager->getProjectGlobalPermissions($project);
+    }
+
+    private function buildDefaultPermissions(
+        Project $project,
+        array $read_ugroup_ids,
+        array $write_ugroup_ids,
+        array $rewind_ugroup_ids
+    ) {
+        $all_permissions = array(
+            Git::DEFAULT_PERM_READ  => $read_ugroup_ids,
+        );
+
+        if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {
+            $all_permissions[Git::DEFAULT_PERM_WRITE] = $write_ugroup_ids;
+            $all_permissions[Git::DEFAULT_PERM_WPLUS] = $rewind_ugroup_ids;
+        }
+
+        return $all_permissions;
     }
 }

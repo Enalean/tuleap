@@ -527,10 +527,9 @@ class KanbanResource extends AuthenticatedResource {
 
     private function validateIdsInAddAreInKanbanTracker(AgileDashboard_Kanban $kanban, KanbanAddRepresentation $add) {
         $all_kanban_item_ids = array();
-        foreach ($this->kanban_item_dao->getAllKanbanItemIds($kanban->getTrackerId()) as $item_id) {
-            $all_kanban_item_ids[] = $item_id;
+        foreach ($this->kanban_item_dao->getAllKanbanItemIds($kanban->getTrackerId()) as $row) {
+            $all_kanban_item_ids[] = $row['id'];
         }
-
         return count(array_diff($add->ids, $all_kanban_item_ids)) === 0;
     }
 

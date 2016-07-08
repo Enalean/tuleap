@@ -188,6 +188,23 @@ class GitPermissionsManager
         return $permissions;
     }
 
+    /**
+     * @return array
+     */
+    public function getProjectGlobalPermissions(Project $project)
+    {
+        $permissions =  array(
+            Git::DEFAULT_PERM_READ => $this->getDefaultPermission($project, Git::DEFAULT_PERM_READ)
+        );
+
+        if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {
+            $permissions[Git::DEFAULT_PERM_WRITE] = $this->getDefaultPermission($project, Git::DEFAULT_PERM_WRITE);
+            $permissions[Git::DEFAULT_PERM_WPLUS] = $this->getDefaultPermission($project, Git::DEFAULT_PERM_WPLUS);
+        }
+
+        return $permissions;
+    }
+
     private function getGlobalPermission(GitRepository $repository, $permission_name)
     {
         return $this->permissions_manager->getAuthorizedUGroupIdsForProject(

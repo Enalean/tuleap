@@ -250,6 +250,7 @@ plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
+project_admin_utils	default_git_perms_granted_for_project	Permissions git par défaut définies pour le projet $1
 
 plugin_git	fork_repository_exists	Le dépôt $1 existe déjà sur la cible. Dépôt ignoré.
 plugin_git	fork_repository_invalid_namespace	Le chemin contient des caractères invalides. Seuls les caractères alphanumeriques sont autorisés.

@@ -1,6 +1,5 @@
 <?php
 /**
- * Copyright (c) Sogilis, 2016. All Rights Reserved.
  * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Sogilis, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,6 +49,10 @@ class ReferencesImporter
 
     public function importCompatRefXML(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, array $created_refs)
     {
+        if ($xml->count() === 0) {
+            return;
+        }
+
         foreach ($xml->children() as $reference) {
             $source = (string) $reference['source'];
             $target = (string) $reference['target'];

@@ -18,22 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$run_dir    = $argv[1];
-$output_dir = $argv[2];
+$run_dir     = $argv[1];
+$output_dir  = $argv[2];
+$bootstrap = ! isset($argv[3]); // temporary to make new & old test pass
 
 $xml = simplexml_load_string(<<<XML
 <?xml version='1.0'?>
-<phpunit bootstrap="$run_dir/bootstrap.php">
+<phpunit>
+  <php>
+    <includePath>/usr/share/tuleap/src/www/include:/usr/share/tuleap/src</includePath>
+    <ini name="date.timezone" value="Europe/Paris"/>
+  </php>
+  <logging>
+    <log type="junit" target="$output_dir/rest_tests.xml" logIncompleteSkipped="true"/>
+  </logging>
   <testsuites>
     <testsuite name="Tuleap REST tests">
     </testsuite>
   </testsuites>
-  <logging>
-    <log type="junit" target="$output_dir/rest_tests.xml" logIncompleteSkipped="true"/>
-  </logging>
 </phpunit>
 XML
 );
+
+if ($bootstrap) {
+    $xml->addAttribute("bootstrap", $run_dir.'/bootstrap.php');
+    $env = $xml->php->addChild('env');
+    $env->addAttribute('name', 'TULEAP_HOST');
+    $env->addAttribute('value', 'http://localhost:8089');
+}
 
 $src_dir = realpath(dirname(__FILE__).'/../..');
 
@@ -46,5 +58,6 @@ foreach (glob($src_dir.'/plugins/*/tests/rest') as $directory) {
 // Write the XML config
 $xml->asXML("$run_dir/suite.xml");
 
-// Write the bootstrap file
-file_put_contents("$run_dir/bootstrap.php", '<?php'.PHP_EOL.'require_once "'.$run_dir.'/vendor/autoload.php";');
+if ($bootstrap) {
+    file_put_contents("$run_dir/bootstrap.php", '<?php'.PHP_EOL.'require_once "'.$run_dir.'/vendor/autoload.php";');
+}

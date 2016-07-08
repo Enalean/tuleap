@@ -167,7 +167,7 @@ $user_manager = UserManager::instance();
 $current_user = $user_manager->getCurrentUser();
 
 //Pass username in order to be written in Apache access_log
-if(!IS_SCRIPT) {
+if(!IS_SCRIPT && function_exists('apache_note')) {
     apache_note('username', $current_user->getUnixName());
 }
 

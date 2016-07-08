@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
+use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
@@ -3633,6 +3634,7 @@ EOS;
             new Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
             new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater(),
             new Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater(),
+            new FieldChangeComputedXMLUpdater(),
             new Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater()
         );
 

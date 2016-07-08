@@ -29,6 +29,7 @@ use \PFUser;
 class RequestWrapper {
 
     private $user_manager;
+    private $db;
 
     public function __construct() {
         $this->setDbConnection();
