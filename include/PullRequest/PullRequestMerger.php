@@ -86,8 +86,7 @@ class PullRequestMerger
         $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
         $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
 
-        $executor->init();
-        $executor->fetchAndCheckout($repository_dest->getFullPath(), $pull_request->getBranchDest());
+        $executor->cloneAndCheckout($repository_dest->getFullPath(), $pull_request->getBranchDest());
         $executor->fetch($repository_src->getFullPath(), $pull_request->getBranchSrc());
         return $executor->merge($merge_rev, $user);
     }

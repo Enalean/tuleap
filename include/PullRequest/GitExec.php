@@ -88,14 +88,24 @@ class GitExec extends Git_Exec
         return $output;
     }
 
-    public function fetchAndCheckout($remote, $branch_name)
+    public function cloneAndCheckout($remote, $branch_name)
     {
         $output = array();
         $remote = escapeshellarg($remote);
-        $branch = escapeshellarg('refs/heads/' . $branch_name);
+        $branch = escapeshellarg($branch_name);
+        $cmd    = "clone -b $branch $remote " . $this->getPath();
 
-        $this->gitCmdWithOutput("fetch $remote $branch", $output);
-        return $this->gitCmdWithOutput("checkout FETCH_HEAD", $output);
+        $retVal = 1;
+        $git    = $this->getGitCommand();
+
+        // --work-tree --git-dir does not play well with git clone repo path
+        exec("$git $cmd 2>&1", $output, $retVal);
+
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Git_Command_Exception("$git $cmd", $output, $retVal);
+        }
     }
 
     public function merge($reference, $user)
