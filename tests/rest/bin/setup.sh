@@ -11,18 +11,29 @@ if [ -z "$HTTPD_DAEMON" ]; then
 fi
 
 setup_apache() {
-    echo "Setup Apache $HTTPD_DAEMON"
-    if [ "$HTTPD_DAEMON" = "httpd24-httpd" ]; then
-	CONF_DIR=/opt/rh/httpd24/root/etc/httpd
-	TAG=httpd24
+    echo "Setup $HTTPD_DAEMON"
+    case "$HTTPD_DAEMON" in
+	httpd24-httpd)
+	    CONF_DIR=/opt/rh/httpd24/root/etc/httpd
+	    TAG=httpd24
+	    ;;
+	rh-nginx18-nginx)
+	    type=nginx
+	    CONF_DIR=/etc/opt/rh/rh-nginx18/nginx/
+	    TAG=nginx18
+	    ;;
+	*)
+	    CONF_DIR=/etc/httpd
+	    TAG=httpd22
+    esac
+    if [ "$TAG" == "nginx18" ]; then
+	cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/nginx.conf
     else
-	CONF_DIR=/etc/httpd
-	TAG=httpd22
+	cp /usr/share/tuleap/src/etc/combined.conf.dist $CONF_DIR/conf.d/combined.conf
+	sed -i -e "s/User apache/User codendiadm/" \
+	    -e "s/Group apache/Group codendiadm/" $CONF_DIR/conf/httpd.conf
+	cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/conf.d/rest-tests.conf
     fi
-    cp /usr/share/tuleap/src/etc/combined.conf.dist $CONF_DIR/conf.d/combined.conf
-    sed -i -e "s/User apache/User codendiadm/" \
-	-e "s/Group apache/Group codendiadm/" $CONF_DIR/conf/httpd.conf
-    cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/conf.d/rest-tests.conf
     service $HTTPD_DAEMON restart
 }
 
@@ -54,12 +65,14 @@ setup_tuleap() {
 }
 
 setup_fpm() {
-    echo "Setup FPM $FPM_DAEMON"
-    sed -i -e "s/user = apache/user = codendiadm/" \
-	-e "s/group = apache/group = codendiadm/" \
-	/etc/opt/rh/rh-php56/php-fpm.d/www.conf
-    cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/rh/rh-php56/php-fpm.d/www.conf
-    service $FPM_DAEMON restart
+    if [ -n "$FPM_DAEMON" ]; then
+        echo "Setup FPM $FPM_DAEMON"
+        sed -i -e "s/user = apache/user = codendiadm/" \
+            -e "s/group = apache/group = codendiadm/" \
+            /etc/opt/rh/rh-php56/php-fpm.d/www.conf
+        cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/rh/rh-php56/php-fpm.d/www.conf
+        service $FPM_DAEMON restart
+    fi
 }
 
 setup_database() {
@@ -76,24 +89,41 @@ setup_database() {
     $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_structure.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_initvalues.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/tracker/db/install.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/graphontrackersv5/db/install.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/agiledashboard/db/install.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/cardwall/db/install.sql"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-group-list' INTO TABLE wiki_group_list"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-page' INTO TABLE wiki_page"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-nonempty' INTO TABLE wiki_nonempty"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-version' INTO TABLE wiki_version"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-recent' INTO TABLE wiki_recent"
-
-    echo "Load initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php
 }
 
+load_project() {
+    base_dir=$1
+
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/import_project_xml.php \
+        -u admin \
+        -i $base_dir \
+        -m $base_dir/user_map.csv
+
+}
+
+seed_data() {
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker" -l codendiadm
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php cardwall" -l codendiadm
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard" -l codendiadm
+
+    load_project /usr/share/tuleap/tests/rest/_fixtures/01-private-member
+    load_project /usr/share/tuleap/tests/rest/_fixtures/02-private
+    load_project /usr/share/tuleap/tests/rest/_fixtures/03-public
+    load_project /usr/share/tuleap/tests/rest/_fixtures/04-public-member
+    load_project /usr/share/tuleap/tests/rest/_fixtures/05-pbi
+    load_project /usr/share/tuleap/tests/rest/_fixtures/06-dragndrop
+
+    echo "Load initial data"
+    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php ng
+}
 
 setup_tuleap
-if [ -n "$FPM_DAEMON" ]; then
-    setup_fpm
-fi
+setup_fpm
 setup_apache
 setup_database
+seed_data
