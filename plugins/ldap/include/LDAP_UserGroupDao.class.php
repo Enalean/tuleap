@@ -217,6 +217,16 @@ extends DataAccessObject
         return true;
     }
 
-}
+    public function duplicateLdapBinding($source_ugroup_id, $new_ugroup_id)
+    {
+        $source_ugroup_id = $this->da->escapeInt($source_ugroup_id);
+        $new_ugroup_id    = $this->da->escapeInt($new_ugroup_id);
 
-?>
+        $sql = "INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)
+                SELECT $new_ugroup_id, ldap_group_dn, synchro_policy, bind_option
+                FROM plugin_ldap_ugroup
+                WHERE ugroup_id = $source_ugroup_id";
+
+        return $this->update($sql);
+    }
+}

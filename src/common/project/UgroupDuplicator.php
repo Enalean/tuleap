@@ -26,9 +26,16 @@ use ProjectUGroup;
 use Project;
 use UGroupBinding;
 use UGroupUserDao;
+use EventManager;
+use Event;
 
 class UgroupDuplicator
 {
+
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     /**
      * @var UGroupUserDao
@@ -54,12 +61,14 @@ class UgroupDuplicator
         UGroupDao $dao,
         UGroupManager $manager,
         UGroupBinding $binding,
-        UGroupUserDao $ugroup_user_dao
+        UGroupUserDao $ugroup_user_dao,
+        EventManager $event_manager
     ) {
         $this->dao             = $dao;
         $this->manager         = $manager;
         $this->binding         = $binding;
         $this->ugroup_user_dao = $ugroup_user_dao;
+        $this->event_manager   = $event_manager;
     }
 
     public function duplicateOnProjectCreation(Project $template, $new_project_id, array &$ugroup_mapping)
@@ -75,18 +84,39 @@ class UgroupDuplicator
 
     private function duplicate(ProjectUGroup $ugroup, $new_project_id, array &$ugroup_mapping)
     {
-        $ugroup_id = $ugroup->getId();
+        $ugroup_id     = $ugroup->getId();
+        $new_ugroup_id = $this->dao->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
 
-        if ($ugroup->isBound()) {
-            $new_ugroup_id = $this->dao->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
-            $this->binding->addBinding($new_ugroup_id, $ugroup->getSourceGroup()->getId());
-        } else {
-            $new_ugroup_id = $this->dao->duplicate($ugroup_id, $new_project_id);
-            $this->ugroup_user_dao->cloneUgroup($ugroup_id, $new_ugroup_id);
+        if (! $new_ugroup_id) {
+            return false;
         }
 
-        if ($new_ugroup_id) {
-            $ugroup_mapping[$ugroup_id] = $new_ugroup_id;
+        $this->pluginDuplicatesUgroup($ugroup, $new_ugroup_id);
+        $this->duplicateUgroupUsersAndBinding($ugroup, $new_ugroup_id, $new_project_id);
+
+        $ugroup_mapping[$ugroup_id] = $new_ugroup_id;
+    }
+
+    private function pluginDuplicatesUgroup(ProjectUGroup $ugroup, $new_ugroup_id)
+    {
+        $params = array(
+            'source_ugroup'  => $ugroup,
+            'new_ugroup_id'  => $new_ugroup_id,
+        );
+
+        $this->event_manager->processEvent(
+            Event::UGROUP_DUPLICATION,
+            $params
+        );
+    }
+
+    private function duplicateUgroupUsersAndBinding(ProjectUGroup $ugroup, $new_ugroup_id, $new_project_id)
+    {
+        if ($ugroup->isBound()) {
+            $this->binding->addBinding($new_ugroup_id, $ugroup->getSourceGroup()->getId());
+        } else {
+            $this->dao->createBinding($new_project_id, $ugroup->getId(), $new_ugroup_id);
+            $this->ugroup_user_dao->cloneUgroup($ugroup->getId(), $new_ugroup_id);
         }
     }
 }

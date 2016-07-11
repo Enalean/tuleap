@@ -121,7 +121,8 @@ class ProjectImportTest extends TuleapDbTestCase {
             new UGroupDao(),
             $ugroup_manager,
             new UGroupBinding($ugroup_user_dao, $ugroup_manager),
-            $ugroup_user_dao
+            $ugroup_user_dao,
+            EventManager::instance()
         );
 
         $project_manager = ProjectManager::instance();

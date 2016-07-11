@@ -209,25 +209,6 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function duplicate($ugroup_id, $new_project_id)
-    {
-        $this->da->startTransaction();
-
-        $new_ugroup_id = $this->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
-
-        if (! $new_ugroup_id) {
-            $this->da->rollback();
-            return false;
-        }
-
-        if (! $this->createBinding($new_project_id, $ugroup_id, $new_ugroup_id) || ! $this->da->commit()) {
-            $this->da->rollback();
-            return false;
-        }
-
-        return $new_ugroup_id;
-    }
-
     public function createUgroupFromSourceUgroup($ugroup_id, $new_project_id)
     {
         $ugroup_id      = $this->da->escapeInt($ugroup_id);
@@ -241,7 +222,7 @@ class UGroupDao extends DataAccessObject {
         return $this->updateAndGetLastId($create_ugroup);
     }
 
-    private function createBinding($new_project_id, $ugroup_id, $new_ugroup_id)
+    public function createBinding($new_project_id, $ugroup_id, $new_ugroup_id)
     {
         $ugroup_id     = $this->da->escapeInt($ugroup_id);
         $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);

@@ -28,6 +28,7 @@ use UGroupUserDao;
 use UGroupManager;
 use UGroupDao;
 use UGroupBinding;
+use EventManager;
 
 class ProjectHelper {
 
@@ -48,7 +49,8 @@ class ProjectHelper {
             new UGroupDao(),
             $ugroup_manager,
             new UGroupBinding($ugroup_user_dao, $ugroup_manager),
-            $ugroup_user_dao
+            $ugroup_user_dao,
+            EventManager::instance()
         );
 
         $reference_manager     = new ReferenceManager();

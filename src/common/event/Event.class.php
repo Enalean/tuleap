@@ -1218,4 +1218,14 @@ class Event {
      *
      */
     const SVN_REPOSITORY_CREATED = 'svn_repository_created';
+
+    /**
+     * When a project is created, ask plugins if some actions must be made for ugroup duplication
+     *
+     * Parameters:
+     *  - source_ugroup => (input) Ugroup
+     *  - new_ugroup_id => (input) int
+     *
+     */
+    const UGROUP_DUPLICATION = 'ugroup_duplication';
 }
