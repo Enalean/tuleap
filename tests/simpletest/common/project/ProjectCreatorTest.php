@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,10 +33,9 @@ class ProjectCreatorTest_BaseLanguage extends MockBaseLanguage {
         $args = implode($args, ',');
         return "$section.$name($args)";
     }
-
 }
 
-class ProjectCreatorTest extends UnitTestCase {
+class ProjectCreatorTest extends TuleapTestCase {
 
     public function setUp(){
         $GLOBALS['Language'] = new ProjectCreatorTest_BaseLanguage();
@@ -88,12 +87,11 @@ class ProjectCreatorTest extends UnitTestCase {
      */
     private function GivenAProjectCreator() {
         $projectManager       = new MockProjectManager();
-        
+        $ugroup_duplicator    = mock('Tuleap\Project\UgroupDuplicator');
+
         $creator = TestHelper::getPartialMock('ProjectCreator', array('createProject'));
-        $creator->__construct($projectManager, ReferenceManager::instance());
+        $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false);
         
         return $creator;
     }
 }
-
-?>

@@ -54,7 +54,8 @@ if ($request->exist('wsdl')) {
     $soapLimitFactory = new SOAP_RequestLimitatorFactory();
 
     $send_notifications   = true;
-    $projectCreator       = new ProjectCreator($projectManager, ReferenceManager::instance(), $send_notifications);
+    $ugroup_duplicator    = new Tuleap\Project\UgroupDuplicator(new UGroupDao(), new UGroupManager());
+    $projectCreator       = new ProjectCreator($projectManager, ReferenceManager::instance(), $ugroup_duplicator, $send_notifications);
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);
     $limitator            = $soapLimitFactory->getLimitator();

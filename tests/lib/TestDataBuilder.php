@@ -21,6 +21,8 @@
 require_once 'account.php';
 require_once 'www/project/admin/UserPermissionsDao.class.php';
 
+use Tuleap\Project\UgroupDuplicator;
+
 class TestDataBuilder {
 
     const ADMIN_ID             = 101;
@@ -101,16 +103,23 @@ class TestDataBuilder {
     /** @var UserPermissionsDao */
     protected $user_permissions_dao;
 
+    /**
+     * @var UgroupDuplicator
+     */
+    protected $ugroup_duplicator;
+
     public function __construct()
     {
         $this->project_manager      = ProjectManager::instance();
         $this->user_manager         = UserManager::instance();
         $this->user_permissions_dao = new UserPermissionsDao();
         $send_notifications         = true;
+        $this->ugroup_duplicator    = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
 
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
             ReferenceManager::instance(),
+            $this->ugroup_duplicator,
             $send_notifications
         );
 

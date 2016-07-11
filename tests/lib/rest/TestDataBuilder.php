@@ -279,7 +279,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
             new UGroupManager(),
             new XMLImportHelper(UserManager::instance()),
             ServiceManager::instance(),
-            new ProjectXMLImporterLogger()
+            new ProjectXMLImporterLogger(),
+            $this->ugroup_duplicator
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
         $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);

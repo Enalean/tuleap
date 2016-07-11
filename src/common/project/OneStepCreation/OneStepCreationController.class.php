@@ -25,6 +25,8 @@ require_once 'OneStepCreationValidator.class.php';
 require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
 require_once 'common/project/OneStepRegistration/OneStepRegistrationPresenterFactory.class.php';
 
+use Tuleap\Project\UgroupDuplicator;
+
 /**
  * Base controller for one step creation project
  */
@@ -111,9 +113,18 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
 
     private function doCreate() {
         $send_notifications = true;
-        $projectCreator = new ProjectCreator($this->project_manager, ReferenceManager::instance(), $send_notifications);
-        $data = $this->creation_request->getProjectValues();
+        $ugroup_duplicator  = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
+
+        $projectCreator = new ProjectCreator(
+            $this->project_manager,
+            ReferenceManager::instance(),
+            $ugroup_duplicator,
+            $send_notifications
+        );
+
+        $data         = $this->creation_request->getProjectValues();
         $creationData = ProjectCreationData::buildFromFormArray($data);
+
         return $projectCreator->build($creationData);
     }
 

@@ -209,6 +209,47 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-}
+    public function duplicate($ugroup_id, $new_project_id)
+    {
+        $ugroup_id      = $this->da->escapeInt($ugroup_id);
+        $new_project_id = $this->da->escapeInt($new_project_id);
 
-?>
+        $this->da->startTransaction();
+
+        $create_ugroup = "INSERT INTO ugroup (name,description,group_id)
+            SELECT name,description,$new_project_id
+            FROM ugroup
+            WHERE ugroup_id=$ugroup_id";
+
+        $new_ugroup_id = $this->updateAndGetLastId($create_ugroup);
+
+        if (! $new_ugroup_id) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $duplicate_members = "INSERT INTO ugroup_user (ugroup_id,user_id)
+                              SELECT $new_ugroup_id,user_id
+                              FROM ugroup_user
+                              WHERE ugroup_id=$ugroup_id";
+
+        if (! $this->update($duplicate_members)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $duplicate_binding = "INSERT INTO ugroup_mapping (to_group_id, src_ugroup_id, dst_ugroup_id)
+                              VALUES ($new_project_id, $ugroup_id, $new_ugroup_id)";
+
+        if (! $this->update($duplicate_binding)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        if ($this->da->commit()) {
+            return $new_ugroup_id;
+        } else {
+            return false;
+        }
+    }
+}
