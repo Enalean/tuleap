@@ -1,3 +1,7 @@
+Version 8.16-4 (Monday, July 4th 2016)
+	== Bug Fix ==
+	* request #9306: Error while creating AgileDashboard
+
 Version 8.16-3 (Monday, July 4th 2016)
 	== Bug Fix ==
 	* request #9289: Root daily is not able to suspend multiple users
