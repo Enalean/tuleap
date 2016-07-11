@@ -53,8 +53,15 @@ if ($request->exist('wsdl')) {
     $projectManager   = ProjectManager::instance();
     $soapLimitFactory = new SOAP_RequestLimitatorFactory();
 
-    $send_notifications   = true;
-    $ugroup_duplicator    = new Tuleap\Project\UgroupDuplicator(new UGroupDao(), new UGroupManager());
+    $send_notifications = true;
+    $ugroup_user_dao    = new UGroupUserDao();
+    $ugroup_manager     = new UGroupManager();
+    $ugroup_duplicator  = new Tuleap\Project\UgroupDuplicator(
+        new UGroupDao(),
+        $ugroup_manager,
+        new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+        $ugroup_user_dao
+    );
     $projectCreator       = new ProjectCreator($projectManager, ReferenceManager::instance(), $ugroup_duplicator, $send_notifications);
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);

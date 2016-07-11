@@ -24,6 +24,10 @@ use \PFUser;
 use \Project;
 use ReferenceManager;
 use Tuleap\Project\UgroupDuplicator;
+use UGroupUserDao;
+use UGroupManager;
+use UGroupDao;
+use UGroupBinding;
 
 class ProjectHelper {
 
@@ -38,9 +42,16 @@ class ProjectHelper {
     private $xml_importer;
 
     public function __construct() {
-        $ugroup_duplicator  = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
-        $reference_manager  = new ReferenceManager();
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_duplicator  = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao
+        );
 
+        $reference_manager     = new ReferenceManager();
         $this->project_creator = new \ProjectCreator(
             \ProjectManager::instance(),
             $reference_manager,

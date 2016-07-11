@@ -115,9 +115,18 @@ class ProjectImportTest extends TuleapDbTestCase {
     }
 
     public function testImportProjectCreatesAProject() {
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_duplicator  = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao
+        );
+
         $project_manager = ProjectManager::instance();
-        $user_manager = UserManager::instance();
-        $importer = new ProjectXMLImporter(
+        $user_manager    = UserManager::instance();
+        $importer        = new ProjectXMLImporter(
             EventManager::instance(),
             $project_manager,
             UserManager::instance(),
@@ -126,8 +135,9 @@ class ProjectImportTest extends TuleapDbTestCase {
             new XMLImportHelper($user_manager),
             ServiceManager::instance(),
             new Log_ConsoleLogger(),
-            new UgroupDuplicator(new UGroupDao(), new UGroupManager())
+            $ugroup_duplicator
         );
+
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
         $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__.'/_fixtures/fake_project');
 
