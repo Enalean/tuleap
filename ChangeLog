@@ -1,3 +1,9 @@
+Version 8.16-5 (Monday, July 11th 2016)
+	== Bug Fix ==
+	* request #9307: Computed fields have to take into account numeric values from selectboxes
+	* request #9308: Logrotated files must be readable by app user
+	* request #9309: Infinite recursion when artifact hierarchy graph is cyclic
+
 Version 8.16-4 (Monday, July 4th 2016)
 	== Bug Fix ==
 	* request #9306: Error while creating AgileDashboard
