@@ -11,6 +11,7 @@ Version 8.17 (not released yet)
 	== Development ==
 	* request #9278: Remove CentOS 5 packages
 	* request #9321: Refactor REST test suite to leverage XML import
+	* story #9224: Remove unused parts of Tuleap
 
 	== Plugins ==
 	* git: 4.233
