@@ -12,12 +12,13 @@ Version 8.17 (not released yet)
 	* request #9278: Remove CentOS 5 packages
 	* request #9321: Refactor REST test suite to leverage XML import
 	* story #9224: Remove unused parts of Tuleap
+	* story #9224: Create a dedicated object to deal with ugroup duplication
 
 	== Plugins ==
 	* git: 4.233
 	* tracker: 5.956
 	* referencealias_core: 0.11
-	* agiledashboard: 1.391
+	* agiledashboard: 1.392
 	* hudson: 1.30
 	* graphontrackersv5: 5.23
 	* mediawiki: 0.118
