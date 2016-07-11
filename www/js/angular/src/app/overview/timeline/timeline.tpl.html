@@ -12,20 +12,23 @@
 <ul>
     <li class="pull-request-event"
         ng-repeat="event in timeline.timeline track by $index"
-        ng-class="[event.type, {'from-pr-author': event.isFromPRAuthor, 'is-outdated': event.is_outdated}]">
+        ng-class="[event.type, { 'from-pr-author': event.isFromPRAuthor, 'is-outdated': event.is_outdated, 'inline-comment': event.isInlineComment }]">
         <div class="avatar">
             <img src="{{ event.user.avatar_url }}" class="media-object">
         </div>
 
         <div class="pull-request-event-content">
-            <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
-                <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline.pull_request.id }} , file_path: '{{ event.file_path }}'})">
-                    <i class="icon-file-text-alt"></i> {{ event.file_path }}
-                </a>
-                <span ng-if="event.is_outdated"><i class="icon-file-text-alt"></i> {{ event.file_path }}</span>
-            -</span>
-            <a href="{{ event.user.user_url }}" class="pull-request-event-author">{{ event.user.display_name }}</a>
-            <small class="pull-request-event-date" am-time-ago="event.post_date"></small>
+            <div class="pull-request-event-content-info">
+                <a href="{{ event.user.user_url }}" class="pull-request-event-author">{{ event.user.display_name }}</a>
+                <small class="pull-request-event-date" am-time-ago="event.post_date"></small>
+
+                <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
+                    <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline.pull_request.id }} , file_path: '{{ event.file_path }}'})">
+                        <i class="icon-file-text-alt"></i> {{ event.file_path }}
+                    </a>
+                    <span ng-if="event.is_outdated"><i class="icon-file-text-alt"></i> {{ event.file_path }}</span>
+                </span>
+            </div>
 
             <p ng-bind-html="event.content"></p>
         </div>

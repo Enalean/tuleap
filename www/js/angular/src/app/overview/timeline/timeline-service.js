@@ -53,41 +53,44 @@ function TimelineService(
     }
 
     function addComment(pullRequest, timeline, newComment) {
-        TimelineRestService.addComment(pullRequest.id, newComment).then(function(event) {
+        return TimelineRestService.addComment(pullRequest.id, newComment).then(function(event) {
             self.formatEvent(event, pullRequest);
             timeline.push(event);
         });
     }
 
-    var eventMessages = {
-        comment: function(content) {
-            return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-        },
-        'inline-comment': function(content) {
-            return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-        },
-        update: function() {
-            return 'Has updated the pull request.';
-        },
-        rebase: function() {
-            return 'Has rebased the pull request.';
-        },
-        merge: function() {
-            return 'Has merged the pull request.';
-        },
-        abandon: function() {
-            return 'Has abandoned the pull request.';
-        }
-    };
     function getContentMessage(event) {
+        var eventMessages = {
+            comment: function(content) {
+                return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+            },
+            'inline-comment': function(content) {
+                return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+            },
+            update: function() {
+                return 'Has updated the pull request.';
+            },
+            rebase: function() {
+                return 'Has rebased the pull request.';
+            },
+            merge: function() {
+                return 'Has merged the pull request.';
+            },
+            abandon: function() {
+                return 'Has abandoned the pull request.';
+            }
+        };
+
         var content = eventMessages[event.event_type || event.type](event.content);
+
         return $sce.trustAsHtml(content);
     }
 
 
     function formatEvent(event, pull_request) {
-        event.isFromPRAuthor = (event.user.id === pull_request.user_id);
+        event.isFromPRAuthor  = (event.user.id === pull_request.user_id);
         event.isInlineComment = (event.type === 'inline-comment');
+
         event.content = getContentMessage(event);
     }
 }
