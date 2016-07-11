@@ -40,14 +40,15 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->event_manager   = mock('EventManager');
-        $this->project_manager = mock('ProjectManager');
-        $this->project         = stub('Project')->getID()->returns(122);
-        $this->ugroup_manager  = mock('UGroupManager');
-        $this->user_manager    = stub('UserManager')->getCurrentUser()->returns(mock('PFUser'));
-        $this->user_finder     = new XMLImportHelper($this->user_manager);
-        $this->logger          = mock('ProjectXMLImporterLogger');
-        $this->xml_importer    = new ProjectXMLImporter(
+        $this->event_manager     = mock('EventManager');
+        $this->project_manager   = mock('ProjectManager');
+        $this->project           = stub('Project')->getID()->returns(122);
+        $this->ugroup_manager    = mock('UGroupManager');
+        $this->user_manager      = stub('UserManager')->getCurrentUser()->returns(mock('PFUser'));
+        $this->user_finder       = new XMLImportHelper($this->user_manager);
+        $this->logger            = mock('ProjectXMLImporterLogger');
+        $this->ugroup_duplicator = mock('Tuleap\Project\UgroupDuplicator');
+        $this->xml_importer      = new ProjectXMLImporter(
             $this->event_manager,
             $this->project_manager,
             $this->user_manager,
@@ -55,7 +56,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager),
             mock('ServiceManager'),
-            $this->logger
+            $this->logger,
+            $this->ugroup_duplicator
         );
 
         $this->xml_file_path              = dirname(__FILE__).'/_fixtures/fake_project.xml';

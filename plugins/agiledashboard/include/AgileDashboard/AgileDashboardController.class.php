@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\AdminAdditionalPanePresenter;
+use Tuleap\Project\UgroupDuplicator;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -239,7 +240,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                         new UGroupManager(),
                         new XMLImportHelper(UserManager::instance()),
                         ServiceManager::instance(),
-                        new ProjectXMLImporterLogger()
+                        new ProjectXMLImporterLogger(),
+                        new UgroupDuplicator(new UGroupDao(), new UGroupManager())
                     )
                 )
             );

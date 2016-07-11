@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@ namespace DataInit;
 
 use \PFUser;
 use \Project;
+use ReferenceManager;
+use Tuleap\Project\UgroupDuplicator;
 
 class ProjectHelper {
 
@@ -36,10 +38,15 @@ class ProjectHelper {
     private $xml_importer;
 
     public function __construct() {
+        $ugroup_duplicator  = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
+        $reference_manager  = new ReferenceManager();
+
         $this->project_creator = new \ProjectCreator(
             \ProjectManager::instance(),
-            new \Rule_ProjectName(),
-            new \Rule_ProjectFullName()
+            $reference_manager,
+            $ugroup_duplicator,
+            false,
+            false
         );
 
         $user_manager       = \UserManager::instance();
@@ -51,7 +58,8 @@ class ProjectHelper {
             new \UGroupManager(),
             new \XMLImportHelper($user_manager),
             \ServiceManager::instance(),
-            new \ProjectXMLImporterLogger()
+            new \ProjectXMLImporterLogger(),
+            $ugroup_duplicator
         );
     }
 

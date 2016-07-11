@@ -23,6 +23,7 @@ require_once 'pre.php';
 
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Project\UgroupDuplicator;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -158,7 +159,8 @@ try {
         new UGroupManager(),
         $user_finder,
         ServiceManager::instance(),
-        $broker_log
+        $broker_log,
+        new UgroupDuplicator(new UGroupDao(), new UGroupManager())
     );
 
      if (empty($project_id)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,12 +41,19 @@ require_once 'common/widget/WidgetLayoutManager.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
+use Tuleap\Project\UgroupDuplicator;
+
 /**
  * Manage creation of a new project in the forge.
  *
  * For now, mainly a wrapper for createProject method
  */
 class ProjectCreator {
+
+    /**
+     * @var UgroupDuplicator
+     */
+    private $ugroup_duplicator;
 
     /**
      * @var bool true to bypass manual activation
@@ -66,18 +73,19 @@ class ProjectCreator {
     /**
      * @var Rule_ProjectName
      */
-    var $ruleShortName;
+    private $ruleShortName;
 
     /**
      * @var Rule_ProjectFullName
      */
-    var $ruleFullName;
+    private $ruleFullName;
 
     private $send_notifications;
 
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
+        UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
         $force_activation = false
     ) {
@@ -87,6 +95,7 @@ class ProjectCreator {
         $this->ruleShortName      = new Rule_ProjectName();
         $this->ruleFullName       = new Rule_ProjectFullName();
         $this->projectManager     = $projectManager;
+        $this->ugroup_duplicator  = $ugroup_duplicator;
     }
 
     /**
@@ -209,7 +218,7 @@ class ProjectCreator {
 
         //Copy ugroups
         $ugroup_mapping = array();
-        ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
 
         $this->initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping);
 

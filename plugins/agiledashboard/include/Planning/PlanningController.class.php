@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Project\UgroupDuplicator;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -353,7 +355,8 @@ class Planning_Controller extends MVC2_PluginController {
             new UGroupManager(),
             new XMLImportHelper(UserManager::instance()),
             ServiceManager::instance(),
-            new ProjectXMLImporterLogger()
+            new ProjectXMLImporterLogger(),
+            new UgroupDuplicator(new UGroupDao(), new UGroupManager())
         );
 
         try {
