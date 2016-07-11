@@ -3261,27 +3261,36 @@ select[name='add_notempty_condition[]'] {
     .tracker-formelement-edit-for-modal {
         font-size: 0.95em;
     }
-}
 
-.deprecated-close {
-    margin: 15px;
-}
+    .original-value {
+        display: block;
+        margin: 3px 0 0 0;
+        font-size: 12px;
+        color: #4DB3D0;
+    }
 
-#warning-deprecated-field {
-    margin: 0 12px
-}
+    > .back-to-autocompute {
+        display: none;
+    }
 
-.original-value {
-    display: block;
-    margin: 3px 0 0 0;
-    font-size: 12px;
-    color: #4DB3D0;
-}
+    > .deprecated-close {
+        margin: 15px;
+    }
 
-.back-to-autocompute {
-    display: none;
-}
+    > #warning-deprecated-field {
+        margin: 0 12px
+    }
 
+    > .auto-compute {
+        .icon-flip-horizontal {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    > .add-field {
+        display: none;
+    }
+}
 
 .tracker_hidden_edition_field {
     display: none;
@@ -3296,16 +3305,6 @@ select[name='add_notempty_condition[]'] {
         font-size: 12px;
         color: #4DB3D0;
     }
-}
-
-.auto-compute {
-    .icon-flip-horizontal {
-        margin: 0 5px 0 0;
-    }
-}
-
-.add-field {
-    display: none;
 }
 
 .tracker-artifact-rollup-view {
