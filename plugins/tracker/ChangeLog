@@ -1,3 +1,6 @@
+Version 5.957 - Tuleap 8.17
+    * REST test for computed fields
+
 Version 5.956 - Tuleap 8.17
     * Fix computation calculation, error when you mix int and computed value on the same node
 

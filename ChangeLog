@@ -15,8 +15,8 @@ Version 8.17 (not released yet)
 	* story #9224: Create a dedicated object to deal with ugroup duplication
 
 	== Plugins ==
-	* git: 4.233
-	* tracker: 5.956
+	* git: 4.234
+	* tracker: 5.957
 	* referencealias_core: 0.11
 	* agiledashboard: 1.392
 	* hudson: 1.30
