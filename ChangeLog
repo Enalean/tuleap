@@ -16,7 +16,7 @@ Version 8.17 (not released yet)
 
 	== Plugins ==
 	* git: 4.234
-	* tracker: 5.957
+	* tracker: 5.958
 	* referencealias_core: 0.11
 	* agiledashboard: 1.392
 	* hudson: 1.30
@@ -28,6 +28,7 @@ Version 8.17 (not released yet)
 	* referencealias_tracker: 0.9
 	* svn: 0.62
 	* fulltextsearch: 0.133
+	* frs: 0.17
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
