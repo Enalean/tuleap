@@ -1,28 +1,27 @@
-<div id="pull-request-info">
+<div id="pull-request-info" ng-class="{ 'in-edition': overview.showEditionForm }">
     <div class="pull-request-details">
         <div ng-hide="overview.showEditionForm">
             <div>
-                <span ng-bind-html="overview.pull_request.title"></span>
-                <button class="btn btn-link btn-small" ng-click="overview.showEditionForm = true">
-                    <i class="icon-edit"></i>
+                <button class="btn btn-mini show-edition" ng-click="overview.showEditionForm = true">
+                    <i class="icon-edit"></i> {{ 'Edit message' | translate }}
                 </button>
+                <span ng-bind-html="overview.pull_request.title" class="pull-request-title"></span>
             </div>
             <blockquote class="pull-request-description" ng-bind-html="overview.pull_request.description"></blockquote>
         </div>
         <form class="pull-request-edition-form" ng-show="overview.showEditionForm">
-            <div>
-                <input type="text" ng-model="overview.editionForm.title" placeholder="title" tabindex="10" />
-                <button ng-click="overview.saveEditionForm()" class="btn btn-link btn-small" tabindex="12">
-                    <i class="icon-ok"></i>
-                </button>
-                <button ng-click="overview.showEditionForm = false" class="btn btn-link btn-small" tabindex="13">
-                    <i class="icon-remove"></i>
-                </button>
-            </div>
-            <textarea ng-model="overview.editionForm.description" rows="5" placeholder="description" tabindex="11"></textarea>
+            <input type="text" ng-model="overview.editionForm.title" placeholder="{{ 'Title' | translate }}">
+            <textarea ng-model="overview.editionForm.description" rows="5" placeholder="{{ 'Description' | translate }}"></textarea>
+            <button ng-click="overview.saveEditionForm()" class="btn btn-primary btn-small">
+                {{ 'Save changes' | translate }}
+            </button>
+            <button ng-click="overview.showEditionForm = false" class="btn btn-small">
+                {{ 'Cancel' | translate }}
+            </button>
         </form>
+
         <div class="pull-requests-references">
-            <div>
+            <p>
                 <span class="pull-requests-source-destination">
                     <span class="repository"
                         ng-if="! overview.pull_request.repository.isCurrent">{{ overview.pull_request.repository.name }}:
@@ -32,39 +31,49 @@
                         ng-if="! overview.pull_request.repository_dest.isCurrent">{{ overview.pull_request.repository_dest.name }}:
                     </span>{{ overview.pull_request.branch_dest }}
                 </span>
-            </div>
+            </p>
             <span class="pull-request-reference">{{ overview.pull_request.reference_src }}</span>
         </div>
     </div>
-    <div class="pull-request-author">
-        <span class="pull-request-label" translate>Requester</span>
-        <div>
-            <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
-            <a href="{{ overview.author.user_url }}">{{ overview.author.display_name }}</a>
+
+    <div class="pull-request-author-date">
+        <div class="pull-request-author">
+            <span class="pull-request-label"><i class="icon-user"></i> {{ 'Requester' | translate }}</span>
+            <div>
+                <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
+                <a href="{{ overview.author.user_url }}">{{ overview.author.display_name }}</a>
+            </div>
+        </div>
+        <div class="pull-request-date">
+            <span class="pull-request-label"><i class="icon-calendar"></i> {{ 'Date' | translate }}</span>
+            <p>{{ overview.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</p>
         </div>
     </div>
-    <div class="pull-request-date">
-        <span class="pull-request-label" translate>Date</span>
-        <div>{{ overview.pull_request.creation_date | date: 'short' }}</div>
-    </div>
-    <div class="pull-request-changes">
-        <span class="pull-request-label" translate>Changes</span>
-        <div>
-            <span class="text-success">+{{ overview.pull_request.short_stat.lines_added }}</span>
-            <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed }}</span>
+
+    <div class="pull-request-changes-ci">
+        <div class="pull-request-changes">
+            <span class="pull-request-label"><i class="icon-copy"></i> {{ 'Changes' | translate }}</span>
+            <div>
+                <span class="text-success">+{{ overview.pull_request.short_stat.lines_added }}</span>
+                <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed }}</span>
+            </div>
         </div>
-    </div>
-    <div>
-        <span class="pull-request-label" translate>Last CI Status</span>
-        <div>
-            <span class="text-success" ng-if="overview.buildStatusIs('success')" translate>success on {{ overview.pull_request.last_build_date | date: 'short' }}</span>
-            <span class="text-error" ng-if="overview.buildStatusIs('fail')" translate>failure on {{ overview.pull_request.last_build_date | date: 'short' }}</span>
-            <span class="text-warning" ng-if="overview.buildStatusIs('unknown')" translate>unknown</span>
+        <div class="pull-request-ci">
+            <span class="pull-request-label"><i class="icon-refresh"></i> {{ 'Last CI Status' | translate }}</span>
+            <p class="text-success" ng-if="overview.buildStatusIs('success')">
+                <i class="icon-ok-sign"></i> <span translate>Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
+            </p>
+            <p class="text-error" ng-if="overview.buildStatusIs('fail')">
+                <i class="icon-remove-sign"></i> <span translate>Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
+            </p>
+            <p class="text-warning" ng-if="overview.buildStatusIs('unknown')">
+                <i class="icon-warning-sign"></i> <span translate>Unknown</span>
+            </p>
         </div>
     </div>
 </div>
 
-<div id="pull-request-actions">
+<div id="pull-request-actions" ng-class="{ 'in-edition': overview.showEditionForm }">
     <div ng-if="overview.operationInProgress" class="loading"></div>
 
     <div ng-if="overview.isNonFastForwardMerge()">

@@ -6,55 +6,6 @@
     justify-content: space-between;
     padding: 0 15px;
 
-    .pull-request-details {
-        flex: 1 1 auto;
-        max-width: 50%;
-    }
-
-    .pull-request-description {
-        white-space: pre-wrap;
-    }
-
-    .pull-request-edition-form {
-        textarea {
-            width: 95%;
-        }
-    }
-
-    .pull-requests-references {
-        font-size: 12px;
-
-        .pull-requests-source-destination {
-            border: 1px solid #f79514;
-            border-radius: 3px;
-            color: #f79514;
-            padding: 2px 2px;
-            margin: 0 5px 0 0;
-
-            .repository {
-                font-weight: 600;
-            }
-        }
-
-        .pull-request-reference {
-            letter-spacing: 0.3px;
-            color: #888;
-        }
-    }
-
-    .pull-request-author,
-    .pull-request-date,
-    .pull-request-changes {
-        flex: 0 1 auto;
-        white-space: nowrap;
-    }
-
-    .pull-request-description,
-    .pull-request-author,
-    .pull-request-date {
-        margin: 0 50px 0 0;
-    }
-
     .pull-request-label {
         display: block;
         margin: 25px 0 5px;
@@ -65,6 +16,81 @@
         &:first-child {
             margin: 0 0 5px;
         }
+
+        > i {
+            font-size: 14px;
+            margin: 0 3px 0 0;
+        }
+    }
+
+    > .pull-request-details {
+        flex: 1 1 auto;
+        max-width: 50%;
+
+        .show-edition {
+            float: right;
+            margin: 0 0 0 10px;
+        }
+
+        .pull-request-title {
+            font-weight: 600;
+        }
+
+        .pull-request-description {
+            white-space: pre-wrap;
+            margin: 10px 50px 0 0;
+            padding: 0 0 0 10px;
+            font-size: 13px;
+            line-height: 18px;
+        }
+
+        > .pull-request-edition-form {
+            input, textarea {
+                width: 100%;
+            }
+        }
+
+        > .pull-requests-references {
+            margin: 15px 0 0;
+            font-size: 12px;
+            transition: opacity 100ms linear;
+
+            .pull-requests-source-destination {
+                border: 1px solid #f79514;
+                border-radius: 3px;
+                color: #f79514;
+                padding: 2px 2px;
+                margin: 0 5px 0 0;
+
+                > .repository {
+                    font-weight: 600;
+                }
+            }
+
+            > .pull-request-reference {
+                letter-spacing: 0.3px;
+                color: #888;
+            }
+        }
+    }
+
+    > .pull-request-details,
+    > .pull-request-author-date {
+        margin: 0 50px 0 0;
+    }
+
+    > .pull-request-author-date,
+    > .pull-request-changes-ci {
+        flex: 0 0 20%;
+        transition: opacity 100ms linear;
+    }
+
+    .pull-request-author,
+    .pull-request-date,
+    .pull-request-changes,
+    .pull-request-ci {
+        white-space: nowrap;
+        margin: 0 0 30px;
     }
 
     .pull-request-author > div {
@@ -79,11 +105,22 @@
         }
     }
 
-    .pull-request-changes .text-success,
-    .pull-request-changes .text-error {
-        margin: 0 2px 0 0;
-        font-size: 14px;
-        font-weight: 600;
+    .pull-request-changes {
+        .text-success,
+        .text-error {
+            margin: 0 2px 0 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+
+    &.in-edition {
+        .pull-requests-references,
+        .pull-request-author-date,
+        .pull-request-changes-ci {
+            opacity: .3;
+            transition: opacity 100ms linear;
+        }
     }
 }
 
@@ -92,6 +129,7 @@
     padding: 15px;
     box-sizing: border-box;
     text-align: center;
+    transition: opacity 100ms linear;
 
     .loading {
         height: 26px;
@@ -115,5 +153,10 @@
     .btn {
         min-width: 150px;
         margin: 15px 0 0;
+    }
+
+    &.in-edition {
+        opacity: .3;
+        transition: opacity 100ms linear;
     }
 }

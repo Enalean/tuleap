@@ -34,6 +34,7 @@ msgid "Binary file"
 msgstr "Fichier binaire"
 
 #: src/app/overview/merge-modal/merge-modal.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -49,6 +50,10 @@ msgstr "Commenter"
 msgid "Date"
 msgstr "Date"
 
+#: src/app/overview/overview.tpl.html
+msgid "Description"
+msgstr "Description"
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion"
 msgstr "Discussion"
@@ -57,13 +62,21 @@ msgstr "Discussion"
 msgid "Discussion has not started yet"
 msgstr "La discussion n’a pas commencé"
 
+#: src/app/overview/overview.tpl.html
+msgid "Edit message"
+msgstr "Éditer le message"
+
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
 #: src/app/overview/overview.tpl.html
-msgid "failure on {{ overview.pull_request.last_build_date | date: 'short' }}"
-msgstr "échec le {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgid ""
+"Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
+"DD HH:mm' }}"
+msgstr ""
+"Échec le {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
+"DD HH:mm' }}"
 
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Files"
@@ -141,6 +154,10 @@ msgstr "Pull requests"
 msgid "Requester"
 msgstr "Demandeur"
 
+#: src/app/overview/overview.tpl.html
+msgid "Save changes"
+msgstr "Enregistrer les changements"
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Say something…"
 msgstr "Dites quelque chose…"
@@ -150,17 +167,27 @@ msgid "Show details"
 msgstr "Voir les détails"
 
 #: src/app/overview/overview.tpl.html
-msgid "success on {{ overview.pull_request.last_build_date | date: 'short' }}"
-msgstr "succès le {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgid ""
+"Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
+"DD HH:mm' }}"
+msgstr ""
+"Succès le {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
+"DD HH:mm' }}"
 
 #: src/app/overview/overview.tpl.html
-msgid "unknown"
-msgstr "inconnu"
+msgid "Title"
+msgstr "Titre"
+
+#: src/app/overview/overview.tpl.html
+msgid "Unknown"
+msgstr "Inconnu"
 
 #~ msgid ""
-#~ "Pull request destination has diverged. Merge will not resolve in a fast-"
-#~ "forward. Be careful if you merge now or update your pull request."
+#~ "Failure on {{ overview.pull_request.last_build_date | date: 'short' }}"
 #~ msgstr ""
-#~ "La destination de la pull request a divergé. L’intégration ne sera pas en "
-#~ "fast-forward. Soyez prudent si vous intégrez maintenant ou mettez à jour "
-#~ "votre pull request."
+#~ "Échec le {{ overview.pull_request.last_build_date | date: 'short' }}"
+
+#~ msgid ""
+#~ "Success on {{ overview.pull_request.last_build_date | date: 'short' }}"
+#~ msgstr ""
+#~ "Succès le {{ overview.pull_request.last_build_date | date: 'short' }}"
