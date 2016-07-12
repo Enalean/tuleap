@@ -607,12 +607,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
         $manual_value                             = $this->getManualValueForChangeset($changeset);
         $artifact_field_value_full_representation = new ArtifactFieldComputedValueFullRepresentation();
+        $empty_array = array();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
             $manual_value === null,
-            $this->getComputedValueWithNoStopOnManualValue($changeset->getArtifact()),
+            $this->getComputedValue($user, $changeset->getArtifact(), null, $empty_array, $this->useFastCompute()),
             $this->getManualValueForChangeset($changeset)
         );
 

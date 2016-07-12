@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -46,7 +46,8 @@ class REST_TestDataBuilderNG extends REST_TestDataBuilder {
         return $this;
     }
 
-    public function generateProject() {
+    public function generateProject()
+    {
         $project_1 = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
         $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_template.xml');
         $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_kanban_template.xml');
@@ -56,6 +57,9 @@ class REST_TestDataBuilderNG extends REST_TestDataBuilder {
 
         $backlog = $this->project_manager->getProjectByUnixName(self::PROJECT_BACKLOG_DND);
         $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
+
+        $computed_field = $this->project_manager->getProjectByUnixName(self::PROJECT_COMPUTED_FIELDS);
+        $this->importTemplateInProject($computed_field->getId(), 'tuleap_computedfields_template.xml');
 
         return $this;
     }
