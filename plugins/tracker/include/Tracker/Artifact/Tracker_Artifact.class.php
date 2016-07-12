@@ -981,7 +981,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string html
      */
     public function fetchDirectLinkToArtifact() {
-        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
+        return '<a class="direct-link-to-artifact"
+            data-artifact-id="'. $this->getId() .'"
+            href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
     }
 
     /**

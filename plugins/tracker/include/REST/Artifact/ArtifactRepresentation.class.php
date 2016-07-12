@@ -20,12 +20,14 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use PFUser;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
+use UserManager;
 
 class ArtifactRepresentation
 {
@@ -41,6 +43,11 @@ class ArtifactRepresentation
      * @var string URI of the artifact {@type string} {@required true}
      */
     public $uri;
+
+    /**
+     * @var string The xref of the artifact (ex: bug #123) {@type string}
+     */
+    public $xref;
 
     /**
      * @var Tuleap\Tracker\REST\TrackerReference Reference to tracker the artifact belongs to {@type Tuleap\Tracker\REST\TrackerReference} {@required true}
@@ -102,10 +109,16 @@ class ArtifactRepresentation
      */
     public $title;
 
-    public function build(Tracker_Artifact $artifact, $values, $values_by_field)
+    /**
+     * @var the semantic assignee value {@type array}
+     */
+    public $assignees;
+
+    public function build(PFUser $current_user, Tracker_Artifact $artifact, $values, $values_by_field)
     {
         $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
+        $this->xref           = $artifact->getXRef();
 
         $this->tracker        = new TrackerReference();
         $this->tracker->build($artifact->getTracker());
@@ -127,5 +140,12 @@ class ArtifactRepresentation
 
         $this->status = $artifact->getStatus();
         $this->title  = $artifact->getTitle();
+
+        $this->assignees = array();
+        foreach ($artifact->getAssignedTo($current_user) as $assignee) {
+            $user_representation = new MinimalUserRepresentation();
+            $user_representation->build($assignee);
+            $this->assignees[] = $user_representation;
+        }
     }
 }

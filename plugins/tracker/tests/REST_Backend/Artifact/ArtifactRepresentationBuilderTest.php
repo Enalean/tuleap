@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\REST\MinimalUserRepresentation;
+
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends TuleapTestCase {
@@ -49,6 +51,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
         stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
         stub($this->artifact)->getUri()->returns('/plugins/tracker/?aid=12');
+        stub($this->artifact)->getXref()->returns('Tracker_Artifact #12');
+        stub($this->artifact)->getAssignedTo()->returns(array($this->user));
     }
 
     public function tearDown()
@@ -58,7 +62,9 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
     }
 
     public function itBuildsTheBasicInfo() {
-        $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
+        $representation              = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
+        $minimal_user_representation = new MinimalUserRepresentation();
+        $minimal_user_representation->build($this->user);
 
         $this->assertEqual($representation->id, 12);
         $this->assertEqual($representation->uri, Tuleap\Tracker\REST\Artifact\ArtifactRepresentation::ROUTE . '/' . 12);
@@ -70,6 +76,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         $this->assertEqual($representation->submitted_on, '2177-06-14T06:09:14+01:00');
         $this->assertEqual($representation->html_url, '/plugins/tracker/?aid=12');
         $this->assertEqual($representation->changesets_uri, Tuleap\Tracker\REST\Artifact\ArtifactRepresentation::ROUTE . '/' . 12 . '/' . Tuleap\Tracker\REST\ChangesetRepresentation::ROUTE);
+        $this->assertEqual($representation->xref, 'Tracker_Artifact #12');
+        $this->assertEqual($representation->assignees[0], $minimal_user_representation);
     }
 }
 
@@ -90,6 +98,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
         stub($this->artifact)->getTracker()->returns($this->tracker);
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
         stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
+        stub($this->artifact)->getXref()->returns('Tracker_Artifact #12');
+        stub($this->artifact)->getAssignedTo()->returns(array($this->user));
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
