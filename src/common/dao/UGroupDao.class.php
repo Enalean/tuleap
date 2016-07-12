@@ -211,45 +211,45 @@ class UGroupDao extends DataAccessObject {
 
     public function duplicate($ugroup_id, $new_project_id)
     {
-        $ugroup_id      = $this->da->escapeInt($ugroup_id);
-        $new_project_id = $this->da->escapeInt($new_project_id);
-
         $this->da->startTransaction();
 
-        $create_ugroup = "INSERT INTO ugroup (name,description,group_id)
-            SELECT name,description,$new_project_id
-            FROM ugroup
-            WHERE ugroup_id=$ugroup_id";
-
-        $new_ugroup_id = $this->updateAndGetLastId($create_ugroup);
+        $new_ugroup_id = $this->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
 
         if (! $new_ugroup_id) {
             $this->da->rollback();
             return false;
         }
 
-        $duplicate_members = "INSERT INTO ugroup_user (ugroup_id,user_id)
-                              SELECT $new_ugroup_id,user_id
-                              FROM ugroup_user
-                              WHERE ugroup_id=$ugroup_id";
-
-        if (! $this->update($duplicate_members)) {
+        if (! $this->createBinding($new_project_id, $ugroup_id, $new_ugroup_id) || ! $this->da->commit()) {
             $this->da->rollback();
             return false;
         }
 
-        $duplicate_binding = "INSERT INTO ugroup_mapping (to_group_id, src_ugroup_id, dst_ugroup_id)
-                              VALUES ($new_project_id, $ugroup_id, $new_ugroup_id)";
+        return $new_ugroup_id;
+    }
 
-        if (! $this->update($duplicate_binding)) {
-            $this->da->rollback();
-            return false;
-        }
+    public function createUgroupFromSourceUgroup($ugroup_id, $new_project_id)
+    {
+        $ugroup_id      = $this->da->escapeInt($ugroup_id);
+        $new_project_id = $this->da->escapeInt($new_project_id);
 
-        if ($this->da->commit()) {
-            return $new_ugroup_id;
-        } else {
-            return false;
-        }
+        $create_ugroup = "INSERT INTO ugroup (name,description,group_id)
+            SELECT name,description,$new_project_id
+            FROM ugroup
+            WHERE ugroup_id=$ugroup_id";
+
+        return $this->updateAndGetLastId($create_ugroup);
+    }
+
+    private function createBinding($new_project_id, $ugroup_id, $new_ugroup_id)
+    {
+        $ugroup_id     = $this->da->escapeInt($ugroup_id);
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $new_project_id = $this->da->escapeInt($new_project_id);
+
+        $create_binding = "INSERT INTO ugroup_mapping (to_group_id, src_ugroup_id, dst_ugroup_id)
+                           VALUES ($new_project_id, $ugroup_id, $new_ugroup_id)";
+
+        return $this->update($create_binding);
     }
 }

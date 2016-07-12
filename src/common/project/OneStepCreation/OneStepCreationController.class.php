@@ -113,7 +113,14 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
 
     private function doCreate() {
         $send_notifications = true;
-        $ugroup_duplicator  = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_duplicator  = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao
+        );
 
         $projectCreator = new ProjectCreator(
             $this->project_manager,

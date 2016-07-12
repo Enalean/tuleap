@@ -224,6 +224,15 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 )
             );
         } else {
+            $ugroup_user_dao    = new UGroupUserDao();
+            $ugroup_manager     = new UGroupManager();
+            $ugroup_duplicator  = new UgroupDuplicator(
+                new UGroupDao(),
+                $ugroup_manager,
+                new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+                $ugroup_user_dao
+            );
+
             $updater = new AgileDashboardScrumConfigurationUpdater(
                 $this->request,
                 $this->config_manager,
@@ -237,11 +246,11 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                         ProjectManager::instance(),
                         UserManager::instance(),
                         new XML_RNGValidator(),
-                        new UGroupManager(),
+                        $ugroup_manager,
                         new XMLImportHelper(UserManager::instance()),
                         ServiceManager::instance(),
                         new ProjectXMLImporterLogger(),
-                        new UgroupDuplicator(new UGroupDao(), new UGroupManager())
+                        $ugroup_duplicator
                     )
                 )
             );

@@ -64,8 +64,16 @@ class ProjectCreationTest extends TuleapDbTestCase {
     public function itCreatesAProject()
     {
         $send_notifications = true;
-        $ugroup_duplicator  = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
-        $projectCreator     = new ProjectCreator(
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_duplicator  = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao
+        );
+
+        $projectCreator = new ProjectCreator(
             ProjectManager::instance(),
             ReferenceManager::instance(),
             $ugroup_duplicator,

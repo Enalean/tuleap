@@ -115,7 +115,14 @@ class TestDataBuilder {
         $this->user_manager         = UserManager::instance();
         $this->user_permissions_dao = new UserPermissionsDao();
         $send_notifications         = true;
-        $this->ugroup_duplicator    = new UgroupDuplicator(new UGroupDao(), new UGroupManager());
+        $ugroup_user_dao            = new UGroupUserDao();
+        $ugroup_manager             = new UGroupManager();
+        $this->ugroup_duplicator    = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao
+        );
 
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
