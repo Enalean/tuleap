@@ -1,19 +1,7 @@
-<div ng-if="! diff.isBinaryFile">
-    <div class="diff-file-title">
-        <h3><i class="icon-file-text-alt"></i> {{ diff.file_path }}</h3>
+<div ng-if="diff.is_loading" class="loading"></div>
 
-        <div diff-link></div>
-    </div>
-
-    <textarea style="display: none"></textarea>
+<div ng-if="diff.isBinaryFile" class="binary-file">
+    <i class="icon-file-alt"></i><br>{{ 'Binary file' | translate }}
 </div>
 
-<div ng-if="diff.isBinaryFile">
-    <div class="diff-file-title">
-        <h3><i class="icon-file-text-alt"></i> {{ diff.file_path }}</h3>
-
-        <div diff-link></div>
-    </div>
-
-    <div class="binary-file"><i class="icon-file-alt"></i><br>{{ 'Binary file' | translate }}</div>
-</div>
+<textarea ng-if="! diff.isBinaryFile" style="display: none"></textarea>

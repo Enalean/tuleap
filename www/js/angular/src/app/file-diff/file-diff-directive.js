@@ -21,9 +21,20 @@ function FileDiffDirective(
     SharedPropertiesService,
     FileDiffRestService
 ) {
+    return {
+        restrict        : 'A',
+        scope           : {},
+        templateUrl     : 'file-diff/file-diff.tpl.html',
+        controller      : 'FileDiffController as diff',
+        bindToController: true,
+        link            : linkFileDiffDirective
+    };
+
     function linkFileDiffDirective(scope, element, attrs, diffController) {
         var pullRequest = SharedPropertiesService.getPullRequest();
         var filePath = $state.params.file_path;
+
+        diffController.is_loading = true;
 
         FileDiffRestService.getUnidiff(pullRequest.id, filePath).then(function(data) {
             diffController.isBinaryFile = data.charset === 'binary';
@@ -44,6 +55,8 @@ function FileDiffDirective(
 
                 unidiff.on('gutterClick', showCommentForm);
             }
+
+            diffController.is_loading = false;
 
             $uiViewScroll(element);
         });
@@ -69,19 +82,19 @@ function FileDiffDirective(
         });
     }
 
-    var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
-        + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
-        + '<div class="arrow"></div>'
-        + '<div class="comment">'
-        + '<div class="info">'
-        + '<span class="author">{{ user.display_name }}</span>'
-        + '<span class="post-date">{{ post_date | date: "short" }}</span>'
-        + '</div>'
-        + '<div class="content">{{ content }}</div>'
-        + '</div>'
-        + '</div>');
-
     function displayInlineComment(unidiff, comment) {
+        var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
+            + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
+            + '<div class="arrow"></div>'
+            + '<div class="comment">'
+            + '<div class="info">'
+            + '<span class="author">{{ user.display_name }}</span>'
+            + '<span class="post-date">{{ post_date | date: "short" }}</span>'
+            + '</div>'
+            + '<div class="content">{{ content }}</div>'
+            + '</div>'
+            + '</div>');
+
         var elt = document.createElement('div'); // eslint-disable-line angular/document-service
         comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
         elt.innerHTML = inlineCommentTemplate(comment);
@@ -131,13 +144,4 @@ function FileDiffDirective(
             unidiff_offset,
             commentText);
     }
-
-    return {
-        restrict        : 'A',
-        scope           : {},
-        templateUrl     : 'file-diff/file-diff.tpl.html',
-        controller      : 'FileDiffController as diff',
-        bindToController: true,
-        link            : linkFileDiffDirective
-    };
 }
