@@ -478,7 +478,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function fetchComputedInputs($displayed_value, $is_autocomputed)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '<input type="text"
+        $html     = '<input type="text" class="field-computed"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_MANUAL . ']"
             value="' . $purifier->purify($displayed_value) . '" />';
         $html    .= '<input type="hidden"
@@ -823,6 +823,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
             $html    .= '</div>';
         }
+
         return $html;
     }
 
@@ -834,8 +835,71 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function getValueDao()
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
     {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $purifier       = Codendi_HTMLPurifier::instance();
+        $current_user   = UserManager::instance()->getCurrentUser();
+        $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact, $current_user, true);
+        if ($computed_value === null) {
+            $computed_value = $this->getFieldEmptyMessage();
+        }
+        $autocomputed_label = ' (' . $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')';
+        $class = 'auto-computed';
+
+        $changeset = $artifact->getLastChangesetWithFieldValue($this)->getValue($this);
+        $required  = $this->required ? ' <span class="highlight">*</span>' : '';
+
+        $html = "";
+        if ($this->userCanRead()) {
+            if (! $this->userCanUpdate()) {
+
+                if (isset($changeset) && $changeset->getValue() !== null) {
+                    $computed_value     = $changeset->getValue();
+                    $autocomputed_label = '';
+                    $class              = '';
+                }
+
+                if (isset($submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL])) {
+                    $computed_value     = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
+                    $autocomputed_label = '';
+                    $class              = '';
+                }
+            }
+
+            if ($this->getDeprecationRetriever()->isALegacyField($this) || ! $this->userCanUpdate()) {
+                $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed">';
+                $html .= '<label for="tracker_artifact_' . $this->id .'" title="'. $purifier->purify($this->description) .
+                        '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required .'</label>';
+
+                $html .= '<span class="'. $class .'">' . $computed_value . $autocomputed_label . '</span></div>';
+
+                return $html;
+            }
+
+            $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
+
+            $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+            $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-modal">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+            $html .= '<label for="tracker_artifact_' . $this->id .'" title="'. $purifier->purify($this->description) .
+                    '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required .'</label>';
+
+            $html .= '<span class="auto-computed auto-computed-for-modal">' . $computed_value .' (' .
+            $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
+
+            $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
+            $html .= $this->fetchArtifactValue($artifact, $changeset, $submitted_values);
+            $html .= $this->fetchBackToAutocomputedButton(false);
+            $html .= $this->fetchComputedValueWithLabel($computed_value);
+
+            $html .= '</div></div>';
+        }
+
+        return $html;
+    }
+
+    protected function getValueDao() {
         return new ComputedDao();
     }
 

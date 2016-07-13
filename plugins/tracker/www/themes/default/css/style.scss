@@ -2506,10 +2506,15 @@ body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-art
                     max-width: 380px;
                 }
 
-                input[type=text] {
+                input[type=text]:not(.field-computed) {
                     margin: 5px 0 0 0;
                     width: 100%;
                     -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    height: 30px;
+                }
+
+                input[type=text].field-computed {
                     box-sizing: border-box;
                     height: 30px;
                 }
@@ -3242,11 +3247,19 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
-.tracker_artifact_field {
+.tracker_artifact_field-computed {
     .auto-computed {
         margin: 0 0 0 3px;
         color: #AAAAAA;
         font-size: 11px;
+    }
+
+    .auto-computed-for-modal {
+        display: block;
+    }
+
+    .tracker-formelement-edit-for-modal {
+        font-size: 0.95em;
     }
 }
 
