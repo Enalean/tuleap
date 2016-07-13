@@ -30,11 +30,13 @@ class BaseAdminPresenter {
     public $access_control_active;
     public $immutable_tag_url_active;
     public $commit_rule;
+    public $repository_delete_active;
 
     public function __construct() {
         $this->notification_active      = false;
         $this->access_control_active    = false;
         $this->immutable_tag_url_active = false;
         $this->commit_rule_active       = false;
+        $this->repository_delete_active = false;
     }
 }

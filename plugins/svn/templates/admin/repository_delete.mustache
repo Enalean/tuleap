@@ -1,0 +1,13 @@
+<div class="tabbable" id="svn-administration">
+    {{> admin/section_presenter }}
+
+    <div class="tab-content">
+        <h3>{{ subtitle }}</h3>
+        <p>{{ comment }}</p>
+
+        <p class="alert alert-warning">{{ alert_message }}</p>
+        <button type="button" class="btn btn-danger" disabled>
+            <i class="icon-trash"></i> {{ button }}
+        </button>
+    </div>
+</div>

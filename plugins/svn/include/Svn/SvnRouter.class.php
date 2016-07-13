@@ -140,6 +140,10 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->displayHooksConfig($this->getService($request), $request);
                     break;
+                case "display-repository-delete":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->admin_controller->displayRepositoryDelete($this->getService($request), $request);
+                    break;
                 case "access-control":
                     $this->checkUserCanAdministrateARepository($request);
                     $this->access_control_controller->displayAuthFile($this->getService($request), $request);

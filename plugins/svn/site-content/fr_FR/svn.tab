@@ -84,3 +84,9 @@ plugin_svn_admin_hooks	comment	Lors d'un commit, il est possible de forcer le re
 plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Requiert une référence dans tous les messages de commit.
 plugin_svn_admin_hooks	label_allow_commit_message_changes	Autorise la modification des messages de commit (svn propset --revprop -r X svn:log)
 plugin_svn_admin_hooks	submit	Sauvegarder les règles
+
+plugin_svn	repository_delete	Supprimer
+plugin_svn_admin_repository_delete	comment	Vous êtes sur le point de supprimer définitivement le dépôt. Cette action ne sera pas réversible.
+plugin_svn_admin_repository_delete	subtitle	Supprimer ce dépôt
+plugin_svn_admin_repository_delete	button_delete	Supprimer ce dépôt
+plugin_svn_admin_repository_delete	alert_message	Pas encore implémenté !

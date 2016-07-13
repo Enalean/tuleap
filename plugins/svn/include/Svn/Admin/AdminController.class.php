@@ -215,4 +215,20 @@ class AdminController {
         );
     }
 
+    public function displayRepositoryDelete(ServiceSvn $service, HTTPRequest $request)
+    {
+        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $title      = $GLOBALS['Language']->getText('global', 'Administration');
+
+        $service->renderInPage(
+            $request,
+            $repository->getName() .' – '. $title,
+            'admin/repository_delete',
+            new RepositoryDeletePresenter(
+                $repository,
+                $request->getProject(),
+                $title
+            )
+        );
+    }
 }
