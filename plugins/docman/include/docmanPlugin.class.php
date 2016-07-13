@@ -31,6 +31,7 @@ class DocmanPlugin extends Plugin {
 
     const TRUNCATED_SERVICE_NAME = 'Documents';
     const SYSTEM_NATURE_NAME     = 'document';
+    const SERVICE_SHORTNAME      = 'docman';
 
     /**
      * Store docman root items indexed by groupId
@@ -118,7 +119,7 @@ class DocmanPlugin extends Plugin {
     }
 
     public function getServiceShortname() {
-        return 'docman';
+        return self::SERVICE_SHORTNAME;
     }
 
     public function service_icon($params) {
