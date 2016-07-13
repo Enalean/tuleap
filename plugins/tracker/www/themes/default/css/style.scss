@@ -3254,11 +3254,11 @@ select[name='add_notempty_condition[]'] {
         font-size: 11px;
     }
 
-    .auto-computed-for-modal {
+    .auto-computed-for-modal, .auto-computed-for-submit {
         display: block;
     }
 
-    .tracker-formelement-edit-for-modal {
+    .tracker-formelement-edit-for-modal, .tracker-formelement-edit-for-submit {
         font-size: 0.95em;
     }
 
