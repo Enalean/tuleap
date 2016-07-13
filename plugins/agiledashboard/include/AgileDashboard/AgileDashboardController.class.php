@@ -230,7 +230,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 new UGroupDao(),
                 $ugroup_manager,
                 new UGroupBinding($ugroup_user_dao, $ugroup_manager),
-                $ugroup_user_dao
+                $ugroup_user_dao,
+                EventManager::instance()
             );
 
             $updater = new AgileDashboardScrumConfigurationUpdater(

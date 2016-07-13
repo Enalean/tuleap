@@ -60,7 +60,8 @@ if ($request->exist('wsdl')) {
         new UGroupDao(),
         $ugroup_manager,
         new UGroupBinding($ugroup_user_dao, $ugroup_manager),
-        $ugroup_user_dao
+        $ugroup_user_dao,
+        EventManager::instance()
     );
     $projectCreator       = new ProjectCreator($projectManager, ReferenceManager::instance(), $ugroup_duplicator, $send_notifications);
     $generic_user_dao     = new GenericUserDao();
