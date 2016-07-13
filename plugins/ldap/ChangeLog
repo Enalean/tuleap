@@ -1,3 +1,6 @@
+Version 3.103 - Tuleap 8.17
+    * Duplicate LDAP binding
+
 Version 3.102 - Tuleap 8.15
     * request #8972: LDAP plugin does not directly use mysql_* API anymore
 

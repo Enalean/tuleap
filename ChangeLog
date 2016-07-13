@@ -30,6 +30,7 @@ Version 8.17 (not released yet)
 	* svn: 0.62
 	* fulltextsearch: 0.133
 	* frs: 0.17
+	* ldap: 3.103
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
