@@ -13,6 +13,7 @@ Version 8.17 (not released yet)
 	* request #9321: Refactor REST test suite to leverage XML import
 	* story #9224: Remove unused parts of Tuleap
 	* story #9224: Create a dedicated object to deal with ugroup duplication
+	* request #9279: Pre commit hooks are compatible with OS X
 
 	== Plugins ==
 	* git: 4.234
