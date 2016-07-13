@@ -94,8 +94,8 @@ $validated_users = $row['count'];
 $wDoc = new Widget_Static($Language->getText('admin_main', 'documentation'));
 $wDoc->setContent('
 <ul>
-  <li><a href="/doc/en/index.html#installation-guide">'.$Language->getText('admin_main', 'install_guide').'</a></li>
-  <li><a href="/doc/en/index.html#administration-guide">'.$Language->getText('admin_main', 'admin_guide').'</a></li>
+  <li><a href="/doc/en/install.html">'.$Language->getText('admin_main', 'install_guide').'</a></li>
+  <li><a href="/doc/en/admin.html">'.$Language->getText('admin_main', 'admin_guide').'</a></li>
 </ul>');
 
 // Site Statistics
