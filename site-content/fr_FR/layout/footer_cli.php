@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,6 @@
 
 ?><h3>API</h3>
 <ul class="unstyled">
-    <li><?= $GLOBALS['sys_name']?> fournit une <a href="/soap/index.php">API&nbsp;SOAP</a> ainsi qu'une <a href="/doc/en/rest/auth.html?#rest-authentication" target="_blank">API REST</a>.
+    <li><?= $GLOBALS['sys_name']?> fournit une <a href="/soap/index.php">API&nbsp;SOAP</a> ainsi qu'une <a href="/doc/en/user-guide/rest.html" target="_blank">API REST</a>.
     </li>
 </ul>
-<?php
-?>
