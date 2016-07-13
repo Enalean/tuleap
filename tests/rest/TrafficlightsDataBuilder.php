@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,16 +23,17 @@ require_once 'common/autoload.php';
 use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\Dao;
 
-class TrafficlightsDataBuilder extends REST_TestDataBuilder {
+class TrafficlightsDataBuilder extends REST_TestDataBuilder
+{
 
-    const PROJECT_TEST_MGMT_ID        = 109;
+    const PROJECT_TEST_MGMT_ID        = 110;
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
 
-    const CAMPAIGN_TRACKER_ID         = 26;
-    const TEST_DEF_TRACKER_ID         = 27;
-    const TEST_EXEC_TRACKER_ID        = 28;
+    const CAMPAIGN_TRACKER_ID         = 30;
+    const TEST_DEF_TRACKER_ID         = 31;
+    const TEST_EXEC_TRACKER_ID        = 32;
 
-    const USER_TESTER_NAME   = 'user_tester';
+    const USER_TESTER_NAME   = 'rest_api_ttl_1';
     const USER_TESTER_PASS   = 'welcome0';
     const USER_TESTER_STATUS = 'A';
 
@@ -41,11 +42,13 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder {
         $this->template_path = dirname(__FILE__).'/_fixtures/';
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->installPlugin();
         $this->activatePlugin('trafficlights');
-        $project = $this->generateProject();
-        $this->importTrafficlightsTemplate();
+
+        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
+        $this->importTrafficlightsTemplate($project);
         $this->configureTrafficlightsPluginForProject($project);
     }
 
@@ -59,46 +62,12 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder {
         $dbtables->updateFromFile(dirname(__FILE__).'/../../db/install.sql');
     }
 
-    public function importTrafficlightsTemplate() {
-        echo "Import Trafficlights XML Template\n";
+    public function importTrafficlightsTemplate(Project $project)
+    {
+        echo "Import Trafficlights XML Template into project";
 
-        $this->importTemplateInProject(self::PROJECT_TEST_MGMT_ID, 'tuleap_testmgmt_template.xml');
+        $this->importTemplateInProject($project->getId(), 'tuleap_testmgmt_template.xml');
 
         return $this;
-    }
-
-    /**
-     * @return PFUser
-     */
-    private function generateUser() {
-        $user = new PFUser();
-        $user->setUserName(self::USER_TESTER_NAME);
-        $user->setPassword(self::USER_TESTER_PASS);
-        $user->setStatus(self::USER_TESTER_STATUS);
-        $user->setLanguage($GLOBALS['Language']);
-        $this->user_manager->createAccount($user);
-
-        return $user;
-    }
-
-    public function generateProject() {
-        $this->setGlobalsForProjectCreation();
-
-        $user_test_rest_1 = $this->generateUser();
-
-        echo "Create Trafficlights Project\n";
-
-        $project = $this->createProject(
-            self::PROJECT_TEST_MGMT_SHORTNAME,
-            'Test-mgmt',
-            true,
-            array($user_test_rest_1),
-            array($user_test_rest_1),
-            array()
-        );
-
-        $this->unsetGlobalsForProjectCreation();
-
-        return $project;
     }
 }

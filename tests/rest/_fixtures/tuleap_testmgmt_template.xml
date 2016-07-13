@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project
+    unix-name="test-mgmt" full-name="Trafficlights" description="For test" access="public">
   <trackers>
     <tracker id="T805" parent_id="0" instantiate_for_new_projects="1">
       <name><![CDATA[Validation Campaign]]></name>
