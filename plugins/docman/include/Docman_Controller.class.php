@@ -956,7 +956,7 @@ class Docman_Controller extends Controler {
             }
             break;
         case 'confirmDelete':
-            if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
+            if ($this->userCannotDelete($user, $item)) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
                 $this->view = 'Details';
             } else {
@@ -1285,7 +1285,7 @@ class Docman_Controller extends Controler {
             }
             break;
         case 'delete':
-            if (!($this->userCanWrite($item->getId()) && $this->userCanWrite($item->getParentId()))) {
+            if ($this->userCannotDelete($user, $item)) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
                 $this->_set_deleteView_errorPerms();
             } else if ($this->request->exist('confirm')) {
@@ -1297,7 +1297,7 @@ class Docman_Controller extends Controler {
             break;
 
         case 'deleteVersion':
-            if (!($this->userCanWrite($item->getId()) && $this->userCanWrite($item->getParentId()))) {
+            if ($this->userCannotDelete($user, $item)) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
                 $this->_set_deleteView_errorPerms();
             } else if ($this->request->exist('confirm')) {
@@ -1811,5 +1811,22 @@ class Docman_Controller extends Controler {
 
     private function getMailBuilder() {
         return new MailBuilder(TemplateRendererFactory::build());
+    }
+
+    private function cannotDeleteBecauseNotSuperadmin(PFUser $user)
+    {
+        return (
+            $this->getProperty('only_siteadmin_can_delete')
+            && ! $user->isSuperUser()
+        );
+    }
+
+    private function userCannotDelete(PFUser $user, Docman_Item $item)
+    {
+        return (
+            $this->cannotDeleteBecauseNotSuperadmin($user)
+            || ! $this->userCanWrite($item->getId())
+            || ! $this->userCanWrite($item->getParentId())
+        );
     }
 }

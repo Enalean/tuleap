@@ -6,4 +6,4 @@ $docman_root = '/var/lib/codendi/docman';
 // Are embedded files allowed ?
 $embedded_are_allowed = true;
 
-?>
+$only_siteadmin_can_delete = false;
