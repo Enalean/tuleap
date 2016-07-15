@@ -84,3 +84,9 @@ plugin_svn_admin_hooks	comment	When committing, it is possible to enforce some r
 plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Force every commit to include a reference.
 plugin_svn_admin_hooks	label_allow_commit_message_changes	Allow commit message changes (svn propset --revprop -r X svn:log)
 plugin_svn_admin_hooks	submit	Save the rules
+
+plugin_svn	repository_delete	Delete
+plugin_svn_admin_repository_delete	comment	You are about to permanently delete the repository. This action cannot be undone.
+plugin_svn_admin_repository_delete	subtitle	Delete this repository
+plugin_svn_admin_repository_delete	button_delete	Delete this repository
+plugin_svn_admin_repository_delete	alert_message	Not yet implemented!
