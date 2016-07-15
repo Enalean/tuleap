@@ -1,3 +1,6 @@
+Version 2.26.111 - Tuleap 8.17
+    * story #9315: Use the permission manager object instead of private methods
+
 Version 2.26.110 - Tuleap 8.17
     * story #9315: Hide the trash icon when the option to prevent deletion is set
 
