@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,10 +40,9 @@ class Git_Driver_Gerrit_GerritDriverFactory {
      */
     public function getDriver(Git_RemoteServer_GerritServer $server) {
         if ($server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS) {
-            include_once '/usr/share/php-guzzle/guzzle.phar';
-            $class = 'Guzzle\Http\Client';
+            require_once '/usr/share/php/Guzzle/autoload.php';
             return new Git_Driver_GerritREST(
-                new $class('', array('ssl.certificate_authority' => 'system')),
+                new Guzzle\Http\Client('', array('ssl.certificate_authority' => 'system')),
                 $this->logger,
                 $server->getAuthType()
             );
