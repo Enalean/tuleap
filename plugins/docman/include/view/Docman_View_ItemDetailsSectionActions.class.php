@@ -36,9 +36,9 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     }
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : 'document';
+        $user               = $this->_controller->getUser();
 
         $content = '';
-        
         $content .= '<dl>';
         
         //{{{ New Version
@@ -79,7 +79,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
 
         //{{{ Delete
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
-        if (!$this->is_deleteable || !($this->_controller->userCanWrite($this->item->getid()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
+        if (! $this->is_deleteable || $this->_controller->userCannotDelete($user, $this->item)) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete_cannotdelete_'.$folder_or_document);
         } else {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 
