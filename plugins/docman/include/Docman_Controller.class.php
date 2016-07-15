@@ -1813,20 +1813,8 @@ class Docman_Controller extends Controler {
         return new MailBuilder(TemplateRendererFactory::build());
     }
 
-    private function cannotDeleteBecauseNotSuperadmin(PFUser $user)
-    {
-        return (
-            $this->getProperty('only_siteadmin_can_delete')
-            && ! $user->isSuperUser()
-        );
-    }
-
     private function userCannotDelete(PFUser $user, Docman_Item $item)
     {
-        return (
-            $this->cannotDeleteBecauseNotSuperadmin($user)
-            || ! $this->userCanWrite($item->getId())
-            || ! $this->userCanWrite($item->getParentId())
-        );
+        return ! $this->_getPermissionsManager()->userCanDelete($user, $item);
     }
 }
