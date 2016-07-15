@@ -1813,7 +1813,7 @@ class Docman_Controller extends Controler {
         return new MailBuilder(TemplateRendererFactory::build());
     }
 
-    private function userCannotDelete(PFUser $user, Docman_Item $item)
+    public function userCannotDelete(PFUser $user, Docman_Item $item)
     {
         return ! $this->_getPermissionsManager()->userCanDelete($user, $item);
     }
