@@ -746,6 +746,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function fetchSubmit($submitted_values = array())
     {
+        if (! $this->userCanSubmit()) {
+            return '';
+        }
+
         $purifier = Codendi_HTMLPurifier::instance();
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
