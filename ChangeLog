@@ -28,7 +28,7 @@ Version 8.17 (not released yet)
 	* referencealias_mediawiki: 0.8
 	* referencealias_svn: 0.6
 	* referencealias_tracker: 0.9
-	* svn: 0.62
+	* svn: 0.63
 	* fulltextsearch: 0.133
 	* frs: 0.17
 	* ldap: 3.103
