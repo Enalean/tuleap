@@ -31,6 +31,7 @@ use Tuleap\HudsonSvn\Job\Launcher;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Dao as SvnDao;
+use Tuleap\Svn\SvnLogger;
 
 class hudson_svnPlugin extends Plugin {
 
@@ -103,10 +104,32 @@ class hudson_svnPlugin extends Plugin {
         return TemplateRendererFactory::build()->getRenderer(HUDSON_SVN_BASE_DIR.'/templates');
     }
 
-    private function getRepositoryManager() {
+    private function getRepositoryManager()
+    {
         $dao = new SvnDao();
 
-        return new RepositoryManager($dao, $this->getProjectManager());
+        return new RepositoryManager(
+            $dao,
+            $this->getProjectManager(),
+            $this->getSvnAdmin(),
+            $this->getLogger(),
+            $this->getSystemCommand()
+        );
+    }
+
+    private function getSystemCommand()
+    {
+        return new System_Command();
+    }
+
+    private function getLogger()
+    {
+        return new SvnLogger();
+    }
+
+    private function getSvnAdmin()
+    {
+        return new SvnAdmin($this->getSystemCommand(), $this->getLogger());
     }
 
     private function getProjectManager() {

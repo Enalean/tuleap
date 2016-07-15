@@ -26,12 +26,15 @@ use Project;
 use SVN_Apache_SvnrootConf;
 use ForgeConfig;
 
-class Dao extends DataAccessObject {
-    public function searchByProject(Project $project) {
+class Dao extends DataAccessObject
+{
+    public function searchByProject(Project $project)
+    {
         $project_id = $this->da->escapeInt($project->getId());
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_svn_repositories
-                WHERE project_id=$project_id";
+                WHERE project_id=' . $project_id .'
+                AND repository_deletion_date IS NULL';
 
         return $this->retrieve($sql);
     }
@@ -57,7 +60,8 @@ class Dao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 
-    public function getListRepositoriesSqlFragment() {
+    public function getListRepositoriesSqlFragment()
+    {
         $auth_mod = $this->da->quoteSmart(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
         $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('sys_data_dir'));
 
@@ -70,7 +74,8 @@ class Dao extends DataAccessObject {
                   AND service.is_used = '1'
                   AND groups.status = 'A'
                   AND plugin_svn_repositories.project_id = groups.group_id
-                  AND service.short_name = 'plugin_svn'";
+                  AND service.short_name = 'plugin_svn'
+                  AND repository_deletion_date IS NOT NULL";
 
         return $sql;
     }
@@ -122,6 +127,20 @@ class Dao extends DataAccessObject {
         $sql .= " (repository_id, ". join($cols, ", ") . ")";
         $sql .= " VALUES ($id, " . join($vals, ", ") . ")";
         $sql .= " ON DUPLICATE KEY UPDATE " . join($update, ", ") . ";";
+
+        return $this->update($sql);
+    }
+
+    public function markAsDeleted($repository_id, $backup_path, $deletion_date)
+    {
+        $backup_path   = $this->da->quoteSmart($backup_path);
+        $repository_id = $this->da->escapeInt($repository_id);
+        $deletion_date = $this->da->quoteSmart($deletion_date);
+
+        $sql = "UPDATE plugin_svn_repositories SET
+                    repository_deletion_date = $deletion_date,
+                    backup_path = $backup_path
+                WHERE id = $repository_id";
 
         return $this->update($sql);
     }

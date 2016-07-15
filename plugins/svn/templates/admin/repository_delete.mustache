@@ -3,11 +3,15 @@
 
     <div class="tab-content">
         <h3>{{ subtitle }}</h3>
-        <p>{{ comment }}</p>
+        <p>{{ comment }} <b>{{ repository_name }}</b>. {{ comment_undone }}</p>
 
-        <p class="alert alert-warning">{{ alert_message }}</p>
-        <button type="button" class="btn btn-danger" disabled>
+        {{^ is_created }}<p class="alert alert-warning">{{ cannot_delete }}</p>{{/ is_created }}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-repository-delete" {{^ is_created }}disabled{{/ is_created }}>
             <i class="icon-trash"></i> {{ button }}
         </button>
     </div>
+</div>
+
+<div id="modal-repository-delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-repository-delete-title" aria-hidden="true">
+    {{> admin/modal_repository_delete }}
 </div>
