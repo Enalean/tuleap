@@ -128,13 +128,15 @@ class ArchivedeleteditemsPlugin extends Plugin
         $exec_res        = null;
 
         $destination_path = $archive_path.$archive_prefix.'_'.basename($source_path);
-        $logger->debug("Archiving                  : " . $source_path . " to " . $destination_path);
-        $logger->debug("Permissions of source      : " . $this->convertFilePermissionsToNumbers($source_path));
-        $logger->debug("Permissions of destination : " . $this->convertFilePermissionsToNumbers($archive_path));
-        $logger->debug("Owner of source            : " . $this->getGroupNameForFile($source_path));
-        $logger->debug("Owner of destination       : " . $this->getGroupNameForFile($destination_path));
 
         if (file_exists($source_path)) {
+
+            $logger->debug("Archiving                  : " . $source_path . " to " . $destination_path);
+            $logger->debug("Permissions of source      : " . $this->convertFilePermissionsToNumbers($source_path));
+            $logger->debug("Permissions of destination : " . $this->convertFilePermissionsToNumbers($archive_path));
+            $logger->debug("Owner of source            : " . $this->getGroupNameForFile($source_path));
+            $logger->debug("Owner of destination       : " . $this->getGroupNameForFile($destination_path));
+
             $cmd = $this->archiveScript." ".$source_path." " .$destination_path;
             $logger->debug($cmd);
 
