@@ -28,6 +28,9 @@ require_once 'common/project/ProjectManager.class.php';
 require_once 'Docman_ItemFactory.class.php';
 
 class Docman_PermissionsManager {
+
+    const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
+
     protected $groupId;
     protected $cache_access = array();
     protected $cache_read   = array();
@@ -43,6 +46,8 @@ class Docman_PermissionsManager {
 
     private static $instance = array();
 
+    private $plugin;
+
     /**
      * Constructor, private to enforce singleton (use instance() instead)
      *
@@ -52,6 +57,7 @@ class Docman_PermissionsManager {
      */
     private function __construct($groupId) {
         $this->groupId = $groupId;
+        $this->plugin  = PluginManager::instance()->getPluginByName(docmanPlugin::SERVICE_SHORTNAME);
     }
 
     /**
@@ -201,6 +207,23 @@ class Docman_PermissionsManager {
             $this->_setCanWrite($user->getId(), $item_id, $canWrite);
         }
         return $this->cache_write[$user->getId()][$item_id];
+    }
+
+    public function userCanDelete(PFUser $user, Docman_Item $item)
+    {
+        return (
+            ! $this->cannotDeleteBecauseNotSuperadmin($user)
+            && $this->userCanWrite($user, $item->getId())
+            && $this->userCanWrite($user, $item->getParentId())
+        );
+    }
+
+    private function cannotDeleteBecauseNotSuperadmin(PFUser $user)
+    {
+        return (
+            $this->plugin->getPluginInfo()->getPropertyValueForName(self::PLUGIN_OPTION_DELETE)
+            && ! $user->isSuperUser()
+        );
     }
 
     /**

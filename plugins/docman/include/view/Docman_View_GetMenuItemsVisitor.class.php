@@ -40,7 +40,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
             $this->actions['canMove'] = true;
             $this->actions['canCut'] = true;
         }
-        if(!$this->if->isRoot($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
+        if(!$this->if->isRoot($item) && $this->dPm->userCanDelete($this->user, $item)) {
             $this->actions['canDelete'] = true;
         }
 
