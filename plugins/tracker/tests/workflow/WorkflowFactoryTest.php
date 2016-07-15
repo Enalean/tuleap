@@ -39,6 +39,8 @@ class WorkflowFactoryTest extends TuleapTestCase {
         PermissionsManager::setInstance(mock('PermissionsManager'));
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+
+        $this->project = mock('Project');
     }
 
     public function tearDown() {
@@ -71,9 +73,9 @@ class WorkflowFactoryTest extends TuleapTestCase {
         
         stub($third_transition)->getPostActions()->returns(array($date_post_action));
 
-        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[0], $mapping)->at(0)->returns(mock('Transition'));
-        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[1], $mapping)->at(1)->returns(mock('Transition'));
-        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[2], $mapping)->at(2)->returns($third_transition);
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[0], $mapping, $this->project)->at(0)->returns(mock('Transition'));
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[1], $mapping, $this->project)->at(1)->returns(mock('Transition'));
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[2], $mapping, $this->project)->at(2)->returns($third_transition);
 
         $workflow_factory   = new WorkflowFactory(
             $transition_factory,
@@ -83,7 +85,7 @@ class WorkflowFactoryTest extends TuleapTestCase {
             mock('WorkflowBackendLogger')
         );
 
-        $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker);
+        $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
 
         $this->assertEqual($workflow->getIsUsed(), 1);
         $this->assertEqual($workflow->getFieldId(), 111);

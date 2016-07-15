@@ -21,15 +21,30 @@
 class Workflow_Transition_Condition_Permissions_Factory {
 
     /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+
+    public function __construct(UGroupManager $ugroup_manager)
+    {
+        $this->ugroup_manager = $ugroup_manager;
+    }
+
+    /**
      * @return Workflow_Transition_Condition_Permissions
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition, Project $project) {
         $authorized_ugroups_keyname = array();
         if (isset($xml->permissions)) {
             foreach ($xml->permissions->permission as $perm) {
                 $ugroup = (string)$perm['ugroup'];
                 if (isset($GLOBALS['UGROUPS'][$ugroup])) {
                     $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
+                } else {
+                    $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup);
+                    if ($ugroup) {
+                        $authorized_ugroups_keyname[] = $ugroup->getId();
+                    }
                 }
             }
         }
