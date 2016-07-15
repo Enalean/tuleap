@@ -1,3 +1,6 @@
+Version 2.26.110 - Tuleap 8.17
+    * story #9315: Hide the trash icon when the option to prevent deletion is set
+
 Version 2.26.109 - Tuleap 8.17
     * story #9315: Prevent deletion if user is not siteadmin
 
