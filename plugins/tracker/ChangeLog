@@ -1,3 +1,6 @@
+Version 5.961 - Tuleap 8.17
+    * story #9090: Error on permission - If a computed field isn't submitable it shouldn't be displayed in modals
+
 Version 5.960 - Tuleap 8.17
     * Fix leaking css styles
 
