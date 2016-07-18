@@ -1030,20 +1030,43 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         $is_submission = null
     ) {
-        $is_valid = true;
         $hasPermission = $this->userCanUpdate();
         if ($is_submission) {
             $hasPermission = $this->userCanSubmit();
         }
         if ($last_changeset_value === null && ( $this->isAnEmptyValue($submitted_value) || $this->isAnEmptyArray($submitted_value)) && $hasPermission && $this->isRequired()) {
-            $is_valid = false;
             $this->setHasErrors(true);
 
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+            return false;
         } else if ($hasPermission) {
-            $is_valid = $this->isValidRegardingRequiredProperty($artifact, $submitted_value) && $this->validateField($artifact, $submitted_value);
+            if (! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
+                && ! isset($submitted_value[self::FIELD_VALUE_MANUAL])
+            ) {
+                return true;
+            }
+            if (! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
+                || ! (
+                    isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
+                    && $submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
+                )
+            ) {
+                return $this->isValidRegardingRequiredProperty($artifact, $submitted_value)
+                    && $this->validateField($artifact, $submitted_value);
+            }
         }
-        return $is_valid;
+
+        return true;
+    }
+
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $submitted_value)
+    {
+        if ($this->isAnEmptyArray($submitted_value)) {
+            $this->addRequiredError();
+            return false;
+        }
+
+        return true;
     }
 
     private function isAnEmptyArray($value)

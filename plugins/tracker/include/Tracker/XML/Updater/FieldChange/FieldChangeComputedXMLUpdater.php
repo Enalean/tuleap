@@ -36,6 +36,8 @@ class FieldChangeComputedXMLUpdater implements Tracker_XML_Updater_FieldChange_F
         if (isset($submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL]) &&
                 $submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL] !== '') {
             $field_change_xml->manual_value = (float) $submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL];
+        } else {
+            unset($field_change_xml->manual_value);
         }
 
         $field_change_xml->is_autocomputed = '0';
