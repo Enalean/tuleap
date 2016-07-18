@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-    unix-name="public-member" full-name="Public member" description="For test" access="public">
+    unix-name="public-incl-restricted" full-name="Public Incl Restricted Project" description="For test" access="unrestricted">
     <long-description>A test project</long-description>
     <services>
     </services>

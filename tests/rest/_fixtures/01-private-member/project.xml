@@ -11,6 +11,7 @@
                 <member format="username">rest_api_tester_1</member>
                 <member format="username">rest_api_tester_2</member>
                 <member format="username">rest_api_tester_3</member>
+                <member format="username">rest_api_restricted_1</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
@@ -27,6 +28,14 @@
             <members>
                 <member format="username">rest_api_tester_1</member>
                 <member format="username">rest_api_tester_2</member>
+            </members>
+        </ugroup>
+        <ugroup name="developers" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_5</member>
+                <member format="username">rest_api_restricted_1</member>
+                <member format="username">rest_api_restricted_2</member>
             </members>
         </ugroup>
     </ugroups>

@@ -26,6 +26,16 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class UsersTest extends RestBase {
 
+    /** @var REST_TestDataBuilderNG */
+    private $data_builder;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->data_builder = new REST_TestDataBuilderNG();
+        $this->data_builder->setForgeToAnonymous();
+    }
+
     public function testGetIdAsAnonymousHasMinimalInformation() {
         $response = $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_1_ID)->send();
         $this->assertEquals($response->getStatusCode(), 200);
@@ -132,12 +142,172 @@ class UsersTest extends RestBase {
         $this->assertCount(3, $json);
     }
 
+    public function testInRestrictedForgeThatActiveProjectMemberIsMemberOfStaticUgroup() {
+        $this->data_builder->setForgeToRestricted();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+    public function testInRestrictedForgeThatRestrictedProjectMemberIsMemberOfStaticUgroup() {
+        $this->data_builder->setForgeToRestricted();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+    public function testInRestrictedForgeThatRestrictedNotProjectMemberIsOnlyMemberOfStaticUgroupInPublicInclRestricted() {
+        $this->data_builder->setForgeToRestricted();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_RESTRICTED_2_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+    public function testInRestrictedForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup() {
+        $this->data_builder->setForgeToRestricted();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_4_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+    public function testInRestrictedForgeThatActiveNotProjectMemberIsMemberOfStaticUgroupExceptPrivateProjects() {
+        $this->data_builder->setForgeToRestricted();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_5_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+    public function testInAnonymousForgeThatActiveProjectMemberIsMemberOfStaticUgroup() {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+    }
+
+
+    public function testInAnonymousForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup() {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_4_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+    }
+
+    public function testInAnonymousForgeThatActiveNotProjectMemberIsMemberOfStaticUgroupExceptPrivateProjects() {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_5_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+    }
+
+    public function testInRegularForgeThatActiveProjectMemberIsMemberOfStaticUgroup() {
+        $this->data_builder->setForgeToRegular();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+
+    public function testInRegularForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup() {
+        $this->data_builder->setForgeToRegular();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_4_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
+    public function testInRegularForgeThatActiveNotProjectMemberIsMemberOfStaticUgroupExceptPrivateProjects() {
+        $this->data_builder->setForgeToRegular();
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_5_ID.'/membership')
+        );
+
+        $ugroups = $response->json();
+        $this->assertNotContains('ug_'. REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
+        $this->assertContains('ug_'. REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
+
+        $this->data_builder->setForgeToAnonymous();
+    }
+
     public function testGetUsersWithMatching() {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users?query=rest_api_tester&limit=10'));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $json = $response->json();
-        $this->assertCount(4, $json);
+        $this->assertCount(5, $json);
     }
 
     public function testGetUserWithExactSearch() {

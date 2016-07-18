@@ -10,6 +10,52 @@ if [ -z "$HTTPD_DAEMON" ]; then
     HTTPD_DAEMON=httpd
 fi
 
+setup_nss() {
+    echo "Installing NSS configuration files..."
+    cat /usr/share/tuleap/src/etc/libnss-mysql.cfg.dist | \
+	sed \
+            -e "s/%sys_dbhost%/localhost/" \
+            -e "s/%sys_dbname%/tuleap/" \
+            -e "s/%sys_dbuser%/tuleapadm/" \
+            -e "s/%sys_dbauth_passwd%/welcome0/" \
+        > /etc/libnss-mysql.cfg
+
+    cat /usr/share/tuleap/src/etc/libnss-mysql-root.cfg.dist | \
+	sed \
+            -e "s/%sys_dbauth_passwd%/welcome0/" \
+        > /etc/libnss-mysql-root.cfg
+
+
+    chown root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
+    chmod 644 /etc/libnss-mysql.cfg
+    chmod 600 /etc/libnss-mysql-root.cfg
+
+    # Update nsswitch.conf to use libnss-mysql
+    if [ -f "/etc/nsswitch.conf" ]; then
+	# passwd
+	grep ^passwd  /etc/nsswitch.conf | grep -q mysql
+	if [ $? -ne 0 ]; then
+	    perl -i'.orig' -p -e "s/^passwd(.*)/passwd\1 mysql/g" /etc/nsswitch.conf
+	fi
+
+	# shadow
+	grep ^shadow  /etc/nsswitch.conf | grep -q mysql
+	if [ $? -ne 0 ]; then
+	    perl -i -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
+	fi
+
+	# group
+	grep ^group  /etc/nsswitch.conf | grep -q mysql
+	if [ $? -ne 0 ]; then
+	    perl -i -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
+	fi
+    else
+	echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
+    fi
+
+    service nscd restart
+}
+
 setup_apache() {
     echo "Setup $HTTPD_DAEMON"
     case "$HTTPD_DAEMON" in
@@ -94,6 +140,12 @@ setup_database() {
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-nonempty' INTO TABLE wiki_nonempty"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-version' INTO TABLE wiki_version"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-recent' INTO TABLE wiki_recent"
+
+    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'localhost' identified by '$MYSQL_PASSWORD';"
+    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'localhost';"
+    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'localhost';"
+    mysql -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'localhost';"
+    mysql -e "FLUSH PRIVILEGES;"
 }
 
 load_project() {
@@ -118,6 +170,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/05-pbi
     load_project /usr/share/tuleap/tests/rest/_fixtures/06-dragndrop
     load_project /usr/share/tuleap/tests/rest/_fixtures/07-computedfield
+    load_project /usr/share/tuleap/tests/rest/_fixtures/08-public-including-restricted
 
     echo "Load initial data"
     php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php ng
@@ -127,4 +180,5 @@ setup_tuleap
 setup_fpm
 setup_apache
 setup_database
+setup_nss
 seed_data

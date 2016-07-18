@@ -37,7 +37,7 @@ class TestDataBuilder {
     const TEST_USER_1_REALNAME    = 'Test User 1';
     const TEST_USER_1_DISPLAYNAME = 'Test User 1 (rest_api_tester_1)';
     const TEST_USER_1_PASS        = 'welcome0';
-    const TEST_USER_1_EMAIL       = 'test_user_1@myzupermail.com';
+    const TEST_USER_1_EMAIL       = 'test_user_1@example.com';
     const TEST_USER_1_LDAPID      = 'tester1';
     const TEST_USER_1_STATUS      = 'A';
 
@@ -46,14 +46,35 @@ class TestDataBuilder {
     const TEST_USER_2_DISPLAYNAME = ' (rest_api_tester_2)';
     const TEST_USER_2_PASS        = 'welcome0';
     const TEST_USER_2_STATUS      = 'A';
-    const TEST_USER_2_EMAIL       = 'test_user_2@myzupermail.com';
+    const TEST_USER_2_EMAIL       = 'test_user_2@example.com';
 
     const TEST_USER_3_ID          = 104;
     const TEST_USER_3_NAME        = 'rest_api_tester_3';
     const TEST_USER_3_DISPLAYNAME = ' (rest_api_tester_3)';
     const TEST_USER_3_PASS        = 'welcome0';
     const TEST_USER_3_STATUS      = 'A';
-    const TEST_USER_3_EMAIL       = 'test_user_3@myzupermail.com';
+    const TEST_USER_3_EMAIL       = 'test_user_3@example.com';
+
+    const TEST_USER_5_ID          = 106;
+    const TEST_USER_5_NAME        = 'rest_api_tester_5';
+    const TEST_USER_5_DISPLAYNAME = ' (rest_api_tester_5)';
+    const TEST_USER_5_PASS        = 'welcome0';
+    const TEST_USER_5_STATUS      = 'A';
+    const TEST_USER_5_EMAIL       = 'test_user_5@example.com';
+
+    const TEST_USER_RESTRICTED_1_ID          = 107;
+    const TEST_USER_RESTRICTED_1_NAME        = 'rest_api_restricted_1';
+    const TEST_USER_RESTRICTED_1_DISPLAYNAME = ' (rest_api_restricted_1)';
+    const TEST_USER_RESTRICTED_1_PASS        = 'welcome0';
+    const TEST_USER_RESTRICTED_1_STATUS      = 'R';
+    const TEST_USER_RESTRICTED_1_EMAIL       = 'rest_api_restricted_1@example.com';
+
+    const TEST_USER_RESTRICTED_2_ID          = 108;
+    const TEST_USER_RESTRICTED_2_NAME        = 'rest_api_restricted_2';
+    const TEST_USER_RESTRICTED_2_DISPLAYNAME = ' (rest_api_restricted_2)';
+    const TEST_USER_RESTRICTED_2_PASS        = 'welcome0';
+    const TEST_USER_RESTRICTED_2_STATUS      = 'R';
+    const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
     const ADMIN_PROJECT_ID          = 100;
     const PROJECT_PRIVATE_MEMBER_ID = 101;
@@ -75,6 +96,15 @@ class TestDataBuilder {
 
     const STATIC_UGROUP_2_ID    = 102;
     const STATIC_UGROUP_2_LABEL = 'static_ugroup_2';
+
+    const STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID    = 103;
+    const STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL = 'developers';
+
+    const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID    = 104;
+    const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_LABEL = 'developers';
+
+    const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID    = 105;
+    const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_LABEL = 'developers';
 
     const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID        = 3;
     const DYNAMIC_UGROUP_PROJECT_MEMBERS_LABEL     = 'Project members';
@@ -109,6 +139,9 @@ class TestDataBuilder {
      */
     protected $ugroup_duplicator;
 
+    /** @var ConfigDao */
+    private $config_dao;
+
     public function __construct()
     {
         $this->project_manager      = ProjectManager::instance();
@@ -131,9 +164,25 @@ class TestDataBuilder {
             $this->ugroup_duplicator,
             $send_notifications
         );
+        $this->config_dao = new ConfigDao();
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['sys_lf'] = '\n';
+    }
+
+    public function setForgeToRestricted()
+    {
+        $this->config_dao->save(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+    }
+
+    public function setForgeToAnonymous()
+    {
+        $this->config_dao->save(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+    }
+
+    public function setForgeToRegular()
+    {
+        $this->config_dao->save(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
     }
 
     public function activateDebug() {
