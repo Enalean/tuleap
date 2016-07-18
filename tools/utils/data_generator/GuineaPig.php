@@ -113,8 +113,8 @@ class GuineaPig {
     }
 
     private function restSetUp() {
-        if (is_file('/usr/share/php-guzzle/guzzle.phar')) {
-            include_once '/usr/share/php-guzzle/guzzle.phar';
+        if (is_file('/usr/share/php/Guzzle/autoload.php')) {
+            include_once '/usr/share/php/Guzzle/autoload.php';
         } elseif (is_file(dirname(__FILE__).'/../../../tests/lib/autoload.php')) {
             include_once dirname(__FILE__).'/../../../tests/lib/autoload.php';
         } else {

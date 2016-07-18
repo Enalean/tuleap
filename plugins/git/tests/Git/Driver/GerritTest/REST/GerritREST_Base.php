@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once '/usr/share/php-guzzle/guzzle.phar';
+require_once '/usr/share/php/Guzzle/autoload.php';
 
 require_once dirname(__FILE__).'/../GerritTestInterfaces.php';
 
