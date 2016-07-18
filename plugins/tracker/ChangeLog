@@ -1,3 +1,9 @@
+Version 5.962 - Tuleap 8.17
+    * request #9328 Tracker XML import deal with static ugroups for workflow transitions
+
+
+
+
 Version 5.961 - Tuleap 8.17
     * story #9090: Error on permission - If a computed field isn't submitable it shouldn't be displayed in modals
 
