@@ -20,7 +20,7 @@ Version 8.17 (not released yet)
 	* request #9314: Non aligned behavior between UI and ssh in Git
 
 	== Plugins ==
-	* git: 4.236
+	* git: 4.237
 	* tracker: 5.962
 	* referencealias_core: 0.11
 	* agiledashboard: 1.393
