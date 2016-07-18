@@ -1,3 +1,7 @@
+Version 8.16-6 (Monday, July 18th 2016)
+	== Bug Fix ==
+	* request #9326: Footer links to the REST API documentation are broken
+
 Version 8.16-5 (Monday, July 11th 2016)
 	== Bug Fix ==
 	* request #9307: Computed fields have to take into account numeric values from selectboxes
