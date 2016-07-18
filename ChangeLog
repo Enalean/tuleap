@@ -36,6 +36,7 @@ Version 8.17 (not released yet)
 	* frs: 0.17
 	* ldap: 3.103
 	* docman: 2.26.112
+	* archivedeleteditems: 0.8
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
