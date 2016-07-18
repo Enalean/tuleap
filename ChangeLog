@@ -16,8 +16,11 @@ Version 8.17 (not released yet)
 	* story #9224: Create a dedicated object to deal with ugroup duplication
 	* request #9279: Pre commit hooks are compatible with OS X
 
+	== Security ==
+	* request #9314: Non aligned behavior between UI and ssh in Git
+
 	== Plugins ==
-	* git: 4.234
+	* git: 4.235
 	* tracker: 5.961
 	* referencealias_core: 0.11
 	* agiledashboard: 1.393
