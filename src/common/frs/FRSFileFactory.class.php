@@ -34,7 +34,7 @@ class FRSFileFactory {
     protected $fileforge;
 
     function FRSFileFactory() {
-        $this->fileforge = $GLOBALS['codendi_bin_prefix'] . "/fileforge";
+        $this->fileforge = ForgeConfig::get('codendi_bin_prefix') . "/fileforge";
     }
 
     public function setFileForge($fileforge) {

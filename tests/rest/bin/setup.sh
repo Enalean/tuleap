@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -172,8 +172,19 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/07-computedfield
     load_project /usr/share/tuleap/tests/rest/_fixtures/08-public-including-restricted
 
+    seed_plugin_data
+
     echo "Load initial data"
     php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php ng
+}
+
+seed_plugin_data() {
+    for fixture_dir in $(find /usr/share/tuleap/plugins/*/tests/rest/_fixtures/* -maxdepth 1 -type d)
+    do
+        if [ -f "$fixture_dir/project.xml" ] && [ -f "$fixture_dir/users.xml" ]  && [ -f "$fixture_dir/user_map.csv" ]; then
+            load_project "$fixture_dir"
+        fi
+    done
 }
 
 setup_tuleap
