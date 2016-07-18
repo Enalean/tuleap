@@ -1,3 +1,6 @@
+Version 4.236 - Tuleap 8.17
+    * Add a timeout to expensive operations in the post-receive-email Git hook
+
 Version 4.235 - Tuleap 8.17
     * request #9314: Non aligned behavior between UI and ssh in Git
 
