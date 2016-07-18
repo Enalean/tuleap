@@ -339,7 +339,7 @@ class WorkflowFactory {
      *
      * @return Workflow The workflow object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Tracker $tracker) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Tracker $tracker, Project $project) {
 
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
@@ -348,7 +348,7 @@ class WorkflowFactory {
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
             $tf = $this->transition_factory;
-            $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping);
+            $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping, $project);
         }
 
         $workflow = new Workflow(

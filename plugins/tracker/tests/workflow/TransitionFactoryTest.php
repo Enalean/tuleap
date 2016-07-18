@@ -42,6 +42,8 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
                 array('getPostActionFactory'),
                 array($this->condition_factory));
         stub($this->factory)->getPostActionFactory()->returns($this->postaction_factory);
+
+        $this->project = mock('Project');
     }
 }
 
@@ -164,7 +166,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
         ');
 
         expect($this->postaction_factory)->getInstanceFromXML($xml->postactions, $this->xml_mapping, '*')->once();
-        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
+        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->project);
     }
 
     public function itReconsititutesPermissions() {
@@ -180,10 +182,8 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
         ');
 
         expect($this->condition_factory)->getAllInstancesFromXML()->once();
-        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
+        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->project);
 
         $this->assertIsA($transition->getConditions(), 'Workflow_Transition_ConditionsCollection');
     }
 }
-
-?>

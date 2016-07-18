@@ -158,7 +158,7 @@ class TransitionFactory {
      *
      * @return Transition The transition object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Project $project) {
 
         $from = null;
         if ((string)$xml->from_id['REF'] != 'null') {
@@ -174,7 +174,7 @@ class TransitionFactory {
         $transition->setPostActions($postactions);
 
         // Conditions on transition
-        $transition->setConditions($this->condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition));
+        $transition->setConditions($this->condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition, $project));
 
         return $transition;
     }

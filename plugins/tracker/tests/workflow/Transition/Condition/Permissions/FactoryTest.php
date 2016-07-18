@@ -33,8 +33,11 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
 
+        $this->ugroup_manager = mock('UgroupManager');
+        $this->project        = mock('Project');
+
         $this->transition          = stub('Transition')->getId()->returns(123);
-        $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory();
+        $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory($this->ugroup_manager);
     }
 
     public function tearDown() {
@@ -49,7 +52,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
                 <permission ugroup="UGROUP_PROJECT_ADMIN"/>
             </permissions>');
 
-        $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
+        $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition, $this->project);
 
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
     }
@@ -64,7 +67,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
             </condition>
         ');
 
-        $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
+        $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition, $this->project);
 
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
     }

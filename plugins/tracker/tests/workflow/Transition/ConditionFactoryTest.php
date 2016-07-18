@@ -38,6 +38,8 @@ class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
             $this->permissions_factory,
             $this->fieldnotempty_factory
         );
+
+        $this->project = mock('Project');
     }
 }
 
@@ -61,7 +63,7 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         parent::setUp();
         PermissionsManager::setInstance(mock('PermissionsManager'));
 
-        $this->transition            = mock('Transition');
+        $this->transition = mock('Transition');
 
         $this->legacy_permissions_xml = new SimpleXMLElement('
             <transition>
@@ -72,7 +74,7 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
             </transition>
         ');
         stub($this->permissions_factory)
-            ->getInstanceFromXML($this->legacy_permissions_xml->permissions, $this->xml_mapping, $this->transition)
+            ->getInstanceFromXML($this->legacy_permissions_xml->permissions, $this->xml_mapping, $this->transition, $this->project)
             ->returns(mock('Workflow_Transition_Condition_Permissions'));
 
         $this->from_5_7_permissions_xml = new SimpleXMLElement('
@@ -88,7 +90,7 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
             </transition>
         ');
         stub($this->permissions_factory)
-            ->getInstanceFromXML($this->from_5_7_permissions_xml->conditions->condition, $this->xml_mapping, $this->transition)
+            ->getInstanceFromXML($this->from_5_7_permissions_xml->conditions->condition, $this->xml_mapping, $this->transition, $this->project)
             ->returns(mock('Workflow_Transition_Condition_Permissions'));
     }
 
@@ -98,13 +100,23 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
     }
 
     public function itReconstitutesLegacyPermissions() {
-        $conditions = $this->condition_factory->getAllInstancesFromXML($this->legacy_permissions_xml, $this->xml_mapping, $this->transition);
+        $conditions = $this->condition_factory->getAllInstancesFromXML(
+            $this->legacy_permissions_xml,
+            $this->xml_mapping,
+            $this->transition,
+            $this->project
+        );
 
         $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
     }
 
     public function itReconstitutesPermissions() {
-        $conditions = $this->condition_factory->getAllInstancesFromXML($this->from_5_7_permissions_xml, $this->xml_mapping, $this->transition);
+        $conditions = $this->condition_factory->getAllInstancesFromXML(
+            $this->from_5_7_permissions_xml,
+            $this->xml_mapping,
+            $this->transition,
+            $this->project
+        );
 
         $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
     }
@@ -123,7 +135,12 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         $condition = mock('Workflow_Transition_Condition_FieldNotEmpty');
         stub($this->fieldnotempty_factory)->getInstanceFromXML($xml->conditions->condition, '*', '*')->returns($condition);
 
-        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
+        $conditions = $this->condition_factory->getAllInstancesFromXML(
+            $xml,
+            $this->xml_mapping,
+            $this->transition,
+            $this->project
+        );
 
         $this->assertEqual($conditions[0], $condition);
     }
@@ -139,7 +156,12 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
 
         stub($this->fieldnotempty_factory)->getInstanceFromXML()->returns(null);
 
-        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
+        $conditions = $this->condition_factory->getAllInstancesFromXML(
+            $xml,
+            $this->xml_mapping,
+            $this->transition,
+            $this->project
+        );
 
         $this->assertEqual($conditions, new Workflow_Transition_ConditionsCollection());
     }
@@ -155,4 +177,3 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         $this->condition_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
-?>

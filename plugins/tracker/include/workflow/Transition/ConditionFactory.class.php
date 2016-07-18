@@ -44,7 +44,7 @@ class Workflow_Transition_ConditionFactory {
      */
     public static function build() {
         return new Workflow_Transition_ConditionFactory(
-            new Workflow_Transition_Condition_Permissions_Factory(),
+            new Workflow_Transition_Condition_Permissions_Factory(new UGroupManager()),
             new Workflow_Transition_Condition_FieldNotEmpty_Factory(
                 new Workflow_Transition_Condition_FieldNotEmpty_Dao(),
                 Tracker_FormElementFactory::instance()
@@ -97,15 +97,25 @@ class Workflow_Transition_ConditionFactory {
      *
      * @return Workflow_Transition_ConditionsCollection
      */
-    public function getAllInstancesFromXML($xml, &$xmlMapping, Transition $transition) {
+    public function getAllInstancesFromXML($xml, &$xmlMapping, Transition $transition, Project $project) {
         $conditions = new Workflow_Transition_ConditionsCollection();
         if ($this->isLegacyXML($xml)) {
             if ($xml->permissions) {
-                $conditions->add($this->permissions_factory->getInstanceFromXML($xml->permissions, $xmlMapping, $transition));
+                $conditions->add($this->permissions_factory->getInstanceFromXML(
+                    $xml->permissions,
+                    $xmlMapping,
+                    $transition,
+                    $project
+                ));
             }
         } else if ($xml->conditions) {
             foreach ($xml->conditions->condition as $xml_condition) {
-                $conditions->add($this->getInstanceFromXML($xml_condition, $xmlMapping, $transition));
+                $conditions->add($this->getInstanceFromXML(
+                    $xml_condition,
+                    $xmlMapping,
+                    $transition,
+                    $project
+                ));
             }
         }
         return $conditions;
@@ -119,13 +129,13 @@ class Workflow_Transition_ConditionFactory {
      *
      * @return Workflow_Transition_Condition The condition object, or null if error
      */
-    private function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+    private function getInstanceFromXML($xml, &$xmlMapping, Transition $transition, Project $project) {
         $type      = (string)$xml['type'];
         $condition = null;
         switch ($type) {
             case 'perms':
                 if ($xml->permissions) {
-                    $condition = $this->permissions_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
+                    $condition = $this->permissions_factory->getInstanceFromXML($xml, $xmlMapping, $transition, $project);
                 }
                 break;
             case 'notempty':

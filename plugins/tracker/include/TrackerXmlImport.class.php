@@ -616,7 +616,12 @@ class TrackerXmlImport {
 
         //set workflow
         if (isset($xml->workflow->field_id)) {
-            $tracker->workflow= $this->workflow_factory->getInstanceFromXML($xml->workflow, $this->xmlFieldsMapping, $tracker);
+            $tracker->workflow= $this->workflow_factory->getInstanceFromXML(
+                $xml->workflow,
+                $this->xmlFieldsMapping,
+                $tracker,
+                $project
+            );
         }
 
         //set permissions
