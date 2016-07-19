@@ -768,12 +768,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($this->userCanRead()) {
             if ($this->userCanUpdate()) {
                 $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
-                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-submit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
                 $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .
                     '" class="tracker_formelement_label">'. $purifier->purify($this->getLabel())  . $required .'</label>';
             }
         }
-        $html .= '<span class="auto-computed">'. $this->getNoValueLabel() .' (' .
+        $html .= '<span class="auto-computed auto-computed-for-submit">'. $this->getNoValueLabel() .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
 
         $html .= '<div class="input-append add-field" data-field-id="'. $this->getId() .'">';
