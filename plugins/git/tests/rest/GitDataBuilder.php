@@ -61,7 +61,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
      */
     private $database_init;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->system_event_manager = SystemEventManager::instance();
@@ -88,7 +89,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $this->project_manager
         );
 
-        $project = $this->generateProject();
+        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_GIT_SHORTNAME);
         $this->activateGitService($project);
 
         $repository = $this->generateGitRepository();
