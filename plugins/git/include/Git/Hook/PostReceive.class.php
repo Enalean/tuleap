@@ -33,6 +33,9 @@ class Git_Hook_PostReceive {
     const DEFAULT_MAIL_SUBJECT = 'Git notification';
     const DEFAULT_FROM         = 'git';
 
+    const TIMEOUT_EXIT_CODE    = 124;
+    const INITIAL_COMMIT       = '0000000000000000000000000000000000000000';
+
     /** @var Git_Hook_LogAnalyzer */
     private $log_analyzer;
 
@@ -126,10 +129,11 @@ class Git_Hook_PostReceive {
      * @return bool
      */
     private function sendMail(GitRepository $repository, MailBuilder $mail_builder, $oldrev, $newrev, $refname) {
-        $mail_raw_output = array();
+        $mail_raw_output  = array();
+        $exit_status_code = 0;
         exec('GIT_DIR=' . escapeshellarg($repository->getFullPath()) .
             ' /usr/share/codendi/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .
-            escapeshellarg($newrev) . ' ' . escapeshellarg($refname), $mail_raw_output);
+            escapeshellarg($newrev) . ' ' . escapeshellarg($refname), $mail_raw_output, $exit_status_code);
 
         $subject       = isset($mail_raw_output[0]) ? $mail_raw_output[0] : self::DEFAULT_MAIL_SUBJECT;
         $mail_enhancer = new MailEnhancer();
@@ -140,17 +144,31 @@ class Git_Hook_PostReceive {
         $access_link   = $repository->getDiffLink($this->repository_url_manager, $newrev);
         $notification  = new Notification($repository->getNotifiedMails(), $subject, '', $body, $access_link, 'Git');
 
+        if ($exit_status_code === self::TIMEOUT_EXIT_CODE) {
+            $this->warnSiteAdministratorOfAMisuseOfAGitRepo($repository, $oldrev, $refname);
+        }
+
         return $mail_builder->buildAndSendEmail($repository->getProject(), $notification, $mail_enhancer);
     }
 
     private function setFrom(MailEnhancer $mail_enhancer) {
+        $email_domain = $this->getEmailDomain();
+
+        $mail_enhancer->addHeader('From', self::DEFAULT_FROM . '@' . $email_domain);
+    }
+
+    /**
+     * @return string
+     */
+    private function getEmailDomain()
+    {
         $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
         if (! $email_domain) {
             $email_domain = ForgeConfig::get('sys_default_domain');
         }
 
-        $mail_enhancer->addHeader('From', self::DEFAULT_FROM . '@' . $email_domain);
+        return $email_domain;
     }
 
     private function addAdditionalMailHeaders(MailEnhancer $mail_enhancer, $mail_raw_output) {
@@ -174,6 +192,43 @@ class Git_Hook_PostReceive {
     private function processGitWebhooks(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
         return $this->webhook_request_sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
+    }
+
+
+    private function warnSiteAdministratorOfAMisuseOfAGitRepo(
+        GitRepository $repository,
+        $oldrev,
+        $refname
+    ) {
+        /*
+         * We do not want to warn the site administrator when it is the first push in the repo.
+         * It is not uncommon to have a large first push (copy of an existing repo for example).
+         */
+        if ($this->isInitialRevision($oldrev)) {
+            return;
+        }
+
+        $repository_name = $repository->getName();
+        $project         = $repository->getProject();
+        $project_name    = $project->getUnixName();
+        $email_domain    = $this->getEmailDomain();
+        $mail            = new Codendi_Mail();
+        $mail->setFrom(self::DEFAULT_FROM . '@' . $email_domain);
+        $mail->setTo(ForgeConfig::get('sys_email_admin'));
+        $mail->setSubject("Potential misuse of Git detected in the repository $repository_name of project $project_name");
+        $mail->setBodyText(
+            "A recent push in $repository_name on the reference $refname has reached a timeout. " .
+            "You should inspect the repository."
+        );
+        $mail->send();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isInitialRevision($revision)
+    {
+        return $revision === self::INITIAL_COMMIT;
     }
 
 }
