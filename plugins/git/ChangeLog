@@ -1,3 +1,6 @@
+Version 4.238 - Tuleap 8.17
+    * story #9090: Git project import should use XML import
+
 Version 4.237 - Tuleap 8.17
     * request #9018: On a fresh Tuleap installation, php-guzzle dependency is not installed
 
