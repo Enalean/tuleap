@@ -41,6 +41,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
+use Tuleap\Git\Repository\DescriptionUpdater;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1203,6 +1204,11 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_ProjectCreatorStatus($dao);
     }
 
+    private function getDescriptionUpdater()
+    {
+        return new DescriptionUpdater(new ProjectHistoryDao(), $this->getGitSystemEventManager());
+    }
+
     private function getGitController() {
         $gerrit_server_factory = $this->getGerritServerFactory();
         return new Git(
@@ -1239,7 +1245,8 @@ class GitPlugin extends Plugin {
             $this->getHistoryValueFormatter(),
             $this->getPermissionChangesDetector(),
             $this->getDefaultPermissionsUpdater(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            $this->getDescriptionUpdater()
         );
     }
 

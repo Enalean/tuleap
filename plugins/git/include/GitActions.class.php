@@ -855,7 +855,6 @@ class GitActions extends PluginActions
         $projectId,
         $repoId,
         $repoAccess,
-        $repoDescription,
         $pane,
         $enable_fine_grained_permissions,
         array $added_branches_permissions,
@@ -874,7 +873,7 @@ class GitActions extends PluginActions
             $controller->redirect('/plugins/git/?group_id='.$projectId);
             return false;
         }
-        if (empty($repoAccess) && empty($repoDescription)) {
+        if (empty($repoAccess)) {
             $this->addError('actions_params_error');
             $this->redirectToRepo($repository);
             return false;
@@ -888,79 +887,57 @@ class GitActions extends PluginActions
             return false;
         }
 
-        if ($repoDescription) {
-            if (strlen($repoDescription) > 1024) {
-                $this->addError('actions_long_description');
-            } else {
-                $repository->setDescription($repoDescription);
+        $are_there_changes = false;
+        if ( !empty($repoAccess) ) {
+            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
 
-                $this->history_dao->groupAddHistory(
-                    "git_repo_update",
-                    $repository->getName() . ': update description',
-                    $repository->getProjectId()
+                $are_there_changes = $this->permission_changes_detector->areThereChangesInPermissionsForRepository(
+                    $repository,
+                    $repoAccess,
+                    $enable_fine_grained_permissions,
+                    $added_branches_permissions,
+                    $added_tags_permissions,
+                    $updated_permissions
                 );
-            }
-        }
 
-        try {
-            $are_there_changes = false;
-            $repository->save();
-            if ( !empty($repoAccess) ) {
-                //TODO use Polymorphism to handle this
-                if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-
-                    $are_there_changes = $this->permission_changes_detector->areThereChangesInPermissionsForRepository(
-                        $repository,
-                        $repoAccess,
-                        $enable_fine_grained_permissions,
-                        $added_branches_permissions,
-                        $added_tags_permissions,
-                        $updated_permissions
-                    );
-
-                    $repository->getBackend()->savePermissions($repository, $repoAccess);
-                } else {
-                    if ($repository->getAccess() != $repoAccess) {
-                        $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
-                        $controller->addInfo( $this->getText('actions_repo_access') );
-                    }
+                $repository->getBackend()->savePermissions($repository, $repoAccess);
+            } else {
+                if ($repository->getAccess() != $repoAccess) {
+                    $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
+                    $controller->addInfo( $this->getText('actions_repo_access') );
                 }
             }
-
-            if ($enable_fine_grained_permissions) {
-                $this->fine_grained_updater->enableRepository($repository);
-            } else {
-                $this->fine_grained_updater->disableRepository($repository);
-            }
-
-            foreach ($added_branches_permissions as $added_branch_permission) {
-                $this->fine_grained_permission_saver->saveBranchPermission($added_branch_permission);
-            }
-
-            foreach ($added_tags_permissions as $added_tag_permission) {
-                $this->fine_grained_permission_saver->saveTagPermission($added_tag_permission);
-            }
-
-            foreach ($updated_permissions as $permission) {
-                $this->fine_grained_permission_saver->updateRepositoryPermission($permission);
-            }
-
-            if ($are_there_changes) {
-                $this->history_dao->groupAddHistory(
-                    'perm_granted_for_git_repository',
-                    $this->history_value_formatter->formatValueForRepository($repository),
-                    $projectId,
-                    array($repository->getName())
-                );
-            }
-
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
-
-        } catch (GitDaoException $e) {
-            $controller->addError( $e->getMessage() );
-            $this->redirectToRepoManagement($projectId, $repoId, $pane);
-            return false;
         }
+
+        if ($enable_fine_grained_permissions) {
+            $this->fine_grained_updater->enableRepository($repository);
+        } else {
+            $this->fine_grained_updater->disableRepository($repository);
+        }
+
+        foreach ($added_branches_permissions as $added_branch_permission) {
+            $this->fine_grained_permission_saver->saveBranchPermission($added_branch_permission);
+        }
+
+        foreach ($added_tags_permissions as $added_tag_permission) {
+            $this->fine_grained_permission_saver->saveTagPermission($added_tag_permission);
+        }
+
+        foreach ($updated_permissions as $permission) {
+            $this->fine_grained_permission_saver->updateRepositoryPermission($permission);
+        }
+
+        if ($are_there_changes) {
+            $this->history_dao->groupAddHistory(
+                'perm_granted_for_git_repository',
+                $this->history_value_formatter->formatValueForRepository($repository),
+                $projectId,
+                array($repository->getName())
+            );
+        }
+
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+
         $controller->addInfo( $this->getText('actions_save_repo_process') );
         $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;

@@ -37,12 +37,17 @@ use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
-
+use Tuleap\Git\Repository\DescriptionUpdater;
 /**
  * Git
  * @author Guillaume Storchi
  */
 class Git extends PluginController {
+
+    /**
+     * @var DescriptionUpdater
+     */
+    private $description_updater;
 
     const PERM_READ  = 'PLUGIN_GIT_READ';
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
@@ -264,7 +269,8 @@ class Git extends PluginController {
         HistoryValueFormatter $history_value_formatter,
         PermissionChangesDetector $permission_changes_detector,
         DefaultPermissionsUpdater $default_permission_updater,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
+        DescriptionUpdater $description_updater
     ) {
         parent::__construct($user_manager, $request);
 
@@ -339,6 +345,7 @@ class Git extends PluginController {
         $this->permission_changes_detector             = $permission_changes_detector;
         $this->default_permission_updater              = $default_permission_updater;
         $this->history_dao                             = $history_dao;
+        $this->description_updater                     = $description_updater;
     }
 
     protected function instantiateView() {
@@ -506,6 +513,7 @@ class Git extends PluginController {
                 'index',
                 'view' ,
                 'edit',
+                'edit-description',
                 'clone',
                 'add',
                 'del',
@@ -554,6 +562,7 @@ class Git extends PluginController {
             if ($repository && $repository->userCanRead($user)) {
                 $this->addPermittedAction('view');
                 $this->addPermittedAction('edit');
+                $this->addPermittedAction('edit-description');
                 $this->addPermittedAction('clone');
                 if ($repository->belongsTo($user)) {
                     $this->addPermittedAction('repo_management');
@@ -647,6 +656,19 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
             #EDIT
+            case 'edit-description':
+                $description = null;
+                if ($this->request->exist('repo_desc')) {
+                    $description       = GitRepository::DEFAULT_DESCRIPTION;
+                    $valid_descrpition = new Valid_Text('repo_desc');
+                    $valid_descrpition->required();
+                    if ($this->request->valid($valid_descrpition)) {
+                        $description = $this->request->get('repo_desc');
+                    }
+
+                    $this->description_updater->updateDescription($repository, $description);
+                }
+                break;
             case 'edit':
                 if (empty($repository)) {
                     $this->addError($this->getText('actions_params_error'));
@@ -663,15 +685,6 @@ class Git extends PluginController {
                     $this->addAction( 'getRepositoryDetails', array($this->groupId, $parentId) );
                     $this->addView('view');
                 } else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
-                    $repoDesc = null;
-                    if ($this->request->exist('repo_desc')) {
-                        $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
-                        $valid_url = new Valid_Text('repo_desc');
-                        $valid_url->required();
-                        if($this->request->valid($valid_url)) {
-                            $repoDesc = $this->request->get('repo_desc');
-                        }
-                    }
                     $repoAccess = null;
                     $valid_url = new Valid_String('repo_access');
                     $valid_url->required();
@@ -719,7 +732,6 @@ class Git extends PluginController {
                             $this->groupId,
                             $repository->getId(),
                             $repoAccess,
-                            $repoDesc,
                             $pane,
                             $enable_fine_grained_permissions,
                             $added_branches_permissions,
@@ -798,14 +810,14 @@ class Git extends PluginController {
                     $valid_url = new Valid_Text('repo_desc');
                     $valid_url->required();
                     if($this->request->valid($valid_url)) {
-                        $repoDesc = $this->request->get('repo_desc');
+                        $description = $this->request->get('repo_desc');
                     }
                     $valid_url = new Valid_String('repo_access');
                     $valid_url->required();
                     if($this->request->valid($valid_url)) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $this->addAction('confirmPrivate', array($this->groupId, $repository->getId(), $repoAccess, $repoDesc) );
+                    $this->addAction('confirmPrivate', array($this->groupId, $repository->getId(), $repoAccess, $description) );
                     $this->addView('confirmPrivate');
                 }
                 break;
