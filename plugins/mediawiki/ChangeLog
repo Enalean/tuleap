@@ -1,3 +1,6 @@
+Version 0.119 - Tuleap 8.17
+    * request #9169: Not all CSS loaded when access mediawiki
+
 Version 0.118 - Tuleap 8.17
     * Remove Sogilis copyright
 
