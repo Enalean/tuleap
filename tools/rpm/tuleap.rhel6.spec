@@ -283,6 +283,16 @@ Requires: tuleap-plugin-tracker >= 0.8.4
 %description plugin-graphontrackers
 Graphs for new tracker generation
 
+%package plugin-tracker-encryption
+Summary: Encryption for tracker
+Group: Development/Tools
+Version: @@PLUGIN_TRACKER_ENCRYPTION_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: php-phpseclib-crypt-rsa
+%description plugin-tracker-encryption
+Adding a new type of tracker fields that are encrypted.
+This plugin is still in beta.
+
 %package plugin-cardwall
 Summary: Graphs for Tracker v5
 Group: Development/Tools
@@ -1155,6 +1165,10 @@ fi
 %files plugin-graphontrackers
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/graphontrackersv5
+
+%files plugin-tracker-encryption
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/tracker_encryption
 
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
