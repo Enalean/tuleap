@@ -67,9 +67,11 @@
 # "X-Git-Newrev", and "X-Git-Reftype" to enable fine tuned filtering and
 # give information for debugging.
 #
-
-MAX_COMMAND_EXECUTION_TIME='5s'
-TIMEOUT_EXIT_CODE=124
+# Exit code
+# ---------
+# The script uses the following exit code:
+# 0 : the script has been executed as expected, no errors have been encountered
+# 124 : the script has taken too much time to execute and a timeout has been triggered
 
 # ---------------------------- Functions
 
@@ -266,6 +268,7 @@ generate_update_branch_email()
 
 	if [ "$?" -eq "$TIMEOUT_EXIT_CODE" ]; then
 	    echo "The summary of changes in the updated branch has taken too much time to be generated and was truncated"
+	    exit_status=${TIMEOUT_EXIT_CODE}
 	fi
 }
 
@@ -459,6 +462,7 @@ show_new_revisions()
 
 	if [ "$?" -eq "$TIMEOUT_EXIT_CODE" ]; then
 	    echo "The list of the new revisions has taken too much time to be generated and was truncated"
+	    exit_status=${TIMEOUT_EXIT_CODE}
 	fi
 }
 
@@ -495,6 +499,8 @@ send_mail()
 # --- Constants
 LOGBEGIN="- Log -----------------------------------------------------------------"
 LOGEND="-----------------------------------------------------------------------"
+MAX_COMMAND_EXECUTION_TIME='5s'
+TIMEOUT_EXIT_CODE=124
 
 # --- Config
 # Set GIT_DIR either from the working directory, or from the environment
@@ -518,8 +524,12 @@ emailprefix=$(git config hooks.emailprefix || echo '[SCM] ')
 custom_showrev=$(git config hooks.showrev)
 maxlines=$(git config hooks.emailmaxlines)
 
+exit_status=0
+
 # Expect 3 parameters: oldrev newrev refname
 if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
 	prep_for_email $1 $2 $3 || continue
 	generate_email $maxlines
 fi
+
+exit ${exit_status}
