@@ -1,3 +1,6 @@
+Version 5.964 - Tuleap 8.17
+    * request #9025: Introduce plugin tracker encryption in a early development stage
+
 Version 5.963 - Tuleap 8.17
     * Modal for adding task and adding new item
 

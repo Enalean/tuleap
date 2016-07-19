@@ -16,13 +16,14 @@ Version 8.17 (not released yet)
 	* story #9224: Remove unused parts of Tuleap
 	* story #9224: Create a dedicated object to deal with ugroup duplication
 	* request #9279: Pre commit hooks are compatible with OS X
+	* request #9025: Introduce plugin tracker encryption in a early development stage
 
 	== Security ==
 	* request #9314: Non aligned behavior between UI and ssh in Git
 
 	== Plugins ==
 	* git: 4.240
-	* tracker: 5.963
+	* tracker: 5.964
 	* referencealias_core: 0.11
 	* agiledashboard: 1.394
 	* hudson: 1.30
@@ -38,6 +39,7 @@ Version 8.17 (not released yet)
 	* ldap: 3.103
 	* docman: 2.26.112
 	* archivedeleteditems: 0.8
+	* tracker_encryption: 1.1
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==
