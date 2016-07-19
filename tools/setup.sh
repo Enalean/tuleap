@@ -47,6 +47,7 @@ GREP='/bin/grep'
 GROUPADD='/usr/sbin/groupadd'
 GROUPDEL='/usr/sbin/groupdel'
 INSTALL='/usr/bin/install'
+IPCALC='/bin/ipcalc'
 LN='/bin/ln'
 LS='/bin/ls'
 MKDIR='/bin/mkdir'
@@ -66,9 +67,9 @@ USERDEL='/usr/sbin/userdel'
 USERMOD='/usr/sbin/usermod'
 
 CMD_LIST=('AWK' 'CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'DIG' 'FIND'
-          'GREP' 'GROUPADD' 'GROUPDEL' 'INSTALL' 'LN' 'LS' 'MKDIR' 'MV' 'MYSQL'
-          'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS' 'TAIL'
-          'TOUCH' 'USERADD' 'USERDEL' 'USERMOD')
+          'GREP' 'GROUPADD' 'GROUPDEL' 'INSTALL' 'IPCALC' 'LN' 'LS' 'MKDIR'
+          'MV' 'MYSQL' 'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS'
+          'TAIL' 'TOUCH' 'USERADD' 'USERDEL' 'USERMOD')
 
 # default parameter
 generate_ssl_certificate="n"
@@ -248,6 +249,11 @@ dns_check() {
     else
         ${DIG} +short ${1} A ${1} AAAA | ${TAIL} -1
     fi
+}
+
+ip_check() {
+    ${IPCALC} --silent --check "${1}"
+    echo ${?}
 }
 
 ##############################################
@@ -1008,6 +1014,19 @@ do
         break
     fi
 
+    if [ -z "${sys_default_domain}" ]
+    then
+        read -p "Tuleap domain name: (e.g. mytuleap.example.com): " \
+            sys_default_domain
+    fi
+
+    if [ "$(ip_check ${sys_default_domain})" -eq 0 ]
+    then
+        todo "Your domain name is $sys_default_domain"
+        sys_fullname=$sys_default_domain
+        break
+    fi
+
     if [ -z "$(dns_check ${sys_default_domain})" ]
     then
         yn="n"
@@ -1030,8 +1049,7 @@ do
         break
     fi
 
-    read -p "Tuleap domain name: (e.g. mytuleap.example.com): " \
-        sys_default_domain
+    sys_default_domain=""
 done
 
 if [ -z "$sys_org_name" ]
