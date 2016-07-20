@@ -77,6 +77,30 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact, null, $empty_array, false));
     }
 
+    public function itUseNameForSlowComputeModeWhenNoTargetFieldNameIsDefined() {
+        $computed_field = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_Computed',
+            array('getProperty', 'getDao', 'getName')
+        );
+
+        stub($computed_field)->getProperty('target_field_name')->returns('');
+        stub($computed_field)->getProperty('fast_compute')->returns(0);
+        stub($computed_field)->getDao()->returns($this->dao);
+        stub($computed_field)->getName()->returns('computed_name');
+
+        stub($this->dao)->getFieldValues(array(233), 'computed_name')->returnsDar(
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15)
+        );
+
+        $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
+        stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
+
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $empty_array = array();
+
+        $this->assertIdentical(20, $computed_field->getComputedValue($this->user, $artifact, null, $empty_array, false));
+    }
 }
 
 class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
