@@ -1,3 +1,6 @@
+Version 5.965 - Tuleap 8.17
+    * request #9330 Computed field calculation broken when target field is not defined
+
 Version 5.964 - Tuleap 8.17
     * request #9025: Introduce plugin tracker encryption in a early development stage
 
