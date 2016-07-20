@@ -139,10 +139,15 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
         $computed_artifact_ids[$artifact->getId()] = true;
 
+        $target_field_name = $this->getProperty('target_field_name');
+        if ($target_field_name === '') {
+            $target_field_name = $this->getName();
+        }
+
         if ($timestamp === null) {
-            $dar = $this->getDao()->getFieldValues(array($artifact->getId()), $this->getProperty('target_field_name'));
+            $dar = $this->getDao()->getFieldValues(array($artifact->getId()), $target_field_name);
         } else {
-            $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp, $this->getId());
+            $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $target_field_name, $timestamp, $this->getId());
         }
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
     }
