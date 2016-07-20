@@ -278,20 +278,19 @@ class Tracker_FormElement_Field_Computed_BackToAutoComputed extends TuleapTestCa
             array(
                 'getProperty',
                 'getDao',
-                'getName',
                 'getId',
                 'getValueDao',
                 'getStandardCalculationMode',
                 'getFieldEmptyMessage',
-                'getStopAtManualSetFieldMode'
+                'getStopAtManualSetFieldMode',
+                'getTargetFieldName'
             )
         );
-        stub($field)->getProperty('target_field_name')->returns('effort');
         stub($field)->getProperty('fast_compute')->returns(0);
         stub($field)->getDao()->returns($this->dao);
         stub($field)->getValueDao()->returns($this->manual_dao);
         stub($field)->getId()->returns(23);
-        stub($field)->getName()->returns('effort');
+        stub($field)->getTargetFieldName()->returns('effort');
         return $field;
     }
 

@@ -157,9 +157,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $computed_children_to_fetch    = array();
         $artifact_ids_to_fetch         = array();
         $has_manual_value_in_children  = false;
+        $target_field_name             = $this->getTargetFieldName();
         $dar                           = $this->getDao()->getComputedFieldValues(
             array($artifact->getId()),
-            $this->getName(),
+            $target_field_name,
             $this->getId(),
             false
         );
@@ -288,11 +289,24 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
     }
 
+    /**
+     * For test purpose
+     * @return String
+     */
+    protected function getTargetFieldName()
+    {
+        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
+            return $this->getProperty('target_field_name');
+        } else {
+            return $this->getName();
+        }
+    }
+
     protected function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
     {
-        $sum                   = null;
-        $target_field_name     = $this->getName();
-        $already_seen          = array();
+        $sum               = null;
+        $target_field_name = $this->getTargetFieldName();
+        $already_seen      = array();
 
         do {
             if ($timestamp !== null) {
