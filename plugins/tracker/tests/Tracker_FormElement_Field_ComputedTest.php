@@ -893,7 +893,7 @@ class Tracker_FormElement_Field_Computed_FieldValidationTest extends TuleapTestC
     public function setUp()
     {
         parent::setUp();
-        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array());
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('isRequired', 'userCanUpdate'));
     }
 
     public function itExpectsAnArray()
@@ -944,6 +944,91 @@ class Tracker_FormElement_Field_Computed_FieldValidationTest extends TuleapTestC
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
         )));
+    }
+
+    public function itIsValidWhenTheFieldIsRequiredAndIsAutocomputed()
+    {
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->field)->isRequired()->returns(true);
+        stub($this->field)->userCanUpdate()->returns(true);
+        $submitted_value = array(
+            'manual_value'    => '',
+            'is_autocomputed' => true
+        );
+
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+        );
+    }
+
+    public function itIsValidWhenTheFieldIsNotRequiredAndIsAutocomputed()
+    {
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->field)->isRequired()->returns(false);
+        stub($this->field)->userCanUpdate()->returns(true);
+        $submitted_value = array(
+            'manual_value'    => '',
+            'is_autocomputed' => true
+        );
+
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+        );
+    }
+
+    public function itIsValidWhenTheFieldIsRequiredAndHasAManualValue()
+    {
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->field)->isRequired()->returns(true);
+        stub($this->field)->userCanUpdate()->returns(true);
+        $submitted_value = array(
+            'manual_value'    => '11'
+        );
+
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+        );
+    }
+
+    public function itIsNotValidWhenTheFieldIsRequiredAndDoesntHaveAManualValue()
+    {
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->field)->isRequired()->returns(true);
+        stub($this->field)->userCanUpdate()->returns(true);
+        $submitted_value = array(
+            'manual_value'    => ''
+        );
+
+        $this->assertFalse(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+        );
+    }
+
+    public function itIsNotValidWhenTheFieldIsNotRequiredAndDoesntHaveAManualValue()
+    {
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->field)->isRequired()->returns(false);
+        stub($this->field)->userCanUpdate()->returns(true);
+        $submitted_value = array(
+            'manual_value'    => ''
+        );
+
+        $this->assertFalse(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+        );
+    }
+
+    public function itIsValidWhenNoValuesAreSubmitted()
+    {
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->field)->isRequired()->returns(false);
+        stub($this->field)->userCanUpdate()->returns(true);
+        $submitted_value = array(
+        );
+
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+        );
     }
 }
 
