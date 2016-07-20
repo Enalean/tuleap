@@ -1,3 +1,6 @@
+Version 5.966 - Tuleap 8.17
+    * story #9090: Fix creation of children in cardwall
+
 Version 5.965 - Tuleap 8.17
     * request #9330 Computed field calculation broken when target field is not defined
 
