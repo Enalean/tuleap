@@ -1,3 +1,6 @@
+Version 5.967 - Tuleap 8.17
+    * Modal V3 - Route REST doesn't retrieve the correct computed value
+
 Version 5.966 - Tuleap 8.17
     * story #9090: Fix creation of children in cardwall
 
