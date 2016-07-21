@@ -1,3 +1,6 @@
+7.6 - Tuleap 8.17
+    * story #9224: keep user group bindings at project creation
+
 7.5 - Tuleap 8.16
     * request #9202: Make Tuleap compatible with PHP 5.6
 
