@@ -1,4 +1,4 @@
-Version 8.17 (not released yet)
+Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==
 	* request #9113: Be able to filter system events by status
 	* story #8425: Comprehensive git permissions changes log
