@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+{
 
     /**
      * @var PFUser
@@ -38,7 +39,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
         $this->current_user       = $current_user;
     }
 
-    protected function getFieldChangeType() {
+    protected function getFieldChangeType()
+    {
         return 'art_link';
     }
 
@@ -77,20 +79,15 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
         $artifact          = $userdata['artifact'];
         $children_trackers = $userdata['children_trackers'];
 
-        if ($this->canExportLinkedArtifact($artifact, $artifact_link_info, $children_trackers)) {
+        if ($this->canExportLinkedArtifact($artifact_link_info)) {
             $value_xml = $field_xml->addChild('value', $artifact_link_info->getArtifactId());
             $value_xml->addAttribute('nature', $artifact_link_info->getNature());
             $this->children_collector->addChild($artifact_link_info->getArtifactId(), $artifact->getId());
         }
     }
 
-    private function canExportLinkedArtifact(Tracker_Artifact $artifact, Tracker_ArtifactLinkInfo $artifact_link_info, array $children_trackers) {
-        if($artifact->getTracker()->isProjectAllowedToUseNature()) {
-            $is_a_child = $artifact_link_info->getNature() === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
-        } else {
-            $is_a_child = in_array($artifact_link_info->getTracker(), $children_trackers);
-        }
-
-        return $is_a_child && $artifact_link_info->userCanView($this->current_user);
+    private function canExportLinkedArtifact(Tracker_ArtifactLinkInfo $artifact_link_info)
+    {
+        return $artifact_link_info->userCanView($this->current_user);
     }
 }

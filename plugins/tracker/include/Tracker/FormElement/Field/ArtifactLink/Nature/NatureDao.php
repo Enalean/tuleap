@@ -26,14 +26,14 @@ use DataAccessObject;
 class NatureDao extends DataAccessObject {
 
     public function create($shortname, $forward_label, $reverse_label) {
+        $nature        = $this->getNatureByShortname($shortname);
         $shortname     = $this->da->quoteSmart($shortname);
         $forward_label = $this->da->quoteSmart($forward_label);
         $reverse_label = $this->da->quoteSmart($reverse_label);
 
         $this->da->startTransaction();
 
-        $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
-        if ($this->retrieve($sql)->count() > 0) {
+        if ($nature->count() > 0) {
             $this->rollBack();
             throw new UnableToCreateNatureException(
                 $GLOBALS['Language']->getText(
@@ -54,6 +54,14 @@ class NatureDao extends DataAccessObject {
 
         $this->commit();
         return true;
+    }
+
+    public function getNatureByShortname($shortname) {
+        $shortname     = $this->da->quoteSmart($shortname);
+
+        $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
+
+        return $this->retrieve($sql);
     }
 
     public function edit($shortname, $forward_label, $reverse_label) {

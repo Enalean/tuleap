@@ -6,6 +6,7 @@ grammar {
     include "../project-definition.rnc"
     include "../git-definition.rnc"
     include "../frs-definition.rnc"
+    include "../nature-definition.rnc"
     include "../mediawiki-definition.rnc"
     include "../../../../../plugins/agiledashboard/www/resources/xml_project_agiledashboard_planning.rnc"
     include "../../../../../plugins/cardwall/www/resources/xml_project_cardwall_data.rnc"
@@ -20,6 +21,7 @@ grammar {
             element svn { svn }? &
             element git { git }? &
             element frs { frs }? &
+            element natures { natures }? &
             element mediawiki { mediawiki }? &
             element agiledashboard { agiledashboard }? &
             element cardwall { cardwall }? &

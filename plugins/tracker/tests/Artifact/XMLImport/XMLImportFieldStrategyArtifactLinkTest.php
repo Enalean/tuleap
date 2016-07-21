@@ -21,22 +21,69 @@
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
+    /** @var  Tracker_FormElement_Field_ArtifactLink */
+    private $field;
+
+    /** @var  PFUser */
+    private $submitted_by;
+
+    /** @var  Logger */
+    private $logger;
+
+    /** @var  Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink */
+    private $artlink_strategy;
+
+    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator */
+    private $nature_creator;
+
+    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao */
+    private $nature_dao;
+
+    /** @var  Tracker_Artifact */
+    private $artifact;
+
+    public function setUp()
+    {
+        $this->field            = mock('Tracker_FormElement_Field_ArtifactLink');
+        $this->submitted_by     = mock('PFUser');
+        $this->logger           = mock('Logger');
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->nature_dao       = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
+        $this->nature_creator   = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator');
+        $this->artifact         = mock('Tracker_Artifact');
+
+        $this->artlink_strategy = partial_mock(
+            'Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink',
+            array('getLastChangeset')
+        );
+    }
 
     public function itShouldWorkWithCompleteMapping() {
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add(100, 1);
         $mapping->add(101, 2);
-        $logger = mock('Logger');
-        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($mapping, $logger);
-        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+            $mapping,
+            $this->logger,
+            $this->artifact_factory,
+            $this->nature_dao,
+            $this->nature_creator
+        );
+
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="artlink" type="art_link">
                     <value>101</value>
                     <value>100</value>
                   </field_change>');
-        $submitted_by = mock('PFUser');
-        $res = $strategy->getFieldData($field, $xml_change, $submitted_by);
-        $expected_res =  array("new_values" => '2,1', 'natures' => array('1' => '', '2' => ''));
+
+        stub($this->nature_dao)->getNatureByShortname()->returnsDar(array());
+        stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
+
+        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $expected_res =  array("new_values" => '2,1', 'removed_values' => array(), 'natures' => array('1' => '', '2' => ''));
         $this->assertEqual($expected_res, $res);
     }
 
@@ -45,32 +92,78 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         $mapping->add(100, 1);
         $mapping->add(101, 2);
         $mapping->add(102, 3);
-        $logger = mock('Logger');
-        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($mapping, $logger);
-        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+
+        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+            $mapping,
+            $this->logger,
+            $this->artifact_factory,
+            $this->nature_dao,
+            $this->nature_creator
+        );
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="artlink" type="art_link">
                     <value nature="toto">101</value>
                     <value nature="titi">100</value>
                     <value>102</value>
                   </field_change>');
-        $submitted_by = mock('PFUser');
-        $res = $strategy->getFieldData($field, $xml_change, $submitted_by);
-        $expected_res =  array("new_values" => '2,1,3', 'natures' => array('1' => 'titi', '2' => 'toto', '3' => ''));
+
+        stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
+        stub($this->nature_dao)->getNatureByShortname()->returnsDar(array('titi'));
+
+        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $expected_res =  array("new_values" => '2,1,3', 'removed_values' => array(), 'natures' => array('1' => 'titi', '2' => 'toto', '3' => ''));
         $this->assertEqual($expected_res, $res);
     }
 
     public function itShouldLogWhenArtifactLinkReferenceIsBroken() {
-        $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
-        $logger = mock('Logger');
-        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($mapping, $logger);
-        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        $mapping          = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $strategy         = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+            $mapping,
+            $this->logger,
+            $this->artifact_factory,
+            $this->nature_dao,
+            $this->nature_creator
+        );
         $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="artlink" type="art_link">
                     <value>101</value>
                   </field_change>');
-        $submitted_by = mock('PFUser');
-        $strategy->getFieldData($field, $xml_change, $submitted_by);
-        expect($logger)->error()->count(1);
+
+        stub($this->nature_dao)->getNatureByShortname()->returnsDar(array());
+        stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
+
+        $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        expect($this->logger)->error()->count(1);
+    }
+
+    public function itShouldRemoveValuesWhenArtifactChildrenAreRemoved() {
+        $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $mapping->add(200, 1);
+        $mapping->add(101, 2);
+        $mapping->add(102, 3);
+
+        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+            $mapping,
+            $this->logger,
+            $this->artifact_factory,
+            $this->nature_dao,
+            $this->nature_creator
+        );
+        $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
+                  <field_change field_name="artlink" type="art_link">
+                    <value nature="toto">200</value>
+                  </field_change>');
+
+        $changeset_value = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
+        stub($changeset_value)->getArtifactIds()->returns(array(1, 2, 3));
+        $changeset = mock('Tracker_Artifact_Changeset');
+        stub($changeset)->getValues()->returns(array($changeset_value));
+        stub($this->artifact)->getLastChangeset()->returns($changeset);
+
+        stub($this->nature_dao)->getNatureByShortname()->returnsDar(array('toto'));
+        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $expected_res =  array("new_values" => '1', 'removed_values' => array(2 => 2, 3 => 3), 'natures' => array('1' => 'toto'));
+
+        $this->assertEqual($expected_res, $res);
     }
 }

@@ -49,9 +49,16 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
      * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
      *
+     * @param PFUser $submitted_by
+     * @param Tracker_Artifact $artifact
      * @return array
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
+    public function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
+    ) {
         $bind = (string) $field_change['bind'];
         $data = array();
 

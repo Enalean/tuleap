@@ -1,4 +1,6 @@
 <?php
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+
 /**
  * Copyright Enalean (c) 2014. All rights reserved.
  *
@@ -140,7 +142,9 @@ class Tracker_Migration_MigrationManager {
             new XMLImportHelper($this->user_manager),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $this->logger,
-            false
+            false,
+            Tracker_ArtifactFactory::instance(),
+            new NatureDao()
         );
     }
 

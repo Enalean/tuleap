@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="natures">
+    <zeroOrMore>
+      <element name="nature">
+        <data type="string">
+          <param name="pattern">[a-zA-Z0-9_]+</param>
+        </data>
+      </element>
+    </zeroOrMore>
+  </define>
+</grammar>

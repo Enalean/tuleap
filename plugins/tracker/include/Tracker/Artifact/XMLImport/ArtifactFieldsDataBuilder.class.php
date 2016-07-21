@@ -19,6 +19,9 @@
  */
 
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
@@ -64,7 +67,9 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
         Logger $logger,
         TrackerXmlFieldsMapping $xml_fields_mapping,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
+        Tracker_ArtifactFactory $tracker_artifact_factory,
+        NatureDao $nature_dao
     ) {
         $this->formelement_factory  = $formelement_factory;
         $this->tracker              = $tracker;
@@ -93,7 +98,13 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
                 $user_finder,
                 $xml_fields_mapping
             ),
-            self::FIELDTYPE_ARTIFACT_LINK => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($artifact_id_mapping, $logger),
+            self::FIELDTYPE_ARTIFACT_LINK => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+                $artifact_id_mapping,
+                $logger,
+                $tracker_artifact_factory,
+                $nature_dao,
+                new NatureCreator($nature_dao, new NatureValidator($nature_dao))
+            ),
             self::FIELDTYPE_COMPUTED      => new XMLImportFieldStrategyComputed()
         );
     }
@@ -101,7 +112,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     /**
      * @return array
      */
-    public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by) {
+    public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by, Tracker_Artifact $artifact)
+    {
         $data = array();
 
         if (! $xml_field_change->field_change) {
@@ -116,7 +128,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
             if ($field) {
                 $this->forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow($field);
-                $this->appendValidValue($data, $field, $field_change, $submitted_by);
+                $this->appendValidValue($data, $field, $field_change, $submitted_by, $artifact);
             } else {
                 $this->logger->debug("Skipped unknown/unused field ".(string) $field_change['field_name']);
             }
@@ -134,10 +146,11 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         array &$data,
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
-        PFUser $submitted_by
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
     ) {
         try {
-            $submitted_value = $this->getFieldData($field, $field_change, $submitted_by);
+            $submitted_value = $this->getFieldData($field, $field_change, $submitted_by, $artifact);
             if ($field->validateField($this->createFakeArtifact(), $submitted_value)) {
                 $data[$field->getId()] = $submitted_value;
             } else {
@@ -163,13 +176,15 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     private function getFieldData(
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
-        PFUser $submitted_by
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
     ) {
         $type = (string)$field_change['type'];
 
         if (! isset($this->strategies[$type])) {
             throw new Tracker_Artifact_XMLImport_Exception_StrategyDoesNotExistException();
         }
-        return $this->strategies[$type]->getFieldData($field, $field_change, $submitted_by);
+
+        return $this->strategies[$type]->getFieldData($field, $field_change, $submitted_by, $artifact);
     }
 }

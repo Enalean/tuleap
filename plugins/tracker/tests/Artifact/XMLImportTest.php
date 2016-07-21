@@ -46,15 +46,29 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     /** @var Tracker_Artifact_Changeset_NewChangesetCreatorBase */
     protected $new_changeset_creator;
 
-    protected $john_doe;
+    /** @var  Tracker_FormElementFactory */
     protected $formelement_factory;
+
+    /** @var  UserManager */
     protected $user_manager;
+
+    /** @var XMLImportHelper  */
     protected $xml_import_helper;
+
+    /** @var Tracker_Artifact  */
     protected $artifact;
-    protected $extraction_path;
+
+    /** @var  Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     protected $static_value_dao;
+
+    /** @var  Logger */
     protected $logger;
+
+    /** @var  Response */
     protected $response;
+
+    protected $extraction_path;
+    protected $john_doe;
 
     public function setUp() {
         parent::setUp();
@@ -98,7 +112,9 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
             $this->xml_import_helper,
             $this->static_value_dao,
             $this->logger,
-            false
+            false,
+            mock('Tracker_ArtifactFactory'),
+            mock('\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
         );
     }
 
@@ -421,7 +437,9 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->xml_import_helper,
             $this->static_value_dao,
             mock('Logger'),
-            false
+            false,
+            mock('Tracker_ArtifactFactory'),
+            mock('\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
         );
 
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
@@ -1712,9 +1730,6 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
 }
 
 class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLImportBaseTest {
-
-    private $xml_element;
-
     private $field_id = 369;
     private $field;
 
@@ -1725,7 +1740,6 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
         stub($this->field)->validateField()->returns(true);
 
         stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'artlink')->returns($this->field);
-
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
@@ -1756,6 +1770,12 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
             stub($art2)->getId()->returns(2);
             stub($this->artifact_creator)->createBare()->returnsAt(0, $art1);
             stub($this->artifact_creator)->createBare()->returnsAt(1, $art2);
+
+            $artlink_strategy = partial_mock(
+                'Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink',
+                array('getLastChangeset', 'createNatureIfNotExists')
+            );
+            stub($artlink_strategy)->getLastChangeset()->returns(false);
 
             $this->importer->importFromXMLPublic($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping);
     }
@@ -1789,6 +1809,12 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
         stub($art2)->getId()->returns(2);
         stub($this->artifact_creator)->createBare()->returnsAt(0, $art1);
         stub($this->artifact_creator)->createBare()->returnsAt(1, $art2);
+
+        $artlink_strategy = partial_mock(
+            'Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink',
+            array('getLastChangeset', 'createNatureIfNotExists')
+        );
+        stub($artlink_strategy)->getLastChangeset()->returns(false);
 
         expect($this->logger)->error()->count(1);
         $this->importer->importFromXMLPublic($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping);

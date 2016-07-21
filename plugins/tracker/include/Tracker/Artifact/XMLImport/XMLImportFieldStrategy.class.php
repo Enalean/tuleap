@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,14 @@ interface Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
      * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
      *
+     * @param PFUser $submitted_by
+     * @param Tracker_Artifact $artifact
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by);
+    public function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
+    );
 }

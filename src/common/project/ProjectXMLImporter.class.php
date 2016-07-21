@@ -22,6 +22,7 @@ require_once "account.php";
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDontExistInPlateformException;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -112,6 +113,18 @@ class ProjectXMLImporter {
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
+        $error                 = false;
+        $params['xml_content'] = $xml_element;
+        $params['error']       = &$error;
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_IS_PROJECT_VALID,
+            $params
+        );
+
+        if ($params['error']) {
+            throw new NatureDontExistInPlateformException();
+        }
+
         if (!empty($project_name_override)) {
             $xml_element['unix-name'] = $project_name_override;
         }
@@ -145,6 +158,18 @@ class ProjectXMLImporter {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
+
+        $error                 = false;
+        $params['xml_content'] = $xml_element;
+        $params['error']       = &$error;
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_IS_PROJECT_VALID,
+            $params
+        );
+
+        if ($params['error']) {
+            throw new NatureDontExistInPlateformException();
+        }
 
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
     }
