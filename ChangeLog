@@ -1,4 +1,7 @@
 Version 8.18 (Not yet released)
+	== Development ==
+	* request #9339: Remove unused code in the utilities
+
 	== Plugins ==
 	* agiledashboard: 1.395
 
