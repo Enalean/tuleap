@@ -9,6 +9,7 @@ Version 8.17 (not released yet)
 	* request #9289: Root daily is not able to suspend multiple users
 	* request #9326: Footer links to the REST API documentation are broken
 	* request #9169: Not all CSS loaded when access mediawiki
+	* request #9337: Logrotate config files are malformed when deployed by the packaging
 
 	== Development ==
 	* request #9278: Remove CentOS 5 packages
