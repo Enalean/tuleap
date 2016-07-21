@@ -610,15 +610,20 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
+        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
+            $empty_array    = array();
+            $computed_value = $this->getComputedValue($user, $changeset->getArtifact(), null, $empty_array, $this->useFastCompute());
+        } else {
+            $computed_value = $this->getComputedValueWithNoStopOnManualValue($changeset->getArtifact());
+        }
         $manual_value                             = $this->getManualValueForChangeset($changeset);
         $artifact_field_value_full_representation = new ArtifactFieldComputedValueFullRepresentation();
-        $empty_array = array();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
             $manual_value === null,
-            $this->getComputedValue($user, $changeset->getArtifact(), null, $empty_array, $this->useFastCompute()),
+            $computed_value,
             $this->getManualValueForChangeset($changeset)
         );
 
