@@ -1,3 +1,6 @@
+Version 5.968 - Tuleap 8.17
+    * request #9336 Computed calculation is broken for old projects
+
 Version 5.967 - Tuleap 8.17
     * Modal V3 - Route REST doesn't retrieve the correct computed value
 
