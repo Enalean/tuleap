@@ -1,3 +1,6 @@
+Version 1.395 - Tuleap 8.18
+    * request #9338: Remove unused angular tuleap-artifact-modal
+
 Version 1.394 - Tuleap 8.17
     * request #9319: Update artifact-modal version
 
