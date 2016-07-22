@@ -45,6 +45,8 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsAdministrator;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
+use Tuleap\MediaWiki\MediawikiMaintenanceWrapper;
+use Tuleap\MediaWiki\XMLMediaWikiExporter;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -122,6 +124,7 @@ class MediaWikiPlugin extends Plugin {
         $this->addHook(UserIsNoLongerNewsWriter::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserBecomesNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserIsNoLongerNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
+        $this->addHook(Event::EXPORT_XML_PROJECT);
 
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
@@ -156,8 +159,37 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function loaded()
+    private function getMediaWikiDataDir()
     {
+        return forge_get_config('mwdata_path', 'mediawiki');
+    }
+
+    public function export_xml_project($params)
+    {
+        $this->getMediaWikiExporter($params['project']->getID())->exportToXml(
+            $params['into_xml'],
+            $params['archive'],
+            'export_mw_' . $params['project']->getID() . time() . '.xml',
+            $params['temporary_dump_path_on_filesystem'],
+            $this->getMediaWikiDataDir()
+        );
+    }
+
+    private function getMediaWikiExporter($group_id)
+    {
+        $sys_command = new System_Command();
+        return new XMLMediaWikiExporter(
+            $sys_command,
+            ProjectManager::instance()->getProject($group_id),
+            new MediawikiManager(new MediawikiDao()),
+            new UGroupManager(),
+            new ProjectXMLExporterLogger(),
+            new MediawikiMaintenanceWrapper($sys_command),
+            new MediawikiLanguageManager(new MediawikiLanguageDao())
+        );
+    }
+
+        public function loaded() {
             parent::loaded();
             if(is_dir("/usr/share/mediawiki")){
                 forge_define_config_item('src_path','mediawiki', "/usr/share/mediawiki");
