@@ -1,3 +1,6 @@
+Version 2.26.113 - Tuleap 8.18
+    * Refactoring for PHP5.6 - Document Manager
+
 Version 2.26.112 - Tuleap 8.17
     * story #9315: Remove delete link in docman action id user cannot delete item
 
