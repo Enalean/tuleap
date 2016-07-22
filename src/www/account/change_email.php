@@ -7,7 +7,6 @@
 // 
 
 require_once('pre.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/event/EventManager.class.php');
 
 $em =& EventManager::instance();

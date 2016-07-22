@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase {
 
     const PARAMETER_ADD_RULE     = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE;

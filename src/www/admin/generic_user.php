@@ -24,7 +24,6 @@
 
 require_once 'pre.php';
 require_once 'www/admin/admin_utils.php';
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 require_once 'common/user/GenericUserFactory.class.php';
 
 session_require_site_admin();

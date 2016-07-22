@@ -98,7 +98,6 @@ class BoomerangPlugin extends Plugin {
     }
 
     private function getCSRFToken() {
-        require_once 'common/include/CSRFSynchronizerToken.class.php';
         return new CSRFSynchronizerToken('/plugins/boomerang/?action=beacon');
     }
 

@@ -13,7 +13,6 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 function format_html_row($row, &$row_num) {
     echo "<tr class=\"". util_get_alt_row_color($row_num++) ."\">\n";

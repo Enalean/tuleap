@@ -21,7 +21,6 @@
 
 require_once('pre.php');
 require_once('common/dao/SessionDao.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

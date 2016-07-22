@@ -13,7 +13,6 @@ require_once('www/project/admin/permissions.php');
 require_once('common/wiki/lib/Wiki.class.php');
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/mail/MassmailFormPresenter.class.php';
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 $hp =& Codendi_HTMLPurifier::instance();
 

@@ -9,7 +9,6 @@
 
 require_once('pre.php');    
 require_once('account.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 $request = HTTPRequest::instance();
 $csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
 
