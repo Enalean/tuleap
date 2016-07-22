@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -114,6 +114,8 @@ use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
+use Tuleap\Git\GitXmlExporter;
+use Tuleap\GitBundle;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -231,11 +233,13 @@ class GitPlugin extends Plugin
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
 
-        $this->addHook(EVENT::REST_RESOURCES);
-        $this->addHook(EVENT::REST_PROJECT_RESOURCES);
-        $this->addHook(EVENT::REST_PROJECT_GET_GIT);
-        $this->addHook(EVENT::REST_PROJECT_OPTIONS_GIT);
+        $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_GET_GIT);
+        $this->addHook(Event::REST_PROJECT_OPTIONS_GIT);
 
+
+        $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
 
         // Gerrit user suspension
@@ -270,6 +274,28 @@ class GitPlugin extends Plugin
         }
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function export_xml_project($params)
+    {
+        $this->getGitExporter($params['project'])->exportToXml(
+            $params['into_xml'],
+            $params['archive'],
+            $params['temporary_dump_path_on_filesystem']
+        );
+    }
+
+    private function getGitExporter(Project $project)
+    {
+        return new GitXmlExporter(
+            $project,
+            $this->getGitPermissionsManager(),
+            $this->getUGroupManager(),
+            $this->getRepositoryFactory(),
+            $this->getLogger(),
+            new System_Command(),
+            new GitBundle(new System_Command(), $this->getLogger())
+        );
     }
 
     public function getServiceShortname() {
