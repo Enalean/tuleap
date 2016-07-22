@@ -42,7 +42,7 @@ extends Docman_View_ItemDetailsSection {
     }
 
     function initDisplay() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 
         //
         // User may request a specific table id
@@ -52,8 +52,8 @@ extends Docman_View_ItemDetailsSection {
             $this->version = $request->get('version');
         }
 
-        $this->atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($this->item, $this->version);
-        $this->table =& $this->atf->getTable();
+        $this->atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item, $this->version);
+        $this->table = $this->atf->getTable();
     }
 
     function buildUrl($prefix, $parameters, $amp = true) {
@@ -72,7 +72,7 @@ extends Docman_View_ItemDetailsSection {
             $itemType = Docman_ItemFactory::getItemTypeForItem($this->item);
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-                $vFactory =& new Docman_VersionFactory();
+                $vFactory = new Docman_VersionFactory();
                 $v = $vFactory->getSpecificVersion($this->item, $version);
                 if($v) {
                     $url = Docman_View_View::buildUrl($this->url, 
@@ -115,7 +115,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_oldver').'</p>';
             }
 
-            $user =& $this->_getCurrentUser();
+            $user = $this->_getCurrentUser();
 
             $html .= '<table>';
 
@@ -469,8 +469,8 @@ extends Docman_View_ItemDetailsSection {
 
     function getToolbar() {
         $html = '';
-        $user =& $this->_getCurrentUser();
-        $dpm  =& $this->_getPermissionsManager();
+        $user = $this->_getCurrentUser();
+        $dpm  = $this->_getPermissionsManager();
         if($dpm->userCanWrite($user, $this->item->getId())) {
             $url = $this->buildUrl($this->url,
                                    array('action'  => 'approval_create',
@@ -484,8 +484,8 @@ extends Docman_View_ItemDetailsSection {
     function getContent() {
         $html = '';
 
-        $user =& $this->_getCurrentUser();
-        $dpm  =& $this->_getPermissionsManager();
+        $user = $this->_getCurrentUser();
+        $dpm  = $this->_getPermissionsManager();
         if(!$dpm->userCanRead($user, $this->item->getId())) {
             return $html;
         }
@@ -497,7 +497,7 @@ extends Docman_View_ItemDetailsSection {
 
         $this->initDisplay();
 
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 
         // Show toolbar
         $html .= $this->getToolbar();
@@ -549,18 +549,18 @@ extends Docman_View_ItemDetailsSection {
     }
 
     function &_getUserManager() {
-        $um =& UserManager::instance();
+        $um = UserManager::instance();
         return $um;
     }
 
     function &_getCurrentUser() {
-        $um   =& $this->_getUserManager();
-        $user =& $um->getCurrentUser();
+        $um   = $this->_getUserManager();
+        $user = $um->getCurrentUser();
         return $user;
     }
 
     function &_getPermissionsManager() {
-        $dpm =& Docman_PermissionsManager::instance($this->item->getGroupId());
+        $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
         return $dpm;
     }
 

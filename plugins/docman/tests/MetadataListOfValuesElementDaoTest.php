@@ -40,8 +40,7 @@ class MetadataListOfValuesElementDaoTest extends UnitTestCase {
         $status = 'A';
 
          // Setup
-        $da =& new MockDataAccess($this);
-        $dao =& new MetadataListOfValuesElementDaoTestVersion($this);
+        $dao = new MetadataListOfValuesElementDaoTestVersion($this);
         $dao->setReturnValue('prepareRanking', 15);
         $dao->setReturnValue('update', true);
         $dao->da = new MockDataAccess($this);
@@ -67,8 +66,7 @@ class MetadataListOfValuesElementDaoTest extends UnitTestCase {
         $metadataId = 1444;
 
          // Setup
-        $da =& new MockDataAccess($this);
-        $dao =& new MetadataListOfValuesElementDaoTestVersion($this);
+        $dao = new MetadataListOfValuesElementDaoTestVersion($this);
         $dao->da = new MockDataAccess($this);
 
         $dao->setReturnValue('update', true);

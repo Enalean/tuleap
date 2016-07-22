@@ -63,10 +63,10 @@ class Docman_MetadataFactory {
      * Return Docman_MetadataDao object
      *
      */
-    function &getDao() {
+    private function getDao() {
         static $_plugin_docman_metadata_dao_instance;
         if(!$_plugin_docman_metadata_dao_instance) {
-            $_plugin_docman_metadata_dao_instance =& new Docman_MetadataDao(CodendiDataAccess::instance());
+            $_plugin_docman_metadata_dao_instance = new Docman_MetadataDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_dao_instance;
     }
@@ -82,7 +82,7 @@ class Docman_MetadataFactory {
      * Factory method. Create a Docman_Metadata object based on the type of the
      * medatadata. Object is created from a row from the DB.
      */
-    function &_createFromRow(&$row) {
+    public function _createFromRow(&$row) {
         switch($row['data_type']) {
         case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
             $md = new Docman_ListMetadata();
@@ -99,13 +99,13 @@ class Docman_MetadataFactory {
     /**
      * Create a Metadata object based on DB a entry.
      */
-    function &getRealMetadata($id) {
+    private function getRealMetadata($id) {
         $md = null;
 
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $dar = $dao->searchById($id);
         if($dar->rowCount() === 1) {            
-            $md =& $this->_createFromRow($dar->current());
+            $md = $this->_createFromRow($dar->current());
         
             $md->setCanChangeName(true);
             $md->setCanChangeIsEmptyAllowed(true);
@@ -121,15 +121,15 @@ class Docman_MetadataFactory {
      *
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
-    function &getRealMetadataList($onlyUsed = false, $type = array()) {
+    public function getRealMetadataList($onlyUsed = false, $type = array()) {
         $mda = array();
 
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $dar = $dao->searchByGroupId($this->groupId, $onlyUsed, $type);
         while($dar->valid()) {
-            $row =& $dar->current();                        
-            
-            $mda[] =& $this->_createFromRow($row);
+            $row = $dar->current();
+
+            $mda[] = $this->_createFromRow($row);
 
             $dar->next();
         }
@@ -137,8 +137,8 @@ class Docman_MetadataFactory {
         return $mda;
     }
 
-    function &getRealMetadataIterator($onlyUsed = false, $type = array()) {
-        $mda =& $this->getRealMetadataList($onlyUsed, $type);
+    private function getRealMetadataIterator($onlyUsed = false, $type = array()) {
+        $mda = $this->getRealMetadataList($onlyUsed, $type);
         $mdi = new ArrayIterator($mda);
         return $mdi;
     }
@@ -149,7 +149,7 @@ class Docman_MetadataFactory {
      * Some HardCoded are customizable at project level.
      */
     function appendHardCodedMetadataParams(&$md) {
-        $sBo =& Docman_SettingsBo::instance($this->groupId);
+        $sBo = Docman_SettingsBo::instance($this->groupId);
         $md->setUseIt($sBo->getMetadataUsage($md->getLabel()));
     }
 
@@ -158,20 +158,20 @@ class Docman_MetadataFactory {
      *
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
-    function &getHardCodedMetadataList($onlyUsed = false) {
+    public function getHardCodedMetadataList($onlyUsed = false) {
         $mda = array();
         foreach($this->hardCodedMetadata as $mdLabel) {
-            $md =& $this->getHardCodedMetadataFromLabel($mdLabel);
+            $md = $this->getHardCodedMetadataFromLabel($mdLabel);
             if(in_array($md->getLabel(), $this->modifiableMetadata)) {
                 $this->appendHardCodedMetadataParams($md);
             }
 
             if($onlyUsed) {
                 if($md->isUsed()) {
-                    $mda[] =& $md;
+                    $mda[] = $md;
                 }
             } else {            
-                $mda[] =& $md;
+                $mda[] = $md;
             }
         }
         return $mda;
@@ -194,7 +194,7 @@ class Docman_MetadataFactory {
         }
 
         // Real metadata
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $dar = $dao->searchByGroupId($this->groupId, true, array());
         while($dar->valid()) {
             $row = $dar->current();
@@ -226,7 +226,7 @@ class Docman_MetadataFactory {
     function appendMetadataValueList(&$md, $onlyActive = true) {
         if(is_a($md, 'Docman_ListMetadata')) {
             $mdLoveFactory = new Docman_MetadataListOfValuesElementFactory();
-            $mdLoveArray =& $mdLoveFactory->getListByFieldId($md->getId(), $md->getLabel(), $onlyActive);        
+            $mdLoveArray   = $mdLoveFactory->getListByFieldId($md->getId(), $md->getLabel(), $onlyActive);
             $md->setListOfValueElements($mdLoveArray);
         }
     }
@@ -239,7 +239,7 @@ class Docman_MetadataFactory {
     function appendAllListOfValues(&$mdIter) {
         $mdIter->rewind();
         while($mdIter->valid()) {
-            $md =& $mdIter->current();
+            $md = $mdIter->current();
             
             if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $this->appendMetadataValueList($md, true);
@@ -253,7 +253,7 @@ class Docman_MetadataFactory {
      * For given item, appends all its ListOfValue metadata.
      */
     function appendAllListOfValuesToItem(&$item) {
-        $iter =& $item->getMetadataIterator();
+        $iter = $item->getMetadataIterator();
         $this->appendAllListOfValues($iter);
     }
 
@@ -272,7 +272,7 @@ class Docman_MetadataFactory {
         }
         
         // Dynamic metadata
-        $mdIter =& $this->getRealMetadataIterator(true);
+        $mdIter = $this->getRealMetadataIterator(true);
         $mdIter->rewind();
         while($mdIter->valid()) {
             $md = $mdIter->current();
@@ -289,7 +289,7 @@ class Docman_MetadataFactory {
      * @param $mdLabelArray Array List of metadata labels to copy.
      */
     function appliesItem1MetadataToItem2($item1, &$item2, $mdLabelArray) {
-        $i1Iter =& $item1->getMetadataIterator();
+        $i1Iter = $item1->getMetadataIterator();
         $i1Iter->rewind();
         while($i1Iter->valid()) {
             $srcMd = $i1Iter->current();
@@ -326,14 +326,14 @@ class Docman_MetadataFactory {
      * @return either a scalar (date, string, ...) or a LoveIterator for the
      * list of values.
      */
-    function &getMetadataValue($item, $md) {
+    public function getMetadataValue($item, $md) {
         $value = null;
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $loveFactory = new Docman_MetadataListOfValuesElementFactory();
             $value = $loveFactory->getLoveValuesForItem($item, $md);
         }
         else {
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $dar = $dao->searchValueById($md->getId(), $item->getId());
             if($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $value = $this->_getMetadataValueFromRow($md, $dar->current());
@@ -373,9 +373,9 @@ class Docman_MetadataFactory {
     /**
      * Return the Metadata corresponding to the given label.
      */
-    function &getFromLabel($label) {
+    public function getFromLabel($label) {
         if(in_array($label, $this->hardCodedMetadata)) {
-            $md =& $this->getHardCodedMetadataFromLabel($label);
+            $md = $this->getHardCodedMetadataFromLabel($label);
 
             if($this->groupId !== null) {
                 $md->setGroupId($this->groupId);
@@ -423,7 +423,7 @@ class Docman_MetadataFactory {
     }
 
     function updateRealMetadata($md) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         return $dao->updateById($md->getId(),
                                 $md->getName(),
                                 $md->getDescription(),
@@ -435,7 +435,7 @@ class Docman_MetadataFactory {
     // Today only usage configuration supported
     function updateHardCodedMetadata($md) {        
         if(in_array($md->getLabel(), $this->modifiableMetadata)) {
-            $sBo =& Docman_SettingsBo::instance($this->groupId);
+            $sBo = Docman_SettingsBo::instance($this->groupId);
             return $sBo->updateMetadataUsage($md->getLabel(), $md->getUseIt());
         }
 
@@ -455,7 +455,7 @@ class Docman_MetadataFactory {
     function create(&$md) {
         $md->setGroupId($this->groupId);
 
-        $dao =& $this->getDao();
+        $dao  = $this->getDao();
         $mdId = $dao->create($this->groupId, 
                              $md->getName(),
                              $md->getType(),
@@ -494,7 +494,7 @@ class Docman_MetadataFactory {
         $deleted = false;
 
         // Delete Md
-        $dao =& $this->getDao();
+        $dao   = $this->getDao();
         $delMd = $dao->delete($md->getId());
 
         if($delMd) {            
@@ -681,7 +681,7 @@ class Docman_MetadataFactory {
      */
     function cloneMetadata($dstGroupId, &$metadataMapping) {
         // Clone hardcoded metadata prefs
-        $sBo =& Docman_SettingsBo::instance($this->groupId);
+        $sBo = Docman_SettingsBo::instance($this->groupId);
         $sBo->cloneMetadataSettings($dstGroupId);
 
         // Clone metadata
@@ -693,7 +693,7 @@ class Docman_MetadataFactory {
      * The matching is made on the name and type
      */
     function getMetadataMapping($dstGroupId, &$metadataMapping) {
-        $dstMdFactory =& $this->_getMetadataFactory($dstGroupId);
+        $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
 
         $metadataMapping = array();
         $metadataMapping['md'] = array();
@@ -732,7 +732,7 @@ class Docman_MetadataFactory {
     /**
      */
     function _findRealMetadataByName($name, &$mda) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
 
         $dar = $dao->searchByName($this->groupId, $name);
         $dar->rewind();
@@ -785,7 +785,7 @@ class Docman_MetadataFactory {
      */
     function exportMetadata($dstGroupId) {
         // Import hardcoded metadata prefs
-        $sBo =& Docman_SettingsBo::instance($this->groupId);
+        $sBo = Docman_SettingsBo::instance($this->groupId);
         $sBo->exportMetadataUsage($dstGroupId);
 
         // Import metadata

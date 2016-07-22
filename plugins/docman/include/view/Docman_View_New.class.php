@@ -155,7 +155,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $html = '';
         $html .= '<h3>Permissions</h3>';
         $html .= '<div id="docman_new_permissions_panel">';
-        $p =& new Docman_View_PermissionsForItem($this->_controller);
+        $p = new Docman_View_PermissionsForItem($this->_controller);
         $params['user_can_manage'] = $this->_controller->userCanWrite($this->newItem->getParentId());
         $html .= $p->fetch($this->newItem->getParentId(), $params);
         $html .= '</div>';
@@ -165,7 +165,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     function _getNewsFieldset($params) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        $user =& $this->_controller->getUser();
+        $user = $this->_controller->getUser();
         if ($user->isMember($params['item']->getGroupId(), 'A') || $user->isMember($params['item']->getGroupId(), 'N1') || $user->isMember($params['item']->getGroupId(), 'N2')) {
             $default_news_summary = '';
             $default_news_details = '';

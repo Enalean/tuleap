@@ -78,7 +78,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         return $icons;
     }
     function &_getItemFactory($params) {
-        $f =& new Docman_ItemFactory();
+        $f = new Docman_ItemFactory();
         return $f;
     }
     /* static */ function buildUrl($prefix, $parameters, $amp = true) {
@@ -225,7 +225,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
     function getActionForItem($item) {
         $js = 'docman.addActionForItem('.$item->getId().', ';
         $params = array();
-        $itemMenuVisitor =& new Docman_View_GetMenuItemsVisitor($this->_controller->getUser(), $item->getGroupId());
+        $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($this->_controller->getUser(), $item->getGroupId());
         $user_actions = $item->accept($itemMenuVisitor, $params);
         $js .= $this->phpArrayToJsArray($user_actions);
         $js .= ");\n";
@@ -234,7 +234,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
 
     function getItemMenu(&$item, $params, $bc = false) {
         
-        $docman_icons =& $this->_getDocmanIcons($params);
+        $docman_icons = $this->_getDocmanIcons($params);
         
         $html = '';
         $html .= '<span class="docman_item_options">';
