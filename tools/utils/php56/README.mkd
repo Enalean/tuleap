@@ -1,0 +1,16 @@
+Development environment with PHP 5.6 and Nginx 1.8
+==================================================
+
+Stuff to dig:
+
+# Very hackish, in order to sur-charge themes icon's (esp. organization_logo, we need to have this alias:)
+ln -s /etc/tuleap/themes /usr/share/tuleap/src/www/themes/custom
+
+/projects and /users require to have a dedicated location (+ fpm security.limit_extensions =), it seems hackish
+same for php scripts that output something else (like avatar.png)
+
+Good to know
+------------
+
+Logs for nginx are there:
+/var/opt/rh/rh-nginx18/log/nginx

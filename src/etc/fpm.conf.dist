@@ -1,5 +1,14 @@
 ; Tuleap
+user = codendiadm
+group = codendiadm
+
+php_value[session.save_path]    = /var/tmp/tuleap_cache/php/session
+php_value[soap.wsdl_cache_dir]  = /var/tmp/tuleap_cache/php/wsdlcache
+
 php_value[include_path] = "/usr/share/pear/:/usr/share/php:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:."
 php_value[memory_limit] = 196M
 php_admin_flag[short_open_tag] = on
 php_value[date.timezone] = Europe/Paris
+
+# For "/users" or "/projects"
+security.limit_extensions =
