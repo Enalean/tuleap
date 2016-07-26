@@ -28,6 +28,7 @@ use Tuleap\HudsonSvn\Job\Dao as JobDao;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\HudsonSvn\Job\Launcher;
+use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Dao as SvnDao;
@@ -113,7 +114,25 @@ class hudson_svnPlugin extends Plugin {
             $this->getProjectManager(),
             $this->getSvnAdmin(),
             $this->getLogger(),
-            $this->getSystemCommand()
+            $this->getSystemCommand(),
+            $this->getDestructor(),
+            $this->getHookDao()
+        );
+    }
+
+    private function getHookDao()
+    {
+        return new HookDao();
+    }
+
+    /**
+     * @return Destructor
+     */
+    private function getDestructor()
+    {
+        return new Destructor(
+            new SvnDao(),
+            $this->getLogger()
         );
     }
 

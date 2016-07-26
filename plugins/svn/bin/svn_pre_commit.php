@@ -22,20 +22,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
-use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Admin\MailHeaderDao;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Hooks\PreCommit;
-use Tuleap\Svn\Commit\SVNLook;
 use Tuleap\Svn\SvnAdmin;
 
 try {
@@ -52,7 +49,12 @@ try {
             ProjectManager::instance(),
             new SvnAdmin(new System_Command(), new SvnLogger()),
             new SvnLogger(),
-            new System_Command()
+            new System_Command(),
+            new Destructor(
+                new Dao(),
+                new SvnLogger()
+            ),
+            new HookDao()
         ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),

@@ -23,8 +23,11 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasSVN\Dao;
+use Tuleap\Svn\Dao as SVNDao;
 use Tuleap\ReferenceAliasSVN\ReferencesImporter;
 use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Dao as SVNPluginDao;
 use Tuleap\Svn\XMLRepositoryImporter;
@@ -103,14 +106,29 @@ class referencealias_svnPlugin extends Plugin
                 $project_manager,
                 $this->getSvnAdmin(),
                 $this->getLogger(),
-                $this->getSystemCommand()
+                $this->getSystemCommand(),
+                $this->getDestructor(),
+                $this->getHookDao()
             )
         );
+    }
+
+    private function getHookDao()
+    {
+        return new HookDao();
     }
 
     private function getSystemCommand()
     {
         return new System_Command();
+    }
+
+    private function getDestructor()
+    {
+        return new Destructor(
+            new SvnDao(),
+            $this->getLogger()
+        );
     }
 
     private function getLogger()

@@ -22,7 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use Tuleap\Svn\Admin\MailHeaderManager;
@@ -30,7 +33,6 @@ use Tuleap\Svn\Admin\MailHeaderDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Hooks\PostCommit;
-use Tuleap\Svn\Commit\SVNLook;
 use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\SvnAdmin;
@@ -50,7 +52,12 @@ try {
             ProjectManager::instance(),
             new SvnAdmin(new System_Command(), new SvnLogger()),
             new SvnLogger(),
-            new System_Command()
+            new System_Command(),
+            new Destructor(
+                new Dao(),
+                new SvnLogger()
+            ),
+            new HookDao()
         ),
         new MailHeaderManager(new MailHeaderDao()),
         new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),

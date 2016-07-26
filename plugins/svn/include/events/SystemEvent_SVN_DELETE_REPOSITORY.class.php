@@ -21,6 +21,8 @@
 namespace Tuleap\Svn\EventRepository;
 
 use SystemEvent;
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuealp\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Dao;
@@ -100,7 +102,12 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
             ProjectManager::instance(),
             new SvnAdmin(new System_Command(), new SvnLogger()),
             new SvnLogger(),
-            new System_Command()
+            new System_Command(),
+            new Destructor(
+                new Dao(),
+                new SvnLogger()
+            ),
+            new HookDao()
         );
     }
 }
