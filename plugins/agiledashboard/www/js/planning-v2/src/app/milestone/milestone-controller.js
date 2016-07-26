@@ -30,7 +30,7 @@ function MilestoneController(
 ) {
     var self = this;
     _.extend(self, {
-        milestone                      : $scope.milestone, //herited from parent scope
+        milestone                      : $scope.milestone, // inherited from parent scope
         dragular_instance_for_milestone: undefined,
         canUserMoveCards               : canUserMoveCards,
         dragularOptionsForMilestone    : dragularOptionsForMilestone,
@@ -64,7 +64,7 @@ function MilestoneController(
         if (target.classList) {
             is_a_create_item_link = target.classList.contains('create-item-link');
         } else {
-            is_a_create_item_link = target.parentNode.getElementsByClassName("create-item-link")[0] !== undefined;
+            is_a_create_item_link = angular.isDefined(target.parentNode.getElementsByClassName("create-item-link")[0]);
         }
 
         if (! is_a_create_item_link) {
@@ -123,7 +123,9 @@ function MilestoneController(
     }
 
     function initDragularForMilestone() {
-        self.dragular_instance_for_milestone = dragularService(document.querySelector('ul.submilestone[data-submilestone-id="'+ self.milestone.id +'"]'), self.dragularOptionsForMilestone());
+        var milestone_element = angular.element('ul.submilestone[data-submilestone-id="' + self.milestone.id + '"]');
+
+        self.dragular_instance_for_milestone = dragularService(milestone_element, self.dragularOptionsForMilestone());
 
         $document.bind('keyup', function(event) {
             var esc_key_code = 27;
@@ -152,11 +154,10 @@ function MilestoneController(
     function dragularDrag(event, element) {
         event.stopPropagation();
 
-        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
-            BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()
+            && BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
         ) {
             BacklogItemSelectedService.multipleBacklogItemsAreDragged(element);
-
         } else {
             BacklogItemSelectedService.deselectAllBacklogItems();
         }
@@ -164,7 +165,7 @@ function MilestoneController(
         $scope.$apply();
     }
 
-    function dragularCancel(event, dropped_item_element, source_element) {
+    function dragularCancel(event) {
         event.stopPropagation();
 
         BacklogItemSelectedService.deselectAllBacklogItems();
@@ -309,8 +310,8 @@ function MilestoneController(
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {
-        return ! preventDrag(element_to_drag) &&
-            ancestorHasHandleClass(handle_element);
+        return ! preventDrag(element_to_drag)
+            && ancestorHasHandleClass(handle_element);
     }
 
     function ancestorHasHandleClass(handle_element) {

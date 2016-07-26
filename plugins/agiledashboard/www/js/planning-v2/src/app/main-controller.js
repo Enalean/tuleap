@@ -1,15 +1,15 @@
 angular
     .module('planning')
-    .controller('MainCtrl', MainCtrl);
+    .controller('MainController', MainController);
 
-MainCtrl.$inject = [
+MainController.$inject = [
     '$scope',
     '$window',
     'SharedPropertiesService',
     'gettextCatalog'
 ];
 
-function MainCtrl(
+function MainController(
     $scope,
     $window,
     SharedPropertiesService,

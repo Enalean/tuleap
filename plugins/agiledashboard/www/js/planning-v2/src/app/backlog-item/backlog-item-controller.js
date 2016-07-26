@@ -30,7 +30,7 @@ function BacklogItemController(
     var self = this;
     _.extend(self, {
         BACKLOG_ITEM_CHILDREN_PAGINATION           : { limit: 50, offset: 0 },
-        backlog_item                               : $scope.backlog_item, //herited from parent scope
+        backlog_item                               : $scope.backlog_item, // inherited from parent scope
         escaping                                   : false,
         dragular_instance_for_backlog_item_children: undefined,
         children_promise                           : $q.when(),
@@ -159,7 +159,9 @@ function BacklogItemController(
     }
 
     function initDragularForBacklogItemChildren() {
-        self.dragular_instance_for_backlog_item_children = dragularService(document.querySelector('ul.backlog-item-children[data-backlog-item-id="'+ self.backlog_item.id +'"]'), self.dragularOptionsForBacklogItemChildren());
+        var backlog_item_element = angular.element('ul.backlog-item-children[data-backlog-item-id="' + self.backlog_item.id + '"]');
+
+        self.dragular_instance_for_backlog_item_children = dragularService(backlog_item_element, self.dragularOptionsForBacklogItemChildren());
 
         $document.on('keyup', function(event) {
             var esc_key_code = 27;
@@ -207,18 +209,17 @@ function BacklogItemController(
         }
     }
 
-    function dragularRelease(event) {
+    function dragularRelease() {
         $element.removeClass('appending-child');
     }
 
     function dragularDrag(event, element) {
         event.stopPropagation();
 
-        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
-            BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()
+            && BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
         ) {
             BacklogItemSelectedService.multipleBacklogItemsAreDragged(element);
-
         } else {
             BacklogItemSelectedService.deselectAllBacklogItems();
         }
@@ -256,8 +257,7 @@ function BacklogItemController(
             source_backlog_item    = self.backlog_item,
             target_backlog_item    = target_list_element.scope().backlog_item,
             target_backlog_item_id = getBacklogItemId(target_list_element),
-            initial_index          = dragularService.shared.initialIndex,
-            target_index           = 0;
+            initial_index          = dragularService.shared.initialIndex;
 
         var dropped_items = [source_backlog_item.children.data[initial_index]];
 
@@ -369,9 +369,9 @@ function BacklogItemController(
 
     function canDropIntoElement(source_element, target_element, dropped_item_element) {
         return (
-            target_element.length === 1 &&
-            getBacklogItemId(source_element) !== getBacklogItemId(target_element) &&
-            isItemDroppable(dropped_item_element, target_element)
+            target_element.length === 1
+            && getBacklogItemId(source_element) !== getBacklogItemId(target_element)
+            && isItemDroppable(dropped_item_element, target_element)
         );
     }
 
@@ -401,7 +401,6 @@ function BacklogItemController(
         dropped_items,
         compared_to
     ) {
-
         BacklogItemCollectionService.items[source_backlog_item_id].updating = true;
         BacklogItemCollectionService.items[target_backlog_item_id].updating = true;
 
@@ -456,8 +455,8 @@ function BacklogItemController(
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {
-        return ! preventDrag(element_to_drag) &&
-            ancestorHasHandleClass(handle_element);
+        return ! preventDrag(element_to_drag)
+            && ancestorHasHandleClass(handle_element);
     }
 
     function ancestorHasHandleClass(handle_element) {

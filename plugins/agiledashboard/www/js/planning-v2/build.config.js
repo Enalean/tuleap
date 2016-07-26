@@ -7,9 +7,9 @@ module.exports = {
      * development and the `compile_dir` folder is where our app resides once it's
      * completely built.
      */
-    build_dir: 'build',
+    build_dir  : 'build',
     compile_dir: 'bin',
-    vendor_dir: 'vendor',
+    vendor_dir : 'vendor',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -49,7 +49,6 @@ module.exports = {
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
-        html: ['src/index.html'],
         scss: 'src/app/main.scss'
     },
 

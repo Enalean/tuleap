@@ -1,9 +1,8 @@
 angular
     .module('planning')
-    .controller('PlanningCtrl', PlanningCtrl);
+    .controller('PlanningController', PlanningController);
 
-PlanningCtrl.$inject = [
-    '$q',
+PlanningController.$inject = [
     '$filter',
     'SharedPropertiesService',
     'BacklogService',
@@ -18,8 +17,7 @@ PlanningCtrl.$inject = [
     'EditItemService'
 ];
 
-function PlanningCtrl(
-    $q,
+function PlanningController(
     $filter,
     SharedPropertiesService,
     BacklogService,
@@ -36,14 +34,14 @@ function PlanningCtrl(
     var self = this;
 
     _.extend(self, {
-        backlog                               : BacklogService.backlog,
-        items                                 : BacklogItemCollectionService.items,
-        milestones                            : MilestoneCollectionService.milestones,
-        compact_view_key                      : 'compact-view',
-        detailed_view_key                     : 'detailed-view',
-        show_closed_view_key                  : 'show-closed-view',
-        hide_closed_view_key                  : 'hide-closed-view',
-        loading_modal                         : NewTuleapArtifactModalService.loading,
+        backlog             : BacklogService.backlog,
+        items               : BacklogItemCollectionService.items,
+        milestones          : MilestoneCollectionService.milestones,
+        compact_view_key    : 'compact-view',
+        detailed_view_key   : 'detailed-view',
+        show_closed_view_key: 'show-closed-view',
+        hide_closed_view_key: 'hide-closed-view',
+        loading_modal       : NewTuleapArtifactModalService.loading,
 
         canShowBacklogItem                    : canShowBacklogItem,
         displayClosedMilestones               : displayClosedMilestones,
@@ -118,7 +116,6 @@ function PlanningCtrl(
             } else {
                 self.milestones.loading = false;
             }
-
         } else {
             displayOpenMilestones();
         }
@@ -248,28 +245,16 @@ function PlanningCtrl(
     function showAddSubmilestoneModal($event, submilestone_type) {
         $event.preventDefault();
 
-        var callback = function(submilestone_id) {
+        function callback(submilestone_id) {
             if (! self.isMilestoneContext()) {
                 return prependSubmilestoneToSubmilestoneList(submilestone_id);
             }
 
             return addSubmilestoneToSubmilestone(submilestone_id);
-        };
+        }
 
         var parent_item = (! _.isEmpty(self.current_milestone)) ? self.current_milestone : undefined;
         NewTuleapArtifactModalService.showCreation(submilestone_type.id, parent_item, callback);
-    }
-
-    function fetchClosedSubMilestonesOnce() {
-        if (self.milestones.closed_milestones_fully_loaded) {
-            return $q.when();
-        }
-
-        return fetchClosedSubMilestones(
-            self.backlog.rest_route_id,
-            MilestoneCollectionService.milestones.closed_milestones_pagination.limit,
-            MilestoneCollectionService.milestones.closed_milestones_pagination.offset
-        );
     }
 
     function addSubmilestoneToSubmilestone(submilestone_id) {
@@ -282,13 +267,12 @@ function PlanningCtrl(
         return MilestoneService.getMilestone(submilestone_id, self.items).then(function(data) {
             var milestone = data.results;
 
-            if (milestone.semantic_status === 'closed' &&
-                ! self.thereAreClosedMilestonesLoaded() &&
-                ! self.milestones.loading &&
-                ! self.milestones.closed_milestones_fully_loaded
+            if (milestone.semantic_status === 'closed'
+                && ! self.thereAreClosedMilestonesLoaded()
+                && ! self.milestones.loading
+                && ! self.milestones.closed_milestones_fully_loaded
             ) {
                 self.displayClosedMilestones();
-
             } else {
                 self.milestones.content.unshift(data.results);
             }
@@ -304,7 +288,7 @@ function PlanningCtrl(
             };
         }
 
-        var callback = function(item_id) {
+        function callback(item_id) {
             var promise;
             if (compared_to) {
                 promise = MilestoneService.addReorderToContent(parent_item.id, [item_id], compared_to);
@@ -317,7 +301,7 @@ function PlanningCtrl(
             });
 
             return promise;
-        };
+        }
 
         NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
     }
@@ -332,7 +316,7 @@ function PlanningCtrl(
     }
 
     function refreshSubmilestone(submilestone_id) {
-        var submilestone = _.find(self.milestones.content, { 'id': submilestone_id });
+        var submilestone = _.find(self.milestones.content, { id: submilestone_id });
 
         submilestone.updating = true;
 
@@ -348,7 +332,7 @@ function PlanningCtrl(
     }
 
     function canShowBacklogItem(backlog_item) {
-        if (typeof backlog_item.isOpen === 'function') {
+        if (angular.isFunction(backlog_item.isOpen)) {
             return backlog_item.isOpen() || self.current_closed_view_class === self.show_closed_view_key;
         }
 
@@ -366,5 +350,4 @@ function PlanningCtrl(
     function displayUserCantPrioritizeForMilestones() {
         return ! hideUserCantPrioritizeForMilestones();
     }
-
 }

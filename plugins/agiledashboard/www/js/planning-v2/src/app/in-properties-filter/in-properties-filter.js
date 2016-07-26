@@ -49,7 +49,7 @@ function InPropertiesFilter(
             });
 
             function match(value) {
-                return ("" + value).match(regexp);
+                return String(value).match(regexp);
             }
 
             function matchCardFields(card_field) {
@@ -65,7 +65,7 @@ function InPropertiesFilter(
                     case 'msb':
                     case 'shared':
                         return card_field.values.some(function(value) {
-                            if (typeof value.display_name !== 'undefined') {
+                            if (angular.isDefined(value.display_name)) {
                                 return match(value.display_name);
                             }
                             return match(value.label);

@@ -2,19 +2,25 @@ angular
     .module('backlog-item-selected')
     .directive('backlogItemSelect', BacklogItemSelect);
 
-BacklogItemSelect.$inject = ['$timeout', 'BacklogItemSelectedService'];
+BacklogItemSelect.$inject = [
+    '$timeout',
+    'BacklogItemSelectedService'
+];
 
-function BacklogItemSelect($timeout, BacklogItemSelectedService) {
+function BacklogItemSelect(
+    $timeout,
+    BacklogItemSelectedService
+) {
     return {
-        restrict        : 'A',
-        scope           : {
+        restrict: 'A',
+        scope   : {
             backlog_item      : '=backlogItemSelect',
             backlog_item_index: '=backlogItemIndex'
         },
-        link            : link
+        link: link
     };
 
-    function link(scope, element, attributes) {
+    function link(scope, element) {
         element.bind('click', function(event) {
             if (event.ctrlKey || event.metaKey) {
                 event.stopPropagation();
@@ -26,11 +32,9 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
             if (backlogItemAlreadySelected()) {
                 BacklogItemSelectedService.removeSelectedItem(scope.backlog_item_index);
                 unhighlightBacklogItem();
-
             } else if (canItemBeSelectedDependingOnTheCurrentSelection(backlog_item_li)) {
                 BacklogItemSelectedService.addSelectedItem(scope.backlog_item, scope.backlog_item_index);
                 highlightBacklogItem();
-
             } else {
                 shakeBacklogItem();
             }
@@ -42,7 +46,7 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
             var first_selected_item = BacklogItemSelectedService.getFirstSelectedItem();
 
             if (first_selected_item) {
-                var first_selected_item_element = document.querySelector('li[data-item-id="' + first_selected_item.id + '"]');
+                var first_selected_item_element = angular.element('li[data-item-id="' + first_selected_item.id + '"]');
 
                 return checkIfTwoElementsAreSiblings(first_selected_item_element, backlog_item_li);
             }
@@ -58,7 +62,7 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
         }
 
         function shakeBacklogItem() {
-            var help_text = angular.element(document.querySelector('#backlog-items-selected-bar > p:last-child'));
+            var help_text = angular.element('#backlog-items-selected-bar > p:last-child');
 
             scope.backlog_item.shaking = true;
             help_text.addClass('focus');

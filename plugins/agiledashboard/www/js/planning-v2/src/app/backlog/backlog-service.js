@@ -18,7 +18,7 @@ function BacklogService(
     var self = this;
     _.extend(self, {
         backlog: {
-            accepted_types : {
+            accepted_types: {
                 toString: function() {
                     return '';
                 }

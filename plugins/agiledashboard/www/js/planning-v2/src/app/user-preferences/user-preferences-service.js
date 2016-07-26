@@ -2,9 +2,13 @@ angular
     .module('user-preferences')
     .service('UserPreferencesService', UserPreferencesService);
 
-UserPreferencesService.$inject = ['Restangular', '$q'];
+UserPreferencesService.$inject = [
+    'Restangular'
+];
 
-function UserPreferencesService(Restangular, $q) {
+function UserPreferencesService(
+    Restangular
+) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl('/api/v1');
