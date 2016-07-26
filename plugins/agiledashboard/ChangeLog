@@ -1,3 +1,6 @@
+Version 1.397 - Tuleap 8.18
+    * request #9284: Use eslint in planning-v2 source
+
 Version 1.396 - Tuleap 8.18
     * request #9010 Export project tool must export all importable services
 
