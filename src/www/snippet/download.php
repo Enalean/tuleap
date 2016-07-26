@@ -2,7 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
-// Copyright (c) Enalean, 2015. All Rights Reserved.
+// Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -17,6 +17,7 @@ $sql="SELECT * FROM snippet_version WHERE snippet_version_id='". db_ei($id) ."'"
 $result=db_query($sql);
 
 if ($result && db_numrows($result) > 0) {
+    header('X-Content-Type-Options: nosniff');
 
    if (db_result($result,0,'filesize') == 0) {
 
@@ -29,17 +30,14 @@ if ($result && db_numrows($result) > 0) {
 	}
 
    } else {
-	
+
 	// Download the patch with the correct filetype
 	if (isset($mode) && $mode == 'view') {
         header('Content-Type: text/plain');
-    } elseif (isset($mode) && $mode == 'download') {
-        header('Content-Type: application/octet-stream');
     } else {
-        header('Content-Type: '.db_result($result,0,'filetype'));
+        header('Content-Disposition: attachment; filename='.db_result($result, 0 ,'filename'));
+        header('Content-Type: '.db_result($result, 0, 'filetype'));
     }
-	header('Content-Length: '.db_result($result,0,'filesize'));
-	header('Content-Disposition: filename='.db_result($result,0,'filename'));
 
 	echo db_result($result,0,'code');
 
