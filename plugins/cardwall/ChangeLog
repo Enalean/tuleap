@@ -1,3 +1,6 @@
+Version 1.61 - Tuleap 8.18
+    * request #9010 Export project tool must export all importable services
+
 Version 1.60 - Tuleap 8.15
     * Update versions
 

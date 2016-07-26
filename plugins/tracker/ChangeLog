@@ -1,3 +1,6 @@
+Version 5.969 - Tuleap 8.18
+    * request #9010 Export project tool must export all importable services
+
 Version 5.968 - Tuleap 8.17
     * request #9336 Computed calculation is broken for old projects
 

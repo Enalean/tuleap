@@ -4,8 +4,10 @@ Version 8.18 (Not yet released)
 	* request #9202: Refactoring for PHP5.6 - Snippets
 
 	== Plugins ==
-	* agiledashboard: 1.395
+	* agiledashboard: 1.396
 	* docman: 2.26.113
+	* cardwall: 1.61
+	* tracker: 5.969
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==

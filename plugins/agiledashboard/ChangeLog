@@ -1,3 +1,6 @@
+Version 1.396 - Tuleap 8.18
+    * request #9010 Export project tool must export all importable services
+
 Version 1.395 - Tuleap 8.18
     * request #9338: Remove unused angular tuleap-artifact-modal
 
