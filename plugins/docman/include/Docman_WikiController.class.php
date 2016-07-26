@@ -423,7 +423,8 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     var $item_factory;
-    protected function getItemFactory() {
+    public function getItemFactory()
+    {
         if (!$this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }
