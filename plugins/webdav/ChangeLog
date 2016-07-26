@@ -1,3 +1,6 @@
+Version 1.9.17 - Tuleap 8.18
+    * request #9300: Configuration files are not properly loaded in Perl environnement
+
 Version 1.9.16 - Tuleap 8.13
     * request #8971: Avoid conflict with PHP 7 Error class
 
