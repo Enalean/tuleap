@@ -1,75 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <include href="xml_project_cardwall_data.rng"/>
   <start>
     <element name="cardwall">
-      <element name="trackers">
-        <zeroOrMore>
-          <element name="tracker">
-            <attribute name="id">
-              <data type="string"/>
-            </attribute>
-            <optional>
-              <element name="columns">
-                <zeroOrMore>
-                  <element name="column">
-                    <optional>
-                      <attribute name="id">
-                        <data type="string"/>
-                      </attribute>
-                    </optional>
-                    <attribute name="label">
-                      <data type="string"/>
-                    </attribute>
-                    <optional>
-                      <attribute name="bg_red">
-                        <data type="int"/>
-                      </attribute>
-                    </optional>
-                    <optional>
-                      <attribute name="bg_green">
-                        <data type="int"/>
-                      </attribute>
-                    </optional>
-                    <optional>
-                      <attribute name="bg_blue">
-                        <data type="int"/>
-                      </attribute>
-                    </optional>
-                  </element>
-                </zeroOrMore>
-              </element>
-            </optional>
-            <optional>
-              <element name="mappings">
-                <zeroOrMore>
-                  <element name="mapping">
-                    <attribute name="tracker_id">
-                      <data type="string"/>
-                    </attribute>
-                    <attribute name="field_id">
-                      <data type="string"/>
-                    </attribute>
-                    <optional>
-                      <element name="values">
-                        <zeroOrMore>
-                          <element name="value">
-                            <attribute name="value_id">
-                              <data type="string"/>
-                            </attribute>
-                            <attribute name="column_id">
-                              <data type="string"/>
-                            </attribute>
-                          </element>
-                        </zeroOrMore>
-                      </element>
-                    </optional>
-                  </element>
-                </zeroOrMore>
-              </element>
-            </optional>
-          </element>
-        </zeroOrMore>
-      </element>
+      <ref name="cardwall"/>
     </element>
   </start>
 </grammar>

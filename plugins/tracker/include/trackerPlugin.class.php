@@ -22,6 +22,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\Import\Spotter;
+use Tuleap\Project\XML\Export\NoArchive;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -755,14 +756,18 @@ class trackerPlugin extends Plugin {
             new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
         );
 
+        $user    = UserManager::instance()->getCurrentUser();
+        $archive = new NoArchive();
+
         $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
-            ->exportToXml($params['project']->getID(), $params['into_xml']);
+            ->exportToXml($params['project']->getID(), $params['into_xml'], $user);
     }
 
     /**
      * @return TrackerXmlExport
      */
-    private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold) {
+    private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold)
+    {
         $rng_validator = new XML_RNGValidator();
 
         return new TrackerXmlExport(
@@ -775,8 +780,14 @@ class trackerPlugin extends Plugin {
                 $can_bypass_threshold,
                 $user_xml_exporter
             ),
-            $user_xml_exporter
+            $user_xml_exporter,
+            EventManager::instance()
         );
+    }
+
+    private function getXmlRngValidator()
+    {
+        return new XML_RNGValidator();
     }
 
     /**
@@ -1044,15 +1055,32 @@ class trackerPlugin extends Plugin {
     }
 
     public function export_xml_project($params) {
-        if (! isset($params['options']['tracker_id'])) {
+        if (! isset($params['options']['tracker_id']) && ! isset($params['options']['all'])) {
             return;
         }
 
+        $project              = $params['project'];
         $can_bypass_threshold = $params['options']['force'] === true;
-        $tracker_id           = $params['options']['tracker_id'];
+        $user_xml_exporter    = $params['user_xml_exporter'];
+        $user                 = $params['user'];
 
-        $project    = $params['project'];
-        $user       = $params['user'];
+        if ($params['options']['all'] === true) {
+            $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
+            ->exportToXmlFull($project->getID(), $params['into_xml'], $user, $params['archive']);
+
+        } else if (isset($params['options']['tracker_id'])) {
+            $this->exportSingleTracker($params, $project, $user_xml_exporter, $user, $can_bypass_threshold);
+        }
+    }
+
+    private function exportSingleTracker(
+        array $params,
+        Project $project,
+        UserXMLExporter $user_xml_exporter,
+        PFUser $user,
+        $can_bypass_threshold
+    ) {
+        $tracker_id = $params['options']['tracker_id'];
         $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
 
         if (! $tracker) {
@@ -1063,7 +1091,7 @@ class trackerPlugin extends Plugin {
             throw new Exception ('Tracker ID does not belong to project ID');
         }
 
-        $this->getTrackerXmlExport($params['user_xml_exporter'], $can_bypass_threshold)
+        $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
             ->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user, $params['archive']);
     }
 

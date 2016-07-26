@@ -40,7 +40,7 @@ $usage_options .= 'h';  // should we display the usage
 $usage_options .= 'x';  // should we display the XML content
 
 $long_options = array(
-    'dir',
+    'dir', 'all'
 );
 
 function usage() {
@@ -58,6 +58,7 @@ Dump a project structure to XML format
   -f              Force the export (for example if there are too many artifacts). Use at your own risks.
   -x              Display the XML content
   --dir           Generate a Directory archive (default is zip archive)
+  --all           Export all compatible services with data (Tracker)
   -h              Display this help
 
 
@@ -100,6 +101,10 @@ if (isset($arguments['t'])) {
 }
 
 $options['force'] = isset($arguments['f']);
+$options['all']   = false;
+if (isset($arguments['all'])) {
+    $options['all'] = true;
+}
 
 try {
     $project =  ProjectManager::instance()->getValidProjectByShortNameOrId($project_id);

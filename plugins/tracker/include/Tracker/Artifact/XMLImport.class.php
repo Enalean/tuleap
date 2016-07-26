@@ -142,8 +142,12 @@ class Tracker_Artifact_XMLImport {
         $artifacts = array();
         foreach (iterator_to_array($xml_element->artifact, false) as $i => $artifact_xml) {
             $artifact = $this->importBareArtifact($tracker, $artifact_xml);
-            $artifacts[$i] = $artifact;
-            $artifacts_id_mapping->add((string)$artifact_xml['id'], $artifact->getId());
+
+            if ($artifact) {
+                $artifacts[$i] = $artifact;
+                $artifacts_id_mapping->add((string)$artifact_xml['id'], $artifact->getId());
+            }
+
         }
         return $artifacts;
     }
@@ -168,7 +172,11 @@ class Tracker_Artifact_XMLImport {
                 $extraction_path,
                 $xml_fields_mapping,
                 $artifacts_id_mapping);
-            $this->importChangesets($artifacts[$i], $artifact_xml, $fields_data_builder);
+
+            if (isset($artifacts[$i])) {
+                $this->importChangesets($artifacts[$i], $artifact_xml, $fields_data_builder);
+            }
+
         }
         return true;
     }

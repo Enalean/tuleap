@@ -7,6 +7,8 @@ grammar {
     include "../git-definition.rnc"
     include "../frs-definition.rnc"
     include "../mediawiki-definition.rnc"
+    include "../../../../../plugins/agiledashboard/www/resources/xml_project_agiledashboard_planning.rnc"
+    include "../../../../../plugins/cardwall/www/resources/xml_project_cardwall_data.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
     include "../../../../../plugins/svn/resources/svn-definition.rnc"
 
@@ -19,6 +21,8 @@ grammar {
             element git { git }? &
             element frs { frs }? &
             element mediawiki { mediawiki }? &
+            element agiledashboard { agiledashboard }? &
+            element cardwall { cardwall }? &
             element ugroups { ugroups }?
         }
 }

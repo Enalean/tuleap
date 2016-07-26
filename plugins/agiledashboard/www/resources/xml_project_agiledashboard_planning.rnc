@@ -1,0 +1,19 @@
+agiledashboard = element plannings  {
+    element planning {
+        attribute name { xsd:string },
+        attribute plan_title { xsd:string },
+        attribute planning_tracker_id { xsd:string },
+        attribute backlog_title { xsd:string },
+
+        element backlogs {
+            element backlog { xsd:string }+
+        },
+
+        element permissions {
+            element permission {
+                attribute ugroup { xsd:string },
+                attribute type { xsd:string }
+            }+
+        }?
+    }*
+}
