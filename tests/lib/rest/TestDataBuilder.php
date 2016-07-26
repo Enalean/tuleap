@@ -347,15 +347,78 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
         $this->setManualValueForSlowComputedArtifact($artifact_a, $user, 'A');
 
-        $this->setManualValueForComputedArtifact($artifact_b, $user, self::LEVEL_TWO_TRACKER_ID, 'B', array('is_autocomputed' => true), null);
-        $this->setManualValueForComputedArtifact($artifact_c, $user, self::LEVEL_TWO_TRACKER_ID, 'C', array('is_autocomputed' => true), null);
+        $this->setManualValueForComputedArtifact(
+            $artifact_b,
+            $user,
+            self::LEVEL_TWO_TRACKER_ID,
+            'B',
+            array('is_autocomputed' => true),
+            null,
+            'total_effort',
+            array('is_autocomputed' => true)
+        );
+        $this->setManualValueForComputedArtifact(
+            $artifact_c,
+            $user,
+            self::LEVEL_TWO_TRACKER_ID,
+            'C',
+            array('is_autocomputed' => true),
+            null,
+            'total_effort',
+            array('is_autocomputed' => true)
+        );
 
-        $this->setManualValueForComputedArtifact($artifact_d, $user, self::LEVEL_THREE_TRACKER_ID, 'D', array('manual_value' => 5), null);
-        $this->setManualValueForComputedArtifact($artifact_e, $user, self::LEVEL_THREE_TRACKER_ID, 'E', array('is_autocomputed' => true), null);
-        $this->setManualValueForComputedArtifact($artifact_f, $user, self::LEVEL_THREE_TRACKER_ID, 'F', array('manual_value' => 5), null);
+        $this->setManualValueForComputedArtifact(
+            $artifact_d,
+            $user,
+            self::LEVEL_THREE_TRACKER_ID,
+            'D',
+            array('manual_value' => 5),
+            null,
+            'effort_estimate',
+            11
+        );
+        $this->setManualValueForComputedArtifact(
+            $artifact_e,
+            $user,
+            self::LEVEL_THREE_TRACKER_ID,
+            'E',
+            array('is_autocomputed' => true),
+            null,
+            'effort_estimate',
+            22
+        );
+        $this->setManualValueForComputedArtifact(
+            $artifact_f,
+            $user,
+            self::LEVEL_THREE_TRACKER_ID,
+            'F',
+            array('manual_value' => 5),
+            null,
+            null,
+            null
+        );
 
-        $this->setManualValueForComputedArtifact($artifact_g, $user, self::LEVEL_FOUR_TRACKER_ID, 'G', 5, 15);
-        $this->setManualValueForComputedArtifact($artifact_h, $user, self::LEVEL_FOUR_TRACKER_ID, 'H', 5, 10);
+        $this->setManualValueForComputedArtifact(
+            $artifact_g,
+            $user,
+            self::LEVEL_FOUR_TRACKER_ID,
+            'G',
+            5,
+            15,
+            null,
+            null
+        );
+        $this->setManualValueForComputedArtifact(
+            $artifact_h,
+            $user,
+            self::LEVEL_FOUR_TRACKER_ID,
+            'H',
+            5,
+            10,
+            null,
+            null
+        );
 
         return $this;
     }
@@ -377,13 +440,25 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
     }
 
-    private function setManualValueForComputedArtifact(Tracker_Artifact $artifact, PFUser $user, $tracker_id, $field_artifact_name, $remaining_effort, $capacity)
-    {
+    private function setManualValueForComputedArtifact(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $tracker_id,
+        $field_artifact_name,
+        $remaining_effort,
+        $capacity,
+        $field_name,
+        $field_value
+    ) {
         $fields_data = array(
             $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'remaining_effort')->getId() => $remaining_effort,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'capacity')->getId() => $capacity,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'name')->getId() => $field_artifact_name
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'capacity')->getId()         => $capacity,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'name')->getId()             => $field_artifact_name
         );
+
+        if ($field_name !== null) {
+            $fields_data[$this->tracker_formelement_factory->getFormElementByName($tracker_id, $field_name)->getId()] = $field_value;
+        }
 
         $artifact->createNewChangeset($fields_data, '', $user, false);
     }

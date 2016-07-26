@@ -72,14 +72,62 @@ class ArtifactsTest extends RestBase {
 
     public function testComputedFieldsCalculation()
     {
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_ONE_ARTIFACT_A_ID, 10, 25, 20, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_B_ID, null, 25, 15, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_C_ID, null, null, 5, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_D_ID, null, null, 5, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_E_ID, 10, 10, 5, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_F_ID, null, null, 5, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_G_ID, null, 15, 5, 'progress');
-        $this->testComputedFieldValueForArtifactId(REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_H_ID, null, 10, 5, 'progress');
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_ONE_ARTIFACT_A_ID,
+            10,
+            25,
+            20,
+            33
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_B_ID,
+            null,
+            25,
+            15,
+            33
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_C_ID,
+            null,
+            null,
+            5,
+            null
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_D_ID,
+            null,
+            null,
+            5,
+            11
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_E_ID,
+            10,
+            10,
+            5,
+            22
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_F_ID,
+            null,
+            null,
+            5,
+            null
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_G_ID,
+            null,
+            15,
+            5,
+            null
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_H_ID,
+            null,
+            10,
+            5,
+            null
+        );
     }
 
     public function testComputedFieldValueForArtifactId(
@@ -87,7 +135,7 @@ class ArtifactsTest extends RestBase {
         $capacity_slow_compute_value = null,
         $capacity_fast_compute_value = null,
         $remaining_effort_value = null,
-        $slow_compute_field_name = null
+        $total_effort_value = null
     ) {
         if ($artifact_id !== null) {
             $response = $this->getResponse($this->client->get("artifacts/$artifact_id"));
@@ -112,11 +160,14 @@ class ArtifactsTest extends RestBase {
                 if ($field['label'] === 'remaining_effort') {
                     $this->assertEquals($remaining_effort_value, $value);
                 }
-                if ($field['label'] === $slow_compute_field_name) {
+                if ($field['label'] === 'progress') {
                     $this->assertEquals($capacity_slow_compute_value, $value);
                 }
                 if ($field['label'] === 'capacity') {
                     $this->assertEquals($capacity_fast_compute_value, $value);
+                }
+                if ($field['label'] === 'effort_estimate') {
+                    $this->assertEquals($total_effort_value, $value);
                 }
             }
         }
