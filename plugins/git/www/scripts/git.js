@@ -19,7 +19,7 @@ document.observe('dom:loaded', function () {
             table.down('tbody > tr > td', previewPos).insert({top: preview});
 
             function getForkDestination() {
-                if (fork_destination.disabled) {
+                if (fork_destination === null || fork_destination.disabled) {
                     return $F('fork_repositories_prefix');
                 } else {
                     return fork_destination.options[fork_destination.selectedIndex].title;
@@ -37,7 +37,7 @@ document.observe('dom:loaded', function () {
                     repo: '...',
                     dest: tuleap.escaper.html(getForkDestination())
                 };
-                if (fork_destination.disabled && $F('fork_repositories_path').strip()) {
+                if ((fork_destination === null || fork_destination.disabled) && $F('fork_repositories_path').strip()) {
                     tplVars['path'] = tuleap.escaper.html($F('fork_repositories_path').strip() + '/');
                 }
                 var reposList = $('fork_repositories_repo');
@@ -71,25 +71,33 @@ document.observe('dom:loaded', function () {
 
         function toggleDestination() {
             var optionBox = $('choose_project');
-            if (optionBox.checked) {
+            if (optionBox !== null && optionBox.checked) {
                 fork_destination.enable();
                 fork_path.disable();
                 fork_path.placeholder = codendi.locales.git.path_placeholder_disabled;
                 fork_path.title       = codendi.locales.git.path_placeholder_disabled;
             } else {
-                fork_destination.disable();
+                disabledForkDestination()
                 fork_path.enable();
                 fork_path.placeholder = codendi.locales.git.path_placeholder_enabled;
                 fork_path.title       = codendi.locales.git.path_placeholder_enabled;
             }
         }
 
-        fork_destination.disable();
-        toggleDestination();
-        $('choose_project').observe('change', toggleDestination);
-        $('choose_personal').observe('change', toggleDestination);
-        $('choose_project').observe('click', toggleDestination);
-        $('choose_personal').observe('click', toggleDestination);
+        function disabledForkDestination() {
+            if (fork_destination !== null) {
+                fork_destination.disable();
+            }
+        }
+
+        if ($('choose_project') && $('choose_personal')) {
+            disabledForkDestination()
+            toggleDestination();
+            $('choose_project').observe('change', toggleDestination);
+            $('choose_personal').observe('change', toggleDestination);
+            $('choose_project').observe('click', toggleDestination);
+            $('choose_personal').observe('click', toggleDestination);
+        }
     }
 
     (function useTemplateConfig() {
