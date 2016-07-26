@@ -1,4 +1,7 @@
 Version 8.18 (Not yet released)
+	== Bug fix ==
+	* request #9344 Persistent XSS through code snippet download
+
 	== Development ==
 	* request #9339: Remove unused code in the utilities
 	* request #9202: Refactoring for PHP5.6 - Snippets
