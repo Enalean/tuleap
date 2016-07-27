@@ -394,9 +394,9 @@ class Git_GitoliteDriver {
 
         try {
             $exec    = new System_Command();
-            $command = 'tar cvzf '.escapeshellarg($backup_path).' '.escapeshellarg($repository->getFullPath());
+            $command = 'umask 77 && tar cvzf '.escapeshellarg($backup_path).' '.escapeshellarg($repository->getFullPath());
             $exec->exec($command);
-            $command = 'chmod 644 '.escapeshellarg($backup_path);
+            $command = 'chmod 640 '.escapeshellarg($backup_path);
             $exec->exec($command);
             $this->logger->info('[Gitolite][Backup] Repository backup done in ['.$backup_path.']');
         } catch (System_Command_CommandException $exception) {
