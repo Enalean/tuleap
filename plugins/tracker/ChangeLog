@@ -1,3 +1,6 @@
+Version 5.972 - Tuleap 8.18
+    * request #9346: Computed field V2 - Description of computed field is not accurate
+
 Version 5.971 - Tuleap 8.18
     * request #9353: Drag and drop on Tracker cardwall renderer must handle better account empty values
 
