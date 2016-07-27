@@ -1,3 +1,6 @@
+Version 4.244 - Tuleap 8.18
+    * request #9356: Backup of a deleted Git repository can be accessed
+
 Version 4.243 - Tuleap 8.18
     * request #9312: Replication from gerrit server does not work over http
 
