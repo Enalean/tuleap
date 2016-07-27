@@ -50,10 +50,8 @@ class UserImportHtml extends UserImport {
             return;
         }
         
-        $errors       = array();
         $parsed_users = array();
-        $ok = $this->parse($user_filename,$errors,$parsed_users);
-        $this->showErrors($errors);
+        $ok = $this->parse($user_filename, $parsed_users);
         
         if (!$ok) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_userimport','err_no_user_to_import'));
@@ -66,14 +64,6 @@ class UserImportHtml extends UserImport {
             project_admin_footer(array());
         }
     }
-  
-
-    function showErrors($errors) {
-        foreach($errors as $error) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_userimport','invalid_mail_or_username',$error));
-        }
-    }
-
 
     /**
      * create the html output to visualize what has been parsed
