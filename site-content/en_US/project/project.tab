@@ -626,6 +626,7 @@ project_admin_userimport	missing_file	Missing or unreadable file.
 project_admin_userimport	username	username
 project_admin_userimport	mail_addr	Email address
 project_admin_userimport	invalid_mail_or_username	Parse error : '$1' is not a valid email address or username.
+project_admin_userimport	multiple_users	Parse error : '$1' has multiple corresponding users.
 project_admin_userimport	unknown_user	Parse error : User '$1' does not exist.
 project_admin_userimport	special_user	Warning : There are more than 1 username corresponding to this mail address or username '$1'. User Import will not continue.
 project_admin_userimport	member_user	Parse error : User '$1' is already a member of this project.
