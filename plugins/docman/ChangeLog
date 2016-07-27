@@ -1,3 +1,6 @@
+Version 2.26.114 - Tuleap 8.18
+    * request #9349: Wiki page can not be accessed via the document manager
+
 Version 2.26.113 - Tuleap 8.18
     * Refactoring for PHP5.6 - Document Manager
 
