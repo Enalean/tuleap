@@ -19,7 +19,9 @@ Version 8.18 (Not yet released)
 	* git: 4.243
 	* boomerang: 0.5
 	* statistics: 0.60
-	* svn: 0.65
+	* svn: 0.66
+	* hudson_svn: 0.10
+	* referencealias_svn: 0.7
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==
