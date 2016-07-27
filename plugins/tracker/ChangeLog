@@ -1,3 +1,6 @@
+Version 5.974 - Tuleap 8.18
+    * request #9354: No feedback is given when an error occurs during a transition
+
 Version 5.973 - Tuleap 8.18
     * request #9252 Artifact links v2 Nature is confusing
 
