@@ -170,10 +170,6 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         return $this->arrayContainsNone($value) || $this->arrayIsEmpty($value);
     }
 
-    private function arrayContainsNone(array $value) {
-        return count($value) == 1 && array_pop($value) == '100';
-    }
-
     private function arrayIsEmpty($value) {
         return count($value) == 0;
     }
