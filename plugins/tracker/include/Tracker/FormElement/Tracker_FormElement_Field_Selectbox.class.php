@@ -233,7 +233,15 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * @return boolean true if the value corresponds to none
      */
     public function isNone($value) {
-        return $value === null || $value === '' || $value === '100' || $value === array();
+        return $value === null ||
+               $value === '' ||
+               $value === '100' ||
+               $value === array() ||
+               (is_array($value) && $this->arrayContainsNone($value));
+    }
+
+    protected function arrayContainsNone(array $value) {
+        return count($value) === 1 && array_pop($value) == '100';
     }
 
     /**
