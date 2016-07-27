@@ -34,7 +34,7 @@
 </div>
 
 <div id="kanban-board" resize>
-    <div class="backlog"
+    <div class="backlog column"
         ng-class="{'column-displayed': kanban.backlog.is_open, 'column-hidden': ! kanban.backlog.is_open, 'small_column': kanban.backlog.is_small_width}"
         ng-click="kanban.expandBacklog()"
         ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
@@ -60,28 +60,9 @@
             </span>
             <span class="column-label">{{ kanban.backlog.label }}</span>
         </div>
-        <div class="column-content" ui-tree="kanban.treeOptions">
-            <div class="kustom-scroll"
-                ng-class="{'has-content': kanban.backlog.filtered_content.length > 0 }"
-                ng-scrollbar
-                rebuild-on="rebuild:kustom-scroll"
-                is-bar-shown="kanban.backlog.is_scrollbar_shown"
-            >
-                <ul ui-tree-nodes
-                    ng-model="kanban.backlog.filtered_content"
-                    ng-class="{'has-scrollbar': kanban.backlog.is_scrollbar_shown }"
-                    class="kanban-items backlog"
-                >
-                    <li ui-tree-node
-                        ng-repeat="item in kanban.backlog.filtered_content track by $id(item)"
-                        ng-include="'kanban-item/kanban-item.tpl.html'"
-                        ui-tree-handle
-                        class="kanban-item {{ item.color }}"
-                        ng-class="{ 'updating': item.updating, 'compact-view': item.is_collapsed }"
-                        id="item_{{ item.id }}"></li>
-                </ul>
-            </div>
-        </div>
+        <kanban-column
+            ng-init="$ctrl.column=kanban.backlog"
+        ></kanban-column>
         <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog" ng-if="kanban.backlog.user_can_add_in_place && kanban.backlog.is_open"></add-in-place>
         <div class="column-label">
             <div ng-style="{top: kanban.backlog.resize_top, left: kanban.backlog.resize_left}">
@@ -149,29 +130,9 @@
             </span>
             <span class="column-label">{{ column.label }}</span>
         </div>
-        <div class="column-content" ui-tree="kanban.treeOptions">
-            <div class="kustom-scroll"
-                ng-class="{'has-content': column.filtered_content.length > 0 }"
-                ng-scrollbar
-                rebuild-on="rebuild:kustom-scroll"
-                is-bar-shown="column.is_scrollbar_shown"
-            >
-                <ul ui-tree-nodes
-                    ng-model="column.filtered_content"
-                    ng-class="{'has-scrollbar': column.is_scrollbar_shown }"
-                    class="kanban-items column"
-                    data-column-id="{{ column.id }}"
-                >
-                    <li ui-tree-node
-                        ng-repeat="item in column.filtered_content track by $id(item)"
-                        ng-include="'kanban-item/kanban-item.tpl.html'"
-                        ui-tree-handle
-                        class="kanban-item {{ item.color }}"
-                        ng-class="{ 'updating': item.updating, 'compact-view': item.is_collapsed }"
-                        id="item_{{ item.id }}"></li>
-                </ul>
-            </div>
-        </div>
+        <kanban-column
+            ng-init="$ctrl.column=column"
+        ></kanban-column>
         <add-in-place column="column" create-item="kanban.createItemInPlace" ng-if="column.user_can_add_in_place && column.is_open"></add-in-place>
         <div class="column-label">
             <div ng-style="{top: column.resize_top, left: column.resize_left}">
@@ -189,7 +150,7 @@
         </div>
     </div>
 
-    <div class="archive"
+    <div class="archive column"
         ng-class="{'column-displayed': kanban.archive.is_open, 'column-hidden': ! kanban.archive.is_open, 'small_column': kanban.archive.is_small_width}"
         ng-click="kanban.expandArchive()"
         ng-attr-title="{{ kanban.archive.is_open ? '' : 'Toggle the archive' | translate }}"
@@ -215,28 +176,9 @@
             </span>
             <span class="column-label">{{ kanban.archive.label }}</span>
         </div>
-        <div class="column-content" ui-tree="kanban.treeOptions">
-            <div class="kustom-scroll"
-                ng-class="{'has-content': kanban.archive.filtered_content.length > 0 }"
-                ng-scrollbar
-                rebuild-on="rebuild:kustom-scroll"
-                is-bar-shown="kanban.archive.is_scrollbar_shown"
-            >
-                <ul ui-tree-nodes
-                    ng-model="kanban.archive.filtered_content"
-                    ng-class="{'has-scrollbar': kanban.archive.is_scrollbar_shown }"
-                    class="kanban-items archive"
-                >
-                    <li ui-tree-node
-                        ng-repeat="item in kanban.archive.filtered_content track by $id(item)"
-                        ng-include="'kanban-item/kanban-item.tpl.html'"
-                        ui-tree-handle
-                        class="kanban-item {{ item.color }}"
-                        ng-class="{ 'updating': item.updating, 'compact-view': item.is_collapsed }"
-                        id="item_{{ item.id }}"></li>
-                </ul>
-            </div>
-        </div>
+        <kanban-column
+            ng-init="$ctrl.column=kanban.archive"
+        ></kanban-column>
         <div class="column-label">
             <div ng-style="{top: kanban.archive.resize_top, left: kanban.archive.resize_left}">
                 {{ kanban.archive.label }}

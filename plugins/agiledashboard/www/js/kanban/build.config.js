@@ -88,14 +88,16 @@ module.exports = {
             'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
             'vendor/angular-socket-io/socket.js',
             'vendor/socket.io-client/socket.io.js',
-            'vendor/angular-locker/dist/angular-locker.min.js'
+            'vendor/angular-locker/dist/angular-locker.min.js',
+            'vendor/dragular/dist/dragular.js'
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
             'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
             'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
             'vendor/angular-ui-select/dist/select.css',
-            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
+            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css',
+            'vendor/dragular/dist/dragular.css',
         ],
         assets: [
             'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',
