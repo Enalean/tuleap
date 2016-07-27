@@ -21,24 +21,49 @@
 namespace Tuleap\Svn\Repository;
 
 use Tuleap\Svn\Dao;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\RuleName;
 use Project;
-use Tuleap\Svn\Repository\CannotCreateRepositoryException;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use ProjectManager;
 use Rule_ProjectName;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use SystemEvent;
+use EventManager;
+use SystemEventManager;
+use Tuleap\Svn\SvnAdmin;
+use PluginManager;
+use Logger;
+use ForgeConfig;
+use Tuleap\Svn\Repository\CannotDeleteRepositoryException;
+use System_Command;
 
-class RepositoryManager {
+class RepositoryManager
+{
+    const PREFIX = "svn_";
 
+
+    /** @var Dao */
     private $dao;
+     /** @var ProjectManager */
     private $project_manager;
+     /** @var SvnAdmin */
+    private $svnadmin;
+     /** @var Logger */
+    private $logger;
+    /** @var System_Command */
+    private $system_command;
 
-    public function __construct(Dao $dao, ProjectManager $project_manager) {
+    public function __construct(
+        Dao $dao,
+        ProjectManager $project_manager,
+        SvnAdmin $svnadmin,
+        Logger $logger,
+        System_Command $system_command
+    ) {
         $this->dao             = $dao;
         $this->project_manager = $project_manager;
+        $this->svnadmin        = $svnadmin;
+        $this->logger          = $logger;
+        $this->system_command  = $system_command;
     }
 
     /**
@@ -90,6 +115,34 @@ class RepositoryManager {
             SystemEvent::PRIORITY_HIGH);
     }
 
+    public function delete(Repository $repository)
+    {
+        $project = $repository->getProject();
+        if (! $project) {
+            return false;
+        }
+
+        $system_path = $repository->getSystemPath();
+        if (is_dir($system_path)) {
+            return $this->system_command->exec('rm -rf '. escapeshellarg($system_path));
+        }
+
+        return false;
+    }
+
+    /**
+     * @return SystemEvent or null
+     */
+    public function queueRepositoryDeletion(Repository $repositorysvn, \SystemEventManager $system_event_manager)
+    {
+        return $system_event_manager->createEvent(
+            'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
+            $repositorysvn->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repositorysvn->getId(),
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_ROOT
+        );
+    }
+
     public function getRepositoryFromSystemPath($path) {
          if (! preg_match('/\/(\d+)\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
             throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
@@ -120,10 +173,13 @@ class RepositoryManager {
     /**
      * @return Repository
      */
-    public function instantiateFromRow(array $row, Project $project) {
+    public function instantiateFromRow(array $row, Project $project)
+    {
         return new Repository(
             $row['id'],
             $row['name'],
+            $row['repository_deletion_date'],
+            $row['backup_path'],
             $project
         );
     }
@@ -139,6 +195,27 @@ class RepositoryManager {
     public function updateHookConfig($repository_id, array $hook_config) {
         return $this->dao->updateHookConfig(
             $repository_id,
-            HookConfig::sanitizeHookConfigArray($hook_config));
+            HookConfig::sanitizeHookConfigArray($hook_config)
+        );
+    }
+
+    public function markAsDeleted(Repository $repository)
+    {
+        if ($repository->canBeDeleted()) {
+            $deletion_date = time();
+            $repository->setDeletionDate($deletion_date);
+            $this->dao->markAsDeleted(
+                $repository->getId(),
+                $repository->getSystemBackupPath() . "/" . $repository->getBackupFileName(),
+                $deletion_date
+            );
+        } else {
+            throw new CannotDeleteRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'delete_repository_exception'));
+        }
+    }
+
+    public function dumpRepository(Repository $repository)
+    {
+        return $this->svnadmin->dumpRepository($repository);
     }
 }

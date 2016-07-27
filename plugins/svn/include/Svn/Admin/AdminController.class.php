@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Admin;
 
+use SystemEventManager;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
@@ -29,21 +30,25 @@ use HTTPRequest;
 use Valid_String;
 use Valid_Array;
 use CSRFSynchronizerToken;
+use Logger;
 
-class AdminController {
+class AdminController
+{
 
     private $repository_manager;
     private $mail_header_manager;
     private $mail_notification_manager;
 
     public function __construct(
-            MailHeaderManager $mail_header_manager,
-            RepositoryManager $repository_manager,
-            MailNotificationManager $mail_notification_manager
-        ) {
+        MailHeaderManager $mail_header_manager,
+        RepositoryManager $repository_manager,
+        MailNotificationManager $mail_notification_manager,
+        Logger $logger
+    ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
         $this->mail_notification_manager = $mail_notification_manager;
+        $this->logger                    = $logger;
     }
 
     private function generateToken(Project $project, Repository $repository) {
@@ -220,6 +225,8 @@ class AdminController {
         $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
         $title      = $GLOBALS['Language']->getText('global', 'Administration');
 
+        $token = $this->generateTokenDeletion($request->getProject(), $repository);
+
         $service->renderInPage(
             $request,
             $repository->getName() .' – '. $title,
@@ -227,8 +234,75 @@ class AdminController {
             new RepositoryDeletePresenter(
                 $repository,
                 $request->getProject(),
-                $title
+                $title,
+                $token
             )
         );
+    }
+
+    public function deleteRepository(HTTPRequest $request)
+    {
+        $project       = $request->getProject();
+        $project_id    = $project->getID();
+        $repository_id = $request->get('repo_id');
+
+        if ($project_id === null || $repository_id === null || $repository_id === false || $project_id === false) {
+            $GLOBALS['Response']->addFeedback('error', 'actions_params_error');
+            return false;
+        }
+
+        $repository = $this->repository_manager->getById($repository_id, $project);
+        if ($repository !== null) {
+            $token = $this->generateTokenDeletion($project, $repository);
+            $token->check();
+
+            if ($repository->canBeDeleted()) {
+                $this->repository_manager->queueRepositoryDeletion($repository, \SystemEventManager::instance());
+
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_svn', 'actions_delete_process', array($repository->getFullName()))
+                );
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    $GLOBALS['Language']->getText(
+                        'plugin_svn',
+                        'actions_delete_backup',
+                        array(
+                            $repository->getFullName(),
+                            $repository->getSystemBackupPath()
+                        )
+                    )
+                );
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_svn', 'feedback_event_delete', array($repository->getFullName()))
+                );
+            } else {
+                $this->redirect($project_id);
+                return false;
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn', 'actions_repo_not_found'));
+        }
+        $this->redirect($project_id);
+    }
+
+    private function generateTokenDeletion(Project $project, Repository $repository)
+    {
+        return new CSRFSynchronizerToken(SVN_BASE_URL.'/?'. http_build_query(
+            array(
+                'group_id' => $project->getID(),
+                'repo_id'  => $repository->getId(),
+                'action'   => 'delete-repository'
+            )
+        ));
+    }
+
+    private function redirect($project_id)
+    {
+        $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(
+            array('group_id' => $project_id)
+        ));
     }
 }

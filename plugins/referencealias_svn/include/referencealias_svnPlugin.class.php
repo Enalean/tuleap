@@ -28,6 +28,8 @@ use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Dao as SVNPluginDao;
 use Tuleap\Svn\XMLRepositoryImporter;
+use Tuleap\Svn\SvnAdmin;
+use Tuleap\Svn\SvnLogger;
 
 class referencealias_svnPlugin extends Plugin
 {
@@ -96,8 +98,29 @@ class referencealias_svnPlugin extends Plugin
         return new ReferencesBuilder(
             $this->getCompatDao(),
             $project_manager,
-            new RepositoryManager($this->getSVNDao(), $project_manager)
+            new RepositoryManager(
+                $this->getSVNDao(),
+                $project_manager,
+                $this->getSvnAdmin(),
+                $this->getLogger(),
+                $this->getSystemCommand()
+            )
         );
+    }
+
+    private function getSystemCommand()
+    {
+        return new System_Command();
+    }
+
+    private function getLogger()
+    {
+        return new SvnLogger();
+    }
+
+    private function getSvnAdmin()
+    {
+        return new SvnAdmin($this->getSystemCommand(), $this->getLogger());
     }
 
     private function getSVNDao()

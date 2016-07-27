@@ -94,7 +94,7 @@ class XMLRepositoryImporter
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: ".$rule_name->getErrorMessage());
         }
 
-        $repo = new Repository ("", $this->name, $project);
+        $repo = new Repository ("", $this->name, '', '', $project);
         $sysevent = $repository_manager->create($repo, $system_event_manager);
         if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");

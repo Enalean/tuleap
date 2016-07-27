@@ -39,7 +39,7 @@ class LauncherTest extends TuleapTestCase {
 
         $this->logger      = mock('Tuleap\HudsonSvn\SvnBackendLogger');
         $this->project     = stub("Project")->getId()->returns(101);
-        $this->repository  = new Repository(1, "repository_name", $this->project);
+        $this->repository  = new Repository(1, "repository_name", '', '', $this->project);
         $this->commit_info = new CommitInfo();
         $this->commit_info->setChangedDirectories(array("/", "a", "a/trunk", "a/trunk/b", "a/trunk/c"));
 

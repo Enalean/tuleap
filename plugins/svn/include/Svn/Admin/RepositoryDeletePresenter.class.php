@@ -22,35 +22,54 @@ namespace Tuleap\Svn\Admin;
 
 use Project;
 use Tuleap\Svn\Repository\Repository;
+use CSRFSynchronizerToken;
 
 class RepositoryDeletePresenter extends BaseAdminPresenter
 {
     public $project_id;
     public $repository_name;
     public $repository_id;
+    public $is_created;
     public $title;
+    public $cannot_delete;
     public $subtitle;
     public $comment;
     public $button;
-    public $alert_message;
+    public $token;
+
+    public $modal_content;
+    public $modal_button_delete;
+    public $modal_button_cancel;
+    public $modal_title;
+
     public $sections;
 
     public function __construct(
         Repository $repository,
         Project $project,
-        $title
+        $title,
+        CSRFSynchronizerToken $token
     ) {
         parent::__construct();
 
         $this->project_id               = $project->getId();
         $this->repository_id            = $repository->getId();
         $this->repository_name          = $repository->getName();
+        $this->is_created               = $repository->isRepositoryCreated();
         $this->title                    = $title;
         $this->repository_delete_active = true;
-        $this->alert_message            = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'alert_message');
+        $this->token                    = $token->fetchHTMLInput();
+
+        $this->cannot_delete            = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'cannot_delete');
         $this->subtitle                 = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'subtitle');
         $this->comment                  = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'comment');
+        $this->comment_undone           = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'comment_undone');
         $this->button                   = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'button_delete');
+
+        $this->modal_title         = $GLOBALS['Language']->getText('plugin_svn_admin_modal_repository_delete', 'title');
+        $this->modal_content       = $GLOBALS['Language']->getText('plugin_svn_admin_modal_repository_delete', 'content');
+        $this->modal_button_delete = $GLOBALS['Language']->getText('plugin_svn_admin_modal_repository_delete', 'button_delete');
+        $this->modal_button_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
 
         $this->sections = new SectionsPresenter($repository);
     }

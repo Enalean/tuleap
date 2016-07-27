@@ -86,7 +86,18 @@ plugin_svn_admin_hooks	label_allow_commit_message_changes	Autorise la modificati
 plugin_svn_admin_hooks	submit	Sauvegarder les règles
 
 plugin_svn	repository_delete	Supprimer
-plugin_svn_admin_repository_delete	comment	Vous êtes sur le point de supprimer définitivement le dépôt. Cette action ne sera pas réversible.
+plugin_svn_admin_repository_delete	cannot_delete	Vous ne pouvez pas supprimer.
+plugin_svn_admin_repository_delete	comment	Vous êtes sur le point de supprimer définitivement le dépôt :
+plugin_svn_admin_repository_delete	comment_undone	Cette action est irréversible.
 plugin_svn_admin_repository_delete	subtitle	Supprimer ce dépôt
 plugin_svn_admin_repository_delete	button_delete	Supprimer ce dépôt
-plugin_svn_admin_repository_delete	alert_message	Pas encore implémenté !
+
+plugin_svn_admin_modal_repository_delete	title	Attendez une minute ...
+plugin_svn_admin_modal_repository_delete	button_delete	Supprimer le dépôt
+plugin_svn_admin_modal_repository_delete	content	Cette suppression est irréversible. Veuillez confirmer la suppresion du dépôt.
+
+plugin_svn	actions_repo_not_found	Le dépôt n'existe pas
+plugin_svn	actions_delete_process	Le dépôt '$1' va être supprimé dans quelques secondes
+plugin_svn	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le répertoire $2
+plugin_svn	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_svn	delete_repository_exception	Une erreur est survenue lors de la suppression du dépôt Svn.

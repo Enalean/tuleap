@@ -27,11 +27,16 @@ class Repository {
     private $id;
     private $name;
     private $project;
+    private $backup_path;
+    private $deletion_date;
 
-    public function __construct($id, $name, Project $project) {
-        $this->id      = $id;
-        $this->project = $project;
-        $this->name    = $name;
+    public function __construct($id, $name, $backup_path, $deletion_date, Project $project)
+    {
+        $this->id            = $id;
+        $this->project       = $project;
+        $this->name          = $name;
+        $this->deletion_date = $deletion_date;
+        $this->backup_path   = $backup_path;
     }
 
     public function setId($id) {
@@ -83,5 +88,35 @@ class Repository {
         }
         // Domain name must be lowercase (issue with some SVN clients)
         return strtolower($svn_url);
+    }
+
+    public function canBeDeleted()
+    {
+        return $this->isRepositoryCreated();
+    }
+
+    public function getBackupPath()
+    {
+        return $this->backup_path;
+    }
+
+    public function getSystemBackupPath()
+    {
+        return ForgeConfig::get('sys_project_backup_path') . '/svn';
+    }
+
+    public function getBackupFileName()
+    {
+        return $this->getName(). $this->getDeletionDate() .'.svn';
+    }
+
+    public function getDeletionDate()
+    {
+        return $this->deletion_date;
+    }
+
+    public function setDeletionDate($deletion_date)
+    {
+        $this->deletion_date = $deletion_date;
     }
 }

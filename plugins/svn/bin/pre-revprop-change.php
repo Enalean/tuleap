@@ -26,6 +26,7 @@
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PreRevpropChange;
+use Tuleap\Svn\SvnAdmin;
 
 try {
     require_once 'pre.php';
@@ -40,7 +41,14 @@ try {
         $action,
         $propname,
         $new_commit_message,
-        new RepositoryManager(new Dao(), ProjectManager::instance()));
+        new RepositoryManager(
+            new Dao(),
+            ProjectManager::instance(),
+            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new SvnLogger(),
+            new System_Command()
+        )
+    );
 
     $hook->checkAuthorized(ReferenceManager::instance());
 

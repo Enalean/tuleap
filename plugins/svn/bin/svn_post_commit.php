@@ -33,7 +33,8 @@ use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Commit\SVNLook;
 use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
-
+use Tuleap\Svn\SvnAdmin;
+use Tuleap\Svn\SvnLogger;
 
 try {
     require_once 'pre.php';
@@ -44,7 +45,13 @@ try {
 
     $hook = new PostCommit(
         ReferenceManager::instance(),
-        new RepositoryManager(new Dao(), ProjectManager::instance()),
+        new RepositoryManager(
+            new Dao(),
+            ProjectManager::instance(),
+            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new SvnLogger(),
+            new System_Command()
+        ),
         new MailHeaderManager(new MailHeaderDao()),
         new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),
         PluginManager::instance(),
@@ -58,6 +65,6 @@ try {
 
     exit(0);
 } catch (Exception $exception) {
-    fwrite (STDERR, $exception->getMessage());
+    fwrite(STDERR, $exception->getMessage());
     exit(1);
 }

@@ -36,6 +36,7 @@ use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Hooks\PreCommit;
 use Tuleap\Svn\Commit\SVNLook;
+use Tuleap\Svn\SvnAdmin;
 
 try {
     require_once 'pre.php';
@@ -46,7 +47,13 @@ try {
     $hook = new PreCommit(
         $repository_path,
         $transaction,
-        new RepositoryManager(new Dao(), ProjectManager::instance()),
+        new RepositoryManager(
+            new Dao(),
+            ProjectManager::instance(),
+            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new SvnLogger(),
+            new System_Command()
+        ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),
         new SvnLogger()
@@ -57,6 +64,6 @@ try {
 
     exit(0);
 } catch (Exception $exception) {
-    fwrite (STDERR, $exception->getMessage());
+    fwrite(STDERR, $exception->getMessage());
     exit(1);
 }
