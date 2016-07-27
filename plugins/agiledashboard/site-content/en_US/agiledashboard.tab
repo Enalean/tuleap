@@ -183,4 +183,4 @@ plugin_agiledashboard_first_scrum	error_existing_tracker	We tried to create an i
 plugin_agiledashboard_first_scrum	internal_error	We tried to create an initial scrum configuration for you but an internal error prevented it.
 plugin_agiledashboard_first_scrum	created	We created an initial scrum configuration for you. Enjoy!
 
-plugin_agiledashboard	service_not_activable	Agile Dashboard service cannot be enabled because this project is using artifact link natures.
+plugin_agiledashboard	service_not_activable	Agile Dashboard service cannot be enabled because this project is using artifact link types.

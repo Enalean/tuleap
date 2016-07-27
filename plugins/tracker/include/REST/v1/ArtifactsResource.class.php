@@ -59,7 +59,7 @@ class ArtifactsResource extends AuthenticatedResource {
     const VALUES_FORMAT_ALL        = 'all';
     const VALUES_DEFAULT           = '';
 
-    const EMPTY_NATURE = '';
+    const EMPTY_TYPE = '';
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -164,7 +164,7 @@ class ArtifactsResource extends AuthenticatedResource {
     }
 
     /**
-     * Get possible natures for an artifact
+     * Get possible types for an artifact
      *
      * @url GET {id}/links
      * @access hybrid
@@ -199,10 +199,10 @@ class ArtifactsResource extends AuthenticatedResource {
     }
 
     /**
-     * Get all artifacts linked by nature
+     * Get all artifacts linked by type
      *
-     * Get all the artifacts linked by nature.
-     * If no nature is provided, it will search linked artifacts witn no nature.
+     * Get all the artifacts linked by type.
+     * If no type is provided, it will search linked artifacts witn no type.
      *
      * @url GET {id}/linked_artifacts
      *
@@ -210,7 +210,7 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @param int    $id        Id of the artifact
      * @param string $direction The artifact link direction {@from query} {@choice forward,reverse}
-     * @param string $nature    The artifact link nature to filter {@from query}
+     * @param string $nature    The artifact link type to filter {@from query}
      * @param int    $limit     Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int    $offset    Position of the first element to display {@from path}{@min 0}
      *
@@ -220,7 +220,7 @@ class ArtifactsResource extends AuthenticatedResource {
     public function getLinkedArtifacts(
         $id,
         $direction,
-        $nature = self::EMPTY_NATURE,
+        $nature = self::EMPTY_TYPE,
         $limit  = 10,
         $offset = self::DEFAULT_OFFSET
     ) {
