@@ -36,6 +36,7 @@ class SectionsPresenter {
         $this->access_control    = $GLOBALS['Language']->getText('plugin_svn', 'access_control');
         $this->immutable_tag     = $GLOBALS['Language']->getText('plugin_svn', 'immutable_tag');
         $this->hooks_config      = $GLOBALS['Language']->getText('plugin_svn', 'hooks_config');
+        $this->repository_delete = $GLOBALS['Language']->getText('plugin_svn', 'repository_delete');
 
         $this->notifications_url = SVN_BASE_URL .'/?'. http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
