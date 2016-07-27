@@ -6,6 +6,7 @@ Version 8.18 (Not yet released)
 	== Development ==
 	* request #9339: Remove unused code in the utilities
 	* request #9202: Refactoring for PHP5.6 - Snippets
+	* story #9090: Improve REST tests of the computed fields
 
 	== Plugins ==
 	* agiledashboard: 1.397
