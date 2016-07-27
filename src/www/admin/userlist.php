@@ -12,7 +12,6 @@ require_once('www/project/admin/ugroup_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/SessionDao.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

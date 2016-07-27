@@ -21,7 +21,6 @@
 
 require_once('pre.php');
 require_once('account.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/include/lib/Upload.class.php');
 
 $user_manager = UserManager::instance();

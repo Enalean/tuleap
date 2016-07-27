@@ -20,7 +20,6 @@
 
 require_once('pre.php');
 require_once 'common/user/GenericUserFactory.class.php';
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 // Valid group id
 $valid_groupid = new Valid_GroupId();

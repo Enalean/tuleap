@@ -20,8 +20,6 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-require_once 'common/include/CSRFSynchronizerToken.class.php';
-
 class Git_Admin_process_Test extends TuleapTestCase {
 
     public function setUp() {

@@ -70,3 +70,6 @@ function autoload_zend($className) {
     }
 }
 spl_autoload_register('autoload_zend');
+
+// Load PHP compatibility libraries
+require_once('common/include/compat/hash_equals.php');
