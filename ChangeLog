@@ -11,12 +11,14 @@ Version 8.18 (Not yet released)
 	* agiledashboard: 1.397
 	* docman: 2.26.114
 	* cardwall: 1.61
-	* tracker: 5.969
+	* tracker: 5.970
 	* forumml: 2.6.26
 	* ldap: 3.104
 	* mediawiki: 0.120
 	* webdav: 1.9.17
-	* git: 4.241
+	* git: 4.242
+	* boomerang: 0.5
+	* statistics: 0.60
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==

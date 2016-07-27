@@ -1,3 +1,6 @@
+Version 5.970 - Tuleap 8.18
+    * request #9342: CSRF token synchronizer implementation uses token with weak entropy
+
 Version 5.969 - Tuleap 8.18
     * request #9010 Export project tool must export all importable services
 
