@@ -50,7 +50,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         $this->artifact_links    = $artifact_links;
         $this->artifact          = $artifact;
         $this->artifact_id       = $artifact->getId();
-        $this->artifact_title    = $artifact->getTitle();
+        $this->artifact_title    = $this->getEmptyStringIfNull($artifact->getTitle());
         $this->artifact_uri      = $artifact->getUri();
         $this->last_changeset_id = $artifact->getLastChangeset()->getId();
         $this->form_elements     = $form_elements;
@@ -92,5 +92,15 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
     public function user_is_logged_in() {
         return $this->user->isLoggedIn();
     }
+
+    /**
+     * @return string
+     */
+    private function getEmptyStringIfNull($value)
+    {
+        if ($value === null) {
+            return '';
+        }
+        return $value;
+    }
 }
-?>
