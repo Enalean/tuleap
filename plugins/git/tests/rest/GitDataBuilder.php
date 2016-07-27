@@ -102,7 +102,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
         echo "Creating Gerrit servers\n";
 
         $server_01 = new Git_RemoteServer_GerritServer(
-            '1',
+            0,
             'localhost',
             29418,
             8080,
@@ -112,11 +112,12 @@ class GitDataBuilder extends REST_TestDataBuilder {
             true,
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
             '',
+            '',
             'Digest'
         );
 
         $server_02 = new Git_RemoteServer_GerritServer(
-            '2',
+            0,
             'otherhost',
             29418,
             8080,
@@ -125,6 +126,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             '',
             false,
             Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            '',
             '',
             'Digest'
         );

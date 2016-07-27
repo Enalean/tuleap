@@ -31,7 +31,7 @@ class Test_GerritServer_Builder {
     }
 
     public function build() {
-        $host = $ssh_port = $http_port = $login = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = $auth_type = 0;
+        $host = $ssh_port = $http_port = $login = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = $auth_type = $replication_password = 0;
         return new Git_RemoteServer_GerritServer(
             $this->id,
             $host,
@@ -43,6 +43,7 @@ class Test_GerritServer_Builder {
             $use_ssl,
             $gerrit_version,
             $http_password,
+            $replication_password,
             $auth_type
         );
     }

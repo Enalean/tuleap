@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,8 @@ require_once 'common/event/EventManager.class.php';
 /**
  * @see Git_Driver_Gerrit_RemoteSSHConfig
  */
-class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
+class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
+{
 
     const DEFAULT_HTTP_PORT       = 80;
     const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
@@ -29,6 +30,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     const GERRIT_VERSION_2_8_PLUS = '2.8+';
     const AUTH_TYPE_DIGEST        = 'Digest';
     const AUTH_TYPE_BASIC         = 'Basic';
+    const GENERIC_USER_PREFIX     = 'gerrit_';
 
     private $id;
     private $host;
@@ -45,6 +47,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $gerrit_version;
     /** @var String */
     private $auth_type;
+    /** @var String */
+    private $replication_password;
 
     public function __construct(
         $id,
@@ -57,19 +61,21 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $use_ssl,
         $gerrit_version,
         $http_password,
+        $replication_password,
         $auth_type
     ) {
-        $this->id               = $id;
-        $this->host             = $host;
-        $this->ssh_port         = $ssh_port;
-        $this->http_port        = $http_port;
-        $this->login            = $login;
-        $this->identity_file    = $identity_file;
-        $this->replication_key  = $replication_key;
-        $this->use_ssl          = $use_ssl;
-        $this->http_password    = $http_password;
-        $this->gerrit_version   = $gerrit_version;
-        $this->auth_type        = $auth_type;
+        $this->id                   = $id;
+        $this->host                 = $host;
+        $this->ssh_port             = $ssh_port;
+        $this->http_port            = $http_port;
+        $this->login                = $login;
+        $this->identity_file        = $identity_file;
+        $this->replication_key      = $replication_key;
+        $this->use_ssl              = $use_ssl;
+        $this->http_password        = $http_password;
+        $this->replication_password = $replication_password;
+        $this->gerrit_version       = $gerrit_version;
+        $this->auth_type            = $auth_type;
     }
 
     public function __toString() {
@@ -227,10 +233,32 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     /**
+     * @return String
+     */
+    public function getReplicationPassword()
+    {
+        return (string)$this->replication_password;
+    }
+
+    /**
      * @param String $http_password
      */
     public function setHTTPPassword($http_password) {
         $this->http_password = $http_password;
         return $this;
+    }
+
+    /**
+     * @param String $http_password
+     */
+    public function setReplicationPassword($replication_password)
+    {
+        $this->replication_password = $replication_password;
+        return $this;
+    }
+
+    public function getGenericUserName()
+    {
+        return Rule_UserName::RESERVED_PREFIX.self::GENERIC_USER_PREFIX.$this->getId();
     }
 }

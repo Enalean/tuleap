@@ -38,6 +38,8 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+
 /**
  * Git
  * @author Guillaume Storchi
@@ -361,7 +363,8 @@ class Git extends PluginController {
         );
     }
 
-    private function routeGitSmartHTTP(Git_URL $url) {
+    private function routeGitSmartHTTP(Git_URL $url)
+    {
         if (! $url->isSmartHTTP()) {
             return;
         }
@@ -373,19 +376,20 @@ class Git extends PluginController {
 
         $logger = new WrapperLogger($this->logger, 'http');
 
-        $logger->debug('REQUEST_URI '.$_SERVER['REQUEST_URI']);
-
-        $command_factory = new Git_HTTP_CommandFactory(
+        $password_handler = PasswordHandlerFactory::getPasswordHandler();
+        $command_factory  = new Git_HTTP_CommandFactory(
             $this->factory,
             new User_LoginManager(
                 EventManager::instance(),
                 UserManager::instance(),
                 new User_PasswordExpirationChecker(),
-                PasswordHandlerFactory::getPasswordHandler()
+                $password_handler
             ),
             PermissionsManager::instance(),
             new URLVerification(),
-            $logger
+            $logger,
+            $this->gerrit_server_factory,
+            new ReplicationHTTPUserAuthenticator($password_handler, $this->gerrit_server_factory)
         );
 
         $http_wrapper = new Git_HTTP_Wrapper($logger);

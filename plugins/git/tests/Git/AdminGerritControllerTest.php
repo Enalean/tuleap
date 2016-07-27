@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,62 +30,94 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->admin   = new Git_AdminGerritController($this->csrf, $this->factory);
 
         $this->request_new_server = array(
-            'host'              => 'host',
-            'port'              => '1234',
-            'login'             => 'login',
-            'identity_file'     => '/path/to/file',
-            'replication_key'   => '',
-            'use_ssl'           => 0,
-            'gerrit_version'    => '2.5',
-            'http_password'     => 'azerty'
+            'host'                 => 'host',
+            'port'                 => '1234',
+            'login'                => 'login',
+            'identity_file'        => '/path/to/file',
+            'replication_key'      => '',
+            'use_ssl'              => 0,
+            'gerrit_version'       => '2.5',
+            'http_password'        => 'azerty',
+            'replication_password' => ''
         );
 
         $this->request_update_existing_server = array(
-            'host'              => 'g.example.com',
-            'port'              => '1234',
-            'login'             => 'new_login',
-            'identity_file'     => '/path/to/file',
-            'replication_key'   => '',
-            'use_ssl'           => 0,
-            'gerrit_version'    => '2.5',
-            'http_password'     => 'azerty'
+            'host'                 => 'g.example.com',
+            'port'                 => '1234',
+            'login'                => 'new_login',
+            'identity_file'        => '/path/to/file',
+            'replication_key'      => '',
+            'use_ssl'              => 0,
+            'gerrit_version'       => '2.5',
+            'http_password'        => 'azerty',
+            'replication_password' => ''
         );
 
         $this->request_new_server_with_no_data = array(
-            'host'              => '',
-            'port'              => '',
-            'login'             => '',
-            'identity_file'     => '',
-            'replication_key'   => '',
-            'use_ssl'           => '',
-            'gerrit_version'    => '2.5',
-            'http_password'     => ''
+            'host'                 => '',
+            'port'                 => '',
+            'login'                => '',
+            'identity_file'        => '',
+            'replication_key'      => '',
+            'use_ssl'              => '',
+            'gerrit_version'       => '2.5',
+            'http_password'        => '',
+            'replication_password' => ''
         );
 
         $this->request_update_existing_server_with_host_and_empty_data = array(
-            'host'              => 'awesome_host',
-            'port'              => '',
-            'login'             => '',
-            'identity_file'     => '',
-            'replication_key'   => '',
-            'use_ssl'           => '',
-            'gerrit_version'    => '',
-            'http_password'     => ''
+            'host'                 => 'awesome_host',
+            'port'                 => '',
+            'login'                => '',
+            'identity_file'        => '',
+            'replication_key'      => '',
+            'use_ssl'              => '',
+            'gerrit_version'       => '',
+            'http_password'        => '',
+            'replication_password' => ''
         );
 
         $this->request_update_existing_server_with_empty_host = array(
-            'host'              => '',
-            'port'              => '1234',
-            'login'             => 'new_login',
-            'identity_file'     => '/path/to/file',
-            'replication_key'   => '',
-            'use_ssl'           => 0,
-            'gerrit_version'    => '2.5',
-            'http_password'     => 'azerty'
+            'host'                 => '',
+            'port'                 => '1234',
+            'login'                => 'new_login',
+            'identity_file'        => '/path/to/file',
+            'replication_key'      => '',
+            'use_ssl'              => 0,
+            'gerrit_version'       => '2.5',
+            'http_password'        => 'azerty',
+            'replication_password' => ''
         );
 
-        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty', '');
-        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty', '');
+        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(
+            0,
+            'host',
+            '1234',
+            '80',
+            'login',
+            '/path/to/file',
+            '',
+            0,
+            '2.5',
+            'azerty',
+            '',
+            ''
+        );
+
+        $this->an_existing_server = new Git_RemoteServer_GerritServer(
+            1,
+            'g.example.com',
+            '1234',
+            '80',
+            'login',
+            '/path/to/file',
+            '',
+            0,
+            '2.5',
+            'azerty',
+            '',
+            ''
+        );
 
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server
@@ -154,4 +186,3 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->admin->process($this->request);
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_HTTP_CommandGitolite3 extends Git_HTTP_CommandGitolite {
+namespace Tuleap\Git\Gerrit;
 
-    public function __construct(PFO_User $user, Git_HTTP_Command $command) {
-        parent::__construct($user, $command);
+use PFO_User;
+use Git_RemoteServer_GerritServer;
 
-        $this->env['GITOLITE_HTTP_HOME'] = $this->gitolite_home;
+class ReplicationHTTPUser implements PFO_User
+{
+    /**
+     * @var Git_RemoteServer_GerritServer
+     */
+    private $gerrit_server;
+
+    public function __construct(Git_RemoteServer_GerritServer $gerrit_server)
+    {
+        $this->gerrit_server = $gerrit_server;
     }
 
-    public function getCommand() {
-        return $this->sudo('/usr/share/gitolite3/gitolite-shell');
+    public function getGroups()
+    {
+        return array();
+    }
+
+    public function getUnixName()
+    {
+        return $this->gerrit_server->getGenericUserName();
     }
 }

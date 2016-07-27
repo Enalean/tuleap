@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'common/dao/include/DataAccessObject.class.php';
+
 class Git_RemoteServer_Dao extends DataAccessObject {
+
+    /**
+     * @var StandardPasswordHandler
+     */
+    private $password_handler;
+
+    public function __construct(DataAccess $da = null)
+    {
+        parent::__construct($da);
+        $this->password_handler = PasswordHandlerFactory::getPasswordHandler();
+    }
 
     public function searchById($id) {
         $id = $this->da->escapeInt($id);
@@ -92,20 +103,78 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         $http_password,
         $auth_type
     ) {
-        $id              = $this->da->escapeInt($id);
-        $host            = $this->da->quoteSmart($host);
-        $ssh_port        = $this->da->escapeInt($ssh_port);
-        $http_port       = $this->da->escapeInt($http_port, CODENDI_DB_NULL);
-        $login           = $this->da->quoteSmart($login);
-        $identity_file   = $this->da->quoteSmart($identity_file);
-        $replication_key = $this->da->quoteSmart($replication_key);
-        $use_ssl         = $this->da->escapeInt($use_ssl);
-        $gerrit_version  = $this->da->quoteSmart($gerrit_version);
-        $http_password   = $this->da->quoteSmart($http_password);
-        $auth_type       = $this->da->quoteSmart($auth_type);
+        $id                   = $this->da->escapeInt($id);
+        $host                 = $this->da->quoteSmart($host);
+        $ssh_port             = $this->da->escapeInt($ssh_port);
+        $http_port            = $this->da->escapeInt($http_port, CODENDI_DB_NULL);
+        $login                = $this->da->quoteSmart($login);
+        $identity_file        = $this->da->quoteSmart($identity_file);
+        $replication_key      = $this->da->quoteSmart($replication_key);
+        $use_ssl              = $this->da->escapeInt($use_ssl);
+        $gerrit_version       = $this->da->quoteSmart($gerrit_version);
+        $http_password        = $this->da->quoteSmart($http_password);
+        $auth_type            = $this->da->quoteSmart($auth_type);
 
-        $sql = "REPLACE INTO plugin_git_remote_servers (id, host, ssh_port, http_port, login, identity_file, ssh_key, use_ssl, gerrit_version, http_password, auth_type)
-                VALUES ($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl, $gerrit_version, $http_password, $auth_type)";
+        if ($id == 0) {
+            $sql = "INSERT INTO plugin_git_remote_servers (
+                id,
+                host,
+                ssh_port,
+                http_port,
+                login,
+                identity_file,
+                ssh_key,
+                use_ssl,
+                gerrit_version,
+                http_password,
+                replication_password,
+                auth_type
+            )
+            VALUES (
+                $id,
+                $host,
+                $ssh_port,
+                $http_port,
+                $login,
+                $identity_file,
+                $replication_key,
+                $use_ssl,
+                $gerrit_version,
+                $http_password,
+                '',
+                $auth_type
+            )";
+        } else {
+            $sql = "REPLACE INTO plugin_git_remote_servers (
+                id,
+                host,
+                ssh_port,
+                http_port,
+                login,
+                identity_file,
+                ssh_key,
+                use_ssl,
+                gerrit_version,
+                http_password,
+                replication_password,
+                auth_type
+            )
+            SELECT
+                $id,
+                $host,
+                $ssh_port,
+                $http_port,
+                $login,
+                $identity_file,
+                $replication_key,
+                $use_ssl,
+                $gerrit_version,
+                $http_password,
+                replication_password,
+                $auth_type
+            FROM plugin_git_remote_servers
+            WHERE id = $id";
+        }
 
         return $this->updateAndGetLastId($sql);
     }
@@ -116,5 +185,18 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 where ID = $id";
         return $this->update($sql);
     }
+
+    public function updateReplicationPassword($id, $replication_password)
+    {
+        $id                   = $this->da->escapeInt($id);
+        $replication_password = $this->da->quoteSmart(
+            $this->password_handler->computeHashPassword($replication_password)
+        );
+
+        $sql = "UPDATE plugin_git_remote_servers
+                SET replication_password = $replication_password
+                WHERE id = $id";
+
+        return $this->update($sql);
+    }
 }
-?>

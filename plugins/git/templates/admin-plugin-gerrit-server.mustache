@@ -97,6 +97,15 @@
                             </td>
                         </tr>
                         <tr>
+                            <td> <label> Replication password: </label> </td>
+                            <td>
+                                <input type="password"
+                                       name="gerrit_servers[{{ id }}][replication_password]"
+                                       value="{{ replication_password }}"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
                             <td> Authentication type </td>
                             <td>
                                 <label class="radio">

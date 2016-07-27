@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command {
 
     protected $gitolite_home = '/usr/com/gitolite';
 
-    public function __construct(PFUser $user, Git_HTTP_Command $command) {
+    public function __construct(PFO_User $user, Git_HTTP_Command $command) {
         parent::__construct();
 
         $gitolite_user_info = posix_getpwnam('gitolite');

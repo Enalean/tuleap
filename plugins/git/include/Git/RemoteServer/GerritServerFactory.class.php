@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -108,7 +108,8 @@ class Git_RemoteServer_GerritServerFactory {
      *
      * @param Git_RemoteServer_GerritServer $server
      */
-    public function save(Git_RemoteServer_GerritServer $server) {
+    public function save(Git_RemoteServer_GerritServer $server)
+    {
         $id = $this->dao->save(
             $server->getId(),
             $server->getHost(),
@@ -126,6 +127,15 @@ class Git_RemoteServer_GerritServerFactory {
             $server->setId($id);
         }
         $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     */
+    public function updateReplicationPassword(Git_RemoteServer_GerritServer $server)
+    {
+        $this->dao->updateReplicationPassword($server->getId(), $server->getReplicationPassword());
     }
 
     /**
@@ -163,7 +173,8 @@ class Git_RemoteServer_GerritServerFactory {
      * @param array $row
      * @return Git_RemoteServer_GerritServer
      */
-    public function instantiateFromRow(array $row) {
+    public function instantiateFromRow(array $row)
+    {
         return new Git_RemoteServer_GerritServer(
             $row['id'],
             $row['host'],
@@ -175,6 +186,7 @@ class Git_RemoteServer_GerritServerFactory {
             $row['use_ssl'],
             $row['gerrit_version'],
             $row['http_password'],
+            $row['replication_password'],
             $row['auth_type']
         );
     }
