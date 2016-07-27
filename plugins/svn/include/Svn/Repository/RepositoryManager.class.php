@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Repository;
 
+use EventManager;
 use Exception;
 use ForgeConfig;
 use Tuleap\Svn\Admin\Destructor;
@@ -37,7 +38,7 @@ use System_Command;
 
 class RepositoryManager
 {
-    const PREFIX = "svn_";
+    const PREFIX = 'svn';
 
     /** @var Dao */
     private $dao;
@@ -53,6 +54,8 @@ class RepositoryManager
     private $system_command;
     /** @var Destructor */
     private $destructor;
+    /** @var EventManager */
+    private $event_manager;
 
     public function __construct(
         Dao $dao,
@@ -61,7 +64,8 @@ class RepositoryManager
         Logger $logger,
         System_Command $system_command,
         Destructor $destructor,
-        HookDao $hook_dao
+        HookDao $hook_dao,
+        EventManager $event_manager
     ) {
         $this->dao             = $dao;
         $this->project_manager = $project_manager;
@@ -70,6 +74,7 @@ class RepositoryManager
         $this->system_command  = $system_command;
         $this->destructor      = $destructor;
         $this->hook_dao        = $hook_dao;
+        $this->event_manager   = $event_manager;
     }
 
     /**
@@ -264,6 +269,7 @@ class RepositoryManager
 
         foreach ($archived_repositories as $repository) {
             try {
+                $this->archiveBeforePurge($repository);
                 $this->deleteArchivedRepository($repository);
                 $this->destructor->delete($repository);
             } catch (Exception $exception) {
@@ -287,6 +293,32 @@ class RepositoryManager
         $command_output = $system_command->exec('rm -rf '.escapeshellarg($path));
         foreach ($command_output as $line) {
             $this->logger->debug('[svn '.$repository->getName().'] cannot remove repository: '. $line);
+        }
+    }
+
+    private function archiveBeforePurge(Repository $repository)
+    {
+        $source_path = $repository->getBackupPath();
+
+        if (dirname($source_path)) {
+            $status      = true;
+            $error       = null;
+            $params      = array(
+                'source_path'    => $source_path,
+                'archive_prefix' => self::PREFIX,
+                'status'         => &$status,
+                'error'          => &$error
+            );
+
+            $this->event_manager->processEvent('archive_deleted_item', $params);
+
+            if ($params['status']) {
+                $this->logger->info('The repository' . $repository->getName() . ' has been moved to the archiving area before purge ');
+                $this->logger->info('Archive of the SVN repository: ' . $repository->getName() . ' done');
+            } else {
+                $this->logger->warn('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge :[' . $params['error'] . ']');
+                $this->logger->warn('An error occured while archiving SVN repository: ' . $repository->getName());
+            }
         }
     }
 }
