@@ -16,6 +16,7 @@ Version 8.18 (Not yet released)
 	* ldap: 3.104
 	* mediawiki: 0.120
 	* webdav: 1.9.17
+	* git: 4.241
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==

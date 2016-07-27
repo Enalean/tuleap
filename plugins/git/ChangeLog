@@ -1,3 +1,6 @@
+Version 4.241 - Tuleap 8.18
+    * request #9345: No preview in 'fork repositories'
+
 Version 4.240 - Tuleap 8.17
     * Notify site admin if a potential mis-use of Git is detected.
 
