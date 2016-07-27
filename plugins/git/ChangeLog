@@ -1,3 +1,6 @@
+Version 4.243 - Tuleap 8.18
+    * request #9312: Replication from gerrit server does not work over http
+
 Version 4.242 - Tuleap 8.18
     * request #9342: CSRF token synchronizer implementation uses token with weak entropy
 
