@@ -108,7 +108,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook('ajax_search_user', 'ajax_search_user', false);
         
         // Project creation
-        $this->_addHook('register_project_creation', 'register_project_creation', false);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
         
         // Backend SVN
         $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);

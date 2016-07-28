@@ -70,7 +70,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY);
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-            $this->_addHook('register_project_creation');
+            $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
@@ -115,10 +115,12 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function register_project_creation($params) {
-        $this->getConfigurationManager()->duplicate(
-            $params['group_id'],
-            $params['template_id']
-        );
+        if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
+            $this->getConfigurationManager()->duplicate(
+                $params['group_id'],
+                $params['template_id']
+            );
+        }
     }
 
     /**

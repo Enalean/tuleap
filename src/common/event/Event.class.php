@@ -21,6 +21,18 @@
 class Event {
 
     /**
+     * Project creation
+     *
+     * 'reportMapping'         => Array: Tracker v3 map of reports
+     * 'trackerMapping'        => Array: Tracker v3 map of trackers
+     * 'ugroupsMapping'        => Array: Map between ugroups from the template and in project
+     * 'group_id'              => Integer: Id of the new project
+     * 'template_id'           => Integer: Id of the template project
+     * 'project_creation_data' => ProjectCreationData: Data passed for project creation
+     */
+    const REGISTER_PROJECT_CREATION = 'register_project_creation';
+
+    /**
      * Periodical system check event.
      *
      * No Parameters.
