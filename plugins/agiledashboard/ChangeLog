@@ -1,3 +1,6 @@
+Version 1.399 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
 Version 1.398 - Tuleap 8.18
     * request #9252 Artifact links v2 Nature is confusing
 

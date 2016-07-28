@@ -1,3 +1,6 @@
+Version 2.26.115 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
 Version 2.26.114 - Tuleap 8.18
     * request #9349: Wiki page can not be accessed via the document manager
 

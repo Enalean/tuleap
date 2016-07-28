@@ -1,3 +1,6 @@
+Version 0.61 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
 Version 0.60 - Tuleap 8.18
     * request #9342: CSRF token synchronizer implementation uses token with weak entropy
 
