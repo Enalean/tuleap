@@ -661,22 +661,23 @@ class ReferenceManager {
      * @param $group_id the group_id of the project
      * @return array of {ReferenceInstance} : an array of project references extracted in the text $html
      */
-    function extractReferences($html,$group_id) {        
+    function extractReferences($html,$group_id)
+    {
         $referencesInstances=array();
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
             $ref_instance=$this->_getReferenceInstanceFromMatch($match);
-            if (!$ref_instance) continue;
+            if (! $ref_instance) continue;
             $ref = $ref_instance->getReference();
 
             // Replace description key with real description if needed
-            if (strpos($ref->getDescription(),"_desc_key")!==false) {
+            if (strpos($ref->getDescription(), "_desc_key") !== false) {
                 if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
                     if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                         $desc = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                     }
                 } else {
-                    $desc=$GLOBALS['Language']->getText('project_reference',$ref->getDescription());
+                    $desc=$GLOBALS['Language']->getText('project_reference', $ref->getDescription());
                 }
             } else {
                 $desc=$ref->getDescription();
@@ -686,11 +687,13 @@ class ReferenceManager {
             $referencesInstances[]=$ref_instance;
         }
 
-        foreach($this->additional_references as $reftype) {
+        foreach ($this->additional_references as $reftype) {
             $m = $this->_extractMatches($html, $reftype['regexp']);
-            $ref = $reftype['cb']($m, $group_id);
-            if(!empty($ref)) {
-                $referencesInstances[] = $ref;
+            if (! empty($m)) {
+                $ref = $reftype['cb']($m, $group_id);
+                if (! empty($ref)) {
+                    $referencesInstances[] = $ref;
+                }
             }
         }
 
