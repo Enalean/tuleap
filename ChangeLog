@@ -2,6 +2,7 @@ Version 8.18 (Not yet released)
 	== Bug fix ==
 	* request #9344 Persistent XSS through code snippet download
 	* request #9329: New install doesn't prompt for domain name
+	* request #9355: 'Import List Of Users' does not work with emails
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
