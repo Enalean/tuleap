@@ -86,8 +86,8 @@ class ProjectCreatorTest extends TuleapTestCase {
      * @return ProjectCreator
      */
     private function GivenAProjectCreator() {
-        $projectManager       = new MockProjectManager();
-        $ugroup_duplicator    = mock('Tuleap\Project\UgroupDuplicator');
+        $projectManager         = new MockProjectManager();
+        $ugroup_duplicator      = mock('Tuleap\Project\UgroupDuplicator');
 
         $creator = TestHelper::getPartialMock('ProjectCreator', array('createProject'));
         $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false);

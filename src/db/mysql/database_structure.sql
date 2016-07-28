@@ -415,6 +415,12 @@ CREATE TABLE frs_log (
   KEY idx_frs_log_group_item (group_id, item_id)
 );
 
+CREATE TABLE IF NOT EXISTS frs_global_permissions(
+    project_id int(11) NOT NULL,
+    permission_type VARCHAR(255) NOT NULL,
+    ugroup_id int(11)
+);
+
 #
 # Table structure for table 'group_cvs_full_history'
 #
