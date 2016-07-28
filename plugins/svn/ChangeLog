@@ -1,3 +1,6 @@
+Version 0.67 - Tuleap 8.18
+    * request #9357 Commit error on SVN plugin
+
 Version 0.66 - Tuleap 8.18
     * Display modal and suppression
 
