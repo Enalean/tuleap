@@ -49,7 +49,6 @@ class AgileDashboardPlugin extends Plugin {
             require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook('javascript_file');
-            $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
@@ -359,15 +358,17 @@ class AgileDashboardPlugin extends Plugin {
     public function javascript_file() {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
-                echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>';
+                echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
             } elseif ($this->isKanbanURL()) {
                 echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
+            } else {
+                echo $this->getMinifiedAssetHTML()."\n";
             }
         }
     }
 
     private function isAnAgiledashboardRequest() {
-        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
+        return $this->currentRequestIsForPlugin();
     }
 
     private function isKanbanURL() {
@@ -381,19 +382,6 @@ class AgileDashboardPlugin extends Plugin {
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
-    }
-
-    public function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                $this->getPluginPath().'/js/display-angular-feedback.js',
-                $this->getPluginPath().'/js/MilestoneContent.js',
-                $this->getPluginPath().'/js/planning-view.js',
-                $this->getPluginPath().'/js/ContentFilter.js',
-                $this->getPluginPath().'/js/home.js',
-            )
-        );
     }
 
     public function process(Codendi_Request $request) {

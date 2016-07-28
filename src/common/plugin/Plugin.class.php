@@ -321,5 +321,25 @@ class Plugin implements PFO_Plugin {
         }
         return $this->backend_logger;
     }
+
+    private function getVersion() {
+        return $this->getPluginInfo()->getPluginDescriptor()->getVersion();
+    }
+
+    private function getMinifiedAssetPath() {
+        return $this->getPluginPath() . '/assets/'.$this->getName().'.'.$this->getVersion().'.js';
+    }
+
+    protected function getMinifiedAssetHTML() {
+        return '<script type="text/javascript" src="'.$this->getMinifiedAssetPath().'"></script>';
+    }
+
+    public function currentRequestIsForPlugin() {
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
+    }
+
+    protected function currentRequestIsForDashboards() {
+        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
+               strpos($_SERVER['REQUEST_URI'], '/my') === 0;
+    }
 }
-?>

@@ -1,0 +1,16 @@
+{
+  "author": "Enalean Team",
+  "name": "tuleap-trackers",
+  "homepage": "https://tuleap.org",
+  "licenses": {
+    "type": "GNU General Public License v2"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/gulp build"
+  }
+}

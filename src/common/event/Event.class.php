@@ -329,17 +329,6 @@ class Event {
     const SERVICE_CLASSNAMES = 'service_classnames';
 
     /**
-     * Get combined scripts
-     *
-     * Parameters:
-     *   'scripts' => array of scripts to combined
-     *
-     * Examples:
-     * $params['scripts'][] = '/path/to/script.js';
-     */
-    const COMBINED_SCRIPTS = 'combined_scripts';
-
-    /**
      * Display javascript snippets in the page header (<head>)
      *
      * No Parameters.
