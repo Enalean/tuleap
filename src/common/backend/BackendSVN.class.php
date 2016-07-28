@@ -337,6 +337,14 @@ class BackendSVN extends Backend {
         return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
     }
 
+    public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir, $contents) {
+        $svn_access_file = $this->_getSVNAccessFile();
+
+        $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
+
+        return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
+    }
+
     private function getSvnAccessFile($system_path) {
         return $system_path."/.SVNAccessFile";
     }

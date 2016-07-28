@@ -101,3 +101,7 @@ plugin_svn	actions_delete_process	Le dépôt '$1' va être supprimé dans quelqu
 plugin_svn	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le répertoire $2
 plugin_svn	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_svn	delete_repository_exception	Une erreur est survenue lors de la suppression du dépôt Svn.
+
+plugin_svn	archived_repositories	Dépôts svn supprimés
+plugin_svn	restore_confirmation	Confirmer la restauration du dépôt
+plugin_svn	restore_no_repo_found	Aucun dépôt svn à restaurer.

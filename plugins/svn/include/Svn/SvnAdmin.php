@@ -73,4 +73,41 @@ class SvnAdmin
             $this->logger->error('[svn '.$repository->getName().'] svnadmin returned with status '.$e->return_value);
         }
     }
+
+    public function importRepository(Repository $repository)
+    {
+        $system_path   = escapeshellarg($repository->getSystemPath());
+        $dump_name     = escapeshellarg($repository->getBackupFileName());
+        $dump_path     = escapeshellarg($repository->getSystemBackupPath());
+        $dump_file     = $dump_path . "/" . $dump_name;
+        $permissions   = escapeshellarg(ForgeConfig::get('sys_http_user') . ":" . $repository->getProject()->getUnixName());
+
+        try {
+            $command = "su -l " . ForgeConfig::get('sys_http_user') . " -c 'svnadmin create " . $system_path ."'";
+            $command_output = $this->system_command->exec($command);
+            foreach ($command_output as $line) {
+                $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin create: ' . $line);
+            }
+
+            $command = "su -l " . ForgeConfig::get('sys_http_user') . " -c 'cd $system_path && umask 77 && svnadmin load . < $dump_file'";
+            $command_output = $this->system_command->exec($command);
+            foreach ($command_output as $line) {
+                $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin load: ' . $line);
+            }
+
+            $command = "chown -R $permissions $system_path";
+            $this->logger->debug($command);
+            $command_output = $this->system_command->exec($command);
+            foreach ($command_output as $line) {
+                $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin load: ' . $line);
+            }
+
+            $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin restore: done');
+        } catch (System_Command_CommandException $e) {
+            foreach ($e->output as $line) {
+                $this->logger->error('[svn '.$repository->getName().'] svnadmin: '.$line);
+            }
+            $this->logger->error('[svn '.$repository->getName().'] svnadmin returned with status '.$e->return_value);
+        }
+    }
 }

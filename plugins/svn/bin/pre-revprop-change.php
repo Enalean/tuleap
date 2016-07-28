@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Repository\HookDao;
@@ -55,7 +57,9 @@ try {
                 new SvnLogger()
             ),
             new HookDao(),
-            EventManager::instance()
+            EventManager::instance(),
+            Backend::instance(Backend::SVN),
+            new AccessFileHistoryFactory(new AccessFileHistoryDao())
         )
     );
 

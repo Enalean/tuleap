@@ -104,20 +104,22 @@ class XMLImporterTest extends TuleapTestCase {
         ForgeConfig::set('sys_http_user', 'codendiadm');
         ProjectManager::clearInstance();
 
-        $this->backend       = mock('Backend');
-        $this->logger        = mock('Logger');
-        $this->ufinder       = safe_mock('User\XML\Import\IFindUserFromXMLReference');
-        $this->pmdao         = safe_mock('ProjectDao');
-        $this->evdao         = safe_mock('SystemEventDao');
-        $this->evfdao        = safe_mock('SystemEventsFollowersDao');
-        $this->pm            = ProjectManager::testInstance($this->pmdao);
-        $this->repodao       = safe_mock('Tuleap\Svn\Dao');
-        $svn_admin           = mock('Tuleap\Svn\SvnAdmin');
-        $logger              = mock('Logger');
-        $system_command      = mock('System_Command');
-        $destructor          = mock('Tuleap\Svn\Admin\Destructor');
-        $hook_dao            = mock('Tuleap\Svn\Repository\HookDao');
-        $event_manager         = EventManager::instance();
+        $this->backend               = mock('Backend');
+        $this->logger                = mock('Logger');
+        $this->ufinder               = safe_mock('User\XML\Import\IFindUserFromXMLReference');
+        $this->pmdao                 = safe_mock('ProjectDao');
+        $this->evdao                 = safe_mock('SystemEventDao');
+        $this->evfdao                = safe_mock('SystemEventsFollowersDao');
+        $this->pm                    = ProjectManager::testInstance($this->pmdao);
+        $this->repodao               = safe_mock('Tuleap\Svn\Dao');
+        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
+        $logger                      = mock('Logger');
+        $system_command              = mock('System_Command');
+        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
+        $hook_dao                    = mock('Tuleap\Svn\Repository\HookDao');
+        $event_manager               = EventManager::instance();
+        $backend                     = Backend::instance(Backend::SVN);
+        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
         $this->repomgr       = new RepositoryManager(
             $this->repodao,
             $this->pm,
@@ -126,7 +128,9 @@ class XMLImporterTest extends TuleapTestCase {
             $system_command,
             $destructor,
             $hook_dao,
-            $event_manager
+            $event_manager,
+            $backend,
+            $access_file_history_factory
         );
         $this->sysevmgr      = SystemEventManager::testInstance($this->evdao, $this->evfdao);
         $this->ugdao         = safe_mock('UGroupDao');

@@ -101,3 +101,7 @@ plugin_svn	actions_delete_process	Repository '$1' will be removed in a few secon
 plugin_svn	actions_delete_backup	A repository backup of '$1' will be available in the backup directory $2
 plugin_svn	feedback_event_delete	There is an event in queue for repository '$1' deletion, it will be processed in one minute or two. Please be patient!
 plugin_svn	delete_repository_exception	An error occured when deleting repository.
+
+plugin_svn	archived_repositories	Deleted svn repositories
+plugin_svn	restore_confirmation	Confirm restore of the svn repository
+plugin_svn	restore_no_repo_found	No restorable svn repositories found.

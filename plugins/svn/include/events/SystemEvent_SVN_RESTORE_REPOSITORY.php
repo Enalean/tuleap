@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\EventRepository;
 
+use EventManager;
 use SystemEvent;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -34,11 +35,10 @@ use ProjectManager;
 use System_Command;
 use Backend;
 use Project;
-use EventManager;
 
-class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
+class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
 {
-    const NAME = 'SystemEvent_SVN_DELETE_REPOSITORY';
+    const NAME = 'SystemEvent_SVN_RESTORE_REPOSITORY';
 
     public function process()
     {
@@ -65,9 +65,7 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
         }
 
         $repository_manager = $this->getRepositoryManager();
-        $repository_manager->markAsDeleted($repository);
-        $repository_manager->dumpRepository($repository);
-        $repository_manager->delete($repository);
+        $repository_manager->restoreRepository($repository);
 
         $generator =  new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
         $generator->generate();
@@ -82,7 +80,7 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
         $repository_id = $this->getRequiredParameter(1);
 
         return 'project: '. $this->verbalizeProjectId($project_id, $with_link) .
-            ', repository: '. $repository_id;
+        ', repository: '. $repository_id;
     }
 
     protected function getRepository(Project $project, $repository_id)
