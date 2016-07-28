@@ -222,8 +222,13 @@ class ProjectCreator {
 
         $this->initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping);
 
-        list($tracker_mapping, $report_mapping) =
-            $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
+        if ($data->projectShouldInheritFromTemplate()) {
+            list($tracker_mapping, $report_mapping) =
+                $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
+        } else {
+            $tracker_mapping = array();
+            $report_mapping  = array();
+        }
         $this->initWikiModuleFromTemplate($group_id, $template_id);
         $this->initLayoutFromTemplate($group_id, $template_id);
 
@@ -236,12 +241,13 @@ class ProjectCreator {
 
         // Raise an event for plugin configuration
         $em = EventManager::instance();
-        $em->processEvent('register_project_creation', array(
-            'reportMapping'  => $report_mapping, // Trackers v3
-            'trackerMapping' => $tracker_mapping, // Trackers v3
-            'ugroupsMapping' => $ugroup_mapping,
-            'group_id'       => $group_id,
-            'template_id'    => $template_id
+        $em->processEvent(Event::REGISTER_PROJECT_CREATION, array(
+            'reportMapping'         => $report_mapping, // Trackers v3
+            'trackerMapping'        => $tracker_mapping, // Trackers v3
+            'ugroupsMapping'        => $ugroup_mapping,
+            'group_id'              => $group_id,
+            'template_id'           => $template_id,
+            'project_creation_data' => $data,
         ));
 
         $this->autoActivateProject($group);

@@ -61,7 +61,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('service_public_areas',              'service_public_areas',              false);
         $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('register_project_creation',         'installNewDocman',                  false);
+        $this->_addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
         $this->_addHook(Event::SERVICE_IS_USED);
         $this->_addHook('soap',                              'soap',                              false);
         $this->_addHook('widget_instance',                   'myPageBox',                         false);
