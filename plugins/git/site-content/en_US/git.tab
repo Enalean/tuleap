@@ -464,7 +464,7 @@ plugin_git	regenerate_config_waiting	Regenerating Gitolite config for project $1
 
 plugin_git	admin_gitolite_config_title	Administration of Gitolite configuration
 plugin_git	admin_gitolite_config_description	This section allows you to regenerate the Gitolite configuration file of a selected project.
-plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="http://doc-en.tuleap.net/en/latest/user-guide/git.html?#continuous-integration-with-hudson-jenkins">Hudson Git Plugin</a>.
+plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git Plugin</a>.
 
 plugin_git	save_access_control	Save permissions
 plugin_git	default_access_control_saved	Default access control successfully saved.
