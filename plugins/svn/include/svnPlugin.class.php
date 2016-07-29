@@ -20,7 +20,9 @@
 
 require_once 'constants.php';
 
+use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
@@ -96,7 +98,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
-        $this->addHook('archive_deleted_item');
+        $this->addHook('codendi_daily_start');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -213,7 +215,12 @@ class SvnPlugin extends Plugin {
                 ProjectManager::instance(),
                 new SvnAdmin(new System_Command(), new SvnLogger()),
                 new SvnLogger(),
-                new System_Command()
+                new System_Command(),
+                new Destructor(
+                    new Dao(),
+                    new SvnLogger()
+                ),
+                new HookDao()
             );
         }
 
@@ -445,5 +452,10 @@ class SvnPlugin extends Plugin {
 
         $backend->chown($svn_project_folder, $backend->getHTTPUser());
         $backend->chgrp($svn_project_folder, $backend->getHTTPUser());
+    }
+
+    public function codendi_daily_start()
+    {
+        $this->getRepositoryManager()->purgeArchivedRepositories();
     }
 }

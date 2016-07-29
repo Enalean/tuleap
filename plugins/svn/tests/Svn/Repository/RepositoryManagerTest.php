@@ -46,12 +46,16 @@ class RepositoryManagerTest extends TuleapTestCase
         $svn_admin             = mock('Tuleap\Svn\SvnAdmin');
         $logger                = mock('Logger');
         $system_command        = mock('System_Command');
+        $destructor            = mock('Tuleap\Svn\Admin\Destructor');
+        $hook_dao              = mock('Tuleap\Svn\Repository\HookDao');
         $this->manager         = new RepositoryManager(
             $this->dao,
             $this->project_manager,
             $svn_admin,
             $logger,
-            $system_command
+            $system_command,
+            $destructor,
+            $hook_dao
         );
         $project               = stub("Project")->getId()->returns(101);
 
@@ -94,7 +98,9 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
     {
         $this->project_dao = safe_mock('ProjectDao');
         $this->dao         = safe_mock('Tuleap\Svn\Dao');
+        $this->hook_dao    = mock('Tuleap\Svn\Repository\HookDao');
         $svn_admin         = mock('Tuleap\Svn\SvnAdmin');
+        $destructor        = mock('Tuleap\Svn\Admin\Destructor');
         $logger            = mock('Logger');
         $system_command    = mock('System_Command');
 
@@ -104,7 +110,9 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             $this->project_manager,
             $svn_admin,
             $logger,
-            $system_command
+            $system_command,
+            $destructor,
+            $this->hook_dao
         );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(
@@ -120,7 +128,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
     }
 
     public function itReturnsARepositoryWithHookConfig() {
-        stub($this->dao)->getHookConfig(33)->returns(array());
+        stub($this->hook_dao)->getHookConfig(33)->returns(array());
 
         $repo = new Repository(33, 'reponame', '', '', $this->project);
         $cfg = $this->manager->getHookConfig($repo);
@@ -130,7 +138,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
     }
 
     public function itReturnsARepositoryWithDifferentHookConfig() {
-        stub($this->dao)->getHookConfig(33)->returns(array(
+        stub($this->hook_dao)->getHookConfig(33)->returns(array(
             HookConfig::MANDATORY_REFERENCE => true));
 
         $repo = new Repository(33, 'reponame', '', '', $this->project);
@@ -141,7 +149,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
     }
 
     public function itCanChangeTheHookConfig(){
-        stub($this->dao)->updateHookConfig(22, array(
+        stub($this->hook_dao)->updateHookConfig(22, array(
             HookConfig::MANDATORY_REFERENCE => true
         ))->once()->returns(true);
 

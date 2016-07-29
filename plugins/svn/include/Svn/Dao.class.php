@@ -105,34 +105,6 @@ class Dao extends DataAccessObject
         return $this->updateAndGetLastId($query);
     }
 
-    public function getHookConfig($id_repository) {
-        $id_repository = $this->da->escapeInt($id_repository);
-        $sql = "SELECT *
-                FROM plugin_svn_hook_config
-                WHERE repository_id = $id_repository";
-        return $this->retrieveFirstRow($sql);
-    }
-
-    public function updateHookConfig($id_repository, array $hook_config) {
-        $id         = $this->da->escapeInt($id_repository);
-
-        $update = array();
-        $cols = array();
-        $vals = array();
-        foreach($hook_config as $tablename => $value) {
-            $update[] = "$tablename = " . $this->da->quoteSmart((bool) $value);
-            $cols[] = $tablename;
-            $vals[] = $this->da->quoteSmart((bool) $value);
-        }
-
-        $sql  = "INSERT INTO plugin_svn_hook_config";
-        $sql .= " (repository_id, ". join($cols, ", ") . ")";
-        $sql .= " VALUES ($id, " . join($vals, ", ") . ")";
-        $sql .= " ON DUPLICATE KEY UPDATE " . join($update, ", ") . ";";
-
-        return $this->update($sql);
-    }
-
     public function markAsDeleted($repository_id, $backup_path, $deletion_date)
     {
         $backup_path   = $this->da->quoteSmart($backup_path);
@@ -145,5 +117,74 @@ class Dao extends DataAccessObject
                 WHERE id = $repository_id";
 
         return $this->update($sql);
+    }
+
+    public function getDeletedRepositoriesToPurge($retention_date)
+    {
+        $retention_date = $this->da->escapeInt($retention_date);
+        $sql = "SELECT *
+                  FROM plugin_svn_repositories
+                  WHERE repository_deletion_date IS NOT NULL
+                    AND FROM_UNIXTIME(repository_deletion_date) <= FROM_UNIXTIME($retention_date)";
+
+        return $this->retrieve($sql);
+    }
+
+    public function delete($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $this->da->startTransaction();
+
+        $sql = "DELETE
+                FROM plugin_svn_accessfile_history
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_immutable_tag
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_mailing_header
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_notification
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_hook_config
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_repositories
+                WHERE id = $repository_id";
+
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
     }
 }

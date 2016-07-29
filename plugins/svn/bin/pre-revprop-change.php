@@ -23,10 +23,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PreRevpropChange;
 use Tuleap\Svn\SvnAdmin;
+use Tuleap\Svn\SvnLogger;
 
 try {
     require_once 'pre.php';
@@ -46,7 +49,12 @@ try {
             ProjectManager::instance(),
             new SvnAdmin(new System_Command(), new SvnLogger()),
             new SvnLogger(),
-            new System_Command()
+            new System_Command(),
+            new Destructor(
+                new Dao(),
+                new SvnLogger()
+            ),
+            new HookDao()
         )
     );
 

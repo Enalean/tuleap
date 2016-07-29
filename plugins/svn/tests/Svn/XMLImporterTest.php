@@ -25,6 +25,7 @@ require_once __DIR__ .'/../bootstrap.php';
 use Project;
 use EventManager;
 use BaseLanguage;
+use Tuleap\Svn\Admin\Destructor;
 use UGroupManager;
 use UGroupDao;
 use UGroupUserDao;
@@ -112,12 +113,16 @@ class XMLImporterTest extends TuleapTestCase {
         $svn_admin           = mock('Tuleap\Svn\SvnAdmin');
         $logger              = mock('Logger');
         $system_command      = mock('System_Command');
+        $destructor          = mock('Tuleap\Svn\Admin\Destructor');
+        $hook_dao            = mock('Tuleap\Svn\Repository\HookDao');
         $this->repomgr       = new RepositoryManager(
             $this->repodao,
             $this->pm,
             $svn_admin,
             $logger,
-            $system_command
+            $system_command,
+            $destructor,
+            $hook_dao
         );
         $this->sysevmgr      = SystemEventManager::testInstance($this->evdao, $this->evfdao);
         $this->ugdao         = safe_mock('UGroupDao');

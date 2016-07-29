@@ -20,6 +20,9 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Exception;
+use ForgeConfig;
+use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Project;
 use ProjectManager;
@@ -27,22 +30,19 @@ use Rule_ProjectName;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use SystemEvent;
-use EventManager;
 use SystemEventManager;
 use Tuleap\Svn\SvnAdmin;
-use PluginManager;
 use Logger;
-use ForgeConfig;
-use Tuleap\Svn\Repository\CannotDeleteRepositoryException;
 use System_Command;
 
 class RepositoryManager
 {
     const PREFIX = "svn_";
 
-
     /** @var Dao */
     private $dao;
+    /** @var HookDao */
+    private $hook_dao;
      /** @var ProjectManager */
     private $project_manager;
      /** @var SvnAdmin */
@@ -51,19 +51,25 @@ class RepositoryManager
     private $logger;
     /** @var System_Command */
     private $system_command;
+    /** @var Destructor */
+    private $destructor;
 
     public function __construct(
         Dao $dao,
         ProjectManager $project_manager,
         SvnAdmin $svnadmin,
         Logger $logger,
-        System_Command $system_command
+        System_Command $system_command,
+        Destructor $destructor,
+        HookDao $hook_dao
     ) {
         $this->dao             = $dao;
         $this->project_manager = $project_manager;
         $this->svnadmin        = $svnadmin;
         $this->logger          = $logger;
         $this->system_command  = $system_command;
+        $this->destructor      = $destructor;
+        $this->hook_dao        = $hook_dao;
     }
 
     /**
@@ -170,6 +176,17 @@ class RepositoryManager
         return $this->getRepositoryByName($project, $repository_name);
     }
 
+    public function getArchivedRepositoriesToPurge($retention_date)
+    {
+        $archived_repositories = array();
+        $deleted_repositories  = $this->dao->getDeletedRepositoriesToPurge($retention_date);
+        foreach ($deleted_repositories as $deleted_repository) {
+            $repository = $this->instantiateFromRowWithoutProject($deleted_repository);
+            array_push($archived_repositories, $repository);
+        }
+        return $archived_repositories;
+    }
+
     /**
      * @return Repository
      */
@@ -178,14 +195,30 @@ class RepositoryManager
         return new Repository(
             $row['id'],
             $row['name'],
-            $row['repository_deletion_date'],
             $row['backup_path'],
+            $row['repository_deletion_date'],
+            $project
+        );
+    }
+
+    /**
+     * @return Repository
+     */
+    public function instantiateFromRowWithoutProject(array $row)
+    {
+        $project = ProjectManager::instance()->getProject($row['project_id']);
+
+        return new Repository(
+            $row['id'],
+            $row['name'],
+            $row['backup_path'],
+            $row['repository_deletion_date'],
             $project
         );
     }
 
     public function getHookConfig(Repository $repository) {
-        $row = $this->dao->getHookConfig($repository->getId());
+        $row = $this->hook_dao->getHookConfig($repository->getId());
         if(!$row) {
             $row = array();
         }
@@ -193,7 +226,7 @@ class RepositoryManager
     }
 
     public function updateHookConfig($repository_id, array $hook_config) {
-        return $this->dao->updateHookConfig(
+        return $this->hook_dao->updateHookConfig(
             $repository_id,
             HookConfig::sanitizeHookConfigArray($hook_config)
         );
@@ -217,5 +250,43 @@ class RepositoryManager
     public function dumpRepository(Repository $repository)
     {
         return $this->svnadmin->dumpRepository($repository);
+    }
+
+    public function purgeArchivedRepositories()
+    {
+        if (! ForgeConfig::get('sys_file_deletion_delay')) {
+            $this->logger->warn("Purge of archived SVN repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
+            return;
+        }
+        $retention_period      = intval(ForgeConfig::get('sys_file_deletion_delay'));
+        $retention_date        = strtotime("-" . $retention_period . " days");
+        $archived_repositories = $this->getArchivedRepositoriesToPurge($retention_date);
+
+        foreach ($archived_repositories as $repository) {
+            try {
+                $this->deleteArchivedRepository($repository);
+                $this->destructor->delete($repository);
+            } catch (Exception $exception) {
+                $this->logger->error($exception->getMessage());
+            }
+        }
+    }
+
+    private function deleteArchivedRepository(Repository $repository)
+    {
+        $this->logger->info('Purge of archived SVN repository: '.$repository->getName());
+        $path = $repository->getBackupPath();
+        $this->logger->debug('Delete backup '. $path);
+        if (empty($path) || ! is_writable($path)) {
+            $this->logger->debug('Empty path or permission denied '.$path);
+        }
+        $this->logger->debug('Removing physically the repository');
+
+        $system_command = new System_Command();
+
+        $command_output = $system_command->exec('rm -rf '.escapeshellarg($path));
+        foreach ($command_output as $line) {
+            $this->logger->debug('[svn '.$repository->getName().'] cannot remove repository: '. $line);
+        }
     }
 }
