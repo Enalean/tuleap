@@ -40,25 +40,22 @@ class SiteCacheTest extends TuleapTestCase {
 
     public function itCreatesCacheDirectories() {
         $cache_dir    = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tuleap_cache_dir';
-        $combined_dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tuleap_combined_dir';
         $lang_dir     = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 
         ForgeConfig::set('codendi_cache_dir', $cache_dir);
         $logger              = mock('Logger');
         $language            = stub('BaseLanguage')->getCacheDirectory()->returns($lang_dir);
         $GLOBALS['Language'] = $language;
-        $html                = stub('Layout')->getCombinedDirectory()->returns($combined_dir);
+        $html                = mock('Layout');
         $GLOBALS['HTML']     = $html;
 
         $site_cache = new SiteCache($logger);
         $site_cache->restoreCacheDirectories();
 
         $this->assertTrue(is_dir($cache_dir));
-        $this->assertTrue(is_dir($combined_dir));
         $this->assertTrue(is_dir($lang_dir));
 
         rmdir($cache_dir);
-        rmdir($combined_dir);
         rmdir($lang_dir);
     }
 }

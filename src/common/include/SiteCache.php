@@ -29,7 +29,6 @@ class SiteCache {
     public function invalidatePluginBasedCaches() {
         $this->invalidateRestler();
         $this->invalidateLanguage();
-        $this->invalidateJsCombined();
         $this->invalidateWSDL();
         $this->invalidatePlugin();
     }
@@ -43,12 +42,6 @@ class SiteCache {
     private function invalidateLanguage() {
         $this->logger->info('Invalidate language cache');
         $GLOBALS['Language']->invalidateCache();
-    }
-
-    private function invalidateJsCombined() {
-        $this->logger->info('Invalidate JS combined cache');
-        $combined = new Combined($GLOBALS['HTML']->getCombinedDirectory());
-        $combined->invalidateCache();
     }
 
     private function invalidateWSDL() {
@@ -65,9 +58,6 @@ class SiteCache {
 
     public function restoreCacheDirectories() {
         $this->restoreRootCacheDirectory();
-
-        $combined_cache_directory = $GLOBALS['HTML']->getCombinedDirectory();
-        $this->recreateDirectory($combined_cache_directory);
 
         $language_cache_directory = $GLOBALS['Language']->getCacheDirectory();
         $this->recreateDirectory($language_cache_directory);
@@ -103,15 +93,6 @@ class SiteCache {
             ForgeConfig::get('sys_http_user'),
             ForgeConfig::get('sys_http_user'),
             0750
-        );
-
-        $combined_cache_directory = $GLOBALS['HTML']->getCombinedDirectory();
-        $this->logger->info('Restore ownership to ' . $combined_cache_directory);
-        $backend->recurseChownChgrp(
-            $combined_cache_directory,
-            ForgeConfig::get('sys_http_user'),
-            ForgeConfig::get('sys_http_user'),
-            array('js')
         );
 
         $language_cache_directory = $GLOBALS['Language']->getCacheDirectory();

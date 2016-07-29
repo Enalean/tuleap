@@ -26,12 +26,12 @@ require_once 'autoload.php';
  * CardwallPlugin
  */
 class cardwallPlugin extends Plugin {
-    
-    /** 
+
+    /**
      * @var Cardwall_OnTop_ConfigFactory
      */
     private $config_factory;
-    
+
     public function getConfigFactory() {
         if (!$this->config_factory) {
             $tracker_factory  = TrackerFactory::instance();
@@ -53,7 +53,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
-            $this->_addHook(Event::JAVASCRIPT);
+            $this->addHook(Event::JAVASCRIPT);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
@@ -159,7 +159,7 @@ class cardwallPlugin extends Plugin {
 
             $report = $params['report'];
             $config = new Cardwall_OnTop_ConfigEmpty();
-            
+
             if ($report->tracker_id != 0) {
                 $config = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
             }
@@ -244,14 +244,6 @@ class cardwallPlugin extends Plugin {
      */
     public function tracker_event_get_semantic_factories($params) {
         $params['factories'][] = Cardwall_Semantic_CardFieldsFactory::instance();
-    }
-
-    private function getJavascriptIncludesForScripts(array $script_names) {
-        $html = '';
-        foreach ($script_names as $script_name) {
-            $html .= '<script type="text/javascript" src="'.$this->getPluginPath().'/js/'.$script_name.'"></script>'."\n";
-        }
-        return $html;
     }
 
     private function isAgileDashboardOrTrackerUrl() {

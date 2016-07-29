@@ -54,7 +54,6 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
     }
 }
 
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 
 $GLOBALS['HTML']->header(array('title'=> 'Frequence stat'));
