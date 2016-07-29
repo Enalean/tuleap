@@ -22,6 +22,8 @@ namespace Tuleap\Git\Gerrit;
 
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
+use Git_RemoteServer_NotFoundException;
+use GitRepository;
 use PasswordHandler;
 use User_InvalidPasswordException;
 use Rule_UserName;
@@ -47,13 +49,16 @@ class ReplicationHTTPUserAuthenticator
 
     /**
      * @throws User_InvalidPasswordException
+     * @throws Git_RemoteServer_NotFoundException
      */
-    public function authenticate(Git_RemoteServer_GerritServer $gerrit_server, $login, $password)
+    public function authenticate(GitRepository $repository, $login, $password)
     {
         if (! $this->isLoginAnHTTPUserLogin($login)) {
-            return;
+            throw new User_InvalidPasswordException();
         }
 
+        $gerrit_server_id = $repository->getRemoteServerId();
+        $gerrit_server    = $this->server_factory->getServerById($gerrit_server_id);
         if (hash_equals($gerrit_server->getGenericUserName(), $login) &&
             $this->password_handler->verifyHashPassword($password, $gerrit_server->getReplicationPassword())
         ) {
