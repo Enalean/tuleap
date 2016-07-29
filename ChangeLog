@@ -12,6 +12,9 @@ Version 8.18 (Not yet released)
 	* request #9299: Plugins no longer append javascript to core Combined
 	* request #9299: Get rid of combined
 
+	== Enhancement ==
+	* External lib no longer referenced in sources
+
 	== Plugins ==
 	* agiledashboard: 1.400
 	* docman: 2.26.116
