@@ -336,10 +336,9 @@ class SvnPlugin extends Plugin {
         $xml = $params['xml_content'];
         $extraction_path = $params['extraction_path'];
         $project = $params['project'];
-        $user_finder = $params['user_finder'];
         $logger = $params['logger'];
 
-        $svn = new XMLImporter($xml, $extraction_path, $user_finder);
+        $svn = new XMLImporter(Backend::instance(), $xml, $extraction_path);
         $svn->import(
             $params['configuration'],
             $logger,

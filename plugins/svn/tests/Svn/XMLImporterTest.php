@@ -90,6 +90,7 @@ class XMLImporterTest extends TuleapTestCase {
     private $accessfilemgr; ///< @var Tuleap\Svn\AccessControl\AccessFileHistoryCreator
     private $notifdao;      ///< @var Tuleap\Svn\Admin\MailNotificationDao
     private $notifmgr;      ///< @var Tuleap\Svn\Admin\MailNotificationManager
+    private $backend;       ///< @var Backend
 
     public function setUp() {
         global $Language;
@@ -102,6 +103,7 @@ class XMLImporterTest extends TuleapTestCase {
         ForgeConfig::set('sys_http_user', 'codendiadm');
         ProjectManager::clearInstance();
 
+        $this->backend       = mock('Backend');
         $this->logger        = mock('Logger');
         $this->ufinder       = safe_mock('User\XML\Import\IFindUserFromXMLReference');
         $this->pmdao         = safe_mock('ProjectDao');
@@ -190,7 +192,7 @@ class XMLImporterTest extends TuleapTestCase {
 
         $this->stubRepoCreation(123, 85, 1585);
 
-        $svn = new XMLImporter($xml, $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->ufinder);
         $this->callImport($svn, $project);
 
         $this->assertFileIsOwnedBy('codendiadm', $this->arpath.'/svn_plugin/123/svn');
@@ -217,7 +219,7 @@ class XMLImporterTest extends TuleapTestCase {
         stub($this->repodao)->create()->never();
         stub($this->evdao)->store()->never();
 
-        $svn = new XMLImporter($xml, $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->ufinder);
         $this->callImport($svn, $project);
     }
 
@@ -234,7 +236,7 @@ class XMLImporterTest extends TuleapTestCase {
 
         $this->stubRepoCreation(123, 85, 1585);
 
-        $svn = new XMLImporter($xml, $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->ufinder);
         $this->callImport($svn, $project);
     }
 
@@ -259,7 +261,7 @@ XML;
         $this->stubRepoCreation(123, 85, 1585);
         stub($this->notifdao)->create()->count(2)->returns(true);
 
-        $svn = new XMLImporter(new SimpleXMLElement($xml), $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->ufinder);
         $this->callImport($svn, $project);
     }
 
@@ -285,7 +287,7 @@ XML;
         stub($this->accessfiledao)->searchLastVersion()->once()->returns(null);
         stub($this->accessfiledao)->create()->once()->returns(true);
 
-        $svn = new XMLImporter(new SimpleXMLElement($xml), $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->ufinder);
         $this->callImport($svn, $project);
 
         $svnroot = $this->getSVNDir(123, "svn");
