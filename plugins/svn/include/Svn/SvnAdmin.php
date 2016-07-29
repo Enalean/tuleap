@@ -49,15 +49,14 @@ class SvnAdmin
         $dump_name   = escapeshellarg($repository->getBackupFileName());
         $dump_path   = escapeshellarg($repository->getSystemBackupPath());
 
-        $commandline_folder = "mkdir -p $dump_path";
-
         try {
-            $this->system_command->exec($commandline_folder);
-        } catch (System_Command_CommandException $e) {
-            $this->logger->error('[svn '.$repository->getName().'] mkdir returned with status '.$e->return_value);
-        }
+            $command = "umask 77 && mkdir -p $dump_path";
+            $command_output = $this->system_command->exec($command);
 
-        try {
+            $command = "chown ". ForgeConfig::get('sys_http_user') .":".ForgeConfig::get('sys_http_user') .
+                " $dump_path && chmod 750 $dump_path";
+            $this->system_command->exec($command);
+
             $command = "umask 77 && svnadmin dump $system_path > $dump_path/$dump_name";
             $command_output = $this->system_command->exec($command);
             foreach ($command_output as $line) {
