@@ -1,3 +1,6 @@
+Version 0.21 - Tuleap 8.18
+    * request #9359: OpenID Connect Client plugin does not follow standard
+
 Version 0.20 - Tuleap 8.15
     * story #9132: Migrate from Less to Sass
 
