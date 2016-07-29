@@ -28,19 +28,30 @@ use InoOicClient\Flow\Exception\UserInfoRequestException;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
+use Firebase\JWT\JWT;
 use Exception;
 
 class Flow extends Basic {
+    /**
+     * @var ProviderManager
+     */
     private $provider_manager;
+
+    /**
+     * @var IDTokenVerifier
+     */
+    private $id_token_verifier;
 
     public function __construct(
         StateManager $state_manager,
         AuthorizationDispatcher $authorization_dispatcher,
-        ProviderManager $provider_manager
+        ProviderManager $provider_manager,
+        IDTokenVerifier $id_token_verifier
     ) {
         $this->setStateManager($state_manager);
         $this->setAuthorizationDispatcher($authorization_dispatcher);
-        $this->provider_manager = $provider_manager;
+        $this->provider_manager   = $provider_manager;
+        $this->id_token_verifier = $id_token_verifier;
     }
 
     public function setOptions(Provider $provider) {
@@ -123,7 +134,11 @@ class Flow extends Basic {
         }
 
         try {
-            $access_token = $this->getAccessToken($authorization_code);
+            $token_request    = $this->createTokenRequest($authorization_code);
+            $token_response   = $this->getTokenDispatcher()->sendTokenRequest($token_request);
+            $access_token     = $token_response->getAccessToken();
+            $encoded_id_token = $token_response->getIdToken();
+            $id_token         = $this->id_token_verifier->validate($provider, $encoded_id_token);
         } catch (Exception $ex) {
             throw new TokenRequestException(
                 sprintf("Exception during token request: [%s] %s", get_class($ex), $ex->getMessage()),
@@ -131,6 +146,7 @@ class Flow extends Basic {
                 $ex
             );
         }
+
 
         try {
             $user_informations = $this->getUserInfo($access_token);
@@ -144,7 +160,7 @@ class Flow extends Basic {
 
         $this->getStateManager()->clearState();
 
-        return new FlowResponse($provider, $state->getReturnTo(), $user_informations);
+        return new FlowResponse($provider, $state->getReturnTo(), $id_token['sub'], $user_informations);
     }
 
     /**

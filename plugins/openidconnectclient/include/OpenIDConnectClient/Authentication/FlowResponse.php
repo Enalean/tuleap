@@ -40,9 +40,15 @@ class FlowResponse {
      */
     private $user_informations;
 
-    public function __construct(Provider $provider, $return_to, array $user_informations) {
+    /**
+     * @var string
+     */
+    private $user_identifier;
+
+    public function __construct(Provider $provider, $return_to, $user_identifier, array $user_informations) {
         $this->provider          = $provider;
         $this->return_to         = $return_to;
+        $this->user_identifier   = $user_identifier;
         $this->user_informations = $user_informations;
     }
 
@@ -61,10 +67,17 @@ class FlowResponse {
     }
 
     /**
+     * @return string
+     */
+    public function getUserIdentifier()
+    {
+        return $this->user_identifier;
+    }
+
+    /**
      * @return array
      */
     public function getUserInformations() {
         return $this->user_informations;
     }
-
 }
