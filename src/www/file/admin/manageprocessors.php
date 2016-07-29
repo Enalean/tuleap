@@ -2,6 +2,7 @@
  
 /* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
@@ -25,6 +26,8 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 
+use Tuleap\FRS\ToolbarPresenter;
+
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {
@@ -46,7 +49,14 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 }
 }
 
-file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','manage_proclist'), 'help' => 'frs.html#processor-list-administration'));
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
+$presenter = new ToolbarPresenter($project);
+$presenter->setProcessorsIsActive();
+$presenter->displaySectionNavigation();
+
+echo $renderer->renderToString('toolbar-presenter', $presenter);
 
 $vAdd      = new Valid_String('add');
 $vProcName = new Valid_String('procname');

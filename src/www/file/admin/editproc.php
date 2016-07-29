@@ -2,6 +2,7 @@
  
 /* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
@@ -25,6 +26,8 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 
+use Tuleap\FRS\ToolbarPresenter;
+
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {
@@ -45,7 +48,14 @@ if ($request->valid($vProcId)) {
     $GLOBALS['Response']->redirect('manageprocessors.php?group_id='.$group_id);
 }
 
-file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','update_proc'), 'help' => 'frs.html#processor-list-administration'));
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
+$presenter = new ToolbarPresenter($project);
+$presenter->setProcessorsIsActive();
+$presenter->displaySectionNavigation();
+
+echo $renderer->renderToString('toolbar-presenter', $presenter);
 
 $sql = "SELECT name,rank FROM frs_processor WHERE group_id=".db_ei($group_id)." AND processor_id=".db_ei($proc_id);
 $result = db_query($sql);

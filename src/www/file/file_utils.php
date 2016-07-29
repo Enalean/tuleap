@@ -10,25 +10,30 @@
 //
 
 require_once('www/news/news_utils.php');
+require_once('common/autoload.php');
 
-function file_utils_header($params) {
-    global $group_id,$Language;
+use Tuleap\FRS\ToolbarPresenter;
+
+function file_utils_admin_header($params)
+{
+    global $group_id;
 
     $params['toptab']='file';
     $params['group']=$group_id;
-    
-    site_project_header($params);
 
     if (!array_key_exists('pv', $params) || !$params['pv']) {
-        if (user_ismember($group_id,"R2")) {
-            echo '<strong>'
-                .'<a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
-            if (!isset($params['help'])) { $params['help'] = "frs.html";}
-            echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-            echo "</strong>";
-        }
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($group_id);
+
+        $renderer        = TemplateRendererFactory::build()->getRenderer(
+            ForgeConfig::get('codendi_dir') .'/src/templates/frs'
+        );
+        $presenter       = new ToolbarPresenter($project);
+
+        echo $renderer->renderToString('toolbar-presenter', $presenter);
     }
 }
+
 
 // Workaround for the 2GB limitation
 function file_utils_get_size($file) {
@@ -47,28 +52,6 @@ function file_utils_get_size($file) {
         $size = $file->Size;
     }
     return $size;
-}
-
-function file_utils_admin_header($params) {
-  global $group_id,$Language;
-
-    $params['toptab']='file';
-    $params['group']=$group_id;
-    
-    site_project_header($params);
-
-    if (user_ismember($group_id,"R2")) {
-        $pm = ProjectManager::instance();
-        $p = $pm->getProject($group_id);
-
-        echo '<strong>';
-        echo '<a href="/file/?group_id='.$group_id.'">'. $Language->getText('project_admin_editservice', $p->getService(Service::FILE)->getLabel()) .'</a>';
-        echo ' | <a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
-	echo ' | <a href="/file/admin/manageprocessors.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','manage_proc').'</a>';
-	if (!isset($params['help'])) { $params['help'] = "frs.html";}
-	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-        echo "</strong><br><hr>";
-    }
 }
 
 function file_utils_footer($params) {

@@ -20,6 +20,8 @@ require_once ('common/user/UserManager.class.php');
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
+use Tuleap\FRS\ToolbarPresenter;
+
 $authorized_user = false;
 
 $request =& HTTPRequest::instance();
@@ -72,9 +74,11 @@ $params = array (
     $hp->purify($pm->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
 
+$project   = $pm->getProject($group_id);
+$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
+$presenter = new ToolbarPresenter($project);
 
 if ($num_packages < 1) {
-    file_utils_header($params);
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if ($frspf->userCanAdmin($user, $group_id)) {
         echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
@@ -346,7 +350,7 @@ while (list ($package_id, $package) = each($packages)) {
     }
 }
 
-file_utils_header($params);
+
 ?>
 
 <SCRIPT language="JavaScript">
