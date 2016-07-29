@@ -27,9 +27,9 @@ Version 8.18 (Not yet released)
 	* git: 4.245
 	* boomerang: 0.5
 	* statistics: 0.62
-	* svn: 0.69
-	* hudson_svn: 0.10
-	* referencealias_svn: 0.7
+	* svn: 0.70
+	* hudson_svn: 0.11
+	* referencealias_svn: 0.8
 	* fulltextsearch: 0.134
 	* graphontrackersv5: 5.24
 	* proftpd: 0.27
