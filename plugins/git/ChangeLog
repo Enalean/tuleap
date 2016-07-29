@@ -1,3 +1,6 @@
+Version 4.245 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
 Version 4.244 - Tuleap 8.18
     * request #9356: Backup of a deleted Git repository can be accessed
 

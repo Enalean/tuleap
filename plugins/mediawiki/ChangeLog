@@ -1,3 +1,6 @@
+Version 0.121 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
 Version 0.120 - Tuleap 8.18
     * request #9300: Configuration files are not properly loaded in Perl environnement
 

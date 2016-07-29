@@ -3,6 +3,7 @@ Version 8.18 (Not yet released)
 	* request #9344 Persistent XSS through code snippet download
 	* request #9329: New install doesn't prompt for domain name
 	* request #9355: 'Import List Of Users' does not work with emails
+	* request #9335: Do not inherit default trackers when importing from XML
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
@@ -12,15 +13,15 @@ Version 8.18 (Not yet released)
 	* request #9299: Get rid of combined
 
 	== Plugins ==
-	* agiledashboard: 1.399
-	* docman: 2.26.115
+	* agiledashboard: 1.400
+	* docman: 2.26.116
 	* cardwall: 1.63
-	* tracker: 5.975
+	* tracker: 5.976
 	* forumml: 2.6.26
-	* ldap: 3.105
-	* mediawiki: 0.120
+	* ldap: 3.106
+	* mediawiki: 0.121
 	* webdav: 1.9.17
-	* git: 4.244
+	* git: 4.245
 	* boomerang: 0.5
 	* statistics: 0.62
 	* svn: 0.67
@@ -28,6 +29,8 @@ Version 8.18 (Not yet released)
 	* referencealias_svn: 0.7
 	* fulltextsearch: 0.134
 	* graphontrackersv5: 5.24
+	* proftpd: 0.27
+	* projectlinks: 2.10
 
     == Themes ==
 	* FlamingParrot: 1.143

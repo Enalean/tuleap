@@ -1,3 +1,6 @@
+Version 0.27 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
 Version 0.26 - Tuleap 8.16
     * request #9206: Activate services at import
 
