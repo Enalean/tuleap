@@ -20,6 +20,7 @@
 
 use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
+use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
 
 
 require_once(__DIR__ . '/../bootstrap.php');
@@ -41,7 +42,8 @@ class FlowTest extends TuleapTestCase {
         $flow             = new Flow(
             $state_manager,
             new AuthorizationDispatcher($state_manager),
-            $provider_manager
+            $provider_manager,
+            new IDTokenVerifier()
         );
 
         $request_uri = $flow->getAuthorizationRequestUri($provider, 'return_to');
@@ -69,7 +71,8 @@ class FlowTest extends TuleapTestCase {
         $flow             = new Flow(
             $state_manager,
             new AuthorizationDispatcher($state_manager),
-            $provider_manager
+            $provider_manager,
+            new IDTokenVerifier()
         );
 
         $request_uri  = $flow->getAuthorizationRequestUri($provider, 'return_to');
