@@ -144,7 +144,7 @@ class GitPlugin extends Plugin {
         //Gerrit user synch help
         $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
 
-        $this->_addHook('register_project_creation');
+        $this->_addHook(Event::REGISTER_PROJECT_CREATION);
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
         $this->_addHook('anonymous_access_to_script_allowed');
         $this->_addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);

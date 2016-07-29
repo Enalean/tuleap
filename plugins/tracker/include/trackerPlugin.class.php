@@ -77,7 +77,7 @@ class trackerPlugin extends Plugin {
         $this->addHook('default_widgets_for_new_owner');
 
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
-        $this->_addHook('register_project_creation',           'register_project_creation',         false);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
@@ -284,21 +284,23 @@ class trackerPlugin extends Plugin {
     * @param Array $params
     */
     function register_project_creation($params) {
-        $tm = new TrackerManager();
-        $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+        if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
+            $tm = new TrackerManager();
+            $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
-        $project_manager = $this->getProjectManager();
-        $template        = $project_manager->getProject($params['template_id']);
-        $project         = $project_manager->getProject($params['group_id']);
+            $project_manager = $this->getProjectManager();
+            $template        = $project_manager->getProject($params['template_id']);
+            $project         = $project_manager->getProject($params['group_id']);
 
-        $config = new AllowedProjectsConfig(
-            $project_manager,
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
-        );
-        if ($config->isProjectAllowedToUseNature($template)) {
-            $config->addProject($project);
+            $config = new AllowedProjectsConfig(
+                $project_manager,
+                new AllowedProjectsDao(),
+                new Tracker_Hierarchy_Dao(),
+                EventManager::instance()
+            );
+            if ($config->isProjectAllowedToUseNature($template)) {
+                $config->addProject($project);
+            }
         }
     }
 

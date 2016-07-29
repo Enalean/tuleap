@@ -29,6 +29,19 @@ class ProjectCreationData {
     private $built_from_template;
     private $trove_data;
     private $is_unrestricted = false;
+    private $inherit_from_template = true;
+
+    /**
+     * Returns true if the data should be inherited from template (in DB)
+     *
+     * This is mostly useful for XML import where "the true" come from XML
+     * and not from the predefined template.
+     *
+     * @return boolean
+     */
+    public function projectShouldInheritFromTemplate() {
+        return $this->inherit_from_template;
+    }
 
     public function getFullName() {
         return $this->full_name;
@@ -187,6 +200,8 @@ class ProjectCreationData {
         }
 
         $this->markUsedServicesFromXML($xml, $template_id, $service_manager, $project_manager);
+
+        $this->inherit_from_template = false;
     }
 
     /**
