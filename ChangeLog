@@ -9,11 +9,12 @@ Version 8.18 (Not yet released)
 	* request #9202: Refactoring for PHP5.6 - Snippets
 	* story #9090: Improve REST tests of the computed fields
 	* request #9299: Plugins no longer append javascript to core Combined
+	* request #9299: Get rid of combined
 
 	== Plugins ==
 	* agiledashboard: 1.399
 	* docman: 2.26.115
-	* cardwall: 1.62
+	* cardwall: 1.63
 	* tracker: 5.975
 	* forumml: 2.6.26
 	* ldap: 3.105
@@ -21,12 +22,15 @@ Version 8.18 (Not yet released)
 	* webdav: 1.9.17
 	* git: 4.244
 	* boomerang: 0.5
-	* statistics: 0.61
+	* statistics: 0.62
 	* svn: 0.67
 	* hudson_svn: 0.10
 	* referencealias_svn: 0.7
 	* fulltextsearch: 0.134
 	* graphontrackersv5: 5.24
+
+    == Themes ==
+	* FlamingParrot: 1.143
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==
