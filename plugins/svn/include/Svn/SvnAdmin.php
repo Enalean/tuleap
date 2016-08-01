@@ -51,17 +51,15 @@ class SvnAdmin
 
         try {
             $command = "umask 77 && mkdir -p $dump_path";
-            $command_output = $this->system_command->exec($command);
+            $this->system_command->exec($command);
 
             $command = "chown ". ForgeConfig::get('sys_http_user') .":".ForgeConfig::get('sys_http_user') .
                 " $dump_path && chmod 750 $dump_path";
             $this->system_command->exec($command);
 
-            $command = "umask 77 && svnadmin dump $system_path > $dump_path/$dump_name";
-            $command_output = $this->system_command->exec($command);
-            foreach ($command_output as $line) {
-                $this->logger->debug('[svn '.$repository->getName().'] svnadmin: '.$line);
-            }
+            $command = "umask 77 && svnadmin dump --quiet $system_path > $dump_path/$dump_name";
+            $this->system_command->exec($command);
+            $this->logger->info('[svn '.$repository->getName().'] svnadmin: dump success');
 
             $command = "chown ". ForgeConfig::get('sys_http_user') .":".ForgeConfig::get('sys_http_user') .
                 " $dump_path/$dump_name && chmod 640 $dump_path/$dump_name";
