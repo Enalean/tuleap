@@ -1,3 +1,7 @@
+Version 4.247 - Tuleap 8.18
+    * request #9368: HTTP replication password can not be added or updated if a password was not already set
+
+
 Version 4.246 - Tuleap 8.18
     * request #9363: Link to the documentation to configure a polling jobs is wrong
 
