@@ -677,7 +677,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     }
     
     if ($_commiter != 100) {
-        $_commiter    = db_ei($_commiter);
+        $_commiter    = db_es($_commiter);
         $commiter_str = "AND user.user_id=cvs_checkins.whoid ".
           "AND user.user_name='$_commiter' ";
     } else {
@@ -732,7 +732,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     $where.
     $order_by.
     $limit;
-    
+
     $result=db_query($sql);
     
     /* expensive way to have total rows number didn'get a cheaper one */
