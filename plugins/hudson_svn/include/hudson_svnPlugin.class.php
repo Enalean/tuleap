@@ -116,7 +116,8 @@ class hudson_svnPlugin extends Plugin {
             $this->getLogger(),
             $this->getSystemCommand(),
             $this->getDestructor(),
-            $this->getHookDao()
+            $this->getHookDao(),
+            EventManager::instance()
         );
     }
 

@@ -57,7 +57,8 @@ try {
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao()
+            new HookDao(),
+            EventManager::instance()
         ),
         new MailHeaderManager(new MailHeaderDao()),
         new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),

@@ -26,6 +26,7 @@ use Project;
 use Tuleap\Svn\Dao;
 use \ProjectManager;
 use \ProjectDao;
+use EventManager;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
@@ -48,6 +49,7 @@ class RepositoryManagerTest extends TuleapTestCase
         $system_command        = mock('System_Command');
         $destructor            = mock('Tuleap\Svn\Admin\Destructor');
         $hook_dao              = mock('Tuleap\Svn\Repository\HookDao');
+        $event_manager         = EventManager::instance();
         $this->manager         = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -55,7 +57,8 @@ class RepositoryManagerTest extends TuleapTestCase
             $logger,
             $system_command,
             $destructor,
-            $hook_dao
+            $hook_dao,
+            $event_manager
         );
         $project               = stub("Project")->getId()->returns(101);
 
@@ -68,6 +71,10 @@ class RepositoryManagerTest extends TuleapTestCase
                 'backup_path'              => ''
             )
         );
+    }
+
+    public function tearDown(){
+        EventManager::clearInstance();
     }
 
     public function itReturnsRepositoryFromAPublicPath(){
@@ -105,6 +112,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
         $system_command    = mock('System_Command');
 
         $this->project_manager = ProjectManager::testInstance($this->project_dao);
+        $event_manager         = EventManager::instance();
         $this->manager         = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -112,7 +120,8 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             $logger,
             $system_command,
             $destructor,
-            $this->hook_dao
+            $this->hook_dao,
+            $event_manager
         );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(
@@ -125,6 +134,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
 
     public function tearDown(){
         ProjectManager::clearInstance();
+        EventManager::clearInstance();
     }
 
     public function itReturnsARepositoryWithHookConfig() {

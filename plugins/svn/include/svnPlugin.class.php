@@ -220,7 +220,8 @@ class SvnPlugin extends Plugin {
                     new Dao(),
                     new SvnLogger()
                 ),
-                new HookDao()
+                new HookDao(),
+                EventManager::instance()
             );
         }
 

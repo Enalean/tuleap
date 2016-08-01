@@ -54,7 +54,8 @@ try {
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao()
+            new HookDao(),
+            EventManager::instance()
         ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),

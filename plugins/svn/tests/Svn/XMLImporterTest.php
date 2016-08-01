@@ -115,6 +115,7 @@ class XMLImporterTest extends TuleapTestCase {
         $system_command      = mock('System_Command');
         $destructor          = mock('Tuleap\Svn\Admin\Destructor');
         $hook_dao            = mock('Tuleap\Svn\Repository\HookDao');
+        $event_manager         = EventManager::instance();
         $this->repomgr       = new RepositoryManager(
             $this->repodao,
             $this->pm,
@@ -122,7 +123,8 @@ class XMLImporterTest extends TuleapTestCase {
             $logger,
             $system_command,
             $destructor,
-            $hook_dao
+            $hook_dao,
+            $event_manager
         );
         $this->sysevmgr      = SystemEventManager::testInstance($this->evdao, $this->evfdao);
         $this->ugdao         = safe_mock('UGroupDao');

@@ -54,7 +54,8 @@ try {
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao()
+            new HookDao(),
+            EventManager::instance()
         )
     );
 

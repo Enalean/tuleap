@@ -32,6 +32,7 @@ use ProjectManager;
 use System_Command;
 use Backend;
 use Project;
+use EventManager;
 
 class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
 {
@@ -107,7 +108,8 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao()
+            new HookDao(),
+            EventManager::instance()
         );
     }
 }
