@@ -1,3 +1,6 @@
+Version 0.12 - Tuleap 8.18
+    * Use archivedeleteditem plugin to do the real deletion
+
 Version 0.11 - Tuleap 8.18
     * Delete the repository after deletion delay
 
