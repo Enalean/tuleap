@@ -1,3 +1,7 @@
+Version 4.248 - Tuleap 8.18
+    * request #9362: Git over HTTP does not work if the repository is not connected to a Gerrit server
+
+
 Version 4.247 - Tuleap 8.18
     * request #9368: HTTP replication password can not be added or updated if a password was not already set
 
