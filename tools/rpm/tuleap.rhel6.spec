@@ -632,9 +632,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 
-# Plugin archivedeleteditems
-%{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
 
@@ -1187,7 +1184,6 @@ fi
 %files plugin-archivedeleteditems
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/archivedeleteditems
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/archive-deleted-items.pl
 
 %files plugin-fusionforge_compat
 %defattr(-,%{APP_USER},%{APP_USER},-)
