@@ -73,7 +73,9 @@ class openidconnectclientPlugin extends Plugin {
     }
 
     public function anonymous_access_to_script_allowed($params) {
-        $params['anonymous_allowed'] = strpos($params['script_name'], $this->getPluginPath()) === 0;
+        if (strpos($params['script_name'], $this->getPluginPath()) === 0) {
+            $params['anonymous_allowed'] = true;
+        }
     }
 
     public function javascript_file($params) {
