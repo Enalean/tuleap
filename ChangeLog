@@ -4,6 +4,7 @@ Version 8.18 (Not yet released)
 	* request #9329: New install doesn't prompt for domain name
 	* request #9355: 'Import List Of Users' does not work with emails
 	* request #9335: Do not inherit default trackers when importing from XML
+	* request #9361: CVS search by commiter does not work
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
