@@ -148,7 +148,7 @@ class Git_AdminGerritController {
 
     private function updateReplicationPassword(Git_RemoteServer_GerritServer $server, $replication_password)
     {
-        if (hash_equals($server->getReplicationPassword(), $replication_password)) {
+        if (! hash_equals($server->getReplicationPassword(), $replication_password)) {
             $server->setReplicationPassword($replication_password);
 
             $this->gerrit_server_factory->updateReplicationPassword($server);
