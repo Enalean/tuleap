@@ -51,7 +51,6 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->includeJavascriptFile('/assets/flamingparrot.'.$this->getVersion().'.js');
     }
 
     private function render($template_name, $presenter) {
@@ -108,6 +107,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
            $title = $params['title'] .' - '. $title;
         }
 
+        $this->includeJavascriptFile($this->include_asset->getFileURL('flamingparrot.js'));
+
         $this->render('header', new FlamingParrot_HeaderPresenter(
             $title,
             $this->imgroot
@@ -121,7 +122,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     }
 
     protected function includeSubsetOfCombined() {
-        echo '<script type="text/javascript" src="/assets/tuleap_subset_flamingparrot.'.$this->getVersion().'.js"></script>'."\n";
+        echo $this->include_asset->getHTMLSnippet('tuleap_subset_flamingparrot.js');
     }
 
     protected function displayCommonStylesheetElements($params) {
