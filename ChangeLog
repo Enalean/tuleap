@@ -1,3 +1,15 @@
+Version 8.17-2 (Monday, August 1st 2016)
+	== Bug Fix ==
+	* request #9363: Link to the documentation to configure a polling jobs is wrong
+	* request #9359: OpenID Connect Client plugin does not follow standard which could lead to improper authentication
+	* request #9356: Backup of a deleted Git repository can be accessed by all users with a shell access
+	* request #9355: 'Import List Of Users' does not work with emails
+	* request #9354: No feedback is given when an error occurs during a transition in the tracker cardwall renderer if no semantic title is defined
+	* request #9353: Drag and drop on Tracker cardwall renderer must handle better account empty values
+	* request #9352: Migrated Tuleap user to LDAP one can't log in
+	* request #9344: Persistent XSS through code snippet download
+	* request #9335: Do not inherit default trackers when importing from XML
+
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==
 	* request #9113: Be able to filter system events by status
