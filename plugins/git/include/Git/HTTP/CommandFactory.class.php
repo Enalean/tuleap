@@ -138,27 +138,29 @@ class Git_HTTP_CommandFactory {
         ) {
             $this->basicAuthenticationChallenge();
         } else {
+            $user = null;
             try {
-                $gerrit_server_id = $repository->getRemoteServerId();
-                $gerrit_server    = $this->gerrit_server_factory->getServerById($gerrit_server_id);
-
                 $user = $this->authenticator->authenticate(
-                    $gerrit_server,
+                    $repository,
                     $_SERVER['PHP_AUTH_USER'],
                     $_SERVER['PHP_AUTH_PW']
                 );
 
-                if (! $user) {
-                    $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-                }
-
-                $this->logger->debug('LOGGED AS '.$user->getUnixName());
-
-                return $this->getGitoliteCommand($user, $command);
+                $this->logger->debug('LOGGED AS ' . $user->getUnixName());
             } catch (Exception $exception) {
-                $this->logger->debug('LOGIN ERROR '.$exception->getMessage());
-                $this->basicAuthenticationChallenge();
+                $this->logger->debug('Replication user not recognized ' . $exception->getMessage());
             }
+
+            if ($user === null) {
+                try {
+                    $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+                } catch (Exception $exception) {
+                    $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());
+                    $this->basicAuthenticationChallenge();
+                }
+            }
+
+            return $this->getGitoliteCommand($user, $command);
         }
     }
 
