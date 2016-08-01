@@ -748,7 +748,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->checkHierarchyCanBeUsed();
                     $this->displayAdminItemHeader($layout, 'hierarchy');
                     $this->getHierarchyController($request)->edit();
                     $this->displayFooter($layout);
@@ -759,7 +758,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy-update':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->checkHierarchyCanBeUsed();
                     $this->getHierarchyController($request)->update();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -844,13 +842,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
         }
         return false;
-    }
-
-    private function checkHierarchyCanBeUsed() {
-        if ($this->isProjectAllowedToUseNature()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_use_hierarchy'));
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-        }
     }
 
     public function isProjectAllowedToUseNature() {
@@ -1427,10 +1418,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
         );
         $params = array("items" => &$items, "tracker_id" => $this->id);
         EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $params);
-
-        if ($this->isProjectAllowedToUseNature()) {
-            unset($items['hierarchy']);
-        }
 
         return $items;
     }

@@ -98,6 +98,14 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
         stub($this->artifact_factory)->getArtifactById(457)->returns($this->other_artifact);
 
+        $this->another_artifact = mock('Tracker_Artifact');
+        stub($this->another_artifact)->getId()->returns(458);
+        stub($this->another_artifact)->getTracker()->returns($this->tracker);
+        stub($this->another_artifact)->getLastChangeset()->returns(
+            stub('Tracker_Artifact_Changeset')->getId()->returns(4581)
+        );
+        stub($this->artifact_factory)->getArtifactById(458)->returns($this->another_artifact);
+
         $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
         stub($this->previous_changesetvalue)->getArtifactIds()->returns(array(36));
 
@@ -232,6 +240,55 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
 
         stub($this->field)->getTracker()->returns($this->tracker_child);
+
+        expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
+
+        $this->saver->saveValue(
+            $this->field,
+            $this->user,
+            $artifact,
+            $this->changeset_value_id,
+            $value,
+            $this->previous_changesetvalue
+        );
+    }
+
+    public function itUsesIsChildArtifactLinkTypeIfAHierarchyIsDefined() {
+        $artifact = mock('Tracker_Artifact');
+
+        $value = array(
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, NULL),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, NULL)
+            ),
+            'removed_values' => array()
+        );
+
+        stub($this->field)->getTracker()->returns($this->tracker);
+
+        expect($this->dao)->create('*', '_is_child', '*', '*', '*')->once();
+
+        $this->saver->saveValue(
+            $this->field,
+            $this->user,
+            $artifact,
+            $this->changeset_value_id,
+            $value,
+            $this->previous_changesetvalue
+        );
+    }
+
+    public function itDoesNotUseIsChildArtifactLinkTypeIfTargetTrackerIsNotChildInHierarchy() {
+        $artifact = mock('Tracker_Artifact');
+
+        $value = array(
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->another_artifact, '_is_child')
+            ),
+            'removed_values' => array()
+        );
+
+        stub($this->field)->getTracker()->returns($this->tracker);
 
         expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
 
