@@ -20,11 +20,11 @@
 
 namespace Tuleap\Svn;
 
+use Backend;
 use Logger;
 use SimpleXMLElement;
 use Project;
 use SystemEventManager;
-use User\XML\Import\IFindUserFromXMLReference;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
@@ -37,9 +37,9 @@ class XMLImporter {
     private $repositories_data;
 
     public function __construct(
+            Backend $backend,
             SimpleXMLElement $xml,
-            $extraction_path,
-            IFindUserFromXMLReference $user_finder)
+            $extraction_path)
     {
         $this->repositories_data = array();
 
@@ -51,7 +51,7 @@ class XMLImporter {
             if($xml_repo->getName() != "repository") {
                 continue;
             }
-            $this->repositories_data[] = new XMLRepositoryImporter($xml_repo, $extraction_path);
+            $this->repositories_data[] = new XMLRepositoryImporter($backend, $xml_repo, $extraction_path);
         }
     }
 
