@@ -1,3 +1,6 @@
+Version 0.73 - Tuleap 8.18
+    * request #9245 Imported SVN repositories are owned by root
+
 Version 0.72 - Tuleap 8.18
     * story #9253: Add quiet option on dump command
 
