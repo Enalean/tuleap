@@ -121,7 +121,8 @@ class hudson_svnPlugin extends Plugin {
             $this->getHookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            $this->getAccessFileHistoryFactory()
+            $this->getAccessFileHistoryFactory(),
+            SystemEventManager::instance()
         );
     }
 

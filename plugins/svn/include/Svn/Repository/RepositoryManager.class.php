@@ -24,7 +24,6 @@ use Backend;
 use EventManager;
 use Exception;
 use ForgeConfig;
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
@@ -64,6 +63,8 @@ class RepositoryManager
     private $backend;
     /** @var AccessFileHistoryFactory */
     private $access_file_history_factory;
+    /** @var SystemEventManager */
+    private $system_event_manager;
 
     public function __construct(
         Dao $dao,
@@ -75,7 +76,8 @@ class RepositoryManager
         HookDao $hook_dao,
         EventManager $event_manager,
         Backend $backend,
-        AccessFileHistoryFactory $access_file_history_factory
+        AccessFileHistoryFactory $access_file_history_factory,
+        SystemEventManager $system_event_manager
     ) {
         $this->dao                         = $dao;
         $this->project_manager             = $project_manager;
@@ -87,6 +89,7 @@ class RepositoryManager
         $this->event_manager               = $event_manager;
         $this->backend                     = $backend;
         $this->access_file_history_factory = $access_file_history_factory;
+        $this->system_event_manager        = $system_event_manager;
     }
 
     /**
@@ -389,6 +392,14 @@ class RepositoryManager
                 $this->logger->warn('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge :[' . $params['error'] . ']');
                 $this->logger->warn('An error occured while archiving SVN repository: ' . $repository->getName());
             }
+        }
+    }
+
+    public function deleteProjectRepositories(Project $project)
+    {
+        $repositories = $this->getRepositoriesInProject($project);
+        foreach ($repositories as $repository) {
+            $this->queueRepositoryDeletion($repository, $this->system_event_manager);
         }
     }
 }

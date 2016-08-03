@@ -22,6 +22,7 @@ namespace Tuleap\Svn\Repository;
 
 use Backend;
 use Mock;
+use SystemEventManager;
 use TuleapTestCase;
 use Project;
 use Tuleap\Svn\Dao;
@@ -53,6 +54,7 @@ class RepositoryManagerTest extends TuleapTestCase
         $event_manager               = EventManager::instance();
         $backend                     = Backend::instance(Backend::SVN);
         $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
+        $system_event_manager        = SystemEventManager::instance();
         $this->manager               = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -63,7 +65,8 @@ class RepositoryManagerTest extends TuleapTestCase
             $hook_dao,
             $event_manager,
             $backend,
-            $access_file_history_factory
+            $access_file_history_factory,
+            $system_event_manager
         );
         $project               = stub("Project")->getId()->returns(101);
 
@@ -120,6 +123,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
 
         $this->project_manager = ProjectManager::testInstance($this->project_dao);
         $event_manager         = EventManager::instance();
+        $system_event_manager  = SystemEventManager::instance();
         $this->manager         = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -130,7 +134,8 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             $this->hook_dao,
             $event_manager,
             $backend,
-            $access_file_history_factory
+            $access_file_history_factory,
+            $system_event_manager
         );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(

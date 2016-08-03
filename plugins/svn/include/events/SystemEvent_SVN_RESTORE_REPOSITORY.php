@@ -22,6 +22,7 @@ namespace Tuleap\Svn\EventRepository;
 
 use EventManager;
 use SystemEvent;
+use SystemEventManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
@@ -111,7 +112,8 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
             new HookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao())
+            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
+            SystemEventManager::instance()
         );
     }
 }

@@ -120,6 +120,7 @@ class XMLImporterTest extends TuleapTestCase {
         $event_manager               = EventManager::instance();
         $backend                     = Backend::instance(Backend::SVN);
         $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
+        $system_event_manager        = SystemEventManager::instance();
         $this->repomgr       = new RepositoryManager(
             $this->repodao,
             $this->pm,
@@ -130,7 +131,8 @@ class XMLImporterTest extends TuleapTestCase {
             $hook_dao,
             $event_manager,
             $backend,
-            $access_file_history_factory
+            $access_file_history_factory,
+            $system_event_manager
         );
         $this->sysevmgr      = SystemEventManager::testInstance($this->evdao, $this->evfdao);
         $this->ugdao         = safe_mock('UGroupDao');
