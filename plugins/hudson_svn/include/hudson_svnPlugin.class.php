@@ -28,6 +28,8 @@ use Tuleap\HudsonSvn\Job\Dao as JobDao;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\HudsonSvn\Job\Launcher;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PostCommit;
@@ -117,8 +119,15 @@ class hudson_svnPlugin extends Plugin {
             $this->getSystemCommand(),
             $this->getDestructor(),
             $this->getHookDao(),
-            EventManager::instance()
+            EventManager::instance(),
+            Backend::instance(Backend::SVN),
+            $this->getAccessFileHistoryFactory()
         );
+    }
+
+    private function getAccessFileHistoryFactory()
+    {
+        return new AccessFileHistoryFactory(new AccessFileHistoryDao());
     }
 
     private function getHookDao()

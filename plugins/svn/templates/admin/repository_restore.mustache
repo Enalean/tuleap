@@ -1,0 +1,27 @@
+<div class="contenu_onglet contenu_onglet_center" id="contenu_onglet_svn_repository">
+    {{^ hasRepositories }}
+        <span>{{ restore_not_found }}</span>
+    {{/ hasRepositories }}
+    {{# hasRepositories }}
+        <table class="contenu_onglet_table">
+            <tr class="boxtable">
+                <td class="boxtitle">Repository name</td>
+                <td class="boxtitle">Delete date</td>
+                <td class="boxtitle">Restore</td>
+            </tr>
+            {{# repositories }}
+                <tr class="boxitemgrey">
+                    <td>{{ getName }}</td>
+                    <td>{{ getDeletionDateHumanReadable }}</td>
+                    <td>
+                        <a href="/plugins/svn/?action=restore&group_id={{ project_id }}&repo_id={{ getId }}">
+                            <img src="{{ url_icon }}"
+                                 onClick="return confirm('{{ restore_confirm }} {{ getName }}.')" border="0"
+                            />
+                        </a>
+                    </td>
+                </tr>
+            {{/ repositories }}
+        </table>
+    {{/ hasRepositories }}
+</div>

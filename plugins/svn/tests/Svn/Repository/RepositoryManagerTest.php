@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Backend;
 use Mock;
 use TuleapTestCase;
 use Project;
@@ -42,15 +43,17 @@ class RepositoryManagerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->dao             = mock('Tuleap\Svn\Dao');
-        $this->project_manager = mock('ProjectManager');
-        $svn_admin             = mock('Tuleap\Svn\SvnAdmin');
-        $logger                = mock('Logger');
-        $system_command        = mock('System_Command');
-        $destructor            = mock('Tuleap\Svn\Admin\Destructor');
-        $hook_dao              = mock('Tuleap\Svn\Repository\HookDao');
-        $event_manager         = EventManager::instance();
-        $this->manager         = new RepositoryManager(
+        $this->dao                   = mock('Tuleap\Svn\Dao');
+        $this->project_manager       = mock('ProjectManager');
+        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
+        $logger                      = mock('Logger');
+        $system_command              = mock('System_Command');
+        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
+        $hook_dao                    = mock('Tuleap\Svn\Repository\HookDao');
+        $event_manager               = EventManager::instance();
+        $backend                     = Backend::instance(Backend::SVN);
+        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
+        $this->manager               = new RepositoryManager(
             $this->dao,
             $this->project_manager,
             $svn_admin,
@@ -58,7 +61,9 @@ class RepositoryManagerTest extends TuleapTestCase
             $system_command,
             $destructor,
             $hook_dao,
-            $event_manager
+            $event_manager,
+            $backend,
+            $access_file_history_factory
         );
         $project               = stub("Project")->getId()->returns(101);
 
@@ -103,13 +108,15 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
 {
     public function setUp()
     {
-        $this->project_dao = safe_mock('ProjectDao');
-        $this->dao         = safe_mock('Tuleap\Svn\Dao');
-        $this->hook_dao    = mock('Tuleap\Svn\Repository\HookDao');
-        $svn_admin         = mock('Tuleap\Svn\SvnAdmin');
-        $destructor        = mock('Tuleap\Svn\Admin\Destructor');
-        $logger            = mock('Logger');
-        $system_command    = mock('System_Command');
+        $this->project_dao           = safe_mock('ProjectDao');
+        $this->dao                   = safe_mock('Tuleap\Svn\Dao');
+        $this->hook_dao              = mock('Tuleap\Svn\Repository\HookDao');
+        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
+        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
+        $logger                      = mock('Logger');
+        $system_command              = mock('System_Command');
+        $backend                     = Backend::instance(Backend::SVN);
+        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
 
         $this->project_manager = ProjectManager::testInstance($this->project_dao);
         $event_manager         = EventManager::instance();
@@ -121,7 +128,9 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             $system_command,
             $destructor,
             $this->hook_dao,
-            $event_manager
+            $event_manager,
+            $backend,
+            $access_file_history_factory
         );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(

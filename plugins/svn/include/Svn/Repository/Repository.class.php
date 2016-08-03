@@ -110,6 +110,11 @@ class Repository {
         return $this->getName(). $this->getDeletionDate() .'.svn';
     }
 
+    public function getDeletionDateHumanReadable()
+    {
+        return date($GLOBALS['Language']->getText('system', 'datefmt'), $this->deletion_date);
+    }
+
     public function getDeletionDate()
     {
         return $this->deletion_date;

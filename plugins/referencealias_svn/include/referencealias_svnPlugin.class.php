@@ -23,6 +23,8 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasSVN\Dao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Dao as SVNDao;
 use Tuleap\ReferenceAliasSVN\ReferencesImporter;
 use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
@@ -109,9 +111,16 @@ class referencealias_svnPlugin extends Plugin
                 $this->getSystemCommand(),
                 $this->getDestructor(),
                 $this->getHookDao(),
-                EventManager::instance()
+                EventManager::instance(),
+                Backend::instance(Backend::SVN),
+                $this->getAccessFileHistoryFactory()
             )
         );
+    }
+
+    private function getAccessFileHistoryFactory()
+    {
+        return new AccessFileHistoryFactory(new AccessFileHistoryDao());
     }
 
     private function getHookDao()

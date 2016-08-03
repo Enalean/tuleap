@@ -21,6 +21,8 @@
 namespace Tuleap\Svn;
 
 use DataAccessObject;
+use SystemEvent;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\Svn\Repository\Repository;
 use Project;
 use SVN_Apache_SvnrootConf;
@@ -107,9 +109,18 @@ class Dao extends DataAccessObject
 
     public function markAsDeleted($repository_id, $backup_path, $deletion_date)
     {
-        $backup_path   = $this->da->quoteSmart($backup_path);
+        if ($deletion_date) {
+            $backup_path = $this->da->quoteSmart($backup_path);
+        } else {
+            $backup_path = "NULL";
+        }
         $repository_id = $this->da->escapeInt($repository_id);
-        $deletion_date = $this->da->quoteSmart($deletion_date);
+
+        if ($deletion_date) {
+            $deletion_date = $this->da->quoteSmart($deletion_date);
+        } else {
+            $deletion_date = "NULL";
+        }
 
         $sql = "UPDATE plugin_svn_repositories SET
                     repository_deletion_date = $deletion_date,
@@ -128,6 +139,25 @@ class Dao extends DataAccessObject
                     AND FROM_UNIXTIME(repository_deletion_date) <= FROM_UNIXTIME($retention_date)";
 
         return $this->retrieve($sql);
+    }
+
+    public function getRestorableRepositoriesByProject($project_id)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $svn_type       = $this->da->quoteSmart('%' . SystemEvent_SVN_RESTORE_REPOSITORY::NAME);
+        $status_new     = $this->da->quoteSmart(SystemEvent::STATUS_NEW);
+        $status_running = $this->da->quoteSmart(SystemEvent::STATUS_RUNNING);
+
+        $sql = "SELECT plugin_svn_repositories.*
+                FROM plugin_svn_repositories
+                LEFT JOIN system_event ON CONCAT(project_id, '::', plugin_svn_repositories.id) = parameters
+                      AND system_event.type LIKE $svn_type
+                      AND system_event.status IN ($status_new, $status_running)
+                WHERE parameters IS NULL
+                  AND project_id = $project_id
+                  AND repository_deletion_date IS NOT NULL";
+
+         return $this->retrieve($sql);
     }
 
     public function delete($repository_id)

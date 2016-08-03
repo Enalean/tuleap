@@ -20,9 +20,12 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Backend;
 use EventManager;
 use Exception;
 use ForgeConfig;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Project;
@@ -30,6 +33,7 @@ use ProjectManager;
 use Rule_ProjectName;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
 use SystemEvent;
 use SystemEventManager;
 use Tuleap\Svn\SvnAdmin;
@@ -56,6 +60,10 @@ class RepositoryManager
     private $destructor;
     /** @var EventManager */
     private $event_manager;
+    /** @var Backend */
+    private $backend;
+    /** @var AccessFileHistoryFactory */
+    private $access_file_history_factory;
 
     public function __construct(
         Dao $dao,
@@ -65,16 +73,20 @@ class RepositoryManager
         System_Command $system_command,
         Destructor $destructor,
         HookDao $hook_dao,
-        EventManager $event_manager
+        EventManager $event_manager,
+        Backend $backend,
+        AccessFileHistoryFactory $access_file_history_factory
     ) {
-        $this->dao             = $dao;
-        $this->project_manager = $project_manager;
-        $this->svnadmin        = $svnadmin;
-        $this->logger          = $logger;
-        $this->system_command  = $system_command;
-        $this->destructor      = $destructor;
-        $this->hook_dao        = $hook_dao;
-        $this->event_manager   = $event_manager;
+        $this->dao                         = $dao;
+        $this->project_manager             = $project_manager;
+        $this->svnadmin                    = $svnadmin;
+        $this->logger                      = $logger;
+        $this->system_command              = $system_command;
+        $this->destructor                  = $destructor;
+        $this->hook_dao                    = $hook_dao;
+        $this->event_manager               = $event_manager;
+        $this->backend                     = $backend;
+        $this->access_file_history_factory = $access_file_history_factory;
     }
 
     /**
@@ -144,11 +156,24 @@ class RepositoryManager
     /**
      * @return SystemEvent or null
      */
-    public function queueRepositoryDeletion(Repository $repositorysvn, \SystemEventManager $system_event_manager)
+    public function queueRepositoryDeletion(Repository $repositorysvn, SystemEventManager $system_event_manager)
     {
         return $system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             $repositorysvn->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repositorysvn->getId(),
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_ROOT
+        );
+    }
+
+    /**
+     * @return SystemEvent or null
+     */
+    public function queueRepositoryRestore(Repository $repository, SystemEventManager $system_event_manager)
+    {
+        return $system_event_manager->createEvent(
+            'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_RESTORE_REPOSITORY::NAME,
+            $repository->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId(),
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_ROOT
         );
@@ -183,8 +208,27 @@ class RepositoryManager
 
     public function getArchivedRepositoriesToPurge($retention_date)
     {
-        $archived_repositories = array();
         $deleted_repositories  = $this->dao->getDeletedRepositoriesToPurge($retention_date);
+        return $this->instantiateRepositoriesFromRow($deleted_repositories);
+    }
+
+    public function getRestorableRepositoriesByProject(Project $project)
+    {
+        $deleted_repositories              = $this->dao->getRestorableRepositoriesByProject($project->getID());
+        $deleted_repositories_instantiated = $this->instantiateRepositoriesFromRow($deleted_repositories);
+        $deleted_existed_repositories      = array();
+        foreach ($deleted_repositories_instantiated as $delete_repository) {
+            $archive = $delete_repository->getBackupPath();
+            if (file_exists($archive)) {
+                array_push($deleted_existed_repositories, $delete_repository);
+            }
+        }
+        return $deleted_existed_repositories;
+    }
+
+    private function instantiateRepositoriesFromRow($deleted_repositories)
+    {
+        $archived_repositories = array();
         foreach ($deleted_repositories as $deleted_repository) {
             $repository = $this->instantiateFromRowWithoutProject($deleted_repository);
             array_push($archived_repositories, $repository);
@@ -276,6 +320,32 @@ class RepositoryManager
                 $this->logger->error($exception->getMessage());
             }
         }
+    }
+
+    public function restoreRepository(Repository $repository)
+    {
+        $this->logger->info('Restoring repository : '.$repository->getName());
+        $backup_path = $repository->getBackupPath();
+
+        if (! file_exists($backup_path)) {
+            $this->logger->error('[Restore] Unable to find repository archive: '.$backup_path);
+            return false;
+        }
+
+        $this->svnadmin->importRepository($repository);
+
+        $new_ugroup_name = null;
+        $old_ugroup_name = null;
+        $this->backend->updateCustomSVNAccessForRepository(
+            $repository->getProject(),
+            $repository->getSystemPath(),
+            $new_ugroup_name,
+            $old_ugroup_name,
+            $repository->getFullName(),
+            $this->access_file_history_factory->getCurrentVersion($repository)->getContent()
+        );
+
+        $this->dao->markAsDeleted($repository->getId(), null, null);
     }
 
     private function deleteArchivedRepository(Repository $repository)
