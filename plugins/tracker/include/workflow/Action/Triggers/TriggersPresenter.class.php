@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,9 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
     /** @var CSRFSynchronizerToken */
     private $token;
 
-    public $project_use_artifact_link_natures;
-
-    public function __construct($form_action, CSRFSynchronizerToken $token, $project_use_artifact_link_natures) {
-        $this->form_action                       = $form_action;
-        $this->token                             = $token;
-        $this->project_use_artifact_link_natures = $project_use_artifact_link_natures;
+    public function __construct($form_action, CSRFSynchronizerToken $token) {
+        $this->form_action = $form_action;
+        $this->token       = $token;
     }
 
     public function title_define_triggers() {
@@ -112,10 +109,4 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
     public function no_children() {
         return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_no_children');
     }
-
-    public function cannot_use_triggers() {
-        return $GLOBALS['Language']->getText('workflow_admin', 'cannot_use_triggers');
-    }
 }
-
-?>

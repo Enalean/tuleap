@@ -1506,7 +1506,6 @@ workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
 workflow_admin	ci_url	Adresse du job Jenkins ou Hudson: http://CI_URL/job/JOBNAME
-workflow_admin	cannot_use_triggers	Les déclencheurs ne peuvent être configurés car les natures de liens entre artefacts sont utilisées à la place de la hiérarchie d'outils de suivi.
 
 workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à $2
 workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
