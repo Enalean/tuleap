@@ -12,6 +12,7 @@ Version 8.18 (Not yet released)
 	* story #9090: Improve REST tests of the computed fields
 	* request #9299: Plugins no longer append javascript to core Combined
 	* request #9299: Get rid of combined
+	* story #9281 define FRS global permissions
 
 	== Enhancement ==
 	* External lib no longer referenced in sources
