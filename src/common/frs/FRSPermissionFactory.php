@@ -21,37 +21,31 @@
 namespace Tuleap\FRS;
 
 use Project;
-use PFUser;
 
-class FRSPermissionManager
+class FRSPermissionFactory
 {
     /** @var PermissionDao */
     private $permission_dao;
-        /** @var FRSPermissionFactory */
-    private $permission_factory;
 
     public function __construct(
-        FRSPermissionDao $permission_dao,
-        FRSPermissionFactory $permission_factory
+        FRSPermissionDao $permission_dao
     ) {
-        $this->permission_dao     = $permission_dao;
-        $this->permission_factory = $permission_factory;
+        $this->permission_dao = $permission_dao;
     }
 
-    public function isAdmin(Project $project, PFUser $user)
+    public function getFrsUGroupsByPermission(Project $project, $permission_type)
     {
-        if ($user->isAdmin($project->getId())) {
-            return true;
-        }
-
-        $permissions = $this->permission_factory->getFrsUgroupsByPermission($project, FRSPermission::FRS_ADMIN);
-
+        $admins = array();
+        $permissions = $this->permission_dao->searchPermissionsForProjectbyType($project->getID(), $permission_type);
         foreach ($permissions as $permission) {
-            if ($user->isMemberOfUGroup($permission->getUGroupId(), $project->getID())) {
-                return true;
-            }
+            $admins[$permission['ugroup_id']] = $this->instantiateFromRow($permission);
         }
 
-        return false;
+        return $admins;
+    }
+
+    private function instantiateFromRow(array $row)
+    {
+        return new FRSPermission($row['project_id'], $row['permission_type'], $row['ugroup_id']);
     }
 }

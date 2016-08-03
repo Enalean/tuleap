@@ -19,6 +19,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+
 /**
  * ServiceFile
  */
@@ -168,6 +172,14 @@ class ServiceFile extends Service
         ));
     }
 
+    private function getFrsPermissionManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
+    }
+
     public function displayHeader(Project $project, $title)
     {
         $GLOBALS['HTML']->includeJavascriptSnippet(
@@ -175,17 +187,18 @@ class ServiceFile extends Service
         );
 
         $user = UserManager::instance()->getCurrentUser();
-        if ($user->isMemberOfUGroup(ProjectUGroup::FILE_MANAGER_ADMIN, $project->getId())) {
+        if ($this->getFrsPermissionManager()->isAdmin($project, $user)) {
             $toolbar[]   = array(
-                'title' => "Admin",
-                'url'   => '/file/admin/manageprocessors.php?'. http_build_query(array(
-                    'group_id' => $project->getId()
+                'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
+                'url'   => '/file/admin/?'. http_build_query(array(
+                    'group_id' => $project->getId(),
+                    'action'   => 'edit-permissions'
                 ))
             );
         }
 
         $toolbar[] = array(
-            'title' => "Help",
+            'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
             'url'   => "/help/show_help.php?section=frs.html");
 
         $breadcrumbs = array();

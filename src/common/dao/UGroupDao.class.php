@@ -56,6 +56,17 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchByListOfUGroupsId(array $ugroup_ids)
+    {
+        $ugroup_ids = $this->da->quoteSmartImplode(',', $ugroup_ids);
+
+        $sql = "SELECT *
+                FROM ugroup
+                WHERE ugroup_id IN ($ugroup_ids)";
+
+        return $this->retrieve($sql);
+    }
+
     function searchDynamicAndStaticByGroupId($group_id) {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 

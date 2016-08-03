@@ -19,6 +19,8 @@
  */
 
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 
 require_once 'exit.php';
 require_once 'html.php';
@@ -136,7 +138,8 @@ class ProjectImportTest extends TuleapDbTestCase {
             new XMLImportHelper($user_manager),
             ServiceManager::instance(),
             new Log_ConsoleLogger(),
-            $ugroup_duplicator
+            $ugroup_duplicator,
+            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao())
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

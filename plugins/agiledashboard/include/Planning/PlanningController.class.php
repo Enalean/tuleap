@@ -19,6 +19,8 @@
  */
 
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -366,7 +368,11 @@ class Planning_Controller extends MVC2_PluginController {
             new XMLImportHelper(UserManager::instance()),
             ServiceManager::instance(),
             new ProjectXMLImporterLogger(),
-            $ugroup_duplicator
+            $ugroup_duplicator,
+            new FRSPermissionCreator(
+                new FRSPermissionDao(),
+                new UGroupDao()
+            )
         );
 
         try {

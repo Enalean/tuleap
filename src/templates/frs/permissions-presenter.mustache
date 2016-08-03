@@ -1,5 +1,21 @@
 <h2>{{ permission_title }}</h2>
 
-<div class='alert warning'>
-{{ under_implementation }}
+<div>
+    <div>
+        <p> {{ administaror_info }} </p>
+    </div>
+    <form method="POST" action="{{ frs_admins_form_action }}">
+        <input type="hidden" value="{{ project_id }}" name="group_id"/>
+        <label class='frs_write_title'>
+            {{ write_title }}
+        </label>
+        <select size="8" multiple name="frs_admins[]">
+            {{# ugroups }}
+                <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+            {{/ ugroups }}
+        </select>
+        <p>
+            <input class="btn btn-primary" type="submit" value="{{ frs_admins_submit_button }}" name="submit"/>
+        </p>
+    </form>
 </div>

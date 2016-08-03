@@ -22,6 +22,8 @@ require_once 'account.php';
 require_once 'www/project/admin/UserPermissionsDao.class.php';
 
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 
 class TestDataBuilder {
 
@@ -162,7 +164,11 @@ class TestDataBuilder {
             $this->project_manager,
             ReferenceManager::instance(),
             $this->ugroup_duplicator,
-            $send_notifications
+            $send_notifications,
+            new FRSPermissionCreator(
+                new FRSPermissionDao(),
+                new UGroupDao()
+            )
         );
         $this->config_dao = new ConfigDao();
 

@@ -48,6 +48,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->user_finder       = new XMLImportHelper($this->user_manager);
         $this->logger            = mock('ProjectXMLImporterLogger');
         $this->ugroup_duplicator = mock('Tuleap\Project\UgroupDuplicator');
+        $frs_permissions_creator = mock('Tuleap\FRS\FRSPermissionCreator');
         $this->xml_importer      = new ProjectXMLImporter(
             $this->event_manager,
             $this->project_manager,
@@ -57,7 +58,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             new XMLImportHelper($this->user_manager),
             mock('ServiceManager'),
             $this->logger,
-            $this->ugroup_duplicator
+            $this->ugroup_duplicator,
+            $frs_permissions_creator
         );
 
         $this->xml_file_path              = dirname(__FILE__).'/_fixtures/fake_project.xml';

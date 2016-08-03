@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
+
 class REST_TestDataBuilder extends TestDataBuilder {
 
     const TEST_USER_4_ID          = 105;
@@ -491,7 +494,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     }
 
 
-    protected function importTemplateInProject($project_id, $template) {
+    protected function importTemplateInProject($project_id, $template)
+    {
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
             $this->project_manager,
@@ -501,7 +505,11 @@ class REST_TestDataBuilder extends TestDataBuilder {
             new XMLImportHelper(UserManager::instance()),
             ServiceManager::instance(),
             new ProjectXMLImporterLogger(),
-            $this->ugroup_duplicator
+            $this->ugroup_duplicator,
+            new FRSPermissionCreator(
+                new FRSPermissionDao(),
+                new UGroupDao()
+            )
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
         $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);

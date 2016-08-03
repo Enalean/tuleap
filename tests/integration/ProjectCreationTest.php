@@ -25,6 +25,8 @@ require_once 'html.php';
 require_once 'user.php';
 
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 
 class ProjectCreationTest extends TuleapDbTestCase {
 
@@ -78,7 +80,11 @@ class ProjectCreationTest extends TuleapDbTestCase {
             ProjectManager::instance(),
             ReferenceManager::instance(),
             $ugroup_duplicator,
-            $send_notifications
+            $send_notifications,
+            new FRSPermissionCreator(
+                new FRSPermissionDao(),
+                new UGroupDao()
+            )
         );
 
         $projectCreator->create('short-name', 'Long name', array(

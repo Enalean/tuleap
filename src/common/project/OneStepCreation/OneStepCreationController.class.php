@@ -26,6 +26,8 @@ require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.
 require_once 'common/project/OneStepRegistration/OneStepRegistrationPresenterFactory.class.php';
 
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 
 /**
  * Base controller for one step creation project
@@ -127,7 +129,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $this->project_manager,
             ReferenceManager::instance(),
             $ugroup_duplicator,
-            $send_notifications
+            $send_notifications,
+            new FRSPermissionCreator(
+                new FRSPermissionDao(),
+                new UGroupDao()
+            )
         );
 
         $data         = $this->creation_request->getProjectValues();
