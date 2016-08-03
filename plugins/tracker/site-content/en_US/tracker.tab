@@ -1731,7 +1731,6 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_no	No
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Submitted projects will be able to use artifact links types.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted projects will not be anymore able to use artifact links types.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Something went wrong during the update. Help us improve your experience by sending an error report.
-plugin_tracker_artifact_links_natures	cannot_use_hierarchy	You cannot use hierarchy of trackers since the project use type of artifact links.
 plugin_tracker_artifact_links_natures	cannot_use_burndown	You cannot use Burndown field since the project uses type of artifact links.
 plugin_tracker_artifact_links_natures	cannot_use_burndown_user	No burndown data can be built for this tracker.
 plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Project "$1" cannot use artifact links types because it is using trackers hierarchy.
@@ -1744,3 +1743,5 @@ plugin_tracker_artifact_links_natures	delete_success	The type has been successfu
 plugin_tracker_artifact_links_natures	delete_error	An error has occured during the deletion of the type: $1
 plugin_tracker_artifact_links_natures	cannot_format	Cannot be formatted because at least one field needed for the format is missing.
 plugin_tracker_artifact_links_natures	unsupported_field	A field needed for the format cannot be formatted.
+plugin_tracker_artifact_links_natures	no_child	As per config (hierarchy), the type _is_child cannot be used for the link to artifact #$1
+plugin_tracker_artifact_links_natures	force_child	As per config (hierarchy), force use of _is_child type for the link to artifact #$1

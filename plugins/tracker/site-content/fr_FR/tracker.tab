@@ -1732,7 +1732,6 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Non
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Les projets soumis ont désormais accès aux natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Les projets soumis ne peuvent plus utiliser les natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Une erreur est survenue pendant la mise à jour de la liste des projets. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
-plugin_tracker_artifact_links_natures	cannot_use_hierarchy	Vous ne pouvez pas utiliser la hiérarchie d'outils de suivi puisque le projet utilise les natures de liens entre artéfacts.
 plugin_tracker_artifact_links_natures	cannot_use_burndown	Vous ne pouvez pas utiliser le diagramme de complétion puisque le projet utilise les natures de liens entre artéfacts.
 plugin_tracker_artifact_links_natures	cannot_use_burndown_user	Les données pour le diagramme de complétion ne peuvent être construites pour cet outil de suivi.
 plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car ce projet utilise la hiérarchie d'outils de suivi.
@@ -1745,3 +1744,5 @@ plugin_tracker_artifact_links_natures	delete_success	La nature a bien été supp
 plugin_tracker_artifact_links_natures	delete_error	Une erreur est survenue pendant la suppression de la nature : $1
 plugin_tracker_artifact_links_natures	cannot_format	Ne peut pas être formaté car au moins un des champs requis pour le format est manquant.
 plugin_tracker_artifact_links_natures	unsupported_field	Un des champs requis pour le format ne peut pas être formaté.
+plugin_tracker_artifact_links_natures	no_child	Tel que définit par la hiérarchie, la nature "_is_child" ne peut être utilisée pour le lien vers l'artéfact #$1
+plugin_tracker_artifact_links_natures	force_child	Tel que définit par la hiérarchie, la nature "_is_child" a été forcée pour le lien vers l'artéfact #$1
