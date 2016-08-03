@@ -1,3 +1,6 @@
+Version 5.977 - Tuleap 8.18
+    * story #9305: Define a hierarchy with the artifact links v2
+
 Version 5.976 - Tuleap 8.18
     * request #9335 Do not inherit default trackers when importing from XML
 
