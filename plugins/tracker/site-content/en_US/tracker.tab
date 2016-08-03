@@ -1505,7 +1505,6 @@ workflow_admin	post_action_not_defined	This action will be inactive until it is 
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
 workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
-workflow_admin	cannot_use_triggers	Triggers can't be configured because artifact links types are used in this project instead of tracker hierarchy.
 
 workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
 workflow_postaction	field_clear	The field '$1' will be automatically cleared

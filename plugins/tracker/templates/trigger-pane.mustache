@@ -1,62 +1,55 @@
 <div class="workflow_triggers">
-    {{# project_use_artifact_link_natures }}
-        <p class="alert alert-warning">
-            {{ cannot_use_triggers }}
+    <h3>{{title_define_triggers}}</h3>
+    <p class="help">
+        {{triggers_definition}}
+    </p>
+    <div id="triggers_existing">
+        <h4>{{title_existing_triggers}}</h4>
+        <table cellspacing="0" cellpadding="10" border="0">
+            <tbody>
+                <tr>
+                    <td class="trigger_description">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tbody class="trigger_description_triggering_fields">
+                                <tr class="trigger_description_triggering_field">
+                                    <td class="trigger_description_triggering_field_intro">
+                                        <span class="trigger_description_triggering_field_when">{{new_trigger_triggering_field_list_intro}}</span>
+                                        <span class="trigger_description_triggering_field_operator"></span>
+                                    </td>
+                                    <td class="trigger_description_triggering_field_detail">
+                                        <span class="trigger_description_triggering_field_quantity"></span> {{condition_of_type}}
+                                        <strong><span class="trigger_description_triggering_field_tracker"></span></strong>
+                                        <span class="trigger_description_triggering_have_field"></span>
+                                        <strong><span class="trigger_description_triggering_field_field_name"></span></strong> {{condition_set_to}}
+                                        <strong><span class="trigger_description_triggering_field_field_value"></span></strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="trigger_description_target">
+                            {{new_trigger_target_intro}}
+                            <strong><span class="trigger_description_target_field_name"></span></strong> {{condition_will_be_set_to}}
+                            <strong><span class="trigger_description_target_field_value"></span></strong>
+                        </p>
+                    </td>
+                    <td>
+                        <img border="0" alt="remove" src="/themes/Tuleap/images/ic/cross.png" class="trigger_remove">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form method="post" action="{{triggers_form_action}}" id="triggers_form" style="display:none;">
+        {{{triggers_synch_token}}}
+        <p class="add_new_trigger">
+            <a href="#add-new-trigger" id="add_new_trigger_title">
+                <i class="icon-plus"></i>
+                <span>
+                    {{triggers_add_new}}
+                </span>
+            </a>
+            {{> triggers-create-new}}
         </p>
-    {{/ project_use_artifact_link_natures }}
-    {{^ project_use_artifact_link_natures }}
-        <h3>{{title_define_triggers}}</h3>
-        <p class="help">
-            {{triggers_definition}}
-        </p>
-        <div id="triggers_existing">
-            <h4>{{title_existing_triggers}}</h4>
-            <table cellspacing="0" cellpadding="10" border="0">
-                <tbody>
-                    <tr>
-                        <td class="trigger_description">
-                            <table cellpadding="0" cellspacing="0" border="0">
-                                <tbody class="trigger_description_triggering_fields">
-                                    <tr class="trigger_description_triggering_field">
-                                        <td class="trigger_description_triggering_field_intro">
-                                            <span class="trigger_description_triggering_field_when">{{new_trigger_triggering_field_list_intro}}</span>
-                                            <span class="trigger_description_triggering_field_operator"></span>
-                                        </td>
-                                        <td class="trigger_description_triggering_field_detail">
-                                            <span class="trigger_description_triggering_field_quantity"></span> {{condition_of_type}}
-                                            <strong><span class="trigger_description_triggering_field_tracker"></span></strong>
-                                            <span class="trigger_description_triggering_have_field"></span>
-                                            <strong><span class="trigger_description_triggering_field_field_name"></span></strong> {{condition_set_to}}
-                                            <strong><span class="trigger_description_triggering_field_field_value"></span></strong>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <p class="trigger_description_target">
-                                {{new_trigger_target_intro}}
-                                <strong><span class="trigger_description_target_field_name"></span></strong> {{condition_will_be_set_to}}
-                                <strong><span class="trigger_description_target_field_value"></span></strong>
-                            </p>
-                        </td>
-                        <td>
-                            <img border="0" alt="remove" src="/themes/Tuleap/images/ic/cross.png" class="trigger_remove">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <form method="post" action="{{triggers_form_action}}" id="triggers_form" style="display:none;">
-            {{{triggers_synch_token}}}
-            <p class="add_new_trigger">
-                <a href="#add-new-trigger" id="add_new_trigger_title">
-                    <i class="icon-plus"></i>
-                    <span>
-                        {{triggers_add_new}}
-                    </span>
-                </a>
-                {{> triggers-create-new}}
-            </p>
-        </form>
-        <p id="triggers_no_children" style="display:none" class="alert alert-info">{{no_children}}</p>
-    {{/ project_use_artifact_link_natures }}
+    </form>
+    <p id="triggers_no_children" style="display:none" class="alert alert-info">{{no_children}}</p>
 </div>

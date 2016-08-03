@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,14 +23,12 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     private $template_renderer;
     private $token;
     private $rule_manager;
-    private $project_use_artifact_link_natures;
 
     public function __construct(
         Tracker $tracker,
         CSRFSynchronizerToken $token,
         TemplateRenderer $renderer,
-        Tracker_Workflow_Trigger_RulesManager $rule_manager,
-        $project_use_artifact_link_natures
+        Tracker_Workflow_Trigger_RulesManager $rule_manager
     ) {
         parent::__construct($tracker);
 
@@ -40,10 +38,9 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
                 'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
             )
         );
-        $this->template_renderer                 = $renderer;
-        $this->token                             = $token;
-        $this->rule_manager                      = $rule_manager;
-        $this->project_use_artifact_link_natures = $project_use_artifact_link_natures;
+        $this->template_renderer = $renderer;
+        $this->token             = $token;
+        $this->rule_manager      = $rule_manager;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -53,7 +50,11 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
         $this->displayHeader($layout);
 
-        $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter($this->url_query, $this->token, $this->project_use_artifact_link_natures);
+        $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter(
+            $this->url_query,
+            $this->token
+        );
+
         $this->template_renderer->renderToPage('trigger-pane', $presenter);
 
 
@@ -62,9 +63,6 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
             $this->rule_manager->getForTargetTracker($this->tracker)->fetchFormattedForJson()
         );
 
-
         $this->displayFooter($layout);
     }
 }
-
-?>
