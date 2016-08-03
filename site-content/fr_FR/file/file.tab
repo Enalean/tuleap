@@ -298,6 +298,10 @@ file_file_utils	update_proc_fail	Modification non effectuée.
 file_file_utils	delete_proc_success	Processeur effacé.
 file_file_utils	delete_proc_fail	Suppression non effectuée.
 file_file_utils	del_proc	Effacer ce processeur ?
+file_file_utils	permissions	Permissions
+file_file_utils	permissions_title	Contrôle d'accès
+file_file_utils	title_frs_administration	Administration des fichiers
+file_file_utils	under_implementation	En cours d'implémentation
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php
