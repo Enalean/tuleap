@@ -29,9 +29,9 @@ Version 8.18 (Not yet released)
 	* git: 4.248
 	* boomerang: 0.5
 	* statistics: 0.62
-	* svn: 0.73
-	* hudson_svn: 0.12
-	* referencealias_svn: 0.9
+	* svn: 0.74
+	* hudson_svn: 0.13
+	* referencealias_svn: 0.10
 	* fulltextsearch: 0.134
 	* graphontrackersv5: 5.24
 	* proftpd: 0.27
@@ -39,7 +39,7 @@ Version 8.18 (Not yet released)
 	* openidconnectclient: 0.22
 
     == Themes ==
-	* FlamingParrot: 1.143
+	* FlamingParrot: 1.144
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==

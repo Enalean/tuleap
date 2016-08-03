@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 8.18
+    * Restore a deleted SVN repository
+
 Version 0.12 - Tuleap 8.18
     * Use archivedeleteditem plugin to do the real deletion
 

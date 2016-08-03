@@ -1,3 +1,6 @@
+Version 0.74 - Tuleap 8.18
+    * Restore a deleted SVN repository
+
 Version 0.73 - Tuleap 8.18
     * request #9245 Imported SVN repositories are owned by root
 
