@@ -59,7 +59,8 @@ try {
             new HookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao())
+            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
+            SystemEventManager::instance()
         ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),

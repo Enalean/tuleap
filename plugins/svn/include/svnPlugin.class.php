@@ -102,6 +102,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('javascript_file');
         $this->addHook('codendi_daily_start');
         $this->addHook('show_pending_documents');
+        $this->addHook('project_is_deleted');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -228,7 +229,8 @@ class SvnPlugin extends Plugin {
                 new HookDao(),
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
-                new AccessFileHistoryFactory(new AccessFileHistoryDao())
+                new AccessFileHistoryFactory(new AccessFileHistoryDao()),
+                SystemEventManager::instance()
             );
         }
 
@@ -460,6 +462,16 @@ class SvnPlugin extends Plugin {
 
         $backend->chown($svn_project_folder, $backend->getHTTPUser());
         $backend->chgrp($svn_project_folder, $backend->getHTTPUser());
+    }
+
+    public function project_is_deleted($params)
+    {
+        if (! empty($params['group_id'])) {
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            if ($project) {
+                $this->getRepositoryManager()->deleteProjectRepositories($project);
+            }
+        }
     }
 
     public function codendi_daily_start()
