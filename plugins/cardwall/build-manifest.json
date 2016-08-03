@@ -1,0 +1,19 @@
+{
+    "name": "cardwall",
+    "themes": {
+        "default": {
+            "files": [
+                "www/themes/default/css/style.scss"
+            ],
+            "target_dir": "www/themes/default/css"
+        }
+    },
+    "javascript": [
+        "www/js/ajaxInPlaceEditorExtensions.js",
+        "www/js/cardwall.js",
+        "www/js/script.js",
+        "www/js/custom-mapping.js",
+        "www/js/CardsEditInPlace.js",
+        "www/js/fullscreen.js"
+    ]
+}

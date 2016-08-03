@@ -10,11 +10,13 @@
     "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
-    "gulp-exec": "^2.1.2",
-    "gulp-install": "^0.6.0",
-    "gulp-rev": "^7.1.0"
+    "gulp-rev": "^7.1.0",
+    "gulp-sass": "^2.3.2"
   },
   "scripts": {
-    "build": "node_modules/.bin/gulp build"
+    "build": "node_modules/.bin/gulp build",
+    "js":    "node_modules/.bin/gulp js",
+    "sass":  "node_modules/.bin/gulp sass",
+    "watch": "node_modules/.bin/gulp watch"
   }
 }

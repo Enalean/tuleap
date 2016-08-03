@@ -31,73 +31,73 @@
 
 body {
     &.FlamingParrot_Orange {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+        @import 'variables-orange';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Blue {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+        @import 'variables-blue';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Green {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
+        @import 'variables-green';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_BlueGrey {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+        @import 'variables-bluegrey';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Purple {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+        @import 'variables-purple';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Red {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
+        @import 'variables-red';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_DarkOrange {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkorange';
+        @import 'variables-darkorange';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_DarkBlue {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkblue';
+        @import 'variables-darkblue';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_DarkGreen {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkgreen';
+        @import 'variables-darkgreen';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_DarkBlueGrey {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkbluegrey';
+        @import 'variables-darkbluegrey';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_DarkPurple {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkpurple';
+        @import 'variables-darkpurple';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_DarkRed {
-        @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkred';
+        @import 'variables-darkred';
 
         @include definitions($main, $color-name);
     }
