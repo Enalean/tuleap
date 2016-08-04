@@ -18,10 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('PluginInfo.class.php');
+use Tuleap\Layout\IncludeAssets;
 
-require_once('common/collection/Map.class.php');
-require_once('PluginManager.class.php');
 /**
  * Plugin
  */
@@ -322,16 +320,12 @@ class Plugin implements PFO_Plugin {
         return $this->backend_logger;
     }
 
-    private function getVersion() {
-        return $this->getPluginInfo()->getPluginDescriptor()->getVersion();
-    }
-
-    private function getMinifiedAssetPath() {
-        return $this->getPluginPath() . '/assets/'.$this->getName().'.'.$this->getVersion().'.js';
-    }
-
     protected function getMinifiedAssetHTML() {
-        return '<script type="text/javascript" src="'.$this->getMinifiedAssetPath().'"></script>';
+        $include_assets = new IncludeAssets(
+            $this->getFilesystemPath() . '/www/assets',
+            $this->getPluginPath() . '/assets'
+        );
+        return $include_assets->getHTMLSnippet($this->getName().'.js');
     }
 
     public function currentRequestIsForPlugin() {

@@ -4,6 +4,8 @@ var gulp    = require('gulp'),
     exec    = require('gulp-exec'),
     install = require('gulp-install'),
     concat  = require('gulp-concat'),
+    rev     = require('gulp-rev'),
+    del     = require('del'),
     fs      = require('fs'),
     path    = require('path'),
     plugins = getAllPluginsWithGulpfile(),
@@ -111,7 +113,15 @@ var gulp    = require('gulp'),
 
 gulp.task('default', ['build']);
 
-gulp.task('concat', function() {
+gulp.task('clean-core', function() {
+    del(asset_dir);
+});
+
+gulp.task('clean-plugins', plugins.map(function (plugin) { return 'clean-'+ plugin; }));
+
+gulp.task('clean', ['clean-core', 'clean-plugins']);
+
+gulp.task('concat', ['clean-core'], function() {
     concatFiles('tuleap', fat_combined_files);
     concatFiles('tuleap_subset', subset_combined_files);
     concatFiles('tuleap_subset_flamingparrot', subset_combined_files.concat(subset_combined_flamingparrot_files));
@@ -130,13 +140,24 @@ plugins.forEach(function (plugin) {
     });
 
     gulp.task('build-'+ plugin, ['install-'+ plugin], function () {
-        return buildInPlugin(plugin);
+        return runInPlugin(plugin, 'build');
+    });
+
+    gulp.task('clean-'+ plugin, ['install-'+ plugin], function () {
+        return runInPlugin(plugin, 'clean');
     });
 });
 
 function concatFiles(name, files) {
     gulp.src(files)
-        .pipe(concat(name+'.' + version + '.js'))
+        .pipe(concat(name+'.js'))
+        .pipe(rev())
+        .pipe(gulp.dest(asset_dir))
+        .pipe(rev.manifest({
+            path: asset_dir + '/manifest.json',
+            base: asset_dir,
+            merge: true
+        }))
         .pipe(gulp.dest(asset_dir));
 }
 
@@ -146,9 +167,9 @@ function installInPlugin(plugin) {
         .pipe(install());
 }
 
-function buildInPlugin(plugin) {
+function runInPlugin(plugin, task) {
     return gulp.src('plugins/'+ plugin +'/gulpfile.js')
-        .pipe(exec('node_modules/.bin/gulp --gulpfile=<%= file.path %>'));
+        .pipe(exec('node_modules/.bin/gulp --gulpfile=<%= file.path %> '+task));
 }
 
 function getAllPluginsWithGulpfile() {

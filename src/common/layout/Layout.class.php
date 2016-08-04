@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+
 /**
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -99,6 +101,11 @@ class Layout extends Response {
     protected $stylesheets = array();
 
     /**
+     * @var IncludeAssets
+     */
+    protected $include_asset;
+
+    /**
      * Constuctor
      * @param string $root the root of the theme : '/themes/Tuleap/'
      */
@@ -128,6 +135,8 @@ class Layout extends Response {
         $this->root     = $root;
         $this->imgroot  = $root . '/images/';
         $this->purifier = Codendi_HTMLPurifier::instance();
+
+        $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
     }
 
     function getChartColors() {
@@ -1253,7 +1262,7 @@ class Layout extends Response {
      */
     public function displayJavascriptElements($params) {
         if ($this->shouldIncludeFatCombined($params)) {
-            echo '<script type="text/javascript" src="/assets/tuleap.'.$this->getVersion().'.js"></script>'."\n";
+            echo $this->include_asset->getHTMLSnippet('tuleap.js');
         } else {
             $this->includeSubsetOfCombined();
         }
@@ -1297,7 +1306,7 @@ class Layout extends Response {
     }
 
     protected function includeSubsetOfCombined() {
-        echo '<script type="text/javascript" src="/assets/tuleap_subset.'.$this->getVersion().'.js"></script>'."\n";
+        echo $this->include_asset->getHTMLSnippet('tuleap_subset.js');
     }
 
     /**
