@@ -5,6 +5,7 @@ Version 8.18 (Not yet released)
 	* request #9355: 'Import List Of Users' does not work with emails
 	* request #9335: Do not inherit default trackers when importing from XML
 	* request #9361: CVS search by commiter does not work
+	* request #8839: Call to sparklines.php should be made in POST to avoid errors
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
