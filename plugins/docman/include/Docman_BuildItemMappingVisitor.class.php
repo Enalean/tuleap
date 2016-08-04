@@ -98,12 +98,12 @@ class Docman_BuildItemMappingVisitor {
         $this->findMatchingChildren($item);
 
         // Recurse on children
-        $items =& $item->getAllItems();
+        $items = $item->getAllItems();
         if($items && $items->size()) {
-            $iter =& $items->iterator();
+            $iter = $items->iterator();
             $iter->rewind();
             while($iter->valid()) {
-                $child =& $iter->current();
+                $child = $iter->current();
                 // We only need to visit child that have equivalent in the
                 // destination project.
                 if(isset($this->itemMapping[$child->getId()])) {
@@ -142,10 +142,10 @@ class Docman_BuildItemMappingVisitor {
             $dar = $this->searchMatchingChildren($item, $parentId);
             if($dar && !$dar->isError() && $dar->rowCount() > 0) {
                 // When there are several items that match, we need to build a fake node
-                $node =& new Docman_Folder();
+                $node = new Docman_Folder();
                 while($row = $dar->getRow()) {
-                    $itemFactory =& $this->getItemFactory();
-                    $i =& $itemFactory->getItemFromRow($row);
+                    $itemFactory = $this->getItemFactory();
+                    $i = $itemFactory->getItemFromRow($row);
                     if($i !== null && $this->checkItemPermissions($row['item_id'])) {
                         $node->addItem($i);
                     }
@@ -167,18 +167,18 @@ class Docman_BuildItemMappingVisitor {
      */
     function compareFolderChildren($srcItem, $dstItem) {
         $nodesToInspect = array();
-        $srcList =& $srcItem->getAllItems();
-        $dstList =& $dstItem->getAllItems();
+        $srcList = $srcItem->getAllItems();
+        $dstList = $dstItem->getAllItems();
         if($srcList && $srcList->size() &&
            $dstList && $dstList->size()) {
-            $srcIter =& $srcList->iterator();
-            $dstIter =& $dstList->iterator();
+            $srcIter = $srcList->iterator();
+            $dstIter = $dstList->iterator();
             $srcIter->rewind();
             $dstIter->rewind();
             $identical = true;
             while($srcIter->valid() && $dstIter->valid() && $identical) {
-                $srcChild =& $srcIter->current();
-                $dstChild =& $dstIter->current();
+                $srcChild = $srcIter->current();
+                $dstChild = $dstIter->current();
                 if($this->compareItem($srcChild, $dstChild)) {
                     $this->itemMapping[$srcChild->getId()] = $dstChild->getId();
                     $nodesToInspect[$srcChild->getId()] = true;
@@ -203,8 +203,8 @@ class Docman_BuildItemMappingVisitor {
      * Check if item can be read by current user
      */
     function checkItemPermissions($itemId) {
-        $user =& $this->getCurrentUser();
-        $dPm =& $this->getPermissionsManager($this->groupId);
+        $user = $this->getCurrentUser();
+        $dPm  = $this->getPermissionsManager($this->groupId);
         return $dPm->userCanRead($user, $itemId);
     }
 
@@ -212,9 +212,9 @@ class Docman_BuildItemMappingVisitor {
      * Search if there is an equivalent of $item in $parentId.
      */
     function searchMatchingItem($item, $parentId) {
-        $dao =& $this->getItemDao();
+        $dao = $this->getItemDao();
         $itemTitles = $this->getTitleStrings($item);
-        $dar =& $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
+        $dar = $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
         return $dar;
     }
 
@@ -223,9 +223,9 @@ class Docman_BuildItemMappingVisitor {
      * $parentId
      */
     function searchMatchingChildren($item, $parentId) {
-        $dao =& $this->getItemDao();
+        $dao = $this->getItemDao();
         $itemTitles = $this->getChildrenTitles($item);
-        $dar =& $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
+        $dar = $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
         return $dar;
     }
 
@@ -234,9 +234,9 @@ class Docman_BuildItemMappingVisitor {
      */
     function getChildrenTitles($item) {
         $title = array();
-        $childList =& $item->getAllItems();
+        $childList = $item->getAllItems();
         if($childList && $childList->size()) {
-            $childIter =& $childList->iterator();
+            $childIter = $childList->iterator();
             $childIter->rewind();
             while($childIter->valid()) {
                 $i = $childIter->current();
@@ -293,29 +293,27 @@ class Docman_BuildItemMappingVisitor {
     // Object accessors
     //
 
-    function &getItemDao() {
+    protected function getItemDao() {
         if($this->dao === null) {
-            $this->dao =& new Docman_ItemDao(CodendiDataAccess::instance());
+            $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
 
-    function &getPermissionsManager($groupId) {
-        $dPm =& Docman_PermissionsManager::instance($groupId);
+    protected function getPermissionsManager($groupId) {
+        $dPm = Docman_PermissionsManager::instance($groupId);
         return $dPm;
     }
 
-    function &getCurrentUser() {
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
+    protected function getCurrentUser() {
+        $um   = UserManager::instance();
+        $user = $um->getCurrentUser();
         return $user;
     }
 
-    function &getItemFactory() {
-        $if =& new Docman_ItemFactory();
+    private function getItemFactory() {
+        $if = new Docman_ItemFactory();
         return $if;
     }
 
 }
-
-?>

@@ -1084,7 +1084,7 @@ plugin_tracker_artifact_changeset	header_html_changeset	Dernières modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	État
 
 plugin_tracker_formelement_admin	aggregate_label	Champ calculé
-plugin_tracker_formelement_admin	aggregate_description	Calcul la valeur (somme des valeurs) du champ en fonction des artefacts liés.<p><strong>Note</strong> : l'option "Calcul rapide" ne vérifie pas les permissions sur les artefacts liés <strong>ET</strong> utilisera le même nom "Champ cible" pour l'ensemble des artifacts liés.</p>
+plugin_tracker_formelement_admin	aggregate_description	Calcule la valeur (somme des valeurs) du champ en fonction des artefacts liés.<p><strong>Note</strong> : <ul><li>Si vous utilisez toujours des champs dépréciés, l'option "Calcul rapide" ne vérifie pas les permissions sur les artefacts liés <strong>ET</strong> utilisera le même nom "Champ cible" pour l'ensemble des artifacts liés.</li><li>sinon le calcul ne vérifie pas les permissions sur les artefacts liés <strong>ET</strong> se basera sur le nom du camps pour faire la somme des artifacts liés.</li></ul>
 plugin_tracker_formelement_admin	crossreferences_label	Références Croisées
 plugin_tracker_formelement_admin	crossreferences_description	Affiche les références croisées de l'artefact
 plugin_tracker_formelement_admin	burndown_label	Diagramme de complétion
@@ -1506,7 +1506,6 @@ workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
 workflow_admin	ci_url	Adresse du job Jenkins ou Hudson: http://CI_URL/job/JOBNAME
-workflow_admin	cannot_use_triggers	Les déclencheurs ne peuvent être configurés car les natures de liens entre artefacts sont utilisées à la place de la hiérarchie d'outils de suivi.
 
 workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à $2
 workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
@@ -1732,9 +1731,6 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Non
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Les projets soumis ont désormais accès aux natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Les projets soumis ne peuvent plus utiliser les natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Une erreur est survenue pendant la mise à jour de la liste des projets. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
-plugin_tracker_artifact_links_natures	cannot_use_hierarchy	Vous ne pouvez pas utiliser la hiérarchie d'outils de suivi puisque le projet utilise les natures de liens entre artéfacts.
-plugin_tracker_artifact_links_natures	cannot_use_burndown	Vous ne pouvez pas utiliser le diagramme de complétion puisque le projet utilise les natures de liens entre artéfacts.
-plugin_tracker_artifact_links_natures	cannot_use_burndown_user	Les données pour le diagramme de complétion ne peuvent être construites pour cet outil de suivi.
 plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car ce projet utilise la hiérarchie d'outils de suivi.
 plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car le service $2 bloque son utilisation.
 plugin_tracker_artifact_links_natures	error_multiple_parents	L'artéfact a plus d'un parent. Impossible d'afficher le reste de la hiérarchie.
@@ -1745,3 +1741,5 @@ plugin_tracker_artifact_links_natures	delete_success	La nature a bien été supp
 plugin_tracker_artifact_links_natures	delete_error	Une erreur est survenue pendant la suppression de la nature : $1
 plugin_tracker_artifact_links_natures	cannot_format	Ne peut pas être formaté car au moins un des champs requis pour le format est manquant.
 plugin_tracker_artifact_links_natures	unsupported_field	Un des champs requis pour le format ne peut pas être formaté.
+plugin_tracker_artifact_links_natures	no_child	Tel que définit par la hiérarchie, la nature "_is_child" ne peut être utilisée pour le lien vers l'artéfact #$1
+plugin_tracker_artifact_links_natures	force_child	Tel que définit par la hiérarchie, la nature "_is_child" a été forcée pour le lien vers l'artéfact #$1

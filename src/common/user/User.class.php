@@ -455,7 +455,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     public function getAllUgroups() {
-        return $this->getUGroupDao()->searchByUserId($this->user_id);
+        return $this->getUGroupDao()->searchByUserIdTakingAccountUserProjectMembership($this->user_id);
     }
 
     var $_ugroups;

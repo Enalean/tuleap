@@ -82,10 +82,12 @@ class SkinTuleap extends SkinTemplate {
         }
 
         $bodyAttrs['class'] .= ' has_sidebar ' . $sidebar_state;
+        $theme_manager = new ThemeManager();
+        $user_theme    = $current_user->getTheme();
 
-        if ($current_user->getTheme() === 'FlamingParrot') {
+        if ($user_theme === 'FlamingParrot') {
             $bodyAttrs['class'] .= ' ' . $current_user->getPreference('theme_variant');
-        } elseif ($current_user->getTheme() === null && ForgeConfig::get('sys_themedefault') === 'FlamingParrot') {
+        } elseif (! $theme_manager->isThemeValid($user_theme) && ForgeConfig::get('sys_themedefault') === 'FlamingParrot') {
             $bodyAttrs['class'] .= ' ' . ForgeConfig::get('sys_default_theme_variant');
         }
     }

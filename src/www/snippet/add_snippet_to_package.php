@@ -11,8 +11,7 @@ require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
 
-function handle_add_exit() {
-	global $suppress_nav;
+function handle_add_exit($suppress_nav) {
         if ($suppress_nav) {
                 echo '
                 </BODY></HTML>';
@@ -21,6 +20,12 @@ function handle_add_exit() {
         }
 	exit;
 }
+
+$request                    = HTTPRequest::instance();
+$post_changes               = $request->get('post_changes');
+$snippet_version_id         = $request->get('snippet_version_id');
+$snippet_package_version_id = $request->get('snippet_package_version_id');
+$suppress_nav               = $request->get('suppress_nav');
 
 if (user_isloggedin()) {
 
@@ -35,7 +40,7 @@ if (user_isloggedin()) {
 	if (!$snippet_package_version_id) {
 		//make sure the package id was passed in
 		echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_v_id_missed').'</H1>';
-		handle_add_exit();
+		handle_add_exit($suppress_nav);
 	}
         $snippet_package_version_id = (int)$snippet_package_version_id;
         $snippet_version_id         = (int)$snippet_version_id;
@@ -54,7 +59,7 @@ if (user_isloggedin()) {
 				"snippet_package_version_id='" . db_ei($snippet_package_version_id) . "'");
 			if (!$result || db_numrows($result) < 1) {
 				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_only_creator').'</H1>';
-				handle_add_exit();
+				handle_add_exit($suppress_nav);
 			}
 
 			/*
@@ -64,7 +69,7 @@ if (user_isloggedin()) {
 			if (!$result || db_numrows($result) < 1) {
 				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
 				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
-				handle_add_exit();
+				handle_add_exit($suppress_nav);
 			}
 
 			/*
@@ -76,7 +81,7 @@ if (user_isloggedin()) {
 			if ($result && db_numrows($result) > 0) {
 				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','already_added').'</H1>';
 				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
-				handle_add_exit();
+				handle_add_exit($suppress_nav);
 			}
 
 			/*
@@ -95,7 +100,7 @@ if (user_isloggedin()) {
 		} else {
 			echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_fill_all_info').'</H1>';
 			echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
-			handle_add_exit();
+			handle_add_exit($suppress_nav);
 		}
 
 	}
@@ -170,12 +175,8 @@ if (user_isloggedin()) {
 	<P>
 	<H2><span class="feedback">'.$feedback.'</span></H2>';
 
-	handle_add_exit();
+	handle_add_exit($suppress_nav);
 
 } else {
-
-	exit_not_logged_in();
-
+    exit_not_logged_in();
 }
-
-?>

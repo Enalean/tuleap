@@ -10,13 +10,12 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
-
-
 $id               = (int)$request->get('id');
 $snippet_category = (int)$request->get('snippet_category');
 $snippet_type     = (int)$request->get('snippet_type');
 $snippet_language = (int)$request->get('snippet_language');
 $snippet_license  = (int)$request->get('snippet_license');
+$type             = $request->get('type');
 
 /*
 

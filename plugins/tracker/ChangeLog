@@ -1,3 +1,81 @@
+Version 5.980 - Tuleap 8.18
+    * story #9305 have agile dashboard compatible with ALv2 (Burndown fields can be used with artifact links v2)
+
+Version 5.979 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
+Version 5.978 - Tuleap 8.18
+    * story #9305: Triggers can be defined with artifact links v2
+
+Version 5.977 - Tuleap 8.18
+    * story #9305: Define a hierarchy with the artifact links v2
+
+Version 5.976 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
+Version 5.975 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
+Version 5.974 - Tuleap 8.18
+    * request #9354: No feedback is given when an error occurs during a transition
+
+Version 5.973 - Tuleap 8.18
+    * request #9252 Artifact links v2 Nature is confusing
+
+Version 5.972 - Tuleap 8.18
+    * request #9346: Computed field V2 - Description of computed field is not accurate
+
+Version 5.971 - Tuleap 8.18
+    * request #9353: Drag and drop on Tracker cardwall renderer must handle better account empty values
+
+Version 5.970 - Tuleap 8.18
+    * request #9342: CSRF token synchronizer implementation uses token with weak entropy
+
+Version 5.969 - Tuleap 8.18
+    * request #9010 Export project tool must export all importable services
+
+Version 5.968 - Tuleap 8.17
+    * request #9336 Computed calculation is broken for old projects
+
+Version 5.967 - Tuleap 8.17
+    * Modal V3 - Route REST doesn't retrieve the correct computed value
+
+Version 5.966 - Tuleap 8.17
+    * story #9090: Fix creation of children in cardwall
+
+Version 5.965 - Tuleap 8.17
+    * request #9330 Computed field calculation broken when target field is not defined
+
+Version 5.964 - Tuleap 8.17
+    * request #9025: Introduce plugin tracker encryption in a early development stage
+
+Version 5.963 - Tuleap 8.17
+    * Modal for adding task and adding new item
+
+Version 5.962 - Tuleap 8.17
+    * request #9328 Tracker XML import deal with static ugroups for workflow transitions
+
+
+
+
+Version 5.961 - Tuleap 8.17
+    * story #9090: Error on permission - If a computed field isn't submitable it shouldn't be displayed in modals
+
+Version 5.960 - Tuleap 8.17
+    * Fix leaking css styles
+
+Version 5.959 - Tuleap 8.17
+    * story #9090: Modal V2
+
+Version 5.958 - Tuleap 8.17
+    * story #9100: See a rollup view for parent/child
+
+Version 5.957 - Tuleap 8.17
+    * REST test for computed fields
+
+Version 5.956 - Tuleap 8.17
+    * Fix computation calculation, error when you mix int and computed value on the same node
+
 Version 5.955 - Tuleap 8.17
     * Remove Sogilis copyright
 

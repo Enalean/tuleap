@@ -111,4 +111,21 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
         $this->assertEqual($this->field_change->is_autocomputed, '1');
         $this->assertEqual($this->field_change->manual_value, 1.5);
     }
+
+    public function itUpdatesWhenOldValueIsManualAndValuesIsAutocomputed()
+    {
+        $submitted_value = array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => ''
+        );
+
+        $specific_field_change = new \SimpleXMLElement('<?xml version="1.0"?>
+                  <field_change field_name="capacity" type="computed">
+                    <manual_value><![CDATA[11]]></manual_value>
+                  </field_change>');
+        $this->updater->update($specific_field_change, $submitted_value);
+
+        $this->assertEqual($specific_field_change->is_autocomputed, '1');
+        $this->assertFalse(isset($specific_field_change->manual_value));
+    }
 }

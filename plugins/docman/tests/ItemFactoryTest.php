@@ -48,9 +48,9 @@ class Docman_ItemFactoryTest extends UnitTestCase {
      * Find path to root for 113
      */
     function testconnectOrphansToParentsStep1() {
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $itemList = array(113 => $fld113);
         $orphans = array(113 => 113);
@@ -63,8 +63,8 @@ class Docman_ItemFactoryTest extends UnitTestCase {
     }
 
     function testconnectOrphansToParentsStep2() {
-        $fld112 =& new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
 
         // Expected item List
         //@php5: clone
@@ -73,7 +73,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
 
         $c_fld112->addItem($c_fld113);
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $itemList = array(112 => $fld112, 113 => $fld113);
         $orphans  = array(112 => 112, 113 => 113);
@@ -86,9 +86,9 @@ class Docman_ItemFactoryTest extends UnitTestCase {
     }
 
     function testconnectOrphansToParentsStep3() {
-        $fld150 =& new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
-        $fld112 =& new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld150 = new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
+        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
 
         // Expected item List
         //@php5: clone
@@ -98,7 +98,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $c_fld112->addItem($c_fld113);
         $c_fld150->addItem($c_fld112);
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
         $itemList = array(150 => $fld150, 112 => $fld112, 113 => $fld113);
@@ -112,10 +112,10 @@ class Docman_ItemFactoryTest extends UnitTestCase {
     }
 
     function testconnectOrphansToParentsStep4() {
-        $fld140 =& new Docman_Folder(array('item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation'));
-        $fld150 =& new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
-        $fld112 =& new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld140 = new Docman_Folder(array('item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation'));
+        $fld150 = new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
+        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
 
         // Expected item List
         //@php5: clone
@@ -127,7 +127,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $c_fld150->addItem($c_fld112);
         $c_fld140->addItem($c_fld150);
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
         $fld150->addItem($fld112);
@@ -153,9 +153,8 @@ class Docman_ItemFactoryTest extends UnitTestCase {
      * but item 150 is to readable by user.
      */
     function testconnectOrphansToParentsStep3PermissionDenied() {
-        $fld150 =& new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
-        $fld112 =& new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
 
         // Expected item List
         //@php5: clone
@@ -163,7 +162,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $c_fld113 = $fld113;
         $c_fld112->addItem($c_fld113);
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
         $itemList = array(150 => false, 112 => $fld112, 113 => $fld113);
@@ -348,11 +347,11 @@ class Docman_ItemFactoryTest extends UnitTestCase {
      * Find path to root for 113, 115 & 135
      */
     function testBuildTreeFromLeavesMultipleStep1() {
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
-        $fld115 =& new Docman_Folder(array('item_id' => 115, 'parent_id' => 150,'title' => 'Folder 115'));
-        $fld135 =& new Docman_Folder(array('item_id' => 135, 'parent_id' => 140,'title' => 'Folder 135'));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld115 = new Docman_Folder(array('item_id' => 115, 'parent_id' => 150,'title' => 'Folder 115'));
+        $fld135 = new Docman_Folder(array('item_id' => 135, 'parent_id' => 140,'title' => 'Folder 135'));
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $itemList = array(113 => $fld113,
                           115 => $fld115,
@@ -370,12 +369,12 @@ class Docman_ItemFactoryTest extends UnitTestCase {
 
 
     function testBuildTreeFromLeavesMultipleStep2() {
-        $fld140 =& new Docman_Folder(array('item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 =& new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150', 'rank' => -2));
-        $fld112 =& new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112', 'rank' => -2));
-        $fld113 =& new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113', 'rank' => 0));
-        $fld115 =& new Docman_Folder(array('item_id' => 115, 'parent_id' => 150,'title' => 'Folder 115', 'rank' => -1));
-        $fld135 =& new Docman_Folder(array('item_id' => 135, 'parent_id' => 140,'title' => 'Folder 135', 'rank' => -1));
+        $fld140 = new Docman_Folder(array('item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation', 'rank' => 0));
+        $fld150 = new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150', 'rank' => -2));
+        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112', 'rank' => -2));
+        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113', 'rank' => 0));
+        $fld115 = new Docman_Folder(array('item_id' => 115, 'parent_id' => 150,'title' => 'Folder 115', 'rank' => -1));
+        $fld135 = new Docman_Folder(array('item_id' => 135, 'parent_id' => 140,'title' => 'Folder 135', 'rank' => -1));
 
         // Expected item List
         //@php5: clone
@@ -391,7 +390,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $c_fld150->addItem($c_fld115);
         $c_fld140->addItem($c_fld135);
 
-        $itemFactory =& new Docman_ItemFactory(0);
+        $itemFactory = new Docman_ItemFactory(0);
 
         $itemList = array(113 => $fld113,
                           115 => $fld115,

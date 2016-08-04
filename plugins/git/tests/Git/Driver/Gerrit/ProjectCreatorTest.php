@@ -115,6 +115,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
                 $use_ssl,
                 $gerrit_version,
                 $http_password,
+                '',
                 $auth_type
             )
         );

@@ -20,6 +20,11 @@
 
 require_once 'constants.php';
 
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Admin\RestoreController;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
@@ -44,6 +49,8 @@ use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\XMLImporter;
+use Tuleap\Svn\SvnLogger;
+use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\Commit\Svnlook;
 
@@ -77,7 +84,8 @@ class SvnPlugin extends Plugin {
     private $permissions_manager;
 
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook(Event::SERVICE_ICON);
@@ -92,6 +100,9 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
+        $this->addHook('codendi_daily_start');
+        $this->addHook('show_pending_documents');
+        $this->addHook('project_is_deleted');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -110,9 +121,24 @@ class SvnPlugin extends Plugin {
 
     public function getTypes() {
         return array(
-            SystemEvent_SVN_CREATE_REPOSITORY::NAME
+            SystemEvent_SVN_CREATE_REPOSITORY::NAME,
+            SystemEvent_SVN_DELETE_REPOSITORY::NAME,
+            SystemEvent_SVN_RESTORE_REPOSITORY::NAME
         );
     }
+
+    /**
+     * Returns the configuration defined for given variable name
+     *
+     * @param String $key
+     *
+     * @return Mixed
+     */
+    public function getConfigurationParameter($key)
+    {
+        return $this->getPluginInfo()->getPropertyValueForName($key);
+    }
+
 
     /** @see Event::UGROUP_MODIFY */
     public function ugroup_modify(array $params) {
@@ -161,26 +187,53 @@ class SvnPlugin extends Plugin {
 
     public function system_event_get_types_for_default_queue($params) {
         $params['types'][] = 'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME;
+        $params['types'][] = 'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME;
+        $params['types'][] = 'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_RESTORE_REPOSITORY::NAME;
     }
 
-    public function get_system_event_class($params) {
-        switch($params['type']) {
-            case 'SVN_CREATE_REPOSITORY' :
+    public function get_system_event_class($params)
+    {
+        switch ($params['type']) {
+            case 'SVN_CREATE_REPOSITORY':
                 include_once dirname(__FILE__).'/events/SystemEvent_SVN_CREATE_REPOSITORY.class.php';
                 $params['class'] = 'SystemEvent_SVN_CREATE_REPOSITORY';
                 $params['dependencies'] = array(
                     $this->getBackendSVN()
                 );
                 break;
+            case 'SVN_DELETE_REPOSITORY':
+                include_once dirname(__FILE__).'/events/SystemEvent_SVN_DELETE_REPOSITORY.class.php';
+                $params['class'] = 'SystemEvent_SVN_DELETE_REPOSITORY';
+                $params['dependencies'] = array(
+                    $this->getRepositoryManager(),
+                    ProjectManager::instance()
+                );
+                break;
         }
     }
 
     /** @return Tuleap\Svn\Repository\RepositoryManager */
-    private function getRepositoryManager() {
-        if(empty($this->repository_manager)) {
-            $this->repository_manager =
-                new RepositoryManager(new Dao(), ProjectManager::instance());
+    private function getRepositoryManager()
+    {
+        if (empty($this->repository_manager)) {
+            $this->repository_manager = new RepositoryManager(
+                new Dao(),
+                ProjectManager::instance(),
+                new SvnAdmin(new System_Command(), new SvnLogger()),
+                new SvnLogger(),
+                new System_Command(),
+                new Destructor(
+                    new Dao(),
+                    new SvnLogger()
+                ),
+                new HookDao(),
+                EventManager::instance(),
+                Backend::instance(Backend::SVN),
+                new AccessFileHistoryFactory(new AccessFileHistoryDao()),
+                SystemEventManager::instance()
+            );
         }
+
         return $this->repository_manager;
     }
 
@@ -264,7 +317,7 @@ class SvnPlugin extends Plugin {
     private function getProjectIdFromViewVcURL(HTTPRequest $request) {
         $svn_root          = $request->get('root');
         $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
-        $project           = ProjectManager::instance()->getProjectByCaseInsensitiveUnixName($project_shortname);
+        $project           = ProjectManager::instance()->getProject($project_shortname);
 
         return $project->getID();
     }
@@ -300,10 +353,9 @@ class SvnPlugin extends Plugin {
         $xml = $params['xml_content'];
         $extraction_path = $params['extraction_path'];
         $project = $params['project'];
-        $user_finder = $params['user_finder'];
         $logger = $params['logger'];
 
-        $svn = new XMLImporter($xml, $extraction_path, $user_finder);
+        $svn = new XMLImporter(Backend::instance(), $xml, $extraction_path);
         $svn->import(
             $params['configuration'],
             $logger,
@@ -334,7 +386,8 @@ class SvnPlugin extends Plugin {
             new AdminController(
                 new MailHeaderManager(new MailHeaderDao()),
                 $repository_manager,
-                $this->getMailNotificationManager()
+                $this->getMailNotificationManager(),
+                new SvnLogger()
             ),
             new ExplorerController(
                 $repository_manager,
@@ -354,7 +407,8 @@ class SvnPlugin extends Plugin {
             new GlobalAdminController(
                 $this->getForgeUserGroupFactory(),
                 $permissions_manager
-            )
+            ),
+            new RestoreController($this->getRepositoryManager())
         );
     }
 
@@ -408,5 +462,34 @@ class SvnPlugin extends Plugin {
 
         $backend->chown($svn_project_folder, $backend->getHTTPUser());
         $backend->chgrp($svn_project_folder, $backend->getHTTPUser());
+    }
+
+    public function project_is_deleted($params)
+    {
+        if (! empty($params['group_id'])) {
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            if ($project) {
+                $this->getRepositoryManager()->deleteProjectRepositories($project);
+            }
+        }
+    }
+
+    public function codendi_daily_start()
+    {
+        $this->getRepositoryManager()->purgeArchivedRepositories();
+    }
+
+    public function show_pending_documents($params)
+    {
+        $project_id            = $params['group_id'];
+        $project               = ProjectManager::instance()->getProject($project_id);
+        $archived_repositories = $this->getRepositoryManager()->getRestorableRepositoriesByProject($project);
+
+        $params['id'][]   = 'svn_repository';
+        $params['nom'][]  = $GLOBALS['Language']->getText('plugin_svn', 'archived_repositories');
+
+        $restore_controller = new RestoreController($this->getRepositoryManager());
+        $tab_content        = $restore_controller->displayRestorableRepositories($archived_repositories, $project_id);
+        $params['html'][]   = $tab_content;
     }
 }

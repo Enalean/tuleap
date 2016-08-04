@@ -2506,10 +2506,15 @@ body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-art
                     max-width: 380px;
                 }
 
-                input[type=text] {
+                input[type=text]:not(.field-computed) {
                     margin: 5px 0 0 0;
                     width: 100%;
                     -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    height: 30px;
+                }
+
+                input[type=text].field-computed {
                     box-sizing: border-box;
                     height: 30px;
                 }
@@ -3242,33 +3247,50 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
-.tracker_artifact_field {
+.tracker_artifact_field-computed {
     .auto-computed {
         margin: 0 0 0 3px;
         color: #AAAAAA;
         font-size: 11px;
     }
-}
 
-.deprecated-close {
-    margin: 15px;
-}
+    .auto-computed-for-modal, .auto-computed-for-submit {
+        display: block;
+    }
 
-#warning-deprecated-field {
-    margin: 0 12px
-}
+    .tracker-formelement-edit-for-modal, .tracker-formelement-edit-for-submit {
+        font-size: 0.95em;
+    }
 
-.original-value {
-    display: block;
-    margin: 3px 0 0 0;
-    font-size: 12px;
-    color: #4DB3D0;
-}
+    .original-value {
+        display: block;
+        margin: 3px 0 0 0;
+        font-size: 12px;
+        color: #4DB3D0;
+    }
 
-.back-to-autocompute {
-    display: none;
-}
+    > .back-to-autocompute {
+        display: none;
+    }
 
+    > .deprecated-close {
+        margin: 15px;
+    }
+
+    > #warning-deprecated-field {
+        margin: 0 12px
+    }
+
+    > .auto-compute {
+        .icon-flip-horizontal {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    > .add-field {
+        display: none;
+    }
+}
 
 .tracker_hidden_edition_field {
     display: none;
@@ -3285,12 +3307,20 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
-.auto-compute {
-    .icon-flip-horizontal {
-        margin: 0 5px 0 0;
-    }
+.tracker-artifact-rollup-view {
+    white-space: nowrap;
 }
 
-.add-field {
-    display: none;
+.tracker-artifact-rollup-view-icon {
+    padding: 0 15px 0 0;
+    font-size: 14px;
+    cursor: pointer;
+
+    &.icon-caret-right {
+        padding: 0 8px 0 3px;
+    }
+
+    &.icon-caret-down {
+        padding: 0 6px 0 2px;
+    }
 }

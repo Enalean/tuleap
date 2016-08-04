@@ -147,6 +147,6 @@ class ReleaseRepresentation
             return null;
         }
 
-        return $tracker_artifact_builder->getArtifactRepresentation($artifact);
+        return $tracker_artifact_builder->getArtifactRepresentation($user, $artifact);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014, 2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -43,7 +43,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
         try {
             return $this->gerrit_server_factory->getServerById($this->getServerId());
         } catch (Git_RemoteServer_NotFoundException $e) {
-            return new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '', false, '', '', '');
+            return new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '', false, '', '', '', '');
         }
     }
 
@@ -69,5 +69,3 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
         }
     }
 }
-
-?>

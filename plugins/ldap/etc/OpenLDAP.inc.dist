@@ -22,8 +22,8 @@ $sys_ldap_dn     = 'dc=tuleap,dc=local';
 
 // For LDAP systems that do not accept anonymous binding, define here
 // a valid DN and password:
-//$sys_ldap_bind_dn = "eduid=1234,ou=people,dc=tuleap,dc=com";
-//$sys_ldap_bind_passwd = "xxxxxxxxx";
+//$sys_ldap_bind_dn = 'eduid=1234,ou=people,dc=tuleap,dc=com';
+//$sys_ldap_bind_passwd = 'xxxxxxxxx';
 
 // LDAP authentication:
 // Tuleap only supports authentication with a attempt to bind with LDAP server

@@ -22,13 +22,12 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_Artifact;
 use Tracker_ArtifactLinkInfo;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_Value_ArtifactLinkDao;
 use Tracker_ReferenceManager;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker;
-use Tracker_Artifact_ChangesetValue;
+use Feedback;
 use PFUser;
 
 class ArtifactLinkValueSaver {
@@ -96,17 +95,82 @@ class ArtifactLinkValueSaver {
         return $this->updateCrossReferences($user, $artifact, $submitted_value);
     }
 
-    private function getNature(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker, Tracker $to_tracker) {
-        if (in_array($to_tracker, $from_tracker->getChildren())) {
-            return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+    private function getNature(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker, Tracker $to_tracker)
+    {
+        $existing_nature     = $artifactlinkinfo->getNature();
+        $nature_by_hierarchy = $this->getNatureDefinedByHierarchy(
+            $artifactlinkinfo,
+            $from_tracker,
+            $to_tracker,
+            $existing_nature
+        );
+
+        if ($nature_by_hierarchy !== null) {
+            return $nature_by_hierarchy;
         }
 
-        $existing_nature = $artifactlinkinfo->getNature();
         if (! empty($existing_nature)) {
             return $existing_nature;
         }
 
         return null;
+    }
+
+    private function getNatureDefinedByHierarchy(
+        Tracker_ArtifactLinkInfo $artifactlinkinfo,
+        Tracker $from_tracker,
+        Tracker $to_tracker,
+        $existing_nature
+    ) {
+        if (in_array($to_tracker, $from_tracker->getChildren())) {
+            $this->warnForceUsageOfChildType($artifactlinkinfo, $from_tracker, $existing_nature);
+
+            return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        }
+
+        if ($from_tracker->getChildren()
+            && ! in_array($to_tracker, $from_tracker->getChildren())
+            && $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+        ) {
+            $this->warnForceUsageOfNoneType($artifactlinkinfo, $from_tracker);
+
+            return Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+        }
+
+        return null;
+    }
+
+    private function warnForceUsageOfNoneType(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker)
+    {
+        if ($from_tracker->isProjectAllowedToUseNature()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'no_child',
+                    $artifactlinkinfo->getArtifactId()
+                )
+            );
+        }
+    }
+
+    private function warnForceUsageOfChildType(
+        Tracker_ArtifactLinkInfo $artifactlinkinfo,
+        Tracker $from_tracker,
+        $existing_nature
+    ) {
+        if ($existing_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            && $from_tracker->isProjectAllowedToUseNature()
+        ) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'force_child',
+                    $artifactlinkinfo->getArtifactId()
+                )
+            );
+        }
     }
 
     /**

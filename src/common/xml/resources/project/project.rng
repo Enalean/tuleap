@@ -6,6 +6,8 @@
   <include href="git-definition.rng"/>
   <include href="frs-definition.rng"/>
   <include href="mediawiki-definition.rng"/>
+  <include href="xml_project_agiledashboard_planning.rng"/>
+  <include href="xml_project_cardwall_data.rng"/>
   <include href="tracker-definition.rng"/>
   <include href="svn-definition.rng"/>
   <start>
@@ -36,6 +38,16 @@
         <optional>
           <element name="mediawiki">
             <ref name="mediawiki"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="agiledashboard">
+            <ref name="agiledashboard"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="cardwall">
+            <ref name="cardwall"/>
           </element>
         </optional>
         <optional>

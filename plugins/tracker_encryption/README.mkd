@@ -1,0 +1,11 @@
+Tracker Encryption
+=================
+
+(!)This plugin is still in beta.
+-------------------------------
+* Adding a new type of tracker fields that are encrypted.
+* Usage:
+    - Add a public RSA key in tracker administration -> tracker encryption.
+    - Add a new encrypted field in tracker administration -> manage field usage.
+    - When you submit a new artifact, your new field's data will be encrypted.
+

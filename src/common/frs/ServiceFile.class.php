@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -21,7 +22,8 @@
 /**
  * ServiceFile
  */
-class ServiceFile extends Service {
+class ServiceFile extends Service
+{
     
     
     /**
@@ -165,5 +167,29 @@ class ServiceFile extends Service {
             '/file/download.php',
         ));
     }
+
+    public function displayHeader(Project $project, $title)
+    {
+        $GLOBALS['HTML']->includeJavascriptSnippet(
+            file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
+        );
+
+        $user = UserManager::instance()->getCurrentUser();
+        if ($user->isMemberOfUGroup(ProjectUGroup::FILE_MANAGER_ADMIN, $project->getId())) {
+            $toolbar[]   = array(
+                'title' => "Admin",
+                'url'   => FRS_BASE_URL .'/admin/manageprocessors.php?'. http_build_query(array(
+                    'group_id' => $project->getId()
+                ))
+            );
+        }
+
+        $toolbar[] = array(
+            'title' => "Help",
+            'url'   => "/help/show_help.php?section=frs.html");
+
+        $breadcrumbs = array();
+
+        parent::displayHeader($title, $breadcrumbs, $toolbar);
+    }
 }
-?>

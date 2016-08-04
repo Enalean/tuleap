@@ -74,7 +74,8 @@ class ExplorerController {
         return new CSRFSynchronizerToken(SVN_BASE_URL."/?group_id=".$project->getid(). '&action=createRepo');
     }
 
-    public function createRepository(ServiceSvn $service, HTTPRequest $request) {
+    public function createRepository(ServiceSvn $service, HTTPRequest $request)
+    {
         $token = $this->generateTokenForCeateRepository($request->getProject());
         $token->check();
 
@@ -82,18 +83,18 @@ class ExplorerController {
         $repo_name = $request->get("repo_name");
 
         if (! $rule->isValid($repo_name)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','invalid_name'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'invalid_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
         } else {
-            $repository_to_create = new Repository ("", $repo_name, $request->getProject(), array());
+            $repository_to_create = new Repository("", $repo_name, "", "", $request->getProject());
             try {
                 $this->repository_manager->create($repository_to_create, $this->system_event_manager);
 
-                $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository','update_success'));
+                $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository', 'update_success'));
                 $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
             } catch (CannotCreateRepositoryException $e) {
-                $GLOBALS['Response']->addFeedback('error', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn','update_error'));
+                $GLOBALS['Response']->addFeedback('error', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn', 'update_error'));
                 $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
             }
         }

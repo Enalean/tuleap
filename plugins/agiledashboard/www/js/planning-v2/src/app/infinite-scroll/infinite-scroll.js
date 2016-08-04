@@ -1,3 +1,1 @@
-(function () {
-    angular.module('infinite-scroll', []);
-})();
+angular.module('infinite-scroll', []);

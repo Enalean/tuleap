@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# This shows all log entries that are not already covered by
+# another ref - i.e. commits that are now accessible from this
+# ref that were previously not accessible
+# (see generate_update_branch_email for the explanation of this
+# command)
+# Revision range passed to rev-list differs for new vs. updated
+# branches.
+
+change_type=$1
+newrev=$2
+oldrev=$3
+refname=$4
+custom_showrev=$5
+
+if [ "$change_type" = create ]
+then
+	# Show all revisions exclusive to this (new) branch.
+	revspec=$newrev
+else
+	# Branch update; show revisions not part of $oldrev.
+	revspec=$oldrev..$newrev
+fi
+# Removed final slash of refs/heads for git 1.5 compat (works with 1.7 too)
+other_branches=$(git for-each-ref --format='%(refname)' refs/heads |
+    grep -F -v $refname)
+
+git rev-parse --not $other_branches |
+if [ -z "$custom_showrev" ]
+then
+	git rev-list --pretty --stdin $revspec
+else
+	git rev-list --stdin $revspec |
+	while read onerev
+	do
+		eval $(printf "$custom_showrev" $onerev)
+	done
+fi

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    unix-name="public" full-name="Public" description="For test" access="public">
+    <long-description>A test project</long-description>
+    <services>
+    </services>
+</project>

@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+    <h3 id="modal-repository-delete-title">{{ modal_title }}</h3>
+</div>
+
+<div class="modal-body">
+    <p>{{ modal_content }}</p>
+</div>
+
+<div class="modal-footer">
+    <form action="/plugins/svn/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=delete-repository" method="post">
+        {{{ token }}}
+        <input type="hidden" name="repo_id" value="{{ repository_id }}" />
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">
+            {{ modal_button_cancel }}
+        </button>
+        <button type="submit" class="btn btn-danger">
+            <i class="icon-trash"></i> {{ modal_button_delete }}
+        </button>
+    </form>
+</div>

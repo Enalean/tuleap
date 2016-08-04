@@ -23,11 +23,17 @@ require_once "account.php";
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\MappingsRegistry;
+use Tuleap\Project\UgroupDuplicator;
 
 /**
  * This class import a project from a xml content
  */
 class ProjectXMLImporter {
+
+    /**
+     * @var UgroupDuplicator
+     */
+    private $ugroup_duplicator;
 
     /** @var EventManager */
     private $event_manager;
@@ -64,22 +70,26 @@ class ProjectXMLImporter {
         UGroupManager $ugroup_manager,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         ServiceManager $service_manager,
-        Logger $logger
+        Logger $logger,
+        UgroupDuplicator $ugroup_duplicator
     ) {
-        $this->event_manager   = $event_manager;
-        $this->project_manager = $project_manager;
-        $this->user_manager    = $user_manager;
-        $this->xml_validator   = $xml_validator;
-        $this->ugroup_manager  = $ugroup_manager;
-        $this->user_finder     = $user_finder;
-        $this->logger          = $logger;
-        $this->service_manager = $service_manager;
+        $this->event_manager     = $event_manager;
+        $this->project_manager   = $project_manager;
+        $this->user_manager      = $user_manager;
+        $this->xml_validator     = $xml_validator;
+        $this->ugroup_manager    = $ugroup_manager;
+        $this->user_finder       = $user_finder;
+        $this->logger            = $logger;
+        $this->service_manager   = $service_manager;
+        $this->ugroup_duplicator = $ugroup_duplicator;
 
         $send_notifications = false;
         $force_activation   = true;
+
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
             ReferenceManager::instance(),
+            $this->ugroup_duplicator,
             $send_notifications,
             $force_activation
         );

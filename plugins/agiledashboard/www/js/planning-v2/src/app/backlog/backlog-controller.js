@@ -73,7 +73,9 @@ function BacklogController(
     }
 
     function initDragular() {
-        self.dragular_instance_for_backlog = dragularService(document.querySelector('ul.backlog'), self.dragularOptionsForBacklog());
+        var backlog_element = angular.element('ul.backlog');
+
+        self.dragular_instance_for_backlog = dragularService(backlog_element, self.dragularOptionsForBacklog());
 
         $scope.$on('dragulardrop', dragularDrop);
         $scope.$on('dragularcancel', dragularCancel);
@@ -99,18 +101,15 @@ function BacklogController(
     function loadBacklog(initial_milestone) {
         if (! self.isMilestoneContext()) {
             BacklogService.loadProjectBacklog(self.project_id);
+        } else if (initial_milestone) {
+            MilestoneService.defineAllowedBacklogItemTypes(initial_milestone);
+            MilestoneService.augmentMilestone(initial_milestone, self.all_backlog_items);
 
+            BacklogService.loadMilestoneBacklog(initial_milestone);
         } else {
-            if (initial_milestone) {
-                MilestoneService.defineAllowedBacklogItemTypes(initial_milestone);
-                MilestoneService.augmentMilestone(initial_milestone, self.all_backlog_items);
-
-                BacklogService.loadMilestoneBacklog(initial_milestone);
-            } else {
-                MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function(data) {
-                    BacklogService.loadMilestoneBacklog(data.results);
-                });
-            }
+            MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function(data) {
+                BacklogService.loadMilestoneBacklog(data.results);
+            });
         }
     }
 
@@ -120,7 +119,6 @@ function BacklogController(
 
             self.backlog_items.pagination.offset = self.backlog_items.pagination.limit;
             self.backlog_items.fully_loaded      = self.backlog_items.pagination.offset >= initial_backlog_items.total_size;
-
         } else {
             displayBacklogItems();
         }
@@ -211,12 +209,12 @@ function BacklogController(
         var compared_to;
         if (! _.isEmpty(self.backlog_items.content)) {
             compared_to = {
-                direction : "before",
-                item_id   : self.backlog_items.content[0].id
+                direction: "before",
+                item_id  : self.backlog_items.content[0].id
             };
         }
 
-        var callback = function(item_id) {
+        function callback(item_id) {
             var promise;
             if (! self.isMilestoneContext()) {
                 if (compared_to) {
@@ -224,12 +222,10 @@ function BacklogController(
                 } else {
                     promise = ProjectService.removeAddToBacklog(undefined, self.details.rest_route_id, [item_id]);
                 }
+            } else if (compared_to) {
+                promise = MilestoneService.removeAddReorderToBacklog(undefined, self.details.rest_route_id, [item_id], compared_to);
             } else {
-                if (compared_to) {
-                    promise = MilestoneService.removeAddReorderToBacklog(undefined, self.details.rest_route_id, [item_id], compared_to);
-                } else {
-                    promise = MilestoneService.removeAddToBacklog(undefined, self.details.rest_route_id, [item_id]);
-                }
+                promise = MilestoneService.removeAddToBacklog(undefined, self.details.rest_route_id, [item_id]);
             }
 
             promise.then(function() {
@@ -243,7 +239,7 @@ function BacklogController(
             });
 
             return promise;
-        };
+        }
 
         var parent_item = (! _.isEmpty(self.current_milestone)) ? self.current_milestone : undefined;
         NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
@@ -269,8 +265,8 @@ function BacklogController(
     }
 
     function isBacklogLoadedAndEmpty() {
-        return ! BacklogService.items.loading &&
-            BacklogService.items.content.length === 0;
+        return ! BacklogService.items.loading
+            && BacklogService.items.content.length === 0;
     }
 
     function moveToTop(backlog_item) {
@@ -312,11 +308,10 @@ function BacklogController(
     function dragularDrag(event, element) {
         event.stopPropagation();
 
-        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
-            BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()
+            && BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
         ) {
             BacklogItemSelectedService.multipleBacklogItemsAreDragged(element);
-
         } else {
             BacklogItemSelectedService.deselectAllBacklogItems();
         }
@@ -324,7 +319,7 @@ function BacklogController(
         $scope.$apply();
     }
 
-    function dragularCancel(event, dropped_item_element, source_element) {
+    function dragularCancel(event) {
         event.stopPropagation();
 
         BacklogItemSelectedService.deselectAllBacklogItems();
@@ -443,8 +438,8 @@ function BacklogController(
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {
-        return ! preventDrag(element_to_drag) &&
-            ancestorHasHandleClass(handle_element);
+        return ! preventDrag(element_to_drag)
+            && ancestorHasHandleClass(handle_element);
     }
 
     function ancestorHasHandleClass(handle_element) {

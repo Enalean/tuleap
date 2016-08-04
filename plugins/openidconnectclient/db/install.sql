@@ -46,14 +46,6 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_unlinked_account (
 
 INSERT INTO plugin_openidconnectclient_provider(name, authorization_endpoint, token_endpoint, user_info_endpoint)
 VALUES (
-    'GitHub',
-    'https://github.com/login/oauth/authorize',
-    'https://github.com/login/oauth/access_token',
-    'https://api.github.com/user'
-);
-
-INSERT INTO plugin_openidconnectclient_provider(name, authorization_endpoint, token_endpoint, user_info_endpoint)
-VALUES (
     'Google',
     'https://accounts.google.com/o/oauth2/auth',
     'https://accounts.google.com/o/oauth2/token',

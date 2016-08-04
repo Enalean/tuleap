@@ -1,3 +1,50 @@
+Version 4.248 - Tuleap 8.18
+    * request #9362: Git over HTTP does not work if the repository is not connected to a Gerrit server
+
+
+Version 4.247 - Tuleap 8.18
+    * request #9368: HTTP replication password can not be added or updated if a password was not already set
+
+
+Version 4.246 - Tuleap 8.18
+    * request #9363: Link to the documentation to configure a polling jobs is wrong
+
+Version 4.245 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
+Version 4.244 - Tuleap 8.18
+    * request #9356: Backup of a deleted Git repository can be accessed
+
+Version 4.243 - Tuleap 8.18
+    * request #9312: Replication from gerrit server does not work over http
+
+Version 4.242 - Tuleap 8.18
+    * request #9342: CSRF token synchronizer implementation uses token with weak entropy
+
+Version 4.241 - Tuleap 8.18
+    * request #9345: No preview in 'fork repositories'
+
+Version 4.240 - Tuleap 8.17
+    * Notify site admin if a potential mis-use of Git is detected.
+
+Version 4.239 - Tuleap 8.17
+    * request #9291: Can no longer update git repository description
+
+Version 4.238 - Tuleap 8.17
+    * story #9090: Git project import should use XML import
+
+Version 4.237 - Tuleap 8.17
+    * request #9018: On a fresh Tuleap installation, php-guzzle dependency is not installed
+
+Version 4.236 - Tuleap 8.17
+    * Add a timeout to expensive operations in the post-receive-email Git hook
+
+Version 4.235 - Tuleap 8.17
+    * request #9314: Non aligned behavior between UI and ssh in Git
+
+Version 4.234 - Tuleap 8.17
+    * REST test for computed fields
+
 Version 4.233 - Tuleap 8.17
     * Remove Sogilis copyright
 

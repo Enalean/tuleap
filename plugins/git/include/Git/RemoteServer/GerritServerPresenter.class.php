@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_RemoteServer_GerritServerPresenter {
+class Git_RemoteServer_GerritServerPresenter
+{
 
-    public function __construct(Git_RemoteServer_GerritServer $server, $is_used) {
-        $this->id               = $server->getId();
-        $this->host             = $server->getHost();
-        $this->http_port        = $server->getHTTPPort();
-        $this->ssh_port         = $server->getSSHPort();
-        $this->replication_key  = $server->getReplicationKey();
-        $this->use_ssl          = $server->usesSSL();
-        $this->login            = $server->getLogin();
-        $this->identity_file    = $server->getIdentityFile();
-        $this->use_gerrit_2_5   = $server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
-        $this->use_gerrit_2_8   = $server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
-        $this->is_used          = $is_used;
-        $this->http_password    = $server->getHTTPPassword();
-        $this->is_digest        = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST;
-        $this->is_basic         = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_BASIC;
+    public function __construct(Git_RemoteServer_GerritServer $server, $is_used)
+    {
+        $this->id                   = $server->getId();
+        $this->host                 = $server->getHost();
+        $this->http_port            = $server->getHTTPPort();
+        $this->ssh_port             = $server->getSSHPort();
+        $this->replication_key      = $server->getReplicationKey();
+        $this->use_ssl              = $server->usesSSL();
+        $this->login                = $server->getLogin();
+        $this->identity_file        = $server->getIdentityFile();
+        $this->use_gerrit_2_5       = $server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
+        $this->use_gerrit_2_8       = $server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
+        $this->is_used              = $is_used;
+        $this->http_password        = $server->getHTTPPassword();
+        $this->replication_password = $server->getReplicationPassword();
+        $this->is_digest            = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST;
+        $this->is_basic             = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_BASIC;
     }
 }

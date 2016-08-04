@@ -35,8 +35,8 @@ class PermissionsManagerPerfTest extends UnitTestCase {
     var $refOnNull;
 
     function setUp() {
-        $this->user = mock('PFUser');
-        $this->docmanPm =& new Docman_PermissionsManagerTestPerfVersion($this);
+        $this->user     = mock('PFUser');
+        $this->docmanPm = new Docman_PermissionsManagerTestPerfVersion($this);
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->refOnNull = null;
     }
@@ -57,7 +57,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->expectNever('_isUserDocmanAdmin');
 
         // no userHasPerms call
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectNever('userHasPermission');
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -77,7 +77,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
         // no userHasPerms call
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectNever('userHasPermission');
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -100,7 +100,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
         // 1 userHasPerm call
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true);
         $pm->expectCallCount('userHasPermission', 1);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -126,7 +126,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
         // 2 userHasPerm call
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true);
         $pm->expectCallCount('userHasPermission', 1);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -149,7 +149,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
 
         $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
         $pm->expectCallCount('userHasPermission', 3);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -182,7 +182,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         //    write perm (not lock).
         // userCanWrite
         // 3. one for WRITE (and eventually lock, but not in this test).
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
         $pm->expectCallCount('userHasPermission', 3);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -206,7 +206,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
         // 2 userHasPerm call
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
         $pm->expectCallCount('userHasPermission', 2);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);

@@ -1,0 +1,12 @@
+<h1>{{ title_frs_administration }}</h1>
+
+{{# sections }}
+    <ul class="nav nav-tabs">
+        <li {{# permissions_active }}class="active"{{/ permissions_active }}>
+            <a href="{{ permissions_url }}">{{ permissions }}</a>
+        </li>
+        <li {{# processors_active }}class="active"{{/ processors_active }}>
+            <a href="{{ processors_url }}">{{ processors }}</a>
+        </li>
+    </ul>
+{{/ sections }}

@@ -55,7 +55,7 @@ class MediaWikiPlugin extends Plugin {
 
             $this->addHook('permission_get_name');
             $this->addHook(Event::SERVICE_IS_USED);
-            $this->_addHook('register_project_creation');
+            $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
             $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
             $this->_addHook(Event::RENAME_PROJECT, 'rename_project');

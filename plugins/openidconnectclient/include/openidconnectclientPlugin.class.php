@@ -27,6 +27,7 @@ use Tuleap\OpenIDConnectClient\Administration\IconPresenterFactory;
 use Tuleap\OpenIDConnectClient\Administration\ColorPresenterFactory;
 use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
+use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
@@ -73,7 +74,9 @@ class openidconnectclientPlugin extends Plugin {
     }
 
     public function anonymous_access_to_script_allowed($params) {
-        $params['anonymous_allowed'] = strpos($params['script_name'], $this->getPluginPath()) === 0;
+        if (strpos($params['script_name'], $this->getPluginPath()) === 0) {
+            $params['anonymous_allowed'] = true;
+        }
     }
 
     public function javascript_file($params) {
@@ -103,15 +106,18 @@ class openidconnectclientPlugin extends Plugin {
     /**
      * @return Flow
      */
-    private function getFlow(ProviderManager $provider_manager) {
-        $state_manager = new StateManager(
+    private function getFlow(ProviderManager $provider_manager)
+    {
+        $state_manager     = new StateManager(
             new StateStorage(),
             new StateFactory(new RandomNumberGenerator())
         );
-        $flow          = new Flow(
+        $id_token_verifier = new IDTokenVerifier();
+        $flow              = new Flow(
             $state_manager,
             new AuthorizationDispatcher($state_manager),
-            $provider_manager
+            $provider_manager,
+            $id_token_verifier
         );
         return $flow;
     }

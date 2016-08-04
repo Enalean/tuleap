@@ -13,7 +13,10 @@ require('../snippet/snippet_utils.php');
 
 if (user_isloggedin()) {
 
-  $id = (int)$request->get('id');
+  $id           = (int)$request->get('id');
+  $type         = $request->get('type');
+  $post_changes = $request->get('post_changes');
+  $changes      = $request->get('changes');
 
   if ($type=='snippet') {
     /*
@@ -30,21 +33,33 @@ if (user_isloggedin()) {
     if ($post_changes) {
       
       // check if the code snippet is uploaded
-      if ($uploaded_data) {
-	$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-	if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
-	  //size is fine
-	  $feedback .= ' '.$Language->getText('snippet_addversion','s_uploaded').' ';
-	} else {
-	  //too big or small
-	  $feedback .= ' '.$Language->getText('snippet_addversion','min_max_length',$sys_max_size_upload).' ';
-	  $code='';
-	}
-      }
+
+      $uploaded_data = $_FILES['uploaded_data'];
+
+        $temporary_uploaded_file_name = $uploaded_data['tmp_name'];
+        $uploaded_data_name           = $uploaded_data['name'];
+        $uploaded_data_size           = $uploaded_data['size'];
+        $uploaded_data_type           = $uploaded_data['type'];
+        // check if the code snippet is uploaded
+        if ($temporary_uploaded_file_name) {
+            $code = addslashes(file_get_contents($temporary_uploaded_file_name));
+            if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
+              //size is fine
+              $feedback .= ' '.$Language->getText('snippet_addversion','s_uploaded').' ';
+            } else {
+              //too big or small
+              $feedback .= ' '.$Language->getText('snippet_addversion','min_max_length',$sys_max_size_upload).' ';
+              $code='';
+            }
+        }
       
       /*
 		      Create a new snippet entry, then create a new snippet version entry
       */
+
+        $version = $request->get('version');
+        $code    = isset($code) ? $code : $request->get('code');
+
 		if ($changes && $version && $code) {
 			$csrf->check();
 			$snippet_id = (int)$request->get('snippet_id');
@@ -230,9 +245,5 @@ function show_add_snippet_box() {
   }
   
 } else {
-  
-  exit_not_logged_in();
-  
+    exit_not_logged_in();
 }
-
-?>

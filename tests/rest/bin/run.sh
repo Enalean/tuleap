@@ -8,6 +8,7 @@ setup_runner_account() {
 
     groupadd -g $GROUP_ID runner
     useradd -u $USER_ID -g $GROUP_ID runner
+    echo "runner soft nproc unlimited" >> /etc/security/limits.d/90-nproc.conf
 
     if [ ! -d /output ]; then
         mkdir /output

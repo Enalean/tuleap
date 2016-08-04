@@ -19,6 +19,7 @@ PLUGIN_HUDSON_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/hudson_git/VERS
 PLUGIN_WEBDAV_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/webdav/VERSION)
 PLUGIN_TRACKER_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/tracker/VERSION)
 PLUGIN_GRAPHONTRACKERS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/graphontrackersv5/VERSION)
+PLUGIN_TRACKER_ENCRYPTION_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/tracker_encryption/VERSION)
 PLUGIN_CARDWALL_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/cardwall/VERSION)
 PLUGIN_AGILEDASHBOARD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/agiledashboard/VERSION)
 PLUGIN_FULLTEXTSEARCH_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/fulltextsearch/VERSION)
@@ -42,6 +43,8 @@ PLUGIN_REFERENCEALIAS_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/referen
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
+
+ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/agiledashboard/www/js/kanban plugins/frs/www/js/angular
 
 ifdef GIT_BRANCH
 TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
@@ -102,21 +105,18 @@ sass:
 	$(MAKE) -C $(BASE_DIR) sass
 
 node:
-	cd $(BASE_DIR)/plugins/agiledashboard/www/js/planning-v2 &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
-		npm run build &&\
-	cd $(BASE_DIR)/plugins/agiledashboard/www/js/kanban &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
-		npm run build &&\
-	cd $(BASE_DIR)/plugins/frs/www/js/angular &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
-		npm run build &&\
+	cd $(BASE_DIR) &&\
+	    npm install &&\
+	    npm run build &&\
 	cd $(BASE_DIR)/src/www/themes/common/tlp &&\
-		npm install &&\
-		npm run build
+            npm install &&\
+            npm run build &&\
+	for directory in $(ANGULAR_APPS_TO_BUILD); do\
+	    cd $(BASE_DIR)/$$directory &&\
+	    npm install &&\
+	    bower install --allow-root --config.interactive=false &&\
+	    npm run build; \
+	done
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep sass
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
@@ -179,6 +179,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@PLUGIN_REQUESTHELP_VERSION@@/$(PLUGIN_REQUESTHELP_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_TRACKER_VERSION@@/$(PLUGIN_TRACKER_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_GRAPHONTRACKERS_VERSION@@/$(PLUGIN_GRAPHONTRACKERS_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_TRACKER_ENCRYPTION_VERSION@@/$(PLUGIN_TRACKER_ENCRYPTION_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_CARDWALL_VERSION@@/$(PLUGIN_CARDWALL_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_AGILEDASHBOARD_VERSION@@/$(PLUGIN_AGILEDASHBOARD_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FULLTEXTSEARCH_VERSION@@/$(PLUGIN_FULLTEXTSEARCH_VERSION)/g' |\

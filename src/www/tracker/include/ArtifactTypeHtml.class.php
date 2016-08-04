@@ -43,7 +43,6 @@ class ArtifactTypeHtml extends ArtifactType {
         $group_id= $this->Group->getID();
         $hp = Codendi_HTMLPurifier::instance();
 
-        $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldEditor.js");
         $GLOBALS['HTML']->includeCalendarScripts();

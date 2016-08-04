@@ -1,6 +1,6 @@
-<?php
+    <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\UgroupDuplicator;
 
 /**
  * Manage creation of a new project in the forge.
@@ -50,6 +51,11 @@ use Tuleap\Project\DescriptionFieldsDao;
  * For now, mainly a wrapper for createProject method
  */
 class ProjectCreator {
+
+    /**
+     * @var UgroupDuplicator
+     */
+    private $ugroup_duplicator;
 
     /**
      * @var bool true to bypass manual activation
@@ -69,18 +75,19 @@ class ProjectCreator {
     /**
      * @var Rule_ProjectName
      */
-    var $ruleShortName;
+    private $ruleShortName;
 
     /**
      * @var Rule_ProjectFullName
      */
-    var $ruleFullName;
+    private $ruleFullName;
 
     private $send_notifications;
 
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
+        UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
         $force_activation = false
     ) {
@@ -90,6 +97,7 @@ class ProjectCreator {
         $this->ruleShortName      = new Rule_ProjectName();
         $this->ruleFullName       = new Rule_ProjectFullName();
         $this->projectManager     = $projectManager;
+        $this->ugroup_duplicator  = $ugroup_duplicator;
     }
 
     /**
@@ -212,12 +220,17 @@ class ProjectCreator {
 
         //Copy ugroups
         $ugroup_mapping = array();
-        ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
 
         $this->initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping);
 
-        list($tracker_mapping, $report_mapping) =
-            $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
+        if ($data->projectShouldInheritFromTemplate()) {
+            list($tracker_mapping, $report_mapping) =
+                $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
+        } else {
+            $tracker_mapping = array();
+            $report_mapping  = array();
+        }
         $this->initWikiModuleFromTemplate($group_id, $template_id);
         $this->initLayoutFromTemplate($group_id, $template_id);
 
@@ -230,12 +243,13 @@ class ProjectCreator {
 
         // Raise an event for plugin configuration
         $em = EventManager::instance();
-        $em->processEvent('register_project_creation', array(
-            'reportMapping'  => $report_mapping, // Trackers v3
-            'trackerMapping' => $tracker_mapping, // Trackers v3
-            'ugroupsMapping' => $ugroup_mapping,
-            'group_id'       => $group_id,
-            'template_id'    => $template_id
+        $em->processEvent(Event::REGISTER_PROJECT_CREATION, array(
+            'reportMapping'         => $report_mapping, // Trackers v3
+            'trackerMapping'        => $tracker_mapping, // Trackers v3
+            'ugroupsMapping'        => $ugroup_mapping,
+            'group_id'              => $group_id,
+            'template_id'           => $template_id,
+            'project_creation_data' => $data,
         ));
 
         $this->autoActivateProject($group);

@@ -17,7 +17,6 @@
  */
 
 require_once 'common/date/DateHelper.class.php';
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 class Tracker_DateReminderFactory {
 

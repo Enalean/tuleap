@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,6 +42,7 @@ class GerritDriverFactoryTest extends TuleapTestCase {
             false,
             Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
             '',
+            '',
             ''
         );
 
@@ -58,6 +59,7 @@ class GerritDriverFactoryTest extends TuleapTestCase {
             '',
             '',
             false,
+            '',
             '',
             '',
             ''
@@ -77,6 +79,7 @@ class GerritDriverFactoryTest extends TuleapTestCase {
             '',
             false,
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
+            '',
             '',
             ''
         );

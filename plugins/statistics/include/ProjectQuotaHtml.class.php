@@ -17,7 +17,6 @@
  */
 
 require_once('ProjectQuotaManager.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
  * Management of custom quota by project

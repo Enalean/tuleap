@@ -26,12 +26,12 @@ require_once 'autoload.php';
  * CardwallPlugin
  */
 class cardwallPlugin extends Plugin {
-    
-    /** 
+
+    /**
      * @var Cardwall_OnTop_ConfigFactory
      */
     private $config_factory;
-    
+
     public function getConfigFactory() {
         if (!$this->config_factory) {
             $tracker_factory  = TrackerFactory::instance();
@@ -53,11 +53,12 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
-            $this->_addHook(Event::JAVASCRIPT);
+            $this->addHook(Event::JAVASCRIPT);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -83,7 +84,29 @@ class cardwallPlugin extends Plugin {
         return array('tracker');
     }
 
-    
+    public function tracker_event_export_full_xml($params)
+    {
+        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker($params['user'], $params['group_id']);
+        $this->getAgileDashboardExplorer()->export($params['xml_content'], $plannings);
+
+        $this->getCardwallXmlExporter($params['group_id'])->export($params['xml_content']);
+    }
+
+    private function getAgileDashboardExplorer()
+    {
+        return new AgileDashboard_XMLExporter(new XML_RNGValidator(), new PlanningPermissionsManager());
+    }
+
+    private function getCardwallXmlExporter($group_id)
+    {
+        return new CardwallConfigXmlExport(
+            ProjectManager::instance()->getProject($group_id),
+            TrackerFactory::instance(),
+            new Cardwall_OnTop_ConfigFactory(TrackerFactory::instance(), Tracker_FormElementFactory::instance()),
+            new XML_RNGValidator()
+        );
+    }
+
     // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
@@ -136,7 +159,7 @@ class cardwallPlugin extends Plugin {
 
             $report = $params['report'];
             $config = new Cardwall_OnTop_ConfigEmpty();
-            
+
             if ($report->tracker_id != 0) {
                 $config = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
             }
@@ -180,14 +203,12 @@ class cardwallPlugin extends Plugin {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
-            echo $this->getJavascriptIncludesForScripts(array(
-                'ajaxInPlaceEditorExtensions.js',
-                'cardwall.js',
-                'script.js',
-                'custom-mapping.js',
-                'CardsEditInPlace.js',
-                'fullscreen.js',
-            ));
+            $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
+            if ($agiledashboard_plugin->currentRequestIsForPlugin()) {
+                $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
+                echo $tracker_plugin->getMinifiedAssetHTML()."\n";
+            }
+            echo $this->getMinifiedAssetHTML()."\n";
         }
     }
 
@@ -223,14 +244,6 @@ class cardwallPlugin extends Plugin {
      */
     public function tracker_event_get_semantic_factories($params) {
         $params['factories'][] = Cardwall_Semantic_CardFieldsFactory::instance();
-    }
-
-    private function getJavascriptIncludesForScripts(array $script_names) {
-        $html = '';
-        foreach ($script_names as $script_name) {
-            $html .= '<script type="text/javascript" src="'.$this->getPluginPath().'/js/'.$script_name.'"></script>'."\n";
-        }
-        return $html;
     }
 
     private function isAgileDashboardOrTrackerUrl() {

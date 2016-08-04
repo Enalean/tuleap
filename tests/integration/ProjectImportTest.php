@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Project\UgroupDuplicator;
 
 require_once 'exit.php';
 require_once 'html.php';
@@ -113,9 +115,19 @@ class ProjectImportTest extends TuleapDbTestCase {
     }
 
     public function testImportProjectCreatesAProject() {
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_duplicator  = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao,
+            EventManager::instance()
+        );
+
         $project_manager = ProjectManager::instance();
-        $user_manager = UserManager::instance();
-        $importer = new ProjectXMLImporter(
+        $user_manager    = UserManager::instance();
+        $importer        = new ProjectXMLImporter(
             EventManager::instance(),
             $project_manager,
             UserManager::instance(),
@@ -123,8 +135,10 @@ class ProjectImportTest extends TuleapDbTestCase {
             new UGroupManager(),
             new XMLImportHelper($user_manager),
             ServiceManager::instance(),
-            new Log_ConsoleLogger()
+            new Log_ConsoleLogger(),
+            $ugroup_duplicator
         );
+
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
         $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__.'/_fixtures/fake_project');
 

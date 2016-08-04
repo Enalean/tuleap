@@ -10,11 +10,21 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
+$request      = HTTPRequest::instance();
+$post_changes = $request->get('post_changes');
 
 if (user_isloggedin()) {
 
     if ($post_changes) {
         $csrf->check();
+
+        $name               = $request->get('name');
+        $description        = $request->get('description');
+        $language           = $request->get('language');
+        $category           = $request->get('category');
+        $version            = $request->get('version');
+        $changes            = $request->get('changes');
+
         /*
 			Create a new snippet entry, then create a new snippet version entry
         */
@@ -150,7 +160,5 @@ function show_add_snippet_box() {
     snippet_footer(array());
 
 } else {
-
-	exit_not_logged_in();
-
+    exit_not_logged_in();
 }

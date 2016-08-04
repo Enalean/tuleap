@@ -1,3 +1,30 @@
+Version 2.26.117 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
+Version 2.26.116 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
+Version 2.26.115 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
+Version 2.26.114 - Tuleap 8.18
+    * request #9349: Wiki page can not be accessed via the document manager
+
+Version 2.26.113 - Tuleap 8.18
+    * Refactoring for PHP5.6 - Document Manager
+
+Version 2.26.112 - Tuleap 8.17
+    * story #9315: Remove delete link in docman action id user cannot delete item
+
+Version 2.26.111 - Tuleap 8.17
+    * story #9315: Use the permission manager object instead of private methods
+
+Version 2.26.110 - Tuleap 8.17
+    * story #9315: Hide the trash icon when the option to prevent deletion is set
+
+Version 2.26.109 - Tuleap 8.17
+    * story #9315: Prevent deletion if user is not siteadmin
+
 Version 2.26.108 - Tuleap 8.16
     * request #9206: Activate services at import
 
@@ -406,10 +433,10 @@ Version 2.18
 
 Version 2.17
     Fix user realname output
-    
+
 Version 2.16
     Fix output of date metadata (contrib Mesulog)
-    
+
 Version 2.15
     Do not display [remove] button on a wiki page if it is referenced in the docman
     Add index on docman_approval_user table
@@ -432,9 +459,9 @@ Version 2.11
 Version 2.9
         Add hook to display info message in permission request dedicated screen.
 
-Version 2.8 
+Version 2.8
         Fix bug: Do not allow the creation of metadata with empty name.
-        Fix bug: Paste action should not appear in popup menu for the same cut document. 
+        Fix bug: Paste action should not appear in popup menu for the same cut document.
         Enhancement: Add hook for color used in plugin statistics.
 
 Version 1.2

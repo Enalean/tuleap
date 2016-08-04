@@ -21,17 +21,22 @@
 namespace Tuleap\Svn;
 
 use DataAccessObject;
+use SystemEvent;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\Svn\Repository\Repository;
 use Project;
 use SVN_Apache_SvnrootConf;
 use ForgeConfig;
 
-class Dao extends DataAccessObject {
-    public function searchByProject(Project $project) {
+class Dao extends DataAccessObject
+{
+    public function searchByProject(Project $project)
+    {
         $project_id = $this->da->escapeInt($project->getId());
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM plugin_svn_repositories
-                WHERE project_id=$project_id";
+                WHERE project_id=' . $project_id .'
+                AND repository_deletion_date IS NULL';
 
         return $this->retrieve($sql);
     }
@@ -57,29 +62,33 @@ class Dao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 
-    public function getListRepositoriesSqlFragment() {
+    public function getListRepositoriesSqlFragment()
+    {
         $auth_mod = $this->da->quoteSmart(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
         $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('sys_data_dir'));
 
         $sql = "SELECT groups.*, service.*,
                 CONCAT('/svnplugin/', unix_group_name, '/', name) AS public_path,
                 CONCAT($sys_dir,'/svn_plugin/', groups.group_id, '/', name) AS system_path,
-                $auth_mod AS auth_mod
+                $auth_mod AS auth_mod, backup_path, repository_deletion_date
                 FROM groups, service, plugin_svn_repositories
                 WHERE groups.group_id = service.group_id
                   AND service.is_used = '1'
                   AND groups.status = 'A'
                   AND plugin_svn_repositories.project_id = groups.group_id
-                  AND service.short_name = 'plugin_svn'";
+                  AND service.short_name = 'plugin_svn'
+                  AND repository_deletion_date IS NULL";
 
         return $sql;
     }
 
-    public function searchRepositoryByName(Project $project, $name) {
+    public function searchRepositoryByName(Project $project, $name)
+    {
         $project_name = $this->da->quoteSmart($project->getUnixNameMixedCase());
         $name         = $this->da->quoteSmart($name);
 
-        $sql = "SELECT groups.*, id, name, CONCAT(unix_group_name, '/', name) AS repository_name
+        $sql = "SELECT groups.*, id, name, CONCAT(unix_group_name, '/', name) AS repository_name,
+                    backup_path, repository_deletion_date
                 FROM groups, plugin_svn_repositories
                 WHERE groups.status = 'A' AND project_id = groups.group_id
                 AND groups.unix_group_name = $project_name
@@ -98,31 +107,114 @@ class Dao extends DataAccessObject {
         return $this->updateAndGetLastId($query);
     }
 
-    public function getHookConfig($id_repository) {
-        $id_repository = $this->da->escapeInt($id_repository);
-        $sql = "SELECT *
-                FROM plugin_svn_hook_config
-                WHERE repository_id = $id_repository";
-        return $this->retrieveFirstRow($sql);
-    }
+    public function markAsDeleted($repository_id, $backup_path, $deletion_date)
+    {
+        if ($deletion_date) {
+            $backup_path = $this->da->quoteSmart($backup_path);
+        } else {
+            $backup_path = "NULL";
+        }
+        $repository_id = $this->da->escapeInt($repository_id);
 
-    public function updateHookConfig($id_repository, array $hook_config) {
-        $id         = $this->da->escapeInt($id_repository);
-
-        $update = array();
-        $cols = array();
-        $vals = array();
-        foreach($hook_config as $tablename => $value) {
-            $update[] = "$tablename = " . $this->da->quoteSmart((bool) $value);
-            $cols[] = $tablename;
-            $vals[] = $this->da->quoteSmart((bool) $value);
+        if ($deletion_date) {
+            $deletion_date = $this->da->quoteSmart($deletion_date);
+        } else {
+            $deletion_date = "NULL";
         }
 
-        $sql  = "INSERT INTO plugin_svn_hook_config";
-        $sql .= " (repository_id, ". join($cols, ", ") . ")";
-        $sql .= " VALUES ($id, " . join($vals, ", ") . ")";
-        $sql .= " ON DUPLICATE KEY UPDATE " . join($update, ", ") . ";";
+        $sql = "UPDATE plugin_svn_repositories SET
+                    repository_deletion_date = $deletion_date,
+                    backup_path = $backup_path
+                WHERE id = $repository_id";
 
         return $this->update($sql);
+    }
+
+    public function getDeletedRepositoriesToPurge($retention_date)
+    {
+        $retention_date = $this->da->escapeInt($retention_date);
+        $sql = "SELECT *
+                  FROM plugin_svn_repositories
+                  WHERE repository_deletion_date IS NOT NULL
+                    AND FROM_UNIXTIME(repository_deletion_date) <= FROM_UNIXTIME($retention_date)";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getRestorableRepositoriesByProject($project_id)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $svn_type       = $this->da->quoteSmart('%' . SystemEvent_SVN_RESTORE_REPOSITORY::NAME);
+        $status_new     = $this->da->quoteSmart(SystemEvent::STATUS_NEW);
+        $status_running = $this->da->quoteSmart(SystemEvent::STATUS_RUNNING);
+
+        $sql = "SELECT plugin_svn_repositories.*
+                FROM plugin_svn_repositories
+                LEFT JOIN system_event ON CONCAT(project_id, '::', plugin_svn_repositories.id) = parameters
+                      AND system_event.type LIKE $svn_type
+                      AND system_event.status IN ($status_new, $status_running)
+                WHERE parameters IS NULL
+                  AND project_id = $project_id
+                  AND repository_deletion_date IS NOT NULL";
+
+         return $this->retrieve($sql);
+    }
+
+    public function delete($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $this->da->startTransaction();
+
+        $sql = "DELETE
+                FROM plugin_svn_accessfile_history
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_immutable_tag
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_mailing_header
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_notification
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_hook_config
+                WHERE repository_id = $repository_id";
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        $sql = "DELETE
+                FROM plugin_svn_repositories
+                WHERE id = $repository_id";
+
+        if (! $this->update($sql)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
     }
 }

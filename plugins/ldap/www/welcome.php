@@ -53,6 +53,13 @@ function welcome_exit_error($title,$text) {
 	exit;
 }
 
+function userValuesHaveNotBeenModified(PFUser $current_user, $timezone, $mailVa, $mailSite)
+{
+    return $current_user->getTimezone() == $timezone &&
+           $current_user->getMailVA() == $mailVa &&
+           $current_user->getMailSiteUpdates() == $mailSite;
+}
+
 // LDAP plugin enabled
 $pluginManager = PluginManager::instance();
 $ldapPlugin = $pluginManager->getPluginByName('ldap');
@@ -64,13 +71,14 @@ if (!$ldapPlugin || !$pluginManager->isPluginAvailable($ldapPlugin)) {
 $um = UserManager::instance();
 $currentUser = $um->getCurrentUser();
 $user_id = $currentUser->getId();
+$timezone = $request->get('timezone');
 
 if($request->isPost() && $request->existAndNonEmpty('action')) {
-    if(!is_valid_timezone($request->get('timezone'))) {
+    if (! is_valid_timezone($timezone)) {
         welcome_exit_error($Language->getText('plugin_ldap', 'welcome_error_up'),
-                           $Language->getText('plugin_ldap', 'welcome_err_notz'));        
+                           $Language->getText('plugin_ldap', 'welcome_err_notz'));
     }
-    
+
     $mailSite = 0;
     $vMailSite = new Valid_WhiteList('form_mail_site', array('1'));
     $vMailSite->required();
@@ -90,7 +98,7 @@ if($request->isPost() && $request->existAndNonEmpty('action')) {
         $currentUser->setMailVA($mailVa);
         $currentUser->setMailSiteUpdates($mailSite);
         $currentUser->setUnixStatus('A');
-        if ($um->updateDb($currentUser)) {
+        if (userValuesHaveNotBeenModified($currentUser, $timezone, $mailVa, $mailSite) || $um->updateDb($currentUser)) {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             $ldapUserDao->setLoginDate($user_id, $_SERVER['REQUEST_TIME']);
         } else {
@@ -106,7 +114,6 @@ else {
     if($request->valid($vPv)) {
         $pv = $request->get('pv');
     }
-    $timezone = $request->get('timezone');
 
     $ldapUm = $ldapPlugin->getLdapUserManager();
     $lr = $ldapUm->getLdapFromUserId($user_id);

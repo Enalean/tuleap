@@ -981,7 +981,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string html
      */
     public function fetchDirectLinkToArtifact() {
-        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
+        return '<a class="direct-link-to-artifact"
+            data-artifact-id="'. $this->getId() .'"
+            href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
     }
 
     /**
@@ -2015,20 +2017,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
         UserXMLExporter $user_xml_exporter
     ) {
-        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
-        $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
 
-        $artifact_xml_exporter = $this->getArtifactXMLExporter(
-            $children_collector,
-            $file_path_xml_exporter,
-            $user,
-            $user_xml_exporter
-        );
+        if (count($this->getChangesets() > 0)) {
+            $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
+            $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
 
-        $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
+            $artifact_xml_exporter = $this->getArtifactXMLExporter(
+                $children_collector,
+                $file_path_xml_exporter,
+                $user,
+                $user_xml_exporter
+            );
 
-        $attachment_exporter = $this->getArtifactAttachmentExporter();
-        $attachment_exporter->exportAttachmentsInArchive($this, $archive);
+            $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
+
+            $attachment_exporter = $this->getArtifactAttachmentExporter();
+            $attachment_exporter->exportAttachmentsInArchive($this, $archive);
+        }
+
     }
 
     /**

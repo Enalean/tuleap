@@ -21,6 +21,7 @@
 namespace Tuleap\Svn;
 
 use HTTPRequest;
+use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -28,15 +29,9 @@ use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Admin\MailNotificationController;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Admin\AdminController;
-use Tuleap\Svn\AuthFile\AccessFileHistoryManager;
-use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Admin\MailnotificationManager;
 use Tuleap\Svn\Admin\ImmutableTagController;
 use Tuleap\Svn\Admin\GlobalAdminController;
-use ProjectManager;
 use UGroupManager;
-use Project;
-use ForgeConfig;
 use Feedback;
 
 class SvnRouter {
@@ -68,6 +63,9 @@ class SvnRouter {
     /** @var GlobalAdminController */
     private $global_admin_controller;
 
+    /** @var RestoreController  */
+    private $restore_controller;
+
     public function __construct(
         RepositoryManager $repository_manager,
         UGroupManager $ugroup_manager,
@@ -77,7 +75,8 @@ class SvnRouter {
         ExplorerController $explorer_controller,
         RepositoryDisplayController $display_controller,
         ImmutableTagController $immutable_tag_controller,
-        GlobalAdminController $global_admin_controller
+        GlobalAdminController $global_admin_controller,
+        RestoreController $restore_controller
     ) {
         $this->repository_manager        = $repository_manager;
         $this->permissions_manager       = $permissions_manager;
@@ -88,6 +87,7 @@ class SvnRouter {
         $this->display_controller        = $display_controller;
         $this->immutable_tag_controller  = $immutable_tag_controller;
         $this->global_admin_controller   = $global_admin_controller;
+        $this->restore_controller        = $restore_controller;
     }
 
     /**
@@ -139,6 +139,18 @@ class SvnRouter {
                 case "hooks-config":
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->displayHooksConfig($this->getService($request), $request);
+                    break;
+                case "display-repository-delete":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->admin_controller->displayRepositoryDelete($this->getService($request), $request);
+                    break;
+                case "delete-repository":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->admin_controller->deleteRepository($request);
+                    break;
+                case "restore":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->restore_controller->restoreRepository($request);
                     break;
                 case "access-control":
                     $this->checkUserCanAdministrateARepository($request);

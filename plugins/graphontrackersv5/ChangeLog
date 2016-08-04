@@ -1,3 +1,9 @@
+Version 5.25 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
+Version 5.24 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
 Version 5.23 - Tuleap 8.17
     * request #9288: A graph on tracker can not be added to a dashboard
 

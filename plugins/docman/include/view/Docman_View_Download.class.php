@@ -38,7 +38,7 @@ class Docman_View_Download extends Docman_View_View {
                 readfile($version->getPath());
             } else {
                 $this->_controller->feedback->log('error', 'The file cannot be found.');
-                $v =& new Docman_View_DocmanError($this->_controller);
+                $v = new Docman_View_DocmanError($this->_controller);
                 $v->display($params);
             }
         }

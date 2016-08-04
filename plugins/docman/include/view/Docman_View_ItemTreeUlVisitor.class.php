@@ -38,14 +38,14 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     var $hp;
 
     function Docman_View_ItemTreeUlVisitor($view, $params = null) {
-        $this->view                =& $view;
-        $this->get_action_on_icon =& new Docman_View_GetActionOnIconVisitor();
-        $this->get_class_for_link  =& new Docman_View_GetClassForLinkVisitor();
+        $this->view                = $view;
+        $this->get_action_on_icon = new Docman_View_GetActionOnIconVisitor();
+        $this->get_class_for_link  = new Docman_View_GetClassForLinkVisitor();
         $this->html                = '';
         $this->js                  = '';
         $this->stripFirstNode      = true;
         $this->firstNodeStripped   = false;
-        $this->hp                  =& Codendi_HTMLPurifier::instance();
+        $this->hp                  = Codendi_HTMLPurifier::instance();
         $this->params              = $params;
         if (!isset($this->params['default_url'])) {
             $this->params['default_url'] = null;
@@ -70,16 +70,16 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     function visitFolder(&$item, $params = array()) {
         $li_displayed = $this->_displayItem($item, $params);
         if($this->_canDisplaySubItems($item)) {
-            $items =& $item->getAllItems();
+            $items = $item->getAllItems();
             if ($items) {
                 $nb = $items->size();
                 if ($nb) { 
                     $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
                     $i = 0;
-                    $iter =& $items->iterator();
+                    $iter = $items->iterator();
                     $iter->rewind();
                     while($iter->valid()) {
-                        $child =& $iter->current();
+                        $child = $iter->current();
                         $child->accept($this, array('is_last' => (++$i == $nb)));
                         $iter->next();
                     }

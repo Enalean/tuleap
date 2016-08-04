@@ -21,7 +21,6 @@
 require_once 'pre.php';
 require_once 'common/mail/Codendi_Mail.class.php';
 require_once 'common/mail/MassmailSender.class.php';
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 $csrf = new CSRFSynchronizerToken('');
 $csrf->check('/my/');

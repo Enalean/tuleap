@@ -20,38 +20,69 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Backend;
 use Mock;
+use SystemEventManager;
 use TuleapTestCase;
 use Project;
 use Tuleap\Svn\Dao;
 use \ProjectManager;
 use \ProjectDao;
-
+use EventManager;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class RepositoryManagerTest extends TuleapTestCase {
+class RepositoryManagerTest extends TuleapTestCase
+{
 
     private $manager;
     private $project_manager;
     private $dao;
 
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
-        $this->dao = mock('Tuleap\Svn\Dao');
-        $this->project_manager = mock('ProjectManager');
-        $this->manager = new RepositoryManager($this->dao, $this->project_manager);
-        $project     = stub("Project")->getId()->returns(101);
+        $this->dao                   = mock('Tuleap\Svn\Dao');
+        $this->project_manager       = mock('ProjectManager');
+        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
+        $logger                      = mock('Logger');
+        $system_command              = mock('System_Command');
+        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
+        $hook_dao                    = mock('Tuleap\Svn\Repository\HookDao');
+        $event_manager               = EventManager::instance();
+        $backend                     = Backend::instance(Backend::SVN);
+        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
+        $system_event_manager        = SystemEventManager::instance();
+        $this->manager               = new RepositoryManager(
+            $this->dao,
+            $this->project_manager,
+            $svn_admin,
+            $logger,
+            $system_command,
+            $destructor,
+            $hook_dao,
+            $event_manager,
+            $backend,
+            $access_file_history_factory,
+            $system_event_manager
+        );
+        $project               = stub("Project")->getId()->returns(101);
 
         stub($this->project_manager)->getProjectByUnixName('projectname')->returns($project);
         stub($this->dao)->searchRepositoryByName($project, 'repositoryname')->returns(
             array(
-                'id'   => 1,
-                'name' => 'repositoryname'
+                'id'                       => 1,
+                'name'                     => 'repositoryname',
+                'repository_deletion_date' => '0000-00-00 00:00:00',
+                'backup_path'              => ''
             )
         );
+    }
+
+    public function tearDown(){
+        EventManager::clearInstance();
     }
 
     public function itReturnsRepositoryFromAPublicPath(){
@@ -76,14 +107,36 @@ class RepositoryManagerTest extends TuleapTestCase {
     }
 }
 
-class RepositoryManagerHookConfigTest extends TuleapTestCase {
-
-    public function setUp(){
-        $this->project_dao = safe_mock('ProjectDao');
-        $this->dao = safe_mock('Tuleap\Svn\Dao');
+class RepositoryManagerHookConfigTest extends TuleapTestCase
+{
+    public function setUp()
+    {
+        $this->project_dao           = safe_mock('ProjectDao');
+        $this->dao                   = safe_mock('Tuleap\Svn\Dao');
+        $this->hook_dao              = mock('Tuleap\Svn\Repository\HookDao');
+        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
+        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
+        $logger                      = mock('Logger');
+        $system_command              = mock('System_Command');
+        $backend                     = Backend::instance(Backend::SVN);
+        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
 
         $this->project_manager = ProjectManager::testInstance($this->project_dao);
-        $this->manager = new RepositoryManager($this->dao, $this->project_manager);
+        $event_manager         = EventManager::instance();
+        $system_event_manager  = SystemEventManager::instance();
+        $this->manager         = new RepositoryManager(
+            $this->dao,
+            $this->project_manager,
+            $svn_admin,
+            $logger,
+            $system_command,
+            $destructor,
+            $this->hook_dao,
+            $event_manager,
+            $backend,
+            $access_file_history_factory,
+            $system_event_manager
+        );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(
             'group_id' => 123,
@@ -95,12 +148,13 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase {
 
     public function tearDown(){
         ProjectManager::clearInstance();
+        EventManager::clearInstance();
     }
 
     public function itReturnsARepositoryWithHookConfig() {
-        stub($this->dao)->getHookConfig(33)->returns(array());
+        stub($this->hook_dao)->getHookConfig(33)->returns(array());
 
-        $repo = new Repository(33, 'reponame', $this->project);
+        $repo = new Repository(33, 'reponame', '', '', $this->project);
         $cfg = $this->manager->getHookConfig($repo);
 
         $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
@@ -108,10 +162,10 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase {
     }
 
     public function itReturnsARepositoryWithDifferentHookConfig() {
-        stub($this->dao)->getHookConfig(33)->returns(array(
+        stub($this->hook_dao)->getHookConfig(33)->returns(array(
             HookConfig::MANDATORY_REFERENCE => true));
 
-        $repo = new Repository(33, 'reponame', $this->project);
+        $repo = new Repository(33, 'reponame', '', '', $this->project);
         $cfg = $this->manager->getHookConfig($repo);
 
         $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
@@ -119,7 +173,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase {
     }
 
     public function itCanChangeTheHookConfig(){
-        stub($this->dao)->updateHookConfig(22, array(
+        stub($this->hook_dao)->updateHookConfig(22, array(
             HookConfig::MANDATORY_REFERENCE => true
         ))->once()->returns(true);
 
@@ -127,5 +181,4 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase {
             HookConfig::MANDATORY_REFERENCE => true,
             'foo' => true));
     }
-
 }

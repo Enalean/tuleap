@@ -22,6 +22,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\Import\Spotter;
+use Tuleap\Project\XML\Export\NoArchive;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -51,7 +52,6 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
-        $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
         $this->_addHook(Event::JAVASCRIPT,                     'javascript',                        false);
         $this->_addHook(Event::TOGGLE,                         'toggle',                            false);
         $this->_addHook(Event::SERVICE_PUBLIC_AREAS,           'service_public_areas',              false);
@@ -77,7 +77,7 @@ class trackerPlugin extends Plugin {
         $this->addHook('default_widgets_for_new_owner');
 
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
-        $this->_addHook('register_project_creation',           'register_project_creation',         false);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
@@ -202,7 +202,10 @@ class trackerPlugin extends Plugin {
 
     public function javascript_file($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
+        }
+        if ($this->currentRequestIsForPlugin()) {
+            echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }
 
@@ -229,41 +232,6 @@ class trackerPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                '/plugins/tracker/scripts/TrackerReports.js',
-                '/plugins/tracker/scripts/TrackerEmailCopyPaste.js',
-                '/plugins/tracker/scripts/TrackerReportsSaveAsModal.js',
-                '/plugins/tracker/scripts/TrackerBinds.js',
-                '/plugins/tracker/scripts/ReorderColumns.js',
-                '/plugins/tracker/scripts/TrackerTextboxLists.js',
-                '/plugins/tracker/scripts/TrackerAdminFields.js',
-                '/plugins/tracker/scripts/TrackerArtifact.js',
-                '/plugins/tracker/scripts/TrackerArtifactEmailActions.js',
-                '/plugins/tracker/scripts/TrackerArtifactLink.js',
-                '/plugins/tracker/scripts/TrackerCreate.js',
-                '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
-                '/plugins/tracker/scripts/TrackerDateReminderForms.js',
-                '/plugins/tracker/scripts/TrackerTriggers.js',
-                '/plugins/tracker/scripts/SubmissionKeeper.js',
-                '/plugins/tracker/scripts/TrackerFieldDependencies.js',
-                '/plugins/tracker/scripts/TrackerRichTextEditor.js',
-                '/plugins/tracker/scripts/artifactChildren.js',
-                '/plugins/tracker/scripts/load-artifactChildren.js',
-                '/plugins/tracker/scripts/modal-in-place.js',
-                '/plugins/tracker/scripts/TrackerArtifactEditionSwitcher.js',
-                '/plugins/tracker/scripts/FixAggregatesHeaderHeight.js',
-                '/plugins/tracker/scripts/TrackerSettings.js',
-                '/plugins/tracker/scripts/TrackerCollapseFieldset.js',
-                '/plugins/tracker/scripts/TrackerArtifactReferences.js',
-                '/plugins/tracker/scripts/CopyArtifact.js',
-                '/plugins/tracker/scripts/tracker-report-nature-column.js'
-            )
-        );
     }
 
     public function javascript($params) {
@@ -325,21 +293,23 @@ class trackerPlugin extends Plugin {
     * @param Array $params
     */
     function register_project_creation($params) {
-        $tm = new TrackerManager();
-        $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+        if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
+            $tm = new TrackerManager();
+            $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
-        $project_manager = $this->getProjectManager();
-        $template        = $project_manager->getProject($params['template_id']);
-        $project         = $project_manager->getProject($params['group_id']);
+            $project_manager = $this->getProjectManager();
+            $template        = $project_manager->getProject($params['template_id']);
+            $project         = $project_manager->getProject($params['group_id']);
 
-        $config = new AllowedProjectsConfig(
-            $project_manager,
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
-        );
-        if ($config->isProjectAllowedToUseNature($template)) {
-            $config->addProject($project);
+            $config = new AllowedProjectsConfig(
+                $project_manager,
+                new AllowedProjectsDao(),
+                new Tracker_Hierarchy_Dao(),
+                EventManager::instance()
+            );
+            if ($config->isProjectAllowedToUseNature($template)) {
+                $config->addProject($project);
+            }
         }
     }
 
@@ -764,14 +734,18 @@ class trackerPlugin extends Plugin {
             new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
         );
 
+        $user    = UserManager::instance()->getCurrentUser();
+        $archive = new NoArchive();
+
         $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
-            ->exportToXml($params['project']->getID(), $params['into_xml']);
+            ->exportToXml($params['project']->getID(), $params['into_xml'], $user);
     }
 
     /**
      * @return TrackerXmlExport
      */
-    private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold) {
+    private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold)
+    {
         $rng_validator = new XML_RNGValidator();
 
         return new TrackerXmlExport(
@@ -784,8 +758,14 @@ class trackerPlugin extends Plugin {
                 $can_bypass_threshold,
                 $user_xml_exporter
             ),
-            $user_xml_exporter
+            $user_xml_exporter,
+            EventManager::instance()
         );
+    }
+
+    private function getXmlRngValidator()
+    {
+        return new XML_RNGValidator();
     }
 
     /**
@@ -1053,15 +1033,32 @@ class trackerPlugin extends Plugin {
     }
 
     public function export_xml_project($params) {
-        if (! isset($params['options']['tracker_id'])) {
+        if (! isset($params['options']['tracker_id']) && ! isset($params['options']['all'])) {
             return;
         }
 
+        $project              = $params['project'];
         $can_bypass_threshold = $params['options']['force'] === true;
-        $tracker_id           = $params['options']['tracker_id'];
+        $user_xml_exporter    = $params['user_xml_exporter'];
+        $user                 = $params['user'];
 
-        $project    = $params['project'];
-        $user       = $params['user'];
+        if ($params['options']['all'] === true) {
+            $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
+            ->exportToXmlFull($project->getID(), $params['into_xml'], $user, $params['archive']);
+
+        } else if (isset($params['options']['tracker_id'])) {
+            $this->exportSingleTracker($params, $project, $user_xml_exporter, $user, $can_bypass_threshold);
+        }
+    }
+
+    private function exportSingleTracker(
+        array $params,
+        Project $project,
+        UserXMLExporter $user_xml_exporter,
+        PFUser $user,
+        $can_bypass_threshold
+    ) {
+        $tracker_id = $params['options']['tracker_id'];
         $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
 
         if (! $tracker) {
@@ -1072,7 +1069,7 @@ class trackerPlugin extends Plugin {
             throw new Exception ('Tracker ID does not belong to project ID');
         }
 
-        $this->getTrackerXmlExport($params['user_xml_exporter'], $can_bypass_threshold)
+        $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
             ->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user, $params['archive']);
     }
 

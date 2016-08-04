@@ -21,7 +21,6 @@ require_once 'pre.php';
 require_once 'adminPresenter.class.php';
 require_once 'common/dao/SystemEventsFollowersDao.class.php';
 require_once 'common/include/Toggler.class.php';
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 session_require(array('group'=>'1', 'admin_flags'=>'A'));
 

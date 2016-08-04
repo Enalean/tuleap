@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -84,6 +84,38 @@ tuleap.textarea = tuleap.textarea || { };
             }
         },
 
+        displayAutocomputed : function (element) {
+            element.find('.tracker_formelement_label').hide();
+            element.find('.tracker_formelement_edit').show();
+            element.find('.auto-computed').show();
+            element.find('.add-field').hide();
+            element.removeClass('in-edition');
+        },
+
+        displayInEdition : function (element) {
+            element.find('.tracker_formelement_edit').hide();
+            element.find('.tracker_formelement_label').show();
+            element.find('.auto-computed').hide();
+            element.find('.add-field').show();
+            element.addClass('in-edition');
+        },
+
+        switchValueToManualMode: function (field_id) {
+            var field_computed_is_autocomputed = document.getElementsByName("artifact[" + field_id + "][is_autocomputed]");
+            if (field_computed_is_autocomputed[0] !== undefined && field_computed_is_autocomputed[0] !== undefined) {
+                field_computed_is_autocomputed[0].value = '0';
+            }
+        },
+
+        switchValueToAutoComputedMode: function (field_id) {
+            var field_computed_manual_value    = document.getElementsByName("artifact[" + field_id + "][manual_value]");
+            var field_computed_is_autocomputed = document.getElementsByName("artifact[" + field_id + "][is_autocomputed]");
+            if (field_computed_manual_value[0] !== undefined && field_computed_is_autocomputed[0] !== undefined) {
+                field_computed_manual_value[0].value    = null;
+                field_computed_is_autocomputed[0].value = '1';
+            }
+        },
+
         loadCreateArtifactModal : function(tracker_id, artifact_link_id, callback) {
             var self = this;
 
@@ -103,6 +135,25 @@ tuleap.textarea = tuleap.textarea || { };
                 $('.tuleap-modal-main-panel form textarea').each( function(){
                     var element = $(this).get(0); //transform to prototype
                     self.enableRichTextArea(element);
+                });
+
+                $(".tracker_artifact_field-computed").each( function() {
+                    var $element                        = $(this);
+                    var $field_id                       = $(this).find('.add-field').data('field-id');
+                    var field_computed_manual_value    = document.getElementsByName("artifact[" + $field_id + "][manual_value]");
+                    var field_computed_is_autocomputed = document.getElementsByName("artifact[" + $field_id + "][is_autocomputed]");
+
+                    self.displayAutocomputed($element);
+                    $element.find('.tracker_formelement_edit').on('click', function () {
+                        self.displayInEdition($element);
+                        $element.off('click');
+                        self.switchValueToManualMode($field_id);
+                    });
+
+                    $element.find('.auto-compute').on('click', function () {
+                        self.displayAutocomputed($element);
+                        self.switchValueToAutoComputedMode($field_id);
+                    });
                 });
 
             }).fail(function() {
@@ -136,6 +187,32 @@ tuleap.textarea = tuleap.textarea || { };
                     if (typeof load_callback !== 'undefined') {
                         load_callback();
                     }
+                });
+
+                $(".tracker_artifact_field").each( function() {
+                    var $element                        = $(this);
+                    var $field_id                       = $(this).find('.add-field').data('field-id');
+                    var field_computed_manual_value    = document.getElementsByName("artifact[" + $field_id + "][manual_value]");
+                    var field_computed_is_autocomputed = document.getElementsByName("artifact[" + $field_id + "][is_autocomputed]");
+
+                    if (field_computed_manual_value[0] !== undefined && field_computed_is_autocomputed[0] !== undefined) {
+                        if (field_computed_manual_value[0].value) {
+                            self.displayInEdition($element);
+                        } else {
+                            self.displayAutocomputed($element);
+                        }
+                    }
+
+                    $element.find('.tracker_formelement_edit').on('click', function () {
+                        self.displayInEdition($element);
+                        $element.off('click');
+                        self.switchValueToManualMode($field_id);
+                    });
+
+                    $element.find('.auto-compute').on('click', function () {
+                        self.displayAutocomputed($element);
+                        self.switchValueToAutoComputedMode($field_id);
+                    });
                 });
             }).fail(function() {
                 tuleap.modal.hideLoad();

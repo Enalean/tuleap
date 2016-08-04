@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    unix-name="public-incl-restricted" full-name="Public Incl Restricted Project" description="For test" access="unrestricted">
+    <long-description>A test project</long-description>
+    <services>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_restricted_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="developers" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_5</member>
+                <member format="username">rest_api_restricted_1</member>
+                <member format="username">rest_api_restricted_2</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>

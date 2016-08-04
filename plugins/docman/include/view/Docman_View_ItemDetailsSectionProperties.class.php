@@ -72,8 +72,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html = '';
         $itemFactory = new Docman_ItemFactory();
         if($itemFactory->getItemTypeForItem($this->item) != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-            $dpm =& Docman_PermissionsManager::instance($this->item->getGroupId());
-            $um =& UserManager::instance();
+            $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
+            $um = UserManager::instance();
             $user = $um->getCurrentUser();
             if(!$this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
                 $label = $GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_lbl');
@@ -93,7 +93,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html .= $this->_getlockInfo();
 
         $params['theme_path'] = $this->theme_path;
-        $get_fields =& new Docman_View_GetFieldsVisitor();
+        $get_fields = new Docman_View_GetFieldsVisitor();
         $fields = $this->item->accept($get_fields, $params);
 
         $html .= '<table class="docman_item_details_properties">';

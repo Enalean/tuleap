@@ -31,13 +31,13 @@ class Docman_VersionFactory {
     }
     
     function create($row) {
-        $dao =& $this->_getVersionDao();
+        $dao = $this->_getVersionDao();
         return $dao->createFromRow($row);
     }
     var $dao;
-    function &_getVersionDao() {
+    function _getVersionDao() {
         if (!$this->dao) {
-            $this->dao =& new Docman_VersionDao(CodendiDataAccess::instance());
+            $this->dao = new Docman_VersionDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
@@ -55,7 +55,7 @@ class Docman_VersionFactory {
     }
 
     function getAllVersionForItem(&$item) {
-        $dao =& $this->_getVersionDao();
+        $dao = $this->_getVersionDao();
         $dar = $dao->searchByItemId($item->getId());
         $versions = false;
         if ($dar && !$dar->isError()) {

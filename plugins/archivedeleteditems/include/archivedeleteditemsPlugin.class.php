@@ -20,15 +20,13 @@
 require_once('common/plugin/Plugin.class.php');
 
 use Tuleap\ArchiveDeletedItems\ArchiveLogger;
+use Tuleap\ArchiveDeletedItems\FileCopier;
 
 /**
  * Archive
  */
 class ArchivedeleteditemsPlugin extends Plugin
 {
-
-    private $archiveScript;
-
     /**
      * Constructor of the class
      *
@@ -40,7 +38,6 @@ class ArchivedeleteditemsPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_SYSTEM);
-        $this->archiveScript = $GLOBALS['codendi_bin_prefix'] . "/archive-deleted-items.pl";
         $this->_addHook('archive_deleted_item', 'archive_deleted_item', false);
     }
 
@@ -71,19 +68,6 @@ class ArchivedeleteditemsPlugin extends Plugin
      */
     public function getConfigurationParameter($key) {
         return $this->getPluginInfo()->getPropertyValueForName($key);
-    }
-
-    private function getGroupNameForFile($file)
-    {
-        $stat  = stat($file);
-        $group = posix_getpwuid($stat['uid']);
-
-        return $group['name'];
-    }
-
-    private function convertFilePermissionsToNumbers($path)
-    {
-        return substr(sprintf('%o', fileperms($path)), -4);
     }
 
     /**
@@ -124,35 +108,22 @@ class ArchivedeleteditemsPlugin extends Plugin
             return false;
         }
 
-        $ret_val         = null;
-        $exec_res        = null;
-
         $destination_path = $archive_path.$archive_prefix.'_'.basename($source_path);
-        $logger->debug("Archiving                  : " . $source_path . " to " . $destination_path);
-        $logger->debug("Permissions of source      : " . $this->convertFilePermissionsToNumbers($source_path));
-        $logger->debug("Permissions of destination : " . $this->convertFilePermissionsToNumbers($archive_path));
-        $logger->debug("Owner of source            : " . $this->getGroupNameForFile($source_path));
-        $logger->debug("Owner of destination       : " . $this->getGroupNameForFile($destination_path));
 
-        if (file_exists($source_path)) {
-            $cmd = $this->archiveScript." ".$source_path." " .$destination_path;
-            $logger->debug($cmd);
-
-            exec($cmd, $exec_res, $ret_val);
-            if ($ret_val == 0) {
-                $logger->info("Archiving OK");
-                $params['status'] = true;
-                return true;
-            } else {
-                $params['error'] = 'Archiving of "'.$source_path.'" in "'.$destination_path.'" failed';
-                $logger->error($params['error']. " : error ".$ret_val);
-                return false;
-            }
-        } else {
+        if (! file_exists($source_path)) {
             $params['error'] = 'Skipping file "'.$source_path.'": not found in file system.';
             $logger->error($params['error']);
             return false;
         }
+
+        $file_copier        = new FileCopier($logger);
+        $is_copy_successful = $file_copier->copy($source_path, $destination_path);
+        if ($is_copy_successful) {
+            $logger->info('Archiving OK');
+        } else {
+            $params['error'] = 'Archiving of "' . $source_path . '" in "' . $destination_path . '" failed';
+        }
+        return $is_copy_successful;
     }
 
     private function getWellFormattedArchivePath() {

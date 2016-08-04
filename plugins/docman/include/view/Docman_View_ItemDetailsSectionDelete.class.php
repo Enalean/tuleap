@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     }
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
-        $item_type = $this->_controller->_getItemFactory()->getItemTypeForItem($this->item);
+        $item_type = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
         
         $vVersion = new Valid_UInt('version');
         $vVersion->required();
@@ -83,7 +83,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
 
         // List of other possible referencers.
         $pagename = $this->item->getPagename();
-        $referencers = $this->_controller->_getItemFactory()->getWikiPageReferencers($pagename, $this->item->getGroupId());
+        $referencers = $this->_controller->getItemFactory()->getWikiPageReferencers($pagename, $this->item->getGroupId());
         if(is_array($referencers) && count($referencers) > 1) {
             $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_wiki_impact_on_documents');
             $output .= '<div id="other_referencers">';
@@ -111,7 +111,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $reference = $item;
 
         while ($item && $item->getParentId() != 0) {
-            $item = $this->_controller->_getItemFactory()->getItemFromDb($item->getParentId());
+            $item = $this->_controller->getItemFactory()->getItemFromDb($item->getParentId());
             $parents[] = array(
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()

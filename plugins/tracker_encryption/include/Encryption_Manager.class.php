@@ -1,0 +1,57 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+require_once '/usr/share/pear/Crypt/RSA.php';
+
+class Encryption_Manager
+{
+    const HASH_FUNCTION = 'sha256';
+    private $rsa;
+
+    public function __construct(Tracker_Key $tracker_key)
+    {
+        $this->rsa = new \Crypt_RSA();
+        $this->rsa->setEncryptionMode(\CRYPT_RSA_ENCRYPTION_OAEP);
+        $this->rsa->setHash(self::HASH_FUNCTION);
+        $this->rsa->setMGFHash(self::HASH_FUNCTION);
+        $this->loadRSAKey($tracker_key);
+    }
+
+    /**
+     * encrypt a given data using phpseclib
+     * @param $data
+     *
+     * @return string Encrypted key or an error message in case of encryption issues
+     */
+    public function encrypt($data)
+    {
+        if ($encrypted = $this->rsa->encrypt($data)) {
+            $data      = base64_encode($encrypted);
+            return $data;
+        } else {
+            throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_encryption', 'encryption_error')));
+        }
+    }
+
+    private function loadRSAKey(Tracker_Key $tracker_key) {
+        if (!$this->rsa->loadKey($tracker_key->getKey())) {
+            throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_encryption', 'encryption_error')));
+        }
+    }
+}

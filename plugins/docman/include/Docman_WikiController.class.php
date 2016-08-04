@@ -32,7 +32,7 @@ class Docman_WikiController extends Docman_Controller {
 
     function __construct(&$plugin, $pluginPath, $themePath, $request) {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
-        $event_manager =& $this->_getEventManager();
+        $event_manager = $this->_getEventManager();
         $event_manager->addListener('plugin_docman_event_wikipage_update', $this->logger, 'log', true);
         $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true);
     }
@@ -71,8 +71,8 @@ class Docman_WikiController extends Docman_Controller {
 
     function isWikiPageReferenced() {
         $wiki_page = $this->request->get('wiki_page');
-        $group_id = $this->request->get('group_id');
-        $item_dao =& $this->_getItemDao();
+        $group_id  = $this->request->get('group_id');
+        $item_dao  = $this->_getItemDao();
         if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
             // TODO: find another way to return a value. 
             // Codendi_Request->params should not be public
@@ -90,13 +90,13 @@ class Docman_WikiController extends Docman_Controller {
         $group_id = $this->request->get('group_id');
 
         require_once 'Docman_PermissionsManager.class.php';
-        $dPM =& Docman_PermissionsManager::instance($group_id);
+        $dPM = Docman_PermissionsManager::instance($group_id);
 
-        $item_factory =& $this->_getItemFactory();
+        $item_factory = $this->getItemFactory();
         $references = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
 
         require_once 'common/user/UserManager.class.php';
-        $uM =& UserManager::instance();
+        $uM = UserManager::instance();
 
         $can_access = true;
         foreach($references as $key => $item) {
@@ -111,13 +111,13 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     function wikiPageUpdated() {
-        $event_manager =& $this->_getEventManager();
-        $item_factory =& $this->_getItemFactory();
+        $event_manager = $this->_getEventManager();
+        $item_factory  = $this->getItemFactory();
 
         $wiki_page_name = $this->request->get('wiki_page');
         $group_id       = $this->request->get('group_id');
         $documents      = $item_factory->getWikiPageReferencers($wiki_page_name, $group_id);
-        $item_dao       =& new Docman_ItemDao(CodendiDataAccess::instance());
+        $item_dao       = new Docman_ItemDao(CodendiDataAccess::instance());
         $user           = $this->request->get('user');
         $diff_link      = $this->request->get('diff_link');
         $version        = $this->request->get('version');
@@ -150,9 +150,9 @@ class Docman_WikiController extends Docman_Controller {
     *
     */
     function isWikiPageEditable() {
-        $item_factory =& $this->_getItemFactory();
-        $wiki_page = $this->request->get('wiki_page');
-        $group_id = $this->request->get('group_id');
+        $item_factory = $this->getItemFactory();
+        $wiki_page    = $this->request->get('wiki_page');
+        $group_id     = $this->request->get('group_id');
         
         $referers = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
         
@@ -215,8 +215,8 @@ class Docman_WikiController extends Docman_Controller {
     }
     function wiki_before_content() {
         $wiki_page = $this->request->get('wiki_page');
-        $group_id = $this->request->get('group_id');
-        $item_dao =& $this->_getItemDao();
+        $group_id  = $this->request->get('group_id');
+        $item_dao  = $this->_getItemDao();
 
         $docman_references = HTML();
         // Add js part for toogling referencers section.
@@ -245,9 +245,9 @@ class Docman_WikiController extends Docman_Controller {
             }
             if(isset($docman_item_id) && $docman_item_id) {
                 $content = HTML();
-                $script = HTML::script(array('type' => 'text/javascript'), "toggle_documents('documents');");
-                $user =& $this->getUser();
-                $dpm =& Docman_PermissionsManager::instance($group_id);
+                $script  = HTML::script(array('type' => 'text/javascript'), "toggle_documents('documents');");
+                $user    = $this->getUser();
+                $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if(is_array($docman_item_id)) {
                     $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
@@ -357,15 +357,14 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     function showReferrerPath($referrer_id, $group_id) {
-        $parents = array();
-        $html = HTML();
-        $hp =& Codendi_HTMLPurifier::instance();
-        $item_factory =& $this->_getItemFactory($group_id);
-        $item =& $item_factory->getItemFromDb($referrer_id);
-        $reference =& $item;
+        $parents      = array();
+        $html         = HTML();
+        $item_factory = $this->getItemFactory($group_id);
+        $item         = $item_factory->getItemFromDb($referrer_id);
+        $reference    = $item;
     
         while ($item->getParentId() != 0) {
-            $item =& $item_factory->getItemFromDb($item->getParentId());
+            $item = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = array(
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
@@ -391,15 +390,14 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     function getDocumentPath($id, $group_id, $referrer_id = null) {
-        $parents = array();
-        $html = HTML();
-        $hp =& Codendi_HTMLPurifier::instance();
-        $item_factory =& $this->_getItemFactory($group_id);
-        $item =& $item_factory->getItemFromDb($id);
-        $reference =& $item;
+        $parents      = array();
+        $html         = HTML();
+        $item_factory = $this->getItemFactory($group_id);
+        $item         = $item_factory->getItemFromDb($id);
+        $reference    = $item;
         if ($reference && $referrer_id != $id) {
             while ($item && $item->getParentId() != 0) {
-                $item =& $item_factory->getItemFromDb($item->getParentId());
+                $item = $item_factory->getItemFromDb($item->getParentId());
                 $parents[] = array(
                     'id'    => $item->getId(),
                     'title' => $item->getTitle()
@@ -425,17 +423,18 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     var $item_factory;
-    function &_getItemFactory() {
+    public function getItemFactory()
+    {
         if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory();
+            $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;
     }
 
     var $dao;
-    function &_getItemDao() {
+    private function _getItemDao() {
         if (!$this->dao) {
-            $this->dao =& new Docman_ItemDao(CodendiDataAccess::instance());
+            $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

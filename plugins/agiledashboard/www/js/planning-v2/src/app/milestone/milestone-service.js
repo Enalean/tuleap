@@ -3,14 +3,20 @@ angular
     .module('milestone')
     .service('MilestoneService', MilestoneService);
 
-MilestoneService.$inject = ['Restangular', '$q', 'BacklogItemFactory'];
+MilestoneService.$inject = [
+    'Restangular',
+    'BacklogItemFactory'
+];
 
-function MilestoneService(Restangular, $q, BacklogItemFactory) {
+function MilestoneService(
+    Restangular,
+    BacklogItemFactory
+) {
     var self = this,
         rest = Restangular.withConfig(function(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
-    });
+            RestangularConfigurer.setFullResponse(true);
+            RestangularConfigurer.setBaseUrl('/api/v1');
+        });
 
     _.extend(self, {
         milestone_content_pagination : { limit: 50, offset: 0 },
@@ -36,22 +42,20 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
     });
 
     function getMilestone(milestone_id, scope_items) {
-        var data = $q.defer();
-
-        rest.one('milestones', milestone_id)
+        var promise = rest.one('milestones', milestone_id)
             .get()
             .then(function(response) {
                 defineAllowedBacklogItemTypes(response.data);
                 augmentMilestone(response.data, scope_items);
 
-                result = {
+                var result = {
                     results: response.data
                 };
 
-                data.resolve(result);
+                return result;
             });
 
-        return data.promise;
+        return promise;
     }
 
     function getOpenMilestones(project_id, limit, offset, scope_items) {
@@ -71,9 +75,7 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
     }
 
     function getMilestones(parent_type, parent_id, limit, offset, order, status, scope_items) {
-        var data = $q.defer();
-
-        rest.one(parent_type, parent_id)
+        var promise = rest.one(parent_type, parent_id)
             .all('milestones')
             .getList({
                 limit : limit,
@@ -89,25 +91,25 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
                     augmentMilestone(milestone, scope_items);
                 });
 
-                result = {
+                var result = {
                     results: response.data,
                     total  : response.headers('X-PAGINATION-SIZE')
                 };
 
-                data.resolve(result);
+                return result;
             });
 
-        return data.promise;
+        return promise;
     }
 
     function putSubMilestones(milestone_id, submilestone_ids) {
         return rest.one('milestones', milestone_id)
-           .customPUT(
-               {
-                   id : milestone_id,
-                   ids: submilestone_ids
-               },
-               'milestones'
+            .customPUT(
+            {
+                id : milestone_id,
+                ids: submilestone_ids
+            },
+            'milestones'
             );
     }
 
@@ -124,24 +126,22 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
     }
 
     function getContent(milestone_id, limit, offset) {
-        var data = $q.defer();
-
-        rest.one('milestones', milestone_id)
+        var promise = rest.one('milestones', milestone_id)
             .all('content')
             .getList({
-                limit: limit,
+                limit : limit,
                 offset: offset
             })
             .then(function(response) {
-                result = {
+                var result = {
                     results: response.data,
-                    total: response.headers('X-PAGINATION-SIZE')
+                    total  : response.headers('X-PAGINATION-SIZE')
                 };
 
-                data.resolve(result);
+                return result;
             });
 
-        return data.promise;
+        return promise;
     }
 
     function augmentMilestone(milestone, scope_items) {
@@ -165,7 +165,7 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
 
             function fetchMilestoneContent(limit, offset) {
                 return getContent(milestone.id, limit, offset).then(function(data) {
-                    angular.forEach(data.results, function(backlog_item, key) {
+                    angular.forEach(data.results, function(backlog_item) {
                         scope_items[backlog_item.id] = backlog_item;
                         augmentBacklogItem(backlog_item);
 
@@ -236,9 +236,9 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
             .all('backlog')
             .patch({
                 order: {
-                    ids         : dropped_item_ids,
-                    direction   : compared_to.direction,
-                    compared_to : compared_to.item_id
+                    ids        : dropped_item_ids,
+                    direction  : compared_to.direction,
+                    compared_to: compared_to.item_id
                 }
             });
     }
@@ -248,9 +248,9 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
             .all('backlog')
             .patch({
                 order: {
-                    ids         : dropped_item_ids,
-                    direction   : compared_to.direction,
-                    compared_to : compared_to.item_id
+                    ids        : dropped_item_ids,
+                    direction  : compared_to.direction,
+                    compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
@@ -279,9 +279,9 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
             .all('content')
             .patch({
                 order: {
-                    ids         : dropped_item_ids,
-                    direction   : compared_to.direction,
-                    compared_to : compared_to.item_id
+                    ids        : dropped_item_ids,
+                    direction  : compared_to.direction,
+                    compared_to: compared_to.item_id
                 }
             });
     }
@@ -291,9 +291,9 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
             .all('content')
             .patch({
                 order: {
-                    ids         : dropped_item_ids,
-                    direction   : compared_to.direction,
-                    compared_to : compared_to.item_id
+                    ids        : dropped_item_ids,
+                    direction  : compared_to.direction,
+                    compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return { id: dropped_item_id };
@@ -316,9 +316,9 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
             .all('content')
             .patch({
                 order: {
-                    ids         : dropped_item_ids,
-                    direction   : compared_to.direction,
-                    compared_to : compared_to.item_id
+                    ids        : dropped_item_ids,
+                    direction  : compared_to.direction,
+                    compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {

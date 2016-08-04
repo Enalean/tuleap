@@ -41,7 +41,7 @@ class ProjectLinksPlugin extends Plugin {
             'projectSummaryTitle', false);
 
         // only does anythign if template authorised, or linked to
-        $this->_addHook('register_project_creation',
+        $this->_addHook(Event::REGISTER_PROJECT_CREATION,
             'registerProjectCreation', false);
 
         $this->_addHook('cssfile',         'cssfile',         false);

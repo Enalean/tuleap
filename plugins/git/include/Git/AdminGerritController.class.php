@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,7 +73,7 @@ class Git_AdminGerritController {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
 
-        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '', Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST);
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '', '', Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST);
     }
 
     private function getListOfGerritServersPresenters() {
@@ -88,7 +88,8 @@ class Git_AdminGerritController {
         return $list_of_presenters;
     }
 
-    private function updateServers(array $request_gerrit_servers) {
+    private function updateServers(array $request_gerrit_servers)
+    {
         foreach ($request_gerrit_servers as $id => $settings) {
             $server = $this->servers[$id];
 
@@ -101,16 +102,17 @@ class Git_AdminGerritController {
                 continue;
             }
 
-            $host                   = isset($settings['host'])              ? $settings['host']             : '';
-            $ssh_port               = isset($settings['ssh_port'])          ? $settings['ssh_port']         : '';
-            $http_port              = isset($settings['http_port'])         ? $settings['http_port']        : '';
-            $login                  = isset($settings['login'])             ? $settings['login']            : '';
-            $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
-            $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
-            $use_ssl                = isset($settings['use_ssl'])                                               ;
-            $gerrit_version         = isset($settings['gerrit_version'])    ? $settings['gerrit_version']   : '';
-            $http_password          = isset($settings['http_password'] )    ? $settings['http_password']    : '';
-            $auth_type              = isset($settings['auth_type'] )        ? $settings['auth_type']        : 'Digest';
+            $host                   = isset($settings['host'])                  ? $settings['host']                    : '';
+            $ssh_port               = isset($settings['ssh_port'])              ? $settings['ssh_port']                : '';
+            $http_port              = isset($settings['http_port'])             ? $settings['http_port']               : '';
+            $login                  = isset($settings['login'])                 ? $settings['login']                   : '';
+            $identity_file          = isset($settings['identity_file'])         ? $settings['identity_file']           : '';
+            $replication_ssh_key    = isset($settings['replication_key'])       ? $settings['replication_key']         : '';
+            $use_ssl                = isset($settings['use_ssl'])                                                          ;
+            $gerrit_version         = isset($settings['gerrit_version'])        ? $settings['gerrit_version']          : '';
+            $http_password          = isset($settings['http_password'])         ? $settings['http_password']           : '';
+            $replication_password   = isset($settings['replication_password'])  ? $settings['replication_password']    : '';
+            $auth_type              = isset($settings['auth_type'])             ? $settings['auth_type']               : 'Digest';
 
             if ($host !== '' &&
                 ($host != $server->getHost() ||
@@ -124,7 +126,6 @@ class Git_AdminGerritController {
                 $http_password != $server->getHTTPPassword() ||
                 $auth_type != $server->getAuthType())
             ) {
-
                 $server
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
@@ -140,6 +141,18 @@ class Git_AdminGerritController {
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }
+
+            $this->updateReplicationPassword($server, $replication_password);
+        }
+    }
+
+    private function updateReplicationPassword(Git_RemoteServer_GerritServer $server, $replication_password)
+    {
+        if (! hash_equals($server->getReplicationPassword(), $replication_password)) {
+            $server->setReplicationPassword($replication_password);
+
+            $this->gerrit_server_factory->updateReplicationPassword($server);
+            $this->servers[$server->getId()] = $server;
         }
     }
 }

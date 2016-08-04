@@ -315,11 +315,11 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
         $params['group_id'] = $group_id;
         $params['action'] = $action;
         $params['confirm'] = true;
-        
-        $request =& new SOAPRequest($params);
-        
-        $plugin_manager =& PluginManager::instance();
-        $p =& $plugin_manager->getPluginByName('docman');
+
+        $request = new SOAPRequest($params);
+
+        $plugin_manager = PluginManager::instance();
+        $p              = $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
             // Process request
             $result = $p->processSOAP($request);

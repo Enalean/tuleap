@@ -353,10 +353,14 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 
         $this->request = new HTTPRequest();
         $this->request->setCurrentUser($this->user);
+
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', '/usr/share/tuleap');
     }
 
     public function tearDown() {
         UserManager::clearInstance();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

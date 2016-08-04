@@ -70,6 +70,109 @@ class ArtifactsTest extends RestBase {
         return $artifact_reference['id'];
     }
 
+    public function testComputedFieldsCalculation()
+    {
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_ONE_ARTIFACT_A_ID,
+            10,
+            25,
+            20,
+            33
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_B_ID,
+            null,
+            25,
+            15,
+            33
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_C_ID,
+            null,
+            null,
+            5,
+            null
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_D_ID,
+            null,
+            null,
+            5,
+            11
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_E_ID,
+            10,
+            10,
+            5,
+            22
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_F_ID,
+            null,
+            null,
+            5,
+            null
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_G_ID,
+            null,
+            15,
+            5,
+            null
+        );
+        $this->testComputedFieldValueForArtifactId(
+            REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_H_ID,
+            null,
+            10,
+            5,
+            null
+        );
+    }
+
+    public function testComputedFieldValueForArtifactId(
+        $artifact_id = null,
+        $capacity_slow_compute_value = null,
+        $capacity_fast_compute_value = null,
+        $remaining_effort_value = null,
+        $total_effort_value = null
+    ) {
+        if ($artifact_id !== null) {
+            $response = $this->getResponse($this->client->get("artifacts/$artifact_id"));
+            $artifact = $response->json();
+
+            $this->assertNotNull($response->getHeader('Last-Modified'));
+            $this->assertNotNull($response->getHeader('Etag'));
+            $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
+
+            $fields = $artifact['values'];
+
+            foreach ($fields as $field) {
+                $value = null;
+                if (isset($field['manual_value'])) {
+                    $value = $field['manual_value'];
+                } else if (isset($field[$field['type'].'_value'])) {
+                    $value = $field[$field['type'].'_value'];
+                } else if (isset($field['value'])) {
+                    $value = $field['value'];
+                }
+
+                if ($field['label'] === 'remaining_effort') {
+                    $this->assertEquals($remaining_effort_value, $value);
+                }
+                if ($field['label'] === 'progress') {
+                    $this->assertEquals($capacity_slow_compute_value, $value);
+                }
+                if ($field['label'] === 'capacity') {
+                    $this->assertEquals($capacity_fast_compute_value, $value);
+                }
+                if ($field['label'] === 'effort_estimate') {
+                    $this->assertEquals($total_effort_value, $value);
+                }
+            }
+        }
+    }
+
     /**
      * @depends testPostArtifact
      */
@@ -85,6 +188,24 @@ class ArtifactsTest extends RestBase {
         $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
 
         $fields = $artifact['values'];
+
+        $this->assertTrue(is_int($artifact['id']));
+        $this->assertTrue(is_int($artifact['submitted_by']));
+
+        $this->assertTrue(is_string($artifact['uri']));
+        $this->assertTrue(is_string($artifact['xref']));
+        $this->assertTrue(is_string($artifact['submitted_on']));
+        $this->assertTrue(is_string($artifact['html_url']));
+        $this->assertTrue(is_string($artifact['changesets_uri']));
+        $this->assertTrue(is_string($artifact['last_modified_date']));
+        $this->assertTrue(is_string($artifact['status']));
+        $this->assertTrue(is_string($artifact['title']));
+
+        $this->assertTrue(is_array($artifact['assignees']));
+
+        $this->assertTrue(is_array($artifact['tracker']));
+        $this->assertTrue(is_array($artifact['project']));
+        $this->assertTrue(is_array($artifact['submitted_by_user']));
 
         foreach($fields as $field) {
             switch($field['type']) {

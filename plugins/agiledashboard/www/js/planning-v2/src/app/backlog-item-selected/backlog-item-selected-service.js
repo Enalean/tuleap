@@ -53,7 +53,7 @@ function BacklogItemSelectedService() {
     function isDraggedBacklogItemSelected(dragged_backlog_item_id) {
         var found = false;
 
-        if (_.find(getCompactedSelectedBacklogItem(), {id: dragged_backlog_item_id})) {
+        if (_.find(getCompactedSelectedBacklogItem(), { id: dragged_backlog_item_id })) {
             found = true;
         }
 
@@ -88,7 +88,6 @@ function BacklogItemSelectedService() {
         _.forEach(getCompactedSelectedBacklogItem(), function(backlog_item) {
             if (backlog_item.selected && backlog_item.hidden) {
                 backlog_item.hidden = false;
-
             } else if (backlog_item.multiple) {
                 backlog_item.selected = true;
             }

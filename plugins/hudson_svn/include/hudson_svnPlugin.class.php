@@ -28,9 +28,13 @@ use Tuleap\HudsonSvn\Job\Dao as JobDao;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\HudsonSvn\Job\Launcher;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Dao as SvnDao;
+use Tuleap\Svn\SvnLogger;
 
 class hudson_svnPlugin extends Plugin {
 
@@ -103,10 +107,59 @@ class hudson_svnPlugin extends Plugin {
         return TemplateRendererFactory::build()->getRenderer(HUDSON_SVN_BASE_DIR.'/templates');
     }
 
-    private function getRepositoryManager() {
+    private function getRepositoryManager()
+    {
         $dao = new SvnDao();
 
-        return new RepositoryManager($dao, $this->getProjectManager());
+        return new RepositoryManager(
+            $dao,
+            $this->getProjectManager(),
+            $this->getSvnAdmin(),
+            $this->getLogger(),
+            $this->getSystemCommand(),
+            $this->getDestructor(),
+            $this->getHookDao(),
+            EventManager::instance(),
+            Backend::instance(Backend::SVN),
+            $this->getAccessFileHistoryFactory(),
+            SystemEventManager::instance()
+        );
+    }
+
+    private function getAccessFileHistoryFactory()
+    {
+        return new AccessFileHistoryFactory(new AccessFileHistoryDao());
+    }
+
+    private function getHookDao()
+    {
+        return new HookDao();
+    }
+
+    /**
+     * @return Destructor
+     */
+    private function getDestructor()
+    {
+        return new Destructor(
+            new SvnDao(),
+            $this->getLogger()
+        );
+    }
+
+    private function getSystemCommand()
+    {
+        return new System_Command();
+    }
+
+    private function getLogger()
+    {
+        return new SvnLogger();
+    }
+
+    private function getSvnAdmin()
+    {
+        return new SvnAdmin($this->getSystemCommand(), $this->getLogger());
     }
 
     private function getProjectManager() {

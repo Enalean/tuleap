@@ -1,30 +1,27 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'common/include/CSRFSynchronizerToken.class.php';
-
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 
 class WorkflowManager {
     protected $tracker;
+
     public function __construct($tracker) {
         $this->tracker = $tracker;
     }
@@ -47,16 +44,13 @@ class WorkflowManager {
                     'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
                     )
             ));
+
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
-
-            $project_use_artifact_link_natures = $this->getAllowedProjectsConfig()->isProjectAllowedToUseNature($this->tracker->getProject());
-
-            $action = new Tracker_Workflow_Action_Triggers_EditTriggers(
+            $action   = new Tracker_Workflow_Action_Triggers_EditTriggers(
                 $this->tracker,
                 $token,
                 $renderer,
-                $workflow_factory->getTriggerRulesManager(),
-                $project_use_artifact_link_natures
+                $workflow_factory->getTriggerRulesManager()
             );
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
@@ -79,14 +73,4 @@ class WorkflowManager {
         }
         $action->process($engine, $request, $current_user);
     }
-
-    private function getAllowedProjectsConfig() {
-        return new AllowedProjectsConfig(
-            ProjectManager::instance(),
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
-        );
-    }
 }
-?>

@@ -1,3 +1,42 @@
+Version 1.402 - Tuleap 8.18
+    * story #9305 have agile dashboard compatible with ALv2 (Agile Dashboard can be used with artifact links v2)
+
+Version 1.401 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
+Version 1.400 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
+Version 1.399 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
+Version 1.398 - Tuleap 8.18
+    * request #9252 Artifact links v2 Nature is confusing
+
+Version 1.397 - Tuleap 8.18
+    * request #9284: Use eslint in planning-v2 source
+
+Version 1.396 - Tuleap 8.18
+    * request #9010 Export project tool must export all importable services
+
+Version 1.395 - Tuleap 8.18
+    * request #9338: Remove unused angular tuleap-artifact-modal
+
+Version 1.394 - Tuleap 8.17
+    * request #9319: Update artifact-modal version
+
+Version 1.393 - Tuleap 8.17
+    * Duplicate LDAP binding
+
+Version 1.393 - Tuleap 8.17
+    * Duplicate user group binding
+
+Version 1.392 - Tuleap 8.17
+    * story #9224: Create a dedicated object to deal with ugroup duplication
+
+Version 1.391 - Tuleap 8.17
+    * story #9090: have computed fields compatible with artifact links v2 (Update artifact-modal to use new computed fields)
+
 Version 1.390 - Tuleap 8.17
     * request #9202 - Make REST tests compatible PHP5.6
 

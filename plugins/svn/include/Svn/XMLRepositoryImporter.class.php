@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn;
 
+use Backend;
 use Logger;
 use Project;
 use SimpleXMLElement;
@@ -39,6 +40,8 @@ use ForgeConfig;
 
 class XMLRepositoryImporter
 {
+
+
     const SERVICE_NAME = 'svn';
 
     /** @var string */
@@ -56,7 +59,11 @@ class XMLRepositoryImporter
     /** @var SimpleXMLElement */
     private $references;
 
+    /** @var Backend */
+    private $backend;
+
     public function __construct(
+        Backend $backend,
         SimpleXMLElement $xml_repo,
         $extraction_path
     ) {
@@ -78,6 +85,7 @@ class XMLRepositoryImporter
         }
 
         $this->references = $xml_repo->references;
+        $this->backend = $backend;
     }
 
     public function import(
@@ -94,7 +102,7 @@ class XMLRepositoryImporter
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: ".$rule_name->getErrorMessage());
         }
 
-        $repo = new Repository ("", $this->name, $project);
+        $repo = new Repository ("", $this->name, '', '', $project);
         $sysevent = $repository_manager->create($repo, $system_event_manager);
         if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
@@ -126,16 +134,21 @@ class XMLRepositoryImporter
         if (! empty($this->references)) {
             $this->importReferences($configuration, $logger, $repo);
         }
+
+        if (! $this->currentUserIsHTTPUser()) {
+            $this->backend->recurseChownChgrp(
+                $repo->getSystemPath(),
+                ForgeConfig::get('sys_http_user'),
+                $project->getUnixName(),
+                array()
+            );
+        }
     }
 
     private function importCommits(Logger $logger, Repository $repo) {
         $rootpath_arg = escapeshellarg($repo->getSystemPath());
         $dumpfile_arg = escapeshellarg($this->dump_file_path);
-        $sudo         = '';
-        if (! $this->currentUserIsHTTPUser()) {
-            $sudo = "-u ".escapeshellarg(ForgeConfig::get('sys_http_user'));
-        }
-        $commandline = "/usr/share/tuleap/plugins/svn/bin/import_repository.sh $sudo $rootpath_arg $dumpfile_arg";
+        $commandline = "/usr/share/tuleap/plugins/svn/bin/import_repository.sh $rootpath_arg $dumpfile_arg";
 
         $logger->info("[svn {$this->name}] Import revisions: $commandline");
 

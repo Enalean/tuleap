@@ -181,7 +181,7 @@ Version: @@PLUGIN_GIT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} >= %{version}, git > 1.7.4, %{php_base}-Smarty, %{php_base}-markdown, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-9
-Requires: geshi, php-guzzle, sudo
+Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
 %description plugin-git
@@ -196,7 +196,7 @@ Version: @@PLUGIN_GIT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} >= %{version}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap
-Requires: geshi, php-guzzle, sudo
+Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
 %description plugin-git-gitolite3
@@ -282,6 +282,16 @@ Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-tracker >= 0.8.4
 %description plugin-graphontrackers
 Graphs for new tracker generation
+
+%package plugin-tracker-encryption
+Summary: Encryption for tracker
+Group: Development/Tools
+Version: @@PLUGIN_TRACKER_ENCRYPTION_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: php-phpseclib-crypt-rsa
+%description plugin-tracker-encryption
+Adding a new type of tracker fields that are encrypted.
+This plugin is still in beta.
 
 %package plugin-cardwall
 Summary: Graphs for Tracker v5
@@ -572,7 +582,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/logrotate.d
 %{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
-%{__perl} -pi -e "s~%APP_USER%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
 
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
@@ -617,7 +627,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/restore-tar-repository.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
-%{__perl} -pi -e "s~%APP_USER%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
 %{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
@@ -631,9 +641,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 
-# Plugin archivedeleteditems
-%{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
 
@@ -641,7 +648,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 %{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
-%{__perl} -pi -e "s~%APP_USER%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
 
 # Plugin mediawiki
@@ -659,7 +666,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin fulltextsearch
 %{__install} plugins/fulltextsearch/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
-%{__perl} -pi -e "s~%APP_USER%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 
 # Plugin im
 %{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
@@ -951,6 +958,7 @@ fi
 %{APP_DIR}/src/www/api/VERSION
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/reference
+%{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/docman
@@ -1169,6 +1177,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/graphontrackersv5
 
+%files plugin-tracker-encryption
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/tracker_encryption
+
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/cardwall
@@ -1185,7 +1197,6 @@ fi
 %files plugin-archivedeleteditems
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/archivedeleteditems
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/archive-deleted-items.pl
 
 %files plugin-fusionforge_compat
 %defattr(-,%{APP_USER},%{APP_USER},-)

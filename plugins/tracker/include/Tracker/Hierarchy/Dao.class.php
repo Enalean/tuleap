@@ -57,6 +57,7 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
      */
     private function removeExistingIsChildNatures($parent_id, array $child_ids) {
         return $this->removeIsChildNatureForTrackersThatAreNotAnymoreChildren($parent_id, $child_ids)
+            && $this->removeIsChildNatureForArtifactsThatWasManuallySetAsChildren($parent_id, $child_ids)
             && $this->removeIsChildNatureForTrackersThatHaveANewParent($parent_id, $child_ids);
     }
 
@@ -188,6 +189,29 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
                             AND hierarchy.child_id NOT IN ($child_ids)
                             AND hierarchy.parent_id = $parent_id)
                 SET nature = NULL";
+
+        return $this->update($sql);
+    }
+
+    private function removeIsChildNatureForArtifactsThatWasManuallySetAsChildren($parent_id, array $child_ids) {
+        $child_ids = $this->da->escapeIntImplode($child_ids);
+        $parent_id = $this->da->escapeInt($parent_id);
+        $is_child  = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
+        $sql = "UPDATE tracker_changeset_value_artifactlink AS artlink
+                    INNER JOIN tracker_artifact AS child_art
+                        ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker_changeset_value AS cv
+                        ON (cv.id = artlink.changeset_value_id)
+                    INNER JOIN tracker_changeset AS c
+                        ON (cv.changeset_id = c.id)
+                    INNER JOIN tracker_artifact AS parent_art
+                        ON (parent_art.id = c.artifact_id
+                            AND parent_art.tracker_id = $parent_id
+                        )
+                SET nature = NULL
+                WHERE child_art.tracker_id NOT IN ($child_ids)
+                    AND nature = $is_child";
 
         return $this->update($sql);
     }

@@ -132,12 +132,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case self::FUNC_SHOW_BURNDOWN:
-                if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                    $this->displayErrorImage(
-                        $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_use_burndown_user')
-                    );
-                    return;
-                }
                 try  {
                     $artifact_id = $request->getValidated('src_aid', 'uint', 0);
                     $artifact    = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
@@ -619,9 +613,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function fetchErrors() {
         $errors  = '';
-        if ($this->getTracker()->isProjectAllowedToUseNature()) {
-            $errors .= '<li>'. $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_use_burndown') .'</li>';
-        }
 
         if ($errors) {
             return '<ul class="feedback_error">'.$errors.'</ul>';

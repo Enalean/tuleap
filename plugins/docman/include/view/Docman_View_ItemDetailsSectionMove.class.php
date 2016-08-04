@@ -38,7 +38,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
         
-        $parents_tree =& new Docman_View_ParentsTree($this->_controller);
+        $parents_tree = new Docman_View_ParentsTree($this->_controller);
         $content .= $parents_tree->fetch(array(
             'docman_icons' => $this->params['docman_icons'],
             'current'      => $this->item->getParentId(),

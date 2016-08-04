@@ -35,7 +35,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 class GitDataBuilder extends REST_TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
-    const PROJECT_TEST_GIT_ID        = 107;
+    const PROJECT_TEST_GIT_ID        = 109;
     const REPOSITORY_GIT_ID          = 1;
 
     /** @var SystemEventManager */
@@ -61,7 +61,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
      */
     private $database_init;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->system_event_manager = SystemEventManager::instance();
@@ -88,7 +89,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $this->project_manager
         );
 
-        $project = $this->generateProject();
+        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_GIT_SHORTNAME);
         $this->activateGitService($project);
 
         $repository = $this->generateGitRepository();
@@ -101,7 +102,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
         echo "Creating Gerrit servers\n";
 
         $server_01 = new Git_RemoteServer_GerritServer(
-            '1',
+            0,
             'localhost',
             29418,
             8080,
@@ -111,11 +112,12 @@ class GitDataBuilder extends REST_TestDataBuilder {
             true,
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
             '',
+            '',
             'Digest'
         );
 
         $server_02 = new Git_RemoteServer_GerritServer(
-            '2',
+            0,
             'otherhost',
             29418,
             8080,
@@ -124,6 +126,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             '',
             false,
             Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            '',
             '',
             'Digest'
         );

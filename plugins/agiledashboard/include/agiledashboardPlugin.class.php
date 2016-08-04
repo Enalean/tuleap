@@ -22,9 +22,6 @@ require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
 require_once 'constants.php';
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
-
 /**
  * AgileDashboardPlugin
  */
@@ -49,7 +46,6 @@ class AgileDashboardPlugin extends Plugin {
             require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook('javascript_file');
-            $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
@@ -70,7 +66,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY);
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-            $this->_addHook('register_project_creation');
+            $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
@@ -88,7 +84,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
             $this->addHook(ITEM_PRIORITY_CHANGE);
-            $this->addHook(Event::SERVICE_IS_ACTIVABLE);
             $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE);
         }
 
@@ -115,10 +110,12 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function register_project_creation($params) {
-        $this->getConfigurationManager()->duplicate(
-            $params['group_id'],
-            $params['template_id']
-        );
+        if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
+            $this->getConfigurationManager()->duplicate(
+                $params['group_id'],
+                $params['template_id']
+            );
+        }
     }
 
     /**
@@ -359,15 +356,17 @@ class AgileDashboardPlugin extends Plugin {
     public function javascript_file() {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
-                echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>';
+                echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
             } elseif ($this->isKanbanURL()) {
                 echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
+            } else {
+                echo $this->getMinifiedAssetHTML()."\n";
             }
         }
     }
 
     private function isAnAgiledashboardRequest() {
-        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
+        return $this->currentRequestIsForPlugin();
     }
 
     private function isKanbanURL() {
@@ -381,19 +380,6 @@ class AgileDashboardPlugin extends Plugin {
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
-    }
-
-    public function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                $this->getPluginPath().'/js/display-angular-feedback.js',
-                $this->getPluginPath().'/js/MilestoneContent.js',
-                $this->getPluginPath().'/js/planning-view.js',
-                $this->getPluginPath().'/js/ContentFilter.js',
-                $this->getPluginPath().'/js/home.js',
-            )
-        );
     }
 
     public function process(Codendi_Request $request) {
@@ -886,27 +872,6 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanDao()
 
         );
-    }
-
-    private function getAllowedProjectsConfig() {
-        return new AllowedProjectsConfig(
-            ProjectManager::instance(),
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
-        );
-    }
-
-    public function service_is_activable($params) {
-        $service_shortname = $params['service_shortname'];
-        $project           = $params['project'];
-
-        if ($service_shortname === $this->getServiceShortname() &&
-            $this->getAllowedProjectsConfig()->isProjectAllowedToUseNature($project)
-        ) {
-            $params['is_activable'] = false;
-            $params['message']      = $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_not_activable');
-        }
     }
 
     public function tracker_event_artifact_link_natures_blocked_by_service($params) {

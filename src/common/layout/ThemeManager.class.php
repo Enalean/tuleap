@@ -163,4 +163,10 @@ class ThemeManager
             return $name . self::$PSR2_EXTENSION;
         }
     }
+
+    public function isThemeValid($name)
+    {
+        return $this->themeExists(ForgeConfig::get('sys_themeroot'), $name) ||
+               $this->themeExists(ForgeConfig::get('sys_custom_themeroot'), $name);
+    }
 }

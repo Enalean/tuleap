@@ -92,11 +92,12 @@ class Controller {
         }
 
         $provider          = $flow_response->getProvider();
-        $user_informations = $flow_response->getUserInformations();
+        $user_identifier   = $flow_response->getUserIdentifier();
+
         try {
             $user_mapping = $this->user_mapping_manager->getByProviderAndIdentifier(
                 $provider,
-                $user_informations['id']
+                $user_identifier
             );
             $this->openSession($user_mapping, $flow_response->getReturnTo(), $login_time);
         } catch (UserMappingNotFoundException $ex) {
@@ -143,9 +144,9 @@ class Controller {
 
     private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response) {
         $provider          = $flow_response->getProvider();
-        $user_informations = $flow_response->getUserInformations();
+        $user_identifier   = $flow_response->getUserIdentifier();
         try {
-            $unlinked_account  = $this->unlinked_account_manager->create($provider->getId(), $user_informations['id']);
+            $unlinked_account  = $this->unlinked_account_manager->create($provider->getId(), $user_identifier);
         } catch (UnlinkedAccountDataAccessException $ex) {
             $this->redirectToLoginPageAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
@@ -157,6 +158,7 @@ class Controller {
             'link_id'   => $unlinked_account->getId(),
             'return_to' => $flow_response->getReturnTo(),
         );
+        $user_informations = $flow_response->getUserInformations();
         foreach (array('name', 'nickname', 'email', 'zoneinfo') as $query_parameter) {
             if (isset($user_informations[$query_parameter])) {
                 $query_parameters[$query_parameter] = $user_informations[$query_parameter];

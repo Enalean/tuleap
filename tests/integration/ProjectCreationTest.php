@@ -24,6 +24,8 @@ require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
 
+use Tuleap\Project\UgroupDuplicator;
+
 class ProjectCreationTest extends TuleapDbTestCase {
 
     public function __construct() {
@@ -62,7 +64,23 @@ class ProjectCreationTest extends TuleapDbTestCase {
     public function itCreatesAProject()
     {
         $send_notifications = true;
-        $projectCreator     = new ProjectCreator(ProjectManager::instance(), ReferenceManager::instance(), $send_notifications);
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_duplicator  = new UgroupDuplicator(
+            new UGroupDao(),
+            $ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $ugroup_manager),
+            $ugroup_user_dao,
+            EventManager::instance()
+        );
+
+        $projectCreator = new ProjectCreator(
+            ProjectManager::instance(),
+            ReferenceManager::instance(),
+            $ugroup_duplicator,
+            $send_notifications
+        );
+
         $projectCreator->create('short-name', 'Long name', array(
             'project' => array(
                 'form_short_description' => '',
@@ -78,4 +96,3 @@ class ProjectCreationTest extends TuleapDbTestCase {
         $this->assertEqual($project->getPublicName(), 'Long name');
     }
 }
-?>

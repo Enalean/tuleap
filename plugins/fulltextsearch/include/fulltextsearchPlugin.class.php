@@ -108,7 +108,6 @@ class fulltextsearchPlugin extends Plugin {
 
         // assets
         $this->_addHook('cssfile', 'cssfile', false);
-        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
         $this->_addHook('javascript_file');
 
         // system events
@@ -590,18 +589,12 @@ class fulltextsearchPlugin extends Plugin {
         }
     }
 
-    function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                $this->getPluginPath().'/scripts/full-text-search.js',
-            )
-        );
-    }
-
     public function javascript_file() {
         if ($this->isAdminPage()) {
-            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '//scripts/admin-load-project-autocompleter.js"></script>';
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/scripts/admin-load-project-autocompleter.js"></script>'."\n";
+        }
+        if ($this->canIncludeAssets()) {
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/scripts/full-text-search.js"></script>'."\n";
         }
     }
 

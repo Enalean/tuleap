@@ -49,3 +49,5 @@ npm-debug.log
 .sass-cache/
 *.css.map
 node_modules/
+src/www/assets/*
+plugins/*/www/assets/*

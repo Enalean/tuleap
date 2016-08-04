@@ -44,32 +44,32 @@ Mock::generate('HTTPRequest');
 class TokenTest extends UnitTestCase {
 
     function testGenerateRandomToken() {
-        $dao =& new MockDocman_TokenDao();
-        $http =& new MockHTTPRequest();
+        $dao  = new MockDocman_TokenDao();
+        $http = new MockHTTPRequest();
         $http->setReturnValue('get', false, array('bc'));
 
-        $t1 =& new Docman_TokenTestVersion();
+        $t1 = new Docman_TokenTestVersion();
         $t1->setReturnReference('_getDao', $dao);
         $t1->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t1->setReturnValue('_getCurrentUserId', '123');
         $t1->setReturnValue('_getHTTPRequest', $http);
         $t1->Docman_Token();
 
-        $t2 =& new Docman_TokenTestVersion();
+        $t2 = new Docman_TokenTestVersion();
         $t2->setReturnReference('_getDao', $dao);
         $t2->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t2->setReturnValue('_getCurrentUserId', '123');
         $t2->setReturnValue('_getHTTPRequest', $http);
         $t2->Docman_Token();
 
-        $t3 =& new Docman_TokenTestVersion();
+        $t3 = new Docman_TokenTestVersion();
         $t3->setReturnReference('_getDao', $dao);
         $t3->setReturnValue('_getReferer', 'http://codendi.com/?id=2&action=show');
         $t3->setReturnValue('_getCurrentUserId', '123');
         $t3->setReturnValue('_getHTTPRequest', $http);
         $t3->Docman_Token();
 
-        $t4 =& new Docman_TokenTestVersion();
+        $t4 = new Docman_TokenTestVersion();
         $t4->setReturnReference('_getDao', $dao);
         $t4->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t4->setReturnValue('_getCurrentUserId', '987');
@@ -81,11 +81,11 @@ class TokenTest extends UnitTestCase {
         $this->assertNotEqual($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
     }
     function testNullToken() {
-        $dao =& new MockDocman_TokenDao();
-        $http =& new MockHTTPRequest();
+        $dao  = new MockDocman_TokenDao();
+        $http = new MockHTTPRequest();
         $http->setReturnValue('get', false, array('bc'));
 
-        $t1 =& new Docman_TokenTestVersion();
+        $t1 = new Docman_TokenTestVersion();
         $t1->setReturnReference('_getDao', $dao);
         $t1->setReturnValue('_getReferer', 'http://codendi.com/?');
         $t1->setReturnValue('_getCurrentUserId', '123');
@@ -95,7 +95,7 @@ class TokenTest extends UnitTestCase {
         $this->assertNull($t1->getToken(), 'Without referer, we should have a null token');
 
 
-        $t2 =& new Docman_TokenTestVersion();
+        $t2 = new Docman_TokenTestVersion();
         $t2->setReturnReference('_getDao', $dao);
         $t2->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t2->setReturnValue('_getCurrentUserId', '123');
@@ -105,7 +105,7 @@ class TokenTest extends UnitTestCase {
         $this->assertNotNull($t2->getToken());
 
 
-        $t3 =& new Docman_TokenTestVersion();
+        $t3 = new Docman_TokenTestVersion();
         $t3->setReturnReference('_getDao', $dao);
         $t3->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t3->setReturnValue('_getCurrentUserId', null);
@@ -119,12 +119,12 @@ class TokenTest extends UnitTestCase {
         $user_id = 123;
         $referer = 'http://codendi.com/?id=1&action=show';
 
-        $dao =& new MockDocman_TokenDao();
+        $dao = new MockDocman_TokenDao();
         $dao->expectOnce('create', array($user_id, '*', $referer));
-        $http =& new MockHTTPRequest();
+        $http = new MockHTTPRequest();
         $http->setReturnValue('get', false, array('bc'));
 
-        $t1 =& new Docman_TokenTestVersion();
+        $t1 = new Docman_TokenTestVersion();
         $t1->setReturnReference('_getDao', $dao);
         $t1->setReturnValue('_getReferer', $referer);
         $t1->setReturnValue('_getCurrentUserId', $user_id);
@@ -133,11 +133,11 @@ class TokenTest extends UnitTestCase {
     }
 
     function testInvalidReferer() {
-        $dao =& new MockDocman_TokenDao();
-        $http =& new MockHTTPRequest();
+        $dao  = new MockDocman_TokenDao();
+        $http = new MockHTTPRequest();
         $http->setReturnValue('get', false, array('bc'));
         foreach(array('aaaa', '?action=foo', '?action=details&section=notification') as $referer) {
-            $t =& new Docman_TokenTestVersion();
+            $t = new Docman_TokenTestVersion();
             $t->setReturnReference('_getDao', $dao);
             $t->setReturnValue('_getReferer', 'http://codendi.com/'. $referer);
             $t->setReturnValue('_getCurrentUserId', '123');
@@ -147,7 +147,7 @@ class TokenTest extends UnitTestCase {
             $this->assertNull($t->getToken(), 'Without valid referer, we should have a null token');
         }
         foreach(array('?action=show', '?id=1&action=show', '?action=details', '?action=details&section=history') as $referer) {
-            $t =& new Docman_TokenTestVersion();
+            $t = new Docman_TokenTestVersion();
             $t->setReturnReference('_getDao', $dao);
             $t->setReturnValue('_getReferer', 'http://codendi.com/'. $referer);
             $t->setReturnValue('_getCurrentUserId', '123');
@@ -157,47 +157,4 @@ class TokenTest extends UnitTestCase {
             $this->assertNotNull($t->getToken(), "With valid referer, we should'nt have a null token");
         }
     }
-
-    /* Cannot be tested due to PHP4 references
-    function testGoodRetrieval() {
-        $url     = 'http://codendi.com/?id=1&action=show';
-        $user_id = 123;
-        $token   = '5db412fe1829e6dea7fc20fc17df5e16';
-
-        $dar =& new MockDataAccessResult();
-        $dar->setReturnValue('valid', true);
-        $dar->setReturnValue('current', array('url' => $url));
-
-        $dao =& new MockDocman_TokenDao();
-        $dao->setReturnReference('searchUrl', $dar);
-        //$dao->expectOnce('delete'); //Doesn't work with PHP4 because we have to use references in retrieveUrl
-
-        $u = mock('PFUser');
-        $u->setReturnValue('getId', $user_id);
-        $um =& new MockUserManager();
-        $um->setReturnReference('getCurrentUser', $u);
-
-        $this->assertEqual(Docman_Token::retrieveUrl($token, $dao, $um), $url);
-
-    }
-    function testBadRetrieval() {
-        $url     = 'http://codendi.com/?id=1&action=show';
-        $user_id = 123;
-        $token   = '5db412fe1829e6dea7fc20fc17df5e16';
-
-        $dar =& new MockDataAccessResult();
-        $dar->setReturnValue('valid', false);
-
-        $dao =& new MockDocman_TokenDao();
-        $dao->setReturnReference('searchUrl', $dar);
-
-        $u = mock('PFUser');
-        $u->setReturnValue('getId', $user_id);
-        $um =& new MockUserManager();
-        $um->setReturnReference('getCurrentUser', $u);
-
-        $this->assertNull(Docman_Token::retrieveUrl($token, $dao, $um));
-
-    }
-    /**/
 }

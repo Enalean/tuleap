@@ -1,40 +1,43 @@
 <?php
 /**
-    * Copyright (c) Enalean, 2016. All rights reserved
-    *
-    * This file is a part of Tuleap.
-    *
-    * Tuleap is free software; you can redistribute it and/or modify
-    * it under the terms of the GNU General Public License as published by
-    * the Free Software Foundation; either version 2 of the License, or
-    * (at your option) any later version.
-    *
-    * Tuleap is distributed in the hope that it will be useful,
-    * but WITHOUT ANY WARRANTY; without even the implied warranty of
-    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    * GNU General Public License for more details.
-    *
-    * You should have received a copy of the GNU General Public License
-    * along with Tuleap. If not, see <http://www.gnu.org/licenses/
-    */
+* Copyright (c) Enalean, 2016. All rights reserved
+*
+* This file is a part of Tuleap.
+*
+* Tuleap is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Tuleap is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/
+*/
 
-class SVN_DAO extends DataAccessObject {
+class SVN_DAO extends DataAccessObject
+{
 
     private $event_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->event_manager = EventManager::instance();
     }
 
-    public function searchSvnRepositories() {
+    public function searchSvnRepositories()
+    {
         $auth_mod = $this->da->quoteSmart(ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY));
         $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('svn_prefix'));
 
         $sql = "SELECT groups.*, service.*,
                 CONCAT('/svnroot/', unix_group_name) AS public_path,
                 CONCAT($sys_dir,'/', unix_group_name) AS system_path,
-                $auth_mod AS auth_mod
+                $auth_mod AS auth_mod, '' AS backup_path, '' AS repository_deletion_date
                 FROM groups, service
                 WHERE groups.group_id = service.group_id
                   AND service.short_name = 'svn'

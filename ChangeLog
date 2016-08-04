@@ -1,4 +1,52 @@
-Version 8.17 (not released yet)
+Version 8.18 (Not yet released)
+	== Bug fix ==
+	* request #9344 Persistent XSS through code snippet download
+	* request #9329: New install doesn't prompt for domain name
+	* request #9355: 'Import List Of Users' does not work with emails
+	* request #9335: Do not inherit default trackers when importing from XML
+	* request #9361: CVS search by commiter does not work
+	* request #8839: Call to sparklines.php should be made in POST to avoid errors
+	* request #9371 Wrong artifact warning message when a user supposed to be notified is suspended
+
+	== Development ==
+	* request #9339: Remove unused code in the utilities
+	* request #9202: Refactoring for PHP5.6 - Snippets
+	* story #9090: Improve REST tests of the computed fields
+	* request #9299:
+		- Get rid of combined
+		- Plugins no longer append javascript to core Combined
+		- combine JavaScript with hash
+	* story #9281 define FRS global permissions
+
+	== Enhancement ==
+	* External lib no longer referenced in sources
+
+	== Plugins ==
+	* agiledashboard: 1.402
+	* docman: 2.26.117
+	* cardwall: 1.64
+	* tracker: 5.980
+	* forumml: 2.6.26
+	* ldap: 3.106
+	* mediawiki: 0.121
+	* webdav: 1.9.17
+	* git: 4.248
+	* boomerang: 0.5
+	* statistics: 0.62
+	* svn: 0.76
+	* hudson_svn: 0.14
+	* referencealias_svn: 0.11
+	* fulltextsearch: 0.134
+	* graphontrackersv5: 5.25
+	* proftpd: 0.27
+	* projectlinks: 2.10
+	* openidconnectclient: 0.22
+	* archivedeleteditems: 0.9
+
+    == Themes ==
+	* FlamingParrot: 1.145
+
+Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==
 	* request #9113: Be able to filter system events by status
 	* story #8425: Comprehensive git permissions changes log
@@ -7,24 +55,40 @@ Version 8.17 (not released yet)
 
 	== Bug fix ==
 	* request #9289: Root daily is not able to suspend multiple users
+	* request #9326: Footer links to the REST API documentation are broken
+	* request #9169: Not all CSS loaded when access mediawiki
+	* request #9337: Logrotate config files are malformed when deployed by the packaging
 
 	== Development ==
 	* request #9278: Remove CentOS 5 packages
+	* request #9321: Refactor REST test suite to leverage XML import
+	* story #9224: Remove unused parts of Tuleap
+	* story #9224: Create a dedicated object to deal with ugroup duplication
+	* request #9279: Pre commit hooks are compatible with OS X
+	* request #9025: Introduce plugin tracker encryption in a early development stage
+
+	== Security ==
+	* request #9314: Non aligned behavior between UI and ssh in Git
 
 	== Plugins ==
-	* git: 4.233
-	* tracker: 5.955
+	* git: 4.240
+	* tracker: 5.968
 	* referencealias_core: 0.11
-	* agiledashboard: 1.390
+	* agiledashboard: 1.394
 	* hudson: 1.30
 	* graphontrackersv5: 5.23
-	* mediawiki: 0.118
+	* mediawiki: 0.119
 	* referencealias_git: 0.6
 	* referencealias_mediawiki: 0.8
 	* referencealias_svn: 0.6
 	* referencealias_tracker: 0.9
-	* svn: 0.62
+	* svn: 0.64
 	* fulltextsearch: 0.133
+	* frs: 0.17
+	* ldap: 3.103
+	* docman: 2.26.112
+	* archivedeleteditems: 0.8
+	* tracker_encryption: 1.1
 
 Version 8.16 (Thursday, June 23rd 2016)
 	== Bug fix ==

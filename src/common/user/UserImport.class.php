@@ -45,11 +45,10 @@ class UserImport {
      * @param string $user_filename (IN):  the complete file name of the file to be parsed
      * @param array  $parsed_users  (OUT): the users parsed in the import file
      *                                     array of the form (column_number => User object)
-     * @param array  $errors        (OUT): string containing explanation what error occurred
      * 
      * @return boolean true if at least one entry was successfully parsed
      */
-    function parse($user_filename, &$errors, &$parsed_users) {
+    function parse($user_filename, &$parsed_users) {
         $um = UserManager::instance();
 
         $fileContent = file($user_filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -58,13 +57,23 @@ class UserImport {
                 $line = trim($line);
                 if ($line != "") {
                     $user = $um->findUser($line);
+                    if (! $user) {
+                        $users = $um->getAllUsersByEmail($line);
+                        $users_number = count($users);
+                        if ($users_number === 1) {
+                            $user = $users[0];
+                        } else if ($users_number > 1) {
+                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_userimport','multiple_users', $line));
+                            continue;
+                        }
+                    }
                     if ($user && ($user->isActive() || $user->isRestricted())) {
                         if (!$user->isMember($this->group_id)
                             && !isset($parsed_users[$user->getId()])) {
                             $parsed_users[$user->getId()] = $user;
                         }
                     } else {
-                        $errors[] = $line;
+                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_userimport','invalid_mail_or_username', $line));
                     }
                 }
             }

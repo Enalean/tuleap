@@ -1,3 +1,12 @@
+Version 0.62 - Tuleap 8.18
+    * request #9299: Get rid of combined
+
+Version 0.61 - Tuleap 8.18
+    * request #9299: Plugins no longer append javascript to core Combined
+
+Version 0.60 - Tuleap 8.18
+    * request #9342: CSRF token synchronizer implementation uses token with weak entropy
+
 Version 0.59 - Tuleap 8.15
     * story #9132: Migrate from Less to Sass
 

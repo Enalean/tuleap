@@ -47,7 +47,7 @@ function BacklogItemCollectionService(
 
         if (compared_to) {
             index = backlog_items_collection.indexOf(
-                _.find(backlog_items_collection, {id: compared_to.item_id})
+                _.find(backlog_items_collection, { id: compared_to.item_id })
             );
 
             if (compared_to.direction === 'after') {

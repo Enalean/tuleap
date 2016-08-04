@@ -22,20 +22,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
-use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Admin\MailHeaderDao;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Hooks\PreCommit;
-use Tuleap\Svn\Commit\SVNLook;
+use Tuleap\Svn\SvnAdmin;
 
 try {
     require_once 'pre.php';
@@ -46,7 +46,22 @@ try {
     $hook = new PreCommit(
         $repository_path,
         $transaction,
-        new RepositoryManager(new Dao(), ProjectManager::instance()),
+        new RepositoryManager(
+            new Dao(),
+            ProjectManager::instance(),
+            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new SvnLogger(),
+            new System_Command(),
+            new Destructor(
+                new Dao(),
+                new SvnLogger()
+            ),
+            new HookDao(),
+            EventManager::instance(),
+            Backend::instance(Backend::SVN),
+            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
+            SystemEventManager::instance()
+        ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),
         new SvnLogger()
@@ -57,6 +72,6 @@ try {
 
     exit(0);
 } catch (Exception $exception) {
-    fwrite (STDERR, $exception->getMessage());
+    fwrite(STDERR, $exception->getMessage());
     exit(1);
 }

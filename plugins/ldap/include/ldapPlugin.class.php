@@ -108,7 +108,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook('ajax_search_user', 'ajax_search_user', false);
         
         // Project creation
-        $this->_addHook('register_project_creation', 'register_project_creation', false);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
         
         // Backend SVN
         $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
@@ -133,6 +133,7 @@ class LdapPlugin extends Plugin {
         }
 
         $this->addHook('root_daily_start');
+        $this->addHook('ugroup_duplication');
 
         return parent::getHooksAndCallbacks();
     }
@@ -1057,5 +1058,14 @@ class LdapPlugin extends Plugin {
 
     private function getConfigFilePath() {
         return $this->getEtcDir().'ldap.inc';
+    }
+
+    public function ugroup_duplication($params)
+    {
+        $dao              = new LDAP_UserGroupDao(CodendiDataAccess::instance());
+        $source_ugroup_id = $params['source_ugroup']->getId();
+        $new_ugroup_id    = $params['new_ugroup_id'];
+
+        $dao->duplicateLdapBinding($source_ugroup_id, $new_ugroup_id);
     }
 }

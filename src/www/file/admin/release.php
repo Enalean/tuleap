@@ -41,7 +41,6 @@ $user = UserManager::instance()->getCurrentUser();
 if (!$frspf->userCanAdmin($user, $group_id)) {
     exit_permission_denied();
 }
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
 

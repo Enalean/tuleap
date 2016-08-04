@@ -23,11 +23,18 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasSVN\Dao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\Dao as SVNDao;
 use Tuleap\ReferenceAliasSVN\ReferencesImporter;
 use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Dao as SVNPluginDao;
 use Tuleap\Svn\XMLRepositoryImporter;
+use Tuleap\Svn\SvnAdmin;
+use Tuleap\Svn\SvnLogger;
 
 class referencealias_svnPlugin extends Plugin
 {
@@ -96,8 +103,53 @@ class referencealias_svnPlugin extends Plugin
         return new ReferencesBuilder(
             $this->getCompatDao(),
             $project_manager,
-            new RepositoryManager($this->getSVNDao(), $project_manager)
+            new RepositoryManager(
+                $this->getSVNDao(),
+                $project_manager,
+                $this->getSvnAdmin(),
+                $this->getLogger(),
+                $this->getSystemCommand(),
+                $this->getDestructor(),
+                $this->getHookDao(),
+                EventManager::instance(),
+                Backend::instance(Backend::SVN),
+                $this->getAccessFileHistoryFactory(),
+                SystemEventManager::instance()
+            )
         );
+    }
+
+    private function getAccessFileHistoryFactory()
+    {
+        return new AccessFileHistoryFactory(new AccessFileHistoryDao());
+    }
+
+    private function getHookDao()
+    {
+        return new HookDao();
+    }
+
+    private function getSystemCommand()
+    {
+        return new System_Command();
+    }
+
+    private function getDestructor()
+    {
+        return new Destructor(
+            new SvnDao(),
+            $this->getLogger()
+        );
+    }
+
+    private function getLogger()
+    {
+        return new SvnLogger();
+    }
+
+    private function getSvnAdmin()
+    {
+        return new SvnAdmin($this->getSystemCommand(), $this->getLogger());
     }
 
     private function getSVNDao()

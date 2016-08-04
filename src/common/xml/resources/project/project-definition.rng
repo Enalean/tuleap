@@ -14,7 +14,7 @@
     </attribute>
     <attribute name="access">
       <data type="string">
-        <param name="pattern">(public|private)</param>
+        <param name="pattern">(public|private|unrestricted)</param>
       </data>
     </attribute>
   </define>

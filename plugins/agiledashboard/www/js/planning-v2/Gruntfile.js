@@ -35,13 +35,13 @@ module.exports = function(grunt) {
          */
         meta: {
             banner:
-                '/**\n' +
-                ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-                ' * <%= pkg.homepage %>\n' +
-                ' *\n' +
-                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-                ' * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n' +
-                ' */\n'
+                '/**\n'
+                + ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n'
+                + ' * <%= pkg.homepage %>\n'
+                + ' *\n'
+                + ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n'
+                + ' * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n'
+                + ' */\n'
         },
 
         /**
@@ -66,15 +66,15 @@ module.exports = function(grunt) {
 
         connect: {
             options: {
-                port: 9000,
-                hostname: 'localhost',
+                port      : 9000,
+                hostname  : 'localhost',
                 livereload: 35729
             },
             coverage: {
                 options: {
-                    open: true,
+                    open     : true,
                     keepalive: true,
-                    base: './coverage/'
+                    base     : './coverage/'
                 }
             }
         },
@@ -87,64 +87,63 @@ module.exports = function(grunt) {
         copy: {
             build_assets: {
                 files: [{
-                    src: ['**'],
-                    dest: '<%= build_dir %>/assets/',
-                    cwd: 'src/assets',
+                    src   : ['**'],
+                    dest  : '<%= build_dir %>/assets/',
+                    cwd   : 'src/assets',
                     expand: true
                 }]
             },
             build_appjs: {
                 files: [{
-                    src: ['<%= app_files.js %>'],
-                    dest: '<%= build_dir %>/',
-                    cwd: '.',
+                    src   : ['<%= app_files.js %>'],
+                    dest  : '<%= build_dir %>/',
+                    cwd   : '.',
                     expand: true
                 }]
             },
             build_appmodules: {
                 files: [{
-                    src: ['<%= app_files.modules %>'],
-                    dest: '<%= build_dir %>/modules',
-                    cwd: '.',
+                    src   : ['<%= app_files.modules %>'],
+                    dest  : '<%= build_dir %>/modules',
+                    cwd   : '.',
                     expand: true
                 }]
             },
             build_vendorjs: {
                 files: [{
-                    src: ['<%= vendor_files.js %>'],
-                    dest: '<%= build_dir %>/',
-                    cwd: '.',
+                    src   : ['<%= vendor_files.js %>'],
+                    dest  : '<%= build_dir %>/',
+                    cwd   : '.',
                     expand: true
                 }]
             },
             build_vendorcss: {
                 files: [{
-                    src: ['<%= vendor_files.css %>'],
-                    dest: '<%= build_dir %>/',
-                    cwd: '.',
+                    src   : ['<%= vendor_files.css %>'],
+                    dest  : '<%= build_dir %>/',
+                    cwd   : '.',
                     expand: true
                 }]
             },
             build_vendorassets: {
                 files: [{
-                    src: ['<%= vendor_files.assets %>'],
-                    dest: '<%= build_dir %>/assets',
+                    src    : ['<%= vendor_files.assets %>'],
+                    dest   : '<%= build_dir %>/assets',
                     flatten: true,
-                    cwd: '.',
-                    expand: true
+                    cwd    : '.',
+                    expand : true
                 }]
             },
             compile_assets: {
                 files: [{
-                    src: ['**'],
-                    dest: '<%= compile_dir %>/assets',
-                    cwd: '<%= build_dir %>/assets',
+                    src   : ['**'],
+                    dest  : '<%= compile_dir %>/assets',
+                    cwd   : '<%= build_dir %>/assets',
                     expand: true
-                },
-                {
-                    src: ['<%= vendor_files.css %>'],
-                    dest: '<%= compile_dir %>/',
-                    cwd: '.',
+                }, {
+                    src   : ['<%= vendor_files.css %>'],
+                    dest  : '<%= compile_dir %>/',
+                    cwd   : '.',
                     expand: true
                 }]
             },
@@ -196,9 +195,9 @@ module.exports = function(grunt) {
         ngAnnotate: {
             compile: {
                 files: [{
-                    src: ['<%= app_files.js %>'],
-                    cwd: '<%= build_dir %>',
-                    dest: '<%= build_dir %>',
+                    src   : ['<%= app_files.js %>'],
+                    cwd   : '<%= build_dir %>',
+                    dest  : '<%= build_dir %>',
                     expand: true
                 }]
             }
@@ -225,7 +224,7 @@ module.exports = function(grunt) {
                 },
                 options: {
                     sourcemap: 'file',
-                    style: 'expanded'
+                    style    : 'expanded'
                 }
             },
             prod: {
@@ -234,20 +233,12 @@ module.exports = function(grunt) {
                 },
                 options: {
                     sourcemap: 'none',
-                    style: 'compressed'
+                    style    : 'compressed'
                 }
             }
         },
 
-        /**
-         * `jshint` defines the rules of our linter as well as which files we
-         * should check. This file, all javascript sources, and all our unit tests
-         * are linted based on the policies listed in `options`. But we can also
-         * specify exclusionary patterns by prefixing them with an exclamation
-         * point (!); this is useful when code comes from a third party but is
-         * nonetheless inside `src/`.
-         */
-        jshint: {
+        eslint: {
             src: [
                 '<%= app_files.js %>'
             ],
@@ -258,13 +249,7 @@ module.exports = function(grunt) {
                 'Gruntfile.js'
             ],
             options: {
-                curly: true,
-                immed: true,
-                newcap: true,
-                noarg: true,
-                sub: true,
-                boss: true,
-                eqnull: true
+                configFile: './.eslintrc.json'
             }
         },
 
@@ -282,7 +267,7 @@ module.exports = function(grunt) {
                 options: {
                     base: 'src/app'
                 },
-                src: ['<%= app_files.atpl %>'],
+                src : ['<%= app_files.atpl %>'],
                 dest: '<%= build_dir %>/templates-app.js'
             }
         },
@@ -303,10 +288,10 @@ module.exports = function(grunt) {
                 reporters: ['dots', 'notify', 'coverage']
             },
             continuous: {
-                singleRun: true,
-                reporters: ['dots', 'junit'],
+                singleRun    : true,
+                reporters    : ['dots', 'junit'],
                 junitReporter: {
-                    outputFile: 'test-results.xml',
+                    outputFile    : 'test-results.xml',
                     useBrowserName: false
                 }
             }
@@ -359,8 +344,8 @@ module.exports = function(grunt) {
              * your Gruntfile changes, it will automatically be reloaded!
              */
             gruntfile: {
-                files: 'Gruntfile.js',
-                tasks: ['jshint:gruntfile'],
+                files  : 'Gruntfile.js',
+                tasks  : ['eslint:gruntfile'],
                 options: {
                     livereload: false
                 }
@@ -374,7 +359,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.js %>'
                 ],
-                tasks: ['jshint:src', 'nggettext_extract', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
+                tasks: ['eslint:src', 'nggettext_extract', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
             },
 
             /**
@@ -414,7 +399,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.jsunit %>'
                 ],
-                tasks: ['jshint:test', 'karma:continuous'],
+                tasks  : ['karma:continuous'], // TODO: 'eslint:test' when tests are fixed
                 options: {
                     livereload: false
                 }
@@ -513,7 +498,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', 'Run unit tests and generate a junit report for the Continuous Integration', function() {
         return grunt.task.run([
-            'jshint',
+            'eslint:src', // TODO: 'eslint' when tests are fixed
             'html2js',
             'karmaconfig',
             'karma:continuous'
@@ -548,7 +533,7 @@ module.exports = function(grunt) {
         var jsFiles = filterForJS(this.filesSrc);
 
         grunt.file.copy('karma/karma-unit.tpl.js', grunt.config('build_dir') + '/karma-unit.js', {
-            process: function(contents, path) {
+            process: function(contents) {
                 return grunt.template.process(contents, {
                     data: {
                         scripts: jsFiles

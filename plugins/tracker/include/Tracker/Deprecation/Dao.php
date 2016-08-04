@@ -92,7 +92,7 @@ class Dao extends DataAccessObject
               AND tracker_field.id = tracker_field_computed.field_id
               AND tracker_field.id  = $field_id
               AND formElement_type = 'computed'
-              AND fast_compute = 0
+              AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
             ORDER BY group_name";
 

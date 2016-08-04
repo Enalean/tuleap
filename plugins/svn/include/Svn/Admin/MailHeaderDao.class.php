@@ -45,5 +45,4 @@ class MailHeaderDao extends DataAccessObject {
 
         return $this->update($query);
     }
-
 }

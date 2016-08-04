@@ -132,23 +132,20 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
             $manual_selection = "manual.value";
 
             $manual_condition = "
-                LEFT JOIN tracker_field  manual_field
+                LEFT JOIN tracker_field manual_field
                 ON (
-                    manual_field.tracker_id = parent_art.tracker_id
+                  manual_field.tracker_id = parent_art.tracker_id
                     AND manual_field.name   = $target_name
                     AND manual_field.use_it = 1
-                    AND manual_field.id     = $field_id
                 )
                 LEFT JOIN (
                     tracker_changeset_value value
                     INNER JOIN tracker_changeset_value_computedfield_manual_value manual
-                        ON (manual.changeset_value_id = value.id)
+                        ON (manual.changeset_value_id = value.id )
                 ) ON (
                     value.changeset_id  = parent_art.last_changeset_id
-                    AND value.field_id  = manual_field.id
-                    AND parent_field.id = $field_id
-                )
-                ";
+                 AND value.field_id  = manual_field.id
+                )";
         }
 
         $sql = "SELECT linked_art.id                           AS id,

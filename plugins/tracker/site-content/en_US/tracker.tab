@@ -716,8 +716,8 @@ plugin_tracker_common_artifact	error_float_value	is not a float.
 plugin_tracker_common_artifact	error_string_value	$1 is not a string.
 plugin_tracker_common_artifact	error_string_value_characters	$1 can contain neiher carriage return nor null char.
 plugin_tracker_common_artifact	error_artifactlink_value	$1: $2 is not an artifact id.
-plugin_tracker_common_artifact	error_artifactlink_nature_value	$1: $2 is not a valid nature.
-plugin_tracker_common_artifact	error_artifactlink_nature_missing	Nature is missing for artifact #$1.
+plugin_tracker_common_artifact	error_artifactlink_nature_value	$1: $2 is not a valid type.
+plugin_tracker_common_artifact	error_artifactlink_nature_missing	Type is missing for artifact #$1.
 plugin_tracker_common_artifact	error_artifactlink_value_not_exist	$1 : artifact #$2 does not exist.
 plugin_tracker_common_artifact	error_artifactlink_choose_parent	You must choose to link to an existing parent artifact or to create a new one.
 plugin_tracker_common_artifact	error_date_value	$1 is not a date.
@@ -1012,8 +1012,8 @@ plugin_tracker	tracker_switcher	Please select a tracker
 plugin_tracker	artlink_added_with_nature	Added $1: $2
 plugin_tracker	artlink_added	Added: $1
 plugin_tracker	artlink_removed	Removed: $1
-plugin_tracker	artlink_updated	Changed nature from $1 to $2: $3
-plugin_tracker	artlink_no_nature	no nature
+plugin_tracker	artlink_updated	Changed type from $1 to $2: $3
+plugin_tracker	artlink_no_nature	no type
 
 plugin_tracker_artifact	set_to	set to
 plugin_tracker_artifact	cleared	cleared
@@ -1083,7 +1083,7 @@ plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	aggregate_label	Computed value
-plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: "Fast computation" will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same "Target field" name.</p>
+plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: <ul><li>If you still use deprecated field, "Fast computation" will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same "Target field" name.</li><li>else the calcul will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same field name.</li></ul>
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
 plugin_tracker_formelement_admin	burndown_label	Burndown Chart
@@ -1183,7 +1183,7 @@ plugin_tracker_formelement_admin	lastmodifiedby_label	Last Updated By
 plugin_tracker_formelement_admin	lastmodifiedby_description	The last person to update the artifact
 plugin_tracker_formelement_admin	lastmodifiedby_help	The field is automatically set to the last person who modified the artifact
 plugin_tracker_formelement_admin	assignedto_label	Assigned to
-plugin_tracker_formelement_admin	upgrade_computed_field_description	<h5>Please update this computed field</h5><p>The legacy Computed fields will be gone by December 31st 2016.<br/>Upon update, the following changes will take effect:</p><ul><li>The computation will take into account all linked artifacts recursively, regardless of link nature.</li><li>The target field will no longer be configurable, the field's name will now be used instead.</li><li>Permissions will not be taken into account.</li></ul><p>For example, a user can see artifact A linked to B and C. Artifact A has a computed field called "Remaining effort".<br/>Even if user cannot access artifacts B or C, the "Remaining effort" field in A will sum the values from the "Remaining Effort" fields in B and C.</p>
+plugin_tracker_formelement_admin	upgrade_computed_field_description	<h5>Please update this computed field</h5><p>The legacy Computed fields will be gone by December 31st 2016.<br/>Upon update, the following changes will take effect:</p><ul><li>The computation will take into account all linked artifacts recursively, regardless of link type.</li><li>The target field will no longer be configurable, the field's name will now be used instead.</li><li>Permissions will not be taken into account.</li></ul><p>For example, a user can see artifact A linked to B and C. Artifact A has a computed field called "Remaining effort".<br/>Even if user cannot access artifacts B or C, the "Remaining effort" field in A will sum the values from the "Remaining Effort" fields in B and C.</p>
 plugin_tracker_formelement_admin	upgrade_computed_field_button	Update to overridable computed field
 plugin_tracker_formelement_admin	upgrade_computed_field_set_target_field	We are unable to update the computed field. The target field should be equal to the computed field's name.
 
@@ -1334,7 +1334,7 @@ plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
 plugin_tracker_admin_import	nb_updated_import	$1 Artifact(s) updated
 plugin_tracker_admin_import	date_format_help	Expected date format is <strong>$1</strong>. <a href="/account/">Change import/export date format</a>
 plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Either you want to import only one field, or you're using the wrong separator.<br />If so, you can <a href="/account/">change the CSV import/export separator</a>
-plugin_tracker_admin_import	importing_nature	Columns using nature will not be taken into account during import : $1.
+plugin_tracker_admin_import	importing_nature	Columns using type will not be taken into account during import : $1.
 plugin_tracker_admin_hierarchy	edit_children_title	Edit children of $1
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy
 plugin_tracker_admin_hierarchy	cannot_be_used	<strong>Note:</strong> The following trackers cannot be used in the hierarchy because they are used elsewhere (kanban, …):
@@ -1505,7 +1505,6 @@ workflow_admin	post_action_not_defined	This action will be inactive until it is 
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
 workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
-workflow_admin	cannot_use_triggers	Triggers can't be configured because artifact links natures are used in this project instead of tracker hierarchy.
 
 workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
 workflow_postaction	field_clear	The field '$1' will be automatically cleared
@@ -1688,59 +1687,58 @@ plugin_tracker_emailgateway	required_ok	Required fields are properly configured
 plugin_tracker_emailgateway	semantic_ko	Semantic title and/or description are not configured
 plugin_tracker_emailgateway	required_ko	Other fields than title or description cannot be required
 
-plugin_tracker_artifact_links_natures	column_label	Nature
-plugin_tracker_artifact_links_natures	title	Artifact Links Nature
-plugin_tracker_artifact_links_natures	available_natures	Available natures
-plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a nature for a better semantics between artifacts. Here is the list of allowed natures for this platform:
+plugin_tracker_artifact_links_natures	column_label	Type
+plugin_tracker_artifact_links_natures	title	Artifact Links Type
+plugin_tracker_artifact_links_natures	available_natures	Available types
+plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform:
 plugin_tracker_artifact_links_natures	shortname	Shortname
 plugin_tracker_artifact_links_natures	forward_label	Forward label
 plugin_tracker_artifact_links_natures	reverse_label	Reverse label
 plugin_tracker_artifact_links_natures	_is_child_forward	Child
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
-plugin_tracker_artifact_links_natures	no_nature	No nature
-plugin_tracker_artifact_links_natures	create_new_nature	Create new nature
-plugin_tracker_artifact_links_natures	edit_nature	Edit nature
+plugin_tracker_artifact_links_natures	no_nature	No type
+plugin_tracker_artifact_links_natures	create_new_nature	Create new type
+plugin_tracker_artifact_links_natures	edit_nature	Edit type
 plugin_tracker_artifact_links_natures	edit_icon_label	Edit
-plugin_tracker_artifact_links_natures	edit_system_nature_title	Editing system natures is disallowed.
+plugin_tracker_artifact_links_natures	edit_system_nature_title	Editing system types is disallowed.
 plugin_tracker_artifact_links_natures	missing_shortname	missing shortname
 plugin_tracker_artifact_links_natures	missing_forward_label	missing forward label
 plugin_tracker_artifact_links_natures	missing_reverse_label	missing reverse label
 plugin_tracker_artifact_links_natures	shortname_help	Only letters and underscore are allowed for shortname (must start with a letter though).
-plugin_tracker_artifact_links_natures	create_error	Unable to create the requested nature: $1
-plugin_tracker_artifact_links_natures	edit_error	Unable to edit the requested nature: $1
+plugin_tracker_artifact_links_natures	create_error	Unable to create the requested type: $1
+plugin_tracker_artifact_links_natures	edit_error	Unable to edit the requested type: $1
 plugin_tracker_artifact_links_natures	db_error	error while playing with the database.  Help us improve your experience by sending an error report.
-plugin_tracker_artifact_links_natures	create_same_name_error	a nature with $1 as shortname already exists.
-plugin_tracker_artifact_links_natures	forward_label_help	E.g. for the fixed_in nature, a bug will be fixed in a release so the forward label will be "Fixed in".
-plugin_tracker_artifact_links_natures	reverse_label_help	E.g. for the fixed_in nature, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).
+plugin_tracker_artifact_links_natures	create_same_name_error	a type with $1 as shortname already exists.
+plugin_tracker_artifact_links_natures	forward_label_help	E.g. for the fixed_in type, a bug will be fixed in a release so the forward label will be "Fixed in".
+plugin_tracker_artifact_links_natures	reverse_label_help	E.g. for the fixed_in type, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).
 plugin_tracker_artifact_links_natures	shortname_placeholder	E.g. fixed_in
 plugin_tracker_artifact_links_natures	forward_label_placeholder	E.g. Fixed in
 plugin_tracker_artifact_links_natures	reverse_label_placeholder	E.g. Fixed
-plugin_tracker_artifact_links_natures	list_of_allowed_projects	List of projects which can use artifact links natures
-plugin_tracker_artifact_links_natures	list_of_allowed_projects_desc	As the artifact links natures feature is still under heavy development, we recommend to activate it only for a chosen set of projects. Those projects won't be able to use the tracker hierarchy nor the agile dashboard.
+plugin_tracker_artifact_links_natures	list_of_allowed_projects	List of projects which can use artifact links types
+plugin_tracker_artifact_links_natures	list_of_allowed_projects_desc	As the artifact links types feature is still under heavy development, we recommend to activate it only for a chosen set of projects. Those projects won't be able to use the tracker hierarchy nor the agile dashboard.
 plugin_tracker_artifact_links_natures	allowed_project_list_id	ID
 plugin_tracker_artifact_links_natures	allowed_project_list_name	Name
-plugin_tracker_artifact_links_natures	allowed_project_list_empty	Currently, there are no projects which can use artifact links nature.
+plugin_tracker_artifact_links_natures	allowed_project_list_empty	Currently, there are no projects which can use artifact links type.
 plugin_tracker_artifact_links_natures	allowed_project_list_allow_project	Authorize
 plugin_tracker_artifact_links_natures	allowed_project_list_revoke_projects	Revoke authorization to selected
 plugin_tracker_artifact_links_natures	allowed_project_list_allow_placeholder	Project name
 plugin_tracker_artifact_links_natures	allowed_project_list_filter_placeholder	Filter on project ID or name
 plugin_tracker_artifact_links_natures	allowed_project_revoke_title	Warning
-plugin_tracker_artifact_links_natures	allowed_project_revoke_description	You are about to revoke usage of artifact links nature to one or several projects. Are you sure you want to do this?
+plugin_tracker_artifact_links_natures	allowed_project_revoke_description	You are about to revoke usage of artifact links type to one or several projects. Are you sure you want to do this?
 plugin_tracker_artifact_links_natures	allowed_project_revoke_yes	Yes, revoke usage
 plugin_tracker_artifact_links_natures	allowed_project_revoke_no	No
-plugin_tracker_artifact_links_natures	allowed_project_allow_project	Submitted projects will be able to use artifact links natures.
-plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted projects will not be anymore able to use artifact links natures.
+plugin_tracker_artifact_links_natures	allowed_project_allow_project	Submitted projects will be able to use artifact links types.
+plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted projects will not be anymore able to use artifact links types.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Something went wrong during the update. Help us improve your experience by sending an error report.
-plugin_tracker_artifact_links_natures	cannot_use_hierarchy	You cannot use hierarchy of trackers since the project use nature of artifact links.
-plugin_tracker_artifact_links_natures	cannot_use_burndown	You cannot use Burndown field since the project uses nature of artifact links.
-plugin_tracker_artifact_links_natures	cannot_use_burndown_user	No burndown data can be built for this tracker.
-plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Project "$1" cannot use artifact links natures because it is using trackers hierarchy.
-plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Project "$1" cannot use artifact links natures because $2 blocks its usage.
+plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Project "$1" cannot use artifact links types because it is using trackers hierarchy.
+plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Project "$1" cannot use artifact links types because $2 blocks its usage.
 plugin_tracker_artifact_links_natures	error_multiple_parents	The artifact has more than one parent. Cannot display rest of hierarchy.
 plugin_tracker_artifact_links_natures	delete_icon_label	Delete
-plugin_tracker_artifact_links_natures	cannot_delete	nature can't be deleted because it is or has been already used.
-plugin_tracker_artifact_links_natures	cannot_delete_title	This nature can't be deleted because it is or has been already used.
-plugin_tracker_artifact_links_natures	delete_success	The nature has been successfuly deleted.
-plugin_tracker_artifact_links_natures	delete_error	An error has occured during the deletion of the nature: $1
+plugin_tracker_artifact_links_natures	cannot_delete	type can't be deleted because it is or has been already used.
+plugin_tracker_artifact_links_natures	cannot_delete_title	This type can't be deleted because it is or has been already used.
+plugin_tracker_artifact_links_natures	delete_success	The type has been successfuly deleted.
+plugin_tracker_artifact_links_natures	delete_error	An error has occured during the deletion of the type: $1
 plugin_tracker_artifact_links_natures	cannot_format	Cannot be formatted because at least one field needed for the format is missing.
 plugin_tracker_artifact_links_natures	unsupported_field	A field needed for the format cannot be formatted.
+plugin_tracker_artifact_links_natures	no_child	As per config (hierarchy), the type _is_child cannot be used for the link to artifact #$1
+plugin_tracker_artifact_links_natures	force_child	As per config (hierarchy), force use of _is_child type for the link to artifact #$1

@@ -1,3 +1,45 @@
+Version 0.76 - Tuleap 8.18
+    * purge /var/tmp/svn on restore
+
+Version 0.75 - Tuleap 8.18
+    * Delete all repositories at the project deletion
+
+Version 0.74 - Tuleap 8.18
+    * Restore a deleted SVN repository
+
+Version 0.73 - Tuleap 8.18
+    * request #9245 Imported SVN repositories are owned by root
+
+Version 0.72 - Tuleap 8.18
+    * story #9253: Add quiet option on dump command
+
+Version 0.71 - Tuleap 8.18
+    * Use archivedeleteditem plugin to do the real deletion
+
+Version 0.70 - Tuleap 8.18
+    * Delete the repository after deletion delay
+
+Version 0.69 - Tuleap 8.18
+    * Change permissions on svn backup dir
+
+Version 0.68 - Tuleap 8.18
+    * Svn dumpfile shouldn't be readable by anybody
+
+Version 0.67 - Tuleap 8.18
+    * request #9357 Commit error on SVN plugin
+
+Version 0.66 - Tuleap 8.18
+    * Display modal and suppression
+
+Version 0.65 - Tuleap 8.18
+    * story #9253: Show again delete tab in administration
+
+Version 0.64 - Tuleap 8.17
+    * story #9253: Hide Delete tab in administration
+
+Version 0.63 - Tuleap 8.17
+    * story #9253: Display tab and button delete
+
 Version 0.62 - Tuleap 8.17
     * Remove Sogilis copyright
 

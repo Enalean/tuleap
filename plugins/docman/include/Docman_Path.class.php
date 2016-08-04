@@ -28,8 +28,8 @@ class Docman_Path {
         if (!isset($this->path[$item->getId()])) {
             $this->path[$item->getId()] = '';
             if ($item->getParentId()) {
-                $if =& $this->_getItemFactory();
-                $parent =& $if->getItemFromDb($item->getParentId(), array('ignore_deleted' => true));
+                $if = $this->_getItemFactory();
+                $parent = $if->getItemFromDb($item->getParentId(), array('ignore_deleted' => true));
                 if ($parent) {
                     $this->path[$item->getId()] = $this->get($parent) .'/';
                 }
@@ -39,9 +39,9 @@ class Docman_Path {
         return $this->path[$item->getId()];
     }
     var $item_factory;
-    function &_getItemFactory() {
+    private function _getItemFactory() {
         if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory();
+            $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;
     }

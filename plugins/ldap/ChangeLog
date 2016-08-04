@@ -1,3 +1,15 @@
+Version 3.106 - Tuleap 8.18
+    * request #9335 Do not inherit default trackers when importing from XML
+
+Version 3.105 - Tuleap 8.18
+    * request #9352: Migrated Tuleap user to LDAP one can't log in
+
+Version 3.104 - Tuleap 8.18
+    * request #9300: Configuration files are not properly loaded in Perl environnement
+
+Version 3.103 - Tuleap 8.17
+    * Duplicate LDAP binding
+
 Version 3.102 - Tuleap 8.15
     * request #8972: LDAP plugin does not directly use mysql_* API anymore
 

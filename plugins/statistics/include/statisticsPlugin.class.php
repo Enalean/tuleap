@@ -39,7 +39,7 @@ class StatisticsPlugin extends Plugin {
         $this->_addHook('usergroup_data',           'usergroup_data',         false);
         $this->_addHook('groupedit_data',           'groupedit_data',         false);
         $this->_addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
-        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
+        $this->addHook('javascript_file');
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
@@ -268,13 +268,10 @@ class StatisticsPlugin extends Plugin {
         ));
     }
 
-    public function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                $this->getPluginPath().'/js/autocomplete.js',
-            )
-        );
+    public function javascript_file($params) {
+        if ($this->currentRequestIsForPlugin()) {
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/autocomplete.js"></script>'."\n";
+        }
     }
 
     public function aggregate_statistics($params) {

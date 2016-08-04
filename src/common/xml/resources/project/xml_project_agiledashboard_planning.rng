@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="agiledashboard">
+    <element name="plannings">
+      <zeroOrMore>
+        <element name="planning">
+          <attribute name="name">
+            <data type="string"/>
+          </attribute>
+          <attribute name="plan_title">
+            <data type="string"/>
+          </attribute>
+          <attribute name="planning_tracker_id">
+            <data type="string"/>
+          </attribute>
+          <attribute name="backlog_title">
+            <data type="string"/>
+          </attribute>
+          <element name="backlogs">
+            <oneOrMore>
+              <element name="backlog">
+                <data type="string"/>
+              </element>
+            </oneOrMore>
+          </element>
+          <optional>
+            <element name="permissions">
+              <oneOrMore>
+                <element name="permission">
+                  <attribute name="ugroup">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="type">
+                    <data type="string"/>
+                  </attribute>
+                </element>
+              </oneOrMore>
+            </element>
+          </optional>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+</grammar>

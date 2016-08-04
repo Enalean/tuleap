@@ -84,3 +84,24 @@ plugin_svn_admin_hooks	comment	When committing, it is possible to enforce some r
 plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Force every commit to include a reference.
 plugin_svn_admin_hooks	label_allow_commit_message_changes	Allow commit message changes (svn propset --revprop -r X svn:log)
 plugin_svn_admin_hooks	submit	Save the rules
+
+plugin_svn	repository_delete	Delete
+plugin_svn_admin_repository_delete	cannot_delete	You can't delete.
+plugin_svn_admin_repository_delete	comment	You are about to permanently delete the repository:
+plugin_svn_admin_repository_delete	comment_undone	This action cannot be undone.
+plugin_svn_admin_repository_delete	subtitle	Delete this repository
+plugin_svn_admin_repository_delete	button_delete	Delete this repository
+
+plugin_svn_admin_modal_repository_delete	title	Wait a minute...
+plugin_svn_admin_modal_repository_delete	button_delete	Delete the repository
+plugin_svn_admin_modal_repository_delete	content	This deletion can't be undone. Please confirm the repository deletion.
+
+plugin_svn	actions_repo_not_found	The repository does not exist
+plugin_svn	actions_delete_process	Repository '$1' will be removed in a few seconds
+plugin_svn	actions_delete_backup	A repository backup of '$1' will be available in the backup directory $2
+plugin_svn	feedback_event_delete	There is an event in queue for repository '$1' deletion, it will be processed in one minute or two. Please be patient!
+plugin_svn	delete_repository_exception	An error occured when deleting repository.
+
+plugin_svn	archived_repositories	Deleted svn repositories
+plugin_svn	restore_confirmation	Confirm restore of the svn repository
+plugin_svn	restore_no_repo_found	No restorable svn repositories found.

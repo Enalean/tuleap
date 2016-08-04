@@ -1,3 +1,18 @@
+Version 0.11 - Tuleap 8.18
+    * Delete all repositories at the project deletion
+
+Version 0.10 - Tuleap 8.18
+    * Restore a deleted SVN repository
+
+Version 0.9 - Tuleap 8.18
+    * Use archivedeleteditem plugin to do the real deletion
+
+Version 0.8 - Tuleap 8.18
+    * Delete the repository after deletion delay
+
+Version 0.7 - Tuleap 8.18
+    * Display modal and suppression
+
 Version 0.6 - Tuleap 8.17
     * request #9274 Warning on project import
 

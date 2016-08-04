@@ -85,5 +85,4 @@ class MailNotificationDao extends DataAccessObject {
 
         return $this->retrieve($query);
     }
-
 }

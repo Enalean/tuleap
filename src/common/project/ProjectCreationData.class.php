@@ -28,6 +28,20 @@ class ProjectCreationData {
     private $short_description;
     private $built_from_template;
     private $trove_data;
+    private $is_unrestricted = false;
+    private $inherit_from_template = true;
+
+    /**
+     * Returns true if the data should be inherited from template (in DB)
+     *
+     * This is mostly useful for XML import where "the true" come from XML
+     * and not from the predefined template.
+     *
+     * @return boolean
+     */
+    public function projectShouldInheritFromTemplate() {
+        return $this->inherit_from_template;
+    }
 
     public function getFullName() {
         return $this->full_name;
@@ -46,7 +60,10 @@ class ProjectCreationData {
     }
 
     public function getAccess() {
-        if($this->is_public === null || ForgeConfig::get('sys_user_can_choose_project_privacy') === '0') {
+        if ($this->is_unrestricted) {
+            return Project::ACCESS_PUBLIC_UNRESTRICTED;
+        }
+        if ($this->is_public === null || ForgeConfig::get('sys_user_can_choose_project_privacy') === '0') {
             return ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
         } else {
             return $this->is_public ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
@@ -170,14 +187,21 @@ class ProjectCreationData {
             'form_101' => $xml->$long_description_tagname
         );
 
-        if($attrs['access'] == 'public') {
-            $this->is_public = true;
-        } else if($attrs['access'] == 'private') {
-            $this->is_public = false;
+        switch ($attrs['access']) {
+            case 'unrestricted':
+                $this->is_unrestricted = true;
+                break;
+            case 'public':
+                $this->is_public = true;
+                break;
+            case 'private':
+                $this->is_public = false;
+                break;
         }
 
-
         $this->markUsedServicesFromXML($xml, $template_id, $service_manager, $project_manager);
+
+        $this->inherit_from_template = false;
     }
 
     /**

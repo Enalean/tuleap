@@ -21,6 +21,18 @@
 class Event {
 
     /**
+     * Project creation
+     *
+     * 'reportMapping'         => Array: Tracker v3 map of reports
+     * 'trackerMapping'        => Array: Tracker v3 map of trackers
+     * 'ugroupsMapping'        => Array: Map between ugroups from the template and in project
+     * 'group_id'              => Integer: Id of the new project
+     * 'template_id'           => Integer: Id of the template project
+     * 'project_creation_data' => ProjectCreationData: Data passed for project creation
+     */
+    const REGISTER_PROJECT_CREATION = 'register_project_creation';
+
+    /**
      * Periodical system check event.
      *
      * No Parameters.
@@ -327,17 +339,6 @@ class Event {
      * $params['classnames']['plugin_tracker'] = 'ServiceTracker';
      */
     const SERVICE_CLASSNAMES = 'service_classnames';
-
-    /**
-     * Get combined scripts
-     *
-     * Parameters:
-     *   'scripts' => array of scripts to combined
-     *
-     * Examples:
-     * $params['scripts'][] = '/path/to/script.js';
-     */
-    const COMBINED_SCRIPTS = 'combined_scripts';
 
     /**
      * Display javascript snippets in the page header (<head>)
@@ -1181,17 +1182,6 @@ class Event {
     const SET_ARTIFACT_REFERENCE_GROUP_ID = 'set_artifact_reference_group_id';
 
     /**
-     * Check if service is activable
-     *
-     * Parameters:
-     *   project           => Project
-     *   service_shortname => string
-     *   is_activable      => boolean
-     *   message           => string
-     */
-    const SERVICE_IS_ACTIVABLE = 'service_is_activable';
-
-    /**
      * Toggle usage of a service
      *
      * Parameters
@@ -1226,4 +1216,14 @@ class Event {
      *  - is_in_siteadmin => (output) Boolean
      */
     const IS_IN_SITEADMIN = 'is_in_siteadmin';
+
+    /**
+     * When a project is created, ask plugins if some actions must be made for ugroup duplication
+     *
+     * Parameters:
+     *  - source_ugroup => (input) Ugroup
+     *  - new_ugroup_id => (input) int
+     *
+     */
+    const UGROUP_DUPLICATION = 'ugroup_duplication';
 }
