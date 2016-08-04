@@ -1,3 +1,6 @@
+Version 1.402 - Tuleap 8.18
+    * story #9305 have agile dashboard compatible with ALv2 (Agile Dashboard can be used with artifact links v2)
+
 Version 1.401 - Tuleap 8.18
     * request #9299: combine JavaScript with hash
 
