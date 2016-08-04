@@ -6,6 +6,7 @@ Version 8.18 (Not yet released)
 	* request #9335: Do not inherit default trackers when importing from XML
 	* request #9361: CVS search by commiter does not work
 	* request #8839: Call to sparklines.php should be made in POST to avoid errors
+	* request #9371 Wrong artifact warning message when a user supposed to be notified is suspended
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
