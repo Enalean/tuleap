@@ -343,14 +343,14 @@ class Workflow {
      *
      * @return void
      */
-    public function validate($fields_data, Tracker_Artifact $artifact) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
         if (! $this->is_used) {
             return;
         }
 
         $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
         if (isset($transition)) {
-            if (! $transition->validate($fields_data, $artifact)) {
+            if (! $transition->validate($fields_data, $artifact, $comment_body)) {
                 throw new Tracker_Workflow_PermissionTransitionViolationException();
             }
         }

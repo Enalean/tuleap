@@ -171,7 +171,7 @@ class Transition_validateTest extends Transition_baseTest {
         $artifact    = mock('Tracker_Artifact');
         $conditions  = stub('Workflow_Transition_ConditionsCollection')->validate()->returns(true);
         $transition->setConditions($conditions);
-        $this->assertTrue($transition->validate($fields_data, $artifact));
+        $this->assertTrue($transition->validate($fields_data, $artifact, ''));
     }
 
     public function itReturnsFalseWhenConditionsAreNotValid() {
@@ -180,7 +180,7 @@ class Transition_validateTest extends Transition_baseTest {
         $artifact    = mock('Tracker_Artifact');
         $conditions  = stub('Workflow_Transition_ConditionsCollection')->validate()->returns(false);
         $transition->setConditions($conditions);
-        $this->assertFalse($transition->validate($fields_data, $artifact));
+        $this->assertFalse($transition->validate($fields_data, $artifact, ''));
     }
 }
 

@@ -24,6 +24,9 @@ class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
     /** @var Workflow_Transition_ConditionFactory */
     protected $condition_factory;
 
+    /** @var Workflow_Transition_Condition_CommentNotEmpty_Factory */
+    protected $commentnotempty_factory;
+
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
     protected $fieldnotempty_factory;
 
@@ -32,11 +35,14 @@ class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->permissions_factory   = mock('Workflow_Transition_Condition_Permissions_Factory');
-        $this->fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
-        $this->condition_factory     = new Workflow_Transition_ConditionFactory(
+        $this->permissions_factory     = mock('Workflow_Transition_Condition_Permissions_Factory');
+        $this->fieldnotempty_factory   = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
+        $this->commentnotempty_factory = mock('Workflow_Transition_Condition_CommentNotEmpty_Factory');
+
+        $this->condition_factory = new Workflow_Transition_ConditionFactory(
             $this->permissions_factory,
-            $this->fieldnotempty_factory
+            $this->fieldnotempty_factory,
+            $this->commentnotempty_factory
         );
 
         $this->project = mock('Project');

@@ -238,6 +238,10 @@ tracker =
                     element condition {
                         attribute type { "notempty" },
                         conditionFieldNotEmptyContent
+                    }?,
+                    element condition {
+                        attribute type { "commentnotempty" },
+                        attribute is_comment_required { "0" | "1" }
                     }?
                 }?
             )

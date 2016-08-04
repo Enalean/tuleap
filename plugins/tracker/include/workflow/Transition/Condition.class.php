@@ -60,7 +60,7 @@ abstract class Workflow_Transition_Condition {
      *
      * @return boolean
      */
-    public abstract function validate($fields_data, Tracker_Artifact $artifact);
+    public abstract function validate($fields_data, Tracker_Artifact $artifact, $comment_body);
 
     public function getTransition() {
         return $this->transition;

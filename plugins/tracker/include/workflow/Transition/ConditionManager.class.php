@@ -40,12 +40,13 @@ class Transition_ConditionManager {
     {
         $transition_condition_factory = $this->getConditionFactory();
 
-        $list_fields_id = $request->get('add_notempty_condition');
+        $list_fields_id       = $request->get('add_notempty_condition');
+        $is_comment_required = $request->get('is_comment_required');
 
         try {
             // Create new condition
             if (is_array($list_fields_id)) {
-                $transition_condition_factory->addCondition($transition, $list_fields_id);
+                $transition_condition_factory->addCondition($transition, $list_fields_id, $is_comment_required);
             }
         } catch (CannotCreateTransitionException $excpetion) {
             throw $excpetion;
