@@ -3,17 +3,18 @@ angular
     .service('KanbanColumnService', KanbanColumnService);
 
 KanbanColumnService.$inject = [
-
+    '$filter'
 ];
 
 function KanbanColumnService(
-
+    $filter
 ) {
     var self = this;
     _.extend(self, {
-        addItem   : addItem,
-        moveItem  : moveItem,
-        removeItem: removeItem
+        addItem    : addItem,
+        filterItems: filterItems,
+        moveItem   : moveItem,
+        removeItem : removeItem
     });
 
     function moveItem(
@@ -63,11 +64,15 @@ function KanbanColumnService(
     }
 
     function updateItem(item, destination_column_id) {
-        if (item.in_column === 'backlog') {
+        if (movedFromBacklogToAnotherColumn(item.in_column, destination_column_id)) {
             updateTimeInfo(item, 'kanban');
         }
         updateTimeInfo(item, destination_column_id);
         updateItemColumn(item, destination_column_id);
+    }
+
+    function movedFromBacklogToAnotherColumn(source_column_id, destination_column_id) {
+        return source_column_id === 'backlog' && destination_column_id !== 'backlog';
     }
 
     function updateItemColumn(item, column_id) {
@@ -95,6 +100,15 @@ function KanbanColumnService(
         } else {
             collection.push(item);
         }
+    }
+
+    function filterItems(filter_terms, column) {
+        var filtered_items = $filter('InPropertiesFilter')(column.content, filter_terms);
+
+        emptyArray(column.filtered_content);
+        _.forEach(filtered_items, function(item) {
+            column.filtered_content.push(item);
+        });
     }
 
     function emptyArray(array) {

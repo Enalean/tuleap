@@ -1,21 +1,21 @@
-(function () {
-    angular.module('kanban', [
-        'ui.router',
-        'ui.tree',
-        'ui.bootstrap',
-        'socket',
-        'templates-app',
-        'shared-properties',
-        'user-preferences',
-        'restangular',
-        'angularMoment',
-        'ngSanitize',
-        'gettext',
-        'ngAnimate',
-        'ngScrollbar',
-        'tuleap.artifact-modal',
-        'uuid-generator',
-        'jwt',
-        'angular-locker'
-    ]);
-})();
+angular.module('kanban', [
+    'ngAnimate',
+    'ngSanitize',
+    'angular-locker',
+    'angularMoment',
+    'dragularModule',
+    'gettext',
+    'jwt',
+    'kanban-column',
+    'ngScrollbar',
+    'restangular',
+    'shared-properties',
+    'socket',
+    'templates-app',
+    'tuleap.artifact-modal',
+    'ui.bootstrap',
+    'ui.router',
+    'ui.tree',
+    'user-preferences',
+    'uuid-generator',
+]);

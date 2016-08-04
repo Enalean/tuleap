@@ -3,6 +3,7 @@
 @import "../../vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker";
 @import "../../vendor/angular-ui-select/dist/select";
 @import "../../vendor/ng-scrollbar/dist/ng-scrollbar";
+@import "../../vendor/dragular/dist/dragular";
 @import "animate.min";
 @import "../../../../../../../src/www/themes/common/css/utils/colors";
 
@@ -120,6 +121,8 @@ $kanban-column-footer-height: 48px;
     font-size: 0;
     overflow-y: hidden;
     overflow-x: auto;
+
+    @import 'kanban-column/kanban-column';
 
     > div {
         position: relative;
@@ -274,26 +277,6 @@ $kanban-column-footer-height: 48px;
             }
         }
 
-        > .column-content {
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            text-transform: none;
-
-            .kustom-scroll {
-                height: 100%;
-
-                &:not(.has-content) {
-                    position: absolute;
-                    width: 100%;
-                    z-index: 0;
-                }
-            }
-
-            > .kanban-info {
-                font-style: italic;
-            }
-        }
-
         add-in-place {
             position: absolute;
             bottom: 0;
@@ -376,7 +359,7 @@ $kanban-column-footer-height: 48px;
             vertical-align: top;
             min-width: 180px;
 
-            > .column-content {
+            .column-content {
                 height: 100%;
                 position: relative;
             }
@@ -415,29 +398,6 @@ $kanban-column-footer-height: 48px;
 
                 &.backlog {
                     font-size: 1.4em;
-                }
-            }
-
-            > .column-content {
-                > .angular-ui-tree-empty {
-                    background: none;
-                }
-
-                .angular-ui-tree-placeholder:only-child {
-                    background: transparentize(#000, 0.9);
-                    width: 100%;
-                    box-sizing: border-box;
-                    margin: $kanban-column-header-height 0 0;
-                    animation: 100ms linear fadeIn;
-                    height: 100%;
-                    min-height: 100%;
-                    max-height: 100%;
-                }
-
-                .ngsb-container, .kanban-items {
-                    height: 100%;
-                    min-height: 100%;
-                    max-height: 100%;
                 }
             }
 
@@ -518,100 +478,5 @@ $kanban-column-footer-height: 48px;
 
     > .archive {
         border-right: none;
-    }
-
-    .ngsb-wrap .ngsb-container,
-    .ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos .ngsb-thumb {
-        transition: none;
-    }
-
-    .ngsb-wrap .ngsb-scrollbar {
-        height: calc(100% - #{$kanban-column-header-height} - 10px - #{$kanban-column-footer-height} - 10px);
-        margin-top: $kanban-column-header-height + 10px;
-        margin-bottom: $kanban-column-footer-height + 10px;
-    }
-
-    .ngsb-wrap .ngsb-scrollbar .ngsb-track {
-        width: 8px;
-        background: none;
-    }
-
-    .ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos {
-        .ngsb-thumb {
-            background: #CCCCCC;
-        }
-
-        &:hover .ngsb-thumb {
-            background: #AAAAAA;
-        }
-    }
-
-    .angular-ui-tree-empty {
-        background: transparent url('column-empty.png') no-repeat center 100px;
-        margin: 0;
-        border: none;
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        z-index: 1;
-    }
-}
-
-ul.kanban-items {
-    margin: 0;
-    padding: 0;
-    height: inherit;
-    list-style-type: none;
-
-    &.has-scrollbar {
-        padding: 0 6px 0 0;
-    }
-
-    > .angular-ui-tree-placeholder {
-        background: #58B359;
-        max-height: 3px;
-        min-height: 3px;
-        margin: 10px;
-
-        &:first-child {
-            margin-top: $kanban-column-header-height + 10px;
-        }
-
-        &:only-child {
-            background: transparent url('column-empty-drop-default.png') no-repeat center 100px;
-            width: 100%;
-            min-height: 200px;
-            max-height: 200px;
-            margin: 0;
-        }
-    }
-
-    > .angular-ui-tree-hidden {
-        display: list-item;
-
-        &:first-child + li {
-            margin-top: $kanban-column-header-height + 10px;
-        }
-
-        + li {
-            margin-top: 10px;
-        }
-    }
-}
-
-ul.kanban-items.angular-ui-tree-drag {
-    opacity: 1;
-    height: auto;
-
-    > li {
-        box-shadow: 0 7px 30px rgba(0, 0, 0, 0.2);
-
-        &:first-child {
-            margin-top: 0;
-        }
-
-        > .kanban-item {
-            border: none;
-        }
     }
 }

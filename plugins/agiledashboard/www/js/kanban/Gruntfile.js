@@ -312,10 +312,12 @@ module.exports = function(grunt) {
             unit: {
                 dir: '<%= build_dir %>',
                 src: [
+                    'vendor/jquery/dist/jquery.js',
                     '<%= vendor_files.js %>',
                     '<%= html2js.app.dest %>',
                     'vendor/angular-mocks/angular-mocks.js',
                     'vendor/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
+                    'vendor/jasmine-fixture/dist/jasmine-fixture.js',
                     '<%= app_files.modules %>',
                     '<%= app_files.js %>',
                     '<%= app_files.jsunit %>'
