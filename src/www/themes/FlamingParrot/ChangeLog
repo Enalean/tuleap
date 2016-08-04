@@ -1,3 +1,6 @@
+Version 1.145 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
 Version 1.144 - Tuleap 8.18
     * Restore a deleted SVN repository
 

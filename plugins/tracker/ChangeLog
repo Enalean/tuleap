@@ -1,3 +1,6 @@
+Version 5.979 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
 Version 5.978 - Tuleap 8.18
     * story #9305: Triggers can be defined with artifact links v2
 

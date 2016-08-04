@@ -10,18 +10,20 @@ Version 8.18 (Not yet released)
 	* request #9339: Remove unused code in the utilities
 	* request #9202: Refactoring for PHP5.6 - Snippets
 	* story #9090: Improve REST tests of the computed fields
-	* request #9299: Plugins no longer append javascript to core Combined
-	* request #9299: Get rid of combined
+	* request #9299:
+		- Get rid of combined
+		- Plugins no longer append javascript to core Combined
+		- combine JavaScript with hash
 	* story #9281 define FRS global permissions
 
 	== Enhancement ==
 	* External lib no longer referenced in sources
 
 	== Plugins ==
-	* agiledashboard: 1.400
-	* docman: 2.26.116
-	* cardwall: 1.63
-	* tracker: 5.978
+	* agiledashboard: 1.401
+	* docman: 2.26.117
+	* cardwall: 1.64
+	* tracker: 5.979
 	* forumml: 2.6.26
 	* ldap: 3.106
 	* mediawiki: 0.121
@@ -33,14 +35,14 @@ Version 8.18 (Not yet released)
 	* hudson_svn: 0.14
 	* referencealias_svn: 0.11
 	* fulltextsearch: 0.134
-	* graphontrackersv5: 5.24
+	* graphontrackersv5: 5.25
 	* proftpd: 0.27
 	* projectlinks: 2.10
 	* openidconnectclient: 0.22
 	* archivedeleteditems: 0.9
 
     == Themes ==
-	* FlamingParrot: 1.144
+	* FlamingParrot: 1.145
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==

@@ -1,3 +1,6 @@
+Version 2.26.117 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
 Version 2.26.116 - Tuleap 8.18
     * request #9335 Do not inherit default trackers when importing from XML
 

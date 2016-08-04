@@ -1,3 +1,6 @@
+Version 1.64 - Tuleap 8.18
+    * request #9299: combine JavaScript with hash
+
 Version 1.63 - Tuleap 8.18
     * request #9299: Get rid of combined
 
