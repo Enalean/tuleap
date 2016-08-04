@@ -43,7 +43,9 @@ class MailBuilder {
         $sent_status = true;
         foreach ($notification->getEmails() as $email) {
             $mail = $this->buildEmail($project, $notification, $mail_enhancer, $email);
-            $sent_status = $mail->send() && $sent_status;
+            if ($this->doesMailHasRecipient($mail)) {
+                $sent_status = $mail->send() && $sent_status;
+            }
         }
         return $sent_status;
     }
@@ -77,6 +79,14 @@ class MailBuilder {
         }
 
         return $mail;
+    }
+
+    /**
+     * @return bool
+     */
+    private function doesMailHasRecipient(Codendi_Mail $mail)
+    {
+        return $mail->getTo() !== null || $mail->getCc() !== null || $mail->getBcc() !== null;
     }
 
     protected function getMailSender() {

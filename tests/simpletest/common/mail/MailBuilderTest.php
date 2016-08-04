@@ -112,6 +112,8 @@ class MailBuilderTest extends TuleapTestCase {
         $project        = stub('Project')->getTruncatedEmailsUsage()->returns(false);
         $codendi_mail_2 = stub('Codendi_Mail')->send()->returns(true);
         stub($this->codendi_mail)->send()->returns(false);
+        stub($this->codendi_mail)->getTo()->returns('user1@example.com');
+        stub($codendi_mail_2)->getTo()->returns('user2@example.com');
 
         stub($this->builder)->getMailSender()->returnsAt(0, $this->codendi_mail);
         stub($this->builder)->getMailSender()->returnsAt(1, $codendi_mail_2);
@@ -127,5 +129,19 @@ class MailBuilderTest extends TuleapTestCase {
         );
 
         $this->assertFalse($sent);
+    }
+
+    public function itDoesNotTryToSendAMailIfNotRecipientHasBeenSet()
+    {
+        $project = stub('Project')->getTruncatedEmailsUsage()->returns(false);
+        stub($this->builder)->getMailSender()->returns($this->codendi_mail);
+        $this->codendi_mail->expectCallCount('send', 0);
+
+        $sent = $this->builder->buildAndSendEmail(
+            $project,
+            $this->notification,
+            $this->mail_enhancer
+        );
+        $this->assertTrue($sent);
     }
 }
