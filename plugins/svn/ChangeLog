@@ -1,3 +1,6 @@
+Version 0.76 - Tuleap 8.18
+    * purge /var/tmp/svn on restore
+
 Version 0.75 - Tuleap 8.18
     * Delete all repositories at the project deletion
 
