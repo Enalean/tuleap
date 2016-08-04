@@ -847,9 +847,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function isProjectAllowedToUseNature() {
         $config = new AllowedProjectsConfig(
             ProjectManager::instance(),
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
+            new AllowedProjectsDao()
         );
 
         return $config->isProjectAllowedToUseNature($this->getProject());

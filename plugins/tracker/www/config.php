@@ -60,9 +60,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             $project_manager,
             new AllowedProjectsConfig(
                 $project_manager,
-                new AllowedProjectsDao(),
-                new Tracker_Hierarchy_Dao(),
-                EventManager::instance()
+                new AllowedProjectsDao()
             ),
             new NatureCreator(
                 $nature_dao,
