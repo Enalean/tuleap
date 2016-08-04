@@ -6,14 +6,32 @@
     </div>
     <form method="POST" action="{{ frs_admins_form_action }}">
         <input type="hidden" value="{{ project_id }}" name="group_id"/>
-        <label class='frs_write_title'>
-            {{ write_title }}
-        </label>
-        <select size="8" multiple name="frs_admins[]">
-            {{# ugroups }}
-                <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-            {{/ ugroups }}
-        </select>
+
+        <div class="frs_permissions">
+            <div class="frs_permissions_read">
+                <label>
+                    {{ permission_read_title }}
+                </label>
+                <select size="8" multiple name="frs_admins[]" disabled>
+                    {{# ugroups }}
+                        <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+                    {{/ ugroups }}
+                </select>
+                <div class='alert warning'>
+                    {{ under_implementation }}
+                </div>
+            </div>
+            <div class="frs_permissions_write">
+                <label>
+                    {{ write_title }}
+                </label>
+                <select size="8" multiple name="frs_admins[]">
+                    {{# ugroups }}
+                        <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+                    {{/ ugroups }}
+                </select>
+            </div>
+        </div>
         <p>
             <input class="btn btn-primary" type="submit" value="{{ frs_admins_submit_button }}" name="submit"/>
         </p>

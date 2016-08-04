@@ -32,6 +32,8 @@ class PermissionPresenter extends BaseFrsPresenter
     public $ugroups;
     public $project_id;
     public $frs_admins_submit_button;
+    public $permission_read_title;
+    public $under_implementation;
 
     public function __construct(Project $project, array $ugroups)
     {
@@ -39,6 +41,8 @@ class PermissionPresenter extends BaseFrsPresenter
         $this->frs_admins_submit_button  = $GLOBALS['Language']->getText('file_file_utils', 'frs_admins_submit_button');
         $this->administaror_info         = $GLOBALS['Language']->getText('file_file_utils', 'administaror_info');
         $this->write_title               = $GLOBALS['Language']->getText('file_file_utils', 'write_title');
+        $this->permission_read_title     = $GLOBALS['Language']->getText('file_file_utils', 'permission_read_title');
+        $this->under_implementation      = $GLOBALS['Language']->getText('file_file_utils', 'under_implementation');
         $this->ugroups                   = $ugroups;
         $this->project_id                = $project->getId();
         $this->frs_admins_form_action    = FRS_BASE_URL .'/admin/?'. http_build_query(array(
