@@ -182,22 +182,6 @@ if (($func=='do_create')||($func=='do_update')) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_s'));
     }
 
-    $is_activable = true;
-    $message      = '';
-
-    $params = array(
-        "project"           => $project,
-        "service_shortname" => $short_name,
-        "is_activable"      => &$is_activable,
-        "message"           => &$message
-    );
-
-    EventManager::instance()->processEvent(Event::SERVICE_IS_ACTIVABLE, $params);
-
-    if ($is_used && ! $is_activable) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cannot_be_used'));
-    }
-
     if (!$is_active) {
         if ($is_used) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','set_stat_unused'));

@@ -22,9 +22,6 @@ require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
 require_once 'constants.php';
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
-
 /**
  * AgileDashboardPlugin
  */
@@ -87,7 +84,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
             $this->addHook(ITEM_PRIORITY_CHANGE);
-            $this->addHook(Event::SERVICE_IS_ACTIVABLE);
             $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE);
         }
 
@@ -876,27 +872,6 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanDao()
 
         );
-    }
-
-    private function getAllowedProjectsConfig() {
-        return new AllowedProjectsConfig(
-            ProjectManager::instance(),
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
-        );
-    }
-
-    public function service_is_activable($params) {
-        $service_shortname = $params['service_shortname'];
-        $project           = $params['project'];
-
-        if ($service_shortname === $this->getServiceShortname() &&
-            $this->getAllowedProjectsConfig()->isProjectAllowedToUseNature($project)
-        ) {
-            $params['is_activable'] = false;
-            $params['message']      = $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_not_activable');
-        }
     }
 
     public function tracker_event_artifact_link_natures_blocked_by_service($params) {
