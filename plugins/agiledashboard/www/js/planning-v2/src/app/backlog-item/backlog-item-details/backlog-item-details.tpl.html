@@ -113,6 +113,12 @@
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
             <span ng-bind-html="details.getCardFieldUserValue(card_field.value, details.backlog_filter.terms)"></span>
         </div>
+        <div
+            ng-if="details.cardFieldIsComputed(card_field.type)"
+            card-computed-field
+            field="card_field"
+            class="card-computed-field"
+        ></div>
         <!-- Artifact links & Burndown fields are not managed yet -->
     </li>
 </ul>
