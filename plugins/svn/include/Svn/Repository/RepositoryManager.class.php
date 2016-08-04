@@ -347,7 +347,7 @@ class RepositoryManager
             $repository->getFullName(),
             $this->access_file_history_factory->getCurrentVersion($repository)->getContent()
         );
-
+        $this->deleteArchivedRepository($repository);
         $this->dao->markAsDeleted($repository->getId(), null, null);
     }
 
