@@ -101,8 +101,14 @@ $group = $pm->getProject(1);
 $ath = new ArtifactTypeHtml($group);
 $HTML->includeCalendarScripts();
 $HTML->header(array('title'=>$Language->getText('tracker_admin_restore','pending_deletions')));
-$atf = new ArtifactTypeFactory($group);
-$ath->displayPendingTrackers();
+EventManager::instance()->processEvent(
+    Event::LIST_DELETED_TRACKERS,
+    array()
+);
+if (TrackerV3::instance()->available()) {
+    $atf = new ArtifactTypeFactory($group);
+    $ath->displayPendingTrackers();
+}
 $HTML->footer(array());
 
 ?>

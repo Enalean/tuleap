@@ -284,4 +284,32 @@ class TrackerDao extends DataAccessObject {
         $id_enumeration = implode(',', $excluded_tracker_ids);
         return "$restriction_clause ($id_enumeration)";
     }
+
+    /**
+    * Searches deleted trackers
+    *
+    * @return DataAccessResult
+    */
+    public function retrieveTrackersMarkAsDeleted() {
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE deletion_date > 0
+                ORDER BY name";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Restore a deleted tracker by removig its deletion_date flag.
+    *
+    * @param int $tracker_id the ID of the tracker
+    *
+    * @return Boolean
+    */
+    public function restoreTrackerMarkAsDeleted($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql        = "UPDATE $this->table_name SET
+                          deletion_date = NULL
+                      WHERE id = $tracker_id";
+        return $this->update($sql);
+    }
 }

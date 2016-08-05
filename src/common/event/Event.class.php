@@ -581,6 +581,14 @@ class Event {
      */
     const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
 
+    /*
+     * Event raised to display the list of deleted Trackers
+     *
+     * Expected results:
+     *     Void
+     */
+    const LIST_DELETED_TRACKERS = 'display_deleted_trackers';
+
     /**
      * Event launched while importing a cardwall from a xml content
      *

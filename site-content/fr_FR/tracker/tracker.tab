@@ -412,9 +412,9 @@ tracker_include_type	field_values	Valeurs des champs
 tracker_include_type	canned_resp	Réponse type
 tracker_include_type	reports	Rapports
 tracker_include_type	mail_notif	Options de notification
-tracker_include_type	pending_removal	Destruction des outils de suivi
-tracker_include_type	no_pending	Aucun outil de suivi en attente de destruction
-tracker_include_type	pending_deletion	Outil de suivi en attente de destruction
+tracker_include_type	pending_removal	Destruction des outils de suivi V3
+tracker_include_type	no_pending	Aucun outil de suivi V3 en attente de destruction
+tracker_include_type	pending_deletion	Outil de suivi V3 en attente de destruction
 tracker_include_type	deletion_date	Date de destruction
 tracker_include_type	delay	Retarder ?
 tracker_include_type	restore	Restaurer ?

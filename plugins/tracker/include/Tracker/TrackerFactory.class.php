@@ -88,6 +88,33 @@ class TrackerFactory {
     }
 
     /**
+     * Retrieve the list of deleted trackers.
+     *
+     * @return Array
+     */
+    public function getDeletedTrackers() {
+        $pending_trackers = $this->getDao()->retrieveTrackersMarkAsDeleted();
+        $deleted_trackers = array();
+        if ($pending_trackers && !$pending_trackers->isError()) {
+            foreach ($pending_trackers as $key => $pending_tracker) {
+                $deleted_trackers[$key] = $this->getTrackerById($pending_tracker['id']);
+            }
+        }
+        return $deleted_trackers;
+    }
+
+    /**
+     * Restore a tracker from the list of deleted trackers.
+     *
+     * @param  int $tracker_id
+     *
+     * @return Boolean
+     */
+    public function restoreDeletedTracker($tracker_id) {
+        return $this->getDao()->restoreTrackerMarkAsDeleted($tracker_id);
+    }
+
+    /**
      * @param int $group_id the project id the trackers to retrieve belong to
      *
      * @return Array of Tracker
