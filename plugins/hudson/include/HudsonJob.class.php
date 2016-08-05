@@ -1,26 +1,23 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('hudson.class.php');
-require_once('HudsonJobURLMalformedException.class.php');
-require_once('HudsonJobURLFileException.class.php');
-require_once('HudsonJobURLFileNotFoundException.class.php');
  
 class HudsonJob {
     const API_XML = '/api/xml';
@@ -29,13 +26,16 @@ class HudsonJob {
     protected $hudson_dobuild_url;
     protected $dom_job;
     private $icons_path;
+    /**
+     * @var Http_Client
+     */
+    private $http_client;
     
-    private $context;
-
     /**
      * Construct an Hudson job from a job URL
      */
-    function __construct($hudson_job_url, $name = null) {
+    public function __construct($hudson_job_url, Http_Client $http_client, $name = null)
+    {
         $parsed_url = parse_url($hudson_job_url);
         
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
@@ -44,9 +44,10 @@ class HudsonJob {
 
         $this->setJobUrl($hudson_job_url);
 
-        $this->name       = $name;
-        $controler        = $this->getHudsonControler();
-        $this->icons_path = $controler->getIconsPath();
+        $this->name        = $name;
+        $controler         = $this->getHudsonControler();
+        $this->icons_path  = $controler->getIconsPath();
+        $this->http_client = $http_client;
     }
 
     private function setJobUrl($url) {
@@ -74,7 +75,6 @@ class HudsonJob {
 
     protected function getDomJob() {
         if (!$this->dom_job) {
-            $this->_setStreamContext();
             $this->buildJobObject();
         }
         return $this->dom_job;
@@ -84,32 +84,24 @@ class HudsonJob {
          $this->dom_job = $this->_getXMLObject($this->hudson_job_url);
     }
     
-    protected function _getXMLObject($hudson_job_url) {
-        $xmlstr = @file_get_contents($hudson_job_url, false, $this->context);
+    protected function _getXMLObject($hudson_job_url)
+    {
+        $this->http_client->setOption(CURLOPT_URL, $hudson_job_url);
+        $this->http_client->doRequest();
+
+        $xmlstr = $this->http_client->getLastResponse();
         if ($xmlstr !== false) {
             $xmlobj = simplexml_load_string($xmlstr);
             if ($xmlobj !== false) {
                 return $xmlobj;
             } else {
-                throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_job_url)));
+                throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error',
+                    array($hudson_job_url)));
             }
         } else {
-            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_job_url))); 
+            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson',
+                'job_url_file_not_found', array($hudson_job_url)));
         }
-    }
-    
-    private function _setStreamContext() {
-        $context_opt = array(
-            'http' => array(
-                'method' => 'GET',
-                'timeout' => 5.0,
-            ),
-        );
-        if (!empty($GLOBALS['sys_proxy'])) {
-            $context_opt['http']['proxy']           = $GLOBALS['sys_proxy'];
-            $context_opt['http']['request_fulluri'] = true;
-        }
-        $this->context = stream_context_create($context_opt);
     }
     
     function getProjectStyle() {
@@ -298,36 +290,4 @@ class HudsonJob {
             return $this->getIconsPath()."health_00_to_19.gif";
         }
     }
-    
-    /**
-     * Launch a Build for this job on the Continuous Integration server.
-     * 
-     * @exception if unable to open build URL or if response is an error
-     *  
-     * @param string $token if CI server has activated security (login/password), then a token is mandatory to build jobs. This token is defined in the job configuration.
-     * @return response of build call.
-     */
-    function launchBuild($token = null) {
-        $url = $this->hudson_dobuild_url;
-        if ($token != null) {
-            $url .= '?token='.$token;
-        }
-        $params = array('http' => array(
-                     'method' => 'POST',
-                     'content' => ''
-                ));
-        $ctx = stream_context_create($params);
-        $fp = fopen($url, 'rb', false, $ctx);
-        if (!$fp) {
-            throw new Exception("Problem with $url");
-        }
-        $response = stream_get_contents($fp);
-        if ($response === false) {
-            throw new Exception("Problem reading data from $url");
-        }
-        return $response;
-    }
-    
 }
-
-?>

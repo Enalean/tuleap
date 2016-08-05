@@ -1,38 +1,37 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('hudson.class.php');
-require_once('HudsonJobURLMalformedException.class.php');
-require_once('HudsonJobURLFileException.class.php');
-require_once('HudsonJobURLFileNotFoundException.class.php');
  
 class HudsonBuild {
 
     protected $hudson_build_url;
     protected $dom_build;
-    
-    private $context;
-        
+    /**
+     * @var Http_Client
+     */
+    private $http_client;
     /**
      * Construct an Hudson build from a build URL
      */
-    function HudsonBuild($hudson_build_url) {
+    public function __construct($hudson_build_url, Http_Client $http_client)
+    {
         $parsed_url = parse_url($hudson_build_url);
         
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
@@ -40,24 +39,27 @@ class HudsonBuild {
         }
                 
         $this->hudson_build_url = $hudson_build_url . "/api/xml";
-        
-        $this->_setStreamContext();
-        
+        $this->http_client      = $http_client;
+
         $this->buildBuildObject();
-        
-        $controler = $this->getHudsonControler(); 
+
+        $controler = $this->getHudsonControler();
         $this->icons_path = $controler->getIconsPath();
     }
     function getHudsonControler() {
         return new hudson();
     }
     
-    public function buildBuildObject() {
+    public function buildBuildObject(){
         $this->dom_build = $this->_getXMLObject($this->hudson_build_url);
     }
     
-    protected function _getXMLObject($hudson_build_url) {
-        $xmlstr = @file_get_contents($hudson_build_url, false, $this->context);
+    protected function _getXMLObject($hudson_build_url)
+    {
+        $this->http_client->setOption(CURLOPT_URL, $hudson_build_url);
+        $this->http_client->doRequest();
+
+        $xmlstr = $this->http_client->getLastResponse();
         if ($xmlstr !== false) {
             $xmlobj = simplexml_load_string($xmlstr);
             if ($xmlobj !== false) {
@@ -66,23 +68,7 @@ class HudsonBuild {
                 throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_build_url)));
             }
         } else {
-            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_build_url))); 
-        }
-    }
-    
-    private function _setStreamContext() {
-        if (array_key_exists('sys_proxy', $GLOBALS) && $GLOBALS['sys_proxy']) {
-            $context_opt = array(
-                'http' => array(
-                    'method' => 'GET',
-                    'proxy' => $GLOBALS['sys_proxy'],
-                    'request_fulluri' => True,
-                    'timeout' => 5.0,
-                ),
-            );
-            $this->context = stream_context_create($context_opt);
-        } else {
-            $this->context = null;
+            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_build_url)));
         }
     }
     
@@ -124,5 +110,3 @@ class HudsonBuild {
         return $this->icons_path .'status_'. $color .'.png';
     }
 }
-
-?>

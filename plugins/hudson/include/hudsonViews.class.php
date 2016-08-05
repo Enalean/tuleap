@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -291,7 +291,8 @@ class hudsonViews extends Views {
                 echo ' <tr>';
 
                 try {
-                    $job = new HudsonJob($row['job_url']);
+                    $http_client = new Http_Client();
+                    $job         = new HudsonJob($row['job_url'], $http_client);
 
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
                     echo '<td>';

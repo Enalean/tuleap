@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,8 @@ class hudsonActions extends Actions {
         $group_id = $request->get('group_id');
         $job_url = $request->get('hudson_job_url');
         try {
-            $job             = new HudsonJob($job_url);
+            $http_client     = new Http_Client();
+            $job             = new HudsonJob($job_url, $http_client);
             $use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
             $use_cvs_trigger = ($request->get('hudson_use_cvs_trigger') === 'on');
             $token           = $request->get('hudson_trigger_token');
