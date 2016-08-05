@@ -36,6 +36,49 @@ codendi.tracker.artifact.artifactLink = {
             textDecoration: (checkbox.checked ? 'line-through' : 'none')
         });
     },
+    enable_mass_unlink: function () {
+        var checkboxes = $$('.tracker-artifact-link-mass-unlink');
+
+        checkboxes.each(function (checkbox) {
+            var tracker_panel = checkbox.up('.tracker-form-element-artifactlink-trackerpanel');
+
+            checkbox.stopObserving('click');
+            checkbox.observe('click', function () {
+                var tds          = tracker_panel.select('td.tracker_report_table_unlink');
+                var force_unlink = checkbox.checked;
+
+                tds.each(function (td) {
+                    var img           = td.down('img');
+                    var checkbox_line = td.down('input[type="checkbox"]');
+
+                    if (! checkbox_line) {
+                        return;
+                    }
+
+                    codendi.tracker.artifact.artifactLink.toggle_unlink(checkbox_line, img, td, force_unlink);
+                });
+            });
+        });
+
+    },
+
+    toggle_unlink: function(checkbox, img, td, force_select) {
+        var unlinked = codendi.imgroot + 'ic/cross_red.png';
+        var linked   = codendi.imgroot + 'ic/cross_grey.png';
+
+        if (force_select) {
+            checkbox.checked = true;
+        } else {
+            checkbox.checked = !checkbox.checked;
+        }
+
+        img.src = checkbox.checked ? unlinked : linked;
+
+        codendi.tracker.artifact.artifactLink.strike(td, checkbox);
+        codendi.tracker.artifact.artifactLink.load_nb_artifacts(checkbox.up('.tracker-form-element-artifactlink-trackerpanel'));
+        codendi.tracker.artifact.artifactLink.reload_aggregates_functions(checkbox.up('.tracker_artifact_field '));
+    },
+
     set_checkbox_style_as_cross: function(table_cells) {
 
         table_cells.each(function (td) {
@@ -53,10 +96,12 @@ codendi.tracker.artifact.artifactLink = {
                         cursor: 'pointer',
                         verticalAlign: 'middle'
                     }).observe('click', function (evt) {
-                        checkbox.checked = !checkbox.checked;
-                        codendi.tracker.artifact.artifactLink.strike(td, checkbox);
-                        codendi.tracker.artifact.artifactLink.load_nb_artifacts(checkbox.up('.tracker-form-element-artifactlink-trackerpanel'));
-                        codendi.tracker.artifact.artifactLink.reload_aggregates_functions(checkbox.up('.tracker_artifact_field '));
+                        codendi.tracker.artifact.artifactLink.toggle_unlink(checkbox, img, td, false);
+
+                        var table = checkbox.up('.tracker_report_table');
+                        if (table) {
+                            table.down('.tracker-artifact-link-mass-unlink').checked = false;
+                        }
                     }).observe('mouseover', function (evt) {
                         img.src = checkbox.checked ? linked : unlinked;
                     }).observe('mouseout', function (evt) {
@@ -160,6 +205,7 @@ codendi.tracker.artifact.artifactLink = {
                                         codendi.tracker.artifact.artifactLink.load_nb_artifacts(renderer_table.up());
                                     });
                                     codendi.tracker.artifact.artifactLink.reload_aggregates_functions(codendi.tracker.artifact.artifactLinker_currentField);
+                                    codendi.tracker.artifact.artifactLink.enable_mass_unlink();
                                 }
                             }
                         }
@@ -781,7 +827,7 @@ document.observe('dom:loaded', function () {
             artifact_links_values[codendi.tracker.artifact.artifactLinker_currentField_id] = { };
         }
         link.up('.tracker_artifact_field')
-            .select('input[type=checkbox]')
+            .select('td input[type=checkbox]')
             .inject(artifact_links_values[codendi.tracker.artifact.artifactLinker_currentField_id], function (acc, e) {
                 acc[e.name.split('[')[3].gsub(']', '')] = 1;
                 return acc;
@@ -916,4 +962,5 @@ document.observe('dom:loaded', function () {
     });
     codendi.tracker.artifact.artifactLink.set_checkbox_style_as_cross( $$('.tracker-form-element-artifactlink-list td.tracker_report_table_unlink') );
     codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
+    codendi.tracker.artifact.artifactLink.enable_mass_unlink();
 });

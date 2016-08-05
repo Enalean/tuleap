@@ -1074,6 +1074,7 @@ plugin_tracker_artifactlink	recent_panel_desc	Sélectionnez les artefacts à lie
 plugin_tracker_artifactlink	recent_panel_title	Artefacts récents
 plugin_tracker_artifactlink	search_panel_title	Rechercher des artefacts
 plugin_tracker_artifactlink	title_prefix	Sélectionner les artefacts à lier à&nbsp;
+plugin_tracker_artifactlink	mass_unlink_title	Marquer tous les liens pour suppression
 
 plugin_tracker_artifact_masschange	cannot_masschange_title	Ce champ est le titre de l'artefact. Il est interdit de le mettre massivement à jour.
 plugin_tracker_artifact_masschange	changing_items	Changer $1 artefact(s) :
