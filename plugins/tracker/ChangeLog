@@ -1,3 +1,6 @@
+Version 5.981 - Tuleap 8.18
+    * request #7263: Display, clean and restore TV5 pending for deletion
+
 Version 5.980 - Tuleap 8.18
     * story #9305 have agile dashboard compatible with ALv2 (Burndown fields can be used with artifact links v2)
 
