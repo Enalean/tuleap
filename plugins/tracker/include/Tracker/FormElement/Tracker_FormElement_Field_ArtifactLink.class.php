@@ -676,7 +676,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $nature_presenter = $nature_presenter_factory->getFromShortname($nature);
             $html .= $renderer->renderToString(
                 'artifactlink-nature-table',
-                new NatureTablePresenter($nature_presenter, $artifact_links, $is_reverse_artifact_links, $this->getTracker())
+                new NatureTablePresenter(
+                    $nature_presenter,
+                    $artifact_links,
+                    $is_reverse_artifact_links,
+                    $this
+                )
             );
         }
         return $html;
@@ -1783,7 +1788,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             if (!is_null($artifact) && $artifact->getTracker()->isActive()) {
                 $nature_html .= $this->getTemplateRenderer()->renderToString(
                     'artifactlink-nature-table-row',
-                    new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes)
+                    new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes, $this)
                 );
             }
         }
@@ -1792,7 +1797,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if ($nature_html !== '') {
             $head_html = $this->getTemplateRenderer()->renderToString(
                     'artifactlink-nature-table-head',
-                    NatureTablePresenter::buildForHeader($nature_presenter, $this->getTracker())
+                    NatureTablePresenter::buildForHeader($nature_presenter, $this)
             );
 
             $result[$key] = array('head' => $head_html, 'rows' => $nature_html);

@@ -1256,6 +1256,10 @@ div.tracker-admin-field-controls {
         &.in-edition .tracker_hidden_edition_field {
             display: block;
         }
+
+        &:not(.in-edition) .tracker_report_table_unlink {
+            display: none;
+        }
     }
 
     &.has_errors {

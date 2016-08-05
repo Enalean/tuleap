@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use Tracker;
+use Tracker_FormElement_Field_ArtifactLink;
 
 class NatureTablePresenter {
 
@@ -45,12 +45,12 @@ class NatureTablePresenter {
         NaturePresenter $nature,
         array $artifact_links,
         $is_reverse_artifact_links,
-        Tracker $tracker
+        Tracker_FormElement_Field_ArtifactLink $field
     ) {
-        $this->table_id           = self::TABLE_ID_PREFIX . $nature->shortname;
-        $this->nature             = $nature->shortname;
-        $this->nature_label       = $this->fetchTabLabel($nature, $is_reverse_artifact_links);
-        $this->tracker_id         = $tracker->getId();
+        $this->table_id              = self::TABLE_ID_PREFIX . $nature->shortname;
+        $this->nature                = $nature->shortname;
+        $this->nature_label          = $this->fetchTabLabel($nature, $is_reverse_artifact_links);
+        $this->tracker_id            = $field->getTracker()->getId();
 
         $language                 = $GLOBALS['Language'];
         $this->id_label           = $language->getText('plugin_tracker_formelement_admin', 'artifactid_label');
@@ -67,12 +67,18 @@ class NatureTablePresenter {
         $html_classes = '';
         foreach($artifact_links as $artifact_link) {
             $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
-            $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact, $html_classes);
+            $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact, $html_classes, $field);
         }
     }
 
-    public static function buildForHeader(NaturePresenter $nature_presenter, Tracker $tracker) {
-       return new NatureTablePresenter($nature_presenter, array(), false, $tracker);
+    public static function buildForHeader(NaturePresenter $nature_presenter, Tracker_FormElement_Field_ArtifactLink $field)
+    {
+        return new NatureTablePresenter(
+            $nature_presenter,
+            array(),
+            false,
+            $field
+        );
     }
 
     private function fetchTabLabel($nature, $is_reverse_artifact_links) {

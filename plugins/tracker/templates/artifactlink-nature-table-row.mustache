@@ -1,5 +1,12 @@
 <tr class="{{ html_classes }}" >
-    <td>{{{ direct_link_to_artifact }}}</td>
+    <td class="tracker_report_table_unlink" width="1">
+        <span><input
+            type="checkbox"
+            name="artifact[{{ artifactlink_field_id }}][removed_values][{{ artifact_id }}][]"
+            value="{{ artifact_id }}"
+        ></span>
+    </td>
+    <td class="tracker-artifact-rollup-view">{{{ direct_link_to_artifact }}}</td>
     <td>{{ project_public_name }}</td>
     <td>{{ tracker_name }}</td>
     <td>{{ artifact_title }}</td>
