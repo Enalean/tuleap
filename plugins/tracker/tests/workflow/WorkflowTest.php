@@ -487,7 +487,7 @@ class Workflow_validateTest extends TuleapTestCase {
         $artifact    = mock('Tracker_Artifact');
 
         try {
-            $workflow->validate($fields_data, $artifact);
+            $workflow->validate($fields_data, $artifact, '');
         } catch (Exception $e) {
             $this->fail('Should not receive an exception');
         }
@@ -508,7 +508,7 @@ class Workflow_validateTest extends TuleapTestCase {
         expect($transition)->validate()->once()->returns(false);
         $this->expectException(new Tracker_Workflow_PermissionTransitionViolationException());
 
-        $workflow->validate($fields_data, $artifact);
+        $workflow->validate($fields_data, $artifact, '');
     }
 }
 
@@ -565,7 +565,7 @@ class Workflow_DisableTest extends TuleapTestCase {
         $fields_data = array($this->field_id => 66);
 
         $this->expectException(new Tracker_Workflow_PermissionTransitionViolationException());
-        $this->workflow->validate($fields_data, $this->artifact);
+        $this->workflow->validate($fields_data, $this->artifact, '');
     }
 
     public function itDisablesTheValidationOfTransitions() {
@@ -575,7 +575,7 @@ class Workflow_DisableTest extends TuleapTestCase {
 
         expect($this->transition)->validate()->never();
 
-        $this->workflow->validate($fields_data, $this->artifact);
+        $this->workflow->validate($fields_data, $this->artifact, '');
     }
 
     public function itDisablesTheGlobalRulesValidation() {

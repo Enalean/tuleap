@@ -207,8 +207,8 @@ class Transition {
      *
      * @return bool, true if the transition can occur, false otherwise
      */
-    public function validate($fields_data, Tracker_Artifact $artifact) {
-        return $this->getConditions()->validate($fields_data, $artifact);
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
+        return $this->getConditions()->validate($fields_data, $artifact, $comment_body);
     }
 
     /**

@@ -75,20 +75,20 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
 
     public function itReturnsTrueWhenNoField() {
         $fields_data = array();
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
 
     public function itReturnsTrueWhenNoFieldId() {
         $fields_data = array(1 => $this->not_empty_data);
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
 
     public function itReturnsTrueWhenFieldNotEmpty() {
         $this->condition->addField($this->field);
         $fields_data = array(123 => $this->not_empty_data);
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
 
@@ -97,7 +97,7 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
         stub($this->changeset)->getValue($this->field)->returns($this->previous_value);
         stub($this->previous_value)->getValue()->returns($this->not_empty_data);
         $fields_data = array();
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
 
@@ -106,7 +106,7 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
         stub($this->changeset)->getValue($this->field)->returns($this->previous_value);
         stub($this->previous_value)->getValue()->returns($this->empty_data);
         $fields_data = array();
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
 
@@ -114,7 +114,7 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
         $this->condition->addField($this->field);
         stub($this->changeset)->getValue($this->field)->returns(null);
         $fields_data = array();
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
 
@@ -122,14 +122,14 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
         $this->condition->addField($this->field);
         $artifact_without_changeset = mock('Tracker_Artifact');
         $fields_data = array();
-        $is_valid    = $this->condition->validate($fields_data, $artifact_without_changeset);
+        $is_valid    = $this->condition->validate($fields_data, $artifact_without_changeset, '');
         $this->assertFalse($is_valid);
     }
 
     public function itReturnsFalseWhenTheFieldIsEmpty() {
         $this->condition->addField($this->field);
         $fields_data = array(123 => $this->empty_data);
-        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
 
@@ -141,7 +141,7 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
             123 => $this->not_empty_data,
             234 => $this->not_empty_data
         );
-        $is_valid = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
 
@@ -153,7 +153,7 @@ class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
             123 => $this->not_empty_data,
             234 => $this->empty_data
         );
-        $is_valid = $this->condition->validate($fields_data, $this->artifact);
+        $is_valid = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
 }

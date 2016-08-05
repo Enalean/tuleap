@@ -128,7 +128,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      *
      * @return bool
      */
-    public function validate($fields_data, Tracker_Artifact $artifact)
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
     {
         if (empty($this->fields)) {
             return true;

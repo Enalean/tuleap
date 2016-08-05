@@ -1474,6 +1474,7 @@ workflow_admin	delete_workflow	Are you sure you want to delete all transitions?
 workflow_admin	title_define_transition_details	Define rules on transition: from <em>$1</em> to <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groups that may make the transition:
 workflow_admin	label_define_transition_required_field	Field that must not be empty
+workflow_admin	label_define_transition_required_comment	Comment must not be empty.
 workflow_admin	permissions_not_updated	Permissions on transition have not been updated.
 workflow_admin	permissions_updated	Permissions on transition have been updated.
 workflow_admin	empty_fields_not_updated	Empty fields on transition have not been updated.

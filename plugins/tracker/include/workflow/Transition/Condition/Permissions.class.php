@@ -106,7 +106,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
-    public function validate($fields_data, Tracker_Artifact $artifact) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
         $current_user = UserManager::instance()->getCurrentUser();
 
         return $this->isUserAllowedToSeeTransition(
