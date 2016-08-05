@@ -1,3 +1,6 @@
+Version 1.404 - Tuleap 8.18
+    * request #8962: Default style for comments editor in modale
+
 Version 1.403 - Tuleap 8.18
     * Replace angular-ui-tree with dragular in kanban view
 

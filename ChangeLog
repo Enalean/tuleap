@@ -22,7 +22,7 @@ Version 8.18 (Not yet released)
 	* External lib no longer referenced in sources
 
 	== Plugins ==
-	* agiledashboard: 1.403
+	* agiledashboard: 1.404
 	* docman: 2.26.117
 	* cardwall: 1.64
 	* tracker: 5.982
