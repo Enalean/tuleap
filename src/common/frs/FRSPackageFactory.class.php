@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -25,6 +26,10 @@ require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once ('common/frs/FRSLog.class.php');
+
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionDao;
 
 /**
  * 
@@ -275,15 +280,25 @@ class FRSPackageFactory {
     }
 
     /**
-     * Test is user can administrate FRS service of given project
-     *
-     * @param PFUser    $user    User to test
-     * @param Integer $groupId Project
-     *
      * @return Boolean
      */
-    public static function userCanAdmin($user, $groupId) {
-        return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
+    public function userCanAdmin(PFUser $user, $project_id)
+    {
+        $project = $this->getProjectManager()->getProject($project_id);
+        return $this->getPermissionManager()->isAdmin($project, $user);
+    }
+
+    private function getProjectManager()
+    {
+        return ProjectManager::instance();
+    }
+
+    private function getPermissionManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
     }
 
 	/**

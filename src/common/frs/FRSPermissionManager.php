@@ -59,4 +59,16 @@ class FRSPermissionManager
     {
         return $this->permission_dao->doesProjectHaveLegacyFrsAdminMembers($project->getID());
     }
+
+    public function userCanRead(Project $project, PFUser $user)
+    {
+        $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), FRSPermission::FRS_READER);
+        foreach ($permissions as $permission) {
+            if ($user->isMemberOfUGroup($permission['ugroup_id'], $project->getID())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

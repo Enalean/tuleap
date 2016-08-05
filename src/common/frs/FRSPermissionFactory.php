@@ -36,7 +36,8 @@ class FRSPermissionFactory
     public function getFrsUGroupsByPermission(Project $project, $permission_type)
     {
         $admins = array();
-        $permissions = $this->permission_dao->searchPermissionsForProjectbyType($project->getID(), $permission_type);
+        $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), $permission_type);
+
         foreach ($permissions as $permission) {
             $admins[$permission['ugroup_id']] = $this->instantiateFromRow($permission);
         }

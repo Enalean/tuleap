@@ -21,6 +21,7 @@
 namespace Tuleap\FRS;
 
 use DataAccessObject;
+use ProjectUGroup;
 
 class FRSPermissionDao extends DataAccessObject
 {
@@ -36,6 +37,7 @@ class FRSPermissionDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
 
     public function searchPermissionsForProjectbyType($project_id, $permission_type)
     {
@@ -83,7 +85,7 @@ class FRSPermissionDao extends DataAccessObject
         return $this->da->commit();
     }
 
-    public function getBindingPermissionsByProject($project_id, $template_id)
+    public function searchBindingPermissionsByProject($project_id, $template_id)
     {
         $project_id  = $this->da->escapeInt($project_id);
         $template_id = $this->da->escapeInt($template_id);
@@ -112,5 +114,88 @@ class FRSPermissionDao extends DataAccessObject
                 LIMIT 1";
 
         return count($this->retrieve($sql)) > 0;
+    }
+
+    public function disableAnonymousRegisteredAuthenticated($project_id)
+    {
+        return $this->updateAccessControl(
+            $project_id,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+    }
+
+    public function disableAuthenticated($project_id)
+    {
+        return $this->updateAccessControl(
+            $project_id,
+            array(ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    private function updateAccessControl($project_id, array $old_ugroup_ids, $new_ugroup_id)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
+        $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
+
+        $sql = "UPDATE frs_global_permissions
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id IN ($old_ugroup_ids)
+                  AND project_id = $project_id";
+
+        return $this->update($sql);
+    }
+
+    private function searchAllProjectsWithAnonymous()
+    {
+        return $this->searchAllProjectsWithPermissionGroup(ProjectUGroup::ANONYMOUS);
+    }
+
+    private function searchAllProjectsWithUnrestricted()
+    {
+        return $this->searchAllProjectsWithPermissionGroup(ProjectUGroup::AUTHENTICATED);
+    }
+
+    private function searchAllProjectsWithPermissionGroup($ugroup_id)
+    {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT DISTINCT groups.group_id
+                FROM groups
+                  JOIN frs_global_permissions ON groups.group_id = frs_global_permissions.project_id
+                WHERE groups.status = 'A'
+                  AND ugroup_id = $ugroup_id
+                ";
+
+        return $this->retrieve($sql);
+    }
+
+    public function updateAllAnonymousAccessToRegistered()
+    {
+        if ($this->searchAllProjectsWithAnonymous()->rowCount() > 0) {
+            return $this->switchDynamicUgroup(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+        }
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered()
+    {
+        if ($this->searchAllProjectsWithUnrestricted()->rowCount() > 0) {
+            return $this->switchDynamicUgroup(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+        }
+    }
+
+    private function switchDynamicUgroup($old_ugroup_id, $new_ugroup_id)
+    {
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+
+        $sql = "UPDATE frs_global_permissions
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id
+                ";
+
+        return $this->update($sql);
     }
 }

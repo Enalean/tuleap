@@ -25,6 +25,7 @@ require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FileModuleMonitorFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once ('common/frs/FRSLog.class.php');
+
 /**
  * 
  */
@@ -308,12 +309,13 @@ class FRSReleaseFactory {
      * Test is user can administrate FRS service of given project
      *
      * @param PFUser    $user    User to test
-     * @param Integer $groupId Project
+     * @param Integer $project_id Project
      *
      * @return Boolean
      */
-    protected function userCanAdmin($user, $groupId) {
-        return FRSPackageFactory::userCanAdmin($user, $groupId);
+    protected function userCanAdmin($user, $project_id)
+    {
+        return $this->_getFRSPackageFactory()->userCanAdmin($user, $project_id);
     }
 
     /**

@@ -18,7 +18,10 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class ForgeAccess_ForgePropertiesManager {
+use Tuleap\FRS\FRSPermissionCreator;
+
+class ForgeAccess_ForgePropertiesManager
+{
 
     /**
      * @var EventManager
@@ -40,14 +43,27 @@ class ForgeAccess_ForgePropertiesManager {
      */
     private $permission_manager;
 
-    public function __construct(ConfigDao $config_dao, ProjectManager $project_manager, PermissionsManager $permission_manager, EventManager $event_manager) {
-        $this->config_dao         = $config_dao;
-        $this->project_manager    = $project_manager;
-        $this->permission_manager = $permission_manager;
-        $this->event_manager      = $event_manager;
+    /**
+     * @var FRSPermissionCreator
+     */
+    private $frs_permission_creator;
+
+    public function __construct(
+        ConfigDao $config_dao,
+        ProjectManager $project_manager,
+        PermissionsManager $permission_manager,
+        EventManager $event_manager,
+        FRSPermissionCreator $frs_permission_creator
+    ) {
+        $this->config_dao             = $config_dao;
+        $this->project_manager        = $project_manager;
+        $this->permission_manager     = $permission_manager;
+        $this->event_manager          = $event_manager;
+        $this->frs_permission_creator = $frs_permission_creator;
     }
 
-    public function updateAccess($new_value, $old_value) {
+    public function updateAccess($new_value, $old_value)
+    {
         if ($new_value === $old_value) {
             return;
         }
@@ -56,6 +72,8 @@ class ForgeAccess_ForgePropertiesManager {
         $this->config_dao->save($property_name, $new_value);
 
         $this->event_manager->processEvent(Event::SITE_ACCESS_CHANGE, array('new_value' => $new_value, 'old_value' => $old_value));
+
+        $this->frs_permission_creator->updateSiteAccess($old_value);
 
         if ($old_value === ForgeAccess::RESTRICTED || $new_value === ForgeAccess::RESTRICTED) {
             $this->project_manager->disableAllowRestrictedForAll();

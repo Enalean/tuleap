@@ -25,277 +25,143 @@ Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackageFactory');
-Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getUserManager', 'getPermissionsManager', '_getFRSPackageFactory', 'getFRSReleasesInfoListFromDb', 'delete_release'));
+Mock::generatePartial(
+    'FRSReleaseFactory',
+    'FRSReleaseFactoryTestVersion',
+    array(
+        'getUserManager',
+        'getPermissionsManager',
+        '_getFRSPackageFactory',
+        'getFRSReleasesInfoListFromDb',
+        'delete_release',
+        'userCanAdmin'
+    )
+);
 
-class FRSReleaseFactoryTest extends UnitTestCase {
+class FRSReleaseFactoryTest extends TuleapTestCase
+{
     protected $group_id   = 12;
     protected $package_id = 34;
     protected $release_id = 56;
     protected $user_id    = 78;
 
-    //
-    // userCanRead
-    //
+    private $user;
+    private $frs_release_factory;
+    private $user_manager;
+    private $permission_manager;
 
-    function testFileReleaseAdminHasAlwaysAccessToReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
-
-        $um = new MockUserManager($this);
-        $um->expectOnce('getUserById', array($this->user_id));
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    public function setUp()
+    {
+        $this->user                = mock('PFUser');
+        $this->frs_release_factory = new FRSReleaseFactoryTestVersion($this);
+        $this->user_manager        = new MockUserManager($this);
+        $this->permission_manager  = new MockPermissionsManager($this);
+        stub($this->user_manager)->getUserById()->returns($this->user);
+        stub($this->frs_release_factory)->getUserManager()->returns($this->user_manager);
     }
 
-    function testProjectAdminHasAlwaysAccessToReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    public function testAdminHasAlwaysAccessToReleases()
+    {
+        stub($this->frs_release_factory)->userCanAdmin()->returns(true);
+        $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    function testSiteAdminHasAlwaysAccessToReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
+    protected function _userCanReadWhenNoPermsOnRelease($canReadPackage)
+    {
+        stub($this->frs_release_factory)->userCanAdmin()->returns(false);
 
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
+        $this->permission_manager->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
+        $this->permission_manager->setReturnValue('isPermissionExist', false);
+        $this->frs_release_factory->setReturnValue('getPermissionsManager', $this->permission_manager);
 
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $frs_package_factory = new MockFRSPackageFactory($this);
+        $frs_package_factory->expectOnce('userCanRead', array($this->group_id, $this->package_id, null));
+        $frs_package_factory->setReturnValue('userCanRead', $canReadPackage);
+        $this->frs_release_factory->setReturnValue('_getFRSPackageFactory', $frs_package_factory);
+
+        return $this->frs_release_factory;
     }
 
-    protected function _userCanReadWhenNoPermsOnRelease($canReadPackage) {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        // User
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', $this->user_id);
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        // Perms
-        $pm = new MockPermissionsManager($this);
-        $pm->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
-        $pm->setReturnValue('isPermissionExist', false);
-        $frsrf->setReturnValue('getPermissionsManager', $pm);
-        
-        // PackageFactory
-        $frspf = new MockFRSPackageFactory($this);
-        $frspf->expectOnce('userCanRead', array($this->group_id, $this->package_id, $this->user_id));
-        $frspf->setReturnValue('userCanRead', $canReadPackage);
-        $frsrf->setReturnValue('_getFRSPackageFactory', $frspf);
-
-        return $frsrf;
+    public function testUserCanReadWhenNoPermsOnReleaseButCanReadPackage()
+    {
+        $this->_userCanReadWhenNoPermsOnRelease(true);
+        $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    function testUserCanReadWhenNoPermsOnReleaseButCanReadPackage() {
-        $frsrf = $this->_userCanReadWhenNoPermsOnRelease(true);
-        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    public function testUserCanReadWhenNoPermsOnReleaseButCannotReadPackage()
+    {
+        $this->_userCanReadWhenNoPermsOnRelease(false);
+        $this->assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    function testUserCanReadWhenNoPermsOnReleaseButCannotReadPackage() {
-        $frsrf = $this->_userCanReadWhenNoPermsOnRelease(false);
-        $this->assertFalse($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    protected function _userCanReadWithSpecificPerms($can_read_release)
+    {
+        $this->user->expectOnce('getUgroups', array($this->group_id, array()));
+        $this->user->setReturnValue('getUgroups', array(1,2,76));
+
+        $this->permission_manager->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
+        $this->permission_manager->setReturnValue('isPermissionExist', true);
+        $this->permission_manager->expectOnce('userHasPermission', array($this->release_id, 'RELEASE_READ', array(1,2,76)));
+        $this->permission_manager->setReturnValue('userHasPermission', $can_read_release);
+        $this->frs_release_factory->setReturnValue('getPermissionsManager', $this->permission_manager);
     }
 
-    protected function _userCanReadWithSpecificPerms($canReadRelease) {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        // User
-        $user = mock('PFUser');
-        $user->expectOnce('getUgroups', array($this->group_id, array()));
-        $user->setReturnValue('getUgroups', array(1,2,76));
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        // Perms
-        $pm = new MockPermissionsManager($this);
-        $pm->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
-        $pm->setReturnValue('isPermissionExist', true);
-        $pm->expectOnce('userHasPermission', array($this->release_id, 'RELEASE_READ', array(1,2,76)));
-        $pm->setReturnValue('userHasPermission', $canReadRelease);
-        $frsrf->setReturnValue('getPermissionsManager', $pm);
-        
-        return $frsrf;
+    public function testUserCanReadWithSpecificPermsHasAccess()
+    {
+        $this->_userCanReadWithSpecificPerms(true);
+        $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    function testUserCanReadWithSpecificPermsHasAccess() {
-        $frsrf = $this->_userCanReadWithSpecificPerms(true);
-        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    public function testUserCanReadWithSpecificPermsHasNoAccess()
+    {
+        $this->_userCanReadWithSpecificPerms(false);
+        $this->assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-    function testUserCanReadWithSpecificPermsHasNoAccess() {
-        $frsrf = $this->_userCanReadWithSpecificPerms(false);
-        $this->assertFalse($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+
+    public function testAdminCanAlwaysUpdateReleases()
+    {
+        stub($this->frs_release_factory)->userCanAdmin()->returns(true);
+        $this->assertTrue($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
-    //
-    // userCanUpdate
-    //
-    function testFileReleaseAdminCanAlwaysUpdateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
-
-        $um = new MockUserManager($this);
-        $um->expectOnce('getUserById', array($this->user_id));
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
+    public function testMereMortalCannotUpdateReleases()
+    {
+        stub($this->frs_release_factory)->userCanAdmin()->returns(false);
+        $this->assertFalse($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
-    function testProjectAdminCanAlwaysUpdateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
+    public function testAdminCanAlwaysCreateReleases()
+    {
+        stub($this->frs_release_factory)->userCanAdmin()->returns(true);
+        $this->assertTrue($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
-    function testSiteAdminCanAlwaysUpdateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
+    public function testMereMortalCannotCreateReleases()
+    {
+        stub($this->frs_release_factory)->userCanAdmin()->returns(false);
+        $this->assertFalse($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
-    function testMereMortalCannotUpdateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertFalse($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
-    }
-
-    //
-    // userCanCreate
-    //
-
-    function testFileReleaseAdminCanAlwaysCreateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
-
-        $um = new MockUserManager($this);
-        $um->expectOnce('getUserById', array($this->user_id));
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanCreate($this->group_id, $this->user_id));
-    }
-
-    function testProjectAdminCanAlwaysCreateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanCreate($this->group_id, $this->user_id));
-    }
-
-    function testSiteAdminCanAlwaysCreateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertTrue($frsrf->userCanCreate($this->group_id, $this->user_id));
-    }
-
-    function testMereMortalCannotCreateReleases() {
-        // Setup test
-        $frsrf = new FRSReleaseFactoryTestVersion($this);
-
-        $user = mock('PFUser');
-
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserById', $user);
-        $frsrf->setReturnValue('getUserManager', $um);
-        
-        $this->assertFalse($frsrf->userCanCreate($this->group_id, $this->user_id));
-    }
-
-    function testDeleteProjectReleasesFail() {
-        $releaseFactory = new FRSReleaseFactoryTestVersion();
+    public function testDeleteProjectReleasesFail()
+    {
         $release = array('release_id' => 1);
-        $releaseFactory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
-        $releaseFactory->setReturnValueAt(0, 'delete_release', true);
-        $releaseFactory->setReturnValueAt(1, 'delete_release', false);
-        $releaseFactory->setReturnValueAt(2, 'delete_release', true);
-        $releaseFactory->expectCallCount('delete_release', 3);
-        $this->assertFalse($releaseFactory->deleteProjectReleases(1));
+        $this->frs_release_factory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
+        $this->frs_release_factory->setReturnValueAt(0, 'delete_release', true);
+        $this->frs_release_factory->setReturnValueAt(1, 'delete_release', false);
+        $this->frs_release_factory->setReturnValueAt(2, 'delete_release', true);
+        $this->frs_release_factory->expectCallCount('delete_release', 3);
+        $this->assertFalse($this->frs_release_factory->deleteProjectReleases(1));
     }
 
-    function testDeleteProjectReleasesSuccess() {
-        $releaseFactory = new FRSReleaseFactoryTestVersion();
+    public function testDeleteProjectReleasesSuccess()
+    {
         $release = array('release_id' => 1);
-        $releaseFactory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
-        $releaseFactory->setReturnValueAt(0, 'delete_release', true);
-        $releaseFactory->setReturnValueAt(1, 'delete_release', true);
-        $releaseFactory->setReturnValueAt(2, 'delete_release', true);
-        $releaseFactory->expectCallCount('delete_release', 3);
-        $this->assertTrue($releaseFactory->deleteProjectReleases(1));
+        $this->frs_release_factory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
+        $this->frs_release_factory->setReturnValueAt(0, 'delete_release', true);
+        $this->frs_release_factory->setReturnValueAt(1, 'delete_release', true);
+        $this->frs_release_factory->setReturnValueAt(2, 'delete_release', true);
+        $this->frs_release_factory->expectCallCount('delete_release', 3);
+        $this->assertTrue($this->frs_release_factory->deleteProjectReleases(1));
     }
-
 }
-
-?>

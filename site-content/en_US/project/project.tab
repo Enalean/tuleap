@@ -457,7 +457,7 @@ project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
 project_admin_utils	perm_reset_for_wikiattachment	Permission reset for wiki attachment $1
 project_admin_utils	perm_reset_for_object	Permission reset for object $1
 project_admin_utils	perm_granted_for_field	Permission granted for field $1
-project_admin_utils	perm_granted_for_files	Permission granted for files
+project_admin_utils	perm_granted_for_files	Permission granted for files $1
 project_admin_utils	perm_granted_for_tracker	Permission granted for tracker $1
 project_admin_utils	perm_granted_for_package	Permission granted for package $1
 project_admin_utils	perm_granted_for_release	Permission granted for release $1
