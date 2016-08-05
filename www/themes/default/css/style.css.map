@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,kBAAmB;EACf,UAAU,EAAE,UAAU;;AAEtB,6BAAW;EACP,UAAU,EAAE,IAAI;;AAGZ,6FAAsB;EAClB,QAAQ,EAAE,QAAQ;EAClB,OAAO,EAAE,CAAC;;AAGd,4CAAS;EACL,QAAQ,EAAE,QAAQ;EAClB,MAAM,EAAE,IAAI;EACZ,KAAK,EAAE,IAAI;EACX,IAAI,EAAE,CAAC;EACP,OAAO,EAAE,WAAW;EACpB,QAAQ,EAAE,MAAM;EAChB,eAAe,EAAE,UAAU;EAC3B,UAAU,EAAE,UAAU;;AAKlC,8DAA8C;EAC1C,OAAO,EAAE,UAAU;;;AAI3B,yBAA0B;EACtB,OAAO,EAAE,IAAI",
-"sources": ["file:///Users/jleclaire/Workspace/tuleap/plugins/trafficlights/www/themes/default/css/style.scss"],
-"names": [],
-"file": "style.css"
-}

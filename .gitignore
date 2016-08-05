@@ -9,3 +9,4 @@ www/scripts/angular/vendor/
 node_modules/
 /nbproject/
 .sass-cache/
+*.css.map
