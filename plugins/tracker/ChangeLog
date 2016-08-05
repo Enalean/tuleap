@@ -1,3 +1,6 @@
+Version 5.982 - Tuleap 8.18
+    * story #9096: A transition cannot occurs if a follow-up comment is not provided
+
 Version 5.981 - Tuleap 8.18
     * request #7263: Display, clean and restore TV5 pending for deletion
 
