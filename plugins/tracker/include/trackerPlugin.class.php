@@ -296,9 +296,7 @@ class trackerPlugin extends Plugin {
 
             $config = new AllowedProjectsConfig(
                 $project_manager,
-                new AllowedProjectsDao(),
-                new Tracker_Hierarchy_Dao(),
-                EventManager::instance()
+                new AllowedProjectsDao()
             );
             if ($config->isProjectAllowedToUseNature($template)) {
                 $config->addProject($project);

@@ -879,7 +879,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function itShouldDoNothingIfNoAttributeAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers /></project>');
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
+        expect($this->nature_config)->isProjectAllowedToUseNature()->never();
         expect($this->nature_config)->addProject()->never();
         expect($this->nature_config)->removeProject()->never();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
@@ -888,7 +888,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function itShouldDoNothingIfNoAttributeAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers /></project>');
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
+        expect($this->nature_config)->isProjectAllowedToUseNature()->never();
         expect($this->nature_config)->addProject()->never();
         expect($this->nature_config)->removeProject()->never();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
@@ -897,7 +897,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function itShouldNotActivateIfAttributeIsFalseAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="false"/></project>');
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
+        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
         expect($this->nature_config)->addProject()->never();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
 
@@ -906,15 +906,14 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function itShouldActivateIfAttributeIsTrueAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="true"/></project>');
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
+        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
         expect($this->nature_config)->addProject()->once();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDoNothingIfAttributeIsTrueAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="true"/></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
+        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(1);
         expect($this->nature_config)->addProject()->never();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
@@ -922,7 +921,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function itShouldDeactivateIfAttributeIsFalseAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="false"/></project>');
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
+        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
         expect($this->nature_config)->removeProject()->once();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }

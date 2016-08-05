@@ -126,9 +126,7 @@ class TrackerXmlImport {
 
         $nature_config = new AllowedProjectsConfig(
             ProjectManager::instance(),
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
+            new AllowedProjectsDao()
         );
 
         return new TrackerXmlImport(
@@ -234,11 +232,7 @@ class TrackerXmlImport {
             $artifacts_id_mapping,
             $created_artifacts);
 
-        if(!$this->nature_config->isProjectAllowedToUseNature($project)) {
-            $this->importHierarchy($xml_input, $created_trackers_mapping);
-        } else {
-            $this->logger->info('No hierarchy will be imported as the trackers use the artifact link nature feature.');
-        }
+        $this->importHierarchy($xml_input, $created_trackers_mapping);
 
         if (isset($xml_input->trackers->triggers)) {
             $this->trigger_rulesmanager->createFromXML($xml_input->trackers->triggers, $this->xmlFieldsMapping);

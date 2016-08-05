@@ -591,9 +591,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function getAllowedProjectsConfig() {
         return new AllowedProjectsConfig(
             ProjectManager::instance(),
-            new AllowedProjectsDao(),
-            new Tracker_Hierarchy_Dao(),
-            EventManager::instance()
+            new AllowedProjectsDao()
         );
     }
 

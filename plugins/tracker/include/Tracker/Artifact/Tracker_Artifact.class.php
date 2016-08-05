@@ -1559,6 +1559,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $fields_data   = array();
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
+            if ($this->getTracker()->isProjectAllowedToUseNature()) {
+                $fields_data[$artlink_field->getId()]['natures'][$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            }
+
             try {
                 $this->createNewChangeset($fields_data, $comment, $current_user);
                 return true;
