@@ -31,7 +31,8 @@ class PermissionController extends BaseFrsPresenter
     {
         $renderer          = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 
-        $toolbar_presenter = new ToolbarPresenter($project);
+        $title             = $GLOBALS['Language']->getText('file_file_utils', 'permissions');
+        $toolbar_presenter = new ToolbarPresenter($project, $title);
 
         $toolbar_presenter->setPermissionIsActive();
         $toolbar_presenter->displaySectionNavigation();

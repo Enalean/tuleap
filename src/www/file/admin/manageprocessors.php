@@ -52,7 +52,8 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-$presenter = new ToolbarPresenter($project);
+$title     = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
+$presenter = new ToolbarPresenter($project, $title);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 

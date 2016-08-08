@@ -76,7 +76,8 @@ $params = array (
 
 $project   = $pm->getProject($group_id);
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-$presenter = new ToolbarPresenter($project);
+$title     = $Language->getText('file_admin_index', 'file_manager_admin');
+$presenter = new ToolbarPresenter($project, $title);
 
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');

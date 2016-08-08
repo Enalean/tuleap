@@ -178,7 +178,7 @@ class ServiceFile extends Service
         if ($user->isMemberOfUGroup(ProjectUGroup::FILE_MANAGER_ADMIN, $project->getId())) {
             $toolbar[]   = array(
                 'title' => "Admin",
-                'url'   => FRS_BASE_URL .'/admin/manageprocessors.php?'. http_build_query(array(
+                'url'   => '/file/admin/manageprocessors.php?'. http_build_query(array(
                     'group_id' => $project->getId()
                 ))
             );
