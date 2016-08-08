@@ -1,3 +1,6 @@
+Version 1.31 - Tuleap 8.18
+    * request #9377: Misleading error message when a job URL can not accessed
+
 Version 1.30 - Tuleap 8.17
     * request #9286: All Personal widgets no more accessible when a jenkins job has no name defined
 
