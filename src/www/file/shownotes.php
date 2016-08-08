@@ -35,7 +35,7 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
     $additional_view = getAdditionalView($release, $user);
 
     $group_id = $release->getGroupID();
-    file_utils_header(array('title'=>$Language->getText('file_shownotes','release_notes'),'group'=>$group_id));
+    file_utils_admin_header(array('title'=>$Language->getText('file_shownotes','release_notes'),'group'=>$group_id));
 
     if ($additional_view) {
         echo $additional_view;

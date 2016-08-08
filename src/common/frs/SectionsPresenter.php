@@ -37,11 +37,11 @@ class SectionsPresenter
         $this->permissions = $GLOBALS['Language']->getText('file_file_utils', 'permissions');
         $this->processors  = $GLOBALS['Language']->getText('file_file_utils', 'manage_proc');
 
-        $this->permissions_url = FRS_BASE_URL .'/admin/?'. http_build_query(array(
+        $this->permissions_url = '/file/admin/?'. http_build_query(array(
             'group_id' => $this->project_id,
             'action'   => 'edit_permissions'
         ));
-        $this->processors_url = FRS_BASE_URL .'/admin/manageprocessors.php?'. http_build_query(array(
+        $this->processors_url = '/file/admin/manageprocessors.php?'. http_build_query(array(
             'group_id' => $this->project_id
         ));
     }
