@@ -1073,6 +1073,7 @@ plugin_tracker_artifactlink	recent_panel_desc	Pick artifacts to be linked from y
 plugin_tracker_artifactlink	recent_panel_title	Recent artifacts
 plugin_tracker_artifactlink	search_panel_title	Search artifacts
 plugin_tracker_artifactlink	title_prefix	Select artifacts to link to&nbsp;
+plugin_tracker_artifactlink	mass_unlink_title	Mark all links to be removed
 
 plugin_tracker_artifact_masschange	cannot_masschange_title	This field is the title of the artifact. It is not allowed to masschange it.
 plugin_tracker_artifact_masschange	changing_items	Changing $1 artifact(s):

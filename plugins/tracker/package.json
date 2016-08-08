@@ -13,6 +13,7 @@
     "gulp-rev": "^7.1.0"
   },
   "scripts": {
-    "build": "node_modules/.bin/gulp build"
+    "build": "node_modules/.bin/gulp build",
+    "watch": "node_modules/.bin/gulp watch"
   }
 }
