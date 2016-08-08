@@ -61,7 +61,8 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts');
         }
-        return  $title;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($title);
     }
     
     function getDescription() {
@@ -99,9 +100,11 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             
         }
     }
-    
-    function getContent() {
-        $html = '';
+
+    function getContent()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if ($this->job != null && $this->build != null) {
                         
             $build = $this->build;
@@ -109,14 +112,14 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             $html .= '<ul>';
             $dom = $build->getDom();
             foreach ($dom->artifact as $artifact) {
-                $html .= ' <li><a href="'.$build->getUrl().'/artifact/'.$artifact->relativePath.'">'.$artifact->fileName.'</a></li>';
+                $html .= ' <li><a href="'.$purifier->purify($build->getUrl().'/artifact/'.$artifact->relativePath).'">'.$purifier->purify($artifact->fileName).'</a></li>';
             }
             $html .= '</ul>';
         } else {
             if ($this->job != null) {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found'));
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
             }
         }            
         return $html;
