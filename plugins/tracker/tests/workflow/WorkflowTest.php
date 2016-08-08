@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -506,7 +506,7 @@ class Workflow_validateTest extends TuleapTestCase {
         $artifact    = mock('Tracker_Artifact');
 
         expect($transition)->validate()->once()->returns(false);
-        $this->expectException(new Tracker_Workflow_PermissionTransitionViolationException());
+        $this->expectException(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
 
         $workflow->validate($fields_data, $artifact, '');
     }
@@ -564,7 +564,7 @@ class Workflow_DisableTest extends TuleapTestCase {
     public function itIsNotValidWhenTheWOrkflowIsEnabled() {
         $fields_data = array($this->field_id => 66);
 
-        $this->expectException(new Tracker_Workflow_PermissionTransitionViolationException());
+        $this->expectException(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($this->transition));
         $this->workflow->validate($fields_data, $this->artifact, '');
     }
 
