@@ -1,10 +1,23 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All rights reserved
  * @copyright Copyright (c) Xerox Corporation, Codendi 2007-2008.
- *
- * This file is licensed under the GNU General Public License version 2. See the file COPYING.
- * 
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  * HudsonPlugin
  */
@@ -200,8 +213,9 @@ class hudsonPlugin extends Plugin {
                     }
                 }
                 if ($dar && $dar->valid()) {
-                    $row = $dar->current();
-                    $build = new HudsonBuild($row['job_url'].'/'.$build_id.'/');
+                    $row         = $dar->current();
+                    $http_client = new Http_Client();
+                    $build       = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
                     echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $build->getBuildTime() . '<br />'; 
                     echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $build->getResult();
                 } else {
@@ -216,9 +230,11 @@ class hudsonPlugin extends Plugin {
                 if ($dar->valid()) {
                     $row = $dar->current();
                     try {
-                        $job = new HudsonJob($row['job_url']);
-                        $job_id = $row['job_id'];
-                        $html = '';
+                        $http_client = new Http_Client();
+                        $job         = new HudsonJob($row['job_url'], $http_client);
+                        $job_id      = $row['job_id'];
+
+                        $html  = '';
                         $html .= '<table>';
                         $html .= ' <tr>';
                         $html .= '  <td colspan="2">';
@@ -278,7 +294,8 @@ class hudsonPlugin extends Plugin {
                 if ($dar && $dar->valid()) {
                     $row = $dar->current();
                     try {
-                        $build = new HudsonBuild($row['job_url'].'/'.$build_id.'/');
+                        $http_client         = new Http_Client();
+                        $build               = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
                         $params['sparkline'] = $build->getStatusIcon();
                     } catch (Exception $e) {
                     }
@@ -292,7 +309,8 @@ class hudsonPlugin extends Plugin {
                 if ($dar->valid()) {
                     $row = $dar->current();
                     try {
-                        $job = new HudsonJob($row['job_url']);
+                        $http_client         = new Http_Client();
+                        $job                 = new HudsonJob($row['job_url'], $http_client);
                         $params['sparkline'] = $job->getStatusIcon();
                     } catch (Exception $e) {
                     }
