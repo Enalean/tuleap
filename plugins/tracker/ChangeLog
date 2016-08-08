@@ -1,3 +1,6 @@
+Version 5.985 - Tuleap 8.18
+    * story #9251: mass remove links when editing artifacts
+
 Version 5.984 - Tuleap 8.18
     * Do not raise perms error when the transition is not valid
 
