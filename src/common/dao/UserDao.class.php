@@ -497,11 +497,14 @@ class UserDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function suspendInactiveAccounts($time) {
-        $sql = 'UPDATE user AS user INNER JOIN user_access AS access ON user.user_id=access.user_id'.
-                     ' SET user.status = "S", user.unix_status = "S"'.
-                     ' WHERE access.last_access_date != 0'.
-                     ' AND access.last_access_date < '.$time;
+    public function suspendInactiveAccounts($time)
+    {
+        $time = $this->getDa()->escapeInt($time);
+        $sql  = 'UPDATE user AS user' .
+            ' INNER JOIN user_access AS access ON user.user_id=access.user_id' .
+            ' SET user.status = "S", user.unix_status = "S"' .
+            ' WHERE (access.last_access_date = 0 AND user.add_date < ' . $time . ')' .
+            ' OR (access.last_access_date != 0 AND access.last_access_date < ' . $time . ')';
         return $this->update($sql);
     }
 
