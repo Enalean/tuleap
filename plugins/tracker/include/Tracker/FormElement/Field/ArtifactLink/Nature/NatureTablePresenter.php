@@ -38,6 +38,7 @@ class NatureTablePresenter {
     public $tracker_id;
 
     public $artifact_links;
+    public $mass_unlink_title;
 
     const TABLE_ID_PREFIX = "tracker_report_table_nature_";
 
@@ -69,6 +70,8 @@ class NatureTablePresenter {
             $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
             $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact, $html_classes, $field);
         }
+
+        $this->mass_unlink_title = $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'mass_unlink_title');
     }
 
     public static function buildForHeader(NaturePresenter $nature_presenter, Tracker_FormElement_Field_ArtifactLink $field)
