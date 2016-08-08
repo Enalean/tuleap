@@ -1,3 +1,12 @@
+Version 8.17-3 (Monday, August 8th 2016)
+	== Bug Fix ==
+	* request #9329: New install doesn't prompt for domain name
+	* request #9346 Computed field V2 - Description of computed field needs to be updated
+	* request #9245 Imported SVN repositories are owned by root
+	* request #9361: CVS search by commiter does not work
+	* request #9367: Archived files can be accessed by all users with a shell access
+	* request #9364: When OpenIDConnect client plugin is activated, git over http no longer works
+
 Version 8.17-2 (Monday, August 1st 2016)
 	== Bug Fix ==
 	* request #9363: Link to the documentation to configure a polling jobs is wrong
