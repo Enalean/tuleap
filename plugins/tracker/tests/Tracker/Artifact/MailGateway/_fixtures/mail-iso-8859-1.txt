@@ -1,0 +1,28 @@
+From user@example.com  Fri Jul  1 09:09:15 2016
+Return-Path: <user@example.com>
+X-Original-To: forge__artifacts@tuleap.example.com
+Delivered-To: forge__artifacts@tuleap.example.com
+From: User1 <user@example.com>
+To: "forge__artifacts@tuleap.example.com"
+	<forge__artifacts@tuleap.example.com>
+Subject: RE : [FaaSSupport #308553] [testcheck-a1026] Ressources pour test
+Thread-Topic: RE : [FaaSSupport #308553] [testcheck-a1026] Ressources pour
+ test
+Thread-Index: AQHR02d5VnybKcdlgUKWGFvX/EH39g==
+Date: Fri, 1 Jul 2016 07:09:14 +0000
+Message-ID: <falrs8kb3ga6pca2dkcjrrcr.1467356950902@email.android.com>
+References: <308553-502c89603953820f830355e2ba711d75-26477-894361@www.tuleap.example.com>
+In-Reply-To: <308553-502c89603953820f830355e2ba711d75-26477-894361@www.tuleap.example.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: multipart/alternative;
+	boundary="_000_falrs8kb3ga6pca2dkcjrrcr1467356950902emailandroidcom_"
+MIME-Version: 1.0
+
+--_000_falrs8kb3ga6pca2dkcjrrcr1467356950902emailandroidcom_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+This should be correctly displayed: =E8=E0=E9=F4

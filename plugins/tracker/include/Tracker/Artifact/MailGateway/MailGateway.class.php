@@ -141,9 +141,11 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         return $changeset;
     }
 
-    private function linkRawMailToChangeset($raw_mail, Tracker_Artifact_Changeset $changeset) {
-        $this->logger->debug('Linking created changeset ('. $changeset->getId() .') to the raw mail.');
-        $this->incoming_mail_dao->save($changeset->getId(), $raw_mail);
+    private function linkRawMailToChangeset($raw_mail, Tracker_Artifact_Changeset $changeset)
+    {
+        $this->logger->debug('Linking created changeset (' . $changeset->getId() . ') to the raw mail.');
+        $raw_mail_utf8 = mb_convert_encoding($raw_mail, 'utf-8');
+        $this->incoming_mail_dao->save($changeset->getId(), $raw_mail_utf8);
     }
 
     /** @return Tracker_Artifact_Changeset */
