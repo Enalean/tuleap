@@ -1,3 +1,6 @@
+Version 0.77 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 0.76 - Tuleap 8.18
     * purge /var/tmp/svn on restore
 

@@ -23,27 +23,33 @@ Version 8.18 (Not yet released)
 	* External lib no longer referenced in sources
 
 	== Plugins ==
-	* agiledashboard: 1.408
-	* docman: 2.26.117
-	* cardwall: 1.64
-	* tracker: 5.987
-	* forumml: 2.6.26
+	* agiledashboard: 1.409
+	* docman: 2.26.118
+	* cardwall: 1.65
+	* tracker: 5.988
+	* forumml: 2.6.27
 	* ldap: 3.106
-	* mediawiki: 0.121
+	* mediawiki: 0.122
 	* webdav: 1.9.17
-	* git: 4.248
+	* git: 4.249
 	* boomerang: 0.5
-	* statistics: 0.62
-	* svn: 0.76
-	* hudson_svn: 0.15
+	* statistics: 0.63
+	* svn: 0.77
+	* hudson_svn: 0.16
 	* referencealias_svn: 0.11
-	* fulltextsearch: 0.134
-	* graphontrackersv5: 5.25
-	* proftpd: 0.27
-	* projectlinks: 2.10
-	* openidconnectclient: 0.22
+	* fulltextsearch: 0.135
+	* graphontrackersv5: 5.26
+	* proftpd: 0.28
+	* projectlinks: 2.11
+	* openidconnectclient: 0.23
 	* archivedeleteditems: 0.9
-	* hudson: 1.32
+	* hudson: 1.33
+	* IM: 1.5.38
+	* admindelegation: 2.13
+	* frs: 0.18
+	* graphontrackers: 1.17
+	* pluginsadministration: 1.19
+	* userlog: 1.9
 
     == Themes ==
 	* FlamingParrot: 1.145

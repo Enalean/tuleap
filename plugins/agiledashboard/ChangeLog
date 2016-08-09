@@ -1,3 +1,6 @@
+Version 1.409 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 1.408 - Tuleap 8.18
     * request #9385: Using dark themes; kanban's drop-empty images raise 404 error
 

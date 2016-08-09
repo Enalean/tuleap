@@ -1,3 +1,6 @@
+Version 2.26.118 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 2.26.117 - Tuleap 8.18
     * request #9299: combine JavaScript with hash
 

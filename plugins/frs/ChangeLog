@@ -1,3 +1,6 @@
+Version 0.18 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 0.17 - Tuleap 8.17
     * story #9100: See a rollup view for parent/child
 

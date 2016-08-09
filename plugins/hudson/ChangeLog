@@ -1,3 +1,6 @@
+Version 1.33 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 1.32 - Tuleap 8.18
     * request #9379: Multiple persistent XSS in the job configuration
 
