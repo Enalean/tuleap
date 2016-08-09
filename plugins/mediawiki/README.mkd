@@ -9,12 +9,8 @@ dependencies are already installed, you just need to activate the plugin
 to start using it.
 
 == Apache configuration update ==
-
-1. open /etc/httpd/conf.d/codendi_aliases.conf
-2. locate the 'Plugin directories' section title.
-3. paste the following row of code straight after it
-Include conf.d/tuleap-plugins/*.conf
-4. restart apache: service httpd restart
+You must reload the Apache configuration you install the plugin.
+You can do that with service httpd reload
 
 === Acknowledgments ===
 
