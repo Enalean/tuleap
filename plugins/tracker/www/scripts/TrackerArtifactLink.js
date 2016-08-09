@@ -405,7 +405,7 @@ document.observe('dom:loaded', function () {
     }
 
     (function () {
-        $$('#tracker_report_table_nature__is_child > tbody > tr > td:first-child > a.direct-link-to-artifact').each(
+        $$('#tracker_report_table_nature__is_child > tbody > tr > td.tracker-artifact-rollup-view > a.direct-link-to-artifact').each(
             function (link) {
                 initRollupViewOfLink(link, 1);
             }
@@ -490,6 +490,7 @@ document.observe('dom:loaded', function () {
 
                 additional_row.dataset.childOf = row_id;
                 additional_row.innerHTML = ' \
+                    <td class="tracker_report_table_unlink"></td> \
                     <td class="tracker-artifact-rollup-view" style="padding-left: '+ (depth * 20) +'px;"> \
                         <a class="direct-link-to-artifact" \
                             href="'+ child.html_url +'" \

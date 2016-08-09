@@ -20,19 +20,23 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
+use Tracker_FormElement_Field_ArtifactLink;
+
 class ArtifactInNatureTablePresenter {
 
     public $direct_link_to_artifact;
     public $project_public_name;
     public $tracker_name;
+    public $artifact_id;
     public $artifact_title;
     public $artifact_status;
     public $artifact_last_update_date;
     public $artifact_submitter;
     public $artifact_assignees;
     public $html_classes;
+    public $artifactlink_field_id;
 
-    public function __construct(\Tracker_Artifact $artifact, $html_classes) {
+    public function __construct(\Tracker_Artifact $artifact, $html_classes, Tracker_FormElement_Field_ArtifactLink $field) {
         $this->html_classes = $html_classes;
         $tracker            = $artifact->getTracker();
         $project            = $tracker->getProject();
@@ -42,9 +46,11 @@ class ArtifactInNatureTablePresenter {
         $this->direct_link_to_artifact   = $artifact->fetchDirectLinkToArtifact();
         $this->project_public_name       = $project->getPublicName();
         $this->tracker_name              = $this->emptyStringIfNull($tracker->getName());
+        $this->artifact_id               = $artifact->getId();
         $this->artifact_title            = $this->emptyStringIfNull($artifact->getTitle());
         $this->artifact_status           = $this->emptyStringIfNull($artifact->getStatus());
         $this->artifact_last_update_date = date('Y-d-m H:i', $artifact->getLastUpdateDate());
+        $this->artifactlink_field_id = $field->getId();
 
         $assignees      = $artifact->getAssignedTo($current_user);
         $assignee_links = array();
