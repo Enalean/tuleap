@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 /**
  * Link datas, views and actions.
@@ -26,8 +27,6 @@
  * @author    guillaume storchi
  * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/user/UserManager.class.php');
 
 class PluginController {
 
@@ -178,9 +177,9 @@ class PluginController {
     function executeViews() {
         $wv = $this->instantiateView();
         //this allow to skip header
-        if (! isset($_REQUEST['noheader']) && $this->default_page_rendering) {
+        if (! $this->isADownload() && $this->default_page_rendering) {
             $wv->display('header', $this->views['header']);
-        }        
+        }
         foreach ($this->views as $viewName=>$viewParams) {
             if ( $viewName != 'header' && $viewName != 'footer' ) {
                 $wv->display($viewName, $viewParams);
@@ -245,6 +244,18 @@ class PluginController {
     protected function setDefaultPageRendering($bool) {
         $this->default_page_rendering = $bool;
     }
-}
 
-?>
+    /**
+     * @return bool
+     */
+    public function isADownload()
+    {
+        $action_type = $this->request->get('a');
+        return $this->request->get('noheader') == 1 ||
+                $action_type === 'snapshot' ||
+                $action_type === 'atom' ||
+                $action_type === 'rss' ||
+                $action_type === 'commitdiff_plain' ||
+                $action_type === 'blob_plain';
+    }
+}

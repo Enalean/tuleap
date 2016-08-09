@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,13 +34,14 @@ class GitViews_GitPhpViewer {
         $this->gitphp_path = file_exists($gitphp_path) ? $gitphp_path : $this->gitphp_path;
     }
 
-    public function getContent() {
+    public function getContent($is_download)
+    {
         ob_start();
-        $this->getView();
+        $this->getView($is_download);
         return ob_get_clean();
     }
 
-    private function getView() {
+    private function getView($is_download) {
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
         } else if ($_REQUEST['a'] === 'blobdiff' && isset($_REQUEST['jenkins']) && $_REQUEST['jenkins'] === 'true') {
@@ -57,13 +58,13 @@ class GitViews_GitPhpViewer {
         $_REQUEST['git_root_path'] = $this->repository->getGitRootPath();
         $_REQUEST['action']        = 'view';
         $this->preSanitizeRequestForGitphp();
-        if ( empty($_REQUEST['noheader']) ) {
+        if (! $is_download) {
             echo '<div id="gitphp" class="plugin_git_gitphp">';
         }
 
         include($this->getGitPhpIndexPath());
 
-        if ( empty($_REQUEST['noheader']) ) {
+        if (! $is_download) {
             echo '</div>';
         }
     }
@@ -111,5 +112,3 @@ class GitViews_GitPhpViewer {
         }
     }
 }
-
-?>

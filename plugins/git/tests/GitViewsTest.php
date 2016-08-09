@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -119,6 +119,7 @@ class GitViewsTest extends UnitTestCase {
 class GitView_DiffViewTest extends TuleapTestCase {
 
     public function testGetViewInverseURLArgumentIfActionIsBlobdiffAndJenkinsIsTrue() {
+        $is_download         = false;
         $_REQUEST['jenkins'] = 'true';
         $_REQUEST['a']       = 'blobdiff';
         $src_initial         = 'src';
@@ -133,13 +134,14 @@ class GitView_DiffViewTest extends TuleapTestCase {
         stub($repository)->getGitRootPath()->returns('/home/abcd');
 
         $gitphp_viewer = new GitViews_GitPhpViewer($repository, dirname(__FILE__).'/_fixtures/fakeGitPHP');
-        $gitphp_viewer->getContent();
+        $gitphp_viewer->getContent($is_download);
 
         $this->assertEqual($_GET['hp'], $src_initial);
         $this->assertEqual($_GET['h'], $dest_initial);
     }
 
     public function testGetViewInverseURLArgumentIfActionIsBlobdiffAndJenkinsIsFalse() {
+        $is_download         = false;
         $_REQUEST['jenkins'] = 'false';
         $_REQUEST['a']       = 'blobdiff';
         $src_initial         = 'src';
@@ -154,7 +156,7 @@ class GitView_DiffViewTest extends TuleapTestCase {
         stub($repository)->getGitRootPath()->returns('/home/abcd');
 
         $gitphp_viewer = new GitViews_GitPhpViewer($repository, dirname(__FILE__).'/_fixtures/fakeGitPHP');
-        $gitphp_viewer->getContent();
+        $gitphp_viewer->getContent($is_download);
 
         $this->assertEqual($_GET['h'], $src_initial);
         $this->assertEqual($_GET['hp'], $dest_initial);

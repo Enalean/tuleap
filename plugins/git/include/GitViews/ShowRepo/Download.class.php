@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,8 @@ class GitViews_ShowRepo_Download {
     }
 
     public function display() {
-        echo $this->gitphp_viewer->getContent();
+        $is_download = true;
+        echo $this->gitphp_viewer->getContent($is_download);
         exit;
     }
 }
