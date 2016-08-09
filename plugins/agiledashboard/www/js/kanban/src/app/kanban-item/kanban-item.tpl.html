@@ -34,45 +34,54 @@
         ng-click="kanban.showEditModal($event, item)"
         class="kanban-item-link"
     >
-        <span class="kanban-item-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
+        <span class="kanban-item-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | tuleapHighlight:kanban.filter_terms"></span>
     </a>
 
-    <div class="kanban-item-label" ng-bind-html="kanban.getCardFieldTextValue(item.label) | highlight:kanban.filter_terms"></div>
+    <div class="kanban-item-label" ng-bind-html="$ctrl.getCardFieldTextValue(item.label) | tuleapHighlight:kanban.filter_terms"></div>
 
     <ul class="extra_card_fields" ng-if="item.card_fields.length > 0">
-        <li ng-repeat="card_field in item.card_fields track by $index" ng-class="{ large: kanban.cardFieldIsText(card_field.type) && card_field.value }">
-            <div ng-if="kanban.cardFieldIsSimpleValue(card_field.type) && card_field.value">
+        <li
+            ng-repeat="card_field in item.card_fields track by $index"
+            ng-class="{ large: $ctrl.cardFieldIsText(card_field.type) && card_field.value }"
+        >
+            <div ng-if="$ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldTextValue(card_field.value) | highlight:kanban.filter_terms"></span>
+                <span ng-bind-html="$ctrl.getCardFieldTextValue(card_field.value) | tuleapHighlight:kanban.filter_terms"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsList(card_field.type) && card_field.values.length > 0">
+            <div ng-if="$ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldListValues(card_field.values, kanban.filter_terms)"></span>
+                <span ng-bind-html="$ctrl.getCardFieldListValues(card_field.values, kanban.filter_terms)"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsDate(card_field.type) && card_field.value">
+            <div ng-if="$ctrl.cardFieldIsDate(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | highlight:kanban.filter_terms"></span>
+                <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | tuleapHighlight:kanban.filter_terms"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsText(card_field.type) && card_field.value">
+            <div ng-if="$ctrl.cardFieldIsText(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldTextValue(card_field.value) | highlight:kanban.filter_terms"></span>
+                <span ng-bind-html="$ctrl.getCardFieldTextValue(card_field.value) | tuleapHighlight:kanban.filter_terms"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0">
+            <div ng-if="$ctrl.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions, kanban.filter_terms)"></span>
+                <span ng-bind-html="$ctrl.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions, kanban.filter_terms)"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsCross(card_field.type) && card_field.value">
+            <div ng-if="$ctrl.cardFieldIsCross(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldCrossValue(card_field.value, kanban.filter_terms)"></span>
+                <span ng-bind-html="$ctrl.getCardFieldCrossValue(card_field.value, kanban.filter_terms)"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0">
+            <div ng-if="$ctrl.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldPermissionsValue(card_field.granted_groups) | highlight:kanban.filter_terms"></span>
+                <span ng-bind-html="$ctrl.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:kanban.filter_terms"></span>
             </div>
-            <div ng-if="kanban.cardFieldIsUser(card_field.type) && card_field.value">
+            <div ng-if="$ctrl.cardFieldIsUser(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldUserValue(card_field.value, kanban.filter_terms)"></span>
+                <span ng-bind-html="$ctrl.getCardFieldUserValue(card_field.value, kanban.filter_terms)"></span>
             </div>
+            <div
+                ng-if="$ctrl.cardFieldIsComputed(card_field.type)"
+                card-computed-field
+                field="card_field"
+                class="card-computed-field"
+        ></div>
             <!-- Artifact links & Burndown fields are not managed yet -->
         </li>
     </ul>
