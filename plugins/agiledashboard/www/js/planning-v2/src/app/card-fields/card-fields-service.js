@@ -1,5 +1,5 @@
 angular
-    .module('backlog-item-details')
+    .module('card-fields')
     .service('CardFieldsService', CardFieldsService);
 
 CardFieldsService.$inject = [
@@ -24,6 +24,7 @@ function CardFieldsService(
         cardFieldIsCross            : cardFieldIsCross,
         cardFieldIsPermissions      : cardFieldIsPermissions,
         cardFieldIsUser             : cardFieldIsUser,
+        cardFieldIsComputed         : cardFieldIsComputed,
         getCardFieldDateValue       : getCardFieldDateValue,
         getCardFieldListValues      : getCardFieldListValues,
         getCardFieldTextValue       : getCardFieldTextValue,
@@ -40,7 +41,6 @@ function CardFieldsService(
             case 'float':
             case 'aid':
             case 'atid':
-            case 'computed':
             case 'priority':
                 return true;
         }
@@ -81,6 +81,10 @@ function CardFieldsService(
 
     function cardFieldIsPermissions(type) {
         return type === 'perm';
+    }
+
+    function cardFieldIsComputed(type) {
+        return type === 'computed';
     }
 
     function cardFieldIsUser(type) {

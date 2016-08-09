@@ -1,7 +1,6 @@
 angular.module('backlog-item-details', [
     'gettext',
-    'angularMoment',
-    'highlight.filter',
+    'card-fields',
     'edit-item',
     'backlog-item',
     'backlog-item-collection',
