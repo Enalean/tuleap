@@ -29,13 +29,14 @@ class IDTokenVerifier
      * @return array
      * @throws MalformedIDTokenException
      */
-    public function validate(Provider $provider, $encoded_id_token)
+    public function validate(Provider $provider, $nonce, $encoded_id_token)
     {
         $id_token = $this->getJWTPayload($encoded_id_token);
 
         if (! $this->isSubjectIdentifierClaimPresent($id_token) ||
             ! $this->isIssuerClaimValid($provider->getAuthorizationEndpoint(), $id_token) ||
-            ! $this->isAudienceClaimValid($provider->getClientId(), $id_token)
+            ! $this->isAudienceClaimValid($provider->getClientId(), $id_token) ||
+            ! $this->isNonceValid($nonce, $id_token)
         ) {
             throw new MalformedIDTokenException('ID token claims are not valid');
         }
@@ -94,5 +95,16 @@ class IDTokenVerifier
         }
         return $id_token['aud'] === $provider_client_id ||
             (is_array($id_token['aud']) && in_array($provider_client_id, $id_token['aud']));
+    }
+
+    /**
+     * @return bool
+     */
+    private function isNonceValid($nonce, array $id_token)
+    {
+        if (! isset($id_token['nonce'])) {
+            return false;
+        }
+        return hash_equals($nonce, $id_token['nonce']);
     }
 }

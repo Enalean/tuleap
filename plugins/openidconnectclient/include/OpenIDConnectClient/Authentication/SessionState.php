@@ -30,10 +30,16 @@ class SessionState {
      * @var string
      */
     private $return_to;
+    /**
+     * @var string
+     */
+    private $nonce;
 
-    public function __construct($secret_key, $return_to) {
-        $this->secret_key       = $secret_key;
-        $this->return_to = $return_to;
+    public function __construct($secret_key, $return_to, $nonce)
+    {
+        $this->secret_key = $secret_key;
+        $this->return_to  = $return_to;
+        $this->nonce      = $nonce;
     }
 
     /**
@@ -48,5 +54,13 @@ class SessionState {
      */
     public function getReturnTo() {
         return $this->return_to;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNonce()
+    {
+        return $this->nonce;
     }
 }

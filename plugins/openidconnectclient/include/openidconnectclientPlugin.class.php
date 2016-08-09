@@ -31,6 +31,7 @@ use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
+use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
@@ -112,9 +113,10 @@ class openidconnectclientPlugin extends Plugin {
             new StateFactory(new RandomNumberGenerator())
         );
         $id_token_verifier = new IDTokenVerifier();
+        $uri_generator     = new Generator();
         $flow              = new Flow(
             $state_manager,
-            new AuthorizationDispatcher($state_manager),
+            new AuthorizationDispatcher($state_manager, $uri_generator),
             $provider_manager,
             $id_token_verifier
         );
