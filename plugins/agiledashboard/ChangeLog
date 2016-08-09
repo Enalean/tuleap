@@ -1,3 +1,6 @@
+Version 1.407 - Tuleap 8.18
+    * request #9348: The planning view does not display computed field V2
+
 Version 1.406 - Tuleap 8.18
     * request #8962: Default style for comments editor in modale
 
