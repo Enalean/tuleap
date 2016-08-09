@@ -1,3 +1,6 @@
+Version 1.408 - Tuleap 8.18
+    * request #9385: Using dark themes; kanban's drop-empty images raise 404 error
+
 Version 1.407 - Tuleap 8.18
     * request #9348: The planning view does not display computed field V2
 
