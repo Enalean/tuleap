@@ -273,20 +273,46 @@ describe('InPropertiesItemFilter', function() {
             expect(filtered_items).toEqual(items);
         });
 
-        it("Given an item with a computed card field, when I filter it with a matching query, then it will be returned", function() {
-            var items = [
-                {
-                    id: null,
-                    label: null,
-                    card_fields: [
-                        { type: 'computed', value: 94 }
-                    ]
-                }
-            ];
+        describe("Given an item with a computed card field,", function() {
+            it("when I filter it with a matching query for its auto-computed value, then it will be returned", function() {
+                var items = [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type        : 'computed',
+                                manual_value: null,
+                                value       : 94
+                            }
+                        ]
+                    }
+                ];
 
-            var filtered_items = in_properties_filter(items, '94');
+                var filtered_items = in_properties_filter(items, '94');
 
-            expect(filtered_items).toEqual(items);
+                expect(filtered_items).toEqual(items);
+            });
+
+            it("when I filter it with a matching query for its manul value, then it will be returned", function() {
+                var items = [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type        : 'computed',
+                                manual_value: 61,
+                                value       : null
+                            }
+                        ]
+                    }
+                ];
+
+                var filtered_items = in_properties_filter(items, '61');
+
+                expect(filtered_items).toEqual(items);
+            });
         });
 
         it("Given an item with a priority card field, when I filter it with a matching query, then it will be returned", function() {

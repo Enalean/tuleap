@@ -50,7 +50,6 @@ function InPropertiesFilter($filter) {
                         case 'float':
                         case 'aid':
                         case 'atid':
-                        case 'computed':
                         case 'priority':
                             return match(card_field.value);
                         case 'file':
@@ -72,6 +71,11 @@ function InPropertiesFilter($filter) {
                         case 'lud':
                         case 'subon':
                             return match(amCalendarFilter(card_field.value));
+                        case 'computed':
+                            if (card_field.manual_value !== null) {
+                                return match(card_field.manual_value);
+                            }
+                            return match(card_field.value);
                     }
 
                     return false;

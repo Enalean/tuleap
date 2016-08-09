@@ -7,9 +7,9 @@ module.exports = {
      * development and the `compile_dir` folder is where our app resides once it's
      * completely built.
      */
-    build_dir: 'build',
+    build_dir  : 'build',
     compile_dir: 'bin',
-    vendor_dir: 'vendor',
+    vendor_dir : 'vendor',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -25,6 +25,8 @@ module.exports = {
             'src/**/*.js',
             '!src/**/*.spec.js',
             '!src/**/*-service.js',
+            '!src/**/*-value.js',
+            '!src/**/*-constant.js',
             '!src/**/*-controller.js',
             '!src/**/*-config.js',
             '!src/**/*-directive.js',
@@ -34,6 +36,8 @@ module.exports = {
         ],
         js: [
             'src/**/*-service.js',
+            'src/**/*-value.js',
+            'src/**/*-constant.js',
             'src/**/*-controller.js',
             'src/**/*-config.js',
             'src/**/*-directive.js',
