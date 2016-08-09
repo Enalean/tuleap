@@ -137,7 +137,8 @@ class GitViews_ShowRepo_Content {
         $html = '';
 
         if ($this->repository->isCreated()) {
-            $html .= $this->gitphp_viewer->getContent();
+            $is_download = false;
+            $html       .= $this->gitphp_viewer->getContent($is_download);
         } else {
             $html .= $this->getWaitingForRepositoryCreationInfo();
         }

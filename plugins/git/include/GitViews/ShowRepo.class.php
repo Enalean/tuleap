@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,7 +83,7 @@ class GitViews_ShowRepo {
             $this->repository,
             $this->controller->getPlugin()->getConfigurationParameter('gitphp_path')
         );
-        if ($this->request->get('noheader') == 1) {
+        if ($this->controller->isADownload()) {
             $view = new GitViews_ShowRepo_Download($git_php_viewer);
         } else {
             $view = new GitViews_ShowRepo_Content(
