@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,7 +40,7 @@ class Tracker_Artifact_MailGateway_Parser {
 
     private function getBody(stdClass $structure) {
         if ($this->isTextPlain($structure) && ! $this->isAttachment($structure)) {
-            return $structure->body;
+            return mb_convert_encoding($structure->body, 'utf-8', $this->getCharset($structure));
         }
 
         if ($this->isMultipart($structure)) {
@@ -65,6 +65,17 @@ class Tracker_Artifact_MailGateway_Parser {
 
     private function isTextPlain($part) {
         return $part->ctype_primary === 'text' && $part->ctype_secondary === 'plain';
+    }
+
+    /**
+     * @return string
+     */
+    private function getCharset(stdClass $part)
+    {
+        if (isset($part->ctype_parameters['charset'])) {
+            return $part->ctype_parameters['charset'];
+        }
+        return 'utf-8';
     }
 
     private function isAttachment($part) {
