@@ -103,10 +103,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'orange';
+            $kanban-image-name: 'orange';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -119,10 +119,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'blue';
+            $kanban-image-name: 'blue';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -135,10 +135,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'green';
+            $kanban-image-name: 'green';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -151,10 +151,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'bluegrey';
+            $kanban-image-name: 'bluegrey';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -167,10 +167,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'purple';
+            $kanban-image-name: 'purple';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -183,10 +183,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'red';
+            $kanban-image-name: 'red';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -199,10 +199,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'darkorange';
+            $kanban-image-name: 'dark-orange';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -215,10 +215,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'darkblue';
+            $kanban-image-name: 'blue';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -231,10 +231,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'darkgreen';
+            $kanban-image-name: 'green';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -247,10 +247,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'darkbluegrey';
+            $kanban-image-name: 'bluegrey';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -263,10 +263,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'darkpurple';
+            $kanban-image-name: 'purple';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
@@ -279,10 +279,10 @@ body {
 
         @include definitions($main);
         #kanban-board {
-            $theme-name: 'darkred';
+            $kanban-image-name: 'red';
 
             @include override-kanban-colors($main);
-            @include override-kanban-images($theme-name);
+            @include override-kanban-images($kanban-image-name);
         }
 
         .empty-home {
