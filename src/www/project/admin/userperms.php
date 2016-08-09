@@ -305,10 +305,6 @@ if ($project->usesDocman()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','doc_man').'</th>';
 }
 
-if ($project->usesFile()) {
-    $head .= '<th>'.$Language->getText('project_admin_userperms','file_man').'</th>';
-}
-
 if ( $project->usesTracker()&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
         userperms_add_header('<th>'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</th>');
@@ -397,17 +393,7 @@ echo $head;
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
-        
-        // File release manager: nothing or admin
-        if ($project->usesFile()) {
-            $cell = '';
-            $cell .= '<TD><SELECT name="file_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['file_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            $cell .= '<OPTION value="2"'.(($row_dev['file_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></TD>';
-            echo $cell;
-        }
-        
+
         $k = 0;
         if ( $project->usesTracker()&&$at_arr ) {
             // Loop on tracker
