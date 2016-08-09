@@ -12,13 +12,13 @@ INSERT INTO service(group_id, label, description, short_name, link, is_active, i
 
 
 CREATE TABLE plugin_svn_repositories(
-  id  int(11) unsigned NOT NULL auto_increment,
-  name  varchar(255) NOT NULL,
+  id int(11) unsigned NOT NULL auto_increment,
+  name varchar(255) NOT NULL,
   project_id int(11) NOT NULL,
   accessfile_id INT(11) UNSIGNED NOT NULL,
   repository_deletion_date INT(11) NULL,
-  backup_path text NULL
-  PRIMARY KEY  (id),
+  backup_path text NULL,
+  PRIMARY KEY (id),
   INDEX project_idx (project_id)
 );
 
