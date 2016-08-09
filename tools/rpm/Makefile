@@ -65,7 +65,7 @@ else
 $(error OS version not supported)
 endif
 
-.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball sass node srpms dist
+.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball node srpms dist
 
 .PRECIOUS: $(RPM_TMP) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
@@ -100,9 +100,6 @@ $(RPM_TMP):
 
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
-sass:
-	$(MAKE) -C $(BASE_DIR) sass
-
 node:
 	cd $(BASE_DIR) &&\
 	    npm install &&\
@@ -114,7 +111,7 @@ node:
 	    npm run build; \
 	done
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep sass
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \

@@ -1,0 +1,27 @@
+{
+    "name": "graphontrackersv5",
+    "themes": {
+        "default": {
+            "files": [
+                "www/themes/default/css/style.scss"
+            ],
+            "target_dir": "www/themes/default/css"
+        },
+        "FlamingParrot": {
+            "files": [
+                "www/themes/FlamingParrot/css/style.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/FlamingParrot/css/utils"
+            ],
+            "target_dir": "www/themes/FlamingParrot/css"
+        }
+    },
+    "javascript": [
+        "www/scripts/graphs.js",
+        "www/scripts/graphs-pie.js",
+        "www/scripts/graphs-bar.js",
+        "www/scripts/graphs-groupedbar.js",
+        "www/scripts/loadGraphs.js"
+    ]
+}

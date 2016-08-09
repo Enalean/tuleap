@@ -1,0 +1,52 @@
+{
+    "name": "tracker",
+    "themes": {
+        "default": {
+            "files": [
+                "www/themes/default/css/style.scss",
+                "www/themes/default/css/ieStyle.scss",
+                "www/themes/default/css/print.scss"
+            ],
+            "target_dir": "www/themes/default/css"
+        },
+        "FlamingParrot": {
+            "files": [
+                "www/themes/FlamingParrot/css/style.scss",
+                "www/themes/FlamingParrot/css/print.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/FlamingParrot/css/utils"
+            ],
+            "target_dir": "www/themes/FlamingParrot/css"
+        }
+    },
+    "javascript": [
+        "www/scripts/TrackerReports.js",
+        "www/scripts/TrackerEmailCopyPaste.js",
+        "www/scripts/TrackerReportsSaveAsModal.js",
+        "www/scripts/TrackerBinds.js",
+        "www/scripts/ReorderColumns.js",
+        "www/scripts/TrackerTextboxLists.js",
+        "www/scripts/TrackerAdminFields.js",
+        "www/scripts/TrackerArtifact.js",
+        "www/scripts/TrackerArtifactEmailActions.js",
+        "www/scripts/TrackerArtifactLink.js",
+        "www/scripts/TrackerCreate.js",
+        "www/scripts/TrackerFormElementFieldPermissions.js",
+        "www/scripts/TrackerDateReminderForms.js",
+        "www/scripts/TrackerTriggers.js",
+        "www/scripts/SubmissionKeeper.js",
+        "www/scripts/TrackerFieldDependencies.js",
+        "www/scripts/TrackerRichTextEditor.js",
+        "www/scripts/artifactChildren.js",
+        "www/scripts/load-artifactChildren.js",
+        "www/scripts/modal-in-place.js",
+        "www/scripts/TrackerArtifactEditionSwitcher.js",
+        "www/scripts/FixAggregatesHeaderHeight.js",
+        "www/scripts/TrackerSettings.js",
+        "www/scripts/TrackerCollapseFieldset.js",
+        "www/scripts/TrackerArtifactReferences.js",
+        "www/scripts/CopyArtifact.js",
+        "www/scripts/tracker-report-nature-column.js"
+    ]
+}

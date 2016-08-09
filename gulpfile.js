@@ -1,15 +1,8 @@
 'use strict';
 
 var gulp    = require('gulp'),
-    exec    = require('gulp-exec'),
-    install = require('gulp-install'),
-    concat  = require('gulp-concat'),
-    rev     = require('gulp-rev'),
     del     = require('del'),
-    fs      = require('fs'),
-    path    = require('path'),
-    plugins = getAllPluginsWithGulpfile(),
-    version = require("fs").readFileSync("VERSION", "utf8").trim(),
+    tuleap  = require('./tools/utils/tuleap-gulp-build'),
     fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
         'src/www/scripts/polyphills/storage.js',
@@ -109,77 +102,112 @@ var gulp    = require('gulp'),
         'src/www/themes/FlamingParrot/js/keymaster-sequence/keymaster.sequence.min.js',
         'src/www/themes/FlamingParrot/js/keyboard-navigation.js'
     ],
-    asset_dir = 'src/www/assets/';
+    common_scss = {
+        files: [
+            'src/www/themes/common/css/print.scss',
+            'src/www/themes/common/css/style.scss'
+        ],
+        target_dir: 'src/www/themes/common/css'
+    },
+    select2_scss = {
+        files: [
+            'src/www/scripts/select2/select2.scss'
+        ],
+        target_dir: 'src/www/scripts/select2'
+    },
+    theme_tuleap_scss = {
+        files: [
+            'src/www/themes/Tuleap/css/print.scss',
+            'src/www/themes/Tuleap/css/style.scss'
+        ],
+        target_dir: 'src/www/themes/Tuleap/css'
+    },
+    theme_flamingparrot_scss = {
+        files: [
+            'src/www/themes/FlamingParrot/css/print.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_Orange.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlue.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlueGrey.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_Red.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_Green.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkOrange.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_Blue.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkGreen.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_Purple.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkRed.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss',
+            'src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss'
+        ],
+        'target_dir': 'src/www/themes/FlamingParrot/css'
+    },
+    asset_dir = 'www/assets';
 
-gulp.task('default', ['build']);
+tuleap.declare_plugin_tasks(asset_dir);
 
-gulp.task('clean-core', function() {
+/**
+ * Javascript
+ */
+
+gulp.task('clean-js-core', function() {
     del(asset_dir);
 });
 
-gulp.task('clean-plugins', plugins.map(function (plugin) { return 'clean-'+ plugin; }));
+gulp.task('js-core', ['clean-js-core'], function() {
+    tuleap.concat_core_js('tuleap', fat_combined_files, asset_dir);
+    tuleap.concat_core_js('tuleap_subset', subset_combined_files, asset_dir);
+    tuleap.concat_core_js('tuleap_subset_flamingparrot', subset_combined_files.concat(subset_combined_flamingparrot_files), asset_dir);
+    tuleap.concat_core_js('flamingparrot', flaming_parrot_files, asset_dir);
+});
+
+gulp.task('js', ['js-core', 'js-plugins']);
+
+/**
+ * Sass
+ */
+gulp.task('clean-sass-core', function() {
+    tuleap.sass_clean('.', common_scss.files);
+    tuleap.sass_clean('.', select2_scss.files);
+    tuleap.sass_clean('.', theme_tuleap_scss.files);
+    tuleap.sass_clean('.', theme_flamingparrot_scss.files);
+});
+
+gulp.task('sass-core', ['clean-sass-core'], function() {
+    tuleap.sass_build('.', common_scss);
+    tuleap.sass_build('.', select2_scss);
+    tuleap.sass_build('.', theme_tuleap_scss);
+    tuleap.sass_build('.', theme_flamingparrot_scss);
+});
+
+gulp.task('sass', ['sass-core', 'sass-plugins']);
+
+/**
+ * Global
+ */
+
+gulp.task('watch', function() {
+    gulp.watch(
+        fat_combined_files
+            .concat(subset_combined_files)
+            .concat(subset_combined_flamingparrot_files)
+            .concat(flaming_parrot_files),
+        ['js-core']
+    );
+
+    gulp.watch(
+        common_scss.files
+            .concat(select2_scss.files)
+            .concat(theme_tuleap_scss.files)
+            .concat(theme_flamingparrot_scss.files),
+        ['sass-core']
+    );
+
+    tuleap.watch_plugins();
+});
+
+gulp.task('clean-core', ['clean-js-core', 'clean-sass-core']);
 
 gulp.task('clean', ['clean-core', 'clean-plugins']);
 
-gulp.task('concat', ['clean-core'], function() {
-    concatFiles('tuleap', fat_combined_files);
-    concatFiles('tuleap_subset', subset_combined_files);
-    concatFiles('tuleap_subset_flamingparrot', subset_combined_files.concat(subset_combined_flamingparrot_files));
-    concatFiles('flamingparrot', flaming_parrot_files);
-});
+gulp.task('build', ['js', 'sass']);
 
-gulp.task('build-plugins', plugins.map(function (plugin) { return 'build-'+ plugin; }));
-
-gulp.task('build', ['concat', 'build-plugins']);
-
-gulp.task('install', plugins.map(function (plugin) { return 'install-'+ plugin; }));
-
-plugins.forEach(function (plugin) {
-    gulp.task('install-'+ plugin, function () {
-        return installInPlugin(plugin);
-    });
-
-    gulp.task('build-'+ plugin, ['install-'+ plugin], function () {
-        return runInPlugin(plugin, 'build');
-    });
-
-    gulp.task('clean-'+ plugin, ['install-'+ plugin], function () {
-        return runInPlugin(plugin, 'clean');
-    });
-});
-
-function concatFiles(name, files) {
-    gulp.src(files)
-        .pipe(concat(name+'.js'))
-        .pipe(rev())
-        .pipe(gulp.dest(asset_dir))
-        .pipe(rev.manifest({
-            path: asset_dir + '/manifest.json',
-            base: asset_dir,
-            merge: true
-        }))
-        .pipe(gulp.dest(asset_dir));
-}
-
-function installInPlugin(plugin) {
-    return gulp.src('./plugins/'+ plugin +'/package.json')
-        .pipe(gulp.dest('./plugins/'+ plugin +'/'))
-        .pipe(install());
-}
-
-function runInPlugin(plugin, task) {
-    return gulp.src('plugins/'+ plugin +'/gulpfile.js')
-        .pipe(exec('node_modules/.bin/gulp --gulpfile=<%= file.path %> '+task));
-}
-
-function getAllPluginsWithGulpfile() {
-    var plugins_path = './plugins';
-
-    return fs.readdirSync(plugins_path).filter(function (file) {
-            try {
-                return fs.statSync(path.join(plugins_path, file, 'gulpfile.js')).isFile();
-            } catch (e) {
-                return false;
-            }
-        });
-}
+gulp.task('default', ['build']);
