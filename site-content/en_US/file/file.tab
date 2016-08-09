@@ -201,6 +201,7 @@ file_admin_index	edit_release_files	Edit/Release Files
 file_admin_index	manage_explain	Create or modify packages and releases, set status and access permissions.
 file_admin_index	quick_add	Quick Add File Release
 file_admin_index	quick_add_explain	One step process where you can specify all the necessary information at the same time. The counterpart is that you can only attach one single file to a given release and not several as in the full File Release process.
+file_admin_index	warning_new_permission	Files permission management has been moved from user permission to user group management <a href="/file/admin/?group_id=$1&action=edit_permissions">in file manager administration</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/qrs.php

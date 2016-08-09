@@ -27,7 +27,7 @@ class FRSPermissionManager
 {
     /** @var PermissionDao */
     private $permission_dao;
-        /** @var FRSPermissionFactory */
+    /** @var FRSPermissionFactory */
     private $permission_factory;
 
     public function __construct(
@@ -53,5 +53,10 @@ class FRSPermissionManager
         }
 
         return false;
+    }
+
+    public function doesProjectHaveOldFrsAdminMembers(Project $project)
+    {
+        return $this->permission_dao->doesProjectHaveLegacyFrsAdminMembers($project->getID());
     }
 }
