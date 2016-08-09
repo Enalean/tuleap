@@ -250,11 +250,12 @@ class hudsonViews extends Views {
     // }}}
 
     function _display_jobs_table($group_id, $services) {
-        $request =& HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByGroupID($group_id);
+        $purifier = Codendi_HTMLPurifier::instance();
+        $user     = UserManager::instance()->getCurrentUser();
+        $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $dar      = $job_dao->searchByGroupID($group_id);
 
         if ($dar && $dar->valid()) {
 
@@ -263,23 +264,23 @@ class hudsonViews extends Views {
 
             echo '<table id="jobs_table" class="table table-bordered table-striped">';
             echo ' <thead><tr>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
+            echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_job')).'</th>';
+            echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess')).'</th>';
+            echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure')).'</th>';
+            echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_rss')).'</th>';
             if ($project->usesSVN()) {
-                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger').'</th>';
+                echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger')).'</th>';
             }
             if ($project->usesCVS()) {
-                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
+                echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger')).'</th>';
             }
             if (!empty($services)) {
                 foreach ($services as $service) {
-                    echo '  <th>'.$service['title'].'</th>';
+                    echo '  <th>'.$purifier->purify($service['title']).'</th>';
                 }
             }
             if ($user->isMember($request->get('group_id'), 'A')) {
-                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
+                echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_actions')).'</th>';
             }
             echo ' </tr></thead>';
             echo '<tbody>';
@@ -296,31 +297,31 @@ class hudsonViews extends Views {
 
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
                     echo '<td>';
-                    echo '<img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /> ';
-                    echo '<a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name'])).'">'.$row['name'].'</a>';
+                    echo '<img src="'.$purifier->purify($job->getStatusIcon()).'" alt="'.$purifier->purify($job->getStatus()).'" title="'.$purifier->purify($job->getStatus()).'" /> ';
+                    echo '<a href="'.$purifier->purify($job->getUrl()).'" onclick="toggle_iframe(this); return false;" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name']))).'">'.$purifier->purify($row['name']).'</a>';
                     echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
-                        echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name'])).'">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
+                        echo '  <td><a href="'.$purifier->purify($job->getLastSuccessfulBuildUrl()).'" onclick="toggle_iframe(this); return false;" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber()).'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() != '') {
-                        echo '  <td><a href="'.$job->getLastFailedBuildUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastFailedBuildNumber(), $row['name'])).'">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber().'</a></td>';
+                        echo '  <td><a href="'.$purifier->purify($job->getLastFailedBuildUrl()).'" onclick="toggle_iframe(this); return false;" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastFailedBuildNumber(), $row['name']))).'">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber()).'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name'])).'" title="'.$GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name'])).'"></a></td>';
+                    echo '  <td align="center"><a href="'.$purifier->purify($job->getUrl()).'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name']))).'"></a></td>';
 
                     if ($project->usesSVN()) {
                         if ($row['use_svn_trigger'] == 1) {
-                            echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
+                            echo '  <td align="center"><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
                         } else {
                             echo '  <td>&nbsp;</td>';
                         }
                     }
                     if ($project->usesCVS()) {
                         if ($row['use_cvs_trigger'] == 1) {
-                            echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger').'"></td>';
+                            echo '  <td align="center"><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'server_lightning.png" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger')).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger')).'"></td>';
                         } else {
                             echo '  <td>&nbsp;</td>';
                         }
@@ -328,21 +329,21 @@ class hudsonViews extends Views {
                     if (!empty($services)) {
                         foreach ($services as $service) {
                             if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
-                                echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$service['title'].'" title="'.$service['title'].'"></td>';
+                                echo '  <td align="center"><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'server_lightning.png" alt="'.$purifier->purify($service['title']).'" title="'.$purifier->purify($service['title']).'"></td>';
                             } else {
                                 echo '  <td>&nbsp;</td>';
                             }
                         }
                     }
                 } catch (Exception $e) {
-                    echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$e->getMessage().'" title="'.$e->getMessage().'" /></td>';
+                    echo '  <td><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'link_error.png" alt="'.$purifier->purify($e->getMessage()).'" title="'.$purifier->purify($e->getMessage()).'" /></td>';
                     $nb_columns = 4;
                     if ($project->usesSVN()) { $nb_columns++; }
                     if ($project->usesCVS()) { $nb_columns++; }
                     foreach ($services as $service) {
                             $nb_columns++;
                     }
-                    echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$e->getMessage().'</span></td>';
+                    echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$purifier->purify($e->getMessage()).'</span></td>';
                 }
 
                 if ($user->isMember($request->get('group_id'), 'A')) {
@@ -350,13 +351,13 @@ class hudsonViews extends Views {
                     // edit job
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$GLOBALS['HTML']->getimage('ic/edit.png',
-                                                            array('alt' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'),
-                                                                  'title' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'))).'</a>';
+                                                            array('alt' => $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','edit_job')),
+                                                                  'title' => $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','edit_job')))).'</a>';
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$job_id.'" onclick="return confirm(';
-                    echo "'" . $GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName())) . "'";
+                    echo "'" . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName()))) . "'";
                     echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png',
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'),
                                                                   'title' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'))).'</a>';
@@ -371,7 +372,7 @@ class hudsonViews extends Views {
             }
             echo '</table>';
         } else {
-            echo '<p>'.$GLOBALS['Language']->getText('plugin_hudson','no_jobs_linked').'</p>';
+            echo '<p>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','no_jobs_linked')).'</p>';
         }
     }
 
@@ -402,23 +403,25 @@ class hudsonViews extends Views {
         $token,
         $svn_paths
     ) {
+        $purifier = Codendi_HTMLPurifier::instance();
+
         echo '  <form class="form-horizontal">
-                    <input type="hidden" name="group_id" value="'.$project->getId().'" />
-                    <input type="hidden" name="job_id" value="'. $job_id .'" />
-                    <input type="hidden" name="action" value="'. $action .'_job" />
+                    <input type="hidden" name="group_id" value="'.$purifier->purify($project->getId()).'" />
+                    <input type="hidden" name="job_id" value="'. $purifier->purify($job_id) .'" />
+                    <input type="hidden" name="action" value="'. $purifier->purify($action) .'_job" />
                     <div class="control-group">
-                        <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>
+                        <label class="control-label" for="hudson_job_url">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','form_job_url')).'</label>
                         <div class="controls">
-                            <input id="hudson_job_url" required name="hudson_job_url" type="text" size="64" value="'. $job_url .'" />
-                            <span class="help help-inline">'. $GLOBALS['Language']->getText('plugin_hudson','form_joburl_example') .'</span>
+                            <input id="hudson_job_url" required name="hudson_job_url" type="text" size="64" value="'. $purifier->purify($job_url) .'" />
+                            <span class="help help-inline">'. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','form_joburl_example')) .'</span>
                         </div>
                     </div>';
         if ($name !== null) {
             echo '  <div class="control-group">
-                        <label class="control-label" for="hudson_job_name">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_name').'</label>
+                        <label class="control-label" for="hudson_job_name">'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','form_job_name')).'</label>
                         <div class="controls">
-                            <input id="hudson_job_name" name="hudson_job_name" type="text" size="64" value="'. $name .'" />
-                            <span class="help help-inline">'. $GLOBALS['Language']->getText('plugin_hudson', 'form_jobname_help', $name) .'</span>
+                            <input id="hudson_job_name" name="hudson_job_name" type="text" size="64" value="'. $purifier->purify($name) .'" />
+                            <span class="help help-inline">'. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_jobname_help', $name)) .'</span>
                         </div>
                     </div>';
         }
@@ -427,7 +430,6 @@ class hudsonViews extends Views {
                         <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger').'</label>
                             <div class="controls">';
             if ($project->usesSVN()) {
-                $purifier = Codendi_HTMLPurifier::instance();
 
                 $checked = '';
                 if ($use_svn_trigger) {
@@ -435,16 +437,16 @@ class hudsonViews extends Views {
                 }
                 echo '<label class="checkbox">
                         <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" '. $checked .'/>
-                        '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn') .'
+                        '. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn')) .'
                       </label>
                       <div id="hudson_svn_paths">
-                        <label for="hudson_svn_paths_textarea">'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_label') .'</label>
+                        <label for="hudson_svn_paths_textarea">'. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','svn_paths_label')) .'</label>
                         <textarea
                           id="hudson_svn_paths_textarea"
                           name="hudson_svn_paths"
-                          placeholder="'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_placeholder') .'"
+                          placeholder="'. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','svn_paths_placeholder')) .'"
                         >'. $purifier->purify($svn_paths) .'</textarea>
-                        <p class="help">'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_helper') .'</p>
+                        <p class="help">'. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','svn_paths_helper')) .'</p>
                       </div>
                     ';
             }
@@ -455,7 +457,7 @@ class hudsonViews extends Views {
                 }
                 echo '<label class="checkbox">
                         <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" '. $checked .'/>
-                        '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs') .'
+                        '. $purifier->purify($GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs')) .'
                         </label>';
             }
             foreach ($services as $service) {
@@ -463,14 +465,14 @@ class hudsonViews extends Views {
             }
             echo '          <label>
                                 '.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'
-                                <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" value="'. $token .'" />
+                                <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" value="'. $purifier->purify($token) .'" />
                             </label>
                         </div>
                   </div>';
         }
         echo '    <div class="control-group">
                     <div class="controls">
-                        <input type="submit" class="btn btn-primary" value="'. $button .'" />
+                        <input type="submit" class="btn btn-primary" value="'. $purifier->purify($button) .'" />
                     </div>
                   </div>
                 </form>';

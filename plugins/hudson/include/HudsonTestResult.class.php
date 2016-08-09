@@ -80,9 +80,17 @@ class HudsonTestResult {
     function getTotalCount() {
         return $this->getFailCount() + $this->getPassCount() + $this->getSkipCount();
     }
-    
-    function getTestResultPieChart() {
-        return '<img class="test_result_pie_chart" src="/plugins/hudson/test_result_pie_chart.php?p='.$this->getPassCount().'&f='.$this->getFailCount().'&s='.$this->getSkipCount().'" alt="Test result: '.$this->getPassCount().'/'.$this->getTotalCount().'" title="Test result: '.$this->getPassCount().'/'.$this->getTotalCount().'" />';
+
+    public function getTestResultPieChart()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $url      = '/plugins/hudson/test_result_pie_chart.php?' . http_build_query(
+                array(
+                    'p' => $this->getPassCount(),
+                    'f' => $this->getFailCount(),
+                    's' => $this->getSkipCount()
+                ));
+        return '<img class="test_result_pie_chart" src="' . $url . '" alt="Test result: ' . $purifier->purify($this->getPassCount() . '/' . $this->getTotalCount()) . '" title="Test result: ' . $purifier->purify($this->getPassCount() . '/' . $this->getTotalCount()) . '" />';
     }
         
 }

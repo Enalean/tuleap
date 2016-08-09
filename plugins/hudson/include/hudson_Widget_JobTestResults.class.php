@@ -63,7 +63,8 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
         } else {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults');
         }
-        return  $title;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($title);
     }
     
     function getDescription() {

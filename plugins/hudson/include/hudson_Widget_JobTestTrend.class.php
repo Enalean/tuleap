@@ -60,7 +60,8 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend');
         }
-        return  $title;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($title);
     }
     
     function getDescription() {
@@ -98,22 +99,23 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
     }
     
     function getContent() {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if ($this->job != null && $this->test_result != null) {
 
             $job = $this->job;
             
             $html .= '<div style="padding: 20px;">';
-            $html .= '<a href="/plugins/hudson/?action=view_test_trend&group_id='.$this->group_id.'&job_id='.$this->job_id.'">';
-            $html .= '<img src="'.$job->getUrl().'/test/trend?width=320&height=240" alt="'.$GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName())).'" title="'.$GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName())).'" />';
+            $html .= '<a href="/plugins/hudson/?action=view_test_trend&group_id='.urlencode($this->group_id).'&job_id='.urlencode($this->job_id).'">';
+            $html .= '<img src="'.$purifier->purify($job->getUrl()).'/test/trend?width=320&height=240" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))).'" />';
             $html .= '</a>';
             $html .= '</div>';
 
         } else {
             if ($this->job != null) {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found'));
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
             }
         }
             
