@@ -28,7 +28,6 @@ use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\AdditionalActionsPresenter;
-use Tuleap\PullRequest\ForkAdditionalActionsPresenter;
 use Tuleap\PullRequest\AdditionalHelpTextPresenter;
 use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\Factory;
@@ -37,13 +36,20 @@ use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\FileUnidiffBuilder;
-use \Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
-use \Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
-use \Tuleap\PullRequest\Timeline\Dao as TimelineDao;
-use \Tuleap\PullRequest\Timeline\TimelineEventCreator;
+use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
+use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
+use Tuleap\PullRequest\Timeline\TimelineEventCreator;
+use Tuleap\PullRequest\Reference\ReferenceFactory;
+use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
+use Tuleap\PullRequest\Reference\ReferenceDao;
 
 class pullrequestPlugin extends Plugin
 {
+
+    const PR_REFERENCE_KEYWORD          = 'pr';
+    const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
+    const REFERENCE_NATURE              = 'pullrequest';
 
     public function __construct($id)
     {
@@ -52,6 +58,9 @@ class pullrequestPlugin extends Plugin
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -394,5 +403,51 @@ class pullrequestPlugin extends Plugin
     private function getTimelineEventCreator()
     {
         return new TimelineEventCreator(new TimelineDao());
+    }
+
+    public function get_reference($params)
+    {
+        $keyword         = $params['keyword'];
+        $pull_request_id = $params['value'];
+
+        if ($this->isReferenceAPullRequestReference($keyword)) {
+            $params['reference'] = $this->getReferenceFactory()->getReferenceByPullRequestId(
+                $keyword,
+                $pull_request_id
+            );
+        }
+    }
+
+    /**
+     * @return ReferenceFactory
+     */
+    private function getReferenceFactory()
+    {
+        return new ReferenceFactory(
+            $this->getPullRequestFactory(),
+            $this->getRepositoryFactory(),
+            new ProjectReferenceRetriever(new ReferenceDao())
+        );
+    }
+
+    private function isReferenceAPullRequestReference($keyword) {
+        return $keyword === self::PR_REFERENCE_KEYWORD || $keyword === self::PULLREQUEST_REFERENCE_KEYWORD;
+    }
+
+    public function get_plugins_available_keywords_references($params)
+    {
+        $params['keywords'] = array_merge(
+            $params['keywords'],
+            array(self::PR_REFERENCE_KEYWORD, self::PULLREQUEST_REFERENCE_KEYWORD)
+        );
+    }
+
+    public function get_available_reference_natures($params) {
+        $nature = array(self::REFERENCE_NATURE => array(
+            'keyword' => 'pullrequest',
+            'label'   => 'Git Pull Request'
+        ));
+
+        $params['natures'] = array_merge($params['natures'], $nature);
     }
 }
