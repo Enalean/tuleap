@@ -1,3 +1,6 @@
+Version 1.411 - Tuleap 8.18
+    * request #9350: The Kanban does not display manual computed field V2
+
 Version 1.410 - Tuleap 8.18
     * story #9281 define FRS global permissions (UI FRS to select who is Admin)
 
