@@ -38,7 +38,8 @@ class ProjectCreatorTest_BaseLanguage extends MockBaseLanguage {
 class ProjectCreatorTest extends TuleapTestCase {
 
     public function setUp(){
-        $GLOBALS['Language'] = new ProjectCreatorTest_BaseLanguage();
+        $GLOBALS['Language']   = new ProjectCreatorTest_BaseLanguage();
+        $GLOBALS['svn_prefix'] = 'whatever';
 
         $this->event_manager = new MockSystemEventManager();
         $this->event_manager->setReturnValue('isUserNameAvailable', true);
@@ -59,6 +60,9 @@ class ProjectCreatorTest extends TuleapTestCase {
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
         unset($GLOBALS['Language']);
+        unset($GLOBALS['svn_prefix']);
+
+        parent::tearDown();
     }
 
     public function testInvalidShortNameShouldRaiseException() {
