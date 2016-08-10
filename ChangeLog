@@ -1,4 +1,7 @@
 Version 8.18 (Not yet released)
+	== Enhancement ==
+		* story #9281 define FRS global permissions
+
 	== Bug fix ==
 	* request #9344 Persistent XSS through code snippet download
 	* request #9329: New install doesn't prompt for domain name
@@ -17,7 +20,7 @@ Version 8.18 (Not yet released)
 		- Get rid of combined
 		- Plugins no longer append javascript to core Combined
 		- combine JavaScript with hash
-	* story #9281 define FRS global permissions
+	* Fix CI issues caused by side effects of $GLOBALS usage
 
 	== Enhancement ==
 	* External lib no longer referenced in sources
