@@ -1,3 +1,6 @@
+Version 0.78 - Tuleap 8.18
+    * request #9388: An error is thrown when a user tries to install the SVN plugin
+
 Version 0.77 - Tuleap 8.18
     * request #9375 Gulpify sass
 
