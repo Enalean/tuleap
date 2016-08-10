@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('HudsonOverviewWidget.class.php');
@@ -119,8 +120,9 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     }
     
     function getContent() {
-        $jobs = $this->getJobsByGroup($this->group_id);
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $jobs     = $this->getJobsByGroup($this->group_id);
+        $html     = '';
         if (sizeof($jobs) > 0) {
             $html .= '<table style="width:100%">';
             $cpt = 1;
@@ -130,10 +132,10 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
                     
                     $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
                     $html .= ' <td>';
-                    $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
+                    $html .= ' <img src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
                     $html .= ' </td>';
                     $html .= ' <td style="width:99%">';
-                    $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$this->group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
+                    $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.urlencode($this->group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
                     $html .= ' </td>';
                     $html .= '</tr>';
                         
@@ -145,7 +147,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
             }
             $html .= '</table>';
         } else {
-        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id));
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', $purifier->purify(array($this->group_id)));
         }
         return $html;
     }

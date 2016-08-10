@@ -738,7 +738,7 @@ class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends 
         $this->assertEqual($fields_data[$this->art_link_id]['new_values'], $new_values);
     }
 
-    public function itSetParentHasNewValues() {
+    public function itSetsParentAsNewValues() {
         $new_values  = '';
         $parent_id   = '657';
         $fields_data = array(
@@ -821,6 +821,19 @@ class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends 
         $this->field->augmentDataFromRequest($fields_data);
 
         $this->assertEqual($fields_data[$this->art_link_id]['natures'], array('356' => '_is_child'));
+    }
+
+    public function itReturnsEmptyArrayIfNoParentAndNoNewValues() {
+        $fields_data = array();
+
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(true);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual(
+            $fields_data,
+            array()
+        );
     }
 }
 

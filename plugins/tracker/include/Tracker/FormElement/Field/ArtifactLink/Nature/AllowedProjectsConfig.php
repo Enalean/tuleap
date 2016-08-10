@@ -22,20 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Project;
 use ProjectManager;
-use Tracker_Hierarchy_Dao;
-use EventManager;
 
 class AllowedProjectsConfig {
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var Tracker_Hierarchy_Dao
-     */
-    private $hierachy_dao;
 
     /**
      * @var ProjectManager
@@ -49,42 +37,14 @@ class AllowedProjectsConfig {
 
     public function __construct(
         ProjectManager $project_manager,
-        AllowedProjectsDao $dao,
-        Tracker_Hierarchy_Dao $hierachy_dao,
-        EventManager $event_manager
+        AllowedProjectsDao $dao
     ) {
         $this->project_manager = $project_manager;
         $this->dao             = $dao;
-        $this->hierachy_dao    = $hierachy_dao;
-        $this->event_manager   = $event_manager;
     }
 
     public function addProject(Project $project) {
-        $this->checkIfProjectCanUseNatures($project);
-
         return $this->dao->create($project);
-    }
-
-    private function checkIfProjectCanUseNatures(Project $project) {
-        if ($this->hierachy_dao->isProjectUsingTrackerHierarchy($project->getId())) {
-            throw new ProjectIsUsingHierarchyException($project);
-        }
-
-        $service_name = '';
-
-        $params = array(
-            'project'      => $project,
-            'service_name' => &$service_name
-        );
-
-        $this->event_manager->processEvent(
-            TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE,
-            $params
-        );
-
-        if ($service_name) {
-            throw new AnotherServiceBlocksNatureUsageException($project, $service_name);
-        }
     }
 
     public function removeProject(Project $project) {

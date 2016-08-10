@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -79,9 +80,10 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
                 $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $dar = $job_dao->searchByJobID($monitored_job);
                 if ($dar->valid()) {
-                    $row = $dar->current();
-                    $job_url = $row['job_url'];
-                    $job = new HudsonJob($job_url);
+                    $row         = $dar->current();
+                    $job_url     = $row['job_url'];
+                    $http_client = new Http_Client();
+                    $job         = new HudsonJob($job_url, $http_client);
                     $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1;    
                 }
             } catch (Exception $e) {
@@ -166,23 +168,25 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
      * @see src/common/widget/Widget::getPreferences()
      */
     function getPreferences() {
-        $prefs  = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $prefs    = '';
         // Monitored jobs
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_jobs').'</strong><br />';
         $user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByUserID($user->getId());
         foreach ($dar as $row) {
-            $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$row['name'].'<br />';
+            $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.urlencode($row['job_id']).'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$purifier->purify($row['name']).'<br />';
         }
         // Use global status
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'use_global_status').'</strong>';
+        $prefs .= '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'use_global_status')).'</strong>';
         $prefs .= '<input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'><br />';
         return $prefs;
     }
     
     function getContent() {
-    	$html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
     	
     	$user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -199,18 +203,19 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
 	                    $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
 	                    $dar = $job_dao->searchByJobID($monitored_job);
 	                    if ($dar->valid()) {
-	                        $row = $dar->current();
-	                        $job_url = $row['job_url'];
-	                        $job_id = $row['job_id'];
-	                        $group_id = $row['group_id'];
-	                        $job = new HudsonJob($job_url);
+                            $http_client = new Http_Client();
+                            $row         = $dar->current();
+                            $job_url     = $row['job_url'];
+                            $job_id      = $row['job_id'];
+                            $group_id    = $row['group_id'];
+                            $job         = new HudsonJob($job_url, $http_client);
 	                        
-	                        $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
+	                        $html .= '<tr class="'. $purifier->purify(util_get_alt_row_color($cpt)) .'">';
 	                        $html .= ' <td>';
-	                        $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
+	                        $html .= ' <img src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
 	                        $html .= ' </td>';
 	                        $html .= ' <td style="width:99%">';
-	                        $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
+	                        $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.urlencode($group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
 	                        $html .= ' </td>';
 	                        $html .= '</tr>';
 	                        

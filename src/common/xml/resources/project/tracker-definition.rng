@@ -619,6 +619,19 @@
               <ref name="conditionFieldNotEmptyContent"/>
             </element>
           </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>commentnotempty</value>
+              </attribute>
+              <attribute name="is_comment_required">
+                <choice>
+                  <value>0</value>
+                  <value>1</value>
+                </choice>
+              </attribute>
+            </element>
+          </optional>
         </element>
       </optional>
     </choice>

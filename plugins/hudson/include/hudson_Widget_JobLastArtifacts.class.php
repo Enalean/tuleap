@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -60,7 +61,8 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts');
         }
-        return  $title;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($title);
     }
     
     function getDescription() {
@@ -84,8 +86,9 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
                     $this->job_url = $used_job->getUrl();
                     $this->job = $used_job;
 
-                    $this->last_build_url = $this->job_url.'/lastBuild/';
-                    $this->build = new HudsonBuild($this->last_build_url);
+                    $http_client          = new Http_Client();
+                    $this->last_build_url = $this->job_url . '/lastBuild/';
+                    $this->build          = new HudsonBuild($this->last_build_url, $http_client);
                 } catch (Exception $e) {
                     $this->job = null;
                     $this->build = null;
@@ -97,9 +100,11 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             
         }
     }
-    
-    function getContent() {
-        $html = '';
+
+    function getContent()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if ($this->job != null && $this->build != null) {
                         
             $build = $this->build;
@@ -107,14 +112,14 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             $html .= '<ul>';
             $dom = $build->getDom();
             foreach ($dom->artifact as $artifact) {
-                $html .= ' <li><a href="'.$build->getUrl().'/artifact/'.$artifact->relativePath.'">'.$artifact->fileName.'</a></li>';
+                $html .= ' <li><a href="'.$purifier->purify($build->getUrl().'/artifact/'.$artifact->relativePath).'">'.$purifier->purify($artifact->fileName).'</a></li>';
             }
             $html .= '</ul>';
         } else {
             if ($this->job != null) {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found'));
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
             }
         }            
         return $html;

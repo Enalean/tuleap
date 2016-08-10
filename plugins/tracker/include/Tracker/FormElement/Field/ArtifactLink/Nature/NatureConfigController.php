@@ -198,24 +198,12 @@ class NatureConfigController {
             return;
         }
 
-        try {
-            $this->allowed_projects_config->addProject($project);
+        $this->allowed_projects_config->addProject($project);
 
-            $response->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'allowed_project_allow_project')
-            );
-        } catch (ProjectIsUsingHierarchyException $exception) {
-            $response->addFeedback(
-                Feedback::ERROR,
-                $exception->getMessage()
-            );
-        } catch (AnotherServiceBlocksNatureUsageException $exception) {
-            $response->addFeedback(
-                Feedback::ERROR,
-                $exception->getMessage()
-            );
-        }
+        $response->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'allowed_project_allow_project')
+        );
     }
 
     private function sendUpdateProjectListError(Response $response) {

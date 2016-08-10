@@ -255,8 +255,11 @@
                 width: 100%;
             }
 
+            @import '../../card-fields/card-computed-field/card-computed-field';
+
             > div {
                 margin: 0 20px 0 0;
+
 
                 span.extra_card_field_title {
                     color: #999;

@@ -747,19 +747,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         if ($extracolumn) {
             $display_extracolumn = true;
-            $classname = 'tracker_report_table_';
+            $classname           = 'tracker_report_table_';
+            $content             = '&nbsp';
             if ($extracolumn === self::EXTRACOLUMN_MASSCHANGE && $this->report->getTracker()->userIsAdmin($current_user)) {
                 $classname .= 'masschange';
             } else if ($extracolumn === self::EXTRACOLUMN_LINK) {
                 $classname .= 'link';
             } else if ($extracolumn === self::EXTRACOLUMN_UNLINK) {
                 $classname .= 'unlink';
+                $content = '<input type="checkbox" title="'. $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'mass_unlink_title') .'" class="tracker-artifact-link-mass-unlink">';
             } else {
                 $display_extracolumn = false;
             }
 
             if ($display_extracolumn) {
-                $html .= '<th class="'. $classname .'">&nbsp;</th>';
+                $html .= '<th class="'. $classname .'">'. $content .'</th>';
             }
         }
 

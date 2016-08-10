@@ -22,7 +22,12 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 
+use Tuleap\FRS\FRSRouter;
 use Tuleap\FRS\PermissionController;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -31,15 +36,34 @@ if ($request->valid($vGroupId)) {
 } else {
     exit_error($Language->getText('file_file_utils', 'g_id_err'), $Language->getText('file_file_utils', 'g_id_err'));
 }
-if (!user_ismember($group_id, 'R2')) {
-    exit_permission_denied();
-}
+
+$permission_dao     = new FRSPermissionDao();
+$permission_factory = new FRSPermissionFactory(
+    $permission_dao
+);
+$permission_manager = new FRSPermissionManager(
+    $permission_dao,
+    $permission_factory
+);
 
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
+$user = UserManager::instance()->getCurrentUser();
+if (! $permission_manager->isAdmin($project, $user)) {
+    exit_permission_denied();
+}
 
-$renderer        = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-$controller      = new PermissionController();
+$frs_router = new FRSRouter(
+    new PermissionController(
+        new UGroupManager(),
+        $permission_factory,
+        new FRSPermissionCreator(
+            $permission_dao,
+            new UGroupDao()
+        ),
+        $permission_manager,
+        new User_ForgeUserGroupFactory(new UserGroupDao())
+    )
+);
 
-$controller->displayToolbar($project);
-$controller->displayPermissions();
+$frs_router->route($request, $project);

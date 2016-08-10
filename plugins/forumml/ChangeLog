@@ -1,3 +1,6 @@
+Version 2.6.27 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 2.6.26 - Tuleap 8.18
     * request #9300: Configuration files are not properly loaded in Perl environnement
 

@@ -1,3 +1,9 @@
+Version 4.250 - Tuleap 8.18
+    * request #9383: Persistent XSS through the plain display of a file in a Git repo
+
+Version 4.249 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 4.248 - Tuleap 8.18
     * request #9362: Git over HTTP does not work if the repository is not connected to a Gerrit server
 

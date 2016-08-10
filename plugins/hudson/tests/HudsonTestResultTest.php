@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,30 +19,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/HudsonTestResult.class.php');
+require_once('bootstrap.php');
+
 Mock::generatePartial(
     'HudsonTestResult',
     'HudsonTestResultTestVersion',
     array('_getXMLObject', 'getHudsonControler', 'getIconsPath')
 );
-
-require_once(dirname(__FILE__).'/../include/hudson.class.php');
 Mock::generate('hudson');
-
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class HudsonTestResultTest extends TuleapTestCase {
 
     /** @var XML_Security */
     private $xml_security;
+    /**
+     * @var Http_Client
+     */
+    private $http_client;
 
     public function setUp() {
         parent::setUp();
 
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $this->xml_security = new XML_Security();
+        $this->xml_security  = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+        $this->http_client = mock('Http_Client');
     }
 
     public function tearDown() {
@@ -54,11 +56,11 @@ class HudsonTestResultTest extends TuleapTestCase {
     
     function testMalformedURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $j = new HudsonJob("toto");
+        $j = new HudsonTestResult("toto", $this->http_client);
     }
     function testMissingSchemeURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $j = new HudsonJob("code4:8080/hudson/jobs/Codendi");
+        $j = new HudsonTestResult("code4:8080/hudson/jobs/Codendi", $this->http_client);
     }
     function testMissingHostURL() {
         $this->expectException('HudsonJobURLMalformedException');
@@ -66,7 +68,7 @@ class HudsonTestResultTest extends TuleapTestCase {
         if (version_compare(PHP_VERSION, '5.3.3', '<')) {
             $this->expectError();
         }
-        $j = new HudsonJob("http://");
+        $j = new HudsonTestResult("http://", $this->http_client);
     }
     
     function testSimpleJobTestResult() {
@@ -81,15 +83,12 @@ class HudsonTestResultTest extends TuleapTestCase {
         $j->setReturnValue('getHudsonControler', $mh);
         $j->setReturnValue('getIconsPath', '');
         
-        $j->HudsonTestResult("http://myCIserver/jobs/myCIjob/lastBuild/testReport/");
+        $j->__construct("http://myCIserver/jobs/myCIjob/lastBuild/testReport/", $this->http_client);
         
         $this->assertEqual($j->getFailCount(), 5);
         $this->assertEqual($j->getPassCount(), 416);
         $this->assertEqual($j->getSkipCount(), 3);
         $this->assertEqual($j->getTotalCount(), 424);
-        
     }
         
 }
-
-?>

@@ -1,3 +1,6 @@
+Version 0.23 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 0.22 - Tuleap 8.18
     * request #9364: When OpenIDConnect client plugin is activated, git over http no longer works
 

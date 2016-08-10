@@ -63,7 +63,17 @@ if ($request->exist('wsdl')) {
         $ugroup_user_dao,
         EventManager::instance()
     );
-    $projectCreator       = new ProjectCreator($projectManager, ReferenceManager::instance(), $ugroup_duplicator, $send_notifications);
+    $projectCreator       = new ProjectCreator(
+        $projectManager,
+        ReferenceManager::instance(),
+        $ugroup_duplicator,
+        $send_notifications,
+        new Tuleap\FRS\FRSPermissionFactory(
+            new Tuleap\FRS\FRSPermissionDao(),
+            $ugroup_manager,
+            new PermissionsManager(new PermissionsDAO())
+        )
+    );
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);
     $limitator            = $soapLimitFactory->getLimitator();

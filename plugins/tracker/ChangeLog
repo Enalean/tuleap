@@ -1,3 +1,27 @@
+Version 5.988 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
+Version 5.987 - Tuleap 8.18
+    * story #9251: mass remove links when editing artifacts (Mass remove links in link type tabs)
+
+Version 5.986 - Tuleap 8.18
+    * story #9251: mass remove links when editing artifacts (Add ability to remove links in link type tabs)
+
+Version 5.985 - Tuleap 8.18
+    * story #9251: mass remove links when editing artifacts
+
+Version 5.984 - Tuleap 8.18
+    * Do not raise perms error when the transition is not valid
+
+Version 5.983 - Tuleap 8.18
+    * story #9305 have agile dashboard compatible with ALv2 (Every projects can now use the artifact links v2)
+
+Version 5.982 - Tuleap 8.18
+    * story #9096: A transition cannot occurs if a follow-up comment is not provided
+
+Version 5.981 - Tuleap 8.18
+    * request #7263: Display, clean and restore TV5 pending for deletion
+
 Version 5.980 - Tuleap 8.18
     * story #9305 have agile dashboard compatible with ALv2 (Burndown fields can be used with artifact links v2)
 

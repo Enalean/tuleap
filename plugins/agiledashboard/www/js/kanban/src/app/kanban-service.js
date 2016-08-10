@@ -2,9 +2,19 @@ angular
     .module('kanban')
     .service('KanbanService', KanbanService);
 
-KanbanService.$inject = ['Restangular', '$q', 'SharedPropertiesService'];
+KanbanService.$inject = [
+    'Restangular',
+    '$q',
+    'SharedPropertiesService',
+    'RestErrorService'
+];
 
-function KanbanService(Restangular, $q, SharedPropertiesService) {
+function KanbanService(
+    Restangular,
+    $q,
+    SharedPropertiesService,
+    RestErrorService
+) {
     _.extend(Restangular.configuration.defaultHeaders, {
         'X-Client-UUID': SharedPropertiesService.getUUID()
     });
@@ -168,7 +178,8 @@ function KanbanService(Restangular, $q, SharedPropertiesService) {
                 order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
             }, {
                 column_id: column_id
-            });
+            })
+            .catch(catchRestError);
     }
 
     function reorderBacklog(kanban_id, dropped_item_id, compared_to) {
@@ -176,7 +187,8 @@ function KanbanService(Restangular, $q, SharedPropertiesService) {
             .all('backlog')
             .patch({
                 order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
-            });
+            })
+            .catch(catchRestError);
     }
 
     function reorderArchive(kanban_id, dropped_item_id, compared_to) {
@@ -184,64 +196,66 @@ function KanbanService(Restangular, $q, SharedPropertiesService) {
             .all('archive')
             .patch({
                 order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
-            });
+            })
+            .catch(catchRestError);
     }
 
     function moveInBacklog(kanban_id, dropped_item_id, compared_to) {
         var patch_arguments = {
             add: {
-                ids : [dropped_item_id]
+                ids: [dropped_item_id]
             }
         };
         if (compared_to) {
-            patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
+            patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
         }
 
         return Restangular.one('kanban', kanban_id)
             .all('backlog')
-            .patch(patch_arguments);
+            .patch(patch_arguments)
+            .catch(catchRestError);
     }
 
     function moveInArchive(kanban_id, dropped_item_id, compared_to) {
         var patch_arguments = {
             add: {
-                ids : [dropped_item_id]
+                ids: [dropped_item_id]
             }
         };
         if (compared_to) {
-            patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
+            patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
         }
 
         return Restangular.one('kanban', kanban_id)
             .all('archive')
-            .patch(patch_arguments);
+            .patch(patch_arguments)
+            .catch(catchRestError);
     }
 
     function moveInColumn(kanban_id, column_id, dropped_item_id, compared_to) {
         var patch_arguments = {
             add: {
-                ids : [dropped_item_id]
+                ids: [dropped_item_id]
             }
         };
         if (compared_to) {
-            patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
+            patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
         }
 
         return Restangular.one('kanban', kanban_id)
             .all('items')
             .patch(
                 patch_arguments,
-                {
-                    column_id: column_id
-                }
-            );
+                { column_id: column_id }
+            )
+            .catch(catchRestError);
     }
 
     function getOrderArgumentsFromComparedTo(dropped_item_id, compared_to) {
         return {
-            ids         : [dropped_item_id],
-            direction   : compared_to.direction,
-            compared_to : compared_to.item_id
+            ids        : [dropped_item_id],
+            direction  : compared_to.direction,
+            compared_to: compared_to.item_id
         };
     }
 
@@ -329,5 +343,11 @@ function KanbanService(Restangular, $q, SharedPropertiesService) {
             }, {
                 kanban_id: kanban_id
             });
+    }
+
+    function catchRestError(data) {
+        RestErrorService.reload(data);
+
+        return $q.reject();
     }
 }

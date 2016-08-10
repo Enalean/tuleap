@@ -34,6 +34,7 @@ function BacklogItemDetailsController(
         cardFieldIsSimpleValue      : CardFieldsService.cardFieldIsSimpleValue,
         cardFieldIsText             : CardFieldsService.cardFieldIsText,
         cardFieldIsUser             : CardFieldsService.cardFieldIsUser,
+        cardFieldIsComputed         : CardFieldsService.cardFieldIsComputed,
         getCardFieldCrossValue      : CardFieldsService.getCardFieldCrossValue,
         getCardFieldDateValue       : CardFieldsService.getCardFieldDateValue,
         getCardFieldFileValue       : CardFieldsService.getCardFieldFileValue,

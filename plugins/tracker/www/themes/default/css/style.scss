@@ -7,6 +7,10 @@ button[name=tracker_query_submit] {
     padding: 0 15px;
 }
 
+.trackers-pending-tracker-removal-action {
+    margin: 0;
+}
+
 #tracker_report_config_options {
     display: block;
     width: 100%;
@@ -1252,6 +1256,10 @@ div.tracker-admin-field-controls {
         &.in-edition .tracker_hidden_edition_field {
             display: block;
         }
+
+        &:not(.in-edition) .tracker_report_table_unlink {
+            display: none;
+        }
     }
 
     &.has_errors {
@@ -1545,6 +1553,19 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .workflow_conditions_notempty {
     list-style-image: url(../images/ic/ui-text-field--exclamation-red.png);
 }
+
+.workflow_conditions_commentnotempty {
+    list-style-image: url(/themes/common/images/ic/comment.png);
+}
+
+.workflow_conditions_commentnotempty_label {
+    font-size: inherit;
+
+    > .workflow_conditions_commentnotempty_checkbox {
+        margin: 2px 0 0;
+    }
+}
+
 
 /* }}} */
 

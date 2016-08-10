@@ -38,7 +38,8 @@ class ProjectCreatorTest_BaseLanguage extends MockBaseLanguage {
 class ProjectCreatorTest extends TuleapTestCase {
 
     public function setUp(){
-        $GLOBALS['Language'] = new ProjectCreatorTest_BaseLanguage();
+        $GLOBALS['Language']   = new ProjectCreatorTest_BaseLanguage();
+        $GLOBALS['svn_prefix'] = 'whatever';
 
         $this->event_manager = new MockSystemEventManager();
         $this->event_manager->setReturnValue('isUserNameAvailable', true);
@@ -59,6 +60,9 @@ class ProjectCreatorTest extends TuleapTestCase {
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
         unset($GLOBALS['Language']);
+        unset($GLOBALS['svn_prefix']);
+
+        parent::tearDown();
     }
 
     public function testInvalidShortNameShouldRaiseException() {
@@ -86,11 +90,12 @@ class ProjectCreatorTest extends TuleapTestCase {
      * @return ProjectCreator
      */
     private function GivenAProjectCreator() {
-        $projectManager       = new MockProjectManager();
-        $ugroup_duplicator    = mock('Tuleap\Project\UgroupDuplicator');
+        $projectManager         = new MockProjectManager();
+        $ugroup_duplicator      = mock('Tuleap\Project\UgroupDuplicator');
+        $frs_permission_creator = mock('Tuleap\FRS\FRSPermissionCreator');
 
         $creator = TestHelper::getPartialMock('ProjectCreator', array('createProject'));
-        $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false);
+        $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false, $frs_permission_creator);
         
         return $creator;
     }

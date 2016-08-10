@@ -24,6 +24,8 @@ require_once 'pre.php';
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -170,7 +172,8 @@ try {
         $user_finder,
         ServiceManager::instance(),
         $broker_log,
-        $ugroup_duplicator
+        $ugroup_duplicator,
+        new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao())
     );
 
      if (empty($project_id)) {

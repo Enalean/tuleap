@@ -163,13 +163,33 @@ class ArtifactLinkUpdater {
         }
     }
 
-    public function formatFieldDatas(Tracker_FormElement_Field_ArtifactLink $artifactlink_field, array $elements_to_be_linked, array $elements_to_be_unlinked) {
+    public function formatFieldDatas(
+        Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
+        array $elements_to_be_linked,
+        array $elements_to_be_unlinked
+    ) {
         $field_datas = array();
 
         $field_datas[$artifactlink_field->getId()]['new_values']     = $this->formatLinkedElementForNewChangeset($elements_to_be_linked);
         $field_datas[$artifactlink_field->getId()]['removed_values'] = $this->formatElementsToBeUnlinkedForNewChangeset($elements_to_be_unlinked);
 
+        $this->augmentFieldDatasRegardingArtifactLinkTypeUsage($artifactlink_field, $elements_to_be_linked, $field_datas);
+
         return $field_datas;
+    }
+
+    private function augmentFieldDatasRegardingArtifactLinkTypeUsage(
+        Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
+        array $elements_to_be_linked,
+        array &$field_datas
+    ) {
+        if (! $artifactlink_field->getTracker()->isProjectAllowedToUseNature()) {
+            return;
+        }
+
+        foreach ($elements_to_be_linked as $artifact_id) {
+            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+        }
     }
 
     private function formatLinkedElementForNewChangeset(array $linked_elements) {

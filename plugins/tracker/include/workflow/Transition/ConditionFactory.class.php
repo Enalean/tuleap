@@ -22,6 +22,9 @@ use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException
 
 class Workflow_Transition_ConditionFactory {
 
+    /** @var Workflow_Transition_Condition_CommentNotEmpty_Factory */
+    private $commentnotempty_factory;
+
     /** @var Workflow_Transition_Condition_Permissions_Factory */
     private $permissions_factory;
 
@@ -33,10 +36,12 @@ class Workflow_Transition_ConditionFactory {
      */
     public function __construct(
         Workflow_Transition_Condition_Permissions_Factory $permissions_factory,
-        Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory
+        Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory,
+        Workflow_Transition_Condition_CommentNotEmpty_Factory $commentnotempty_factory
     ) {
-        $this->permissions_factory   = $permissions_factory;
-        $this->fieldnotempty_factory = $fieldnotempty_factory;
+        $this->permissions_factory     = $permissions_factory;
+        $this->fieldnotempty_factory   = $fieldnotempty_factory;
+        $this->commentnotempty_factory = $commentnotempty_factory;
     }
 
     /**
@@ -48,6 +53,9 @@ class Workflow_Transition_ConditionFactory {
             new Workflow_Transition_Condition_FieldNotEmpty_Factory(
                 new Workflow_Transition_Condition_FieldNotEmpty_Dao(),
                 Tracker_FormElementFactory::instance()
+            ),
+            new Workflow_Transition_Condition_CommentNotEmpty_Factory(
+                new Workflow_Transition_Condition_CommentNotEmpty_Dao()
             )
         );
     }
@@ -64,6 +72,8 @@ class Workflow_Transition_ConditionFactory {
         $collection = new Workflow_Transition_ConditionsCollection();
         $collection->add(new Workflow_Transition_Condition_Permissions($transition));
         $collection->add($this->fieldnotempty_factory->getFieldNotEmpty($transition));
+        $collection->add($this->commentnotempty_factory->getCommentNotEmpty($transition));
+
         return $collection;
     }
 
@@ -74,11 +84,8 @@ class Workflow_Transition_ConditionFactory {
 
     /**
      * Deletes all exiting conditions then saves the new condition.
-     * @param Transition $transition
-     * @param int $field_id
-     * @return int The ID of the newly created condition
      */
-    public function addCondition(Transition $transition, $list_field_id)
+    public function addCondition(Transition $transition, $list_field_id, $is_comment_required)
     {
         $this->getFieldNotEmptyDao()->deleteByTransitionId($transition->getId());
         if ($list_field_id) {
@@ -86,10 +93,18 @@ class Workflow_Transition_ConditionFactory {
                 throw new CannotCreateTransitionException();
             }
         }
+
+        if (! $this->getCommentNotEmptyDao()->create($transition->getId(), $is_comment_required)) {
+            throw new CannotCreateTransitionException();
+        }
     }
 
     private function getFieldNotEmptyDao() {
         return new Workflow_Transition_Condition_FieldNotEmpty_Dao();
+    }
+
+    private function getCommentNotEmptyDao() {
+        return new Workflow_Transition_Condition_CommentNotEmpty_Dao();
     }
 
     /**
@@ -141,6 +156,9 @@ class Workflow_Transition_ConditionFactory {
             case 'notempty':
                 $condition = $this->fieldnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
                 break;
+            case 'commentnotempty':
+                $condition = $this->commentnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
+                break;
         }
         return $condition;
     }
@@ -184,6 +202,6 @@ class Workflow_Transition_ConditionFactory {
     public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
         $this->permissions_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
         $this->fieldnotempty_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $this->commentnotempty_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
-?>

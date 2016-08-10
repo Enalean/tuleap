@@ -1,0 +1,27 @@
+{
+    "name": "agiledashboard",
+    "themes": {
+        "default": {
+            "files": [
+                "www/themes/default/css/style.scss"
+            ],
+            "target_dir": "www/themes/default/css"
+        },
+        "FlamingParrot": {
+            "files": [
+                "www/themes/FlamingParrot/css/style.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/FlamingParrot/css/utils"
+            ],
+            "target_dir": "www/themes/FlamingParrot/css"
+        }
+    },
+    "javascript": [
+        "www/js/display-angular-feedback.js",
+        "www/js/MilestoneContent.js",
+        "www/js/planning-view.js",
+        "www/js/ContentFilter.js",
+        "www/js/home.js"
+    ]
+}

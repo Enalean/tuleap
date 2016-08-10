@@ -24,6 +24,7 @@ use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
 
 /**
  * This class import a project from a xml content
@@ -62,6 +63,9 @@ class ProjectXMLImporter {
     /** @var ServiceManager */
     private $service_manager;
 
+    /** @var FRSPermissionCreator */
+    private $frs_permissions_creator;
+
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
@@ -71,7 +75,8 @@ class ProjectXMLImporter {
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         ServiceManager $service_manager,
         Logger $logger,
-        UgroupDuplicator $ugroup_duplicator
+        UgroupDuplicator $ugroup_duplicator,
+        FRSPermissionCreator $frs_permissions_creator
     ) {
         $this->event_manager     = $event_manager;
         $this->project_manager   = $project_manager;
@@ -91,6 +96,7 @@ class ProjectXMLImporter {
             ReferenceManager::instance(),
             $this->ugroup_duplicator,
             $send_notifications,
+            $frs_permissions_creator,
             $force_activation
         );
     }

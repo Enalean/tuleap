@@ -1074,6 +1074,7 @@ plugin_tracker_artifactlink	recent_panel_desc	Sélectionnez les artefacts à lie
 plugin_tracker_artifactlink	recent_panel_title	Artefacts récents
 plugin_tracker_artifactlink	search_panel_title	Rechercher des artefacts
 plugin_tracker_artifactlink	title_prefix	Sélectionner les artefacts à lier à&nbsp;
+plugin_tracker_artifactlink	mass_unlink_title	Marquer tous les liens pour suppression
 
 plugin_tracker_artifact_masschange	cannot_masschange_title	Ce champ est le titre de l'artefact. Il est interdit de le mettre massivement à jour.
 plugin_tracker_artifact_masschange	changing_items	Changer $1 artefact(s) :
@@ -1474,6 +1475,7 @@ workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer toutes les tr
 workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de <em>$1</em> à <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
 workflow_admin	label_define_transition_required_field	Champ qui doit être rempli :
+workflow_admin	label_define_transition_required_comment	Le commentaire doit être rempli.
 workflow_admin	permissions_not_updated	Les permissions n'ont pas été prises en compte.
 workflow_admin	permissions_updated	Les permissions ont été prises en compte.
 workflow_admin	empty_fields_not_updated	Les champs obligatoires n'ont pas été pris en compte.
@@ -1633,6 +1635,7 @@ plugin_tracker	copy_of	Copie de $1
 
 plugin_tracker	disable_notifications	Désactiver les notifications
 plugin_tracker	enable_notifications	Activer les notifications
+
 plugin_tracker	disable_notifications_alternate_text	Ne plus recevoir les notifications de cet artefact
 plugin_tracker	enable_notifications_alternate_text	Recevoir les notifications de cet artefact
 plugin_tracker	raw_email_button_title	Afficher l'email original
@@ -1731,8 +1734,6 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Non
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Les projets soumis ont désormais accès aux natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Les projets soumis ne peuvent plus utiliser les natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Une erreur est survenue pendant la mise à jour de la liste des projets. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
-plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car ce projet utilise la hiérarchie d'outils de suivi.
-plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car le service $2 bloque son utilisation.
 plugin_tracker_artifact_links_natures	error_multiple_parents	L'artéfact a plus d'un parent. Impossible d'afficher le reste de la hiérarchie.
 plugin_tracker_artifact_links_natures	delete_icon_label	Supprimer
 plugin_tracker_artifact_links_natures	cannot_delete	la nature ne peut être supprimée car elle est ou a déjà été utilisée.
@@ -1743,3 +1744,8 @@ plugin_tracker_artifact_links_natures	cannot_format	Ne peut pas être formaté c
 plugin_tracker_artifact_links_natures	unsupported_field	Un des champs requis pour le format ne peut pas être formaté.
 plugin_tracker_artifact_links_natures	no_child	Tel que définit par la hiérarchie, la nature "_is_child" ne peut être utilisée pour le lien vers l'artéfact #$1
 plugin_tracker_artifact_links_natures	force_child	Tel que définit par la hiérarchie, la nature "_is_child" a été forcée pour le lien vers l'artéfact #$1
+plugin_tracker	pending_tv5_removal	Outils de suivi en attente de suppression
+plugin_tracker	no_pending	Aucun outil de suivi en attente de suppression
+
+plugin_tracker	info_tracker_restored	L'outil de suivi '$1' a été proprement restauré
+plugin_tracker	tracker_action_restore	Restaurer

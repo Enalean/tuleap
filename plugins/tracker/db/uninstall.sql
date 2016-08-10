@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS tracker_workflow;
 DROP TABLE IF EXISTS tracker_workflow_transition;
 DROP TABLE IF EXISTS tracker_workflow_transition_condition_field_notempty;
+DROP TABLE IF EXISTS tracker_workflow_transition_condition_comment_notempty;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_date;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;

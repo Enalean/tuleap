@@ -44,6 +44,7 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
 
 /**
  * Manage creation of a new project in the forge.
@@ -84,20 +85,27 @@ class ProjectCreator {
 
     private $send_notifications;
 
+    /**
+     * @var FRSPermissionCreator
+     */
+    private $frs_permissions_creator;
+
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
         UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
+        FRSPermissionCreator $frs_permissions_creator,
         $force_activation = false
     ) {
-        $this->send_notifications = $send_notifications;
-        $this->force_activation   = $force_activation;
-        $this->reference_manager  = $reference_manager;
-        $this->ruleShortName      = new Rule_ProjectName();
-        $this->ruleFullName       = new Rule_ProjectFullName();
-        $this->projectManager     = $projectManager;
-        $this->ugroup_duplicator  = $ugroup_duplicator;
+        $this->send_notifications      = $send_notifications;
+        $this->force_activation        = $force_activation;
+        $this->reference_manager       = $reference_manager;
+        $this->ruleShortName           = new Rule_ProjectName();
+        $this->ruleFullName            = new Rule_ProjectFullName();
+        $this->projectManager          = $projectManager;
+        $this->frs_permissions_creator = $frs_permissions_creator;
+        $this->ugroup_duplicator       = $ugroup_duplicator;
     }
 
     /**
@@ -222,7 +230,7 @@ class ProjectCreator {
         $ugroup_mapping = array();
         $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
 
-        $this->initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping);
+        $this->initFRSModuleFromTemplate($group, $template_id, $ugroup_mapping);
 
         if ($data->projectShouldInheritFromTemplate()) {
             list($tracker_mapping, $report_mapping) =
@@ -473,11 +481,12 @@ class ProjectCreator {
         }
     }
 
-    private function initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping) {
+    private function initFRSModuleFromTemplate(Project $project, $template_id, $ugroup_mapping)
+    {
         $sql_ugroup_mapping = ' ugroup_id ';
         if (is_array($ugroup_mapping) && count($ugroup_mapping)) {
             $sql_ugroup_mapping = ' CASE ugroup_id ';
-            foreach($ugroup_mapping as $key => $val) {
+            foreach ($ugroup_mapping as $key => $val) {
                 $sql_ugroup_mapping .= ' WHEN '. $key .' THEN '. $val;
             }
             $sql_ugroup_mapping .= ' ELSE ugroup_id END ';
@@ -485,10 +494,11 @@ class ProjectCreator {
         //Copy packages from template project
         $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = $template_id";
         if ($result = db_query($sql)) {
-            while($p_data = db_fetch_array($result)) {
+            while ($p_data = db_fetch_array($result)) {
                 $template_package_id = $p_data['package_id'];
-                $sql = sprintf("INSERT INTO frs_package(group_id, name, status_id, rank, approve_license) VALUES (%s, '%s', %s, %s, %s)",
-                    $group_id,
+                $sql = sprintf(
+                    "INSERT INTO frs_package(group_id, name, status_id, rank, approve_license) VALUES (%s, '%s', %s, %s, %s)",
+                    db_ei($project->getId()),
                     db_escape_string($p_data['name']),
                     db_ei($p_data['status_id']),
                     db_ei($p_data['rank']),
@@ -506,6 +516,8 @@ class ProjectCreator {
                 }
             }
         }
+
+        $this->frs_permissions_creator->duplicate($project, $template_id);
     }
 
     // Generic Trackers Creation

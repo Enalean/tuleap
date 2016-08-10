@@ -30,6 +30,12 @@ CREATE TABLE  tracker_workflow_transition_condition_field_notempty(
     field_id INT(11) NOT NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_workflow_transition_condition_comment_notempty;
+CREATE TABLE  tracker_workflow_transition_condition_comment_notempty(
+    transition_id INT(11) NOT NULL PRIMARY KEY,
+    is_comment_required TINYINT(1) NOT NULL
+) ENGINE=InnoDB;
+
 --
 --  Table structure for workflow_transition_postactions_field_date
 --

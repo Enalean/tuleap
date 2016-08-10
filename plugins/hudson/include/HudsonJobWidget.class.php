@@ -54,8 +54,8 @@ abstract class HudsonJobWidget extends HudsonWidget {
     }
     
     function getInstallPreferences() {
-        $prefs  = '';
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $prefs    = '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'</strong><br />';
         
         $selected_jobs_id = $this->getSelectedJobsId();
         $jobs = $this->getAvailableJobs();
@@ -63,9 +63,9 @@ abstract class HudsonJobWidget extends HudsonWidget {
         $only_one_job = (count($jobs) == 1);
 	    foreach ($jobs as $job_id => $job) {
                 $selected = ($only_one_job)?'checked="checked"':'';
-                $prefs .= '<input type="radio" name="' . $this->widget_id . '_job_id" value="'.$job_id.'" ' . $selected . '> ' . $job->getName() ;
+                $prefs .= '<input type="radio" name="' . $purifier->purify($this->widget_id) . '_job_id" value="'.$purifier->purify($job_id).'" ' . $selected . '> ' . $purifier->purify($job->getName()) ;
                 if (in_array($job_id, $selected_jobs_id)) {
-                        $prefs .= ' <em>('. $GLOBALS['Language']->getText('widget_add', 'already_used') .')</em>';
+                        $prefs .= ' <em>('. $purifier->purify($GLOBALS['Language']->getText('widget_add', 'already_used')) .')</em>';
                 }
                 $prefs .= '<br />';
 	    }
@@ -77,14 +77,14 @@ abstract class HudsonJobWidget extends HudsonWidget {
     }
 
     function getPreferences() {
-        $prefs  = '';
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $prefs    = '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'</strong><br />';
         
         $jobs = $this->getAvailableJobs();
         
         foreach ($jobs as $job_id => $job) {
             $selected = ($job_id == $this->job_id)?'checked="checked"':'';
-            $prefs .= '<input type="radio" name="' . $this->widget_id . '_job_id" value="'.$job_id.'" ' . $selected . '> '.$job->getName().'<br />';
+            $prefs .= '<input type="radio" name="' . $purifier->purify($this->widget_id) . '_job_id" value="'.$purifier->purify($job_id).'" ' . $selected . '> '.$purifier->purify($job->getName()).'<br />';
         }
         return $prefs;
     }

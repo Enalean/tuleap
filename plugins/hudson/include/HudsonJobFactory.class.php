@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'HudsonJob.class.php';
 
 /**
  * Fetch and distribute HudsonJob (and keep them in cache).
@@ -51,9 +50,8 @@ class HudsonJobFactory {
         $jobs = array();
         foreach ($dar as $row) {
             try {
-                $job = new HudsonJob($row['job_url'], $row['name']);
-                $jobs[$row['job_id']] = $job;
-            } catch (exception $e) {
+                $jobs[$row['job_id']] = $this->getHudsonJob($row['job_url'], $row['name']);
+            } catch (Exception $e) {
                 // Do not add unvalid jobs
             }
         }
@@ -65,9 +63,8 @@ class HudsonJobFactory {
         $jobs = array();
         foreach ($dar as $row) {
             try {
-                $job = new HudsonJob($row['job_url'], $row['name']);
-                $jobs[$row['job_id']] = $job;
-            } catch (exception $e) {
+                $jobs[$row['job_id']] = $this->getHudsonJob($row['job_url'], $row['name']);
+            } catch (Exception $e) {
                 // Do not add unvalid jobs
             }
         }
@@ -77,5 +74,13 @@ class HudsonJobFactory {
     protected function getDao() {
         return new PluginHudsonJobDao(CodendiDataAccess::instance());
     }
+
+    /**
+     * @return HudsonJob
+     */
+    private function getHudsonJob($url, $name)
+    {
+        $http_client = new Http_Client();
+        return new HudsonJob($url, $http_client, $name);
+    }
 }
-?>

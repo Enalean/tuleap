@@ -25,6 +25,7 @@ use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
+    const DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
 
     /**
      * Check that the service is used and the plugin is allowed for project $project
@@ -182,6 +183,21 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
+                            case 'restore-tracker':
+                                if ($this->userIsTrackerAdmin($project, $user)) {
+                                    $tracker_id   = $request->get('tracker_id');
+                                    $group_id     = $request->get('group_id');
+                                    $token      = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?group_id='. $group_id .'&amp;tracker_id='.$tracker_id.'&amp;func=restore-tracker');
+                                    $token->check();
+                                    $tracker_name = $this->getTrackerFactory()->getTrackerById($tracker_id)->getName();
+                                    $this->restoreDeletedTracker($tracker_id);
+                                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker', 'info_tracker_restored', $tracker_name));
+                                    $GLOBALS['Response']->redirect(get_server_url().'/tracker/admin/restore.php');
+                                } else {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
+                                }
+                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -190,6 +206,17 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 }
             }
         }
+    }
+
+   /**
+     * Restore a deleted tracker.
+     *
+     * @param Integer $tracker_id ID of the tracker marked as deleted
+     *
+     * @return Boolean
+     */
+    private function restoreDeletedTracker($tracker_id) {
+        return $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
     }
 
     public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params) {
@@ -724,6 +751,42 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
     }
 
+    /**
+     * Build the list of deleted trackers of all projects with purge and restore actions.
+     *
+     * @return Void
+     */
+    public function displayDeletedTrackers() {
+        $deletedTrackers = $this->getTrackerFactory()->getDeletedTrackers();
+        if (empty($deletedTrackers)) {
+            print '<h3>'.$GLOBALS['Language']->getText('plugin_tracker','no_pending').'</h3>';
+        } else {
+            $deleted_trackers_presenters =  array();
+            foreach ($deletedTrackers as $key => $tracker) {
+                $project                        = $tracker->getProject();
+                $project_id                     = $project->getId();
+                $project_name                   = $project->getUnixName();
+                $tracker_id                     = $tracker->getId();
+                $tracker_name                   = $tracker->getName();
+                $deletion_date                  = date('d-m-Y',$tracker->deletion_date);
+
+                $resotre_token                  = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?group_id='. $project_id .'&amp;tracker_id='.$tracker_id.'&amp;func=restore-tracker');
+                $deleted_trackers_presenters [] = new DeletedTrackerPresenter(
+                                                        $tracker_id,
+                                                        $tracker_name,
+                                                        $project_id,
+                                                        $project_name,
+                                                        $deletion_date,
+                                                        $resotre_token
+                                                   );
+            }
+            $presenter        = new DeletedTrackersListPresenter($deleted_trackers_presenters);
+            $template_factory = TemplateRendererFactory::build();
+            $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
+            $renderer->renderToPage(self::DELETED_TRACKERS_TEMPLATE_NAME,$presenter);
+        }
+    }
+
     private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user) {
         return $tracker->userCanView($user) && ! $this->getTV3MigrationManager()->isTrackerUnderMigration($tracker);
     }
@@ -972,13 +1035,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * Mark as deleted all trackers of a given project
      *
-     * @param Integer $groupId The project id
+     * @param Integer $group_id The project id
      *
      * @return Boolean
      */
-    public function deleteProjectTrackers($groupId) {
+    public function deleteProjectTrackers($group_id) {
         $delete_status = true;
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($groupId);
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id);
         if (!empty($trackers)) {
             foreach ($trackers as $tracker) {
                 if (!$this->getTrackerFactory()->markAsDeleted($tracker->getId())) {

@@ -1,3 +1,6 @@
+Version 2.13 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 2.12 - Tuleap 8.15
     * story #9132: Migrate from Less to Sass
 

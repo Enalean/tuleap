@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,23 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/HudsonBuild.class.php');
+require_once('bootstrap.php');
+
 Mock::generatePartial(
     'HudsonBuild',
     'HudsonBuildTestVersion',
     array('_getXMLObject', 'getHudsonControler')
 );
-
-require_once(dirname(__FILE__).'/../include/hudson.class.php');
 Mock::generate('hudson');
-
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class HudsonBuildTest extends TuleapTestCase {
 
     /** @var XML_Security */
     private $xml_security;
+    private $http_client;
 
     public function setUp() {
         parent::setUp();
@@ -43,6 +41,7 @@ class HudsonBuildTest extends TuleapTestCase {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+        $this->http_client = mock('Http_Client');
     }
 
     public function tearDown() {
@@ -54,11 +53,11 @@ class HudsonBuildTest extends TuleapTestCase {
     
     function testMalformedURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $b = new HudsonBuild("toto");
+        $b = new HudsonBuild("toto", $this->http_client);
     }
     function testMissingSchemeURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $b = new HudsonBuild("code4:8080/hudson/jobs/Codendi");
+        $b = new HudsonBuild("code4:8080/hudson/jobs/Codendi", $this->http_client);
     }
     function testMissingHostURL() {
         $this->expectException('HudsonJobURLMalformedException');
@@ -66,7 +65,7 @@ class HudsonBuildTest extends TuleapTestCase {
         if (version_compare(PHP_VERSION, '5.3.3', '<')) {
             $this->expectError();
         }
-        $b = new HudsonBuild("http://");
+        $b = new HudsonBuild("http://", $this->http_client);
     }
     
     function testSimpleJobBuild() {
@@ -80,7 +79,7 @@ class HudsonBuildTest extends TuleapTestCase {
         $b->setReturnValue('_getXMLObject', $xmldom);
         $b->setReturnValue('getHudsonControler', $h);
         
-        $b->HudsonBuild("http://myCIserver/jobs/myCIjob/lastBuild/");
+        $b->__construct("http://myCIserver/jobs/myCIjob/lastBuild/", $this->http_client);
         
         $this->assertEqual($b->getBuildStyle(), "freeStyleBuild");
         $this->assertFalse($b->isBuilding());
@@ -93,5 +92,3 @@ class HudsonBuildTest extends TuleapTestCase {
     }
         
 }
-
-?>

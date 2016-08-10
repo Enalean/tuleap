@@ -1,3 +1,6 @@
+Version 0.63 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 0.62 - Tuleap 8.18
     * request #9299: Get rid of combined
 

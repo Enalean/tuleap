@@ -84,7 +84,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
             $this->addHook(ITEM_PRIORITY_CHANGE);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -872,16 +871,5 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanDao()
 
         );
-    }
-
-    public function tracker_event_artifact_link_natures_blocked_by_service($params) {
-        $project = $params['project'];
-
-        if ($project->usesService($this->getServiceShortname())) {
-            $params['service_name'] = $GLOBALS['Language']->getText(
-                'plugin_agiledashboard',
-                'service_lbl_key'
-            );
-        }
     }
 }

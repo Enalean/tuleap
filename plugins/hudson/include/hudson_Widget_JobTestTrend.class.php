@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -59,7 +60,8 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend');
         }
-        return  $title;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($title);
     }
     
     function getDescription() {
@@ -79,10 +81,11 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
             
             if (array_key_exists($this->job_id, $jobs)) {
                 try {
-                    $used_job = $jobs[$this->job_id];
-                    $this->job_url = $used_job->getUrl();
-                    $this->job = $used_job;
-                    $this->test_result = new HudsonTestResult($this->job_url);
+                    $used_job          = $jobs[$this->job_id];
+                    $this->job_url     = $used_job->getUrl();
+                    $this->job         = $used_job;
+                    $http_client       = new Http_Client();
+                    $this->test_result = new HudsonTestResult($this->job_url, $http_client);
                 } catch (Exception $e) {
                     $this->test_result = null;
                 }
@@ -96,22 +99,23 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
     }
     
     function getContent() {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if ($this->job != null && $this->test_result != null) {
 
             $job = $this->job;
             
             $html .= '<div style="padding: 20px;">';
-            $html .= '<a href="/plugins/hudson/?action=view_test_trend&group_id='.$this->group_id.'&job_id='.$this->job_id.'">';
-            $html .= '<img src="'.$job->getUrl().'/test/trend?width=320&height=240" alt="'.$GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName())).'" title="'.$GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName())).'" />';
+            $html .= '<a href="/plugins/hudson/?action=view_test_trend&group_id='.urlencode($this->group_id).'&job_id='.urlencode($this->job_id).'">';
+            $html .= '<img src="'.$purifier->purify($job->getUrl()).'/test/trend?width=320&height=240" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))).'" />';
             $html .= '</a>';
             $html .= '</div>';
 
         } else {
             if ($this->job != null) {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found'));
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
             }
         }
             

@@ -1,0 +1,35 @@
+<div
+    class="column-content"
+    ng-class="{ 'column-empty': $ctrl.isColumnLoadedAndEmpty() }"
+>
+    <div
+        class="kustom-scroll"
+        ng-class="{ 'has-content': $ctrl.column.filtered_content.length > 0 }"
+        ng-scrollbar
+        rebuild-on="rebuild:kustom-scroll"
+        is-bar-shown="$ctrl.column.is_scrollbar_shown"
+    >
+        <ul
+            dragular="$ctrl.dragularOptions()"
+            class="kanban-items"
+            ng-class="{
+                'appending-item': $ctrl.appending_item,
+                'has-scrollbar' : $ctrl.column.is_scrollbar_shown
+            }"
+            data-column-id="{{ $ctrl.column.id }}"
+            esc-key="$ctrl.cancelDrag()"
+        >
+            <li
+                ng-repeat="item in $ctrl.column.filtered_content track by $id(item)"
+                class="kanban-item {{ item.color }}"
+                ng-class="{
+                    'updating'    : item.updating,
+                    'compact-view': item.is_collapsed,
+                }"
+                id="item_{{ item.id }}"
+            >
+                <kanban-item></kanban-item>
+            </li>
+        </ul>
+    </div>
+</div>

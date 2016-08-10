@@ -31,13 +31,16 @@ class ToolbarPresenter extends BaseFrsPresenter
     /** @var Project */
     private $project;
 
+    private $title;
+
     public $title_frs_administration;
 
-    public function __construct(Project $project)
+    public function __construct(Project $project, $title)
     {
         parent::__construct();
 
         $this->project  = $project;
+        $this->title    = $title;
         $this->sections = array();
 
         $this->title_frs_administration = $GLOBALS['Language']->getText('file_file_utils', 'title_frs_administration');
@@ -47,8 +50,8 @@ class ToolbarPresenter extends BaseFrsPresenter
 
     private function displayAdminHeader()
     {
-        $service = new ServiceFile($this->project, 'test');
-        $service->displayHeader($this->project, 'test');
+        $service = new ServiceFile($this->project, $this->title);
+        $service->displayHeader($this->project, $this->title);
     }
 
     public function setPermissionIsActive()

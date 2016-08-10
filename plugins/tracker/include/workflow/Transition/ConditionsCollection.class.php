@@ -82,8 +82,13 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
         $html  = '';
         $html .= '<ul class="workflow_conditions">';
         foreach ($this->conditions as $condition) {
+            $content = $condition->fetch();
+            if (! $content) {
+                continue;
+            }
+
             $html .= '<li class="workflow_conditions_'. $condition->identifier .'">';
-            $html .= $condition->fetch();
+            $html .= $content;
             $html .= '</li>';
         }
         $html .= '</ul>';
@@ -112,9 +117,9 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
      *
      * @return true if all conditions are satisfied
      */
-    public function validate($fields_data, Tracker_Artifact $artifact) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
         foreach ($this->getConditions() as $condition) {
-            if (! $condition->validate($fields_data, $artifact)) {
+            if (! $condition->validate($fields_data, $artifact, $comment_body)) {
                 return false;
             }
         }

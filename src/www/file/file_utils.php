@@ -28,7 +28,7 @@ function file_utils_admin_header($params)
         $renderer        = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') .'/src/templates/frs'
         );
-        $presenter       = new ToolbarPresenter($project);
+        $presenter       = new ToolbarPresenter($project, $params['title']);
 
         echo $renderer->renderToString('toolbar-presenter', $presenter);
     }

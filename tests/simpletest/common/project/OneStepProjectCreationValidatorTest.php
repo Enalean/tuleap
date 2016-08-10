@@ -51,6 +51,13 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         UserManager::clearInstance();
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
+
+        unset($GLOBALS['ftp_frs_dir_prefix']);
+        unset($GLOBALS['ftp_anon_dir_prefix']);
+        unset($GLOBALS['svn_prefix']);
+        unset($GLOBALS['cvs_prefix']);
+        unset($GLOBALS['grpdir_prefix']);
+
         parent::tearDown();
     }
 

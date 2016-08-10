@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -106,13 +106,18 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
-    public function validate($fields_data, Tracker_Artifact $artifact) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
         $current_user = UserManager::instance()->getCurrentUser();
 
-        return $this->isUserAllowedToSeeTransition(
-            $current_user,
-            $artifact->getTracker()->getGroupId()
-        );
+        if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker()->getGroupId())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'transition_permissions_not_valid')
+            );
+            return false;
+        }
+
+        return true;
     }
 
     public function isUserAllowedToSeeTransition(PFUser $user, $project_id) {

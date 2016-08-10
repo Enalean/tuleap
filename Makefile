@@ -91,18 +91,6 @@ autoload-docker: ## Generate autoload files
 autoload-dev:
 	@tools/utils/autoload.sh
 
-sass:
-	@tools/utils/sass.sh sass "$(CURDIR)"
-
-sass-docker: ## Compile Sass files into CSS
-	@$(DOCKER) run --rm -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife:2 --sass
-
-sass-dev:
-	@tools/utils/sass.sh dev "$(CURDIR)"
-
-sass-dev-docker: ## Compile Sass files into CSS with debug informations
-	@$(DOCKER) run --rm -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife:2 --sass_dev
-
 ## RNG generation
 
 rnc2rng-docker: clean-rng ## Compile rnc file into rng

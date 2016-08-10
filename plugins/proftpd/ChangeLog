@@ -1,3 +1,6 @@
+Version 0.28 - Tuleap 8.18
+    * request #9375 Gulpify sass
+
 Version 0.27 - Tuleap 8.18
     * request #9335 Do not inherit default trackers when importing from XML
 

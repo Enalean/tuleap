@@ -32,9 +32,11 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Dao as SvnDao;
 use Tuleap\Svn\SvnLogger;
+use Tuleap\Svn\SvnAdmin;
 
 class hudson_svnPlugin extends Plugin {
 
