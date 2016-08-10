@@ -1,3 +1,6 @@
+Version 1.410 - Tuleap 8.18
+    * story #9281 define FRS global permissions (UI FRS to select who is Admin)
+
 Version 1.409 - Tuleap 8.18
     * request #9375 Gulpify sass
 
