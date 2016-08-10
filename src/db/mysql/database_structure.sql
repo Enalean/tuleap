@@ -418,7 +418,9 @@ CREATE TABLE frs_log (
 CREATE TABLE IF NOT EXISTS frs_global_permissions(
     project_id int(11) NOT NULL,
     permission_type VARCHAR(255) NOT NULL,
-    ugroup_id int(11)
+    ugroup_id int(11),
+    INDEX project_id (project_id),
+    INDEX permission_type (permission_type(10))
 );
 
 #

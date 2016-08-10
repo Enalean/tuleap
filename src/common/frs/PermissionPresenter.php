@@ -23,15 +23,27 @@ namespace Tuleap\FRS;
 
 use Project;
 use ServiceFile;
+use ProjectUGroup;
 
 class PermissionPresenter extends BaseFrsPresenter
 {
     public $permission_title;
-    public $under_implementation;
+    public $administaror_info;
+    public $ugroups;
+    public $project_id;
+    public $frs_admins_submit_button;
 
-    public function __construct()
+    public function __construct(Project $project, array $ugroups)
     {
-        $this->permission_title     = $GLOBALS['Language']->getText('file_file_utils', 'permissions_title');
-        $this->under_implementation = $GLOBALS['Language']->getText('file_file_utils', 'under_implementation');
+        $this->permission_title          = $GLOBALS['Language']->getText('file_file_utils', 'permissions_title');
+        $this->frs_admins_submit_button  = $GLOBALS['Language']->getText('file_file_utils', 'frs_admins_submit_button');
+        $this->administaror_info         = $GLOBALS['Language']->getText('file_file_utils', 'administaror_info');
+        $this->write_title               = $GLOBALS['Language']->getText('file_file_utils', 'write_title');
+        $this->ugroups                   = $ugroups;
+        $this->project_id                = $project->getId();
+        $this->frs_admins_form_action    = FRS_BASE_URL .'/admin/?'. http_build_query(array(
+            'group_id' => $this->project_id,
+            'action'   => 'admin-frs-admins'
+        ));
     }
 }

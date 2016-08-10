@@ -102,6 +102,15 @@ class User_ForgeUserGroupFactory {
         return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)));
     }
 
+    public function getProjectUGroupsWithAdministratorAndMembers(Project $project) {
+        $user_groups = array();
+
+        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_ADMINS);
+
+        return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)));
+    }
+
     /**
      * @return User_ForgeUGroup
      */

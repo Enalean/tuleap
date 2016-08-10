@@ -92,9 +92,10 @@ class ProjectCreatorTest extends TuleapTestCase {
     private function GivenAProjectCreator() {
         $projectManager         = new MockProjectManager();
         $ugroup_duplicator      = mock('Tuleap\Project\UgroupDuplicator');
+        $frs_permission_creator = mock('Tuleap\FRS\FRSPermissionCreator');
 
         $creator = TestHelper::getPartialMock('ProjectCreator', array('createProject'));
-        $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false);
+        $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false, $frs_permission_creator);
         
         return $creator;
     }

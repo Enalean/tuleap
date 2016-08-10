@@ -453,6 +453,7 @@ project_admin_utils	perm_reset_for_wikiattachment	Réinitialisation des permissi
 project_admin_utils	perm_reset_for_object	Réinitialisation des permissions pour l'objet $1
 project_admin_utils	perm_granted_for_field	Permission accordée pour le champ $1
 project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de suivi $1
+project_admin_utils	perm_granted_for_files	Permission accordée pour Fichiers
 project_admin_utils	perm_granted_for_package	Permission accordée pour le paquet $1
 project_admin_utils	perm_granted_for_release	Permission accordée pour la version $1
 project_admin_utils	perm_granted_for_document	Permission accordée pour le document $1

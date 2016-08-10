@@ -42,6 +42,7 @@ define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
 
 /**
  * Manage creation of a new project in the forge.
@@ -82,11 +83,17 @@ class ProjectCreator {
 
     private $send_notifications;
 
+    /**
+     * @var FRSPermissionCreator
+     */
+    private $frs_permissions_creator;
+
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
         UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
+        FRSPermissionCreator $frs_permissions_creator,
         $force_activation = false
     ) {
         $this->send_notifications      = $send_notifications;
@@ -95,6 +102,7 @@ class ProjectCreator {
         $this->ruleShortName           = new Rule_ProjectName();
         $this->ruleFullName            = new Rule_ProjectFullName();
         $this->projectManager          = $projectManager;
+        $this->frs_permissions_creator = $frs_permissions_creator;
         $this->ugroup_duplicator       = $ugroup_duplicator;
     }
 
@@ -505,6 +513,8 @@ class ProjectCreator {
                 }
             }
         }
+
+        $this->frs_permissions_creator->duplicate($project, $template_id);
     }
 
     // Generic Trackers Creation
