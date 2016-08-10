@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
@@ -103,6 +103,10 @@ msgstr "Éditer"
 #: src/app/kanban.tpl.html
 msgid "Edit this Kanban"
 msgstr "Éditer ce Kanban"
+
+#: src/app/card-fields/card-computed-field/card-computed-field.tpl.html
+msgid "Empty"
+msgstr "Aucun(e)"
 
 #: src/app/error/error.tpl.html
 msgid "Error details"

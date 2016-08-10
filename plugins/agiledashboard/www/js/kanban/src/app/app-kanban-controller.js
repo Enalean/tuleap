@@ -13,7 +13,6 @@ KanbanCtrl.$inject = [
     'SharedPropertiesService',
     'KanbanService',
     'KanbanItemRestService',
-    'CardFieldsService',
     'NewTuleapArtifactModalService',
     'UserPreferencesService',
     'SocketFactory',
@@ -33,7 +32,6 @@ function KanbanCtrl(
     SharedPropertiesService,
     KanbanService,
     KanbanItemRestService,
-    CardFieldsService,
     NewTuleapArtifactModalService,
     UserPreferencesService,
     SocketFactory,
@@ -78,20 +76,6 @@ function KanbanCtrl(
 
     self.user_prefers_collapsed_cards = true;
     self.init                         = init;
-    self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
-    self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
-    self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
-    self.cardFieldIsDate              = CardFieldsService.cardFieldIsDate;
-    self.cardFieldIsFile              = CardFieldsService.cardFieldIsFile;
-    self.cardFieldIsCross             = CardFieldsService.cardFieldIsCross;
-    self.cardFieldIsPermissions       = CardFieldsService.cardFieldIsPermissions;
-    self.cardFieldIsUser              = CardFieldsService.cardFieldIsUser;
-    self.getCardFieldListValues       = CardFieldsService.getCardFieldListValues;
-    self.getCardFieldTextValue        = CardFieldsService.getCardFieldTextValue;
-    self.getCardFieldFileValue        = CardFieldsService.getCardFieldFileValue;
-    self.getCardFieldCrossValue       = CardFieldsService.getCardFieldCrossValue;
-    self.getCardFieldPermissionsValue = CardFieldsService.getCardFieldPermissionsValue;
-    self.getCardFieldUserValue        = CardFieldsService.getCardFieldUserValue;
     self.isColumnWipReached           = isColumnWipReached;
     self.setWipLimitForColumn         = setWipLimitForColumn;
     self.userIsAdmin                  = userIsAdmin;

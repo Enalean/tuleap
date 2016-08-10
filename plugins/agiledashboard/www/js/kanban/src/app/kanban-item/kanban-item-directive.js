@@ -4,7 +4,11 @@ angular
 
 function KanbanItem() {
     return {
-        restrict   : 'AE',
-        templateUrl: 'kanban-item/kanban-item.tpl.html'
+        restrict        : 'AE',
+        scope           : true,
+        controller      : 'KanbanItemController',
+        controllerAs    : '$ctrl',
+        bindToController: true,
+        templateUrl     : 'kanban-item/kanban-item.tpl.html'
     };
 }

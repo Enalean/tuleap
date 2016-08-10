@@ -1,0 +1,7 @@
+.card-computed-field {
+    $empty-value-color: #aaa;
+
+    .empty-value {
+        color: $empty-value-color;
+    }
+}

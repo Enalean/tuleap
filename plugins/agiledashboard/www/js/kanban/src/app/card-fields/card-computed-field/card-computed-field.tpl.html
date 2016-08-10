@@ -1,0 +1,16 @@
+<span class="extra_card_field_title">{{ card_field.label }}: </span>
+<span
+    class="autocomputed-value"
+    ng-show="card_field.value !== null && card_field.manual_value === null"
+    ng-bind="card_field.value"
+></span>
+<span
+    class="manual-value"
+    ng-show="card_field.manual_value !== null"
+    ng-bind="card_field.manual_value"
+></span>
+<span
+    class="empty-value"
+    ng-show="card_field.value === null && card_field.manual_value === null"
+    translate
+>Empty</span>

@@ -192,6 +192,8 @@ $transition_delay: 350ms;
                     width: 100%;
                 }
 
+                @import '../card-fields/card-computed-field/card-computed-field';
+
                 > div {
                     margin: 0 20px 0 0;
 

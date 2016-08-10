@@ -5,14 +5,14 @@
  * @license MIT
  */
 
-describe('highlight', function () {
+describe('tuleapHighlight', function () {
   'use strict';
 
   var highlightFilter, testPhrase = 'Prefix Highlight Suffix';
 
   beforeEach(module('kanban'));
   beforeEach(inject(function ($filter) {
-    highlightFilter = $filter('highlight');
+    highlightFilter = $filter('tuleapHighlight');
   }));
   describe('case insensitive', function () {
     it('should highlight a matching phrase', function () {

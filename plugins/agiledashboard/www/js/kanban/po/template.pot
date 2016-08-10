@@ -88,6 +88,10 @@ msgstr ""
 msgid "Edit this Kanban"
 msgstr ""
 
+#: src/app/card-fields/card-computed-field/card-computed-field.tpl.html
+msgid "Empty"
+msgstr ""
+
 #: src/app/error/error.tpl.html
 msgid "Error details"
 msgstr ""
