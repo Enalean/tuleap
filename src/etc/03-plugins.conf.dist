@@ -2,6 +2,9 @@
 # Plugins
 #
 
+# 0- Specific plugins configurations
+Include conf.d/tuleap-plugins/*.conf
+
 # 1- plugins CGI scripts
 ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codendi/plugins/$1"
 <Directory "/usr/share/codendi/plugins/[^/]*/cgi-bin">

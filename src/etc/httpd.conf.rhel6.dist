@@ -1015,7 +1015,6 @@ Include conf/ssl.conf
 
 # Load plugins specific apache configuration
 Include conf.d/*.conf
-Include conf.d/tuleap-plugins/*.conf
 
 DocumentRoot "/usr/share/tuleap/src/www"
 
