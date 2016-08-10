@@ -1,3 +1,6 @@
+Version 5.989 - Tuleap 8.18
+    * request #9390 Follow up received using the reply by mail feature and a mail non encoded in UTF-8 is truncated
+
 Version 5.988 - Tuleap 8.18
     * request #9375 Gulpify sass
 
