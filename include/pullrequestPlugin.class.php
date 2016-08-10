@@ -326,8 +326,9 @@ class pullrequestPlugin extends Plugin
                 $pull_request_updater->updatePullRequests($user, $git_exec, $repository, $branch_name, $new_rev);
             }
 
-            $git_repository_factory = $this->getRepositoryFactory();
-            $this->markManuallyMerged($user, $repository, $branch_name, $new_rev);
+            if (! $user->isAnonymous()) {
+                $this->markManuallyMerged($user, $repository, $branch_name, $new_rev);
+            }
         }
     }
 
