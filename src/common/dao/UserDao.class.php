@@ -1,22 +1,22 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -472,8 +472,8 @@ class UserDao extends DataAccessObject {
      * @return Boolean
      */
     function suspendAccount($condition) {
-        $sql = 'UPDATE user SET status = "S", unix_status = "S"'.
-               ' WHERE '.$condition;
+        $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
+            ' WHERE status != "D" AND (' . $condition . ')';
         return $this->update($sql);
     }
 
@@ -503,8 +503,9 @@ class UserDao extends DataAccessObject {
         $sql  = 'UPDATE user AS user' .
             ' INNER JOIN user_access AS access ON user.user_id=access.user_id' .
             ' SET user.status = "S", user.unix_status = "S"' .
-            ' WHERE (access.last_access_date = 0 AND user.add_date < ' . $time . ')' .
-            ' OR (access.last_access_date != 0 AND access.last_access_date < ' . $time . ')';
+            ' WHERE user.status != "D" AND (' .
+            '(access.last_access_date = 0 AND user.add_date < ' . $time . ') OR ' .
+            '(access.last_access_date != 0 AND access.last_access_date < ' . $time . '))';
         return $this->update($sql);
     }
 
