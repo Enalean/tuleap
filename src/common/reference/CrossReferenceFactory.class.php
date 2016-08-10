@@ -208,7 +208,13 @@ class CrossReferenceFactory {
         }
         // loop through natures
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
-            $display .= '<div class="nature">';
+            $div_classes = "nature";
+
+            if (!$condensed) {
+                $div_classes .= " not-condensed";
+            }
+
+            $display .= '<div class="'. $div_classes .'">';
             if (!$condensed) {
                 $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
             }
