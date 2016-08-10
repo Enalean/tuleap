@@ -31,3 +31,11 @@ plugin_pullrequest	git_clone_bar_help_text_view_pull_requests	See all pull reque
 plugin_pullrequest	git_clone_bar_help_text_pull_request_actions	When viewing a pull request, comment it, review its files and merge or abandon it
 
 plugin_pullrequest	reference_pullrequest_desc_key	Pull Request
+
+plugin_pullrequest	status_merged	Merged
+plugin_pullrequest	status_abandoned	Abandoned
+plugin_pullrequest	status_in_review	In review
+
+plugin_pullrequest	tooltip_title_label	Title:
+plugin_pullrequest	tooltip_status_label	Status:
+plugin_pullrequest	tooltip_creation_date_label	Created on:

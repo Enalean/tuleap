@@ -43,6 +43,7 @@ use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Reference\ReferenceFactory;
 use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
 use Tuleap\PullRequest\Reference\ReferenceDao;
+use Tuleap\PullRequest\Tooltip\Presenter;
 
 class pullrequestPlugin extends Plugin
 {
@@ -61,6 +62,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
+        $this->addHook('ajax_reference_tooltip');
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -449,5 +451,25 @@ class pullrequestPlugin extends Plugin
         ));
 
         $params['natures'] = array_merge($params['natures'], $nature);
+    }
+
+    public function ajax_reference_tooltip($params)
+    {
+        $reference = $params['reference'];
+        if ($reference->getNature() === self::REFERENCE_NATURE) {
+            $pull_request_id            = $params['val'];
+            $pull_request               = $this->getPullRequestFactory()->getPullRequestById($pull_request_id);
+            $pull_request_title         = $pull_request->getTitle();
+            $pull_request_status        = $pull_request->getStatus();
+            $pull_request_creation_date = $pull_request->getCreationDate();
+
+            $renderer  = $this->getTemplateRenderer();
+            $presenter = new Presenter(
+                $pull_request_title,
+                $pull_request_status,
+                $pull_request_creation_date
+            );
+            echo $renderer->renderToString($presenter->getTemplateName(), $presenter);
+        }
     }
 }
