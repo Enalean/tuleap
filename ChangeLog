@@ -11,6 +11,7 @@ Version 8.18 (Not yet released)
 	* request #8839: Call to sparklines.php should be made in POST to avoid errors
 	* request #9371 Wrong artifact warning message when a user supposed to be notified is suspended
 	* request #9381 Release notes and changelog can not be accessed
+	* request #9389 Cross reference field broken while using artifact link field
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
