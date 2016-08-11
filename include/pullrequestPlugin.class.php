@@ -389,7 +389,7 @@ class pullrequestPlugin extends Plugin
 
     private function getPullRequestFactory()
     {
-        return new Factory(new Dao());
+        return new Factory(new Dao(), ReferenceManager::instance());
     }
 
     private function getRepositoryFactory()

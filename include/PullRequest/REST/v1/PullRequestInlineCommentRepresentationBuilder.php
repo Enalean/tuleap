@@ -40,7 +40,7 @@ class PullRequestInlineCommentRepresentationBuilder
         $this->user_manager = $user_manager;
     }
 
-    public function getForFile(PullRequest $pull_request, $file_path)
+    public function getForFile(PullRequest $pull_request, $file_path, $project_id)
     {
         $res = $this->dao->searchUpToDateByFilePath($pull_request->getId(), $file_path);
 
@@ -54,7 +54,8 @@ class PullRequestInlineCommentRepresentationBuilder
                 (int) $row['unidiff_offset'],
                 $user_representation,
                 $row['post_date'],
-                $row['content']
+                $row['content'],
+                $project_id
             );
         }
 

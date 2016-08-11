@@ -18,23 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Comment;
+namespace Tuleap\PullRequest\InlineComment;
 
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
+use PFUser;
 use ReferenceManager;
 use pullrequestPlugin;
-use PFUser;
 
-class Factory
+class InlineCommentCreator
 {
-
     /**
+     * @var Dao
+     */
+    private $dao;
+
+    /*
      * @var ReferenceManager
      */
     private $reference_manager;
-
-    /** @var Tuleap\PullRequest\Comment\Dao */
-    private $dao;
-
 
     public function __construct(Dao $dao, ReferenceManager $reference_manager)
     {
@@ -42,46 +44,33 @@ class Factory
         $this->reference_manager = $reference_manager;
     }
 
-    public function save(Comment $comment, PFUser $user, $project_id)
-    {
-        $saved = $this->dao->save(
-            $comment->getPullRequestId(),
-            $comment->getUserId(),
-            $comment->getPostDate(),
-            $comment->getContent()
+    public function insert(
+        PullRequest $pull_request,
+        PFUser $user,
+        PullRequestInlineCommentPOSTRepresentation $comment_data,
+        $post_date,
+        $project_id
+    ) {
+        $pull_request_id = $pull_request->getId();
+
+        $inserted = $this->dao->insert(
+            $pull_request_id,
+            $user->getId(),
+            $comment_data->file_path,
+            $post_date,
+            $comment_data->unidiff_offset,
+            $comment_data->content
         );
 
         $this->reference_manager->extractCrossRef(
-            $comment->getContent(),
-            $comment->getPullRequestId(),
+            $comment_data->content,
+            $pull_request_id,
             pullrequestPlugin::REFERENCE_NATURE,
             $project_id,
             $user->getId(),
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
 
-        return $saved;
-    }
-
-    public function getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order)
-    {
-        $comments = array();
-
-        foreach ($this->dao->searchByPullRequestId($pull_request_id, $limit, $offset, $order) as $row) {
-            $comments[] = $this->instantiateFromRow($row);
-        }
-
-        return new PaginatedComments($comments, $this->dao->foundRows());
-    }
-
-    private function instantiateFromRow($row)
-    {
-        return new Comment(
-            $row['id'],
-            $row['pull_request_id'],
-            $row['user_id'],
-            $row['post_date'],
-            $row['content']
-        );
+        return $inserted;
     }
 }

@@ -25,6 +25,8 @@ use \PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 use Tuleap\PullRequest\Exception\InvalidBuildStatusException;
+use pullrequestPlugin;
+use ReferenceManager;
 
 class Factory
 {
@@ -34,9 +36,15 @@ class Factory
      */
     private $dao;
 
-    public function __construct(Dao $dao)
+    /*
+     * @var ReferenceManager
+     */
+    private $reference_manager;
+
+    public function __construct(Dao $dao, ReferenceManager $reference_manager)
     {
-        $this->dao = $dao;
+        $this->dao               = $dao;
+        $this->reference_manager = $reference_manager;
     }
 
     /**
@@ -117,7 +125,7 @@ class Factory
     /**
      * @return PullRequest
      */
-    public function create(PullRequest $pull_request)
+    public function create(PFUser $user, PullRequest $pull_request, $project_id)
     {
         $new_pull_request_id = $this->dao->create(
             $pull_request->getRepositoryId(),
@@ -138,6 +146,24 @@ class Factory
         }
 
         $pull_request->setId($new_pull_request_id);
+
+        $this->reference_manager->extractCrossRef(
+            $pull_request->getTitle(),
+            $new_pull_request_id,
+            pullrequestPlugin::REFERENCE_NATURE,
+            $project_id,
+            $user->getId(),
+            pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
+        );
+
+        $this->reference_manager->extractCrossRef(
+            $pull_request->getDescription(),
+            $new_pull_request_id,
+            pullrequestPlugin::REFERENCE_NATURE,
+            $project_id,
+            $user->getId(),
+            pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
+        );
 
         return $pull_request;
     }
@@ -167,9 +193,30 @@ class Factory
         return $this->dao->markAsMerged($pull_request->getId());
     }
 
-    public function updateTitleAndDescription($pull_request, $new_title, $new_description)
+    public function updateTitleAndDescription(PFUser $user, PullRequest $pull_request, $project_id, $new_title, $new_description)
     {
-        return $this->dao->updateTitleAndDescription($pull_request->getId(), $new_title, $new_description);
+        $pull_request_id = $pull_request->getId();
+        $updated         = $this->dao->updateTitleAndDescription($pull_request_id, $new_title, $new_description);
+
+        $this->reference_manager->extractCrossRef(
+            $new_title,
+            $pull_request_id,
+            pullrequestPlugin::REFERENCE_NATURE,
+            $project_id,
+            $user->getId(),
+            pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
+        );
+
+        $this->reference_manager->extractCrossRef(
+            $new_description,
+            $pull_request_id,
+            pullrequestPlugin::REFERENCE_NATURE,
+            $project_id,
+            $user->getId(),
+            pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
+        );
+
+        return $updated;
     }
 
     public function updateLastBuildStatus(PullRequest $pull_request, $status, $date)

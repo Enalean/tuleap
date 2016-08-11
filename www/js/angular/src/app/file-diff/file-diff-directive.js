@@ -6,8 +6,8 @@ FileDiffDirective.$inject = [
     '$window',
     'lodash',
     '$state',
+    '$compile',
     '$uiViewScroll',
-    '$interpolate',
     'SharedPropertiesService',
     'FileDiffRestService'
 ];
@@ -16,8 +16,8 @@ function FileDiffDirective(
     $window,
     lodash,
     $state,
+    $compile,
     $uiViewScroll,
-    $interpolate,
     SharedPropertiesService,
     FileDiffRestService
 ) {
@@ -50,7 +50,7 @@ function FileDiffDirective(
                 displayUnidiff(unidiff, data.lines);
 
                 data.inline_comments.forEach(function(comment) {
-                    displayInlineComment(unidiff, comment);
+                    displayInlineComment(unidiff, comment, scope);
                 });
 
                 unidiff.on('gutterClick', showCommentForm);
@@ -60,6 +60,37 @@ function FileDiffDirective(
 
             $uiViewScroll(element);
         });
+
+        function showCommentForm(unidiff, lnb) {
+            var elt = document.createElement('div'); // eslint-disable-line angular/document-service
+            elt.innerHTML = '<div class="new-inline-comment">'
+                + '<i class="icon-plus-sign"></i>'
+                + '<div class="arrow"></div>'
+                + '<div class="new-inline-comment-content">'
+                + '<form>'
+                + '<textarea></textarea>'
+                + '</form>'
+                + '<div class="controls">'
+                + '<button type="submit" class="btn btn-primary"><i class="icon-comment"></i> Comment</button>'
+                + '<button type="button" class="btn"><i class="icon-remove"></i> Cancel</button>'
+                + '</div></div></div>';
+            var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
+                coverGutter: true
+            });
+
+            elt.querySelector('button[type="submit"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                var commentText = elt.querySelector('textarea').value;
+                postComment(lnb, commentText).then(function(comment) {
+                    displayInlineComment(unidiff, comment, scope);
+                    commentFormWidget.clear();
+                });
+            });
+
+            elt.querySelector('button[type="button"]').addEventListener('click', function() {
+                commentFormWidget.clear();
+            });
+        }
     }
 
     function displayUnidiff(unidiff, fileLines) {
@@ -82,55 +113,12 @@ function FileDiffDirective(
         });
     }
 
-    function displayInlineComment(unidiff, comment) {
-        var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
-            + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
-            + '<div class="arrow"></div>'
-            + '<div class="comment">'
-            + '<div class="info">'
-            + '<span class="author">{{ user.display_name }}</span>'
-            + '<span class="post-date">{{ post_date | date: "short" }}</span>'
-            + '</div>'
-            + '<div class="content">{{ content }}</div>'
-            + '</div>'
-            + '</div>');
-
-        var elt = document.createElement('div'); // eslint-disable-line angular/document-service
-        comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-        elt.innerHTML = inlineCommentTemplate(comment);
-        unidiff.addLineWidget(comment.unidiff_offset - 1, elt, {
+    function displayInlineComment(unidiff, comment, scope) {
+        var child_scope            = scope.$new();
+        child_scope.comment        = comment;
+        var inline_comment_element = $compile('<inline-comment comment="comment"></inline-comment>')(child_scope)[0];
+        unidiff.addLineWidget(comment.unidiff_offset - 1, inline_comment_element, {
             coverGutter: true
-        });
-    }
-
-    function showCommentForm(unidiff, lnb) {
-        var elt = document.createElement('div'); // eslint-disable-line angular/document-service
-        elt.innerHTML = '<div class="new-inline-comment">'
-            + '<i class="icon-plus-sign"></i>'
-            + '<div class="arrow"></div>'
-            + '<div class="new-inline-comment-content">'
-            + '<form>'
-            + '<textarea></textarea>'
-            + '</form>'
-            + '<div class="controls">'
-            + '<button type="submit" class="btn btn-primary"><i class="icon-comment"></i> Comment</button>'
-            + '<button type="button" class="btn"><i class="icon-remove"></i> Cancel</button>'
-            + '</div></div></div>';
-        var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
-            coverGutter: true
-        });
-
-        elt.querySelector('button[type="submit"]').addEventListener('click', function(e) {
-            e.preventDefault();
-            var commentText = elt.querySelector('textarea').value;
-            postComment(lnb, commentText).then(function(comment) {
-                displayInlineComment(unidiff, comment);
-                commentFormWidget.clear();
-            });
-        });
-
-        elt.querySelector('button[type="button"]').addEventListener('click', function() {
-            commentFormWidget.clear();
         });
     }
 

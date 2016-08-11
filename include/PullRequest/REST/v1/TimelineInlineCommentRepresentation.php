@@ -22,9 +22,13 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\User\REST\MinimalUserRepresentation ;
 use Tuleap\REST\JsonCast;
+use Codendi_HTMLPurifier;
 
 class TimelineInlineCommentRepresentation
 {
+
+    const TYPE = 'inline-comment';
+
     /**
      * @var string {@type string}
      */
@@ -61,14 +65,15 @@ class TimelineInlineCommentRepresentation
     public $type;
 
 
-    public function __construct($file_path, $unidiff_offset, $user, $post_date, $content, $is_outdated)
+    public function build($file_path, $unidiff_offset, $user, $post_date, $content, $is_outdated, $project_id)
     {
         $this->file_path      = $file_path;
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
         $this->post_date      = JsonCast::toDate($post_date);
-        $this->content        = $content;
+        $purifier             = Codendi_HTMLPurifier::instance();
+        $this->content        = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
         $this->is_outdated    = $is_outdated;
-        $this->type           = 'inline-comment';
+        $this->type           = self::TYPE;
     }
 }

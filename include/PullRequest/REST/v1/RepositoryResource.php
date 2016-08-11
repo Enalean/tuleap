@@ -29,6 +29,7 @@ use ProjectManager;
 use UserManager;
 use PFUser;
 use GitDao;
+use ReferenceManager;
 
 class RepositoryResource
 {
@@ -45,11 +46,10 @@ class RepositoryResource
     /** @var UserManager */
     private $user_manager;
 
-
     public function __construct()
     {
         $this->pull_request_dao     = new PullRequestDao();
-        $this->pull_request_factory = new PullRequestFactory($this->pull_request_dao);
+        $this->pull_request_factory = new PullRequestFactory($this->pull_request_dao, ReferenceManager::instance());
         $this->git_repository_factory = new GitRepositoryFactory(
             new GitDao(),
             ProjectManager::instance()

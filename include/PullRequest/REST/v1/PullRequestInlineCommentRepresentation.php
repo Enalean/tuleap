@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\User\REST\MinimalUserRepresentation ;
 use Tuleap\REST\JsonCast;
+use Codendi_HTMLPurifier;
 
 class PullRequestInlineCommentRepresentation
 {
@@ -45,11 +46,12 @@ class PullRequestInlineCommentRepresentation
      */
     public $content;
 
-    public function __construct($unidiff_offset, $user, $post_date, $content)
+    public function __construct($unidiff_offset, $user, $post_date, $content, $project_id)
     {
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
         $this->post_date      = JsonCast::toDate($post_date);
-        $this->content        = $content;
+        $purifier             = Codendi_HTMLPurifier::instance();
+        $this->content        = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
     }
 }

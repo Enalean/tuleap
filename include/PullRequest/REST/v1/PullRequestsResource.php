@@ -59,6 +59,8 @@ use Tuleap\REST\ProjectAuthorization;
 use BackendLogger;
 use \Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use \Tuleap\PullRequest\Timeline\TimelineEventCreator;
+use ReferenceManager;
+use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 
 class PullRequestsResource extends AuthenticatedResource
 {
@@ -98,6 +100,11 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var Tuleap\PullRequest\Timeline\TimelineEventCreator */
     private $timeline_event_creator;
 
+    /**
+     * @var InlineCommentCreator
+     */
+    private $inline_comment_creator;
+
     public function __construct()
     {
         $this->git_repository_factory = new GitRepositoryFactory(
@@ -106,10 +113,11 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $pull_request_dao           = new PullRequestDao();
-        $this->pull_request_factory = new PullRequestFactory($pull_request_dao);
+        $reference_manager          = ReferenceManager::instance();
+        $this->pull_request_factory = new PullRequestFactory($pull_request_dao, $reference_manager);
 
         $comment_dao           = new CommentDao();
-        $this->comment_factory = new CommentFactory($comment_dao);
+        $this->comment_factory = new CommentFactory($comment_dao, $reference_manager);
 
         $inline_comment_dao     = new InlineCommentDao();
         $timeline_dao           = new TimelineDao();
@@ -134,6 +142,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->logger               = new BackendLogger();
 
         $this->timeline_event_creator = new TimelineEventCreator(new TimelineDao());
+
+        $dao = new \Tuleap\PullRequest\InlineComment\Dao();
+        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager);
     }
 
     /**
@@ -283,7 +294,7 @@ class PullRequestsResource extends AuthenticatedResource
                 new \Tuleap\PullRequest\InlineComment\Dao(),
                 $this->user_manager
             );
-            $inline_comments = $inline_comment_builder->getForFile($pull_request, $path);
+            $inline_comments = $inline_comment_builder->getForFile($pull_request, $path, $git_repository->getProjectId());
         }
 
         return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments, $mime_type, $charset);
@@ -328,9 +339,7 @@ class PullRequestsResource extends AuthenticatedResource
         }
 
         $post_date = time();
-
-        $dao = new \Tuleap\PullRequest\InlineComment\Dao();
-        $dao->insert($id, $user->getId(), $comment_data->file_path, $post_date, $comment_data->unidiff_offset, $comment_data->content);
+        $this->inline_comment_creator->insert($pull_request, $user, $comment_data, $post_date, $git_repository->getProjectId());
 
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($this->user_manager->getUserById($user->getId()));
@@ -339,7 +348,8 @@ class PullRequestsResource extends AuthenticatedResource
             $comment_data->unidiff_offset,
             $user_representation,
             $post_date,
-            $comment_data->content
+            $comment_data->content,
+            $git_repository->getProjectId()
         );
     }
 
@@ -520,7 +530,12 @@ class PullRequestsResource extends AuthenticatedResource
         if ($status !== null) {
             $this->patchStatus($user, $pull_request, $repository_src, $status);
         } else {
-            $this->patchInfo($pull_request, $body);
+            $this->patchInfo(
+                $user,
+                $pull_request,
+                $repository_src->getProjectId(),
+                $body
+            );
         }
         $updated_pull_request        = $this->getPullRequest($id);
 
@@ -569,9 +584,19 @@ class PullRequestsResource extends AuthenticatedResource
         }
     }
 
-    private function patchInfo(PullRequest $pull_request, $body)
-    {
-        $this->pull_request_factory->updateTitleAndDescription($pull_request, $body->title, $body->description);
+    private function patchInfo(
+        PFUser $user,
+        PullRequest $pull_request,
+        $project_id,
+        $body
+    ) {
+        $this->pull_request_factory->updateTitleAndDescription(
+            $user,
+            $pull_request,
+            $project_id,
+            $body->title,
+            $body->description
+        );
     }
 
     /**
@@ -715,7 +740,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $current_time   = time();
         $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
-        $new_comment_id = $this->comment_factory->save($comment);
+        $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
 
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($user);

@@ -105,57 +105,7 @@
             }
         }
 
-
-        .inline-comment {
-            display: flex;
-            align-items: center;
-            margin: 3px 0;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-            .avatar {
-                flex: 0 0 auto;
-                width: 30px;
-                height: 30px;
-                margin: 0 5px 0 15px;
-            }
-
-            .comment {
-                display: flex;
-                flex: 1 1 auto;
-                margin: 0 15px 0 0;
-                background: #ffffff;
-                border: 1px solid #eeeeee;
-                border-radius: 3px;
-                box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
-
-                .info {
-                    padding: 4px 6px;
-                    background: #eeeeee;
-                    color: #ffffff;
-                    font-size: 12px;
-                    white-space: nowrap;
-
-                    .author {
-                        display: flex;
-                        align-items: center;
-                    }
-
-                    .post-date {
-
-                    }
-                }
-
-                .content {
-                    display: flex;
-                    align-items: center;
-                    padding: 3px 6px;
-                    color: #333;
-                    font-size: 13px;
-                    line-height: 24px;
-                }
-            }
-
-        }
+        @import 'inline-comment/inline-comment';
 
         .new-inline-comment {
             display: flex;

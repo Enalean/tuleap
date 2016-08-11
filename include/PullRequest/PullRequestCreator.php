@@ -104,7 +104,7 @@ class PullRequestCreator
         $merge_status = $this->pull_request_merger->detectMergeabilityStatus($executor, $pull_request, $pull_request->getSha1Src(), $repository_src);
         $pull_request->setMergeStatus($merge_status);
 
-        return $this->pull_request_factory->create($pull_request);
+        return $this->pull_request_factory->create($creator, $pull_request, $repository_src->getProjectId());
     }
 
     private function checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)

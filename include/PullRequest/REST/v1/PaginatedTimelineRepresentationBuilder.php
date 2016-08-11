@@ -74,13 +74,15 @@ class PaginatedTimelineRepresentationBuilder
                 );
                 return $event_representation;
             case 'InlineComment':
-                $event_representation = new TimelineInlineCommentRepresentation(
+                $event_representation = new TimelineInlineCommentRepresentation();
+                $event_representation->build(
                     $event->getFilePath(),
                     $event->getUnidiffOffset(),
                     $user_representation,
                     $event->getPostDate(),
                     $event->getContent(),
-                    $event->isOutdated()
+                    $event->isOutdated(),
+                    $project_id
                 );
                 return $event_representation;
             case 'TimelineEvent':
