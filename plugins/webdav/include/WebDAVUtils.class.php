@@ -20,6 +20,10 @@
 
 require_once 'WebDAV_Request.class.php';
 
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+
 /**
  * This class contains methods used in WebDAV plugin
  */
@@ -108,6 +112,17 @@ class WebDAVUtils {
     }
 
     /**
+     * For test purpose
+     */
+    protected function getFRSPermissionManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
+    }
+
+    /**
      * Tests if the user is Superuser, project admin or File release admin
      *
      * @param PFUser $user
@@ -115,12 +130,12 @@ class WebDAVUtils {
      *
      * @return Boolean
      */
-    function userIsAdmin($user, $groupId) {
+    function userIsAdmin($user, $project_id)
+    {
+        $permission_manager = $this->getFRSPermissionManager();
+        $project = $this->getProjectManager()->getProject($project_id);
 
-        // A refers to admin
-        // R2 refers to File release admin
-        return ($user->isSuperUser() || $user->isMember($groupId, 'A') || $user->isMember($groupId, 'R2'));
-
+        return ($user->isSuperUser() || $permission_manager->isAdmin($project, $user));
     }
 
     /**
@@ -131,19 +146,20 @@ class WebDAVUtils {
      *
      * @return Boolean
      */
-    function userCanWrite($user, $groupId) {
-
-        // R2 refers to File release admin
-        return $this->isWriteEnabled() && ($user->isSuperUser() || $user->isMember($groupId, 'R2'));
+    function userCanWrite($user, $project_id)
+    {
+        $permission_manager = $this->getFRSPermissionManager();
+        $project = $this->getProjectManager()->getProject($project_id);
+        return $this->isWriteEnabled() && ($user->isSuperUser() || $permission_manager->isAdmin($project, $user));
 
     }
 
     /**
      * Returns an instance of ProjectManager
      *
-     * @return FRSProjectManager
+     * @return ProjectManager
      */
-    function getProjectManager() {
+    public function getProjectManager() {
 
         $pm = ProjectManager::instance();
         return $pm;

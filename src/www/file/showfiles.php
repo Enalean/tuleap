@@ -34,13 +34,6 @@ if($request->valid($vGroupId)) {
 } else {
     exit_no_group();
 }
-if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
-    $authorized_user = true;
-}
-
-$frspf = new FRSPackageFactory();
-$frsrf = new FRSReleaseFactory();
-$frsff = new FRSFileFactory();
 
 $permission_manager = new FRSPermissionManager(
     new FRSPermissionDao(),
@@ -49,12 +42,19 @@ $permission_manager = new FRSPermissionManager(
 
 $pm        = ProjectManager::instance();
 $project   = $pm->getProject($group_id);
+$user = UserManager::instance()->getCurrentUser();
+if ($permission_manager->isAdmin($project, $user) || $permission_manager->userCanRead($project, $user)) {
+    $authorized_user = true;
+}
+
+$frspf = new FRSPackageFactory();
+$frsrf = new FRSReleaseFactory();
+$frsff = new FRSFileFactory();
 
 $packages = array();
 $num_packages = 0;
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
-$user = UserManager::instance()->getCurrentUser();
 foreach ($res as $package) {
     if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
          && $permission_manager->userCanRead($project, $user)) {

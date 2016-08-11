@@ -183,15 +183,11 @@ class FRSPackage {
 		return $this->package_releases;
 	}
     
-    /**
-     * Function userCanRead : determine if the user can view this package or not
-     *
-	 * @param int $user_id if not given or 0 take the current user
-     * @return boolean true if user has Read access to this package, false otherwise
-	 */ 
-	function userCanRead($user_id=0) {
-        $frspf = new FRSPackageFactory();
-        return $frspf->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
-	}
+    public function userCanRead($user_id = 0)
+    {
+        $factory = new FRSPackageFactory();
+
+        return $factory->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
+    }
 
 }

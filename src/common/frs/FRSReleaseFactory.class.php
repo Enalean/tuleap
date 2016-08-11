@@ -318,23 +318,15 @@ class FRSReleaseFactory {
         return $this->_getFRSPackageFactory()->userCanAdmin($user, $project_id);
     }
 
-    /**
-     * Return true if user has Read or Update permission on this release
-     *
-	 * @param Integer $group_id   The project the release is in
-     * @param Integer $package_id The package this release is in
-	 * @param Integer $release_id The release id
-	 * @param Integer $user_id    If not given or false take the current user
-     *
-     * @return Boolean
-     */ 
-	function userCanRead($group_id, $package_id, $release_id, $user_id=false) {
+    function userCanRead($group_id, $package_id, $release_id, $user_id = false)
+    {
         $um = $this->getUserManager();
-	    if (!$user_id) {
+        if (! $user_id) {
             $user = $um->getCurrentUser();
         } else {
             $user = $um->getUserById($user_id);    
         }
+
         if ($this->userCanAdmin($user, $group_id)) {
             return true;
         } else {
@@ -345,9 +337,10 @@ class FRSReleaseFactory {
                 $frspf = $this->_getFRSPackageFactory();
                 $ok    = $frspf->userCanRead($group_id, $package_id, $user->getId());
             }
+
             return $ok;
         }
-	}
+    }
 
     /** 
      * Return true if user has Update permission on this release 

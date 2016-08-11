@@ -21,6 +21,10 @@
 require_once ('WebDAVFRSPackage.class.php');
 require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
 
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+
 /**
  * This class lists the packages of a given project
  *
@@ -222,16 +226,23 @@ class WebDAVFRS extends Sabre_DAV_Directory {
 
     }
 
+    /** @protected for testing purpose */
+    protected function getPermissionsManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
+    }
+
     /**
      * Checks whether the user can read the project or not
      *
      * @return Boolean
      */
-    function userCanRead() {
-
-        return ($this->getProject()->userIsMember()
-        || ($this->getProject()->isPublic() && !$this->getUser()->isRestricted()));
-
+    public function userCanRead()
+    {
+        return $this->getPermissionsManager()->userCanRead($this->getProject(), $this->getUser());
     }
 
     /**
@@ -239,9 +250,9 @@ class WebDAVFRS extends Sabre_DAV_Directory {
      *
      * @return Boolean
      */
-    function userCanWrite() {
-        $utils = $this->getUtils();
-        return $utils->userCanWrite($this->getUser(), $this->getGroupId());
+    public function userCanWrite()
+    {
+        return $this->getPermissionsManager()->isAdmin($this->getProject(), $this->getUser());
     }
 
     /**

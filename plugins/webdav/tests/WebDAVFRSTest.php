@@ -31,7 +31,17 @@ Mock::generate('Project');
 Mock::generatePartial(
     'WebDAVFRS',
     'WebDAVFRSTestVersion',
-array('getGroupId', 'getProject', 'getUser', 'getUtils', 'getPackageList','getFRSPackageFromName', 'getWebDAVPackage', 'userCanWrite')
+    array(
+        'getGroupId',
+        'getProject',
+        'getUser',
+        'getUtils',
+        'getPackageList',
+        'getFRSPackageFromName',
+        'getWebDAVPackage',
+        'userCanWrite',
+        'getPermissionsManager'
+    )
 );
 
 /**
@@ -42,6 +52,7 @@ class WebDAVFRSTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $this->frs_permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
     }
 
     function tearDown() {
@@ -147,134 +158,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $utils = new MockWebDAVUtils();
         $webDAVFRS->setReturnValue('getUtils', $utils);
         $this->assertEqual($webDAVFRS->getChild($WebDAVPackage->getPackageId()), $WebDAVPackage);
-    }
-
-    /**
-     * Testing when project is not public and user is not member and not restricted
-     */
-    function testUserCanReadWhenNotPublicNotMemberNotRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), false);
-    }
-
-    /**
-     * Testing when project is not public and user is member and not restricted
-     */
-    function testUserCanReadWhenNotPublicMemberNotRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), true);
-    }
-
-    /**
-     * Testing when project is not public and user is not member and restricted
-     */
-    function testUserCanReadWhenNotPublicNotMemberRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), false);
-    }
-
-    /**
-     * Testing when project is not public and user is member and restricted
-     */
-    function testUserCanReadWhenNotPublicMemberRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), true);
-    }
-
-    /**
-     * Testing when project is public and user is not member and not restricted
-     */
-    function testUserCanReadWhenPublicNotMemberNotRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), true);
-    }
-
-    /**
-     * Testing when project is public and user is member and not restricted
-     */
-    function testUserCanReadWhenPublicMemberNotRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), true);
-    }
-
-    /**
-     * Testing when project is public and user is not member and restricted
-     */
-    function testUserCanReadWhenPublicNotMemberRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), false);
-    }
-
-    /**
-     * Testing when project is public and user is member and restricted
-     */
-    function testUserCanReadWhenPublicMemberRestricted() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVFRS->setReturnValue('getProject', $project);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVFRS->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVFRS->userCanRead(), true);
     }
 
     /**

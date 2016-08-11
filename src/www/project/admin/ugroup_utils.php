@@ -35,8 +35,8 @@ $GLOBALS['UGROUPS'] = array(
     'UGROUP_AUTHENTICATED'      => $GLOBALS['UGROUP_AUTHENTICATED'],
     'UGROUP_PROJECT_MEMBERS'    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
     'UGROUP_PROJECT_ADMIN'      => $GLOBALS['UGROUP_PROJECT_ADMIN'],
-    'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
     'UGROUP_DOCUMENT_TECH'      => $GLOBALS['UGROUP_DOCUMENT_TECH'],
+    'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
     'UGROUP_DOCUMENT_ADMIN'     => $GLOBALS['UGROUP_DOCUMENT_ADMIN'],
     'UGROUP_WIKI_ADMIN'         => $GLOBALS['UGROUP_WIKI_ADMIN'],
     'UGROUP_TRACKER_ADMIN'      => $GLOBALS['UGROUP_TRACKER_ADMIN'],
@@ -179,7 +179,6 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
   if ($user->isMember($group_id))               $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
   if ($user->isMember($group_id,'A'))           $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
   if ($user->isMember($group_id,'D2'))          $res[] = $GLOBALS['UGROUP_DOCUMENT_ADMIN'];
-  if ($user->isMember($group_id,'R2'))          $res[] = $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'];
   if ($user->isMember($group_id,'W2'))          $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
   if (is_int($instances)) {
       if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
@@ -240,9 +239,6 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         if ($user->isMember($group_id)) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
-        // File manager admins
-        if ($user->isMember($group_id,'R2')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
         // Document admin
         if ($user->isMember($group_id,'D2')) { return true; }
@@ -312,9 +308,6 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_displ
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " $having_keyword ORDER BY ".$sqlorder.")";
-    } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
-        // File manager admins
-        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2 AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
         // Document admin
         return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3) AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";

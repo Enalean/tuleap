@@ -285,15 +285,17 @@ class FRSPackageFactory {
     public function userCanAdmin(PFUser $user, $project_id)
     {
         $project = $this->getProjectManager()->getProject($project_id);
-        return $this->getPermissionManager()->isAdmin($project, $user);
+        return $this->getFRSPermissionManager()->isAdmin($project, $user);
     }
 
-    private function getProjectManager()
+    /** @protected for testing purpose */
+    protected function getProjectManager()
     {
         return ProjectManager::instance();
     }
 
-    private function getPermissionManager()
+    /** @protected for testing purpose */
+    protected function getFRSPermissionManager()
     {
         return new FRSPermissionManager(
             new FRSPermissionDao(),
@@ -301,28 +303,45 @@ class FRSPackageFactory {
         );
     }
 
-	/**
-     * Return true if user has Read or Update permission on this package
-     *
-	 * @param Integer $group_id   The project this package is in
-	 * @param Integer $package_id The package id
-	 * @param Integer $user_id    If not given or false take the current user
-     *
-     * @return Boolean
-     */ 
-	function userCanRead($group_id, $package_id, $user_id=false) {
-        $pm = $this->getPermissionsManager();
-        $um = $this->getUserManager();
-	    if (! $user_id) {
-            $user = $um->getCurrentUser();
-        } else {
-            $user = $um->getUserById($user_id);    
-        }
-        $ok = $this->userCanAdmin($user, $group_id)
-              || $pm->userHasPermission($package_id, FRSPackage::PERM_READ, $user->getUgroups($group_id, array()))
-              || !$pm->isPermissionExist($package_id, FRSPackage::PERM_READ);
+    public function userCanRead($project_id, $package_id, $user_id = false)
+    {
+        $frs_permission_manager = $this->getFRSPermissionManager();
+
+        $user    = $this->getUser($user_id);
+        $project = $this->getProjectManager()->getProject($project_id);
+
+        $ok = $frs_permission_manager->isAdmin($project, $user)
+            || (
+                $frs_permission_manager->userCanRead($project, $user)
+                &&
+                $this->userCanReadPackage($project_id, $package_id, $user)
+            );
+
         return $ok;
-	}
+    }
+
+    /** @return PFUser */
+    private function getUser($user_id = false)
+    {
+        $user_manager = $this->getUserManager();
+        if (! $user_id) {
+            $user = $user_manager->getCurrentUser();
+        } else {
+            $user = $user_manager->getUserById($user_id);
+        }
+
+        return $user;
+    }
+
+    private function userCanReadPackage($project_id, $package_id, PFUser $user)
+    {
+        $global_permission_manager = $this->getPermissionsManager();
+
+        $user_groups = $user->getUgroups($project_id, array());
+
+        return $global_permission_manager->userHasPermission($package_id, FRSPackage::PERM_READ, $user_groups)
+            || ! $global_permission_manager->isPermissionExist($package_id, FRSPackage::PERM_READ);
+    }
 
     /**
      * Return true if user has Update permission on this package
@@ -349,7 +368,6 @@ class FRSPackageFactory {
      * @return Boolean true if the user has permission to create packages, false otherwise
      */ 
     function userCanCreate($group_id, $user_id=false) {
-        $pm = $this->getPermissionsManager();
         $um = $this->getUserManager();
         if (! $user_id) {
             $user = $um->getCurrentUser();

@@ -26,9 +26,10 @@ Mock::generatePartial(
         '_getFRSPackageDao',
         'getUserManager',
         'getPermissionsManager',
+        'getFRSPermissionManager',
+        'getProjectManager',
         'getFRSPackagesFromDb',
-        'delete_package',
-        'userCanAdmin'
+        'delete_package'
     )
 );
 require_once('common/dao/include/DataAccess.class.php');
@@ -52,15 +53,21 @@ class FRSPackageFactoryTest extends TuleapTestCase
     private $frs_package_factory;
     private $user_manager;
     private $permission_manager;
+    private $frs_permission_manager;
 
     public function setUp()
     {
-        $this->user                = mock('PFUser');
-        $this->frs_package_factory = new FRSPackageFactoryTestVersion($this);
-        $this->user_manager        = new MockUserManager($this);
-        $this->permission_manager  = new MockPermissionsManager($this);
+        $this->user                   = mock('PFUser');
+        $this->frs_package_factory    = new FRSPackageFactoryTestVersion($this);
+        $this->user_manager           = new MockUserManager($this);
+        $this->permission_manager     = new MockPermissionsManager($this);
+        $this->frs_permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
+        $this->project_manager        = mock('ProjectManager');
+
         stub($this->user_manager)->getUserById()->returns($this->user);
         stub($this->frs_package_factory)->getUserManager()->returns($this->user_manager);
+        stub($this->frs_package_factory)->getFRSPermissionManager()->returns($this->frs_permission_manager);
+        stub($this->frs_package_factory)->getProjectManager()->returns($this->project_manager);
     }
 
     public function testGetFRSPackageFromDb()
@@ -124,13 +131,15 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
     public function testAdminHasAlwaysAccess()
     {
-        stub($this->frs_package_factory)->userCanAdmin()->returns(true);
+        stub($this->frs_permission_manager)->isAdmin()->returns(true);
+
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
     protected function _userCanReadWithSpecificPerms($can_read_package)
     {
-        stub($this->frs_package_factory)->userCanAdmin()->returns(false);
+        stub($this->frs_permission_manager)->userCanRead()->returns(true);
+        stub($this->frs_permission_manager)->isAdmin()->returns(false);
 
         $this->user->expectOnce('getUgroups', array($this->group_id, array()));
         $this->user->setReturnValue('getUgroups', array(1,2,76));
@@ -160,6 +169,7 @@ class FRSPackageFactoryTest extends TuleapTestCase
      */
     public function testUserCanReadWhenNoPermissionsSet()
     {
+        stub($this->frs_permission_manager)->userCanRead()->returns(true);
         $this->user->expectOnce('getUgroups', array($this->group_id, array()));
         $this->user->setReturnValue('getUgroups', array(1,2,76));
 
@@ -175,25 +185,25 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
     public function testAdminCanAlwaysUpdate()
     {
-        stub($this->frs_package_factory)->userCanAdmin()->returns(true);
+        stub($this->frs_permission_manager)->isAdmin()->returns(true);
         $this->assertTrue($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
     }
 
     public function testMereMortalCannotUpdate()
     {
-        stub($this->frs_package_factory)->userCanAdmin()->returns(false);
+        stub($this->frs_permission_manager)->isAdmin()->returns(false);
         $this->assertFalse($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
     }
 
     public function testAdminCanAlwaysCreate()
     {
-        stub($this->frs_package_factory)->userCanAdmin()->returns(true);
+        stub($this->frs_permission_manager)->isAdmin()->returns(true);
         $this->assertTrue($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
     public function testMereMortalCannotCreate()
     {
-        stub($this->frs_package_factory)->userCanAdmin()->returns(false);
+        stub($this->frs_permission_manager)->isAdmin()->returns(false);
         $this->assertFalse($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
