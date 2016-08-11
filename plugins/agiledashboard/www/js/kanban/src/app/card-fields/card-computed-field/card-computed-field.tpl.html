@@ -1,16 +1,14 @@
-<span class="extra_card_field_title">{{ card_field.label }}: </span>
-<span
-    class="autocomputed-value"
-    ng-show="card_field.value !== null && card_field.manual_value === null"
-    ng-bind="card_field.value"
-></span>
-<span
-    class="manual-value"
-    ng-show="card_field.manual_value !== null"
-    ng-bind="card_field.manual_value"
-></span>
-<span
-    class="empty-value"
-    ng-show="card_field.value === null && card_field.manual_value === null"
-    translate
->Empty</span>
+<div
+    class="card-field card-computed-field"
+    ng-if="card_field.value !== null || card_field.manual_value !== null"
+>
+    <span class="extra-card-field-title">{{ card_field.label }}: </span>
+    <span
+        ng-show="card_field.value !== null && card_field.manual_value === null"
+        ng-bind-html="card_field.value | tuleapHighlight:filter_terms"
+    ></span>
+    <span
+        ng-show="card_field.manual_value !== null"
+        ng-bind-html="card_field.manual_value | tuleapHighlight:filter_terms"
+    ></span>
+</div>

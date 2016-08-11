@@ -179,53 +179,7 @@ $transition_delay: 350ms;
             text-align: center;
         }
 
-        > .extra_card_fields {
-            margin: 0;
-            text-align: left;
-
-            > li {
-                display: inline-block;
-                list-style-type: none;
-                font-size: 0.8em;
-
-                &.large {
-                    width: 100%;
-                }
-
-                @import '../card-fields/card-computed-field/card-computed-field';
-
-                > div {
-                    margin: 0 20px 0 0;
-
-                    span.extra_card_field_title {
-                        color: #999;
-                    }
-
-                    span.color {
-                        display: inline-block;
-                        width: 9px;
-                        height: 9px;
-                        border-radius: 50%;
-                        margin: 0 3px 0 0;
-                    }
-
-                    a:hover {
-                        text-decoration: none;
-                    }
-
-                    .user {
-                        display: inline-block;
-
-                        .avatar {
-                            width: 22px;
-                            height: 22px;
-                            display: inline-block;
-                            margin: 0 4px 0 0;
-                        }
-                    }
-                }
-            }
-        }
+        @import '../card-fields/card-fields';
     }
 
     .kanban-item-expand-collapse {
@@ -278,7 +232,7 @@ $transition_delay: 350ms;
             }
         }
 
-        ul.extra_card_fields {
+        ul.extra-card-fields {
             display: none;
         }
     }

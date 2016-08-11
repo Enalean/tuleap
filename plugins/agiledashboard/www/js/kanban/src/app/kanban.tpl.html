@@ -27,7 +27,13 @@
     </div>
 
     <div class="input-search">
-        <input type="search" class="search" placeholder="{{ 'Filter...' | translate }}"  ng-model="kanban.filter_terms" ng-keyup="kanban.treeFilter()">
+        <input
+            type="search"
+            class="search"
+            placeholder="{{ 'Filter...' | translate }}"
+            ng-model="kanban.filter.terms"
+            ng-keyup="kanban.filterCards()"
+        >
     </div>
 
     <div class="clearfix"></div>

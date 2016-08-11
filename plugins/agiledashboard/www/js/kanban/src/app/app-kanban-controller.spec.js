@@ -12,6 +12,7 @@ describe('KanbanCtrl - ', function() {
         SocketFactory,
         DroppedService,
         ColumnCollectionService,
+        KanbanFilterValue,
         kanban;
 
     function emptyArray(array) {
@@ -32,7 +33,8 @@ describe('KanbanCtrl - ', function() {
             _KanbanColumnService_,
             _SocketFactory_,
             _DroppedService_,
-            _ColumnCollectionService_
+            _ColumnCollectionService_,
+            _KanbanFilterValue_
         ) {
             $controller                   = _$controller_;
             $q                            = _$q_;
@@ -45,6 +47,7 @@ describe('KanbanCtrl - ', function() {
             SocketFactory                 = _SocketFactory_;
             DroppedService                = _DroppedService_;
             ColumnCollectionService       = _ColumnCollectionService_;
+            KanbanFilterValue             = _KanbanFilterValue_;
         });
 
         kanban = {
@@ -75,6 +78,10 @@ describe('KanbanCtrl - ', function() {
         spyOn(DroppedService, "reorderColumn").and.returnValue($q.when());
         spyOn(DroppedService, "moveToColumn").and.returnValue($q.when());
         spyOn(ColumnCollectionService, "getColumn");
+
+        KanbanFilterValue = {
+            terms: ''
+        };
 
         $scope = $rootScope.$new();
 
@@ -117,7 +124,7 @@ describe('KanbanCtrl - ', function() {
                     { id: 88 },
                     { id: 40 }
                 ]);
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, KanbanCtrl.archive);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
                 expect(KanbanCtrl.archive.loading_items).toBeFalsy();
                 expect(KanbanCtrl.archive.fully_loaded).toBeTruthy();
             });
@@ -162,7 +169,7 @@ describe('KanbanCtrl - ', function() {
                     { id: 69 },
                     { id: 16 }
                 ]);
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, KanbanCtrl.backlog);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.backlog);
                 expect(KanbanCtrl.backlog.loading_items).toBeFalsy();
                 expect(KanbanCtrl.backlog.fully_loaded).toBeTruthy();
             });
@@ -228,7 +235,7 @@ describe('KanbanCtrl - ', function() {
                     { id: 981 },
                     { id: 331 }
                 ]);
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, column);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(column);
                 expect(column.loading_items).toBeFalsy();
                 expect(column.fully_loaded).toBeTruthy();
             });
@@ -306,7 +313,7 @@ describe('KanbanCtrl - ', function() {
 
                 expect(KanbanService.expandArchive).toHaveBeenCalledWith(kanban.id);
                 expect(KanbanCtrl.archive.is_open).toBeTruthy();
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, KanbanCtrl.archive);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
             });
 
             it("and not yet loaded, when I toggle it, then it will be expanded and loaded", function() {
@@ -350,7 +357,7 @@ describe('KanbanCtrl - ', function() {
 
                 expect(KanbanService.expandBacklog).toHaveBeenCalledWith(kanban.id);
                 expect(KanbanCtrl.backlog.is_open).toBeTruthy();
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, KanbanCtrl.backlog);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.backlog);
             });
 
             it("and not yet loaded, when I toggle it, then it will be expanded and loaded", function() {
@@ -401,7 +408,7 @@ describe('KanbanCtrl - ', function() {
 
                 expect(KanbanService.expandColumn).toHaveBeenCalledWith(kanban.id, column.id);
                 expect(column.is_open).toBeTruthy();
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, column);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(column);
             });
         });
     });
@@ -502,15 +509,15 @@ describe('KanbanCtrl - ', function() {
             it("was open, when I filter the kanban, then the backlog will be filtered", function() {
                 KanbanCtrl.backlog.is_open = true;
 
-                KanbanCtrl.treeFilter();
+                KanbanCtrl.filterCards();
 
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, KanbanCtrl.backlog);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.backlog);
             });
 
             it("was closed, when I filter the kanban, then the backlog won't be filtered", function() {
                 KanbanCtrl.backlog.is_open = false;
 
-                KanbanCtrl.treeFilter();
+                KanbanCtrl.filterCards();
 
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
             });
@@ -520,15 +527,15 @@ describe('KanbanCtrl - ', function() {
             it("was open, when I filter the kanban, then the archive will be filtered", function() {
                 KanbanCtrl.archive.is_open = true;
 
-                KanbanCtrl.treeFilter();
+                KanbanCtrl.filterCards();
 
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, KanbanCtrl.archive);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
             });
 
             it("was closed, when I filter the kanban, then the archive won't be filtered", function() {
                 KanbanCtrl.archive.is_open = false;
 
-                KanbanCtrl.treeFilter();
+                KanbanCtrl.filterCards();
 
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
             });
@@ -556,15 +563,15 @@ describe('KanbanCtrl - ', function() {
             it("that was open, when I filter the kanban, then the column will be filtered", function() {
                 column.is_open = true;
 
-                KanbanCtrl.treeFilter();
+                KanbanCtrl.filterCards();
 
-                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.filter_terms, column);
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(column);
             });
 
             it("that was closed, when I filter the kanban, then the column won't be filtered", function() {
                 column.is_open = false;
 
-                KanbanCtrl.treeFilter();
+                KanbanCtrl.filterCards();
 
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
             });

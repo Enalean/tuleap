@@ -1,6 +1,7 @@
 describe("KanbanColumnService -", function() {
-    var $filter;
-    var KanbanColumnService;
+    var $filter,
+        KanbanColumnService,
+        KanbanFilterValue;
 
     beforeEach(function() {
         module('kanban', function($provide) {
@@ -9,14 +10,22 @@ describe("KanbanColumnService -", function() {
                     return function() {};
                 });
             });
+
+            $provide.decorator('KanbanFilterValue', function() {
+                return {
+                    terms: ''
+                };
+            });
         });
 
         inject(function(
             _$filter_,
-            _KanbanColumnService_
+            _KanbanColumnService_,
+            _KanbanFilterValue_
         ) {
             $filter             = _$filter_;
             KanbanColumnService = _KanbanColumnService_;
+            KanbanFilterValue   = _KanbanFilterValue_;
         });
     });
     describe("moveItem() -", function() {
@@ -404,7 +413,8 @@ describe("KanbanColumnService -", function() {
             };
             var filtered_content_ref = column.filtered_content;
 
-            KanbanColumnService.filterItems('reagreement', column);
+            KanbanFilterValue.terms = 'reagreement';
+            KanbanColumnService.filterItems(column);
 
             expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
             expect(column.filtered_content).toBe(filtered_content_ref);
@@ -433,7 +443,8 @@ describe("KanbanColumnService -", function() {
                 };
             });
 
-            KanbanColumnService.filterItems('6', column);
+            KanbanFilterValue.terms = '6';
+            KanbanColumnService.filterItems(column);
 
             expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
             expect(column.filtered_content).toEqual([

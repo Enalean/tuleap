@@ -188,14 +188,6 @@ describe('InPropertiesItemFilter', function() {
             id         : null,
             label      : null,
             card_fields: [{
-                type : 'computed',
-                value: 42
-            }]
-        }], '42').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
                 type : 'priority',
                 value: 42
             }]
@@ -282,6 +274,24 @@ describe('InPropertiesItemFilter', function() {
                 }]
             }], 'today').length).toBe(1);
         });
+        expect(in_properties_filter([{
+            id         : null,
+            label      : null,
+            card_fields: [{
+                type        : 'computed',
+                manual_value: null,
+                value       : 42
+            }]
+        }], '42').length).toBe(1);
+        expect(in_properties_filter([{
+            id         : null,
+            label      : null,
+            card_fields: [{
+                type        : 'computed',
+                manual_value: 42,
+                value       : null
+            }]
+        }], '42').length).toBe(1);
     });
 
     it("Given no terms to filter with, when I filter a list of items, then a copy of this list with the same items will be returned", function() {

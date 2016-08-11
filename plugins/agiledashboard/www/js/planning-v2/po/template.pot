@@ -75,10 +75,6 @@ msgstr ""
 msgid "Edit this item"
 msgstr ""
 
-#: src/app/card-fields/card-computed-field/card-computed-field.tpl.html
-msgid "Empty"
-msgstr ""
-
 #: src/app/backlog/backlog.tpl.html
 msgid "Filter..."
 msgstr ""

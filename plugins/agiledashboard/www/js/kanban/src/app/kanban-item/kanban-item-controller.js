@@ -3,15 +3,18 @@ angular
     .controller('KanbanItemController', KanbanItemController);
 
 KanbanItemController.$inject = [
-    'CardFieldsService'
+    'CardFieldsService',
+    'KanbanFilterValue'
 ];
 
 function KanbanItemController(
-    CardFieldsService
+    CardFieldsService,
+    KanbanFilterValue
 ) {
     var self = this;
 
     _.extend(self, {
+        kanban_filter               : KanbanFilterValue,
         cardFieldIsCross            : CardFieldsService.cardFieldIsCross,
         cardFieldIsDate             : CardFieldsService.cardFieldIsDate,
         cardFieldIsFile             : CardFieldsService.cardFieldIsFile,
