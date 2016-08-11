@@ -12,6 +12,7 @@ Version 8.18 (Not yet released)
 	* request #9371 Wrong artifact warning message when a user supposed to be notified is suspended
 	* request #9381 Release notes and changelog can not be accessed
 	* request #9389 Cross reference field broken while using artifact link field
+	* request #9382 A user which has not been connected at least one time can not be suspended for inactivity
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
