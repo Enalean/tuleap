@@ -56,17 +56,25 @@ class FRSRouter
 
         $action = $request->get('action');
 
+
         switch ($action) {
             case "edit-permissions":
                 $this->useDefaultRoute($request, $project, $user);
                 break;
             case "admin-frs-admins":
-                $select_project_ids = $request->get('frs_admins');
+                $admin_ugroups_ids  = $request->get('frs_admins');
+                $reader_ugroups_ids = $request->get('frs_readers');
 
-                if ($select_project_ids) {
-                    $this->permission_controller->updatePermissions($project, $user, $select_project_ids);
-                } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'no_data_selected'));
+                if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_data_incorrect'));
+                    $this->useDefaultRoute($request, $project, $user);
+                    return;
+                }
+
+                try {
+                    $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
+                } catch (FRSWrongPermissiongrantedException $e) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_permission_incorrect'));
                 }
 
                 $this->useDefaultRoute($request, $project, $user);

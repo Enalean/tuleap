@@ -21,6 +21,9 @@ define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
 use Tuleap\FRS\ToolbarPresenter;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
 
 $authorized_user = false;
 
@@ -39,13 +42,24 @@ if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
+
+$permission_manager = new FRSPermissionManager(
+    new FRSPermissionDao(),
+    new FRSPermissionFactory(new FRSPermissionDao())
+);
+
+$pm        = ProjectManager::instance();
+$project   = $pm->getProject($group_id);
+
 $packages = array();
 $num_packages = 0;
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
 $user = UserManager::instance()->getCurrentUser();
 foreach ($res as $package) {
-    if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())) {
+    if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
+         && $permission_manager->userCanRead($project, $user)) {
+
         if ($request->existAndNonEmpty('release_id')) {
             if($request->valid(new Valid_UInt('release_id'))) {
         	    $release_id = $request->get('release_id');
@@ -59,6 +73,7 @@ foreach ($res as $package) {
     }
 }
 
+
 if ($request->valid(new Valid_Pv('pv'))) {
     $pv = $request->get('pv');
 } else {
@@ -67,21 +82,21 @@ if ($request->valid(new Valid_Pv('pv'))) {
 
 $hp = Codendi_HTMLPurifier::instance();
 
-$pm = ProjectManager::instance();
+
 $params = array (
     'title' => $Language->getText('file_showfiles',
     'file_p_for',
     $hp->purify($pm->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
 
-$project   = $pm->getProject($group_id);
+
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
 $title     = $Language->getText('file_admin_index', 'file_manager_admin');
 $presenter = new ToolbarPresenter($project, $title);
 
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
-    if ($frspf->userCanAdmin($user, $group_id)) {
+    if ($permission_manager->isAdmin($project, $user)) {
         echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
     }
     file_utils_footer($params);
@@ -103,8 +118,7 @@ if ($pv) {
 
 }
 // get unix group name for path
-$pm = ProjectManager::instance();
-$group_unix_name = $pm->getProject($group_id)->getUnixName();
+$group_unix_name = $project->getUnixName();
 
 $proj_stats['packages'] = $num_packages;
 $pm = & PermissionsManager :: instance();
@@ -112,18 +126,19 @@ $fmmf = new FileModuleMonitorFactory();
  
 $javascript_packages_array = array();
  
-if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
+if (!$pv && $permission_manager->isAdmin($project, $user)) {
     $html .= '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
 }
+
 // Iterate and show the packages
 while (list ($package_id, $package) = each($packages)) {
     $can_see_package = false;
-    if ($package->isActive()) {
+    if ($package->isActive() && $permission_manager->userCanRead($project, $user)) {
         $emphasis = 'strong';
         $can_see_package = true;
-    } else if ($package->isHidden()){
+    } else if ($package->isHidden()) {
         $emphasis = 'em';
-        if ($frspf->userCanAdmin($user, $group_id)) {
+        if ($frspf->userCanAdmin($user, $project)) {
             $can_see_package = true;
         }
     }
@@ -136,7 +151,7 @@ while (list ($package_id, $package) = each($packages)) {
         }
         $html .= " <$emphasis>". $hp->purify(util_unconvert_htmlspecialchars($package->getName())) ."</$emphasis>";
         if (!$pv) {
-            if ($frspf->userCanAdmin($user, $group_id)) {
+            if ($permission_manager->isAdmin($project, $user)) {
                 $html .= '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
                 $html .= '       '. $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) ));
                 $html .= '</a>';
@@ -150,7 +165,7 @@ while (list ($package_id, $package) = each($packages)) {
                 $html .= '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
             }
             $html .= '</a>';
-            if ($frspf->userCanAdmin($user, $group_id)) {
+            if ($permission_manager->isAdmin($project, $user)) {
                 $html .= '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), CODENDI_PURIFIER_CONVERT_HTML)  .'\');">'
                             . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
             }
@@ -173,7 +188,7 @@ while (list ($package_id, $package) = each($packages)) {
     
         $javascript_releases_array = array();
         $html .= '<div id="p_'.$package_id.'">';
-        if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
+        if (!$pv && $permission_manager->isAdmin($project, $user)) {
             $html .= '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'add_releases') .']</a></p>';
         }
         if (!$res_release || $num_releases < 1) {
@@ -183,13 +198,14 @@ while (list ($package_id, $package) = each($packages)) {
             // iterate and show the releases of the package
             foreach ($res_release as $package_release) {
                 $can_see_release = false;
-                if ($frsrf->userCanRead($group_id, $package_id, $package_release->getReleaseID(), $user->getId())) {
+                if ($frsrf->userCanRead($group_id, $package_id, $package_release->getReleaseID(), $user->getId())
+                    && $permission_manager->userCanRead($project, $user)) {
                     if ($package_release->isActive()) {
                         $emphasis = 'strong';
                         $can_see_release = true;
-                    } else if($package_release->isHidden()){
+                    } else if ($package_release->isHidden()) {
                         $emphasis = 'em';
-                        if ($frspf->userCanAdmin($user, $group_id)) {
+                        if ($permission_manager->userCanRead($project, $user)) {
                             $can_see_release = true;
                         }
                     }
@@ -220,7 +236,7 @@ while (list ($package_id, $package) = each($packages)) {
                     }
                     $html .= "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
-                        if ($frspf->userCanAdmin($user, $group_id)) {
+                        if ($permission_manager->isAdmin($project, $user)) {
                             $html .= '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">'
                             . $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                         }
@@ -234,7 +250,7 @@ while (list ($package_id, $package) = each($packages)) {
                     } 
                     $html .= '</td> ';
                     $html .= '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
-                    if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
+                    if (!$pv && $permission_manager->isAdmin($project, $user)) {
                         $html .= ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), CODENDI_PURIFIER_CONVERT_HTML) .'\');">'
                         . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                     }

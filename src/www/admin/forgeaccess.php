@@ -20,13 +20,20 @@
 
 require_once 'pre.php';
 
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
+
 $controller = new ForgeAccess_AdminController(
     new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
     new ForgeAccess_ForgePropertiesManager(
         new ConfigDao(),
         ProjectManager::instance(),
         PermissionsManager::instance(),
-        EventManager::instance()
+        EventManager::instance(),
+        new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao()
+        )
     ),
     new Config_LocalIncFinder(),
     new UserDao(),

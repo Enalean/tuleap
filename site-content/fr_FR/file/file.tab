@@ -310,7 +310,8 @@ file_file_utils	write_title	Ecrire
 file_file_utils	no_data_selected	Aucune donnée selectionnée.
 file_file_utils	toolbar_admin	Admin
 file_file_utils	toolbar_help	Aide
-file_file_utils	under_implementation	En cours d'implémentation
+file_file_utils	error_permission_incorrect	Les permissions attribuées semblent incorrectes, les membres du projet ont plus de droit que les administrateurs de projet.
+file_file_utils	error_data_incorrect	Les données semblent incorrectes.
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php

@@ -316,8 +316,8 @@ file_file_utils	write_title	Write
 file_file_utils	no_data_selected	No data selected.
 file_file_utils	toolbar_admin	Admin
 file_file_utils	toolbar_help	Help
-file_file_utils	under_implementation	Under implementation
-
+file_file_utils	error_permission_incorrect	Permissions seem incorrect, projects members can write while administrators only can read.
+file_file_utils	error_data_incorrect	Data seem incorrect.
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php
