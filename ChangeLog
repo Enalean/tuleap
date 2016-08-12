@@ -23,6 +23,7 @@ Version 8.18 (Not yet released)
 		- Plugins no longer append javascript to core Combined
 		- combine JavaScript with hash
 	* Fix CI issues caused by side effects of $GLOBALS usage
+	* story #9281: define FRS global permissions
 
 	== Enhancement ==
 	* External lib no longer referenced in sources
