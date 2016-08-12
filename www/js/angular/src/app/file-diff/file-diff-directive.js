@@ -9,7 +9,8 @@ FileDiffDirective.$inject = [
     '$compile',
     '$uiViewScroll',
     'SharedPropertiesService',
-    'FileDiffRestService'
+    'FileDiffRestService',
+    'TooltipService'
 ];
 
 function FileDiffDirective(
@@ -19,7 +20,8 @@ function FileDiffDirective(
     $compile,
     $uiViewScroll,
     SharedPropertiesService,
-    FileDiffRestService
+    FileDiffRestService,
+    TooltipService
 ) {
     return {
         restrict        : 'A',
@@ -58,6 +60,8 @@ function FileDiffDirective(
 
             diffController.is_loading = false;
 
+            TooltipService.setupTooltips();
+
             $uiViewScroll(element);
         });
 
@@ -84,6 +88,7 @@ function FileDiffDirective(
                 postComment(lnb, commentText).then(function(comment) {
                     displayInlineComment(unidiff, comment, scope);
                     commentFormWidget.clear();
+                    TooltipService.setupTooltips();
                 });
             });
 

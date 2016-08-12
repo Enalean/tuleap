@@ -5,13 +5,15 @@ angular
 TimelineController.$inject = [
     'lodash',
     'SharedPropertiesService',
-    'TimelineService'
+    'TimelineService',
+    'TooltipService'
 ];
 
 function TimelineController(
     lodash,
     SharedPropertiesService,
-    TimelineService
+    TimelineService,
+    TooltipService
 ) {
     var self = this;
 
@@ -34,6 +36,7 @@ function TimelineController(
             TimelineService.timeline_pagination.offset
         ).then(function(timeline) {
             self.timeline = timeline;
+            TooltipService.setupTooltips();
         }).finally(function() {
             self.loading_timeline = false;
         });
@@ -46,6 +49,7 @@ function TimelineController(
             self.new_comment
         ).then(function() {
             self.new_comment.content = '';
+            TooltipService.setupTooltips();
         });
     }
 }

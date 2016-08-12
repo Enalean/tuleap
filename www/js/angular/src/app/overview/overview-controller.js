@@ -8,7 +8,8 @@ OverviewController.$inject = [
     'SharedPropertiesService',
     'PullRequestService',
     'UserRestService',
-    'MergeModalService'
+    'MergeModalService',
+    'TooltipService'
 ];
 
 function OverviewController(
@@ -17,7 +18,8 @@ function OverviewController(
     SharedPropertiesService,
     PullRequestService,
     UserRestService,
-    MergeModalService
+    MergeModalService,
+    TooltipService
 ) {
     var self = this;
 
@@ -48,6 +50,8 @@ function OverviewController(
         UserRestService.getUser(self.pull_request.user_id).then(function(user) {
             self.author = user;
         });
+
+        TooltipService.setupTooltips();
     });
 
     function buildStatusIs(status) {
@@ -61,6 +65,7 @@ function OverviewController(
             self.editionForm.raw_description)
         .then(function() {
             self.showEditionForm = false;
+            TooltipService.setupTooltips();
         });
     }
 

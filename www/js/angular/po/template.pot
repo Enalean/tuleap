@@ -91,15 +91,19 @@ msgid "Non fast-forward merge"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
-msgid "Oh snap!"
+msgid "OK"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
-msgid "OK"
+msgid "Oh snap!"
 msgstr ""
 
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Proceed with merge"
+msgstr ""
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Pull Request Details"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
@@ -108,10 +112,6 @@ msgstr ""
 
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request."
-msgstr ""
-
-#: src/app/pull-request/pull-request.tpl.html
-msgid "Pull Request Details"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
