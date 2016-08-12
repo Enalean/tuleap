@@ -794,24 +794,32 @@ class FRSFileFactory {
         return $dao->searchStagingCandidates($groupId);
     }
 
+    private function getPermissionManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
+    }
+
     /**
      * Returns true if user has permissions to add files
-     *
-     * NOTE : For the moment, only super admin, project admin (A) and file admin (R2) can add files
      *
      * @param int $group_id the project ID this file is in
      * @param int $user_id the ID of the user. If not given or false, take the current user
      * @return boolean true if the user has permission to add files, false otherwise
      */
-    function userCanAdd($group_id,$user_id=false) {
-        $pm = PermissionsManager::instance();
-        $um = UserManager::instance();
+    function userCanAdd($group_id, $user_id = false)
+    {
+        $pm      = PermissionsManager::instance();
+        $project = $pm->getProject($group_id);
+        $um      = UserManager::instance();
         if (! $user_id) {
             $user = $um->getCurrentUser();
         } else {
             $user = $um->getUserById($user_id);
         }
-        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
+        $ok = $user->isSuperUser() || $this->getPermissionManager()->isAdmin($project, $user) || user_ismember($group_id, 'A');
         return $ok;
     }
 

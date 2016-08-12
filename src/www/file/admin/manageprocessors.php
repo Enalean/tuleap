@@ -27,6 +27,9 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 
 use Tuleap\FRS\ToolbarPresenter;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -36,7 +39,16 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-if (!user_isloggedin() || !user_ismember($group_id,'R2')) {
+$permission_manager = new FRSPermissionManager(
+    new FRSPermissionDao(),
+    new FRSPermissionFactory(new FRSPermissionDao())
+);
+
+$user            = UserManager::instance()->getCurrentUser();
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+
+if (!user_isloggedin()  || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 
@@ -49,8 +61,6 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 }
 }
 
-$project_manager = ProjectManager::instance();
-$project         = $project_manager->getProject($group_id);
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
 $title     = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
 $presenter = new ToolbarPresenter($project, $title);
