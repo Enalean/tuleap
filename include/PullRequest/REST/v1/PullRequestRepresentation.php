@@ -134,17 +134,25 @@ class PullRequestRepresentation
      */
     public $short_stat;
 
-
     /**
      * @var string {@type string}
      */
     public $last_build_status;
 
-
     /**
      * @var string {@type string}
      */
     public $last_build_date;
+
+    /**
+     * @var string {@type string}
+     */
+    public $raw_title;
+
+    /**
+     * @var string {@type string}
+     */
+    public $raw_description;
 
     public function build(
         PullRequest $pull_request,
@@ -193,6 +201,9 @@ class PullRequestRepresentation
         $this->merge_status     = $this->expandMergeStatusName($pull_request->getMergeStatus());
 
         $this->short_stat = $pr_short_stat_representation;
+
+        $this->raw_title       = $pull_request->getTitle();
+        $this->raw_description = $pull_request->getDescription();
     }
 
     private function expandStatusName($status_acronym)

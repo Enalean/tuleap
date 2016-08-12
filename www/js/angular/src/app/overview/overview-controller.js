@@ -42,8 +42,8 @@ function OverviewController(
     SharedPropertiesService.whenReady().then(function() {
         self.pull_request = SharedPropertiesService.getPullRequest();
 
-        self.editionForm.title = self.pull_request.title;
-        self.editionForm.description = self.pull_request.description;
+        self.editionForm.raw_title       = self.pull_request.raw_title;
+        self.editionForm.raw_description = self.pull_request.raw_description;
 
         UserRestService.getUser(self.pull_request.user_id).then(function(user) {
             self.author = user;
@@ -57,8 +57,8 @@ function OverviewController(
     function saveEditionForm() {
         PullRequestService.updateTitleAndDescription(
             self.pull_request,
-            self.editionForm.title,
-            self.editionForm.description)
+            self.editionForm.raw_title,
+            self.editionForm.raw_description)
         .then(function() {
             self.showEditionForm = false;
         });

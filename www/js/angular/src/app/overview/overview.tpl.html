@@ -10,8 +10,8 @@
             <blockquote class="pull-request-description" ng-bind-html="overview.pull_request.description"></blockquote>
         </div>
         <form class="pull-request-edition-form" ng-show="overview.showEditionForm">
-            <input type="text" ng-model="overview.editionForm.title" placeholder="{{ 'Title' | translate }}">
-            <textarea ng-model="overview.editionForm.description" rows="5" placeholder="{{ 'Description' | translate }}"></textarea>
+            <input type="text" ng-model="overview.editionForm.raw_title" placeholder="{{ 'Title' | translate }}">
+            <textarea ng-model="overview.editionForm.raw_description" rows="5" placeholder="{{ 'Description' | translate }}"></textarea>
             <button ng-click="overview.saveEditionForm()" class="btn btn-primary btn-small">
                 {{ 'Save changes' | translate }}
             </button>
