@@ -51,13 +51,13 @@ Version 8.18 (Not yet released)
 	* hudson: 1.33
 	* IM: 1.5.38
 	* admindelegation: 2.13
-	* frs: 0.18
+	* frs: 0.19
 	* graphontrackers: 1.17
 	* pluginsadministration: 1.19
 	* userlog: 1.9
 
     == Themes ==
-	* FlamingParrot: 1.146
+	* FlamingParrot: 1.147
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==
