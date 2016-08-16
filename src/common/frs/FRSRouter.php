@@ -67,7 +67,7 @@ class FRSRouter
 
                 if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_data_incorrect'));
-                    $this->useDefaultRoute($request, $project, $user);
+                    $this->redirectToDefaultRoute($project);
                     return;
                 }
 
@@ -77,7 +77,7 @@ class FRSRouter
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_permission_incorrect'));
                 }
 
-                $this->useDefaultRoute($request, $project, $user);
+                $this->redirectToDefaultRoute($project);
                 break;
             default:
                 $this->useDefaultRoute($request, $project, $user);
@@ -85,9 +85,16 @@ class FRSRouter
         }
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
+    private function redirectToDefaultRoute(Project $project)
+    {
+        $GLOBALS['Response']->redirect('/file/admin/?'. http_build_query(
+            array(
+                'group_id' => $project->getId(),
+                'action'   => 'edit-permissions'
+            )
+        ));
+    }
+
     private function useDefaultRoute(HTTPRequest $request, Project $project, PFUser $user)
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');

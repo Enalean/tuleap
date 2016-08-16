@@ -39,7 +39,7 @@ class SectionsPresenter
 
         $this->permissions_url = '/file/admin/?'. http_build_query(array(
             'group_id' => $this->project_id,
-            'action'   => 'edit_permissions'
+            'action'   => 'edit-permissions'
         ));
         $this->processors_url = '/file/admin/manageprocessors.php?'. http_build_query(array(
             'group_id' => $this->project_id

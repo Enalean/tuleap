@@ -195,7 +195,7 @@ file_admin_index	edit_release_files	Création/modification de versions
 file_admin_index	manage_explain	Créer ou modifier des paquets et versions, leur statut et les permissions d'accès.
 file_admin_index	quick_add	Création de version rapide
 file_admin_index	quick_add_explain	Spécifier en une seule étape toutes les informations nécessaires à la création d'une version. La contrepartie est que vous ne pouvez initialement attacher qu'un seul fichier à cette version et non pas plusieurs comme dans le processus complet (voir ci-dessus).
-file_admin_index	warning_new_permission	La gestion des permissions a été déplacée de la gestion des permissions d'utilisateurs vers la gestion des groupes <a href="/file/admin/?group_id=$1&action=edit_permissions">dans l'administration du gestionnaire de fichiers</a>.
+file_admin_index	warning_new_permission	La gestion des permissions a été déplacée de la gestion des permissions d'utilisateurs vers la gestion des groupes <a href="/file/admin/?group_id=$1&action=edit-permissions">dans l'administration du gestionnaire de fichiers</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/qrs.php
