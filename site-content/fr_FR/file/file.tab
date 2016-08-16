@@ -300,10 +300,11 @@ file_file_utils	delete_proc_success	Processeur effacé.
 file_file_utils	delete_proc_fail	Suppression non effectuée.
 file_file_utils	del_proc	Effacer ce processeur ?
 file_file_utils	permissions	Permissions
-file_file_utils	permissions_title	Administrateurs des fichiers
+file_file_utils	permissions_title	Permissions
 file_file_utils	permission_read_title	Lecture
 file_file_utils	title_frs_administration	Administration des fichiers
-file_file_utils	administaror_info	Cette section permet de sélectionner les administrateurs du service Fichier, en plus des administrateurs du projet.
+file_file_utils	access_control_intro	Cette section permet de définir les groupes d'utilisateurs qui peuvent lire et/ou écrire du contenu dans le service Fichier.
+file_file_utils	administrator_info	Les administrateurs de projet ainsi que les groupes d'utilisateurs ayant le droit d'écriture peuvent administrer ce service.
 file_file_utils	frs_admins_submit_button	Soumettre
 file_file_utils	updated_permissions	Les permissions ont été mises à jour
 file_file_utils	write_title	Ecrire
