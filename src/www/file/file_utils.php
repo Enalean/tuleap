@@ -376,6 +376,9 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".db_ei($group_id).") ORDER BY rank";
     $result = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
+    foreach ($processor_id as $key => $id) {
+        $processor_id[$key] = $hp->purify($id, CODENDI_PURIFIER_JS_QUOTE);
+    }
     $processor_name = util_result_column_to_array($result, 1);
     foreach ($processor_name as $key => $value) {
         $processor_name[$key] = $hp->purify($value, CODENDI_PURIFIER_JS_QUOTE);
@@ -383,59 +386,65 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $sql = "SELECT * FROM frs_filetype ORDER BY type_id";
     $result1 = db_query($sql);
     $type_id = util_result_column_to_array($result1, 0);
+    foreach ($type_id as $key => $id) {
+        $type_id[$key] = $hp->purify($id, CODENDI_PURIFIER_JS_QUOTE);
+    }
     $type_name = util_result_column_to_array($result1, 1);
+    foreach ($type_name as $key => $name) {
+        $type_name[$key] = $hp->purify($name, CODENDI_PURIFIER_JS_QUOTE);
+    }
     $url_news = get_server_url() . "/file/showfiles.php?group_id=" . $group_id;
     echo '<script type="text/javascript">';
     echo "var processor_id = ['" . implode("', '", $processor_id) . "'];";
     echo "var processor_name = ['" . implode("', '", $processor_name) . "'];";
     echo "var type_id = ['" . implode("', '", $type_id) . "'];";
     echo "var type_name = ['" . implode("', '", $type_name) . "'];";
-    echo "var group_id = " . $group_id . ";";
-    echo "var relname = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'relname') . "';";
-    echo "var choose = '" . $GLOBALS['Language']->getText('file_file_utils', 'must_choose_one') . "';";
-    echo "var browse = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'browse') . "';";
-    echo "var local_file = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'local_file') . "';";
-    echo "var scp_ftp_files = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files') . "';";
-    echo "var upload_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'upload') . "';";
-    echo "var add_file_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'add_file') . "';";
-    echo "var add_change_log_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log') . "';";
-    echo "var view_change_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'view_change') . "';";
-    echo "var refresh_files_list = '". $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') . "';";
-    echo "var release_mode = '". ($is_update ? 'edition' : 'creation' ) ."';";
+    echo "var group_id = " . $hp->purify($group_id, CODENDI_PURIFIER_JS_QUOTE) . ";";
+    echo "var relname = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var choose = '" . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var browse = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'browse'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var local_file = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'local_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var scp_ftp_files = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var upload_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var add_file_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var add_change_log_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var refresh_files_list = '". $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var release_mode = '". $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) ."';";
     if ($is_update) {
         $pm  = PermissionsManager::instance();
         $dar = $pm->getAuthorizedUgroups($release->getReleaseID(), FRSRelease::PERM_READ);
         $ugroups_name = array();
         foreach ($dar as $row) {
-            $ugroups_name[] = util_translate_name_ugroup($row['name']);
+            $ugroups_name[] = $hp->purify(util_translate_name_ugroup($row['name']), CODENDI_PURIFIER_JS_QUOTE);
         }
         echo "var ugroups_name = '" . implode(", ", $ugroups_name) . "';";
-        echo "var default_permissions_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm') . "';";
+        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     } else {
-        echo "var default_permissions_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions') . "';";
+        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     }
     echo '</script>';
     //set variables for news template 
     $relname = $GLOBALS['Language']->getText('file_admin_editreleases', 'relname');
     if (!$is_update) {
-        echo '<p>'.$GLOBALS['Language']->getText('file_admin_editreleases','contain_multiple_files').'</p>';
+        echo '<p>'. $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','contain_multiple_files')).'</p>';
     }
     ?>
     
     <FORM id="frs_form" NAME="frsRelease" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $url; ?>" CLASS="form-inline">
-        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $GLOBALS['sys_max_size_upload']; ?>">
+        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $hp->purify(ForgeConfig::get('sys_max_size_upload')); ?>">
         <input type="hidden" name="postReceived" value="" />
         <?php
         if ($release->getReleaseId()) {
-            echo '<input type="hidden" id="release_id" name="release[release_id]" value="'. $release->getReleaseId() .'" />';
+            echo '<input type="hidden" id="release_id" name="release[release_id]" value="'. $hp->purify($release->getReleaseId()) .'" />';
         }
         ?>
         <TABLE BORDER="0" width="100%">
-        <TR><TD><FIELDSET><LEGEND><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','fieldset_properties'); ?></LEGEND>
+        <TR><TD><FIELDSET><LEGEND><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','fieldset_properties')); ?></LEGEND>
         <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
             <TR>
                 <TD>
-                    <B><?php echo $GLOBALS['Language']->getText('file_admin_editpackages','p_name'); ?>:</B>
+                    <B><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages','p_name')); ?>:</B>
                 </TD>
                 <TD>
     <?php
@@ -443,11 +452,11 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $res = & $frspf->getFRSPackagesFromDb($group_id);
     $rows = count($res);
     if (!$res || $rows < 1) {
-        echo '<p class="highlight">' . $GLOBALS['Language']->getText('file_admin_qrs', 'no_p_available') . '</p>';
+        echo '<p class="highlight">' . $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'no_p_available')) . '</p>';
     } else {
         echo '<SELECT NAME="release[package_id]" id="package_id">';
         for ($i = 0; $i < $rows; $i++) {
-            echo '<OPTION VALUE="' . $res[$i]->getPackageID() . '"';
+            echo '<OPTION VALUE="' . $hp->purify($res[$i]->getPackageID()) . '"';
             if($res[$i]->getPackageID() == $release->getPackageId()) echo ' selected';
             echo '>' . $hp->purify(util_unconvert_htmlspecialchars($res[$i]->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</OPTION>';
         }
@@ -456,7 +465,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     ?>
                 </TD><td></td>
                 <TD>
-                    <B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_name'); ?>: <span class="highlight"><strong>*</strong></span></B>
+                    <B><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','release_name')); ?>: <span class="highlight"><strong>*</strong></span></B>
                 </TD>
                 <TD>
                     <INPUT TYPE="TEXT" id="release_name" name="release[name]" onBlur="update_news()" value="<?php echo $hp->purify($release->getName()); ?>">
@@ -464,14 +473,14 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <TR>
                 <TD>
-                    <B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_date'); ?>:</B>
+                    <B><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','release_date')); ?>:</B>
                 </TD>
                 <TD>
                 <?php echo $GLOBALS['HTML']->getDatePicker('release_date', 'release[date]', isset($release_date) ? $hp->purify($release_date) : format_date('Y-m-d',$release->getReleaseDate())); ?>
                 </TD>
                 <td></td>
                 <TD>
-                    <B><?php echo $GLOBALS['Language']->getText('global','status'); ?>:</B>
+                    <B><?php echo $hp->purify($GLOBALS['Language']->getText('global','status')); ?>:</B>
                 </TD>
                 <TD>
                     <?php
@@ -504,7 +513,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
 
         </TABLE></FIELDSET>
         </TD></TR>
-        <TR><TD><FIELDSET><LEGEND><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','fieldset_uploaded_files'); ?></LEGEND>
+        <TR><TD><FIELDSET><LEGEND><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','fieldset_uploaded_files')); ?></LEGEND>
     <?php
     
     $titles = array ();
@@ -527,30 +536,30 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         $files = & $release->getFiles();
         for ($i = 0; $i < count($files); $i++) {
             $fname = $files[$i]->getFileName();
-            $list = split('/', $fname);
+            $list = explode('/', $fname);
             $fname = $list[sizeof($list) - 1];
             $user_id = $files[$i]->getUserID();
             $userName =(isset($user_id)) ? UserManager::instance()->getUserById($files[$i]->getUserID())->getRealName() : "";   
             echo '<TR>';
-            echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
-            echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
+            echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $hp->purify($files[$i]->getFileID()) . '"></TD>';
+            echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $hp->purify($files[$i]->getFileID()) . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
             //In case of difference between the inserted md5 and the computed one
             //we dispaly an editable text field to let the user insert the right value
             //to avoid the error message next time
-            $value = 'value = "'.$files[$i]->getReferenceMd5().'"';
+            $value = 'value = "'.$hp->purify($files[$i]->getReferenceMd5()).'"';
             if ($frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
-                $value = 'value = "'.$files[$i]->getComputedMd5().'" readonly="true"';
+                $value = 'value = "'.$hp->purify($files[$i]->getComputedMd5()).'" readonly="true"';
             }
             echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" '.$value.' SIZE="36" ></TD>';
             $comment = $files[$i]->getComment();
-            echo '<TD><textarea NAME="release_comment[]" cols="20", rows="1" >'.$comment.'</textarea></TD>';
-            echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
+            echo '<TD><textarea NAME="release_comment[]" cols="20" rows="1">'.$hp->purify($comment).'</textarea></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$hp->purify($userName).'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
-            echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . $hp->purify(format_date('Y-m-d', $files[$i]->getReleaseTime())) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
         }
-        echo '<INPUT TYPE="HIDDEN" id="nb_files" NAME="nb_files" VALUE="' . count($files) . '">';
+        echo '<INPUT TYPE="HIDDEN" id="nb_files" NAME="nb_files" VALUE="' . $hp->purify(count($files)) . '">';
     ?>
                         
                         <tr id="row_0">
@@ -558,16 +567,18 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                             <td>
                                 <input type="hidden" name="js" value="no_js"/>
                                 <select name="ftp_file[]" id="ftp_file_0">
-                                    <option value="-1"><?php echo $GLOBALS['Language']->getText('file_file_utils','must_choose_one'); ?></option>
+                                    <option value="-1"><?php echo $hp->purify($GLOBALS['Language']->getText('file_file_utils','must_choose_one')); ?></option>
     <?php
     
     //iterate and show the files in the upload directory
-    $file_list = $frsff->getUploadedFileNames($release->getProject());
+    $file_list    = $frsff->getUploadedFileNames($release->getProject());
+    $file_list_js = array();
     foreach ($file_list as $file) {
-        echo '<option value="' . $file . '">' . $hp->purify($file, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+        echo '<option value="' . $hp->purify($file) . '">' . $hp->purify($file, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+        $file_list_js = $hp->purify($file_list_js, CODENDI_PURIFIER_JS_QUOTE);
     }
     echo '<script type="text/javascript">';
-    echo "var available_ftp_files = ['" . implode("', '", $file_list) . "'];";
+    echo "var available_ftp_files = ['" . implode("', '", $file_list_js) . "'];";
     echo '</script>';
     
     ?>
@@ -590,18 +601,18 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 </table>
                 <?php
     
-		echo '<span class="small" style="color:#666"><i>'.$GLOBALS['Language']->getText('file_admin_editreleases','upload_file_msg',formatByteToMb($GLOBALS['sys_max_size_upload'])).'</i> </span>';
+		echo '<span class="small" style="color:#666"><i>'.$hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','upload_file_msg',formatByteToMb($GLOBALS['sys_max_size_upload']))).'</i> </span>';
 		echo '<div id=\'files_help\'><span class="smaller">';
         include ($GLOBALS['Language']->getContent('file/qrs_attach_file'));
         echo '</span></div>';
     ?>
             </FIELDSET>
             </TD></TR>
-            <TR><TD><FIELDSET><LEGEND><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','fieldset_notes'); ?></LEGEND>
+            <TR><TD><FIELDSET><LEGEND><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','fieldset_notes')); ?></LEGEND>
             <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="100%">
             <TR id="notes_title">
                 <TD VALIGN="TOP" width="10%">
-                    <span id="release_notes"><B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_notes'); ?>:  </B></span>
+                    <span id="release_notes"><B><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','release_notes')); ?>:  </B></span>
                 </TD>
             </TR>
             <TR id="upload_notes">
@@ -616,7 +627,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <TR id="change_log_title">
                 <TD VALIGN="TOP" width="10%">
-                    <span id="change_log"><B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','change_log'); ?>:  </B></span>
+                    <span id="change_log"><B><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','change_log')); ?>:  </B></span>
                 </TD>
             </TR>
             <TR id="upload_change_log">
@@ -633,7 +644,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TD></TR>
             <TR>
                 <TD>
-                    <FIELDSET><LEGEND><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','fieldset_permissions'); ?></LEGEND>
+                    <FIELDSET><LEGEND><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','fieldset_permissions')); ?></LEGEND>
                         <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
     
                             <TR id="permissions">
@@ -658,11 +669,11 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     
         if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
             echo '
-            <TR><TD><FIELDSET><LEGEND>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_news') . '</LEGEND>
+            <TR><TD><FIELDSET><LEGEND>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_news')) . '</LEGEND>
                 <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
                     <TR>
                         <TD VALIGN="TOP">
-                            <B> ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'submit_news') . ' :</B>
+                            <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'submit_news')) . ' :</B>
                         </TD>
                         <TD>
                             <INPUT ID="submit_news" TYPE="CHECKBOX" NAME="release_submit_news" VALUE="1">
@@ -671,21 +682,21 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     </TR>
                     <TR id="tr_subject">
                         <TD VALIGN="TOP" ALIGN="RIGHT">
-                            <B> ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'subject') . ' :</B>
+                            <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'subject')) . ' :</B>
                         </TD>
                         <TD>
-                            <INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE=" ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_subject', $relname) . '" SIZE="40" MAXLENGTH="60">
+                            <INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE=" ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_subject', $relname)) . '" SIZE="40" MAXLENGTH="60">
                         </TD>
                     </TR>	
                     <TR id="tr_details">
                         <TD VALIGN="TOP" ALIGN="RIGHT">
-                            <B> ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'details') . ' :</B>
+                            <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'details')) . ' :</B>
                         </TD>
                         <TD>
-                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_details', array (
+                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_details', array (
             $relname,
             $url_news
-            )) . ' </TEXTAREA>
+            ))) . ' </TEXTAREA>
                         </TD>
                     </TR>
                     <TR id="tr_public">
@@ -708,10 +719,10 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         $fmmf = new FileModuleMonitorFactory();
         $count = count($fmmf->getFilesModuleMonitorFromDb($release->getPackageId()));
         if ($count > 0) {
-            echo '<TR><TD><FIELDSET><LEGEND>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_notification') . '</LEGEND>';
+            echo '<TR><TD><FIELDSET><LEGEND>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_notification')) . '</LEGEND>';
             echo '<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">';
-            echo '<TR><TD>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'users_monitor', $count) . '</TD></TR>';
-            echo '<TR><TD><B>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'mail_file_rel_notice') . '</B><INPUT TYPE="CHECKBOX" NAME="notification" VALUE="1" CHECKED>';
+            echo '<TR><TD>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'users_monitor', $count)) . '</TD></TR>';
+            echo '<TR><TD><B>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'mail_file_rel_notice')) . '</B><INPUT TYPE="CHECKBOX" NAME="notification" VALUE="1" CHECKED>';
             echo '</TD></TR>';
             echo '</TABLE></FIELDSET></TD></TR>';
         }
@@ -721,8 +732,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 <TD ALIGN="CENTER">
                     
                     <INPUT TYPE="HIDDEN" NAME="create" VALUE="bla">
-                    <INPUT TYPE="SUBMIT" ID="create_release"  VALUE="<?php echo $is_update ? $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release') : $GLOBALS['Language']->getText('file_admin_qrs', 'release_file'); ?>">
-                    <input type="submit" ID="cancel_release" name="cancel" value="<?php echo  $GLOBALS['Language']->getText('global','btn_cancel');?>" />
+                    <INPUT TYPE="submit" ID="create_release"  VALUE="<?php echo $is_update ? $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release')) : $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'release_file')); ?>">
+                    <input type="submit" ID="cancel_release" name="cancel" value="<?php echo  $hp->purify($GLOBALS['Language']->getText('global','btn_cancel'));?>" />
                 </TD>
             </TR>
         </TABLE>

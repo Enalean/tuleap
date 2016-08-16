@@ -156,6 +156,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual('\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E',
                 $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE));
         $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
+        $this->assertEqual('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
     }
 
     function testBasicNobr() {

@@ -146,7 +146,7 @@ file_admin_editreleases	create_auto_news	Create Automatic News
 file_admin_editreleases	rel_news	You can automatically create a piece of news to inform people about the new release.
 file_admin_editreleases	create_news	Create News
 file_admin_editreleases	define_new_release	Define a New Release of a Package
-file_admin_editreleases	contain_multiple_files	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1&hellip;) or names.
+file_admin_editreleases	contain_multiple_files	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1…) or names.
 file_admin_editreleases	your_release	Releases of package : $1 
 file_admin_editreleases	no_releases_defined	You Have No Releases $1 Defined
 file_admin_editreleases	release_name	Release Name
@@ -185,7 +185,7 @@ file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, yo
 file_admin_editreleases	create_new_release	Create a new release
 file_admin_editreleases	create_canceled	Release creation canceled
 file_admin_editreleases	update_canceled	Release update canceled
-file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)
+file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - Please compress your files)
 file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Owner
 file_admin_editreleases	fileforge_error	An error occured while moving file to destination (was the file $1 already deleted?)
