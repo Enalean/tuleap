@@ -6,7 +6,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once ('pre.php');
 require_once ('www/file/file_utils.php');
@@ -20,7 +20,6 @@ require_once ('common/user/UserManager.class.php');
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
-use Tuleap\FRS\ToolbarPresenter;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
@@ -64,7 +63,7 @@ foreach ($res as $package) {
             if($request->valid(new Valid_UInt('release_id'))) {
         	    $release_id = $request->get('release_id');
                 $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
-            }             	
+            }
         }
         if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
             $packages[$package->getPackageID()] = $package;
@@ -88,11 +87,7 @@ $params = array (
     'file_p_for',
     $hp->purify($pm->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
-
-
-$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-$title     = $Language->getText('file_admin_index', 'file_manager_admin');
-$presenter = new ToolbarPresenter($project, $title);
+$project->getService(Service::FILE)->displayHeader($project, $params['title']);
 
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
@@ -123,9 +118,9 @@ $group_unix_name = $project->getUnixName();
 $proj_stats['packages'] = $num_packages;
 $pm = & PermissionsManager :: instance();
 $fmmf = new FileModuleMonitorFactory();
- 
+
 $javascript_packages_array = array();
- 
+
 if (!$pv && $permission_manager->isAdmin($project, $user)) {
     $html .= '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
 }
@@ -171,7 +166,7 @@ while (list ($package_id, $package) = each($packages)) {
             }
         }
         $html .= '</legend>';
-        
+
         if ($package->isHidden()) {
             //TODO i18n
             $html .= '<div style="text-align:center"><em>'.$Language->getText('file_showfiles', 'hidden_package').'</em></div>';
@@ -181,11 +176,11 @@ while (list ($package_id, $package) = each($packages)) {
         // are published the same day
         $res_release = $frsrf->getFRSReleasesFromDb($package_id, null, $group_id);
         $num_releases = count($res_release);
-    
+
         if (!isset ($proj_stats['releases']))
             $proj_stats['releases'] = 0;
         $proj_stats['releases'] += $num_releases;
-    
+
         $javascript_releases_array = array();
         $html .= '<div id="p_'.$package_id.'">';
         if (!$pv && $permission_manager->isAdmin($project, $user)) {
@@ -212,9 +207,9 @@ while (list ($package_id, $package) = each($packages)) {
                 }
                 if ($can_see_release) {
                     detectSpecialCharactersInName($package_release->getName(), $GLOBALS['Language']->getText('file_showfiles', 'release'));
-                    
+
                     $permission_exists = $pm->isPermissionExist($package_release->getReleaseID(), 'RELEASE_READ');
-                    
+
                     // Highlight the release if one was chosen
                     if ($request->existAndNonEmpty('release_id')) {
                         if($request->valid(new Valid_UInt('release_id'))) {
@@ -247,7 +242,7 @@ while (list ($package_id, $package) = each($packages)) {
                     $html .= ' <td style="text-align:center">';
                     if ($package_release->isHidden()) {
                         $html .= '<em>'.$Language->getText('file_showfiles', 'hidden_release').'</em>';
-                    } 
+                    }
                     $html .= '</td> ';
                     $html .= '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
                     if (!$pv && $permission_manager->isAdmin($project, $user)) {
@@ -256,15 +251,15 @@ while (list ($package_id, $package) = each($packages)) {
                     }
                     $html .= '</TD></TR>' . "\n";
                     $html .= '</table>';
-                    
+
                     // get the files in this release....
                     $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
                     $num_files = count($res_file);
-        
+
                     if (!isset ($proj_stats['files']))
                         $proj_stats['files'] = 0;
                     $proj_stats['files'] += $num_files;
-        
+
                     $javascript_files_array = array();
                     if (!$res_file || $num_files < 1) {
                         $html .= '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
@@ -277,15 +272,15 @@ while (list ($package_id, $package) = each($packages)) {
                         while ($resrow = db_fetch_array($res_filetype)) {
                             $file_type[$resrow['type_id']] = $resrow['name'];
                         }
-        
+
                         $q = "select * from frs_processor";
                         $res_processor = db_query($q);
                         while ($resrow = db_fetch_array($res_processor)) {
                             $processor[$resrow['processor_id']] = $resrow['name'];
                         }
-                        
+
                         $html .= '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0">';
-                        
+
                         $title_arr = array ();
                         $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
                         $title_arr[] = $Language->getText('file_showfiles', 'size');
@@ -296,7 +291,7 @@ while (list ($package_id, $package) = each($packages)) {
                         $title_arr[] = $Language->getText('file_showfiles', 'md5sum');
                         $title_arr[] = $Language->getText('file_showfiles', 'user');
                         $html .= html_build_list_table_top($title_arr, false, false, true, null, "files_table") . "\n";
-                        
+
                         // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
                         $html .= '<colgroup>';
                         $html .= ' <col class="frs_filename_col">';
@@ -308,16 +303,16 @@ while (list ($package_id, $package) = each($packages)) {
                         $html .= ' <col class="frs_md5sum_col">';
                         $html .= ' <col class="frs_user_col">';
                         $html .= '</colgroup>';
-        
+
                             // now iterate and show the files in this release....
                         foreach($res_file as $file_release) {
                             $filename = $file_release['filename'];
                             $list = split('/', $filename);
                             $fname = $list[sizeof($list) - 1];
                             $html .= "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $bgcolor . '"><TD><B>';
-                            
+
                             $javascript_files_array[] = "'f_".$file_release['file_id']."'";
-                            
+
                             if (($package->getApproveLicense() == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
                                 // Allow direct download
                                 $html .= '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify($file_release['filename']) . '" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
@@ -417,9 +412,9 @@ if (!$pv) {
     $javascript_array .= implode(",", $javascript_packages_array);
     $javascript_array .= '}';
     print '<script language="javascript">'.$javascript_array.'</script>';
-    
+
     ?>
-    
+
     <script language="javascript">
     // at page loading, we only expand the first release of the package, and collapse the others
     var cpt_release;
@@ -428,18 +423,18 @@ if (!$pv) {
         $H(packages[package_id]).keys().each(function(release_id) {
             if (cpt_release > 0) {
                 //Element.toggle(package_id + release_id);
-                toggle_release(package_id, release_id); 
+                toggle_release(package_id, release_id);
             }
             cpt_release++;
         });
     });
     </script>
-    
+
     <?php
 }
-// project totals (statistics) 
+// project totals (statistics)
 if (isset ($proj_stats['size'])) {
-	
+
     $total_size = FRSFile::convertBytesToKbytes($proj_stats['size']);
 
     print '<p>';

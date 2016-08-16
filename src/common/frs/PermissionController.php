@@ -23,6 +23,7 @@ namespace Tuleap\FRS;
 
 use TemplateRendererFactory;
 use Project;
+use Service;
 use ForgeConfig;
 use UGroupManager;
 use User_UGroup;
@@ -62,13 +63,14 @@ class PermissionController extends BaseFrsPresenter
     {
         $renderer          = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 
-        $title             = $GLOBALS['Language']->getText('file_file_utils', 'permissions');
+        $title             = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
         $toolbar_presenter = new ToolbarPresenter($project, $title);
 
         $toolbar_presenter->setPermissionIsActive();
         $toolbar_presenter->displaySectionNavigation();
 
-        echo $renderer->renderToString('toolbar-presenter', $toolbar_presenter);
+        $project->getService(Service::FILE)->displayHeader($project, $title);
+        $renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
     }
 
     public function displayPermissions(Project $project, PFUser $user)
@@ -77,7 +79,7 @@ class PermissionController extends BaseFrsPresenter
             return;
         }
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 
         $all_project_ugroups   = $this->ugroup_factory->getAllForProject($project);
         $admin_project_ugroups = $this->ugroup_factory->getProjectUGroupsWithAdministratorAndMembers($project);
@@ -88,7 +90,7 @@ class PermissionController extends BaseFrsPresenter
             $this->getFrsUGroupsByPermission($project, FRSPermission::FRS_READER, $all_project_ugroups)
         );
 
-        echo $renderer->renderToString('permissions-presenter', $presenter);
+        $renderer->renderToPage('permissions-presenter', $presenter);
     }
 
     private function getFrsUGroupsByPermission(Project $project, $permission_type, array $project_ugroups)

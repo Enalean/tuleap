@@ -44,14 +44,6 @@ class ToolbarPresenter extends BaseFrsPresenter
         $this->sections = array();
 
         $this->title_frs_administration = $GLOBALS['Language']->getText('file_file_utils', 'title_frs_administration');
-
-        $this->displayAdminHeader();
-    }
-
-    private function displayAdminHeader()
-    {
-        $service = $this->project->getService('file');
-        $service->displayHeader($this->project, $this->title);
     }
 
     public function setPermissionIsActive()
