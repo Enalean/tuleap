@@ -146,7 +146,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $name = $driver->getGerritProjectName($repository);
         if ($driver->doesTheProjectExist($gerrit_server, $name)) {
-             throw new Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException($name, $gerrit_server->getHost());
+             throw new Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException($name, $gerrit_server->getBaseUrl());
         }
 
         $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);

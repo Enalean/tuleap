@@ -147,7 +147,7 @@ plugin_git	gerrit_title	Migration vers Gerrit
 plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
 plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
 plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un mirroir de la référence sur Gerrit.</li></ul>
-plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Le dépot courant est maintenant un mirroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur <a href="$2">$2</a>.</li><li>Le dépot courant est maintenant un mirroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_past_project_warn	Ce dépôt a déjà été migré sur Gerrit et existe encore. Il n'est pas possible de migrer ce dépôt sur ce même serveur avant de l'avoir supprimé.
 plugin_git	gerrit_past_project_delete	Supprimer ce projet sur Gerrit
