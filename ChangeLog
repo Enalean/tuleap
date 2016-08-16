@@ -1,6 +1,6 @@
 Version 8.18 (Not yet released)
 	== Enhancement ==
-		* story #9281 define FRS global permissions
+	* story #9281 define FRS global permissions
 
 	== Bug fix ==
 	* request #9344 Persistent XSS through code snippet download
