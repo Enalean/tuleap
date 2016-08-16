@@ -1,8 +1,14 @@
+Version 8.17-4 (Tuesday, August 16th 2016)
+	== Bug Fix ==
+	* request #9382: A user which has not been connected at least one time can not be suspended for inactivity
+	* request #9390: Follow up received using the reply by mail feature and a mail non encoded in UTF-8 is truncated
+	* request #9383: Persistent XSS through the plain display of a file in a Git repo
+
 Version 8.17-3 (Monday, August 8th 2016)
 	== Bug Fix ==
 	* request #9329: New install doesn't prompt for domain name
-	* request #9346 Computed field V2 - Description of computed field needs to be updated
-	* request #9245 Imported SVN repositories are owned by root
+	* request #9346: Computed field V2 - Description of computed field needs to be updated
+	* request #9245: Imported SVN repositories are owned by root
 	* request #9361: CVS search by commiter does not work
 	* request #9367: Archived files can be accessed by all users with a shell access
 	* request #9364: When OpenIDConnect client plugin is activated, git over http no longer works
