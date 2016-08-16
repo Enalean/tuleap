@@ -319,7 +319,7 @@ class Git_Driver_Gerrit_MembershipManager {
         if (isset($this->cache_groups[$server->getId()][$gerrit_group_name])) {
             return $this->cache_groups[$server->getId()][$gerrit_group_name];
         }
-        throw new Exception("Group $gerrit_group_name doesn't not exist on server ".$server->getId()." ".$server->getHost());
+        throw new Exception("Group $gerrit_group_name doesn't not exist on server ".$server->getId()." ".$server->getBaseUrl());
     }
 
     private function cacheGroupDefinitionForServer(Git_RemoteServer_GerritServer $server) {

@@ -84,10 +84,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     public function itInformsAboutMigrationSuccess() {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
-        $gerrit_host  = 'gerrit.instance.net';
+        $gerrit_url     = 'https://gerrit.example.com:8888/';
         stub($this->project_creator)->createGerritProject()->returns($remote_project);
-        stub($this->gerrit_server)->getHost()->returns($gerrit_host);
-        expect($this->event)->done("Created project $remote_project on $gerrit_host")->once();
+        stub($this->gerrit_server)->getBaseUrl()->returns($gerrit_url);
+        expect($this->event)->done("Created project $remote_project on $gerrit_url")->once();
         $this->event->process();
     }
 
