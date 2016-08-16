@@ -25,7 +25,7 @@ use TemplateRendererFactory;
 use Project;
 use ForgeConfig;
 use UGroupManager;
-use HTTPRequest;
+use User_UGroup;
 use Feedback;
 use PFUser;
 use User_ForgeUserGroupFactory;
@@ -97,15 +97,23 @@ class PermissionController extends BaseFrsPresenter
         $frs_ugroups = $this->permission_factory->getFrsUGroupsByPermission($project, $permission_type);
 
         foreach ($project_ugroups as $project_ugroup) {
-            $selected  = isset($frs_ugroups[$project_ugroup->getId()]) ? true : false;
             $options[] = array(
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
-                'selected' => $selected
+                'selected' => $this->isUgroupSelected($frs_ugroups, $project_ugroup, $permission_type)
             );
         }
 
         return $options;
+    }
+
+    private function isUgroupSelected(array $frs_ugroups, User_UGroup $project_ugroup, $permission_type)
+    {
+        if ($project_ugroup->getId() == ProjectUGroup::PROJECT_ADMIN && $permission_type === FRSPermission::FRS_ADMIN) {
+            return true;
+        }
+
+        return isset($frs_ugroups[$project_ugroup->getId()]);
     }
 
     private function isProjectAdminPermissionGrantedForReadButNotForWrite(array $admin_ugroup_ids, array $reader_group_ids)
