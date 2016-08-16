@@ -53,12 +53,13 @@ class LauncherTest extends TuleapTestCase {
     }
 
     private function launchAndTest($jobs, $repository, $commit_info, $call_count) {
-        $factory   = mock('Tuleap\HudsonSvn\Job\Factory');
-        $ci_client = mock('Jenkins_Client');
+        $factory      = mock('Tuleap\HudsonSvn\Job\Factory');
+        $ci_client    = mock('Jenkins_Client');
+        $build_params = mock('Tuleap\HudsonSvn\BuildParams');
 
         stub($factory)->getJobsByRepository()->returns($jobs);
 
-        $launcher = new Launcher($factory, $this->logger, $ci_client);
+        $launcher = new Launcher($factory, $this->logger, $ci_client, $build_params);
 
         $launcher->launch($repository, $commit_info);
         $ci_client->expectCallCount('launchJobBuild', $call_count);
