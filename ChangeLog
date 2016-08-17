@@ -1,6 +1,6 @@
 Version 8.18 (Not yet released)
 	== Enhancement ==
-	* story #9281 define FRS global permissions
+	* story #9281: define FRS global permissions
 
 	== Bug fix ==
 	* request #9344: Persistent XSS through code snippet download
@@ -15,7 +15,8 @@ Version 8.18 (Not yet released)
 	* request #9382: A user which has not been connected at least one time can not be suspended for inactivity
 	* request #9401: Impossible to update release
 	* request #9400: Error raised when creating or updating a release
-	* request #9398 No longer possible to addFile with Tuleap CLI
+	* request #9398: No longer possible to addFile with Tuleap CLI
+	* request #9404: Fatal error when setting a package to hidden
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
