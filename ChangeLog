@@ -3,16 +3,18 @@ Version 8.18 (Not yet released)
 	* story #9281 define FRS global permissions
 
 	== Bug fix ==
-	* request #9344 Persistent XSS through code snippet download
+	* request #9344: Persistent XSS through code snippet download
 	* request #9329: New install doesn't prompt for domain name
 	* request #9355: 'Import List Of Users' does not work with emails
 	* request #9335: Do not inherit default trackers when importing from XML
 	* request #9361: CVS search by commiter does not work
 	* request #8839: Call to sparklines.php should be made in POST to avoid errors
-	* request #9371 Wrong artifact warning message when a user supposed to be notified is suspended
-	* request #9381 Release notes and changelog can not be accessed
-	* request #9389 Cross reference field broken while using artifact link field
-	* request #9382 A user which has not been connected at least one time can not be suspended for inactivity
+	* request #9371: Wrong artifact warning message when a user supposed to be notified is suspended
+	* request #9381: Release notes and changelog can not be accessed
+	* request #9389: Cross reference field broken while using artifact link field
+	* request #9382: A user which has not been connected at least one time can not be suspended for inactivity
+	* request #9401: Impossible to update release
+	* request #9400: Error raised when creating or updating a release
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
