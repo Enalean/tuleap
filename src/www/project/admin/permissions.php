@@ -28,6 +28,10 @@
 // type='TRACKER_ARTIFACT_ACCESS'  id='artifact_id'                table='artifact'
  
 
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
+
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 
@@ -212,35 +216,38 @@ function permission_get_object_fullname($permission_type,$object_id) {
 /**
  * Check if the current user is allowed to change permissions, depending on the permission_type
  *
- * @param Integer $group_id        Id of the project
+ * @param Integer $project_id        Id of the project
  * @param String  $permission_type Type of the permission
  * @param Boolean $object_id       Object on which permission is applied
  *
  * @return Boolean
  */
-function permission_user_allowed_to_change($group_id, $permission_type, $object_id=0) {
+function permission_user_allowed_to_change($project_id, $permission_type, $object_id=0) {
+
+    $project_manager = ProjectManager::instance();
+    $project         = $project_manager->getProject($project_id);
 
     // Super-user and project admin has all rights...
     $user = UserManager::instance()->getCurrentUser();
-    if (user_is_super_user() || $user->isMember($group_id, 'A')) return true;
+
+    if (user_is_super_user() || $user->isMember($project_id, 'A')) {
+        return true;
+    }
 
     if ($permission_type=='NEWS_READ') {
         //special case : if user has write (or admin) perms on News, he can submit news ==> he can submit private news ==> he can define news perms
-        return (user_ismember($group_id,'N1') || user_ismember($group_id,'N2'));
+        return (user_ismember($project_id,'N1') || user_ismember($project_id,'N2'));
     } else if ($permission_type=='DOCGROUP_READ') {
-        return (user_ismember($group_id,'D2'));
+        return (user_ismember($project_id,'D2'));
     } else if ($permission_type=='DOCUMENT_READ') {
-        return (user_ismember($group_id,'D2'));
+        return (user_ismember($project_id,'D2'));
     } else if ($permission_type=='WIKI_READ') {
-        return (user_ismember($group_id,'W2'));
+        return (user_ismember($project_id,'W2'));
     } else if ($permission_type=='WIKIPAGE_READ') {
-        return (user_ismember($group_id,'W2'));
+        return (user_ismember($project_id,'W2'));
     } else if ($permission_type=='WIKIATTACHMENT_READ') {
-        return (user_ismember($group_id,'W2'));
+        return (user_ismember($project_id,'W2'));
     } else if (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        
         //The object_id stored in the permission table when permission_type ='TRACKER_ARTIFACT_ACCESS' 
         //corresponds to the artifact_id 
         if ($permission_type == 'TRACKER_ARTIFACT_ACCESS') {
@@ -255,13 +262,24 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
             }
         }
 
-        $at = new ArtifactType($group, (int)$object_id);
+        $at = new ArtifactType($project, (int)$object_id);
         return $at->userIsAdmin();
+    } else if ($permission_type == 'PACKAGE_READ') {
+        $permission_dao     = new FRSPermissionDao();
+        $permission_factory = new FRSPermissionFactory($permission_dao);
+
+        $permission_manager = new FRSPermissionManager($permission_dao, $permission_factory);
+
+        return $permission_manager->isAdmin($project, $user);
+    } else if ($permission_type == 'RELEASE_READ') {
+        $frs_package_factory = new FRSPackageFactory();
+
+        return $frs_package_factory->userCanCreate($project_id, $user->getId());
     } else {
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $allowed = false;
         $em->processEvent('permission_user_allowed_to_change', array(
-            'group_id'        => $group_id,
+            'group_id'        => $project_id,
             'permission_type' => $permission_type, 
             'object_id'       => $object_id, 
             'allowed'         => &$allowed)

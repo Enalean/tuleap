@@ -358,23 +358,19 @@ class FRSPackageFactory {
 
     /**
      * Returns true if user has permissions to Create packages
-     * 
-     * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
-     * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
-     * 
-     * @param Integer $group_id The project ID this release is in
-     * @param Integer $user_id  The ID of the user. If not given or false, take the current user
      *
      * @return Boolean true if the user has permission to create packages, false otherwise
      */ 
-    function userCanCreate($group_id, $user_id=false) {
-        $um = $this->getUserManager();
+    public function userCanCreate($project_id, $user_id = false)
+    {
+        $user_manager = $this->getUserManager();
         if (! $user_id) {
-            $user = $um->getCurrentUser();
+            $user = $user_manager->getCurrentUser();
         } else {
-            $user = $um->getUserById($user_id);    
+            $user = $user_manager->getUserById($user_id);
         }
-        return $this->userCanAdmin($user, $group_id);
+
+        return $this->userCanAdmin($user, $project_id);
     }
 
     /**
