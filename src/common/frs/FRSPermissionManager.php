@@ -40,7 +40,7 @@ class FRSPermissionManager
 
     public function isAdmin(Project $project, PFUser $user)
     {
-        if ($user->isAdmin($project->getId())) {
+        if ($user->isSuperUser() || $user->isAdmin($project->getId())) {
             return true;
         }
 
@@ -62,6 +62,10 @@ class FRSPermissionManager
 
     public function userCanRead(Project $project, PFUser $user)
     {
+        if ($this->isAdmin($project, $user)) {
+            return true;
+        }
+
         $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), FRSPermission::FRS_READER);
         foreach ($permissions as $permission) {
             if ($user->isMemberOfUGroup($permission['ugroup_id'], $project->getID())) {

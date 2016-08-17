@@ -264,9 +264,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      * @return Boolean
      */
     function userCanRead($user) {
-
         return (($this->getPackage()->isActive() && $this->getPackage()->userCanRead($user->getId()))
-        || ($this->getPackage()->isHidden() && $this->userIsAdmin()));
+            || ($this->getPackage()->isHidden() && $this->userIsAdmin()));
 
     }
 

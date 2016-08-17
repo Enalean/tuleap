@@ -227,10 +227,6 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
     if ($permission_type=='NEWS_READ') {
         //special case : if user has write (or admin) perms on News, he can submit news ==> he can submit private news ==> he can define news perms
         return (user_ismember($group_id,'N1') || user_ismember($group_id,'N2'));
-    } else if ($permission_type=='PACKAGE_READ') {
-        return (user_ismember($group_id,'R2'));
-    } else if ($permission_type=='RELEASE_READ') {
-        return (user_ismember($group_id,'R2'));
     } else if ($permission_type=='DOCGROUP_READ') {
         return (user_ismember($group_id,'D2'));
     } else if ($permission_type=='DOCUMENT_READ') {

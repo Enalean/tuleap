@@ -120,11 +120,6 @@ class FRSXMLImporter {
             $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
         }
 
-        if(isset($xml_frs->administrators)) {
-            foreach($xml_frs->administrators->user as $xml_admin) {
-                $this->importAdministrator($project, $xml_admin);
-            }
-        }
         EventManager::instance()->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
             array(
@@ -137,18 +132,6 @@ class FRSXMLImporter {
             )
         );
         return true;
-    }
-
-    private function importAdministrator(Project $project, SimpleXMLElement $xml_admin) {
-        $user = $this->xml_import_helper->getUser($xml_admin);
-        if(!$user->isMember($project->getId())) {
-            $this->logger->warn("User '{$user->getName()}' is not member of the project. Skipping admin import...");
-            return;
-        }
-
-        $this->logger->debug("Setting {$user->getName()} as FRS administrator.");
-        $frs_admin_group = $this->ugroup_manager->getUGroupByName($project, ProjectUGroup::$normalized_names[ProjectUGroup::FILE_MANAGER_ADMIN]);
-        $frs_admin_group->addUser($user);
     }
 
     private function importPackage(
