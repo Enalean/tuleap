@@ -133,7 +133,7 @@ while (list ($package_id, $package) = each($packages)) {
         $can_see_package = true;
     } else if ($package->isHidden()) {
         $emphasis = 'em';
-        if ($frspf->userCanAdmin($user, $project)) {
+        if ($frspf->userCanAdmin($user, $project->getID())) {
             $can_see_package = true;
         }
     }
