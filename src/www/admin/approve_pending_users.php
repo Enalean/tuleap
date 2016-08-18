@@ -18,7 +18,7 @@ define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $hp = Codendi_HTMLPurifier::instance();
-$request =& HTTPRequest:: instance();
+$request = HTTPRequest:: instance();
 $action_select = '';
 $status= '';
 $users_array = array();
@@ -41,7 +41,7 @@ $expiry_date = 0;
     }else{
         $vDate = new Valid_String();
         if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && $vDate->validate($request->get('form_expiry'))) {
-            $date_list = split("-", $request->get('form_expiry'), 3);
+            $date_list = explode("-", $request->get('form_expiry'), 3);
             $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
             $expiry_date = $unix_expiry_time; 
             
@@ -62,7 +62,7 @@ $expiry_date = 0;
                      ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                  " WHERE user_id IN ($users_ids)");
 
-            $em =& EventManager::instance();
+            $em = EventManager::instance();
             foreach ($users_array as $user_id) {
                 $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
             }
@@ -116,7 +116,7 @@ $expiry_date = 0;
             $csrf_token->check();
             db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                      " WHERE user_id IN (".implode(',', $users_array).")");
-            $em =& EventManager::instance();
+            $em = EventManager::instance();
             foreach ($users_array as $user_id) {
                 $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
             }
