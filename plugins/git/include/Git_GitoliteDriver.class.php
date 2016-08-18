@@ -398,6 +398,7 @@ class Git_GitoliteDriver {
             $exec->exec($command);
             $command = 'chmod 640 '.escapeshellarg($backup_path);
             $exec->exec($command);
+            chgrp($backup_path, 'gitolite');
             $this->logger->info('[Gitolite][Backup] Repository backup done in ['.$backup_path.']');
         } catch (System_Command_CommandException $exception) {
             $this->logger->error('[Gitolite][Backup] Error when backuping repository in ['.$backup_path.'] error message : '.$exception->getMessage());
