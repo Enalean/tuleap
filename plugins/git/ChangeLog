@@ -1,3 +1,6 @@
+Version 4.252 - Tuleap 8.19
+    * Remove split usage in Git plugin
+
 Version 4.251 - Tuleap 8.18
     * request #9405 System event fails for restore git repository
 
