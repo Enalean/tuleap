@@ -44,6 +44,7 @@ $tlp-table-row-background-odd : #ffffff;
         > tr > td {
             padding: $tlp-table-cell-padding;
             border-bottom: 1px solid $tlp-ui-border-normal;
+            line-height: normal;
 
             &.tlp-table-cell-numeric {
                 text-align: right;
@@ -52,6 +53,19 @@ $tlp-table-row-background-odd : #ffffff;
             &.tlp-table-cell-actions {
                 text-align: right;
                 white-space: nowrap;
+            }
+
+            > .tlp-badge-primary,
+            > .tlp-badge-secondary,
+            > .tlp-badge-info,
+            > .tlp-badge-success,
+            > .tlp-badge-warning,
+            > .tlp-badge-danger {
+                margin: -4px 0 -3px;
+            }
+
+            > .tlp-button-small {
+                margin: -5px 0 -3px;
             }
         }
 

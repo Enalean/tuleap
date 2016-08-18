@@ -39,6 +39,10 @@ $tlp-badge-secondary-outline-color: #888888;
     vertical-align: middle;
 }
 
+.tlp-badge-icon {
+    margin: 0 3px 0 2px;
+}
+
 .tlp-badge-primary {
     @extend %tlp-badge;
 
