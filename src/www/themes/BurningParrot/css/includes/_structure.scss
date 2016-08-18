@@ -19,7 +19,6 @@
 
 $navbar-height: 45px;
 $sidebar-width: 50px;
-$main-background: #f2f4fa;
 
 body {
     display: flex;
@@ -30,7 +29,7 @@ body {
 
 #main-container {
     flex: 1 1 auto;
-    background: $main-background;
+    background: $tlp-theme-background-color;
 }
 
 #feedback {

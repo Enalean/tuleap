@@ -140,6 +140,17 @@ var gulp    = require('gulp'),
         ],
         'target_dir': 'src/www/themes/FlamingParrot/css'
     },
+    theme_burningparrot_scss = {
+        files: [
+            'src/www/themes/BurningParrot/css/burning-parrot-blue.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-green.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-grey.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-orange.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-purple.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-red.scss',
+        ],
+        'target_dir': 'src/www/themes/BurningParrot/css'
+    },
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
@@ -169,6 +180,7 @@ gulp.task('clean-sass-core', function() {
     tuleap.sass_clean('.', select2_scss.files);
     tuleap.sass_clean('.', theme_tuleap_scss.files);
     tuleap.sass_clean('.', theme_flamingparrot_scss.files);
+    tuleap.sass_clean('.', theme_burningparrot_scss.files);
 });
 
 gulp.task('sass-core', ['clean-sass-core'], function() {
@@ -176,6 +188,7 @@ gulp.task('sass-core', ['clean-sass-core'], function() {
     tuleap.sass_build('.', select2_scss);
     tuleap.sass_build('.', theme_tuleap_scss);
     tuleap.sass_build('.', theme_flamingparrot_scss);
+    tuleap.sass_build('.', theme_burningparrot_scss);
 });
 
 gulp.task('sass', ['sass-core', 'sass-plugins']);
@@ -189,7 +202,8 @@ gulp.task('watch', function() {
         fat_combined_files
             .concat(subset_combined_files)
             .concat(subset_combined_flamingparrot_files)
-            .concat(flaming_parrot_files),
+            .concat(flaming_parrot_files)
+            .concat(theme_burningparrot_scss),
         ['js-core']
     );
 
@@ -197,7 +211,8 @@ gulp.task('watch', function() {
         common_scss.files
             .concat(select2_scss.files)
             .concat(theme_tuleap_scss.files)
-            .concat(theme_flamingparrot_scss.files),
+            .concat(theme_flamingparrot_scss.files)
+            .concat(theme_burningparrot_scss.files),
         ['sass-core']
     );
 
