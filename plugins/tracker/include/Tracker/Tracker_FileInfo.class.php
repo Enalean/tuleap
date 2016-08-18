@@ -189,7 +189,7 @@ class Tracker_FileInfo {
      * @return true if the file is a supported image
      */
     public function isImage() {
-        $parts = split('/', $this->getFileType());
+        $parts = explode('/', $this->getFileType());
         return $parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types) ;
     }
 
