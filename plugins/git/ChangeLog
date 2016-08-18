@@ -1,3 +1,6 @@
+Version 4.251 - Tuleap 8.18
+    * request #9405 System event fails for restore git repository
+
 Version 4.250 - Tuleap 8.18
     * request #9383: Persistent XSS through the plain display of a file in a Git repo
 
