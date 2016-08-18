@@ -237,12 +237,7 @@ class StatisticsPlugin extends Plugin {
     }
     
     private function getSoapUri() {
-        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-            $protocol = "https";
-        } else {
-            $protocol = "http";
-        }
-        return $protocol.'://'.$GLOBALS['sys_default_domain'].'/plugins/statistics/soap';
+        return HTTPRequest::instance()->getServerUrl().'/plugins/statistics/soap';
     }
     
     public function renderWSDL() {
