@@ -153,7 +153,7 @@ class Tracker_DateReminder {
     public function getUgroups($asArray = false) {
         $ugroups = $this->ugroups;
         if ($asArray) {
-            $ugroups = split('[,]', $this->ugroups);
+            $ugroups = explode(',', $this->ugroups);
             $ugroups = array_map('trim', $ugroups);
         }
         return $ugroups;

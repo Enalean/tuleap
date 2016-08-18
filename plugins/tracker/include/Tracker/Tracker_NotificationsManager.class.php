@@ -332,7 +332,7 @@ class Tracker_NotificationsManager {
 
     protected function updateGlobalNotification($global_notification_id, $data) {
         $feedback = '';
-        $arr_email_address = split('[,;]', $data['addresses']);
+        $arr_email_address = preg_split('/[,;]/', $data['addresses']);
         if (!util_validateCCList($arr_email_address, $feedback, false)) {
           $GLOBALS['Response']->addFeedback('error', $feedback);
         } else {
@@ -350,7 +350,7 @@ class Tracker_NotificationsManager {
         $notifs = $this->getGlobalNotifications();
         foreach($notifs as $key => $nop) {
             if (!$update || $notifs[$key]->isAllUpdates()) {
-                foreach(split('[,;]', $notifs[$key]->getAddresses()) as $address) {
+                foreach(preg_split('/[,;]/', $notifs[$key]->getAddresses()) as $address) {
                     $addresses[] = array('address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions());
                 }
             }
