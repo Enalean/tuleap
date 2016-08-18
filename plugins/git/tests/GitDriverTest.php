@@ -21,7 +21,6 @@
 
 require_once 'bootstrap.php';
 
-
 class GitDriverTest extends TuleapTestCase {
 
     private $destinationPath;
@@ -111,7 +110,7 @@ class GitDriverTest extends TuleapTestCase {
         @exec('cd '.$this->destinationPath.' && touch toto');
         $driver->add($this->destinationPath, 'toto');
         exec('cd '.$this->destinationPath.' && git ls-files -s toto',$out,$ret);
-        $sha1 = split(" ", implode($out));
+        $sha1 = explode(" ", implode($out));
         $this->assertEqual(strlen($sha1[1]), 40);
     }
 
@@ -284,4 +283,3 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual($config['hooks']['showrev'], '');
     }
 }
-?>
