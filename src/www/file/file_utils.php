@@ -12,8 +12,6 @@
 require_once('www/news/news_utils.php');
 require_once('common/autoload.php');
 
-use Tuleap\FRS\ToolbarPresenter;
-
 function file_utils_header($params) {
     global $group_id,$Language;
 
@@ -983,12 +981,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 // the date didn't change => don't update it
                 $unix_release_time = $rel->getReleaseDate();
             }else{
-                $date_list = split("-", $release['date'], 3);
+                $date_list = explode("-", $release['date'], 3);
                 $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
             }
         } else {
             //parse the date
-            $date_list = split("-", $release['date'], 3);
+            $date_list = explode("-", $release['date'], 3);
             $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         }
 
@@ -1085,7 +1083,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     if (!$release_files_to_delete || !in_array($rel_file, $release_files_to_delete) ) {
                         $package_id = $release['package_id'];
                         $fname = $files[$index]->getFileName();
-                        $list  = split('/', $fname);
+                        $list  = explode('/', $fname);
                         $fname = $list[sizeof($list) - 1];
                         if ($new_release_id[$index] != $release_id) {
                             //changing to a different release for this file
@@ -1107,7 +1105,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                     if (format_date('Y-m-d', $res2->getReleaseTime()) == $release_time[$index]) {
                                         $unix_release_time = $res2->getReleaseTime();
                                     } else {
-                                        $date_list = split("-", $release_time[$index], 3);
+                                        $date_list = explode("-", $release_time[$index], 3);
                                         $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
                                     }
 

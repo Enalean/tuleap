@@ -26,7 +26,7 @@ use Tuleap\FRS\FRSPermissionDao;
 
 $authorized_user = false;
 
-$request =& HTTPRequest::instance();
+$request  = HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {
@@ -40,9 +40,9 @@ $permission_manager = new FRSPermissionManager(
     new FRSPermissionFactory(new FRSPermissionDao())
 );
 
-$pm        = ProjectManager::instance();
-$project   = $pm->getProject($group_id);
-$user = UserManager::instance()->getCurrentUser();
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+$user            = UserManager::instance()->getCurrentUser();
 if ($permission_manager->isAdmin($project, $user) || $permission_manager->userCanRead($project, $user)) {
     $authorized_user = true;
 }
@@ -85,7 +85,7 @@ $hp = Codendi_HTMLPurifier::instance();
 $params = array (
     'title' => $Language->getText('file_showfiles',
     'file_p_for',
-    $hp->purify($pm->getProject($group_id)->getPublicName())
+    $hp->purify($project_manager->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
 $project->getService(Service::FILE)->displayHeader($project, $params['title']);
 
@@ -116,7 +116,7 @@ if ($pv) {
 $group_unix_name = $project->getUnixName();
 
 $proj_stats['packages'] = $num_packages;
-$pm = & PermissionsManager :: instance();
+$pm   = PermissionsManager::instance();
 $fmmf = new FileModuleMonitorFactory();
 
 $javascript_packages_array = array();
@@ -307,7 +307,7 @@ while (list ($package_id, $package) = each($packages)) {
                             // now iterate and show the files in this release....
                         foreach($res_file as $file_release) {
                             $filename = $file_release['filename'];
-                            $list = split('/', $filename);
+                            $list = explode('/', $filename);
                             $fname = $list[sizeof($list) - 1];
                             $html .= "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $bgcolor . '"><TD><B>';
 
