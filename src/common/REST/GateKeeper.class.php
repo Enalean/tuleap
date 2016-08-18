@@ -19,23 +19,24 @@
 
 namespace Tuleap\REST;
 
-use \PFUser;
-use \Exception;
-use \ForgeConfig;
+use PFUser;
+use Exception;
+use ForgeConfig;
+use HTTPRequest;
 
 /**
  * Ensure that request has the right properties before going RESTFul
  */
 class GateKeeper {
 
-    public function assertAccess(PFUser $user) {
+    public function assertAccess(PFUser $user, HTTPRequest $request) {
         if ($this->isTokenBasedAuthentication($user)) {
-            if ($this->isHTTPS() || $this->canReachApiWithoutHTTPS()) {
+            if ($request->isSecure() || $this->canReachApiWithoutHTTPS()) {
                 return true;
             }
             throw new Exception('The API is only accessible over HTTPS');
         } else {
-            if ($this->isCSRFSafe()) {
+            if ($this->isCSRFSafe($request)) {
                 return true;
             }
             throw new Exception('Referer doesn\'t match host. CSRF tentative ?');
@@ -44,10 +45,6 @@ class GateKeeper {
 
     private function isTokenBasedAuthentication(PFUser $user) {
         return $user->isAnonymous();
-    }
-
-    private function isHTTPS() {
-        return isset($_SERVER['HTTPS']);
     }
 
     private function canReachApiWithoutHTTPS() {
@@ -62,23 +59,19 @@ class GateKeeper {
      * @todo We should really check based on a csrf token but no way to get it done yet
      * @return boolean
      */
-    private function isCSRFSafe() {
-        if ($this->isRequestFromSelf()) {
+    private function isCSRFSafe(HTTPRequest $request) {
+        if ($this->isRequestFromSelf($request)) {
             return true;
         }
         return false;
     }
 
-    private function isRequestFromSelf() {
-        return $this->getQueryHost() === $this->getRefererHost();
+    private function isRequestFromSelf(HTTPRequest $request) {
+        return $this->getQueryHost($request) === $this->getRefererHost();
     }
 
-    private function getQueryHost() {
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $scheme = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-            return $this->getUrlBase($scheme.$_SERVER['HTTP_HOST']);
-        }
-        return $this->getUrlBase(get_server_url());
+    private function getQueryHost(HTTPRequest $request) {
+        return $this->getUrlBase($request->getServerUrl());
     }
 
     private function getRefererHost() {

@@ -30,7 +30,7 @@ use Luracast\Restler\Defaults;
 
 try {
     $gate_keeper = new GateKeeper();
-    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser());
+    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), HTTPRequest::instance());
 } catch (Exception $exception) {
     header("HTTP/1.0 403 Forbidden");
     $GLOBALS['Response']->sendJSON(array(

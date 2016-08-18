@@ -139,6 +139,9 @@ $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
 
 $feedback=''; // Initialize global var
 
+$request = HTTPRequest::instance();
+$request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
+
 //library to determine browser settings
 if(!IS_SCRIPT) {
     require_once('browser.php');
@@ -222,10 +225,8 @@ if (license_already_declined()) {
 if (!IS_SCRIPT) {
     $urlVerifFactory = new URLVerificationFactory();
     $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
-    $urlVerif->assertValidUrl($_SERVER);
+    $urlVerif->assertValidUrl($_SERVER, $request);
 }
-$request = HTTPRequest::instance();
-$request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
 
 //Check post max size
 if ($request->exist('postExpected') && !$request->exist('postReceived')) {

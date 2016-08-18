@@ -183,20 +183,11 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string text to be displayed in mail notifications when the text has been changed
      */
     protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id) {
-        $protocol = $this->getServerProtocol();
-        $url      = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
+        $url      = HTTPRequest::instance()->getServerUrl().TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
 
         return '<a href="'.$url.'">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
     }
 
-    private function getServerProtocol() {
-        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-            return 'https';
-        }
-
-        return 'http';
-    }
-    
     /**
      * Returns the "set to" for field added later
      *

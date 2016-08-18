@@ -28,14 +28,6 @@ class URLVerification {
     protected $urlChunks = null;
 
     /**
-     * Constructor of the class
-     *
-     * @return void
-     */
-    function __construct() {
-    }
-
-    /**
      * Returns an array containing data for the redirection URL
      *
      * @return Array
@@ -136,17 +128,6 @@ class URLVerification {
     }
 
     /**
-     * Return true if given request is using SSL
-     *
-     * @param Array $server
-     *
-     * @return Boolean
-     */
-    public function isUsingSSL($server) {
-        return (isset($server['HTTPS']) && $server['HTTPS'] == 'on');
-    }
-
-    /**
      * Should we treat current request as an exception
      *
      * @param array $server
@@ -197,10 +178,10 @@ class URLVerification {
      *
      * @return String
      */
-    function getRedirectionURL($server) {
+    function getRedirectionURL(HTTPRequest $request, $server) {
         $chunks   = $this->getUrlChunks($server);
 
-        $location = $this->getRedirectLocation($server, $chunks);
+        $location = $this->getRedirectLocation($request, $server, $chunks);
 
         if (isset($chunks['script'])) {
             $location .= $chunks['script'];
@@ -210,18 +191,18 @@ class URLVerification {
         return $location;
     }
 
-    private function getRedirectLocation(array $server, array $chunks) {
+    private function getRedirectLocation(HTTPRequest $request, array $server, array $chunks) {
         if (isset($chunks['protocol']) || isset($chunks['host'])) {
-            return $this->rewriteProtocol($server, $chunks);
+            return $this->rewriteProtocol($request, $server, $chunks);
         }
         return '';
     }
 
-    private function rewriteProtocol(array $server, array $chunks) {
+    private function rewriteProtocol(HTTPRequest $request, array $server, array $chunks) {
         if (isset($chunks['protocol'])) {
             $location = $chunks['protocol']."://";
         } else {
-            if ($this->isUsingSSL($server)) {
+            if ($request->isSecure()) {
                 $location = "https://";
             } else {
                 $location = "http://";
@@ -244,25 +225,10 @@ class URLVerification {
      *
      * @return void
      */
-    public function verifyProtocol($server) {
-        if (!$this->isUsingSSL($server)) {
-            if ($GLOBALS['sys_force_ssl'] == 1) {
-                $this->urlChunks['protocol'] = 'https';
-            }
-        }
-    }
-
-    /**
-     * Modify the host name if needed
-     *
-     * @param Array $server
-     *
-     * @return void
-     *
-     */
-    public function verifyHost($server) {
-        if (!$this->isUsingSSL($server) && $GLOBALS['sys_force_ssl'] == 1) {
-            $this->urlChunks['host'] = $GLOBALS['sys_https_host'];
+    public function verifyProtocol(HTTPRequest $request) {
+        if (! $request->isSecure() && $GLOBALS['sys_force_ssl'] == 1) {
+            $this->urlChunks['protocol'] = 'https';
+            $this->urlChunks['host']     = $GLOBALS['sys_https_host'];
         }
     }
 
@@ -533,14 +499,13 @@ class URLVerification {
      *
      * @return void
      */
-    public function assertValidUrl($server) {
+    public function assertValidUrl($server, HTTPRequest $request) {
         if (!$this->isException($server)) {
-            $this->verifyProtocol($server);
-            $this->verifyHost($server);
+            $this->verifyProtocol($request);
             $this->verifyRequest($server);
             $chunks = $this->getUrlChunks();
             if (isset($chunks)) {
-                $location = $this->getRedirectionURL($server);
+                $location = $this->getRedirectionURL($request, $server);
                 $this->header($location);
             }
 
