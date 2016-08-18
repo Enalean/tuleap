@@ -348,9 +348,8 @@ function get_mime_content_type($file, $name) {
     } else {
         $type = exec('file -bi '.$file);
     }
-    $type = split(";", $type);
+    $type = explode(";", $type);
     $type = correct_mime_type($type[0], $name);
     
     return $type;
 }
-?>
