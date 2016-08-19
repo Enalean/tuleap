@@ -283,16 +283,6 @@ class TuleapTemplate extends BaseTemplate {
 		if ( !isset( $sidebar['TOOLBOX'] ) ) $sidebar['TOOLBOX'] = true;
 		if ( !isset( $sidebar['LANGUAGES'] ) ) $sidebar['LANGUAGES'] = true;
 
-		if (session_loggedin()) {
-			$efbox_log_text = _('Log Out');
-			$efbox_log_link = "/account/logout.php?return_to=" .
-			    urlencode(getStringFromServer('REQUEST_URI'));
-		} else {
-			$efbox_log_text = _('Log In');
-			$efbox_log_link = "/account/login.php?return_to=" .
-			    urlencode(getStringFromServer('REQUEST_URI'));
-		}
-
 		foreach( $sidebar as $boxName => $content ) {
 			if ( $content === false )
 				continue;

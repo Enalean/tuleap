@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -45,7 +45,6 @@ if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
             <p>
                 <a href="http://<?= $default_domain; ?>/"><b>Accueil</b></a> |
                 <a href="http://<?= $default_domain; ?>/contact.php"><B>Contactez-nous</b></a> |
-                <a href="http://<?= $default_domain; ?>/account/logout.php"><B>Se déconecter</b></a>
             </p>
             <div class="hero-unit">
                 <img src="http://<?= $default_domain; ?>/themes/common/images/organization_logo.png" vspace="" hspace="7" border=0 alt="Organization logo">

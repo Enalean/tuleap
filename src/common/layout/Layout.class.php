@@ -32,7 +32,7 @@ use Tuleap\Layout\IncludeAssets;
  * Geoffrey Herteg, August 29, 2000
  *
  */
-class Layout extends Response {
+abstract class Layout extends Response {
 
 
     /**
@@ -1880,109 +1880,7 @@ class Layout extends Response {
         echo $this->getNotificationPlaceholder();
     }
 
-    function header($params) {
-        global $Language;
-        $this->generic_header($params);
-
-        //themable someday?
-        $site_fonts='verdana,arial,helvetica,sans-serif';
-
-        echo '<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0" class="'. $this->getClassnamesForBodyTag($params) .'">';
-
-        echo $this->getOsdnNavBar();
-
-        echo html_blankimage(5,100);
-?>
-<br>
-<!-- start page body -->
-<div align="center">
-<table cellpadding="0" cellspacing="0" border="0" width="97%">
-
-<!-- First line with borders and corners -->
-           <tr>
-               <td background="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="1%" height="26"><img src="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="16" height="26" alt=" "></td>
-                <td background="<? echo util_get_image_theme("top_border.png"); ?>" align="left" colspan="3" width="99%"><a href="/"><img src="<? echo util_get_image_theme("codex_banner_lc.png"); ?>"  height="26" border="0" alt="<?php echo $GLOBALS['sys_name'].' '.$Language->getText('include_layout','banner'); ?>"></a></td>
-                <td><img src="<? echo util_get_image_theme("upper_right_corner.png"); ?>" width="16" height="26" alt=" "></td>
-        </tr>
-
-
-<!-- Second line with menus and content -->
-        <tr>
-
-                <td background="<? echo util_get_image_theme("left_border.png"); ?>" align="left" valign="bottom" alt=""><img src="<? echo util_get_image_theme("bottom_left_corner.png"); ?>" width="16" height="16" alt=""></td>
-
-                <td colspan="3" >
-<!-- start main body cell -->
-
-
-        <div align="left">
-        <table style=menus cellpadding="0" cellspacing="0" border="0" width="100%">
-
-                <tr valign="top">
-                    <td class="menuframe">
-
-        <!-- VA Linux Stats Counter -->
-        <?php
-        $request = HTTPRequest::instance();
-        if (! $request->isSecure()) {
-                print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="'.$Language->getText('include_layout','counter').'"><BR>';
-        } else {
-                print html_blankimage(1,140) . '<br>';
-        }
-
-        $main_body_class = '';
-        if (isset($params['toptab']) && is_string($params['toptab'])) {
-            $main_body_class = 'service-' . $params['toptab'];
-        }
-        ?>
-
-
-        <!-- Company Logo here -->
-        <P>
-    <?php
-    print '<center><IMG src="'.util_get_image_theme("organization_logo.png").'" alt="'.$GLOBALS['sys_org_name'].' '.$Language->getText('include_layout','logo').'"></center><BR>';
-    ?>
-
-        <!-- menus -->
-        <?php
-        // html_blankimage(1,140);
-        menu_print_sidebar($params);
-        ?>
-        <P>
-        </TD>
-
-        <td width="15" background="<? echo util_get_image_theme("fade.png"); ?>" nowrap>&nbsp;</td>
-
-        <td class="contenttable <?=$main_body_class?>">
-        <BR>
-<?php
-        if (isset($params['group']) && $params['group']) {
-            echo $this->project_tabs($params['toptab'],$params['group']);
-        } else if (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||
-                   strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
-            $tabs = array(
-                array(
-                    'link'  => '/my/',
-                    'label' => $Language->getText('my_index','my_dashboard')
-                ),
-                array(
-                    'link'  => '/account/',
-                    'label' => $Language->getText('my_index','account_maintenance'),
-                )
-            );
-            echo '<hr SIZE="1" NoShade>';
-            foreach($tabs as $tab) {
-                $this->tab_entry($tab['link'],'',$tab['label'],strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
-                      (strstr(getStringFromServer('REQUEST_URI'),'/account') ? 2 : 1),'');
-            }
-            echo '<hr SIZE="1" NoShade>';
-        }
-        echo $this->getBreadCrumbs();
-        echo $this->getToolbar();
-        echo $this->_getFeedback();
-        $this->_feedback->display();
-        echo $this->getNotificationPlaceholder();
-    }
+    public abstract function header($params);
 
     public function getNotificationPlaceholder() {
         return '<div id="notification-placeholder"></div>';
@@ -2025,35 +1923,6 @@ class Layout extends Response {
 <!-- themed page footer -->
 <?php
     $this->generic_footer($params);
-    }
-
-
-
-    function menuhtml_top($title) {
-            /*
-                    Use only for the top most menu
-            */
-        ?>
-<table class="menutable">
-        <tr>
-                <td class="menutitle"><?php echo $title; ?><br></td>
-        </tr>
-        <tr>
-                <td class="menuitem">
-        <?php
-    }
-
-
-    function menuhtml_bottom() {
-            /*
-                    End the table
-            */
-            print '
-                        <BR>
-                        </td>
-                </tr>
-        </table>
-';
     }
 
     function menu_entry($link, $title) {
@@ -2472,38 +2341,6 @@ class Layout extends Response {
             $i++;
         }
         $output .= '&nbsp;&middot;&nbsp;';
-        return $output;
-    }
-
-    function getOsdnNavDropdown() {
-        $output = '
-        <!-- OSDN navdropdown -->
-        <script type="text/javascript">
-        function handle_navbar(index,form) {
-            if ( index > 1 ) {
-                window.location=form.options[index].value;
-            }
-        }
-        </script>';
-        $output .= '<a href="'.get_server_url().'" class="osdn_codendi_logo">';
-        $output .= $this->getImage("codendi_logo.png", array("alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
-        $output .= '<br /></a>';
-        // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
-        include($GLOBALS['Language']->getContent('layout/osdn_sites'));
-        if (isset($osdn_sites)) {
-            $output .= '<form name="form1"><div>';
-            $output .= '<select name="navbar" onChange="handle_navbar(selectedIndex,this)">';
-            $output .= '   <option>------------</option>';
-            reset ($osdn_sites);
-            while (list ($key, $val) = each ($osdn_sites)) {
-                list ($key, $val) = each ($val);
-                $output .= '   <option value="'.$val.'">'.$key.'</option>';
-            }
-            $output .= '</select>';
-            $output .= '</div></form>';
-        }
-        $output .= '<!-- end OSDN navdropdown -->';
-
         return $output;
     }
 

@@ -44,16 +44,28 @@ class TestPresenter {
 }
 
 abstract class TemplateRendererTestBase extends TuleapTestCase {
-    function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        
+        ForgeConfig::store();
+
+        ForgeConfig::set('codendi_dir', dirname(__FILE__));
+
         $this->expected_l10_string = 'a translated string';
         $GLOBALS['Language']->expectOnce('getText', array('module', 'i18n_text'));
         $GLOBALS['Language']->setReturnValue('getText', $this->expected_l10_string);
-        
+
         $this->presenter = new TestPresenter();
-        $this->output    = $this->renderer->renderToString('test', $this->presenter);
+        $this->output    = $this->getRenderer()->renderToString('test', $this->presenter);
     }
+
+    public function tearDown()
+    {
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+
+    abstract protected function getRenderer();
     
     function assertOutputContains($content) {
         $this->assertPattern("/".$content."/", $this->output);
@@ -85,5 +97,9 @@ abstract class TemplateRendererTestBase extends TuleapTestCase {
         $this->assertOutputContains($this->expected_l10_string);
         $this->assertOutputDoesntContain('i18n_text');
     }
+
+    public function itLoadsGloballyAvailableTemplates()
+    {
+        $this->assertOutputContains('globally available content');
+    }
 }
-?>
