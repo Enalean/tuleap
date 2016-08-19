@@ -403,7 +403,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         }
 
         $login_presenter_builder = new User_LoginPresenterBuilder();
-        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure);
+        $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
+        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
 
         $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
 
