@@ -173,4 +173,20 @@ class Flow extends Basic {
         $this->clientInfo->fromArray($this->options->get(self::OPT_CLIENT_INFO, array()));
         return $this->clientInfo;
     }
+
+    /**
+     * @return array
+     */
+    public function getUserInfo($access_token)
+    {
+        $user_info_request  = $this->createUserInfoRequest($access_token);
+        $user_info_endpoint = $user_info_request->getUserInfoEndpoint();
+
+        if (empty($user_info_endpoint)) {
+            return array();
+        }
+
+        $user_info_response = $this->getUserInfoDispatcher()->sendUserInfoRequest($user_info_request);
+        return $user_info_response->getClaims();
+    }
 }

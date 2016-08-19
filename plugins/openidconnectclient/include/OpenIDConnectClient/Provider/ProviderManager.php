@@ -215,13 +215,15 @@ class ProviderManager {
         $icon,
         $color
     ) {
-        $string_validator   = new Valid_String();
-        $http_uri_validator = new Valid_HTTPSURI();
+        $string_validator            = new Valid_String();
+        $http_uri_validator          = new Valid_HTTPSURI();
         $http_uri_validator->required();
+        $userinfo_endpoint_validator = new Valid_HTTPSURI();
 
         return $string_validator->validate($name) && $string_validator->validate($client_id) &&
             $string_validator->validate($client_secret) && $http_uri_validator->validate($authorization_endpoint) &&
-            $http_uri_validator->validate($token_endpoint) && $http_uri_validator->validate($userinfo_endpoint) &&
+            $http_uri_validator->validate($token_endpoint) &&
+            $userinfo_endpoint_validator->validate($userinfo_endpoint) &&
             $string_validator->validate($icon) && $string_validator->validate($color);
     }
 

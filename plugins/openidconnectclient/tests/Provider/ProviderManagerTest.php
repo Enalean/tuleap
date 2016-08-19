@@ -43,6 +43,25 @@ class ProviderManagerTest extends TuleapTestCase {
         );
     }
 
+    public function itCreatesNewProviderWithAnEmptyUserInfoEndpoint()
+    {
+        $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
+        $provider_manager = new ProviderManager($provider_dao);
+
+        $provider_dao->expectOnce('create');
+
+        $provider_manager->create(
+            'Provider',
+            'https://example.com/auth',
+            'https://example.com/token',
+            '',
+            'ID',
+            'Secret',
+            'github',
+            'fiesta_red'
+        );
+    }
+
     public function itUpdatesProvider() {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
         $provider_dao->setReturnValue('save', true);

@@ -21,8 +21,10 @@
                 <span class="provider-label">{{ token_endpoint }}</span>
                 <span>{{ getTokenEndpoint }}</span>
 
+                {{# getUserInfoEndpoint }}
                 <span class="provider-label">{{ userinfo_endpoint }}</span>
                 <span>{{ getUserInfoEndpoint }}</span>
+                {{/ getUserInfoEndpoint }}
             </div>
             <div class="provider-client">
                 <span class="provider-label">{{ client_id }}</span>
