@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/user/LoginPresenter.class.php';
 
-class LDAP_LoginPresenter extends User_LoginPresenter {
-
-    public function __construct(User_LoginPresenter $login_presenter) {
+class LDAP_LoginPresenter extends User_LoginPresenter
+{
+    public function __construct(User_LoginPresenter $login_presenter)
+    {
         parent::__construct(
             $login_presenter->getReturnTo(),
             $login_presenter->getPv(),
             $login_presenter->getFormLoginName(),
             $login_presenter->getToggleSsl(),
             '',
+            $login_presenter->getCSRFToken(),
             false
         );
     }
 
-    public function account_login_login_with_tuleap() {
+    public function account_login_login_with_tuleap()
+    {
         $ldap_name = $GLOBALS['Language']->getText('plugin_ldap', 'people_ldap');
         return $GLOBALS['Language']->getText('account_login', 'page_title', array($ldap_name));
     }
 }
-?>

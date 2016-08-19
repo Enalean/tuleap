@@ -68,13 +68,15 @@ if($request->valid(new Valid_WhiteList('stay_in_ssl', array(0,1)))) {
 // Application
 //
 
-$um = UserManager::instance();
+$um         = UserManager::instance();
+$login_csrf = new CSRFSynchronizerToken('/account/login.php');
 
 // first check for valid login, if so, redirect
 $success = false;
 $status  = null;
 $user    = null;
 if ($request->isPost()) {
+    $login_csrf->check();
     if (!$_rVar['form_loginname'] || !$_rVar['form_pw']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','missing_pwd'));
     } else {
@@ -112,7 +114,8 @@ $presenter = $presenter_builder->build(
     $_rVar['return_to'],
     $_cVar['pv'],
     $_rVar['form_loginname'],
-    $request->isSecure()
+    $request->isSecure(),
+    $login_csrf
 );
 
 if($pvMode) {

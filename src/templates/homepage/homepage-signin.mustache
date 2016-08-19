@@ -11,6 +11,7 @@
                 <span class="add-on"><i class="icon-lock"></i></span>
                 <input type="password" name="form_pw" placeholder="{{ password_placeholder }}">
             </div>
+            <input type="hidden" name="{{ csrf_token_name }}" value="{{ csrf_token_value }}">
             <button type="submit" name="login" class="btn btn-large btn-primary">{{ sign_in_submit }}</button>
             {{# allow_password_recovery }}
                 <a class="lost-password" href="{{ most_secure_url }}/account/lostpw.php">{{ forgot_password }}</a>
