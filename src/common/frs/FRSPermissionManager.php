@@ -27,7 +27,7 @@ class FRSPermissionManager
 {
     /** @var PermissionDao */
     private $permission_dao;
-        /** @var FRSPermissionFactory */
+    /** @var FRSPermissionFactory */
     private $permission_factory;
 
     public function __construct(
@@ -40,7 +40,7 @@ class FRSPermissionManager
 
     public function isAdmin(Project $project, PFUser $user)
     {
-        if ($user->isAdmin($project->getId())) {
+        if ($user->isSuperUser() || $user->isAdmin($project->getId())) {
             return true;
         }
 
@@ -48,6 +48,27 @@ class FRSPermissionManager
 
         foreach ($permissions as $permission) {
             if ($user->isMemberOfUGroup($permission->getUGroupId(), $project->getID())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function doesProjectHaveOldFrsAdminMembers(Project $project)
+    {
+        return $this->permission_dao->doesProjectHaveLegacyFrsAdminMembers($project->getID());
+    }
+
+    public function userCanRead(Project $project, PFUser $user)
+    {
+        if ($this->isAdmin($project, $user)) {
+            return true;
+        }
+
+        $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), FRSPermission::FRS_READER);
+        foreach ($permissions as $permission) {
+            if ($user->isMemberOfUGroup($permission['ugroup_id'], $project->getID())) {
                 return true;
             }
         }

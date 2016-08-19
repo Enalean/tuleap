@@ -1,6 +1,6 @@
 <?php
- 
-/* 
+
+/*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -27,6 +27,9 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 
 use Tuleap\FRS\ToolbarPresenter;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -36,11 +39,20 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-if (!user_isloggedin() || !user_ismember($group_id,'R2')) {
+$permission_manager = new FRSPermissionManager(
+    new FRSPermissionDao(),
+    new FRSPermissionFactory(new FRSPermissionDao())
+);
+
+$user            = UserManager::instance()->getCurrentUser();
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+
+if (!user_isloggedin()  || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 
-$vMode = new Valid_WhiteList('mode',array('delete')); 
+$vMode = new Valid_WhiteList('mode',array('delete'));
 if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
     # delete a processor from db
     if ($request->valid(new Valid_UInt('proc_id'))) {
@@ -49,15 +61,14 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 }
 }
 
-$project_manager = ProjectManager::instance();
-$project         = $project_manager->getProject($group_id);
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
 $title     = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
 $presenter = new ToolbarPresenter($project, $title);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-echo $renderer->renderToString('toolbar-presenter', $presenter);
+$project->getService(Service::FILE)->displayHeader($project, $title);
+$renderer->renderToPage('toolbar-presenter', $presenter);
 
 $vAdd      = new Valid_String('add');
 $vProcName = new Valid_String('procname');
@@ -68,14 +79,14 @@ $vProcRank->required();
 if ($request->isPost() && $request->existAndNonEmpty('add')) {
     # add a new processor to the database
     if ($request->valid($vProcName) &&
-        $request->valid($vProcRank) && 
+        $request->valid($vProcRank) &&
         $request->valid($vAdd)) {
         $procname = $request->get('procname');
         $procrank = $request->get('procrank');
         if ($procrank == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));
         } else if ($procname == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	         	
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));
         } else {
             file_utils_add_proc($procname,$procrank);
         }
@@ -93,20 +104,20 @@ $vProcessRank = new Valid_UInt('processrank');
 $vProcessRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('update')) {
-    # update a processor  
+    # update a processor
     if ($request->valid($vProcessName) &&
-        $request->valid($vProcessRank) && 
+        $request->valid($vProcessRank) &&
         $request->valid($vProcId)      &&
         $request->valid($vUpdate)) {
         $proc_id     = $request->get('proc_id');
         $processname = $request->get('processname');
         $processrank = $request->get('processrank');
         if ($processrank == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));
         } else if ($processname == "") {
-            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	      
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));
         } else {
-            file_utils_update_proc($proc_id,$processname,$processrank);    
+            file_utils_update_proc($proc_id,$processname,$processrank);
         }
     } else {
         $feedback .= $Language->getText('file_file_utils','update_proc_fail');
@@ -132,18 +143,18 @@ file_utils_show_processors($result);
 <H3><?php echo $Language->getText('file_admin_manageprocessors','add_proc'); ?></H3>
 
 <?php
-    
-$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id='.$group_id.'" METHOD="POST">    
+
+$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id='.$group_id.'" METHOD="POST">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
     <TR><TD>'.$Language->getText('file_file_utils','proc_name').': <font color=red>*</font> </TD>
     <TD><INPUT TYPE="TEXT" NAME="procname" VALUE="" SIZE=30></TD></TR>
     <TR><TD>'.$Language->getText('file_file_utils','proc_rank').': <font color=red>*</font> </TD>
-    <TD><INPUT TYPE="TEXT" NAME="procrank" VALUE="" SIZE=10></TD></TR></TABLE>    
+    <TD><INPUT TYPE="TEXT" NAME="procrank" VALUE="" SIZE=10></TD></TR></TABLE>
     <p><INPUT TYPE="SUBMIT" NAME="add" VALUE="'. $Language->getText('file_file_utils','add_proc').'"></p></FORM>
     <p><font color="red">*</font>: '.$Language->getText('file_file_utils','required_fields').'</p>';
-    
+
 echo $return;
 
 file_utils_footer(array());
- 
+
  ?>

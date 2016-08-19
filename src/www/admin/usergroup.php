@@ -54,7 +54,7 @@ if ($request->isPost()) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_usergroup','data_not_parsed'));
         } else {
             if ($request->existAndNonEmpty('expiry_date')) {
-                $date_list = split('-', $request->get('expiry_date'), 3);
+                $date_list = explode('-', $request->get('expiry_date'), 3);
                 $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
                 if ($user->getExpiryDate() != $unix_expiry_time) {
                     $user->setExpiryDate($unix_expiry_time);

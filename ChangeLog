@@ -1,16 +1,22 @@
-Version 8.18 (Not yet released)
+Version 8.18 (Thursday, August 18th 2016)
 	== Enhancement ==
-		* story #9281 define FRS global permissions
+	* story #9281: define FRS global permissions
 
 	== Bug fix ==
-	* request #9344 Persistent XSS through code snippet download
+	* request #9344: Persistent XSS through code snippet download
 	* request #9329: New install doesn't prompt for domain name
 	* request #9355: 'Import List Of Users' does not work with emails
 	* request #9335: Do not inherit default trackers when importing from XML
 	* request #9361: CVS search by commiter does not work
 	* request #8839: Call to sparklines.php should be made in POST to avoid errors
-	* request #9371 Wrong artifact warning message when a user supposed to be notified is suspended
-	* request #9381 Release notes and changelog can not be accessed
+	* request #9371: Wrong artifact warning message when a user supposed to be notified is suspended
+	* request #9381: Release notes and changelog can not be accessed
+	* request #9389: Cross reference field broken while using artifact link field
+	* request #9382: A user which has not been connected at least one time can not be suspended for inactivity
+	* request #9401: Impossible to update release
+	* request #9400: Error raised when creating or updating a release
+	* request #9398: No longer possible to addFile with Tuleap CLI
+	* request #9404: Fatal error when setting a package to hidden
 
 	== Development ==
 	* request #9339: Remove unused code in the utilities
@@ -21,20 +27,21 @@ Version 8.18 (Not yet released)
 		- Plugins no longer append javascript to core Combined
 		- combine JavaScript with hash
 	* Fix CI issues caused by side effects of $GLOBALS usage
+	* story #9281: define FRS global permissions
 
 	== Enhancement ==
 	* External lib no longer referenced in sources
 
 	== Plugins ==
-	* agiledashboard: 1.411
+	* agiledashboard: 1.412
 	* docman: 2.26.118
 	* cardwall: 1.65
-	* tracker: 5.988
+	* tracker: 5.989
 	* forumml: 2.6.27
 	* ldap: 3.106
 	* mediawiki: 0.123
-	* webdav: 1.9.17
-	* git: 4.250
+	* webdav: 1.9.18
+	* git: 4.251
 	* boomerang: 0.5
 	* statistics: 0.63
 	* svn: 0.78
@@ -44,18 +51,18 @@ Version 8.18 (Not yet released)
 	* graphontrackersv5: 5.26
 	* proftpd: 0.28
 	* projectlinks: 2.11
-	* openidconnectclient: 0.23
+	* openidconnectclient: 0.24
 	* archivedeleteditems: 0.9
 	* hudson: 1.33
 	* IM: 1.5.38
 	* admindelegation: 2.13
-	* frs: 0.18
+	* frs: 0.19
 	* graphontrackers: 1.17
 	* pluginsadministration: 1.19
 	* userlog: 1.9
 
     == Themes ==
-	* FlamingParrot: 1.146
+	* FlamingParrot: 1.147
 
 Version 8.17 (Thursday, July 21st 2016)
 	== Enhancement ==

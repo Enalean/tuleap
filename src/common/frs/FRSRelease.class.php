@@ -297,16 +297,11 @@ class FRSRelease {
 		return $this->release_files;
 	}
     
-    /**
-     * Function userCanRead : determine if the user can view this release or not
-     *
-	 * @param int $user_id if not given or 0 take the current user
-     * @return boolean true if user has Read access to this release, false otherwise
-	 */ 
-	function userCanRead($user_id=0) {
+    public function userCanRead($user_id = 0) {
         $release_factory = new FRSReleaseFactory();
+
         return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
-	}
+    }
 	
 	/**
      * Returns the HTML content for tooltip when hover a reference with the nature release

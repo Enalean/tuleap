@@ -24,6 +24,7 @@ use Project;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
 use UGroupDao;
+use ForgeAccess;
 
 class FRSPermissionCreator
 {
@@ -38,22 +39,22 @@ class FRSPermissionCreator
         $this->ugroup_dao     = $ugroup_dao;
     }
 
-    public function savePermissions(Project $project, array $ugroup_ids)
+    public function savePermissions(Project $project, array $ugroup_ids, $permission_type)
     {
         $normalizer            = new PermissionsNormalizer();
         $override_collection   = new PermissionsNormalizerOverrideCollection();
         $normalized_ugroup_ids = $normalizer->getNormalizedUGroupIds($project, $ugroup_ids, $override_collection);
 
-        $this->permission_dao->savePermissions($project->getId(), FRSPermission::FRS_ADMIN, $normalized_ugroup_ids);
+        $this->permission_dao->savePermissions($project->getId(), $permission_type, $normalized_ugroup_ids);
 
-        group_add_history('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId());
+        group_add_history('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId(), array($permission_type));
 
         $override_collection->emitFeedback("");
     }
 
     public function duplicate(Project $project, $template_id)
     {
-        $permissions = $this->permission_dao->getBindingPermissionsByProject($project->getID(), $template_id);
+        $permissions = $this->permission_dao->searchBindingPermissionsByProject($project->getID(), $template_id);
 
         $duplicate_permissions = array();
         foreach ($permissions as $permission) {
@@ -75,5 +76,25 @@ class FRSPermissionCreator
         }
 
         return $ugroup_name;
+    }
+
+    public function updateProjectAccess(Project $project, $old_access, $new_access)
+    {
+        if ($new_access === Project::ACCESS_PRIVATE) {
+            $this->permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
+        }
+        if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
+            $this->permission_dao->disableAuthenticated($project->getID());
+        }
+    }
+
+    public function updateSiteAccess($old_value)
+    {
+        if ($old_value === ForgeAccess::ANONYMOUS) {
+            $this->permission_dao->updateAllAnonymousAccessToRegistered();
+        }
+        if ($old_value === ForgeAccess::RESTRICTED) {
+            $this->permission_dao->updateAllAuthenticatedAccessToRegistered();
+        }
     }
 }

@@ -26,13 +26,10 @@
  * @TODO Make sure directories tree to manage forks and repo is a good choice
  * @author gstorchi
  */
- $DIR = dirname(__FILE__);
- require_once($DIR.'/../DVCS/DVCSDriver.class.php');
+
+require_once(__DIR__.'/../DVCS/DVCSDriver.class.php');
 
 class GitDriver implements DVCSDriver {
-
-    public function __construct() {
-    }
 
     protected function execGitAction($cmd, $action_name) {
         $out = array();
@@ -127,7 +124,7 @@ class GitDriver implements DVCSDriver {
     public function getGitVersion() {
         $cmd        = 'git --version';
         $cmd_result = $this->execGitAction($cmd, 'version');
-        $version    = split(" ", $cmd_result);
+        $version    = explode(" ", $cmd_result);
 
         return $version[2];
     }
@@ -315,5 +312,3 @@ class GitDriver implements DVCSDriver {
         return true;
     }
 }
-
-?>

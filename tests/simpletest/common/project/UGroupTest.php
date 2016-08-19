@@ -305,7 +305,6 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
         //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
         //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
@@ -317,7 +316,6 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 0');
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
         //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
         //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));

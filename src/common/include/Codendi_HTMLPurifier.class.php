@@ -1,24 +1,24 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -247,12 +247,10 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_JS_QUOTE:
-            $json_hex_apos = 4; //Equivalent to JSON_HEX_APOS
-            $clean = $this->js_string_purifier($html, $json_hex_apos);
+            $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
             break;
         case CODENDI_PURIFIER_JS_DQUOTE:
-            $json_hex_quote = 8; //Equivalent to JSON_HEX_QUOTE
-            $clean = $this->js_string_purifier($html, $json_hex_quote);
+            $clean = $this->js_string_purifier($html, JSON_HEX_QUOT);
             break;
         case CODENDI_PURIFIER_CONVERT_HTML:
         default:
@@ -265,49 +263,11 @@ class Codendi_HTMLPurifier {
     /**
      * @return string
      */
-    private function js_string_purifier($str, $options) {
-        $clean = '';
-        $default_options = 1 | 2; // Equivalent to JSON_HEX_TAG|JSON_HEX_AMP
-        if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-            $clean_quoted = json_encode($str, $default_options|$options);
-            $clean = substr($clean_quoted, 1, -1);
-        } else {
-            $clean = $this->js_string_purifier_compat($str, $options);
-        }
+    private function js_string_purifier($str, $options)
+    {
+        $clean_quoted = json_encode(strval($str), JSON_HEX_TAG | JSON_HEX_AMP | $options);
+        $clean        = mb_substr($clean_quoted, 1, -1);
         return $clean;
-    }
-
-    /**
-     * Provide a replacement for
-     * json_encode($str, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS),
-     * json_encode($str, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_QUOTE) or
-     * json_encode($str, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOTE)
-     * Some of these options are not available before PHP 5.3.0
-     *
-     * @see http://php.net/manual/en/json.constants.php#constant.json-hex-tag
-     *
-     * @return string
-     */
-    private function js_string_purifier_compat($str, $options) {
-        $chr_to_encode = array(
-            '<' => '\u003C',
-            '>' => '\u003E',
-            '&' => '\u0026'
-        );
-        //JSON_HEX_APOS
-        if ((4 & $options) != 0) {
-            $chr_to_encode['\\\''] = '\u0027';
-        }
-        //JSON_HEX_QUOTE
-        if ((8 & $options) != 0) {
-            $chr_to_encode['\\"'] = '\u0022';
-        }
-
-        $str_quoted = json_encode($str);
-        $str_special_chr = substr($str_quoted, 1, -1);
-        $str_clean = str_replace(array_keys($chr_to_encode), array_values($chr_to_encode), $str_special_chr);
-
-        return $str_clean;
     }
 
     /**
@@ -350,5 +310,3 @@ class Codendi_HTMLPurifier {
         $reference_manager->insertReferences($html, $group_id);
     }
 }
-
-?>

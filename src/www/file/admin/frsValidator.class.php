@@ -11,7 +11,6 @@
 
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FRSReleaseFactory.class.php');
-require_once ('common/frs/FRSFileFactory.class.php');
 
 class frsValidator {
     var $_errors;
@@ -30,7 +29,6 @@ class frsValidator {
     function isValidForCreation($release, $group_id) {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
-        $frsff = new FRSFileFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
             if (!isset($release['name']) || !$release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
@@ -62,7 +60,6 @@ class frsValidator {
     function isValidForUpdate($release, $group_id) {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
-        $frsff = new FRSFileFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
             if (!isset($release['name']) || !$release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));

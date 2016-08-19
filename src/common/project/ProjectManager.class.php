@@ -18,6 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
+
 /**
  * Provide access to projects
  */
@@ -422,6 +425,16 @@ class ProjectManager {
             'access'             => $access_level,
             'old_access'         => $old_access,
         ));
+
+        $this->getFrsPermissionsCreator()->updateProjectAccess($project, $old_access, $access_level);
+    }
+
+    private function getFrsPermissionsCreator()
+    {
+        return new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao()
+        );
     }
 
     public function setTruncatedEmailsUsage(Project $project, $usage) {

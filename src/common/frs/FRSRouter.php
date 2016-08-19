@@ -56,20 +56,28 @@ class FRSRouter
 
         $action = $request->get('action');
 
+
         switch ($action) {
             case "edit-permissions":
                 $this->useDefaultRoute($request, $project, $user);
                 break;
             case "admin-frs-admins":
-                $select_project_ids = $request->get('frs_admins');
+                $admin_ugroups_ids  = $request->get('frs_admins');
+                $reader_ugroups_ids = $request->get('frs_readers');
 
-                if ($select_project_ids) {
-                    $this->permission_controller->updatePermissions($project, $user, $select_project_ids);
-                } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'no_data_selected'));
+                if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_data_incorrect'));
+                    $this->redirectToDefaultRoute($project);
+                    return;
                 }
 
-                $this->useDefaultRoute($request, $project, $user);
+                try {
+                    $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
+                } catch (FRSWrongPermissiongrantedException $e) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_permission_incorrect'));
+                }
+
+                $this->redirectToDefaultRoute($project);
                 break;
             default:
                 $this->useDefaultRoute($request, $project, $user);
@@ -77,9 +85,16 @@ class FRSRouter
         }
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
+    private function redirectToDefaultRoute(Project $project)
+    {
+        $GLOBALS['Response']->redirect('/file/admin/?'. http_build_query(
+            array(
+                'group_id' => $project->getId(),
+                'action'   => 'edit-permissions'
+            )
+        ));
+    }
+
     private function useDefaultRoute(HTTPRequest $request, Project $project, PFUser $user)
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');

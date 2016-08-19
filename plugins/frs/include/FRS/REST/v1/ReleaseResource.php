@@ -69,7 +69,7 @@ class ReleaseResource extends AuthenticatedResource
         if ($package->isActive()) {
             $release_representation->build($release, $this->retriever, $user);
         } else if ($package->isHidden()
-            && FRSPackageFactory::userCanAdmin($user, $package->getGroupID())
+            && $this->frs_release_factory->userCanAdmin($user, $package->getGroupID())
         ) {
             $release_representation->build($release, $this->retriever, $user);
         } else {

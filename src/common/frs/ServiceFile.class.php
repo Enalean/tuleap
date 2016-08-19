@@ -19,6 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
@@ -28,8 +29,7 @@ use Tuleap\FRS\FRSPermissionFactory;
  */
 class ServiceFile extends Service
 {
-    
-    
+
     /**
     * getPublicArea
     * 

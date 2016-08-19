@@ -18,7 +18,8 @@ KanbanCtrl.$inject = [
     'SocketFactory',
     'KanbanColumnService',
     'ColumnCollectionService',
-    'DroppedService'
+    'DroppedService',
+    'KanbanFilterValue'
 ];
 
 function KanbanCtrl(
@@ -37,7 +38,8 @@ function KanbanCtrl(
     SocketFactory,
     KanbanColumnService,
     ColumnCollectionService,
-    DroppedService
+    DroppedService,
+    KanbanFilterValue
 ) {
     var self    = this,
         limit   = 50,
@@ -92,8 +94,8 @@ function KanbanCtrl(
     self.expandArchive                = expandArchive;
     self.toggleArchive                = toggleArchive;
     self.setIsCollapsed               = setIsCollapsed;
-    self.filter_terms                 = '';
-    self.treeFilter                   = filterCards;
+    self.filter                       = KanbanFilterValue;
+    self.filterCards                  = filterCards;
     self.loading_modal                = NewTuleapArtifactModalService.loading;
     self.showEditModal                = showEditModal;
     self.moveItemAtTheEnd             = moveItemAtTheEnd;
@@ -158,15 +160,15 @@ function KanbanCtrl(
     }
 
     function filterBacklogCards() {
-        KanbanColumnService.filterItems(self.filter_terms, self.backlog);
+        KanbanColumnService.filterItems(self.backlog);
     }
 
     function filterArchiveCards() {
-        KanbanColumnService.filterItems(self.filter_terms, self.archive);
+        KanbanColumnService.filterItems(self.archive);
     }
 
     function filterColumnCards(column) {
-        KanbanColumnService.filterItems(self.filter_terms, column);
+        KanbanColumnService.filterItems(column);
     }
 
     function reflowKustomScrollBars() {

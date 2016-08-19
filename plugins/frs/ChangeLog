@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 8.18
+    * story #9281 define FRS global permissions (Read perm + forgeupgrade (site and project perm) + Update site and project at FRS level)
+
 Version 0.18 - Tuleap 8.18
     * request #9375 Gulpify sass
 

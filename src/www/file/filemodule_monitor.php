@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('common/frs/FRSPackageFactory.class.php');
@@ -24,7 +24,7 @@ if (user_isloggedin()) {
         if ($frspf->userCanRead($group_id, $filemodule_id, $currentUser->getId())) {
             $fmmf->processMonitoringActions($request, $currentUser, $group_id, $filemodule_id, $um, $userHelper);
 
-            file_utils_admin_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
+            file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
             echo $fmmf->getMonitoringHTML($currentUser, $group_id, $filemodule_id, $um, $userHelper);
             file_utils_footer(array());
         } else {
@@ -38,5 +38,3 @@ if (user_isloggedin()) {
 } else {
     exit_not_logged_in();
 }
-
-?>

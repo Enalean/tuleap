@@ -2,33 +2,30 @@
 
 <div>
     <div>
-        <p> {{ administaror_info }} </p>
+        <p> {{ access_control_intro }} </p>
+        <p> {{ administrator_info }} </p>
     </div>
     <form method="POST" action="{{ frs_admins_form_action }}">
         <input type="hidden" value="{{ project_id }}" name="group_id"/>
-
         <div class="frs_permissions">
             <div class="frs_permissions_read">
                 <label>
                     {{ permission_read_title }}
                 </label>
-                <select size="8" multiple name="frs_admins[]" disabled>
-                    {{# ugroups }}
+                <select size="8" multiple name="frs_readers[]">
+                    {{# ugroups_reader }}
                         <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-                    {{/ ugroups }}
+                    {{/ ugroups_reader }}
                 </select>
-                <div class='alert warning'>
-                    {{ under_implementation }}
-                </div>
             </div>
             <div class="frs_permissions_write">
                 <label>
                     {{ write_title }}
                 </label>
                 <select size="8" multiple name="frs_admins[]">
-                    {{# ugroups }}
+                    {{# ugroups_admin }}
                         <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-                    {{/ ugroups }}
+                    {{/ ugroups_admin }}
                 </select>
             </div>
         </div>

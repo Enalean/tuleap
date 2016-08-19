@@ -3,11 +3,13 @@ angular
     .service('KanbanColumnService', KanbanColumnService);
 
 KanbanColumnService.$inject = [
-    '$filter'
+    '$filter',
+    'KanbanFilterValue'
 ];
 
 function KanbanColumnService(
-    $filter
+    $filter,
+    KanbanFilterValue
 ) {
     var self = this;
     _.extend(self, {
@@ -102,8 +104,8 @@ function KanbanColumnService(
         }
     }
 
-    function filterItems(filter_terms, column) {
-        var filtered_items = $filter('InPropertiesFilter')(column.content, filter_terms);
+    function filterItems(column) {
+        var filtered_items = $filter('InPropertiesFilter')(column.content, KanbanFilterValue.terms);
 
         emptyArray(column.filtered_content);
         _.forEach(filtered_items, function(item) {

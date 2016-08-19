@@ -25,6 +25,10 @@ require_once 'common/dao/FRSFileDao.class.php';
 require_once 'Exceptions.class.php';
 require_once 'common/valid/Rule.class.php';
 
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+
 /**
  *
  */
@@ -795,24 +799,32 @@ class FRSFileFactory {
     }
 
     /**
-     * Returns true if user has permissions to add files
-     *
-     * NOTE : For the moment, only super admin, project admin (A) and file admin (R2) can add files
-     *
-     * @param int $group_id the project ID this file is in
-     * @param int $user_id the ID of the user. If not given or false, take the current user
+     * @return FRSPermissionManager
+     */
+    private function getPermissionManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
+    }
+
+    /**
      * @return boolean true if the user has permission to add files, false otherwise
      */
-    function userCanAdd($group_id,$user_id=false) {
-        $pm = PermissionsManager::instance();
-        $um = UserManager::instance();
+    public function userCanAdd($project_id, $user_id = false)
+    {
+        $project_manager = $this->_getProjectManager();
+        $project         = $project_manager->getProject($project_id);
+        $user_manager    = UserManager::instance();
+
         if (! $user_id) {
-            $user = $um->getCurrentUser();
+            $user = $user_manager->getCurrentUser();
         } else {
-            $user = $um->getUserById($user_id);
+            $user = $user_manager->getUserById($user_id);
         }
-        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
-        return $ok;
+
+        return $this->getPermissionManager()->isAdmin($project, $user);
     }
 
     /**

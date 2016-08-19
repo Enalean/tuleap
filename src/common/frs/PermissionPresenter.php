@@ -22,28 +22,29 @@
 namespace Tuleap\FRS;
 
 use Project;
-use ServiceFile;
-use ProjectUGroup;
 
 class PermissionPresenter extends BaseFrsPresenter
 {
     public $permission_title;
-    public $administaror_info;
-    public $ugroups;
+    public $administrator_info;
+    public $access_control_intro;
+    public $ugroups_admin;
+    public $ugroups_reader;
     public $project_id;
     public $frs_admins_submit_button;
     public $permission_read_title;
     public $under_implementation;
 
-    public function __construct(Project $project, array $ugroups)
+    public function __construct(Project $project, array $ugroups_admin, array $ugroups_reader)
     {
         $this->permission_title          = $GLOBALS['Language']->getText('file_file_utils', 'permissions_title');
         $this->frs_admins_submit_button  = $GLOBALS['Language']->getText('file_file_utils', 'frs_admins_submit_button');
-        $this->administaror_info         = $GLOBALS['Language']->getText('file_file_utils', 'administaror_info');
+        $this->administrator_info        = $GLOBALS['Language']->getText('file_file_utils', 'administrator_info');
+        $this->access_control_intro      = $GLOBALS['Language']->getText('file_file_utils', 'access_control_intro');
         $this->write_title               = $GLOBALS['Language']->getText('file_file_utils', 'write_title');
         $this->permission_read_title     = $GLOBALS['Language']->getText('file_file_utils', 'permission_read_title');
-        $this->under_implementation      = $GLOBALS['Language']->getText('file_file_utils', 'under_implementation');
-        $this->ugroups                   = $ugroups;
+        $this->ugroups_admin             = $ugroups_admin;
+        $this->ugroups_reader            = $ugroups_reader;
         $this->project_id                = $project->getId();
         $this->frs_admins_form_action    = FRS_BASE_URL .'/admin/?'. http_build_query(array(
             'group_id' => $this->project_id,

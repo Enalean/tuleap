@@ -5,30 +5,34 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/user/UserHelper.class.php');
 
-//	  
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+
+//
 //  get the Group object
-//	  
+//
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
 	exit_no_group();
-}		   
+}
 $atf = new ArtifactTypeFactory($group);
 if (!$group || !is_object($group) || $group->isError()) {
 	exit_error($Language->getText('global','error'),$Language->getText('project_admin_index','not_get_atf'));
 }
 // Get the artfact type list
 $at_arr = $atf->getArtifactTypes();
-	
+
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 $project=$pm->getProject($group_id);
@@ -38,6 +42,14 @@ if ($project->isError()) {
     	return;
 }
 
+$should_hide_warning_for_frs_legacy_perms = 'hide-warning-frs-legacy-perms';
+
+$csrf_hide_warning = new CSRFSynchronizerToken('/project/admin/userperms.php?group_id='. (int)$group_id);
+if ($request->get($should_hide_warning_for_frs_legacy_perms)) {
+    $csrf_hide_warning->check();
+    $current_user->setPreference($should_hide_warning_for_frs_legacy_perms, true);
+}
+
 // ########################### form submission, make updates
 if ($request->exist('submit')) {
     group_add_history ('changed_member_perm','',$group_id);
@@ -45,7 +57,7 @@ if ($request->exist('submit')) {
 
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
     while ($row_dev = db_fetch_array($res_dev)) {
-        
+
         if($request ->exist("admin_user_$row_dev[user_id]")){
             $forum_flags= "forums_user_$row_dev[user_id]";
             $doc_flags  = "doc_user_$row_dev[user_id]";
@@ -73,11 +85,11 @@ if ($request->exist('submit')) {
                     // Check that there is still at least one admin
                     $sql = "SELECT NULL FROM user_group WHERE user_id != ".db_ei($row_dev['user_id'])." AND admin_flags='A' AND group_id=".db_ei($group_id).' LIMIT 1';
                     $res_dev2 = db_query($sql);
-                    
+
                     if (db_numrows($res_dev2) > 0 ) {
                         $other_admin_exists=true;
                     }
-                            
+
                     if (!$other_admin_exists) {
                         $is_admin_only_modification = true;
                         foreach ($flags as $flag) {
@@ -119,7 +131,7 @@ if ($request->exist('submit')) {
                             $tracker_error = true;
                         }
                     }
-              
+
                 }
             }
 
@@ -127,7 +139,7 @@ if ($request->exist('submit')) {
                 $nb_errors++;
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' '.db_error());
             }
-        
+
             // Raise an event
             $em =& EventManager::instance();
             $user_permissions = array();
@@ -181,7 +193,7 @@ $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user_group.svn_flags,
                   user_group.news_flags";
 $sql['from']  = " FROM user,user_group ";
-$sql['where'] = " WHERE user.user_id = user_group.user_id 
+$sql['where'] = " WHERE user.user_id = user_group.user_id
                     AND user_group.group_id = ". db_ei($group_id);
 
 if ($request->exist('search') && $request->get('search') != null) {
@@ -199,8 +211,8 @@ if ($project->usesTracker()&&$at_arr ) {
     for ($j = 0; $j < count($at_arr); $j++) {
         $atid = db_ei($at_arr[$j]->getID());
         $sql['select'] .= ", IFNULL(artifact_perm_". $atid .".perm_level, 0) AS perm_level_". $atid ." ";
-        $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_". $atid ." 
-                                 ON(artifact_perm_". $atid .".user_id = user_group.user_id 
+        $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_". $atid ."
+                                 ON(artifact_perm_". $atid .".user_id = user_group.user_id
                                     AND artifact_perm_". $atid .".group_artifact_id = ". $atid .") ";
     }
 }
@@ -213,9 +225,9 @@ $sql = 'SELECT FOUND_ROWS() AS nb';
 $res = db_query($sql);
 $row = db_fetch_array($res);
 $num_total_rows = $row['nb'];
-                
-$sql = "SELECT ugroup_user.user_id AS user_id, ugroup.ugroup_id AS ugroup_id, ugroup.name AS name 
-FROM ugroup, ugroup_user 
+
+$sql = "SELECT ugroup_user.user_id AS user_id, ugroup.ugroup_id AS ugroup_id, ugroup.name AS name
+FROM ugroup, ugroup_user
 WHERE ugroup.group_id = ". db_ei($group_id) ."
   AND ugroup_user.ugroup_id = ugroup.ugroup_id";
 $res_ugrp = db_query($sql);
@@ -230,6 +242,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_utils','us
 echo '
 <h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>';
 echo '<FORM action="userperms.php" name = "form_search" method="post" class="form-inline">';
+
 echo $Language->getText('project_admin_utils','search_user');
 echo '&nbsp;';
 echo '<div class="input-append">';
@@ -242,27 +255,26 @@ $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
 echo '<INPUT class="btn" type="submit" name ="searchUser" value="'.$Language->getText('admin_main', 'search').'"></div>';
 echo '</FORM>';
-/*
-$abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-$used_abc_array = array();
-while ($row_dev = db_fetch_array($res_dev)) {
-    $uc = ucfirst(substr($row_dev['user_name'], 0, 1));
-    if (in_array($uc, $abc_array)) {
-        $used_abc_array[$uc] = 1;
-    }
+
+$frs_permission_manager = new FRSPermissionManager(
+    new FRSPermissionDao(),
+    new FRSPermissionFactory(new FRSPermissionDao())
+);
+
+if ($frs_permission_manager->doesProjectHaveOldFrsAdminMembers($group)
+    && ! $current_user->getPreference($should_hide_warning_for_frs_legacy_perms)
+) {
+    echo '<form action="" method="POST">
+        <input type="hidden" name="group_id" value="'. (int)$group_id .'" />
+        <input type="hidden" name="'. $should_hide_warning_for_frs_legacy_perms .'" value="1" />
+        '. $csrf_hide_warning->fetchHTMLInput() .'
+        <div class="alert alert-warning">
+            <button type="submit" class="close" aria-hidden="true">&times;</button> </a>
+            <i class="icon-warning-sign"></i> '.
+            $GLOBALS['Language']->getText('file_admin_index', 'warning_new_permission', (int)$group_id).
+        '</div>
+        </form>';
 }
-db_reset_result($res_dev);
-for ($i=0; $i < count($abc_array); $i++) {
-    $letter = '&nbsp;'. $abc_array[$i] .'&nbsp;';
-    if (isset($used_abc_array[$abc_array[$i]])) {
-        echo '<a href="#'. $abc_array[$i] .'">';
-        echo $letter;
-        echo '</a>';
-    } else {
-        echo $letter;
-    }
-}
-*/
 
 if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 
@@ -292,16 +304,16 @@ if ($project->usesCVS()) {
 if ($project->usesSVN()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
 }
-if ($project->usesForum()) {    
+if ($project->usesForum()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','forums').'</th>';
-}                               
-if ($project->usesWiki()) {     
+}
+if ($project->usesWiki()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','wiki').'</th>';
-}                               
-if ($project->usesNews()) {     
+}
+if ($project->usesNews()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','news').'</th>';
-}                               
-if ($project->usesDocman()) {   
+}
+if ($project->usesDocman()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','doc_man').'</th>';
 }
 
@@ -325,10 +337,10 @@ echo $head;
         }
         echo $cell;
     }
-    
+
     $uh = new UserHelper();
-    $hp = Codendi_HTMLPurifier::instance(); 
-    
+    $hp = Codendi_HTMLPurifier::instance();
+
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
         print '<TR class="'. util_get_alt_row_color($i) .'">';
@@ -339,8 +351,8 @@ echo $head;
             <INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="A" '.(($row_dev['admin_flags']=='A')?'CHECKED':'').'>&nbsp;'.$Language->getText('global','yes').'<BR>
             <INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="" '.(($row_dev['admin_flags']=='')?'CHECKED':'').'>&nbsp;'.$Language->getText('global','no').'
             </TD>';
-        if ($project->usesCVS()) { 
-            echo '<TD>'.$Language->getText('global','yes').'</TD>'; 
+        if ($project->usesCVS()) {
+            echo '<TD>'.$Language->getText('global','yes').'</TD>';
         }
      // svn
         if ($project->usesSVN()) {
@@ -351,7 +363,7 @@ echo $head;
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
-        
+
         // forums
         if ($project->usesForum()) {
             $cell = '';
@@ -381,7 +393,7 @@ echo $head;
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
-	
+
         //documentation states
         if ($project->usesDocman()) {
             $cell = '';
@@ -413,8 +425,8 @@ echo $head;
         if (isset($ugroups[$row_dev['user_id']])) {
             $is_first=true;
             foreach($ugroups[$row_dev['user_id']] as $row) {
-                if (!$is_first) { 
-                    print ', '; 
+                if (!$is_first) {
+                    print ', ';
                 }
                 print '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.
                     $row['name'].'</a>';
@@ -443,7 +455,7 @@ if ($num_total_rows && $number_per_page < $num_total_rows) {
     	$search = '&amp;search='.$pattern;
     } else {
     	$search = '';
-    	
+
     }
     echo '<div style="font-family:Verdana">Page: ';
     $width = 10;

@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -25,137 +26,62 @@ Mock::generate('Project');
 Mock::generatePartial(
     'WebDAVUtils',
     'WebDAVUtilsTestVersion',
-array()
+    array('getFRSPermissionManager', 'getProjectManager')
 );
 
 /**
  * This is the unit test of WebDAVUtils
  */
-class WebDAVUtilsTest extends TuleapTestCase {
+class WebDAVUtilsTest extends TuleapTestCase
+{
+    private $user;
+    private $project;
+    private $utils;
+    private $frs_permission_manager;
+    private $project_manager;
 
-    /**
-     * Testing when The user is not member and is not super user
-     */
-    function testUserIsAdminNotSuperUserNotmember() {
+    public function setUp()
+    {
+        $this->user                   = mock('PFUser');
+        $this->project                = new MockProject();
+        $this->utils                  = new WebDAVUtilsTestVersion($this);
+        $this->frs_permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
+        $this->project_manager        = mock('ProjectManager');
 
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', false);
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), false);
-
+        stub($this->utils)->getFRSPermissionManager()->returns($this->frs_permission_manager);
+        stub($this->utils)->getProjectManager()->returns($this->project_manager);
     }
 
-    /**
-     * Testing when The user is super user
-     */
-    function testUserIsAdminSuperUser() {
+    public function testuserIsAdminNotSuperUserNotmember()
+    {
+        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('isMember', false);
+        stub($this->frs_permission_manager)->isAdmin()->returns(false);
 
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', false);
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
+        $this->assertEqual($this->utils->userIsAdmin($this->user, $this->project->getGroupId()), false);
     }
 
-    /**
-     * Testing when The user is group admin
-     */
-    function testUserIsAdminGroupAdmin() {
+    public function testuserIsAdminSuperUser()
+    {
+        $this->user->setReturnValue('isSuperUser', true);
+        $this->user->setReturnValue('isMember', false);
 
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', true, array('0' => $project->getGroupId(), '1' => 'A'));
-        $user->setReturnValue('isMember', false, array('0' => $project->getGroupId(), '1' => 'R2'));
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
+        $this->assertEqual($this->utils->userIsAdmin($this->user, $this->project->getGroupId()), true);
     }
 
-    /**
-     * Testing when The user is group admin and super user
-     */
-    function testUserIsAdminSuperUserGroupAdmin() {
+    public function testuserIsAdminFRSAdmin()
+    {
+        $this->user->setReturnValue('isSuperUser', false);
+        stub($this->frs_permission_manager)->isAdmin()->returns(true);
 
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', true, array('0' => $project->getGroupId(), '1' => 'A'));
-        $user->setReturnValue('isMember', false, array('0' => $project->getGroupId(), '1' => 'R2'));
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
+        $this->assertEqual($this->utils->userIsAdmin($this->user, $this->project->getGroupId()), true);
     }
 
-    /**
-     * Testing when The user is file release admin
-     */
-    function testUserIsAdminFRSAdmin() {
+    public function testuserIsAdminSuperuserFRSAdmin()
+    {
+        $this->user->setReturnValue('isSuperUser', true);
+        stub($this->frs_permission_manager)->isAdmin()->returns(true);
 
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', false, array('0' => $project->getGroupId(), '1' => 'A'));
-        $user->setReturnValue('isMember', true, array('0' => $project->getGroupId(), '1' => 'R2'));
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
+        $this->assertEqual($this->utils->userIsAdmin($this->user, $this->project->getGroupId()), true);
     }
-
-    /**
-     * Testing when The user is file release admin and super user
-     */
-    function testUserIsAdminSuperuserFRSAdmin() {
-
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', false, array('0' => $project->getGroupId(), '1' => 'A'));
-        $user->setReturnValue('isMember', true, array('0' => $project->getGroupId(), '1' => 'R2'));
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
-    }
-
-    /**
-     * Testing when The user is group admin and file release admin
-     */
-    function testUserIsAdminGroupAdminFRSAdmin() {
-
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', true);
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
-    }
-
-    /**
-     * Testing when The user is group admin filerelease admin and super user
-     */
-    function testUserIsAdminSuperUserGroupAdminFRSAdmin() {
-
-        $utils = new WebDAVUtilsTestVersion($this);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-        $project = new MockProject();
-        $user->setReturnValue('isMember', true);
-
-        $this->assertEqual($utils->UserIsAdmin($user, $project->getGroupId()), true);
-
-    }
-
 }
-?>
