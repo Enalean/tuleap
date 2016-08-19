@@ -1,4 +1,4 @@
-    <?php
+<?php
 /**
  * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
