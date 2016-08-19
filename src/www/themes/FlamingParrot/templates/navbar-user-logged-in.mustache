@@ -7,5 +7,12 @@
     {{/ request_is_post }}
     <li><a href="/account/">{{ my_index_text }}</a></li>
     <li class="divider"></li>
-    <li><a href="/account/logout.php">{{ include_menu_text }}</a></li>
+    <li>
+        <form action="/account/logout.php" method="post">
+            {{# logout_csrf }}
+                {{> csrf_token_input }}
+            {{/ logout_csrf }}
+            <input class="submit-action" type="submit" value="{{ include_menu_text }}">
+        </form>
+    </li>
 </ul>

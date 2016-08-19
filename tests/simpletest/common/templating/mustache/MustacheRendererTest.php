@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,14 +21,10 @@
 require_once dirname(__FILE__).'/../TemplateRendererTestBase.php';
 require_once 'common/templating/mustache/MustacheRenderer.class.php';
 
-/**
- * Replace this class or add a class for every template engine 
- */
-class MustacheRendererTest extends TemplateRendererTestBase {
-    function setUp() {
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
-        parent::setUp();
+class MustacheRendererTest extends TemplateRendererTestBase
+{
+    protected function getRenderer()
+    {
+        return new MustacheRenderer(dirname(__FILE__).'/templates');
     }
 }
-
-?>

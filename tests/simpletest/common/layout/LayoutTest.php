@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,24 +26,28 @@ Mock::generate('EventManager');
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Respone class.
  */
-class LayoutTest extends UnitTestCase {
-
-    function setUp() {
+class LayoutTest extends UnitTestCase
+{
+    public function setUp()
+    {
         $GLOBALS['sys_user_theme']     = 'Stuff';
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['sys_user_theme']);
     }
 
-    function testAddStyleSheet() {
-        $l = TestHelper::getPartialMock('Layout', array());
+    public function testAddStyleSheet()
+    {
+        $l = TestHelper::getPartialMock('Layout', array('header'));
         $l->addStylesheet('/theme/css/style.css');
         $this->assertEqual($l->getAllStyleSheets(), array('/theme/css/style.css'));
     }
 
-    function testAddedStyleSheetShouldBeRenderedInPageHeaders() {
-        $l = TestHelper::getPartialMock('Layout', array('getEventManager', 'getStylesheetTheme'));
+    public function testAddedStyleSheetShouldBeRenderedInPageHeaders()
+    {
+        $l = TestHelper::getPartialMock('Layout', array('header', 'getEventManager', 'getStylesheetTheme'));
         $l->setReturnValue('getEventManager', new MockEventManager());
 
         $css = '/viewvc-static/styles.css';
@@ -57,5 +61,3 @@ class LayoutTest extends UnitTestCase {
         $this->assertTrue(strpos($content, '<link rel="stylesheet" type="text/css" href="'.$css.'" />'), "There should be a custom css here.");
     }
 }
-
-?>

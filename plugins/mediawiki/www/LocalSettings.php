@@ -407,16 +407,11 @@ if (isset($_SERVER['SERVER_SOFTWARE'])) {
 		var $dst = '/account/lostpw.php';
 	}
 
-	class SpecialForgeRedirLogout extends SpecialForgeRedir {
-		var $dstappendself = true;
-		var $dst = '/account/logout.php?return_to=';
-	}
-
 	function DisableLogInOut(&$mList) {
 		$mList['Userlogin'] = 'SpecialForgeRedirLogin';
 		$mList['CreateAccount'] = 'SpecialForgeRedirCreateAccount';
 		$mList['Resetpass'] = 'SpecialForgeRedirResetPass';
-		$mList['Userlogout'] = 'SpecialForgeRedirLogout';
+        unset($mList['Userlogout']);
 		return true;
 	}
 	$GLOBALS['wgHooks']['SpecialPage_initList'][] = 'DisableLogInOut';

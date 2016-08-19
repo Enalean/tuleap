@@ -182,10 +182,6 @@ require_once('exit.php');
 //various html libs like button bar, themable
 require_once('html.php');
 
-//left-hand nav library, themable
-require_once('menu.php');
-
-
 
 //insert this page view into the database
 if(!IS_SCRIPT) {
