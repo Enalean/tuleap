@@ -1,3 +1,6 @@
+Version 1.148 - Tuleap 8.19
+    * request #9406: Missing login CSRF protection
+
 Version 1.147 - Tuleap 8.18
     * story #9281 define FRS global permissions (Read perm + forgeupgrade (site and project perm) + Update site and project at FRS level)
 

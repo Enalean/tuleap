@@ -1,3 +1,6 @@
+Version 3.107 - Tuleap 8.19
+    * request #9406: Missing login CSRF protection
+
 Version 3.106 - Tuleap 8.18
     * request #9335 Do not inherit default trackers when importing from XML
 
