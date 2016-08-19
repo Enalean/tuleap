@@ -17,7 +17,7 @@
         <div class="modal-body">
             <div class="row-fluid">
                 <div class="span8">
-                    <label for="name-{{ getId }}">{{ name }}</label>
+                    <label for="name-{{ getId }}">{{ name }}<span class="highlight"> *</span></label>
                     <input class="provider-name" type="text" name="name" id="name-{{ getId }}" value="{{ getName }}" required>
                 </div>
 
@@ -42,22 +42,22 @@
                 </div>
             </div>
 
-            <label for="authorization_endpoint-{{ getId }}">{{ authorization_endpoint }}</label>
+            <label for="authorization_endpoint-{{ getId }}">{{ authorization_endpoint }}<span class="highlight"> *</span></label>
             <input type="url" pattern="https://.+" name="authorization_endpoint" id="authorization_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getAuthorizationEndpoint }}" required>
 
-            <label for="token_endpoint-{{ getId }}">{{ token_endpoint }}</label>
+            <label for="token_endpoint-{{ getId }}">{{ token_endpoint }}<span class="highlight"> *</span></label>
             <input type="url" pattern="https://.+"name="token_endpoint" id="token_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getTokenEndpoint }}" required>
 
             <label for="userinfo_endpoint-{{ getId }}">{{ userinfo_endpoint }}</label>
-            <input class="provider-user-info-endpoint" type="url" pattern="https://.+" name="userinfo_endpoint" id="userinfo_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getUserInfoEndpoint }}" required>
+            <input class="provider-user-info-endpoint" type="url" pattern="https://.+" name="userinfo_endpoint" id="userinfo_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getUserInfoEndpoint }}">
 
             <p class="info"><i class="icon-info-sign"></i> {{ client_help }}</p>
             <p class="info provider-callback-url">{{ callback_url }}</p>
 
-            <label for="client_id-{{ getId }}">{{ client_id }}</label>
+            <label for="client_id-{{ getId }}">{{ client_id }}<span class="highlight"> *</span></label>
             <input type="text" name="client_id" id="client_id-{{ getId }}" value="{{ getClientId }}" required>
 
-            <label for="client_secret-{{ getId }}">{{ client_secret }}</label>
+            <label for="client_secret-{{ getId }}">{{ client_secret }}<span class="highlight"> *</span></label>
             <input type="text" name="client_secret" id="client_secret-{{ getId }}" value="{{ getClientSecret }}" required>
 
             <p class="preview-label">{{ preview }}</p>

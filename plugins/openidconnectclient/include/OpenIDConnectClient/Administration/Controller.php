@@ -97,7 +97,7 @@ class Controller {
         $name                   = $request->get('name');
         $authorization_endpoint = $request->get('authorization_endpoint');
         $token_endpoint         = $request->get('token_endpoint');
-        $userinfo_endpoint      = $request->get('userinfo_endpoint');
+        $userinfo_endpoint      = $request->get('userinfo_endpoint') ? $request->get('userinfo_endpoint') : '';
         $client_id              = $request->get('client_id');
         $client_secret          = $request->get('client_secret');
         $icon                   = $request->get('icon');
@@ -141,7 +141,7 @@ class Controller {
         $name                   = $request->get('name');
         $authorization_endpoint = $request->get('authorization_endpoint');
         $token_endpoint         = $request->get('token_endpoint');
-        $userinfo_endpoint      = $request->get('userinfo_endpoint');
+        $userinfo_endpoint      = $request->get('userinfo_endpoint') ? $request->get('userinfo_endpoint') : '';
         $client_id              = $request->get('client_id');
         $client_secret          = $request->get('client_secret');
         $icon                   = $request->get('icon');
