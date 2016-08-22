@@ -90,7 +90,7 @@ class PermissionController extends BaseFrsPresenter
             $this->getFrsUGroupsByPermission($project, FRSPermission::FRS_READER, $all_project_ugroups)
         );
 
-        $renderer->renderToPage('permissions-presenter', $presenter);
+        $renderer->renderToPage('permissions-global-presenter', $presenter);
     }
 
     private function getFrsUGroupsByPermission(Project $project, $permission_type, array $project_ugroups)
