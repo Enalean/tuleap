@@ -70,7 +70,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $repository->setRemoteServerMigrationStatus(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
             $repository->getBackend()->updateRepoConf($repository);
 
-            $this->done("Created project $gerrit_project on ". $server->getHost());
+            $this->done("Created project $gerrit_project on ". $server->getBaseUrl());
             return true;
         } catch (Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException $e) {
             $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
@@ -160,7 +160,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         if ($with_link) {
             try {
                 $server = $this->server_factory->getServerById($remote_server_id);
-                $txt    = $server->getHost();
+                $txt    = $server->getBaseUrl();
             } catch (Git_RemoteServer_NotFoundException $exception) {
                 $txt .= " GERRIT SERVER DELETED";
             }

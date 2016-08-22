@@ -63,7 +63,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
     public function verbalizeParameters($with_link) {
         if ($with_link) {
             $server = $this->getServer();
-            return 'Update SSH replication key of gerrit server '.$server->getHost().' (Id: '.$server->getId().')';
+            return 'Update SSH replication key of gerrit server '. $server->getBaseUrl() .' (Id: '.$server->getId().')';
         } else {
             return $this->getServerId();
         }
