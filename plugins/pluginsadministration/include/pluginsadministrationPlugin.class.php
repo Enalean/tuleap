@@ -14,7 +14,6 @@ class PluginsAdministrationPlugin extends Plugin {
     function PluginsAdministrationPlugin($id) {
         $this->Plugin($id);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
-        $this->_addHook('site_admin_menu_hook',   'siteAdminHooks', true);
         $this->_addHook('cssfile', 'cssFile', false);
     }
     
@@ -25,21 +24,12 @@ class PluginsAdministrationPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
-    function siteAdminHooks($hook, $params) {
-        $site_url  = $this->getPluginPath().'/';
-        $site_name = $GLOBALS['Language']->getText('plugin_pluginsadministration','descriptor_name');
-        switch ($hook) {
-            case 'site_admin_menu_hook':
-                $HTML =& $params['HTML'];
-                $HTML->menu_entry($site_url, $site_name);
-                break;
-            case 'site_admin_option_hook':
-                echo '<li><a href="',$site_url,'">',$site_name,'</a></li>';
-                break;
-            default:
-                break;
-        }
+
+    function siteAdminHooks($hook, $params)
+    {
+        $site_url  = $this->getPluginPath() . '/';
+        $site_name = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'descriptor_name');
+        echo '<li><a href="', $site_url, '">', $site_name, '</a></li>';
     }
     
     function cssFile($params) {
