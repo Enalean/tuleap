@@ -1,22 +1,24 @@
 Version 8.19 (Not Released Yet)
+	== Enhancement ==
+	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
 
-    == Development ==
-    * request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
-    * request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in Git plugin)
-    * request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in Tracker plugin)
-    * request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usages in src/www/admin)
-    * request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/docman)
+	== Development ==
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in Git plugin)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in Tracker plugin)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usages in src/www/admin)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/docman)
 
-    == Bug fix ==
-    * request #9406: Missing login CSRF protection
+	== Bug fix ==
+	* request #9406: Missing login CSRF protection
 
 	== Plugins ==
-    * tracker: 5.990
-    * git: 4.252
-    * ldap: 3.107
+	* tracker: 5.990
+	* git: 4.252
+	* ldap: 3.107
 
-    == Themes ==
-    * FlamingParrot: 1.148
+	== Themes ==
+	* FlamingParrot: 1.148
 
 Version 8.18 (Thursday, August 18th 2016)
 	== Enhancement ==
