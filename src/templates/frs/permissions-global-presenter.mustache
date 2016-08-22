@@ -1,0 +1,13 @@
+<h2>{{ permission_title }}</h2>
+
+<div>
+    <div>
+        <p> {{ administrator_info }} </p>
+    </div>
+    <form method="POST" action="{{ frs_admins_form_action }}">
+        {{> permissions-presenter }}
+        <p>
+            <input class="btn btn-primary" type="submit" value="{{ frs_admins_submit_button }}" name="submit"/>
+        </p>
+    </form>
+</div>
