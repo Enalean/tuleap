@@ -12,6 +12,7 @@ Version 8.19 (Not Released Yet)
 
 	== Bug fix ==
 	* request #9406: Missing login CSRF protection
+	* story #9393: SVN custom logs are not working in new installation
 
 	== Plugins ==
 	* tracker: 5.990
