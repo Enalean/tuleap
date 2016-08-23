@@ -28,11 +28,14 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
         $this->removeExistingUgroupNodes($field_change_xml);
 
         $field_change_xml['use_perm'] = (int)$submitted_value['use_artifact_permissions'];
-        array_walk(
-            $submitted_value['u_groups'],
-            array($this, 'appendUgroupToFieldChangeNode'),
-            $field_change_xml
-        );
+
+        if (isset($submitted_value['u_groups'])) {
+            array_walk(
+                $submitted_value['u_groups'],
+                array($this, 'appendUgroupToFieldChangeNode'),
+                $field_change_xml
+            );
+        }
     }
 
     private function appendUgroupToFieldChangeNode(
