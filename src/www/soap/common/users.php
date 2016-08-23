@@ -57,16 +57,25 @@ function getUserInfo($sessionKey, $user_id) {
 function checkUsersExistence($sessionKey, $users) {
     if (session_continue($sessionKey)){
         try {
-            $existingUsers = array();
-            $um            = UserManager::instance();
-            $currentUser   = $um->getCurrentUser();
+            $existingUsers         = array();
+            $user_manager          = UserManager::instance();
+            $currentUser           = $user_manager->getCurrentUser();
+            $email_identifier_type = 'email:';
 
             foreach ($users as $userIdentifier) {
-                $userObj  = $um->getUserByIdentifier($userIdentifier);
-                $userInfo = user_to_soap($userIdentifier, $userObj, $currentUser);
+                if (strpos($userIdentifier, $email_identifier_type) === 0) {
+                    $user_email = substr($userIdentifier, strlen($email_identifier_type));
+                    $users      = $user_manager->getAllUsersByEmail($user_email);
 
-                if ($userInfo) {
-                    $existingUsers[] = $userInfo;
+                } else {
+                    $users = array($user_manager->getUserByIdentifier($userIdentifier));
+                }
+
+                foreach ($users as $user) {
+                    $user_info = user_to_soap($userIdentifier, $user, $currentUser);
+                    if ($user_info) {
+                        $existingUsers[] = $user_info;
+                    }
                 }
             }
 
