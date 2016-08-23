@@ -189,7 +189,7 @@ class XMLRepositoryImporter
         // Write .SVNAccessFile
         $writer = new SVN_AccessFile_Writer($repo->getSystemPath());
         $logger->info("[svn {$this->name}] Save Access File version #" . $access_file->getVersionNumber() . " to " . $writer->filename(). ": " . $access_file->getContent());
-        if(!$writer->write_with_defaults($this->access_file_contents)) {
+        if(!$writer->write_with_defaults($access_file->getContent())) {
             throw new XMLImporterException("Could not write to " . $writer->filename());
         }
     }
