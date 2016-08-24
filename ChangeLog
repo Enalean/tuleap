@@ -17,7 +17,7 @@ Version 8.19 (Not Released Yet)
 	* request #9407: HTTPS is not properly detected when behind a reverse proxy
 
 	== Plugins ==
-	* tracker: 5.991
+	* tracker: 5.992
 	* git: 4.253
 	* ldap: 3.107
 	* mediawiki: 0.124
