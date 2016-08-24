@@ -111,11 +111,17 @@ $sys_cookie_prefix = 'TULEAP';
 //
 //
 
-// The ip address of the node server.
-// For example : $node_server = '192.168.1.13:443';
+// The ip address of the nodejs server.
 // Server node support only the protocol https
 // Specify the port which the server listens
+// If you want a nodejs server independently of Tuleap server specify two variables :
+// - nodejs_server is a FQDN/public IP for the communication between the browser and nodejs.
+//      For example : $node_server = 'rt.example.com:443';
+// - nodejs_server_int is a FQDN/private IP for the communication between Tuleap and nodejs.
+//      For example : $node_server_int = '192.168.1.13:443';
+// Otherwise set the ip only on $nodejs_server.
 $nodejs_server = '';
+$nodejs_server_int = '';
 
 // The private key sharing between tuleap server and nodejs server.
 // To protect data sending between servers.

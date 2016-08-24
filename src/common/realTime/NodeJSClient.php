@@ -31,7 +31,7 @@ class NodeJSClient implements Client {
     private $url;
 
     public function __construct() {
-        $this->url = 'https://' . ForgeConfig::get('nodejs_server');
+        $this->url = 'https://' . $this->getNodeJsServerAddress();
     }
 
     /**
@@ -42,7 +42,7 @@ class NodeJSClient implements Client {
      * @throws \Http_ClientException
      */
     public function sendMessage(MessageDataPresenter $message) {
-        if (ForgeConfig::get('nodejs_server') !== '') {
+        if ($this->getNodeJsServerAddress() !== '') {
             $http_curl_client = new Http_Client();
 
             $options = array(
@@ -63,5 +63,11 @@ class NodeJSClient implements Client {
                 $logger->error('Unable to reach nodejs server '. $this->url .' -> '. $e->getMessage());
             }
         }
+    }
+
+    private function getNodeJsServerAddress()
+    {
+        return ForgeConfig::get('nodejs_server_int') !== '' ?
+            ForgeConfig::get('nodejs_server_int') : ForgeConfig::get('nodejs_server');
     }
 }
