@@ -1,3 +1,6 @@
+Version 0.79 - Tuleap 8.19
+    * request #9416 SVN import doesn't properly take into account empty ugroups
+
 Version 0.78 - Tuleap 8.18
     * request #9388: An error is thrown when a user tries to install the SVN plugin
 
