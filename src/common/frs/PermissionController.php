@@ -31,6 +31,8 @@ use Feedback;
 use PFUser;
 use User_ForgeUserGroupFactory;
 use ProjectUGroup;
+use ServiceFile;
+use TemplateRenderer;
 
 class PermissionController extends BaseFrsPresenter
 {
@@ -59,27 +61,16 @@ class PermissionController extends BaseFrsPresenter
         $this->permission_manager = $permission_manager;
     }
 
-    public function displayToolbar(Project $project)
-    {
-        $renderer          = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-
-        $title             = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
-        $toolbar_presenter = new ToolbarPresenter($project, $title);
-
-        $toolbar_presenter->setPermissionIsActive();
-        $toolbar_presenter->displaySectionNavigation();
-
-        $project->getService(Service::FILE)->displayHeader($project, $title);
-        $renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
-    }
-
     public function displayPermissions(Project $project, PFUser $user)
     {
         if (! $this->permission_manager->isAdmin($project, $user)) {
             return;
         }
 
-        $renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $service  = $project->getService(Service::FILE);
+        $renderer = $this->getRenderer();
+
+        $this->displayHeader($service, $renderer);
 
         $all_project_ugroups   = $this->ugroup_factory->getAllForProject($project);
         $admin_project_ugroups = $this->ugroup_factory->getProjectUGroupsWithAdministratorAndMembers($project);
@@ -91,6 +82,8 @@ class PermissionController extends BaseFrsPresenter
         );
 
         $renderer->renderToPage('permissions-global-presenter', $presenter);
+
+        $service->displayFooter();
     }
 
     private function getFrsUGroupsByPermission(Project $project, $permission_type, array $project_ugroups)
@@ -151,8 +144,25 @@ class PermissionController extends BaseFrsPresenter
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('file_file_utils', 'updated_permissions'));
     }
 
-    private function getTemplateDir()
+    private function displayHeader(ServiceFile $service, TemplateRenderer $renderer)
     {
-        return ForgeConfig::get('codendi_dir') .'/src/templates/frs';
+        $project = $service->getProject();
+
+        $title             = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
+        $toolbar_presenter = new ToolbarPresenter($project, $title);
+
+        $toolbar_presenter->setPermissionIsActive();
+        $toolbar_presenter->displaySectionNavigation();
+
+        $service->displayHeader($project, $title);
+        $renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
+    }
+
+    /** @return TemplateRenderer */
+    private function getRenderer()
+    {
+        $template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/frs';
+
+        return TemplateRendererFactory::build()->getRenderer($template_dir);
     }
 }

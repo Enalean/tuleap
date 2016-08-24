@@ -46,7 +46,7 @@ class PermissionPresenter extends BaseFrsPresenter
         $this->ugroups_admin             = $ugroups_admin;
         $this->ugroups_reader            = $ugroups_reader;
         $this->project_id                = $project->getId();
-        $this->frs_admins_form_action    = FRS_BASE_URL .'/admin/?'. http_build_query(array(
+        $this->frs_admins_form_action    = '/file/admin/?'. http_build_query(array(
             'group_id' => $this->project_id,
             'action'   => 'admin-frs-admins'
         ));
