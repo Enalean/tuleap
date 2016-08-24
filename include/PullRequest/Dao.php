@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest;
 
 use DataAccessObject;
+use Tuleap\PullRequest\Criterion\ISearchOnStatus;
 
 class Dao extends DataAccessObject
 {
@@ -169,19 +170,44 @@ class Dao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function getPaginatedPullRequests($repository_id, $limit, $offset)
+    public function getPaginatedPullRequests(
+        $repository_id,
+        ISearchOnStatus $criterion,
+        $limit,
+        $offset
+    )
     {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $limit         = $this->da->escapeInt($limit);
-        $offset        = $this->da->escapeInt($offset);
+        $repository_id          = $this->da->escapeInt($repository_id);
+        $limit                  = $this->da->escapeInt($limit);
+        $offset                 = $this->da->escapeInt($offset);
+        $where_status_statement = $this->getStatusStatements($criterion);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_pullrequest_review
-                WHERE repository_id = $repository_id OR repo_dest_id = $repository_id
+                WHERE (repository_id = $repository_id OR repo_dest_id = $repository_id)
+                AND $where_status_statement
                 LIMIT $limit
                 OFFSET $offset";
 
         return $this->retrieve($sql);
+    }
+
+    private function getStatusStatements(ISearchOnStatus $criterion) {
+        $where_status_statement = '1';
+
+        if ($criterion->shouldRetrieveOpenPullRequests() && $criterion->shouldRetrieveClosedPullRequests()) {
+            return $where_status_statement;
+        } else {
+            if ($criterion->shouldRetrieveOpenPullRequests()) {
+                $where_status_statement = 'status IN ('. $this->da->quoteSmart(PullRequest::STATUS_REVIEW) .')';
+            }
+
+            if ($criterion->shouldRetrieveClosedPullRequests()) {
+                $where_status_statement = 'status IN ('. $this->da->quoteSmart(PullRequest::STATUS_ABANDONED) .', '. $this->da->quoteSmart(PullRequest::STATUS_MERGED) .')';
+            }
+        }
+
+        return $where_status_statement;
     }
 
     public function markAsAbandoned($pull_request_id)

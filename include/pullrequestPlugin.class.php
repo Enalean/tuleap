@@ -171,6 +171,7 @@ class pullrequestPlugin extends Plugin
 
         $params['result'] = $repository_resource->getPaginatedPullRequests(
             $params['repository'],
+            $params['query'],
             $params['limit'],
             $params['offset']
         );

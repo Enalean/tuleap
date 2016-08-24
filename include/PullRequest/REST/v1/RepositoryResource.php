@@ -23,6 +23,8 @@ namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
+use Luracast\Restler\RestException;
 use GitRepositoryFactory;
 use GitRepository;
 use ProjectManager;
@@ -46,20 +48,30 @@ class RepositoryResource
     /** @var UserManager */
     private $user_manager;
 
+    /** @var QueryToCriterionConverter */
+    private $query_to_criterion_converter;
+
     public function __construct()
     {
-        $this->pull_request_dao     = new PullRequestDao();
-        $this->pull_request_factory = new PullRequestFactory($this->pull_request_dao, ReferenceManager::instance());
+        $this->pull_request_dao       = new PullRequestDao();
+        $this->pull_request_factory   = new PullRequestFactory($this->pull_request_dao, ReferenceManager::instance());
         $this->git_repository_factory = new GitRepositoryFactory(
             new GitDao(),
             ProjectManager::instance()
         );
-        $this->user_manager = UserManager::instance();
+        $this->user_manager                 = UserManager::instance();
+        $this->query_to_criterion_converter = new QueryToCriterionConverter();
     }
 
-    public function getPaginatedPullRequests(GitRepository $repository, $limit, $offset)
+    public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset)
     {
-        $result   = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $limit, $offset);
+        try {
+            $criterion = $this->query_to_criterion_converter->convert($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $result   = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criterion, $limit, $offset);
         $user     = $this->user_manager->getCurrentUser();
 
         $total_size = (int) $this->pull_request_dao->foundRows();
