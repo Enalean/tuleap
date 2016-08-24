@@ -29,6 +29,7 @@ use Tuleap\Svn\Dao;
 use \ProjectManager;
 use \ProjectDao;
 use EventManager;
+use ForgeConfig;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
@@ -54,7 +55,7 @@ class RepositoryManagerTest extends TuleapTestCase
         $event_manager               = EventManager::instance();
         $backend                     = Backend::instance(Backend::SVN);
         $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-        $system_event_manager        = SystemEventManager::instance();
+        $system_event_manager        = mock('SystemEventManager');
         $this->manager               = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -81,8 +82,10 @@ class RepositoryManagerTest extends TuleapTestCase
         );
     }
 
-    public function tearDown(){
+    public function tearDown()
+    {
         EventManager::clearInstance();
+        Backend::clearInstances();
     }
 
     public function itReturnsRepositoryFromAPublicPath(){
@@ -123,7 +126,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
 
         $this->project_manager = ProjectManager::testInstance($this->project_dao);
         $event_manager         = EventManager::instance();
-        $system_event_manager  = SystemEventManager::instance();
+        $system_event_manager  = mock('SystemEventManager');
         $this->manager         = new RepositoryManager(
             $this->dao,
             $this->project_manager,

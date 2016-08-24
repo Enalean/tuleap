@@ -209,7 +209,7 @@ class RepositoryManager
         return $this->getRepositoryByName($project, $repository_name);
     }
 
-    public function getArchivedRepositoriesToPurge($retention_date)
+    private function getArchivedRepositoriesToPurge($retention_date)
     {
         $deleted_repositories  = $this->dao->getDeletedRepositoriesToPurge($retention_date);
         return $this->instantiateRepositoriesFromRow($deleted_repositories);
@@ -316,9 +316,10 @@ class RepositoryManager
 
         foreach ($archived_repositories as $repository) {
             try {
-                $this->archiveBeforePurge($repository);
-                $this->deleteArchivedRepository($repository);
-                $this->destructor->delete($repository);
+                if ($this->archiveBeforePurge($repository)) {
+                    $this->deleteArchivedRepository($repository);
+                    $this->destructor->delete($repository);
+                }
             } catch (Exception $exception) {
                 $this->logger->error($exception->getMessage());
             }
@@ -392,6 +393,8 @@ class RepositoryManager
                 $this->logger->warn('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge :[' . $params['error'] . ']');
                 $this->logger->warn('An error occured while archiving SVN repository: ' . $repository->getName());
             }
+
+            return $params['status'];
         }
     }
 
