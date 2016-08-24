@@ -1316,25 +1316,6 @@ todo "Default admin credentials are login: admin / password: $siteadmin_password
 todo "CHANGE DEFAULT CREDENTIALS BEFORE FIRST USAGE"
 
 ##############################################
-# Crontab configuration
-#
-
-# XXX: Writing to /tmp/foo as root is a security issue, should use mktemp
-# or similar, or better we should use /etc/cron.d/tuleap
-
-echo "Installing root user crontab..."
-crontab -u root -l > /tmp/cronfile
-
-$GREP -q "Tuleap" /tmp/cronfile
-if [ $? -ne 0 ]; then
-    $CAT <<EOF >>/tmp/cronfile
-# Tuleap: weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /usr/lib/$PROJECT_NAME/bin/backup_job
-EOF
-    crontab -u root /tmp/cronfile
-fi
-
-##############################################
 # Create Tuleap profile script
 #
 
