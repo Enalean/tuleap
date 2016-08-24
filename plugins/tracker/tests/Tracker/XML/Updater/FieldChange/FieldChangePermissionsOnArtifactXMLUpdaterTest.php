@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,12 +54,24 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
         $this->assertEqual((int)$this->field_change_xml->ugroup[1]['ugroup_id'], 1002);
     }
 
-    public function itUpdatesTheUsePerm() {
+    public function  itUpdatesTheUsePerm() {
         $this->updater->update(
             $this->field_change_xml,
             array(
                 'use_artifact_permissions' => 0,
                 'u_groups' => array()
+            )
+        );
+
+        $this->assertEqual((int)$this->field_change_xml['use_perm'], 0);
+        $this->assertEqual(count($this->field_change_xml->ugroup), 0);
+    }
+
+    public function  itUpdatesTheUsePermEvenWhenUGroupsAreNotSubmitted() {
+        $this->updater->update(
+            $this->field_change_xml,
+            array(
+                'use_artifact_permissions' => 0
             )
         );
 
