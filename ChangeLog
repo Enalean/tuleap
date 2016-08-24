@@ -15,18 +15,20 @@ Version 8.19 (Not Released Yet)
 	* story #9393: SVN custom logs are not working in new installation
 	* request #9414: Removing the backup cron for new installation
 	* request #9407: HTTPS is not properly detected when behind a reverse proxy
+	* request #9122: Don't remove deleted items if copy doesn't work
 
 	== Plugins ==
 	* tracker: 5.992
-	* git: 4.254
+	* git: 4.255
 	* ldap: 3.107
 	* mediawiki: 0.124
 	* pluginsadministration: 1.20
 	* userlog: 1.10
-	* svn: 0.79
+	* svn: 0.80
 	* openidconnectclient: 0.26
 	* statistics: 0.64
 	* webdav: 1.9.19
+	* docman: 2.26.119
 
 	== Themes ==
 	* FlamingParrot: 1.149

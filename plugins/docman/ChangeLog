@@ -1,3 +1,6 @@
+Version 2.26.119 - Tuleap 8.19
+    * request #9122: Don't remove deleted items if copy doesn't work
+
 Version 2.26.118 - Tuleap 8.18
     * request #9375 Gulpify sass
 
