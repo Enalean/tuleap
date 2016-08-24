@@ -161,13 +161,14 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $this->assertEqual($field->getDefaultValue(), 'b300,b200');
     }
 
-    public function testOpenListWithNoValue() {
+    public function itVerifiesThatOpenListDefaultValueIsNotBindedToSomethingWhenAnAdministratorHaveNotDefinedAPreference()
+    {
         stub($this->bind)->getDefaultValues()->returns(array());
 
         $field = partial_mock('Tracker_FormElement_Field_OpenList', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), 'b'.Tracker_FormElement_Field_List_Bind::NONE_VALUE);
+        $this->assertEqual($field->getDefaultValue(), '');
     }
 
     public function testSubmittedByWithOneValue() {
