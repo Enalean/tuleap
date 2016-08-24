@@ -14,9 +14,10 @@ Version 8.19 (Not Released Yet)
 	* request #9406: Missing login CSRF protection
 	* story #9393: SVN custom logs are not working in new installation
 	* request #9414: Removing the backup cron for new installation
+	* request #9407: HTTPS is not properly detected when behind a reverse proxy
 
 	== Plugins ==
-	* tracker: 5.990
+	* tracker: 5.991
 	* git: 4.253
 	* ldap: 3.107
 	* mediawiki: 0.124
@@ -24,9 +25,14 @@ Version 8.19 (Not Released Yet)
 	* userlog: 1.10
 	* svn: 0.79
 	* openidconnectclient: 0.26
+	* statistics: 0.64
+	* webdav: 1.9.19
 
 	== Themes ==
 	* FlamingParrot: 1.149
+
+    == Api ==
+	* REST API: 1.17
 
 Version 8.18 (Thursday, August 18th 2016)
 	== Enhancement ==

@@ -1,3 +1,6 @@
+Version 5.991 - Tuleap 8.19
+    * request #9407: HTTPS is not properly detected when behind a reverse proxy
+
 Version 5.990 - Tuleap 8.19
     * Remove split usage in Tracker plugin
 
