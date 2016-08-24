@@ -18,7 +18,7 @@ Version 8.19 (Not Released Yet)
 	* request #9122: Don't remove deleted items if copy doesn't work
 
 	== Plugins ==
-	* tracker: 5.992
+	* tracker: 5.993
 	* git: 4.255
 	* ldap: 3.107
 	* mediawiki: 0.124

@@ -1,3 +1,6 @@
+Version 5.993 - Tuleap 8.19
+    * request #9420: Openlist field can have an erroneous value when an artifact is created
+
 Version 5.992 - Tuleap 8.19
     * request #9331: Copy artifact - warning when permission on field is used
 
