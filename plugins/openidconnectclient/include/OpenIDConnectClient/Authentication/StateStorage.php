@@ -27,7 +27,8 @@ class StateStorage extends Session {
     public function saveState(\InoOicClient\Oic\Authorization\State\State $state) {
         $stored_state = new SessionState(
             $state->getSecretKey(),
-            $state->getReturnTo()
+            $state->getReturnTo(),
+            $state->getNonce()
         );
         $this->container->offsetSet(self::VAR_AUTHORIZATION_STATE, $stored_state);
     }

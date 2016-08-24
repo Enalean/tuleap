@@ -29,11 +29,12 @@ class StateManagerTest extends TuleapTestCase {
     public function itValidatesValidState() {
         $key           = 'Tuleap_key';
         $return_to     = '/return_to';
+        $nonce         = 'random_string';
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
         $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
-        $state         = new State(1234, $return_to, $key);
+        $state         = new State(1234, $return_to, $key, $nonce);
         $signed_state  = $state->getSignedState();
-        $stored_state  = new SessionState($key, $return_to);
+        $stored_state  = new SessionState($key, $return_to, $nonce);
         $state_storage->setReturnValue('loadState', $stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
@@ -42,11 +43,12 @@ class StateManagerTest extends TuleapTestCase {
 
     public function itDoesNotValidateInvalidState() {
         $return_to     = '/return_to';
+        $nonce         = 'random_string';
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
         $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
-        $state         = new State(1234, $return_to, 'key1');
+        $state         = new State(1234, $return_to, 'key1', $nonce);
         $signed_state  = $state->getSignedState();
-        $stored_state  = new SessionState('key2', $return_to);
+        $stored_state  = new SessionState('key2', $return_to, $nonce);
         $state_storage->setReturnValue('loadState', $stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);

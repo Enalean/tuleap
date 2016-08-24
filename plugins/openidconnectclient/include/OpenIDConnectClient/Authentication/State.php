@@ -25,22 +25,37 @@ use Firebase\JWT\JWT;
 class State extends \InoOicClient\Oic\Authorization\State\State {
     const SIGNATURE_ALGORITHM = 'HS256';
 
+    /**
+     * @var int
+     */
     private $provider_id;
+    /**
+     * @var string
+     */
     private $return_to;
+    /**
+     * @var string
+     */
     private $secret_key;
+    /**
+     * @var string
+     */
+    private $nonce;
 
-    public function __construct($provider_id, $return_to, $secret_key) {
+    public function __construct($provider_id, $return_to, $secret_key, $nonce)
+    {
         $this->provider_id = $provider_id;
         $this->return_to   = $return_to;
         $this->secret_key  = $secret_key;
+        $this->nonce       = $nonce;
     }
 
     /**
      * @return State
      */
-    public static function createFromSignature($signed_state, $return_to, $secret_key) {
+    public static function createFromSignature($signed_state, $return_to, $secret_key, $nonce) {
         $provider_id = JWT::decode($signed_state, $secret_key, array(self::SIGNATURE_ALGORITHM));
-        return new State($provider_id, $return_to, $secret_key);
+        return new State($provider_id, $return_to, $secret_key, $nonce);
     }
 
     /**
@@ -60,5 +75,13 @@ class State extends \InoOicClient\Oic\Authorization\State\State {
 
     public function getSecretKey() {
         return $this->secret_key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNonce()
+    {
+        return $this->nonce;
     }
 }

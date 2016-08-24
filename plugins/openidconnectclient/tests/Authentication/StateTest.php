@@ -28,11 +28,12 @@ class StateTest extends TuleapTestCase {
         $secret_key  = 'Tuleap';
         $return_to   = '/return_to';
         $provider_id = 1234;
+        $nonce       = 'random_string';
 
-        $state        = new State($provider_id, $return_to, $secret_key);
+        $state        = new State($provider_id, $return_to, $secret_key, $nonce);
         $signed_state = $state->getSignedState();
 
-        $this->assertEqual($state, State::createFromSignature($signed_state, $return_to, $secret_key));
+        $this->assertEqual($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce));
     }
 
 }

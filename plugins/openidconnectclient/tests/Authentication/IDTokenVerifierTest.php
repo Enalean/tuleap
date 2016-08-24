@@ -43,16 +43,18 @@ class IDTokenVerifierTest extends \TuleapTestCase
     public function itRejectsIDTokenIfPartsAreMissingInTheJWT()
     {
         $provider          = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        $nonce             = 'random_string';
         $id_token_verifier = new IDTokenVerifier();
         $fake_id_token     = 'aaaaa.aaaaa';
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
-        $id_token_verifier->validate($provider, $fake_id_token);
+        $id_token_verifier->validate($provider, $nonce, $fake_id_token);
     }
 
     public function itRejectsIDTokenIfPayloadCantBeRead()
     {
         $provider          = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        $nonce             = 'random_string';
         $id_token_verifier = new IDTokenVerifier();
         $fake_id_token     = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.' .
             'fail.' .
@@ -60,7 +62,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
             'ZyuhtF39yxJPAjUESwxk2J5k_4zM3O-vtd1Ghyo4IbqKKSy6J9mTniYJPenn5-HIirE';
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
-        $id_token_verifier->validate($provider, $fake_id_token);
+        $id_token_verifier->validate($provider, $nonce, $fake_id_token);
     }
 
     public function itRejectsIDTokenIfSubjectIdentifierIsNotPresent()
@@ -68,6 +70,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
         stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
         stub($provider)->getClientId()->returns('client_id');
+        $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
         $id_token          = JWT::encode(
@@ -80,7 +83,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
         );
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
-        $id_token_verifier->validate($provider, $id_token);
+        $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
     public function itRejectsIDTokenIfAudienceClaimIsInvalid()
@@ -88,6 +91,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
         stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
         stub($provider)->getClientId()->returns('client_id');
+        $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
         $id_token          = JWT::encode(
@@ -101,7 +105,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
         );
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
-        $id_token_verifier->validate($provider, $id_token);
+        $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
     public function itRejectsIDTokenIfAudienceClaimIsNotPresentInTheList()
@@ -109,6 +113,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
         stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
         stub($provider)->getClientId()->returns('client_id');
+        $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
         $id_token          = JWT::encode(
@@ -122,7 +127,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
         );
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
-        $id_token_verifier->validate($provider, $id_token);
+        $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
     public function itRejectsIDTokenIfIssuerIdentifierIsInvalid()
@@ -130,20 +135,45 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
         stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
         stub($provider)->getClientId()->returns('client_id');
+        $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
         $id_token          = JWT::encode(
             array(
-                'iss' => 'evil.example.com',
-                'aud' => 'client_id',
-                'sub' => '123'
+                'nonce' => $nonce,
+                'iss'   => 'evil.example.com',
+                'aud'   => 'client_id',
+                'sub'   => '123'
             ),
             $this->rsa_key,
             'RS256'
         );
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
-        $id_token_verifier->validate($provider, $id_token);
+        $id_token_verifier->validate($provider, $nonce, $id_token);
+    }
+
+    public function itRejectsIDTokenIfNonceIsInvalid()
+    {
+        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
+        stub($provider)->getClientId()->returns('client_id');
+        $nonce    = 'random_string';
+
+        $id_token_verifier = new IDTokenVerifier();
+        $id_token          = JWT::encode(
+            array(
+                'nonce' => 'different_random_string',
+                'iss'   => 'evil.example.com',
+                'aud'   => 'client_id',
+                'sub'   => '123'
+            ),
+            $this->rsa_key,
+            'RS256'
+        );
+
+        $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
+        $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
     public function itAcceptsAValidIDToken()
@@ -151,12 +181,14 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
         stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
         stub($provider)->getClientId()->returns('client_id_2');
+        $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
         $id_token_content  = array(
-            'iss' => 'example.com',
-            'aud' => array('client_id_1', 'client_id_2'),
-            'sub' => '123'
+            'nonce' => $nonce,
+            'iss'   => 'example.com',
+            'aud'   => array('client_id_1', 'client_id_2'),
+            'sub'   => '123'
         );
         $id_token          = JWT::encode(
             $id_token_content,
@@ -164,7 +196,7 @@ class IDTokenVerifierTest extends \TuleapTestCase
             'RS256'
         );
 
-        $verified_id_token = $id_token_verifier->validate($provider, $id_token);
+        $verified_id_token = $id_token_verifier->validate($provider, $nonce, $id_token);
         $this->assertIdentical($verified_id_token, $id_token_content);
     }
 }

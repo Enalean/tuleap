@@ -138,7 +138,7 @@ class Flow extends Basic {
             $token_response   = $this->getTokenDispatcher()->sendTokenRequest($token_request);
             $access_token     = $token_response->getAccessToken();
             $encoded_id_token = $token_response->getIdToken();
-            $id_token         = $this->id_token_verifier->validate($provider, $encoded_id_token);
+            $id_token         = $this->id_token_verifier->validate($provider, $state->getNonce(), $encoded_id_token);
         } catch (Exception $ex) {
             throw new TokenRequestException(
                 sprintf("Exception during token request: [%s] %s", get_class($ex), $ex->getMessage()),
