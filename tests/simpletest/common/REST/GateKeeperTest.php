@@ -22,15 +22,16 @@ use Tuleap\REST\GateKeeper;
 abstract class GateKeeperTest  extends TuleapTestCase {
     protected $user;
     protected $anonymous;
+    protected $request;
+    protected $gate_keeper;
 
     public function setUp() {
         parent::setUp();
         $this->user        = new PFUser(array('user_id' => 112));
         $this->anonymous   = new PFUser(array('user_id' => 0));
         $this->gate_keeper = new GateKeeper();
-        $this->preserveServer('HTTPS');
+        $this->request     = mock('HTTPRequest');
         $this->preserveServer('HTTP_REFERER');
-        $this->preserveServer('HTTP_HOST');
     }
 
     public function tearDown() {
@@ -43,36 +44,36 @@ class GateKeeper_TokenAndHTTPS_Test  extends GateKeeperTest {
 
     public function setUp() {
         parent::setUp();
-        $_SERVER['HTTP_REFERER']      = 'http://example.com/bla';
-        $_SERVER['HTTP_HOST']         = 'example.com';
+        $_SERVER['HTTP_REFERER'] = 'http://example.com/bla';
+        stub($this->request)->getServerUrl()->returns('http://example.com');
     }
 
     public function itThrowsExceptionWhenTokenAuthenticationWithoutSSL() {
-        unset($_SERVER['HTTPS']);
+        stub($this->request)->isSecure()->returns(false);
         $this->expectException('Exception');
 
-        $this->gate_keeper->assertAccess($this->anonymous);
+        $this->gate_keeper->assertAccess($this->anonymous, $this->request);
     }
 
     public function itLetsPassWhenTokenAuthenticationWithSSL() {
-        $_SERVER['HTTPS'] = 1;
+        stub($this->request)->isSecure()->returns(true);
 
-        $this->gate_keeper->assertAccess($this->anonymous);
+        $this->gate_keeper->assertAccess($this->anonymous, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function itLetsPassWhenTokenAuthenticationWithoutSSLButWithDebug() {
-        unset($_SERVER['HTTPS']);
+        stub($this->request)->isSecure()->returns(false);
         $GLOBALS['DEBUG_MODE'] = 1;
 
-        $this->gate_keeper->assertAccess($this->anonymous);
+        $this->gate_keeper->assertAccess($this->anonymous, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function itLetPassHTTPWhenCookieAuthentication() {
-        unset($_SERVER['HTTPS']);
+        stub($this->request)->isSecure()->returns(false);
 
-        $this->gate_keeper->assertAccess($this->user);
+        $this->gate_keeper->assertAccess($this->user, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
     }
 }
@@ -81,25 +82,25 @@ class GateKeeper_CSRF_Test extends GateKeeperTest {
 
     public function itLetPassWhenReferMatchesHost() {
         $_SERVER['HTTP_REFERER'] = 'http://example.com/bla';
-        $_SERVER['HTTP_HOST']    = 'example.com';
+        stub($this->request)->getServerUrl()->returns('http://example.com');
 
-        $this->gate_keeper->assertAccess($this->user);
+        $this->gate_keeper->assertAccess($this->user, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
     public function itThrowsExceptionWhenReferIsDiffentFromHost() {
         $_SERVER['HTTP_REFERER'] = 'http://wannabe_attacker.com/bla';
-        $_SERVER['HTTP_HOST']    = 'example.com';
+        stub($this->request)->getServerUrl()->returns('http://example.com');
 
         $this->expectException('Exception');
-        $this->gate_keeper->assertAccess($this->user);
+        $this->gate_keeper->assertAccess($this->user, $this->request);
     }
 
     public function itThrowsExceptionWhenNoReferer() {
         unset($_SERVER['HTTP_REFERER']);
-        $_SERVER['HTTP_HOST']    = 'example.com';
+        stub($this->request)->getServerUrl()->returns('http://example.com');
 
         $this->expectException('Exception');
-        $this->gate_keeper->assertAccess($this->user);
+        $this->gate_keeper->assertAccess($this->user, $this->request);
     }
 }

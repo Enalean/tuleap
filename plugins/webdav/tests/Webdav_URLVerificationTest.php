@@ -20,19 +20,23 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial(
-    'Webdav_URLVerification',
-    'Webdav_URLVerificationTestVersion',
-    array('getWebDAVHost', 'forbiddenError', 'isException')
-);
+class Webdav_URLVerificationTest extends TuleapTestCase {
 
-class Webdav_URLVerificationTest extends UnitTestCase {
+    private $request;
+    private $webdavURLVerification;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->request = mock('HTTPRequest');
+        $this->webdavURLVerification = partial_mock('Webdav_URLVerification', array('getWebDAVHost', 'forbiddenError', 'isException'));
+    }
 
     public function tearDown() {
-        parent::tearDown();
         unset($GLOBALS['sys_force_ssl']);
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_https_host']);
+        parent::tearDown();
     }
 
     function testAssertValidUrlHTTPAndForceSslEquals0() {
@@ -42,30 +46,28 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_https_host']     = 'example.com';
         $GLOBALS['sys_force_ssl'] = 0;
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
-        $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectNever('isException'); // no parent call
+        $this->webdavURLVerification->expectNever('forbiddenError');
+        $this->webdavURLVerification->expectNever('isException'); // no parent call
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
     function testAssertValidUrlHTTPSAndForceSslEquals0() {
-        $server = array('HTTP_HOST' => 'webdav.codendi.org',
-                        'HTTPS'     => 'on');
+        $server = array('HTTP_HOST' => 'webdav.codendi.org');
+        stub($this->request)->isSecure()->returns(true);
 
         $GLOBALS['sys_default_domain'] = 'example.com';
         $GLOBALS['sys_https_host']     = 'example.com';
         $GLOBALS['sys_force_ssl']      = 0;
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
-        $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectNever('isException'); // no parent call
+        $this->webdavURLVerification->expectNever('forbiddenError');
+        $this->webdavURLVerification->expectNever('isException'); // no parent call
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
     function testAssertValidUrlHTTPAndForceSslEquals1() {
@@ -75,59 +77,54 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_https_host']     = 'example.com';
         $GLOBALS['sys_force_ssl']      = 1;
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
-        $WebdavURLVerification->expectOnce('forbiddenError');
-        $WebdavURLVerification->expectNever('isException'); // no parent call
+        $this->webdavURLVerification->expectOnce('forbiddenError');
+        $this->webdavURLVerification->expectNever('isException'); // no parent call
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
-    function testAssertValidUrlHTTPSAndForceSslEquals1() {
-        $server = array('HTTP_HOST' => 'webdav.codendi.org',
-                        'HTTPS'     => 'on');
+    function _testAssertValidUrlHTTPSAndForceSslEquals1() {
+        $server = array('HTTP_HOST' => 'webdav.codendi.org');
+        stub($this->request)->isSecure()->returns(true);
 
         $GLOBALS['sys_default_domain'] = 'example.com';
         $GLOBALS['sys_https_host']     = 'example.com';
         $GLOBALS['sys_force_ssl'] = 1;
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
-        $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectNever('isException'); // no parent call
+        $this->webdavURLVerification->expectNever('forbiddenError');
+        $this->webdavURLVerification->expectNever('isException'); // no parent call
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
     function testAssertValidUrlNotPluginHost() {
         $server = array('HTTP_HOST' => 'codendi.org');
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
-        $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectOnce('isException'); // parent call
-        $WebdavURLVerification->setReturnValue('isException', true);
+        $this->webdavURLVerification->expectNever('forbiddenError');
+        $this->webdavURLVerification->expectOnce('isException'); // parent call
+        $this->webdavURLVerification->setReturnValue('isException', true);
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
-
 
     function testAssertValidUrlButWebdavHostIsDefaultDomain() {
         $server = array('HTTP_HOST' => 'a.codendi.org');
 
         $GLOBALS['sys_default_domain'] = 'a.codendi.org';
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'a.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'a.codendi.org');
 
-        $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectOnce('isException'); // parent call
-        $WebdavURLVerification->setReturnValue('isException', true);
+        $this->webdavURLVerification->expectNever('forbiddenError');
+        $this->webdavURLVerification->expectOnce('isException'); // parent call
+        $this->webdavURLVerification->setReturnValue('isException', true);
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
     function testAssertValidUrlButWebdavHostIsHttpsHost() {
@@ -136,14 +133,12 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_default_domain'] = 'example.com';
         $GLOBALS['sys_https_host']     = 'b.codendi.org';
 
-        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
-        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'b.codendi.org');
+        $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'b.codendi.org');
 
-        $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectOnce('isException'); // parent call
-        $WebdavURLVerification->setReturnValue('isException', true);
+        $this->webdavURLVerification->expectNever('forbiddenError');
+        $this->webdavURLVerification->expectOnce('isException'); // parent call
+        $this->webdavURLVerification->setReturnValue('isException', true);
 
-        $WebdavURLVerification->assertValidUrl($server);
+        $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 }
-?>

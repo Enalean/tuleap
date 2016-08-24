@@ -64,16 +64,16 @@ class Webdav_URLVerification extends URLVerification {
      *
      * @return void
      */
-    public function assertValidUrl($server) {
+    public function assertValidUrl($server, HTTPRequest $request) {
         if (strcmp($server['HTTP_HOST'], $this->getWebDAVHost()) == 0 
             && strcmp($this->getWebDAVHost(), $GLOBALS['sys_default_domain']) != 0
             && strcmp($this->getWebDAVHost(), $GLOBALS['sys_https_host']) != 0
             ) {
-            if (!$this->isUsingSSL($server) && $GLOBALS['sys_force_ssl'] == 1) {
+            if (! $request->isSecure() && $GLOBALS['sys_force_ssl'] == 1) {
                 $this->forbiddenError();
             }
         } else {
-            parent::assertValidUrl($server);
+            parent::assertValidUrl($server, $request);
         }
     }
 
