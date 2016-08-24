@@ -104,7 +104,7 @@ class MappingFileOptimusPrimeTransformer {
         return new WillBeMappedUser($username, $mapped_user);
     }
 
-    private function getWillBeCreatedUser($username, $status, $to_be_imported_user) {
+    private function getWillBeCreatedUser($username, $status, ToBeCreatedUser $to_be_imported_user) {
         if (! $status) {
             $status = PFUser::STATUS_SUSPENDED;
         }
@@ -117,7 +117,8 @@ class MappingFileOptimusPrimeTransformer {
             $to_be_imported_user->getUserName(),
             $to_be_imported_user->getRealName(),
             $to_be_imported_user->getEmail(),
-            $status
+            $status,
+            $to_be_imported_user->getOriginalLdapId()
         );
     }
 

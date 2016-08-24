@@ -120,7 +120,7 @@ class MappingTest extends TuleapTestCase {
 
     public function itReturnsACreatedUser() {
         stub($this->collection)->getUserById(107)->returns(
-            new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S')
+            new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S', 'ed107')
         );
         stub($this->user_manager)->getUserByUserName('jdoe')->returns($this->my_user);
 
