@@ -23,6 +23,7 @@ Version 8.19 (Not Released Yet)
 	* pluginsadministration: 1.20
 	* userlog: 1.10
 	* svn: 0.79
+	* openidconnectclient: 0.25
 
 	== Themes ==
 	* FlamingParrot: 1.149
