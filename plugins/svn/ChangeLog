@@ -1,3 +1,6 @@
+Version 0.82 - Tuleap 8.19
+    * db_stats_svn_plugin_history.pl script stores data in database
+
 Version 0.81 - Tuleap 8.19
     * Create db_stats_svn_plugin_history.pl script
 
