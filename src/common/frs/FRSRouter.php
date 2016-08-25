@@ -71,12 +71,7 @@ class FRSRouter
                     return;
                 }
 
-                try {
-                    $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
-                } catch (FRSWrongPermissiongrantedException $e) {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_permission_incorrect'));
-                }
-
+                $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
                 $this->redirectToDefaultRoute($project);
                 break;
             default:
