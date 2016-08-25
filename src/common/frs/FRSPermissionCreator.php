@@ -68,6 +68,10 @@ class FRSPermissionCreator
 
     private function getUGroupNames(array $ugroup_ids)
     {
+        if (! $ugroup_ids) {
+            return array();
+        }
+
         $ugroup_name = array();
         $ugroups     = $this->ugroup_dao->searchByListOfUGroupsId($ugroup_ids);
 
