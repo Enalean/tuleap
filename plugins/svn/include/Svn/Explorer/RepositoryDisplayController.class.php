@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2016. All rights reserved
  *
@@ -27,8 +26,9 @@ use HTTPRequest;
 use Tuleap\Svn\Explorer\RepositoryDisplayPresenter;
 use \Tuleap\Svn\Repository\RepositoryManager;
 use \Tuleap\Svn\Repository\RepositoryNotFoundException;
-use Tuleap\Svn\ViewVCProxy\ViewVCProxy;
+use Tuleap\Svn\ViewVC\ViewVCProxy;
 use ProjectManager;
+use Tuleap\Svn\ViewVC\AccessHistorySaver;
 
 class RepositoryDisplayController
 {
@@ -39,11 +39,12 @@ class RepositoryDisplayController
     public function __construct(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
-        SvnPermissionManager $permissions_manager
+        SvnPermissionManager $permissions_manager,
+        AccessHistorySaver $access_history_saver
     ) {
         $this->permissions_manager = $permissions_manager;
         $this->repository_manager  = $repository_manager;
-        $this->proxy               = new ViewVCProxy($repository_manager, $project_manager);
+        $this->proxy               = new ViewVCProxy($repository_manager, $project_manager, $access_history_saver);
     }
 
     public function displayRepository(ServiceSvn $service, HTTPRequest $request)

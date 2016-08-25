@@ -53,6 +53,8 @@ use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\Commit\Svnlook;
+use Tuleap\Svn\ViewVC\AccessHistorySaver;
+use Tuleap\Svn\ViewVC\AccessHistoryDao;
 
 /**
  * SVN plugin
@@ -396,7 +398,8 @@ class SvnPlugin extends Plugin {
             new RepositoryDisplayController(
                 $repository_manager,
                 ProjectManager::instance(),
-                $permissions_manager
+                $permissions_manager,
+                new AccessHistorySaver(new AccessHistoryDao())
             ),
             new ImmutableTagController(
                 $repository_manager,
