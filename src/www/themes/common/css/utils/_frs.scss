@@ -79,10 +79,10 @@ table.release tr td img {
     padding: 7px 2px;
 }
 
-.frs_permissions {
-    display: flex;
+#frs-admin-perms-form {
+    max-width: 960px;
 }
 
-.frs_permissions_read {
-    margin: 0 20px 0 0;
+#frs-admin-perms-submit {
+    margin: 20px 0 0;
 }
