@@ -64,6 +64,12 @@ class FRSRouter
             case "admin-frs-admins":
                 $admin_ugroups_ids  = $request->get('permission_frs_admins');
                 $reader_ugroups_ids = $request->get('permission_frs_readers');
+                if (! $admin_ugroups_ids) {
+                    $admin_ugroups_ids = array();
+                }
+                if (! $reader_ugroups_ids) {
+                    $reader_ugroups_ids = array();
+                }
 
                 if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_data_incorrect'));
