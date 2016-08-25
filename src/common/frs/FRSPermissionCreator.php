@@ -28,8 +28,11 @@ use ForgeAccess;
 
 class FRSPermissionCreator
 {
-    /** @var PermissionDao */
+    /** @var FRSPermissionDao */
     private $permission_dao;
+
+    /** @var UGroupDao */
+    private $ugroup_dao;
 
     public function __construct(
         FRSPermissionDao $permission_dao,

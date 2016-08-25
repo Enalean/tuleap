@@ -26,7 +26,7 @@
 // type='TRACKER_ACCESS_ASSIGNEE'  id='group_artifact_id'          table='artifact_group_list'
 // type='TRACKER_ACCESS_FULL'      id='group_artifact_id'          table='artifact_group_list'
 // type='TRACKER_ARTIFACT_ACCESS'  id='artifact_id'                table='artifact'
- 
+
 
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
@@ -723,7 +723,7 @@ function permission_display_selection_form($permission_type, $object_id, $group_
 
 
 function permission_display_selection_frs($permission_type, $object_id = null, $group_id) {
-	$html = '';
+    $html = '';
     // Get ugroups already defined for this permission_type
     $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
     $nb_set=db_numrows($res_ugroups);
@@ -736,11 +736,11 @@ function permission_display_selection_frs($permission_type, $object_id = null, $
     if (db_numrows($res)<1) {
         $html .= "<p><b>".$GLOBALS['Language']->getText('global','error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions','perm_type_not_def',$permission_type);
         return $html;
-    } else { 
+    } else {
         while ($row = db_fetch_array($res)) {
             if ($predefined_ugroups) { $predefined_ugroups.= ' ,';}
-            $predefined_ugroups .= $row['ugroup_id'] ;
-            if ($row['is_default']) $default_values[]=$row['ugroup_id'];
+            $predefined_ugroups .= db_ei($row['ugroup_id']);
+            if ($row['is_default']) { $default_values[]=$row['ugroup_id'];}
         }
     }
     $sql="SELECT * FROM ugroup WHERE group_id=".db_ei($group_id)." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
@@ -750,9 +750,9 @@ function permission_display_selection_frs($permission_type, $object_id = null, $
     while($row = db_fetch_array($res)) {
         $name = util_translate_name_ugroup($row[1]);
         $array[] = array(
-                'value' => $row[0], 
-                'text' => $name
-                );
+            'value' => $row[0],
+            'text' => $name
+        );
     }
     $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, false, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
     $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
