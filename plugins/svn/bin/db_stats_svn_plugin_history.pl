@@ -5,7 +5,6 @@
 use DBI;
 use Time::Local;
 use POSIX qw( strftime );
-use Data::Dumper;
 
 require("../include.pl");  # Include all the predefined functions
 
@@ -156,6 +155,47 @@ while (<LOGFILE>) {
 }
 close(LOGFILE);
 
-#print Dumper \%svn_access_by_repository;
+for my $repository_id ( keys %svn_access_by_repository ) {
+    for my $user_id ( keys %{$svn_access_by_repository{$repository_id}} ) {
+
+        $nb_write = defined $svn_access_by_repository{$repository_id}{$user_id}{write} ?
+                    $svn_access_by_repository{$repository_id}{$user_id}{write} : 0;
+        $nb_read  = defined $svn_access_by_repository{$repository_id}{$user_id}{read} ?
+                    $svn_access_by_repository{$repository_id}{$user_id}{read} : 0;
+
+        ## test first if we have already a row for group_id, user_id, day_date that contains
+        ## info on svn browsing activity.
+        $sql_search = "SELECT *
+                       FROM plugin_svn_full_history
+                       WHERE repository_id = $repository_id
+                        AND user_id = $user_id
+                        AND day = $day_date";
+
+        $search_res = $dbh->prepare($sql_search);
+        $search_res->execute();
+
+        if ($search_res->rows > 0) {
+            $sql = "UPDATE plugin_svn_full_history
+                    SET svn_write_operations = $nb_write,
+                        svn_read_operations = $nb_read
+                    WHERE repository_id = $repository_id
+                        AND user_id = $user_id
+                        AND day = $day_date";
+        } else {
+            $sql = "INSERT INTO plugin_svn_full_history (repository_id, user_id, day, svn_write_operations, svn_read_operations)
+                    VALUES ($repository_id, $user_id, $day_date, $nb_write, $nb_read)";
+        }
+
+        $dbh->do($sql);
+
+        #Update the last_access_date in user_access table
+        $sql = "UPDATE user_access
+                SET last_access_date = $day_begin
+                WHERE user_id = $user_id
+                    AND last_access_date < $day_begin";
+
+        $dbh->do($sql)
+    }
+}
 
 print " done.\n" if $verbose;

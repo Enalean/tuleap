@@ -58,3 +58,13 @@ CREATE TABLE plugin_svn_immutable_tag (
 
 INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
 VALUES ('PLUGIN_SVN_ADMIN', 4, 1);
+
+CREATE TABLE plugin_svn_full_history (
+  repository_id int(11) unsigned NOT NULL,
+  user_id int(11) NOT NULL,
+  day int(11) NOT NULL,
+  svn_read_operations int(11) NOT NULL default 0,
+  svn_write_operations int(11) NOT NULL default 0,
+  svn_browse_operations int(11) NOT NULL default 0,
+  PRIMARY KEY (repository_id, user_id, day)
+);
