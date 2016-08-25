@@ -92,41 +92,34 @@ class PermissionController extends BaseFrsPresenter
         $frs_ugroups = $this->permission_factory->getFrsUGroupsByPermission($project, $permission_type);
 
         foreach ($project_ugroups as $project_ugroup) {
+            if ($this->isUgroupHidden($project_ugroup)) {
+                continue;
+            }
+
             $options[] = array(
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
-                'selected' => $this->isUgroupSelected($frs_ugroups, $project_ugroup, $permission_type)
+                'selected' => $this->isUgroupSelected($frs_ugroups, $project_ugroup)
             );
         }
 
         return $options;
     }
 
-    private function isUgroupSelected(array $frs_ugroups, User_UGroup $project_ugroup, $permission_type)
+    private function isUgroupHidden(User_UGroup $project_ugroup)
     {
-        if ($project_ugroup->getId() == ProjectUGroup::PROJECT_ADMIN && $permission_type === FRSPermission::FRS_ADMIN) {
-            return true;
-        }
-
-        return isset($frs_ugroups[$project_ugroup->getId()]);
+        return (int)$project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
     }
 
-    private function isProjectAdminPermissionGrantedForReadButNotForWrite(array $admin_ugroup_ids, array $reader_group_ids)
+    private function isUgroupSelected(array $frs_ugroups, User_UGroup $project_ugroup)
     {
-
-        return in_array(ProjectUGroup::PROJECT_MEMBERS, $admin_ugroup_ids)
-            && ! in_array(ProjectUGroup::PROJECT_ADMIN, $admin_ugroup_ids)
-            && in_array(ProjectUGroup::PROJECT_ADMIN, $reader_group_ids);
+        return isset($frs_ugroups[$project_ugroup->getId()]);
     }
 
     public function updatePermissions(Project $project, PFUser $user, array $admin_ugroup_ids, array $reader_group_ids)
     {
         if ($project->isError() || ! $this->permission_manager->isAdmin($project, $user)) {
             return;
-        }
-
-        if ($this->isProjectAdminPermissionGrantedForReadButNotForWrite($admin_ugroup_ids, $reader_group_ids)) {
-            throw new FRSWrongPermissiongrantedException();
         }
 
         $this->permission_creator->savePermissions(
