@@ -1,3 +1,6 @@
+Version 1.150 - Tuleap 8.19
+    * FRS writers are in fact FRS administrators
+
 Version 1.149 - Tuleap 8.19
     * request #9406: Missing logout CSRF protection
 
