@@ -50,7 +50,7 @@ class FRSRouter
     {
         $user = UserManager::instance()->getCurrentUser();
         if (! $request->get('action')) {
-            $this->useDefaultRoute($request, $project, $user);
+            $this->useDefaultRoute($project, $user);
             return;
         }
 
@@ -59,7 +59,7 @@ class FRSRouter
 
         switch ($action) {
             case "edit-permissions":
-                $this->useDefaultRoute($request, $project, $user);
+                $this->useDefaultRoute($project, $user);
                 break;
             case "admin-frs-admins":
                 $admin_ugroups_ids  = $request->get('permission_frs_admins');
@@ -80,7 +80,7 @@ class FRSRouter
                 $this->redirectToDefaultRoute($project);
                 break;
             default:
-                $this->useDefaultRoute($request, $project, $user);
+                $this->useDefaultRoute($project, $user);
                 break;
         }
     }
@@ -95,11 +95,8 @@ class FRSRouter
         ));
     }
 
-    private function useDefaultRoute(HTTPRequest $request, Project $project, PFUser $user)
+    private function useDefaultRoute(Project $project, PFUser $user)
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-
-        $this->permission_controller->displayToolbar($project);
         $this->permission_controller->displayPermissions($project, $user);
     }
 }
