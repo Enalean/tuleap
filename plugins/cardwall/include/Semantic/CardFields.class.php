@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013. All rights reserved.
+* Copyright Enalean (c) 2013-2016. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -93,8 +93,18 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
                 $html .= '<tr><td>';
                 $html .=  $html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 $html .= '</td><td>';
-                $html .= '<a href="'. $this->getUrl() .'&amp;remove='. (int)$field->id .'" title="' . $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields') . '">';
-                $html .= $GLOBALS['HTML']->getimage('ic/cross.png', array('alt' => $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields')));
+                $html .= '<form method="post" id="tracker-semantic-removal-action" action="'. $html_purifier->purify($this->getUrl()) .'">';
+                $html .= $this->getCSRFToken()->fetchHTMLInput();
+                $html .= '<input type="hidden" name="remove" value="' . $html_purifier->purify($field->getId()) .  '">';
+                $html .= '<button type="submit" class="btn btn-link">';
+                $html .= $GLOBALS['HTML']->getimage(
+                    'ic/cross.png',
+                    array(
+                        'alt' => $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_fields')
+                    )
+                );
+                $html .= '</button>';
+                $html .= '</form>';
                 $html .= '</a>';
                 $html .= '</td></tr>';
             }
@@ -107,6 +117,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
         }
         if ($options) {
             $html .= '<form action="'. $this->getUrl() .'" method="POST">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
             $html .= '<p>'. $GLOBALS['Language']->getText('plugin_cardwall','semantic_card_fields_add_field');
             $html .= '<select name="field">';
             $html .= $options;
@@ -167,8 +178,10 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
 
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ( $request->get('add') && (int) $request->get('field')) {
+            $this->getCSRFToken()->check();
             $this->addField($request->get('field'));
         } else if ( (int) $request->get('remove') ) {
+            $this->getCSRFToken()->check();
             $this->removeField($request->get('remove'));
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
@@ -244,4 +257,3 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
         return Tracker_FormElementFactory::instance()->getFieldById($row['field_id']);
     }
 }
-?>

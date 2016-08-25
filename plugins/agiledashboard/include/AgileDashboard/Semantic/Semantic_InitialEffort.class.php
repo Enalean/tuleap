@@ -130,6 +130,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
         if ($numeric_fields = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFields($this->tracker)) {
 
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="initial_effort_field_id">';
             if (! $this->getFieldId()) {
                 $select .= '<option value="-1" selected="selected">' . $purify->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field')) . '</option>';
@@ -181,6 +182,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
+            $this->getCSRFToken()->check();
             $field_id = $request->get('initial_effort_field_id');
             $field = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFieldById($this->tracker, $field_id);
 
@@ -197,6 +199,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','bad_field_initial_effort'));
             }
         } else if ($request->exist('delete')) {
+            $this->getCSRFToken()->check();
             if ($this->delete()) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','deleted_initial_effort'));
                 $GLOBALS['Response']->redirect($this->getUrl());

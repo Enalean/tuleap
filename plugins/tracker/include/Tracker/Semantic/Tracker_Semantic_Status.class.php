@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -224,7 +224,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedListFields($this->tracker)) {
 
-            $html .= '<form method="POST" action="'. $this->geturl() .'">';
+            $html .= '<form method="POST" action="'. $this->getUrl() .'">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
 
             // field selectbox
             $field = null;
@@ -295,6 +296,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
+            $this->getCSRFToken()->check();
             if ($request->get('field_id') == '-1') {
                 if ($this->getField()) {
                     $this->delete();
