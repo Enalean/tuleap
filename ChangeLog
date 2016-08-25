@@ -3,6 +3,7 @@ Version 8.19 (Not Released Yet)
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
 	* story #9281: define FRS global permissions (Refactoring of package and release)
 	* story #9409: define FRS permissions for packages and releases (Refactoring : add package router)
+	* request #9419: It should be possible to create ldap users at XML import
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
@@ -22,7 +23,7 @@ Version 8.19 (Not Released Yet)
 	== Plugins ==
 	* tracker: 5.993
 	* git: 4.255
-	* ldap: 3.107
+	* ldap: 3.108
 	* mediawiki: 0.124
 	* pluginsadministration: 1.20
 	* userlog: 1.10

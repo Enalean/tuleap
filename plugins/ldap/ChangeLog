@@ -1,3 +1,6 @@
+Version 3.108 - Tuleap 8.19
+    * request #9419 It should be possible to create ldap users at XML import
+
 Version 3.107 - Tuleap 8.19
     * request #9406: Missing login CSRF protection
 
