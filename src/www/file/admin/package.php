@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 1999-2000 (c) The SourceForge Crew
+ * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,184 +19,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');    
-require_once('www/project/admin/permissions.php');    
-require_once('www/file/file_utils.php');
-require_once('www/forum/forum_utils.php');
-require_once('common/frs/FRSFileFactory.class.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/frs/FRSPackageFactory.class.php');
-require_once('common/frs/FileModuleMonitorFactory.class.php');
-$request =& HTTPRequest::instance();
+use Tuleap\FRS\FRSPackageController;
+use Tuleap\FRS\FRSPackageRouter;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
 
+require_once('pre.php');
 
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if($request->valid($vGroupId)) {
-    $group_id = $request->get('group_id');
-} else {
+$request         = HTTPRequest::instance();
+$project_manager = ProjectManager::instance();
+
+$valid_group_id = new Valid_GroupId();
+$valid_group_id->required();
+if(! $request->valid($valid_group_id)) {
     exit_no_group();
 }
 
-$frspf = new FRSPackageFactory();
-$user = UserManager::instance()->getCurrentUser();
-if (!$frspf->userCanAdmin($user, $group_id)) {
-    exit_permission_denied();
-}
+$group_id = $request->get('group_id');
+$user     = UserManager::instance()->getCurrentUser();
+$project  = $project_manager->getProject($group_id);
 
-$frsrf = new FRSReleaseFactory();
-$frsff = new FRSFileFactory();
+$router = new FRSPackageRouter(
+    new FRSPackageController(
+        FRSPackageFactory::instance(),
+        FRSReleaseFactory::instance()
+    ),
+    FRSPackageFactory::instance(),
+    new FRSPermissionManager(
+        new FRSPermissionDao(),
+        new FRSPermissionFactory(new FRSPermissionDao())
+    )
+);
 
-$existing_packages = array();
-$res = $frspf->getFRSPackagesFromDb($group_id);
-foreach($res as $p => $nop) {
-    $existing_packages[] = array(
-        'id'   => $res[$p]->getPackageId(),
-        'name' => $res[$p]->getName(),
-        'rank' => $res[$p]->getRank(),
-    );
-}
-$vFunc = new Valid_WhiteList('func',array('delete','add','create','edit','update'));
-$vFunc->required();
-if (! $request->valid($vFunc)) {
-    $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
-}
-
-switch ($request->get('func')) {
-    case 'delete':
-        $vPackageId = new Valid_UInt('id');
-        if ($request->valid($vPackageId)) {
-            $package_id = $request->get('id');
-                /*
-                     Delete the corresponding package only if it is empty
-                */
-                $res_release = $frsrf->getFRSReleasesFromDb($package_id, null, $group_id);
-                $num_releases = count($res_release);
-                //make sure there is no more release in the package
-                if($num_releases>0){
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages','p_not_empty'));
-                }else{
-                    if (!$frspf->delete_package($group_id, $package_id)) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages','p_not_yours'));
-                    } else {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages','p_del'));
-                    }
-                }
-        }
-        $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-        break;
-    case 'add':
-        $title   = $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p');
-        $package = new FRSPackage(array('group_id' => $group_id));
-        frs_display_package_form($package, $title, '?group_id='. $group_id .'&amp;func=create', $existing_packages);
-        break;
-    case 'create':
-        if (!$request->exist('submit')) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','create_canceled'));
-            $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-        } else {
-            $package_data             = $request->get('package');
-            $package_data['group_id'] = $group_id;
-            $title                    = $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p');
-            $url                      = '?func=create&amp;group_id='. $group_id;
-            if (isset($package_data['name']) && isset($package_data['rank']) && isset($package_data['status_id'])) {
-                $package_data['name'] = htmlspecialchars($package_data['name']);
-                if ($frspf->isPackageNameExist($package_data['name'], $group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','p_name_exists'));
-                    $package = new FRSPackage($package_data);
-                    frs_display_package_form($package, $title, $url, $existing_packages);
-                } else {
-                    //create a new package
-                    $res_id = $frspf->create($package_data);
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_added'));
-                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-                }
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
-                frs_display_package_form($package, $title, $url, $existing_packages);
-            }
-        }
-        break;
-    case 'edit':
-        $vPackageId = new Valid_UInt('id');
-        if ($request->valid($vPackageId)) {
-            $package_id = $request->get('id');
-        } else {
-            $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
-        }
-
-        if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
-            frs_display_package_form($package, $GLOBALS['Language']->getText('file_admin_editpackages', 'edit_package'), '?func=update&amp;group_id='. $group_id .'&amp;id='. $package_id, $existing_packages);
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
-            $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-        }
-        break;
-    case 'update':
-        if (!$request->exist('submit')) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','update_canceled'));
-            $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-        } else {
-            $vPackageId = new Valid_UInt('id');
-            if ($request->valid($vPackageId)) {
-                $package_id = $request->get('id');
-            } else {
-                $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
-            }
-            if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
-                $package_data = $request->get('package');
-                // we check if the name already exist only if the name has changed
-                if ($package_data['name'] == html_entity_decode($package->getName()) || !$frspf->isPackageNameExist($package_data['name'], $group_id)) {
-                    if ($package_data['status_id'] == $frspf->STATUS_HIDDEN) {
-                        //if hiding a package, refuse if it has releases under it
-                        // LJ Wrong SQL statement. It should only check for the existence of
-                        // LJ active packages. If only hidden releases are in this package
-                        // LJ then we can safely hide it.
-                        // LJ $res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
-                        if ($frsrf->isActiveReleases($package_id)) {
-                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('file_admin_editpackages','cannot_hide'));
-                            $package_data['status_id'] = $frspf->STATUS_ACTIVE;
-                        }
-                    }
-                    //update an existing package
-                    $package->setName(htmlspecialchars($package_data['name']));
-                    $package->setRank($package_data['rank']);
-                    $package->setStatusId($package_data['status_id']);
-                    $package->setApproveLicense($package_data['approve_license']);
-                    $package_is_updated = $frspf->update($package);
-
-                    //Permissions
-                    $vUgroups = new Valid_UInt('ugroups');
-                    if ($request->validArray($vUgroups)) {
-                        $ugroups = $request->get('ugroups');
-                    } else {
-                        $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
-                    }
-                    list ($return_code, $feedback) = permission_process_selection_form($group_id, 'PACKAGE_READ', $package->getPackageID(), $ugroups);
-                    if (!$return_code) {
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','perm_update_err'));
-                        $GLOBALS['Response']->addFeedback('error', $feedback);
-                    } else {
-                        $package_is_updated = true;
-                    }
-
-                    if ($package_is_updated) {
-                        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated', $package->getName()));
-                    } else {
-                        $GLOBALS['Response']->addFeedback('info', 'Package not updated');
-                    }
-                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-                } else {
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','p_name_exists'));
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','update_canceled'));
-                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-                }
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
-                $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-            }
-        }
-        break;
-    default:
-        break;
-}
+$router->route($request, $project, $user);
