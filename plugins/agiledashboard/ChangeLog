@@ -1,3 +1,6 @@
+Version 1.413 - Tuleap 8.19
+    * request #9415: Impossible to unset the semantic Initial effort
+
 Version 1.412 - Tuleap 8.18
     * request #9387: Computed card fields manual values should be filtered
 

@@ -1,3 +1,6 @@
+Version 5.994 - Tuleap 8.19
+    * request #9415: Impossible to unset the semantic Initial effort
+
 Version 5.993 - Tuleap 8.19
     * request #9420: Openlist field can have an erroneous value when an artifact is created
 
