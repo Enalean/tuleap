@@ -1,3 +1,6 @@
+Version 0.83 - Tuleap 8.19
+    * story #9393: Store ViewVC access
+
 Version 0.82 - Tuleap 8.19
     * db_stats_svn_plugin_history.pl script stores data in database
 
