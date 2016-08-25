@@ -62,6 +62,11 @@ echo "--- Beginning of $script ---"
 
 ./db_stats_projects_nightly.pl $*
 
+if [ -f /usr/share/tuleap/plugins/svn/bin/db_stats_svn_plugin_history.pl ]
+then
+    /usr/share/tuleap/plugins/svn/bin/db_stats_svn_plugin_history.pl $*
+fi
+
 ##
 ## END order sensitive section
 ##
