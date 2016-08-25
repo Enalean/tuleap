@@ -1,0 +1,6 @@
+/var/log/tuleap/archive_deleted_item.log {
+    missingok
+    notifempty
+    compress
+    delaycompress
+}
