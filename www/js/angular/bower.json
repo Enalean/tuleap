@@ -7,13 +7,13 @@
     "angular-gettext": "~1.1.4",
     "angular-ui-bootstrap-bower": "~0.8.0",
     "angular-ui-router": "~0.2.15",
-    "ng-lodash": "~0.4.0",
+    "ng-lodash": "0.5.0",
     "codemirror": "CodeMirror#^5.14.2",
     "ui-select": "angular-ui-select#~0.13.2",
     "angular-moment": "^0.10.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.9",
-    "jasmine-promise-matchers": "~2.0.0"
+    "jasmine-promise-matchers": "2.1.0"
   }
 }

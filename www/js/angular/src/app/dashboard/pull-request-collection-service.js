@@ -16,43 +16,47 @@ function PullRequestCollectionService(
     var self = this;
 
     _.extend(self, {
-        pull_requests           : SharedPropertiesService.getPullRequests(),
-        getPullRequests         : getPullRequests,
-        pull_requests_pagination: {
-            limit : 50,
-            offset: 0
-        }
+        loadPullRequests: loadPullRequests,
+        search          : search,
+
+        all_pull_requests         : [],
+        pull_requests_fully_loaded: false
     });
 
-    function getPaginatedPullRequest(repository_id, limit, offset) {
-        return PullRequestCollectionRestService.getPullRequests(repository_id, limit, offset)
-        .then(function(response) {
-            self.pull_requests.push.apply(self.pull_requests, response.data.collection);
+    function loadPullRequests() {
+        var repository_id = SharedPropertiesService.getRepositoryId();
 
-            var headers = response.headers();
-            var total   = headers['x-pagination-size'];
+        var promise = PullRequestCollectionRestService.getAllPullRequests(repository_id, progressivelyLoadCallback)
+            .then(function(pull_requests) {
+                if (self.pull_requests_fully_loaded) {
+                    emptyArray(self.all_pull_requests);
 
-            if ((limit + offset) < total) {
-                return getPaginatedPullRequest(repository_id, limit, offset + limit);
-            }
+                    _.forEachRight(pull_requests, function(pull_request) {
+                        self.all_pull_requests.push(pull_request);
+                    });
+                }
 
-            return self.pull_requests;
+                self.pull_requests_fully_loaded = true;
+            });
+
+        return promise;
+    }
+
+    function progressivelyLoadCallback(pull_requests) {
+        if (self.pull_requests_fully_loaded) {
+            return;
+        }
+
+        _.forEachRight(pull_requests, function(pull_request) {
+            self.all_pull_requests.push(pull_request);
         });
     }
 
-    function getPullRequests(repository_id, limit, offset) {
-        return getPaginatedPullRequest(repository_id, limit, offset)
-        .then(function() {
-            self.pull_requests.forEach(function(pullRequest) {
-                var repoId = parseInt(repository_id, 10);
-                var repositorySrc = pullRequest.repository;
-                var repositoryDest = pullRequest.repository_dest;
-                repositorySrc.isCurrent = (repositorySrc.id === repoId);
-                repositoryDest.isCurrent = (repositoryDest.id === repoId);
-                repositorySrc.isFork = (repositorySrc.id !== repositoryDest.id);
-            });
-            _.reverse(self.pull_requests);
-            return self.pull_requests;
-        });
+    function emptyArray(array) {
+        array.length = 0;
+    }
+
+    function search(pull_request_id) {
+        return _.find(self.all_pull_requests, ['id', pull_request_id]);
     }
 }

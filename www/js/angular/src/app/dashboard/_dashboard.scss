@@ -1,65 +1,33 @@
-#dashboard-header {
+.dashboard {
     padding: 25px 15px;
     margin: 0 0 30px;
     background: #F7F7F7;
     border-top: 2px solid #AAA;
+
+    @import 'pull-request-summary/pull-request-summary';
 
     > h2 {
         display: inline-block;
         margin: 0;
     }
 
-    > .ui-select-container {
-        display: inline-block;
-        position: relative;
-        top: -4px;
-        left: 10px;
+    .pull-requests-list {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        align-items: stretch;
+        align-content:  flex-start;
+    }
 
-        .ui-select-toggle {
-            width: 100%;
-            box-sizing: border-box;
-            padding-right: 25px;
-        }
-
-        .id {
-            color: #AAA;
-            margin: 0 5px 0 0;
-        }
-
-        .title {
-            margin: 0 5px 0 0;
-        }
-
-        .source-dest {
-            border: 1px solid #f79514;
-            border-radius: 3px;
-            color: #f79514;
-            padding: 2px 2px;
-            margin: 0 5px 0 0;
-        }
-
-        .creation-date {
-            color: #AAA;
-            margin: 0 5px 0 0;
-        }
-
-        &.ui-select-bootstrap > .ui-select-choices {
-            margin-top: -20px;
-            width: 800px;
-
-            .ui-select-choices-row.active > a {
-                .id {
-                    color: #DDD;
-                }
-            }
-        }
+    .pull-request-list-item {
+        list-style: none;
+        margin: 5px 0 0 0;
     }
 
     > .loading {
-        display: inline-block;
-        width: 16px;
         height: 16px;
-        margin: 0 0 0 15px;
         background: url('loader-mini.gif') no-repeat center center;
     }
 }

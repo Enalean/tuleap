@@ -8,7 +8,7 @@ msgstr ""
 msgid "Abandon"
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html
+#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 #: src/app/overview/overview.tpl.html
 msgid "Abandoned"
 msgstr ""
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Merge"
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html
+#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"
 msgstr ""
 

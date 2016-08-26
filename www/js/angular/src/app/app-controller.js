@@ -3,24 +3,18 @@ angular
     .controller('MainController', MainController);
 
 MainController.$inject = [
-    'lodash',
     '$scope',
-    '$state',
-    'PullRequestCollectionService',
-    'SharedPropertiesService',
     'gettextCatalog',
-    'amMoment'
+    'amMoment',
+    'SharedPropertiesService'
 ];
 
 /* eslint-disable angular/controller-as */
 function MainController(
-    _,
     $scope,
-    $state,
-    PullRequestCollectionService,
-    SharedPropertiesService,
     gettextCatalog,
-    amMoment
+    amMoment,
+    SharedPropertiesService
 ) {
     $scope.init = init;
 
@@ -29,34 +23,10 @@ function MainController(
         SharedPropertiesService.setUserId(user_id);
 
         initLocale(language);
-
-        var dataPromise = loadData(repository_id);
-        SharedPropertiesService.setReadyPromise(dataPromise);
-        dataPromise.then(function() {
-            redirectToOverview();
-        });
     }
 
     function initLocale(language) {
         gettextCatalog.setCurrentLanguage(language);
         amMoment.changeLocale(language);
-    }
-
-    function loadData(repository_id) {
-        return PullRequestCollectionService.getPullRequests(
-                repository_id,
-                PullRequestCollectionService.pull_requests_pagination.limit,
-                PullRequestCollectionService.pull_requests_pagination.offset)
-            .then(function(pull_requests) {
-                var wanted_pull_request_id = ($state.includes('pull-request')) ? parseInt($state.params.id, 10) : pull_requests[0].id;
-                SharedPropertiesService.setPullRequest(_.find(pull_requests, { id: wanted_pull_request_id }));
-            });
-    }
-
-    function redirectToOverview() {
-        if (_.includes(['pull-requests', 'pull-request'], $state.current.name)) {
-            var pull_request_id = SharedPropertiesService.getPullRequest().id;
-            $state.go('overview', { id: pull_request_id });
-        }
     }
 }

@@ -9,7 +9,6 @@ function SharedPropertiesService() {
         readyPromise : null,
         repository_id: null,
         pull_request : null,
-        pull_requests: [],
         user_id      : null
     };
 
@@ -20,8 +19,6 @@ function SharedPropertiesService() {
         setRepositoryId: setRepositoryId,
         getPullRequest : getPullRequest,
         setPullRequest : setPullRequest,
-        getPullRequests: getPullRequests,
-        setPullRequests: setPullRequests,
         getUserId      : getUserId,
         setUserId      : setUserId
     };
@@ -39,7 +36,7 @@ function SharedPropertiesService() {
     }
 
     function setRepositoryId(repository_id) {
-        property.repository_id = repository_id;
+        property.repository_id = parseInt(repository_id, 10);
     }
 
     function getPullRequest() {
@@ -50,19 +47,11 @@ function SharedPropertiesService() {
         property.pull_request = pull_request;
     }
 
-    function getPullRequests() {
-        return property.pull_requests;
-    }
-
-    function setPullRequests(pull_requests) {
-        property.pull_requests = pull_requests;
-    }
-
     function setUserId(user_id) {
-        property.user_id = user_id;
+        property.user_id = parseInt(user_id, 10);
     }
 
     function getUserId() {
-        return parseInt(property.user_id, 10);
+        return property.user_id;
     }
 }

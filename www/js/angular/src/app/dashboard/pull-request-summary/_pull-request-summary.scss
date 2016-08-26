@@ -1,0 +1,54 @@
+.pull-request-summary {
+    $border-color: #eee;
+    $border-hover-color: #ccc;
+    $creation-date-color: #888;
+    $background-color: #fff;
+    $margin-between-items: 15px;
+
+    min-height: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    background-color: $background-color;
+    border-radius: 3px;
+    border: 1px solid $border-color;
+    cursor: pointer;
+    padding: 0 $margin-between-items;
+
+    &:hover {
+        transition: border-color 100ms linear;
+        border-color: $border-hover-color;
+    }
+
+    .title {
+        font-size: 14px;
+    }
+
+    .refs {
+        margin-left: $margin-between-items;
+    }
+
+    .creation-date {
+        color: $creation-date-color;
+        margin-left: $margin-between-items;
+    }
+
+    .status {
+        margin-left: $margin-between-items;
+    }
+
+    .author {
+        margin-left: auto;
+    }
+
+    .actions {
+        margin-left: $margin-between-items;
+
+        > .btn {
+            width: 45px;
+        }
+    }
+}

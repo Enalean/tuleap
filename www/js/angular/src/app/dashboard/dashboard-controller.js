@@ -3,38 +3,37 @@ angular
     .controller('DashboardController', DashboardController);
 
 DashboardController.$inject = [
-    '$state',
     'lodash',
-    'SharedPropertiesService',
-    'PullRequestService'
+    'PullRequestCollectionService',
+    'PullRequestService',
+    'TooltipService'
 ];
 
 function DashboardController(
-    $state,
     _,
-    SharedPropertiesService,
-    PullRequestService
+    PullRequestCollectionService,
+    PullRequestService,
+    TooltipService
 ) {
     var self = this;
 
     _.extend(self, {
+        init: init,
+
         loading_pull_requests: true,
-        valid_status_keys    : PullRequestService.valid_status_keys,
-        pull_requests        : [],
-        selected_pull_request: {},
-        loadPullRequest      : loadPullRequest
+        pull_requests        : PullRequestCollectionService.all_pull_requests,
+        valid_status_keys    : PullRequestService.valid_status_keys
     });
 
+    self.init();
 
-    SharedPropertiesService.whenReady().then(function() {
-        self.pull_requests = SharedPropertiesService.getPullRequests();
-        self.selected_pull_request = SharedPropertiesService.getPullRequest();
-    }).finally(function() {
-        self.loading_pull_requests = false;
-    });
+    function init() {
+        self.loading_pull_requests = true;
 
-    function loadPullRequest(pull_request) {
-        SharedPropertiesService.setPullRequest(pull_request);
-        $state.go('overview', { id: pull_request.id });
+        return PullRequestCollectionService.loadPullRequests()
+        .finally(function() {
+            self.loading_pull_requests = false;
+            TooltipService.setupTooltips();
+        });
     }
 }

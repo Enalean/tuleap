@@ -4,6 +4,7 @@ angular
 
 OverviewController.$inject = [
     '$q',
+    '$state',
     'lodash',
     'SharedPropertiesService',
     'PullRequestService',
@@ -14,6 +15,7 @@ OverviewController.$inject = [
 
 function OverviewController(
     $q,
+    $state,
     _,
     SharedPropertiesService,
     PullRequestService,
@@ -24,21 +26,22 @@ function OverviewController(
     var self = this;
 
     _.extend(self, {
-        valid_status_keys    : PullRequestService.valid_status_keys,
-        pull_request         : {},
-        author               : {},
-        editionForm          : {},
-        showEditionForm      : false,
-        saveEditionForm      : saveEditionForm,
+        author             : {},
+        editionForm        : {},
+        operationInProgress: false,
+        pull_request       : {},
+        showEditionForm    : false,
+        valid_status_keys  : PullRequestService.valid_status_keys,
+
+        abandon              : abandon,
         buildStatusIs        : buildStatusIs,
         checkMerge           : checkMerge,
-        abandon              : abandon,
-        operationInProgress  : false,
+        hasAbandonRight      : hasAbandonRight,
+        hasMergeRight        : hasMergeRight,
         isConflictingMerge   : isConflictingMerge,
         isNonFastForwardMerge: isNonFastForwardMerge,
         isUnknownMerge       : isUnknownMerge,
-        hasMergeRight        : hasMergeRight,
-        hasAbandonRight      : hasAbandonRight
+        saveEditionForm      : saveEditionForm
     });
 
     SharedPropertiesService.whenReady().then(function() {
@@ -52,6 +55,9 @@ function OverviewController(
         });
 
         TooltipService.setupTooltips();
+    })
+    .catch(function() {
+        $state.go('dashboard');
     });
 
     function buildStatusIs(status) {

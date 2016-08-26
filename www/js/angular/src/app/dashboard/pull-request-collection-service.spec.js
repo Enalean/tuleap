@@ -1,93 +1,78 @@
-describe('PullRequestCollectionService', function() {
-    var $httpBackend,
+describe('PullRequestCollectionService -', function() {
+    var $q,
         PullRequestCollectionService,
         SharedPropertiesService,
-        _;
+        PullRequestCollectionRestService;
 
     beforeEach(function() {
         module('tuleap.pull-request');
 
         // eslint-disable-next-line angular/di
         inject(function(
-            _$httpBackend_,
+            _$q_,
+            _PullRequestCollectionRestService_,
             _PullRequestCollectionService_,
-            _SharedPropertiesService_,
-            _lodash_
+            _SharedPropertiesService_
         ) {
-            $httpBackend                 = _$httpBackend_;
-            _                            = _lodash_;
-            PullRequestCollectionService = _PullRequestCollectionService_;
-            SharedPropertiesService      = _SharedPropertiesService_;
+            $q                               = _$q_;
+            PullRequestCollectionRestService = _PullRequestCollectionRestService_;
+            PullRequestCollectionService     = _PullRequestCollectionService_;
+            SharedPropertiesService          = _SharedPropertiesService_;
         });
+
+        spyOn(PullRequestCollectionRestService, "getAllPullRequests");
+        spyOn(SharedPropertiesService, "getRepositoryId");
+
+        installPromiseMatchers();
     });
 
-    describe('#getPullRequests', function() {
-        var backendData;
-        var repoId = '1', limit = 50, offset = 0;
+    describe('loadPullRequests()', function() {
+        it("When I load the pull requests, then the REST service will be called and the returned pull requests will be stored by reverse order of creation date", function() {
+            var pull_requests = [
+                { id: 1 },
+                { id: 2 }
+            ];
 
-        beforeEach(function() {
-            backendData = {
-                collection: [{
-                    id         : 1,
-                    title      : 'Asking a PR',
-                    user_id    : 101,
-                    branch_src : 'sample-pr',
-                    branch_dest: 'master',
-                    repository : {
-                        id: 1
-                    },
-                    repository_dest: {
-                        id: 1
-                    },
-                    status       : 'abandon',
-                    creation_date: '1996-00-00T00:00:00+00:00'
-                }, {
-                    id         : 2,
-                    title      : 'Asking another PR',
-                    user_id    : 101,
-                    branch_src : 'sample-pr',
-                    branch_dest: 'master',
-                    repository : {
-                        id: 1
-                    },
-                    repository_dest: {
-                        id: 2
-                    },
-                    status       : 'abandon',
-                    creation_date: '2016-04-19T09:20:21+00:00'
-                }]
-            };
+            PullRequestCollectionRestService.getAllPullRequests.and.callFake(function(repository_id, callback) {
+                callback(pull_requests);
+                return $q.when(pull_requests);
+            });
+            SharedPropertiesService.getRepositoryId.and.returnValue(1);
+
+            var promise = PullRequestCollectionService.loadPullRequests();
+
+            var reversed_pull_requests = [
+                { id: 2 },
+                { id: 1 }
+            ];
+
+            expect(promise).toBeResolved();
+            expect(PullRequestCollectionService.all_pull_requests).toEqual(reversed_pull_requests);
         });
 
-        it('requests pull requests from the REST service', function() {
-            var expectedUrl = '/api/v1/git/' + repoId + '/pull_requests?limit=' + limit + '&offset=' + offset;
-            $httpBackend.expectGET(expectedUrl).respond([]);
+        it("Given that pull requests had already been loaded once, when I load the pull requests again, then the REST service will be called and only when all pull requests are retrieved, the pull requests will be stored", function() {
+            PullRequestCollectionService.pull_requests_fully_loaded = true;
 
-            PullRequestCollectionService.getPullRequests(repoId, limit, offset);
+            var pull_requests = [
+                { id: 9 },
+                { id: 68 }
+            ];
 
-            $httpBackend.verifyNoOutstandingExpectation();
-        });
+            PullRequestCollectionRestService.getAllPullRequests.and.callFake(function(repository_id, callback) {
+                callback(pull_requests);
+                return $q.when(pull_requests);
+            });
+            SharedPropertiesService.getRepositoryId.and.returnValue(1);
 
-        it('sets the list of pull requests in SharedPropertiesService by reverse order of creation date', function() {
-            $httpBackend.whenGET().respond(backendData);
+            var promise = PullRequestCollectionService.loadPullRequests();
 
-            PullRequestCollectionService.getPullRequests(repoId, limit, offset);
-            $httpBackend.flush();
+            var reversed_pull_requests = [
+                { id: 68 },
+                { id: 9 }
+            ];
 
-            var processedPullRequests = SharedPropertiesService.getPullRequests();
-            expect(_.map(processedPullRequests, 'id')).toEqual([2, 1]);
-        });
-
-        it('sets flags for each pull request', function() {
-            $httpBackend.whenGET().respond(backendData);
-
-            PullRequestCollectionService.getPullRequests(repoId, limit, offset);
-            $httpBackend.flush();
-
-            var processedPullRequests = SharedPropertiesService.getPullRequests();
-            expect(_.map(processedPullRequests, 'repository.isFork')).toEqual([true, false]);
-            expect(_.map(processedPullRequests, 'repository.isCurrent')).toEqual([true, true]);
-            expect(_.map(processedPullRequests, 'repository_dest.isCurrent')).toEqual([false, true]);
+            expect(promise).toBeResolved();
+            expect(PullRequestCollectionService.all_pull_requests).toEqual(reversed_pull_requests);
         });
     });
 });

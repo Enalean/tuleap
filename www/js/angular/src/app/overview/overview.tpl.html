@@ -21,17 +21,9 @@
         </form>
 
         <div class="pull-requests-references">
-            <p>
-                <span class="pull-requests-source-destination">
-                    <span class="repository"
-                        ng-if="! overview.pull_request.repository.isCurrent">{{ overview.pull_request.repository.name }}:
-                    </span>{{ overview.pull_request.branch_src }}
-                    <i class="icon-long-arrow-right"></i>
-                    <span class="repository"
-                        ng-if="! overview.pull_request.repository_dest.isCurrent">{{ overview.pull_request.repository_dest.name }}:
-                    </span>{{ overview.pull_request.branch_dest }}
-                </span>
-            </p>
+            <div>
+                <pull-request-refs pull-request-data="overview.pull_request"></pull-request-refs>
+            </div>
             <span class="pull-request-reference">{{ overview.pull_request.reference_src }}</span>
         </div>
     </div>
@@ -39,10 +31,7 @@
     <div class="pull-request-author-date">
         <div class="pull-request-author">
             <span class="pull-request-label"><i class="icon-user"></i> {{ 'Requester' | translate }}</span>
-            <div>
-                <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
-                <a href="{{ overview.author.user_url }}">{{ overview.author.display_name }}</a>
-            </div>
+            <tuleap-username username="overview.author"></tuleap-username>
         </div>
         <div class="pull-request-date">
             <span class="pull-request-label"><i class="icon-calendar"></i> {{ 'Date' | translate }}</span>

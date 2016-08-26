@@ -1,81 +1,50 @@
 describe('DashboardController', function() {
     var $q,
         $rootScope,
-        $state,
-        SharedPropertiesService,
-        controller,
-        expectedPullRequests,
-        selectedPullRequest;
+        DashboardController,
+        PullRequestCollectionService,
+        TooltipService;
 
     beforeEach(function() {
-        module('tuleap.pull-request');
-
         var $controller;
+
+        module('tuleap.pull-request');
 
         // eslint-disable-next-line angular/di
         inject(function(
             _$controller_,
             _$q_,
             _$rootScope_,
-            _$state_,
-            _SharedPropertiesService_
+            _PullRequestCollectionService_,
+            _TooltipService_
         ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope  = _$rootScope_;
-            $state = _$state_;
-            SharedPropertiesService = _SharedPropertiesService_;
+            $controller                  = _$controller_;
+            $q                           = _$q_;
+            $rootScope                   = _$rootScope_;
+            PullRequestCollectionService = _PullRequestCollectionService_;
+            TooltipService               = _TooltipService_;
         });
 
-        expectedPullRequests = [{
-            id         : 1,
-            title      : 'Asking a PR',
-            user_id    : 101,
-            branch_src : 'sample-pr',
-            branch_dest: 'master',
-            status     : 'abandon'
-        }, {
-            id         : 2,
-            title      : 'Asking another PR',
-            user_id    : 101,
-            branch_src : 'sample-pr',
-            branch_dest: 'master',
-            status     : 'abandon'
-        }];
-        selectedPullRequest = expectedPullRequests[0];
-        SharedPropertiesService.setPullRequests(expectedPullRequests);
-        SharedPropertiesService.setPullRequest(selectedPullRequest);
-        SharedPropertiesService.setReadyPromise($q.when('ready'));
+        spyOn(PullRequestCollectionService, "loadPullRequests").and.returnValue($q.when());
 
-        spyOn($state, 'go');
-
-        controller = $controller('DashboardController', {
-            $state: $state
+        DashboardController = $controller('DashboardController', {
+            PullRequestCollectionService: PullRequestCollectionService
         });
     });
 
-    describe('When app is ready', function() {
-        it('sets the list of pull requests and the current one', function() {
+    describe("init()", function() {
+        it("when the controller is created, then all the pull requests will be loaded and the loading flag will be set to false", function() {
+            spyOn(TooltipService, "setupTooltips");
+            PullRequestCollectionService.loadPullRequests.and.returnValue($q.when());
+
+            DashboardController.init();
+            expect(DashboardController.loading_pull_requests).toBe(true);
+
             $rootScope.$apply();
 
-            expect(controller.pull_requests).toEqual(expectedPullRequests);
-            expect(controller.selected_pull_request).toEqual(selectedPullRequest);
-        });
-    });
-
-    describe('#loadPullRequest', function() {
-        it('sets the current pull request', function() {
-            var targetPullRequest = expectedPullRequests[1];
-            controller.loadPullRequest(targetPullRequest);
-
-            expect(SharedPropertiesService.getPullRequest()).toEqual(targetPullRequest);
-        });
-
-        it('navigates to the overview of the given pull request', function() {
-            var targetPullRequest = expectedPullRequests[1];
-            controller.loadPullRequest(targetPullRequest);
-
-            expect($state.go).toHaveBeenCalledWith('overview', { id: targetPullRequest.id });
+            expect(PullRequestCollectionService.loadPullRequests).toHaveBeenCalled();
+            expect(DashboardController.loading_pull_requests).toBe(false);
+            expect(TooltipService.setupTooltips).toHaveBeenCalled();
         });
     });
 });

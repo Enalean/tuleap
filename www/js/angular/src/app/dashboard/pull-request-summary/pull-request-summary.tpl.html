@@ -1,0 +1,48 @@
+<div
+    class="pull-request-summary"
+    ng-click="::summary_controller.goToOverview()"
+>
+    <span
+        class="title"
+        ng-bind-html="::summary_controller.pull_request.title"
+        ng-click="$event.stopPropagation()"
+    ></span>
+    <pull-request-refs
+        class="refs"
+        pull-request-data="::summary_controller.pull_request"
+    ></pull-request-refs>
+    <small class="creation-date">
+        <i class="icon-calendar"></i>
+        {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+    </small>
+    <span
+        ng-if="::summary_controller.isAbandoned()"
+        class="status label"
+        translate
+    >Abandoned</span>
+    <span
+        ng-if="::summary_controller.isMerged()"
+        class="status label label-success"
+        translate
+    >Merged</span>
+    <tuleap-username
+        class="author"
+        username="summary_controller.author"
+    ></tuleap-username>
+   <div class="btn-group actions">
+        <a
+           class="btn commit"
+           ui-sref="overview({ id: summary_controller.pull_request.id })"
+           ng-click="$event.stopPropagation()"
+        >
+        {{ ::summary_controller.pull_request.reference_src | limitTo: 6 }}
+        </a>
+        <a
+           class="btn files"
+           ui-sref="files({ id: summary_controller.pull_request.id })"
+           ng-click="$event.stopPropagation()"
+       >
+            <i class="icon-copy"></i>
+       </a>
+   </div>
+</div>

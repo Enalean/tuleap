@@ -55,18 +55,6 @@
             font-size: 12px;
             transition: opacity 100ms linear;
 
-            .pull-requests-source-destination {
-                border: 1px solid #f79514;
-                border-radius: 3px;
-                color: #f79514;
-                padding: 2px 2px;
-                margin: 0 5px 0 0;
-
-                > .repository {
-                    font-weight: 600;
-                }
-            }
-
             > .pull-request-reference {
                 letter-spacing: 0.3px;
                 color: #888;
@@ -91,18 +79,6 @@
     .pull-request-ci {
         white-space: nowrap;
         margin: 0 0 30px;
-    }
-
-    .pull-request-author > div {
-        display: flex;
-        align-items: center;
-
-        .avatar {
-            display: inline-block;
-            width: 25px;
-            height: 25px;
-            margin: 0 5px 0 0;
-        }
     }
 
     .pull-request-changes {
