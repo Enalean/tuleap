@@ -124,6 +124,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedUserSbFields($this->tracker)) {
             
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="list_field_id">';
             if (! $this->getFieldId()) {
                 $select .= '<option value="" selected="selected">' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field')) . '</option>';
@@ -175,6 +176,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
+            $this->getCSRFToken()->check();
             if ($field = Tracker_FormElementFactory::instance()->getUsedUserSbFieldById($this->tracker, $request->get('list_field_id'))) {
                 $this->list_field = $field;
                 if ($this->save()) {
@@ -189,6 +191,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_contributor'));
             }
         } else if ($request->exist('delete')) {
+            $this->getCSRFToken()->check();
             if ($this->delete()) {
                 $this->sendContributorChangeEvent();
                 $GLOBALS['Response']->redirect($this->getUrl());
@@ -278,4 +281,3 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
     }
 
 }
-?>

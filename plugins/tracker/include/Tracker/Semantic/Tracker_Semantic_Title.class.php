@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -123,7 +123,8 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
 
         if ($text_fields = Tracker_FormElementFactory::instance()->getUsedTextFields($this->tracker)) {
 
-            $html .= '<form method="POST" action="'. $this->geturl() .'">';
+            $html .= '<form method="POST" action="'. $this->getUrl() .'">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="text_field_id">';
             if ( ! $this->getFieldId()) {
                 $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
@@ -174,6 +175,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
+            $this->getCSRFToken()->check();
             if ($field = Tracker_FormElementFactory::instance()->getUsedTextFieldById($this->tracker, $request->get('text_field_id'))) {
                 $this->text_field = $field;
                 if ($this->save()) {
@@ -186,6 +188,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_title'));
             }
         } else if ($request->exist('delete')) {
+            $this->getCSRFToken()->check();
             if ($this->delete()) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','deleted_title'));
                 $GLOBALS['Response']->redirect($this->getUrl());
