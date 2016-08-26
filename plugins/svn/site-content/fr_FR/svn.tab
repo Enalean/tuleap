@@ -105,3 +105,9 @@ plugin_svn	delete_repository_exception	Une erreur est survenue lors de la suppre
 plugin_svn	archived_repositories	Dépôts svn supprimés
 plugin_svn	restore_confirmation	Confirmer la restauration du dépôt
 plugin_svn	restore_no_repo_found	Aucun dépôt svn à restaurer.
+
+plugin_svn	logsdaily_field	Nom du dépôt
+plugin_svn	logsdaily_title	Les commits Subversion multi dépôts
+plugin_svn	log_read_label	Lecture
+plugin_svn	log_write_label	Écriture
+plugin_svn	log_browse_label	Accès depuis l'interface
