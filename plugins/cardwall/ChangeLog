@@ -1,3 +1,6 @@
+Version 1.66 - Tuleap 8.19
+    * request #9417: Missing CSRF protection in the semantic administration
+
 Version 1.65 - Tuleap 8.18
     * request #9375 Gulpify sass
 

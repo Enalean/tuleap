@@ -22,7 +22,7 @@ Version 8.19 (Not Released Yet)
 	* tory #9393: SVN custom logs are not working in new installation in HTTPS
 
 	== Plugins ==
-	* tracker: 5.994
+	* tracker: 5.995
 	* git: 4.255
 	* ldap: 3.108
 	* mediawiki: 0.124
@@ -33,7 +33,8 @@ Version 8.19 (Not Released Yet)
 	* statistics: 0.64
 	* webdav: 1.9.19
 	* docman: 2.26.119
-	* agiledashboard: 1.413
+	* agiledashboard: 1.414
+	* cardwall: 1.66
 
 	== Themes ==
 	* FlamingParrot: 1.150
