@@ -71,6 +71,7 @@ class FRSPackageRouter
                 } catch (FRSDeletePackageNotYoursException $e) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_yours'));
                 }
+                $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
                 break;
             case 'add':
                 $this->package_controller->displayCreationForm($project, $existing_packages);

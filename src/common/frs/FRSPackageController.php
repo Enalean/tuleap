@@ -60,7 +60,6 @@ class FRSPackageController
 
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_del'));
         }
-        $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
     }
 
     public function displayCreationForm(Project $project, array $existing_packages)
@@ -109,8 +108,8 @@ class FRSPackageController
         }
 
         $package_data = $request->get('package');
-        if (! ($package_data['name'] == html_entity_decode($package->getName())
-            && $this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId()))
+        if ($package_data['name'] !== html_entity_decode($package->getName())
+            && $this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId())
         ) {
             throw new FRSPackageNameAlreadyExistsException();
         }
