@@ -55,6 +55,7 @@ use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\AccessHistoryDao;
+use Tuleap\Svn\Logs\QueryBuilder;
 
 /**
  * SVN plugin
@@ -105,6 +106,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('codendi_daily_start');
         $this->addHook('show_pending_documents');
         $this->addHook('project_is_deleted');
+        $this->addHook('logs_daily');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -494,5 +496,21 @@ class SvnPlugin extends Plugin {
         $restore_controller = new RestoreController($this->getRepositoryManager());
         $tab_content        = $restore_controller->displayRestorableRepositories($archived_repositories, $project_id);
         $params['html'][]   = $tab_content;
+    }
+
+    public function logs_daily($params)
+    {
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['group_id']);
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
+            $builder = new QueryBuilder();
+            $query  = $builder->buildQuery($project, $params['span'], $params['who']);
+
+             $params['logs'][] = array(
+                'sql'   => $query,
+                'field' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_field'),
+                'title' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_title')
+            );
+        }
     }
 }

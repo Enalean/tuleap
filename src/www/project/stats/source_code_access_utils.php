@@ -81,9 +81,15 @@ function logs_display($sql, $span, $field, $title='') {
             print ' <td> <a href="/users/'.$hp->purify($row["user_name"]).'/">'.$hp->purify($row["user_name"]).'</a> ('. $hp->purify($row["realname"]) .')</td>'
                 .' <td>'.$hp->purify($row["email"]).'</td>';
             print ' <td>';
-            print $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'
-                .' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
-                .'</tr>'."\n";
+            print $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>';
+
+            if (isset($row['local_time'])) {
+                print ' <td align="right">'. $hp->purify($row['local_time']) .'</td>';
+            } else {
+                print ' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>';
+            }
+
+            print '</tr>'."\n";
         } while ($row = db_fetch_array($res));
 
         print '</table>';
@@ -479,7 +485,9 @@ function plugins_log_extract($project, $span, $who) {
     $event_manager->processEvent('logs_daily', array(
         'group_id'  => $project->getGroupId(),
         'logs_cond' => logs_cond($project, $span, $who),
-        'logs'      => &$logs
+        'logs'      => &$logs,
+        'span'      => $span,
+        'who'       => $who,
     ));
     return $logs;
 
