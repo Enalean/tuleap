@@ -4,6 +4,7 @@ Version 8.19 (Not Released Yet)
 	* story #9281: define FRS global permissions (Refactoring of package and release)
 	* story #9409: define FRS permissions for packages and releases (Refactoring : add package router)
 	* request #9419: It should be possible to create ldap users at XML import
+	* story #9393 See svn plugin access logs
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
@@ -28,7 +29,7 @@ Version 8.19 (Not Released Yet)
 	* mediawiki: 0.124
 	* pluginsadministration: 1.20
 	* userlog: 1.10
-	* svn: 0.83
+	* svn: 0.84
 	* openidconnectclient: 0.26
 	* statistics: 0.64
 	* webdav: 1.9.19
