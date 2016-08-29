@@ -1,3 +1,15 @@
+Version 8.18-2 (Monday, August 29th 2016)
+	== Bug fix ==
+	* request #9420: Openlist field can have an erroneous value when an artifact is created
+	* request #9416: SVN import doesn't properly take into account empty ugroups
+	* request #9415: Impossible to unset the semantic Initial effort
+	* request #9412: When you check users existance with SOAP the returned information is incomplete
+	* request #9407: HTTPS is not properly detected when behind a reverse proxy
+	* request #9406: Missing login and logout CSRF protection
+	* request #9403: User info endpoint should not be mandatory
+	* request #9397: Manually push SSH keys to a Gerrit server can be confusing if two servers use the same hostname
+	* request #9331: Copy artifact - warning when permission on field is used
+
 Version 8.18 (Thursday, August 18th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions
