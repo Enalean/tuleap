@@ -108,6 +108,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('project_is_deleted');
         $this->addHook('logs_daily');
         $this->addHook('statistics_collector');
+        $this->addHook('plugin_statistics_service_usage');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -519,10 +520,18 @@ class SvnPlugin extends Plugin {
     {
         if (! empty($params['formatter']))
         {
-            $statistic_dao       = new \Tuleap\Svn\Statistic\Dao();
-            $statistic_collector = new \Tuleap\Svn\Statistic\Collector($statistic_dao);
+            $statistic_dao       = new \Tuleap\Svn\Statistic\SCMUsageDao();
+            $statistic_collector = new \Tuleap\Svn\Statistic\SCMUsageCollector($statistic_dao);
 
             echo $statistic_collector->collect($params['formatter']);
         }
     }
+
+    public function plugin_statistics_service_usage(array $params)
+    {
+        $statistic_dao       = new \Tuleap\Svn\Statistic\ServiceUsageDao();
+        $statistic_collector = new \Tuleap\Svn\Statistic\ServiceUsageCollector($statistic_dao);
+        $statistic_collector->collect($params['csv_exporter'], $params['start_date'], $params['end_date']);
+    }
+
 }
