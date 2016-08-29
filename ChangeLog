@@ -20,7 +20,8 @@ Version 8.19 (Not Released Yet)
 	* request #9414: Removing the backup cron for new installation
 	* request #9407: HTTPS is not properly detected when behind a reverse proxy
 	* request #9122: Don't remove deleted items if copy doesn't work
-	* tory #9393: SVN custom logs are not working in new installation in HTTPS
+	* story #9393: SVN custom logs are not working in new installation in HTTPS
+	* request #9395: A restricted user can not browse the SVN tree in SVN core if the SVN plugin is not installed
 
 	== Plugins ==
 	* tracker: 5.995
