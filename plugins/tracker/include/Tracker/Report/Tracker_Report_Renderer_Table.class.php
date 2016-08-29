@@ -1886,8 +1886,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
 
-        $lines = array();
-        $head  = array('aid');
+        $lines                    = array();
+        $head                     = array('aid');
+        $artlink_natures          = array();
+        $nature_presenter_factory = new NaturePresenterFactory(new NatureDao());
         foreach ($columns as $column) {
             if (! $this->canFieldBeExportedToCSV($column['field'])) {
                 continue;
@@ -1895,16 +1897,23 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             $title = $column['field']->getName();
             if (isset($column['artlink_nature'])) {
-                if (isset($column['artlink_nature'])) {
-                    $nature = $column['artlink_nature'];
-                    if (! $nature) {
-                        $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
-                    }
-                    $title .= " (". $nature. ")";
+                $nature = $column['artlink_nature'];
+                if (! $nature) {
+                    $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
                 }
+                $title .= " (". $nature. ")";
             }
 
-            $head[] = $title;
+            if ($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
+                foreach ($nature_presenter_factory->getAllNatures() as $nature) {
+                    $head[]            = $title. " (" . $nature->shortname . ")";
+                    $artlink_natures[] = $nature->shortname;
+                }
+                $head[]            = $title . " (" . $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature') . ")";
+                $artlink_natures[] = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
+            } else {
+                $head[] = $title;
+            }
         }
 
         $lines[] = $head;
@@ -1945,6 +1954,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $column['artlink_nature'],
                             $format
                         );
+                    } if($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE && isset($artlink_natures)) {
+                        foreach ($artlink_natures as $nature) {
+                            $line[] = $column['field']->fetchCSVChangesetValueWithNature(
+                                $row['changeset_id'],
+                                $nature,
+                                ''
+                            );
+                        }
                     } else {
                         $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
                         $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
