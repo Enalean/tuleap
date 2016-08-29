@@ -107,6 +107,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('show_pending_documents');
         $this->addHook('project_is_deleted');
         $this->addHook('logs_daily');
+        $this->addHook('statistics_collector');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -511,6 +512,17 @@ class SvnPlugin extends Plugin {
                 'field' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_field'),
                 'title' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_title')
             );
+        }
+    }
+
+    public function statistics_collector(array $params)
+    {
+        if (! empty($params['formatter']))
+        {
+            $statistic_dao       = new \Tuleap\Svn\Statistic\Dao();
+            $statistic_collector = new \Tuleap\Svn\Statistic\Collector($statistic_dao);
+
+            echo $statistic_collector->collect($params['formatter']);
         }
     }
 }
