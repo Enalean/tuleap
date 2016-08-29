@@ -20,20 +20,29 @@
 
 namespace Tuleap\FRS;
 
+use ForgeConfig;
 use FRSPackage;
 use FRSRelease;
 use FRSReleaseFactory;
 use HTTPRequest;
 use Project;
+use ProjectUGroup;
+use TemplateRendererFactory;
+use User_ForgeUserGroupFactory;
+use User_UGroup;
 
 class FRSReleaseController
 {
     /** @var FRSReleaseFactory */
     private $release_factory;
 
-    public function __construct(FRSReleaseFactory $release_factory)
+    /** @var User_ForgeUserGroupFactory  */
+    private $ugroup_factory;
+
+    public function __construct(FRSReleaseFactory $release_factory, User_ForgeUserGroupFactory $ugroup_factory)
     {
         $this->release_factory = $release_factory;
+        $this->ugroup_factory  = $ugroup_factory;
     }
 
     public function delete(Project $project, FRSRelease $release)
@@ -99,5 +108,68 @@ class FRSReleaseController
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
             '?func=update&amp;postExpected=&amp;group_id='. $project->getGroupId() .'&amp;package_id='. $release->getPackageID() .'&amp;id='. $release->getReleaseID()
         );
+    }
+
+    public function displayUserGroups(Project $project, $permission_type, $release_id = null)
+    {
+        $renderer            = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $all_project_ugroups = $this->ugroup_factory->getAllForProject($project);
+        $ugroups             = $this->getFrsUGroupsByPermission($permission_type, $all_project_ugroups, $release_id);
+
+        $presenter = new FRSReleasePermissionPresenter(
+            $project,
+            $ugroups,
+            $permission_type
+        );
+
+        $renderer->renderToPage('permissions-presenter', $presenter);
+    }
+
+
+    private function getFrsUGroupsByPermission($permission_type, array $project_ugroups, $release_id = null)
+    {
+        $options         = array();
+        foreach ($project_ugroups as $project_ugroup) {
+            if ($this->isUgroupHidden($project_ugroup)) {
+                continue;
+            }
+
+            $release_ugroups = $this->getAllUserGroups($permission_type, $release_id);
+
+            $options[] = array(
+                'id'       => $project_ugroup->getId(),
+                'name'     => $project_ugroup->getName(),
+                'selected' => $this->isUgroupSelected($project_ugroup, $release_ugroups)
+            );
+        }
+
+        return $options;
+    }
+
+    private function isUgroupHidden(User_UGroup $project_ugroup)
+    {
+        return (int)$project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
+    }
+
+    private function getAllUserGroups($permission_type, $release_id)
+    {
+        $ugroups = array();
+
+        $release_ugroups = permission_db_authorized_ugroups($permission_type, $release_id);
+        while ($ugroup = db_fetch_array($release_ugroups)) {
+            $ugroups[] = $ugroup['ugroup_id'];
+        }
+
+        return $ugroups;
+    }
+
+    private function isUgroupSelected(User_UGroup $user_group, array $release_ugroups)
+    {
+        return in_array($user_group->getId(), $release_ugroups);
+    }
+
+    private function getTemplateDir()
+    {
+        return ForgeConfig::get('codendi_dir') .'/src/templates/frs';
     }
 }

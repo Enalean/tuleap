@@ -22,7 +22,7 @@ namespace Tuleap\FRS;
 
 use Project;
 
-class FRSPackagePermissionPresenter
+class FRSReleasePermissionPresenter
 {
     public $user_groups;
     public $permission_not_defined;

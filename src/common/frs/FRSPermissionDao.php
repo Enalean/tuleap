@@ -22,6 +22,7 @@ namespace Tuleap\FRS;
 
 use DataAccessObject;
 use FRSPackage;
+use FRSRelease;
 use ProjectUGroup;
 
 class FRSPermissionDao extends DataAccessObject
@@ -140,8 +141,8 @@ class FRSPermissionDao extends DataAccessObject
         $project_id     = $this->da->escapeInt($project_id);
         $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
         $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
-        $package_read   = $this->da->quoteSmart(FRSPackage::PERM_READ)
-        ;
+        $package_read   = $this->da->quoteSmart(FRSPackage::PERM_READ);
+        $release_read   = $this->da->quoteSmart(FRSRelease::PERM_READ);
 
         $this->da->startTransaction();
 
@@ -153,10 +154,11 @@ class FRSPermissionDao extends DataAccessObject
 
         $sql = "UPDATE permissions
                 INNER JOIN frs_package ON permissions.object_id = CAST(frs_package.package_id AS CHAR)
+                INNER JOIN frs_release ON frs_release.package_id = frs_package.package_id
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id IN ($old_ugroup_ids)
                   AND frs_package.group_id = $project_id
-                  AND permission_type = $package_read";
+                  AND permission_type IN ($package_read, $release_read)";
         $this->update($sql);
 
         return $this->da->commit();
@@ -205,6 +207,7 @@ class FRSPermissionDao extends DataAccessObject
         $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
         $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
         $package_read  = $this->da->quoteSmart(FRSPackage::PERM_READ);
+        $release_read  = $this->da->quoteSmart(FRSRelease::PERM_READ);
 
         $this->da->startTransaction();
 
@@ -217,7 +220,7 @@ class FRSPermissionDao extends DataAccessObject
         $sql = "UPDATE permissions
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id = $old_ugroup_id
-                AND permission_type = $package_read
+                AND permission_type IN ($package_read, $release_read)
                 ";
         $this->update($sql);
 

@@ -429,14 +429,22 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     if ($is_update) {
         $pm  = PermissionsManager::instance();
         $dar = $pm->getAuthorizedUgroups($release->getReleaseID(), FRSRelease::PERM_READ);
+
+        $ugroup_factory      = new User_ForgeUserGroupFactory(new UserGroupDao());
+        $all_project_ugroups = $ugroup_factory->getAllForProject($release->getProject());
+        $project_names       = array();
+        foreach ($all_project_ugroups as $project_ugroup) {
+            $project_names[$project_ugroup->getId()] = $project_ugroup->getName();
+        }
+
         $ugroups_name = array();
         foreach ($dar as $row) {
-            $ugroups_name[] = $hp->purify(util_translate_name_ugroup($row['name']), CODENDI_PURIFIER_JS_QUOTE);
+            $ugroups_name[] = $hp->purify($project_names[$row['ugroup_id']], CODENDI_PURIFIER_JS_QUOTE);
         }
-        echo "var ugroups_name = '" . implode(", ", $ugroups_name) . "';";
-        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+        echo "var ugroups_name = ' " . implode(", ", $ugroups_name) . " ';";
+        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
     } else {
-        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
     }
     echo '</script>';
     //set variables for news template
@@ -665,10 +673,17 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                 <TD>
                                     <DIV id="permissions_list">
                                         <?php
+                                        $project = ProjectManager::instance()->getProject($group_id);
                                         if ($is_update) {
-                                            permission_display_selection_frs("RELEASE_READ", $release->getReleaseID(), $group_id);
+                                            $release_controller = new FRSPackageController(
+                                                FRSPackageFactory::instance(),
+                                                FRSReleaseFactory::instance(),
+                                                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                                                PermissionsManager::instance()
+                                            );
+
+                                            $release_controller->displayUserGroups($project, FRSRelease::PERM_READ, $release->getReleaseID());
                                         } else {
-                                            $project            = ProjectManager::instance()->getProject($group_id);
                                             $package_controller = new FRSPackageController(
                                                 FRSPackageFactory::instance(),
                                                 FRSReleaseFactory::instance(),
