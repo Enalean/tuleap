@@ -54,13 +54,10 @@ class Tracker_Artifact_MailGateway_CitationStripper {
     }
 
     private function stripOutlookTextQuote($mail_content) {
-        if (ForgeConfig::get('sys_strip_outlook') == 1) {
-            return $this->stripOutlook(
-                $this->stripOutlook($mail_content, 'en'),
-                'fr'
-            );
-        }
-        return $mail_content;
+        return $this->stripOutlook(
+            $this->stripOutlook($mail_content, 'en'),
+            'fr'
+        );
     }
 
     public function stripHTML($mail_content) {
