@@ -7,7 +7,7 @@ function PullRequestsDirective() {
         restrict        : 'A',
         scope           : {},
         templateUrl     : 'pull-requests/pull-requests.tpl.html',
-        controller      : 'PullRequestsController as pull_requests',
+        controller      : 'PullRequestsController as pullrequests_controller',
         bindToController: true
     };
 }

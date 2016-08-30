@@ -9,11 +9,11 @@ PullRequestController.$inject = [
 
 function PullRequestController(
     $state,
-    lodash
+    _
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         $state: $state
     });
 }

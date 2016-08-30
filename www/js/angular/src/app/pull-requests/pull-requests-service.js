@@ -9,13 +9,13 @@ PullRequestsService.$inject = [
 ];
 
 function PullRequestsService(
-    lodash,
+    _,
     SharedPropertiesService,
     PullRequestsRestService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         pull_requests           : SharedPropertiesService.getPullRequests(),
         getPullRequests         : getPullRequests,
         pull_requests_pagination: {
@@ -51,7 +51,7 @@ function PullRequestsService(
                 repositoryDest.isCurrent = (repositoryDest.id === repoId);
                 repositorySrc.isFork = (repositorySrc.id !== repositoryDest.id);
             });
-            lodash.reverse(self.pull_requests);
+            _.reverse(self.pull_requests);
             return self.pull_requests;
         });
     }

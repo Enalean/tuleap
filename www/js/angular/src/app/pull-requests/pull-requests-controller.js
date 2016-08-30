@@ -11,13 +11,13 @@ PullRequestsController.$inject = [
 
 function PullRequestsController(
     $state,
-    lodash,
+    _,
     SharedPropertiesService,
     PullRequestService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         loading_pull_requests: true,
         valid_status_keys    : PullRequestService.valid_status_keys,
         pull_requests        : [],

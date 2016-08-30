@@ -8,12 +8,12 @@ MergeModalController.$inject = [
 ];
 
 function MergeModalController(
-    lodash,
+    _,
     $modalInstance
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         proceed: proceed,
         cancel : cancel
     });

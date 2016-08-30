@@ -1,10 +1,10 @@
 <div id="pull-requests-header">
     <h2 translate>Pull requests</h2>
 
-    <ui-select ng-if="pull_requests.pull_requests.length > 0"
-            ng-model="pull_requests.selected_pull_request"
+    <ui-select ng-if="pullrequests_controller.pull_requests.length > 0"
+            ng-model="pullrequests_controller.selected_pull_request"
             search-enabled="false"
-            on-select="pull_requests.loadPullRequest($item)"
+            on-select="pullrequests_controller.loadPullRequest($item)"
     >
         <ui-select-match>
             <span class="id">#{{ $select.selected.id }}</span>
@@ -16,10 +16,10 @@
                 {{ $select.selected.branch_dest }}
             </small>
             <small am-time-ago="$select.selected.creation_date" class="creation-date"></small>
-            <span ng-if="$select.selected.status === pull_requests.valid_status_keys.abandon" class="status label" translate>Abandoned</span>
-            <span ng-if="$select.selected.status === pull_requests.valid_status_keys.merge" class="status label label-success" translate>Merged</span>
+            <span ng-if="$select.selected.status === pullrequests_controller.valid_status_keys.abandon" class="status label" translate>Abandoned</span>
+            <span ng-if="$select.selected.status === pullrequests_controller.valid_status_keys.merge" class="status label label-success" translate>Merged</span>
         </ui-select-match>
-        <ui-select-choices repeat="pull_request in (pull_requests.pull_requests | filter: $select.search) track by pull_request.id">
+        <ui-select-choices repeat="pull_request in (pullrequests_controller.pull_requests | filter: $select.search) track by pull_request.id">
             <span class="id">#{{ pull_request.id }}</span>
             <span class="title">{{ pull_request.raw_title }}</span>
             <small class="source-dest">
@@ -29,12 +29,12 @@
                 {{ pull_request.branch_dest }}
             </small>
             <small am-time-ago="pull_request.creation_date" class="creation-date"></small>
-            <span ng-if="pull_request.status === pull_requests.valid_status_keys.abandon" class="status label" translate>Abandoned</span>
-            <span ng-if="pull_request.status === pull_requests.valid_status_keys.merge" class="status label label-success" translate>Merged</span>
+            <span ng-if="pull_request.status === pullrequests_controller.valid_status_keys.abandon" class="status label" translate>Abandoned</span>
+            <span ng-if="pull_request.status === pullrequests_controller.valid_status_keys.merge" class="status label label-success" translate>Merged</span>
         </ui-select-choices>
     </ui-select>
 
-    <span ng-if="pull_requests.loading_pull_requests" class="loading"></span>
+    <span ng-if="pullrequests_controller.loading_pull_requests" class="loading"></span>
 </div>
 
 <div ui-view="pull-request"></div>

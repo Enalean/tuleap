@@ -7,19 +7,19 @@ FilepathsService.$inject = [
 ];
 
 function FilepathsService(
-    lodash
+    _
 ) {
     var self = this;
     var filepaths = [];
 
-    lodash.extend(self, {
+    _.extend(self, {
         setFilepaths: setFilepaths,
         previous    : previous,
         next        : next
     });
 
     function setFilepaths(files) {
-        filepaths = lodash.map(files, 'path');
+        filepaths = _.map(files, 'path');
     }
 
     function previous(filepath) {

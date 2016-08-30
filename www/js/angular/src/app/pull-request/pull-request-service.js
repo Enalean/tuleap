@@ -8,12 +8,12 @@ PullRequestService.$inject = [
 ];
 
 function PullRequestService(
-    lodash,
+    _,
     PullRequestRestService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         valid_status_keys: {
             review : 'review',
             merge  : 'merge',

@@ -9,13 +9,13 @@ TimelineService.$inject = [
 ];
 
 function TimelineService(
-    lodash,
+    _,
     $sce,
     TimelineRestService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         timeline_pagination: {
             limit : 50,
             offset: 0
@@ -45,7 +45,7 @@ function TimelineService(
         var initialTimeline = [];
         return getPaginatedTimeline(pull_request, initialTimeline, limit, offset)
         .then(function(timeline) {
-            lodash.forEach(timeline, function(event) {
+            _.forEach(timeline, function(event) {
                 self.formatEvent(event, pull_request);
             });
             return timeline;

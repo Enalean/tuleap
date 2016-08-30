@@ -12,12 +12,12 @@ FilesRestService.$inject = [
 function FilesRestService(
     $http,
     $q,
-    lodash,
+    _,
     ErrorModalService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         getFiles: getFiles
     });
 

@@ -7,7 +7,7 @@ function FilesDirective() {
         restrict        : 'A',
         scope           : {},
         templateUrl     : 'files/files.tpl.html',
-        controller      : 'FilesController as files',
+        controller      : 'FilesController as files_controller',
         bindToController: true
     };
 }

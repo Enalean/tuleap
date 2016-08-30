@@ -14,7 +14,7 @@ OverviewController.$inject = [
 
 function OverviewController(
     $q,
-    lodash,
+    _,
     SharedPropertiesService,
     PullRequestService,
     UserRestService,
@@ -23,7 +23,7 @@ function OverviewController(
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         valid_status_keys    : PullRequestService.valid_status_keys,
         pull_request         : {},
         author               : {},

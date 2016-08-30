@@ -9,11 +9,11 @@ ErrorModalService.$inject = [
 
 function ErrorModalService(
     $modal,
-    lodash
+    _
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         showError: showError
     });
 

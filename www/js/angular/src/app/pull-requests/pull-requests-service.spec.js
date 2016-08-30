@@ -2,7 +2,7 @@ describe('PullRequestsService', function() {
     var $httpBackend,
         PullRequestsService,
         SharedPropertiesService,
-        lodash;
+        _;
 
     beforeEach(function() {
         module('tuleap.pull-request');
@@ -14,7 +14,7 @@ describe('PullRequestsService', function() {
                         _lodash_
         ) {
             $httpBackend = _$httpBackend_;
-            lodash = _lodash_;
+            _ = _lodash_;
             PullRequestsService = _PullRequestsService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -74,7 +74,7 @@ describe('PullRequestsService', function() {
             $httpBackend.flush();
 
             var processedPullRequests = SharedPropertiesService.getPullRequests();
-            expect(lodash.map(processedPullRequests, 'id')).toEqual([2, 1]);
+            expect(_.map(processedPullRequests, 'id')).toEqual([2, 1]);
         });
 
         it('sets flags for each pull request', function() {
@@ -84,9 +84,9 @@ describe('PullRequestsService', function() {
             $httpBackend.flush();
 
             var processedPullRequests = SharedPropertiesService.getPullRequests();
-            expect(lodash.map(processedPullRequests, 'repository.isFork')).toEqual([true, false]);
-            expect(lodash.map(processedPullRequests, 'repository.isCurrent')).toEqual([true, true]);
-            expect(lodash.map(processedPullRequests, 'repository_dest.isCurrent')).toEqual([false, true]);
+            expect(_.map(processedPullRequests, 'repository.isFork')).toEqual([true, false]);
+            expect(_.map(processedPullRequests, 'repository.isCurrent')).toEqual([true, true]);
+            expect(_.map(processedPullRequests, 'repository_dest.isCurrent')).toEqual([false, true]);
         });
     });
 });

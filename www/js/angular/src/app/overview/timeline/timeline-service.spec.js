@@ -3,20 +3,21 @@ describe('TimelineService', function() {
     var $httpBackend,
         $sce,
         TimelineService,
-        lodash;
+        _;
 
     beforeEach(function() {
         module('tuleap.pull-request');
 
         // eslint-disable-next-line angular/di
-        inject(function(_$httpBackend_,
-                        _$sce_,
-                        _lodash_,
-                        _TimelineService_
+        inject(function(
+            _$httpBackend_,
+            _$sce_,
+            _lodash_,
+            _TimelineService_
         ) {
-            $httpBackend = _$httpBackend_;
-            $sce = _$sce_;
-            lodash = _lodash_;
+            $httpBackend    = _$httpBackend_;
+            $sce            = _$sce_;
+            _               = _lodash_;
             TimelineService = _TimelineService_;
         });
     });
@@ -201,7 +202,7 @@ describe('TimelineService', function() {
             TimelineService.addComment(pullRequest, timeline, newComment);
             $httpBackend.flush();
 
-            expect(lodash.map(timeline, 'id')).toEqual([expectedComment.id]);
+            expect(_.map(timeline, 'id')).toEqual([expectedComment.id]);
         });
     });
 });

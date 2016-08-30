@@ -10,14 +10,14 @@ TimelineController.$inject = [
 ];
 
 function TimelineController(
-    lodash,
+    _,
     SharedPropertiesService,
     TimelineService,
     TooltipService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         pull_request    : {},
         timeline        : [],
         loading_timeline: true,

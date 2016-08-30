@@ -2,7 +2,7 @@
     <h3><i class="icon-copy"></i> <span translate>Modified Files</span> <span class="badge">{{ files.files.length }}</span></h3>
 
     <div class="file-switcher">
-        <ui-select ng-if="! files.loading_files" ng-model="files.selected_file" search-enabled="false" on-select="files.loadFile($item)">
+        <ui-select ng-if="! files_controller.loading_files" ng-model="files_controller.selected_file" search-enabled="false" on-select="files_controller.loadFile($item)">
             <ui-select-match>
                 <div class="file">
                     <span class="status status-{{ $select.selected.status }}">{{ $select.selected.status }}</span>
@@ -11,7 +11,7 @@
                     <span class="changes lines-removed text-error" ng-class="{ 'show-changes': $select.selected.lines_removed > 0}">-{{ $select.selected.lines_removed }}</span>
                 </div>
             </ui-select-match>
-            <ui-select-choices repeat="file in (files.files | filter: $select.search) track by file.path">
+            <ui-select-choices repeat="file in (files_controller.files | filter: $select.search) track by file.path">
                 <div class="file">
                     <span class="status status-{{ file.status }}">{{ file.status }}</span>
                     <span class="path">{{ file.path }}</span>
@@ -22,7 +22,7 @@
         </ui-select>
     </div>
 
-    <div ng-if="files.loading_files" class="loading"></div>
+    <div ng-if="files_controller.loading_files" class="loading"></div>
 </div>
 
-<div ui-view="file-diff" ng-if="! files.loading_files"></div>
+<div ui-view="file-diff" ng-if="! files_controller.loading_files"></div>

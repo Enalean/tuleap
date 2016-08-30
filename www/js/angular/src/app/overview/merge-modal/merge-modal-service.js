@@ -9,11 +9,11 @@ MergeModalService.$inject = [
 
 function MergeModalService(
     $modal,
-    lodash
+    _
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         showMergeModal: showMergeModal
     });
 

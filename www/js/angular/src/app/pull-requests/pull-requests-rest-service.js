@@ -12,12 +12,12 @@ PullRequestsRestService.$inject = [
 function PullRequestsRestService(
     $http,
     $q,
-    lodash,
+    _,
     ErrorModalService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         getPullRequests: getPullRequests
     });
 

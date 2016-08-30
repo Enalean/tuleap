@@ -15,7 +15,7 @@ FileDiffDirective.$inject = [
 
 function FileDiffDirective(
     $window,
-    lodash,
+    _,
     $state,
     $compile,
     $uiViewScroll,
@@ -99,7 +99,7 @@ function FileDiffDirective(
     }
 
     function displayUnidiff(unidiff, fileLines) {
-        var content = lodash.map(fileLines, 'content').join('\n');
+        var content = _.map(fileLines, 'content').join('\n');
         unidiff.setValue(content);
 
         fileLines.forEach(function(line, lnb) {

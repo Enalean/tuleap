@@ -10,12 +10,12 @@ FileDiffController.$inject = [
 
 function FileDiffController(
     $state,
-    lodash,
+    _,
     SharedPropertiesService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         file_path   : $state.params.file_path,
         pull_request: SharedPropertiesService.getPullRequest()
     });

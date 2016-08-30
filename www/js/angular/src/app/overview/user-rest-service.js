@@ -12,12 +12,12 @@ UserRestService.$inject = [
 function UserRestService(
     $http,
     $q,
-    lodash,
+    _,
     ErrorModalService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         getUser: getUser
     });
 

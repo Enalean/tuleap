@@ -9,13 +9,13 @@ ErrorModalController.$inject = [
 ];
 
 function ErrorModalController(
-    lodash,
+    _,
     $modalInstance,
     message
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         reloading: false,
         details  : false,
         message  : message,

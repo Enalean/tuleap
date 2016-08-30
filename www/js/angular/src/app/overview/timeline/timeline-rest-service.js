@@ -12,12 +12,12 @@ TimelineRestService.$inject = [
 function TimelineRestService(
     $http,
     $q,
-    lodash,
+    _,
     ErrorModalService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         getTimeline: getTimeline,
         addComment : addComment
     });

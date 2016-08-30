@@ -7,7 +7,7 @@ function TimelineDirective() {
         restrict        : 'A',
         scope           : {},
         templateUrl     : 'overview/timeline/timeline.tpl.html',
-        controller      : 'TimelineController as timeline',
+        controller      : 'TimelineController as timeline_controller',
         bindToController: true
     };
 }

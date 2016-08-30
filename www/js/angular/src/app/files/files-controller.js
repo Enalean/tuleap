@@ -11,7 +11,7 @@ FilesController.$inject = [
 ];
 
 function FilesController(
-    lodash,
+    _,
     $state,
     SharedPropertiesService,
     FilesRestService,
@@ -19,7 +19,7 @@ function FilesController(
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         pull_request : {},
         files        : [],
         selected_file: {},
@@ -48,7 +48,7 @@ function FilesController(
         self.selected_file = self.files[0];
 
         if ($state.includes('diff')) {
-            self.selected_file = lodash.find(self.files, { path: $state.params.file_path });
+            self.selected_file = _.find(self.files, { path: $state.params.file_path });
         }
 
         loadFile(self.selected_file);

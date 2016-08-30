@@ -12,12 +12,12 @@ FileDiffRestService.$inject = [
 function FileDiffRestService(
     $q,
     $http,
-    lodash,
+    _,
     ErrorModalService
 ) {
     var self = this;
 
-    lodash.extend(self, {
+    _.extend(self, {
         getUnidiff       : getUnidiff,
         postInlineComment: postInlineComment
     });
