@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSPackageController;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
+
 require_once('www/news/news_utils.php');
 require_once('common/autoload.php');
 
@@ -185,7 +190,7 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
     if (!$group_id) {
         return $GLOBALS['Language']->getText('file_file_utils','g_id_err');
     } else {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $res = $frsrf->getFRSReleasesInfoListFromDb($group_id);
         $p = array();
         foreach($res as $release){
@@ -207,7 +212,7 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
 
 function file_utils_show_processors ($result) {
     global $group_id,$Language;
-    $hp =& Codendi_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $rows  =  db_numrows($result);
 
     $title_arr=array();
@@ -339,7 +344,15 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings) 
      //We cannot set permission on creation for now
      if ($package->getPackageID()) {
          echo '<tr style="vertical-align:top"><th>' .'Permissions'. ':</th><td>';
-         permission_display_selection_frs('PACKAGE_READ', $package->getPackageID(), $package->getGroupID());
+         $project            = ProjectManager::instance()->getProject($package->getGroupID());
+         $package_controller = new FRSPackageController(
+             FRSPackageFactory::instance(),
+             FRSReleaseFactory::instance(),
+             new User_ForgeUserGroupFactory(new UserGroupDao()),
+             PermissionsManager::instance()
+         );
+
+         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package->getPackageID());
          echo '</td></tr>';
      }
      echo '<tr><td></td><td> <br><input class="btn btn-primary" type="submit" NAME="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /> ';
@@ -351,7 +364,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings) 
 
 function frs_display_release_form($is_update, &$release, $group_id, $title, $url) {
     global $frspf, $frsrf, $frsff;
-    $hp =& Codendi_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     if (is_array($release)) {
         if (isset($release['date'])) {
             $release_date = $release['date'];
@@ -451,7 +464,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 <TD>
     <?php
 
-    $res = & $frspf->getFRSPackagesFromDb($group_id);
+    $res = $frspf->getFRSPackagesFromDb($group_id);
     $rows = count($res);
     if (!$res || $rows < 1) {
         echo '<p class="highlight">' . $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'no_p_available')) . '</p>';
@@ -535,7 +548,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             <tbody id="files_body">
 
     <?php
-        $files = & $release->getFiles();
+        $files = $release->getFiles();
         for ($i = 0; $i < count($files); $i++) {
             $fname = $files[$i]->getFileName();
             $list = explode('/', $fname);
@@ -656,7 +669,15 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                         if ($is_update) {
                                             permission_display_selection_frs("RELEASE_READ", $release->getReleaseID(), $group_id);
                                         } else {
-                                            permission_display_selection_frs("PACKAGE_READ", $release->getPackageID(), $group_id);
+                                            $project            = ProjectManager::instance()->getProject($group_id);
+                                            $package_controller = new FRSPackageController(
+                                                FRSPackageFactory::instance(),
+                                                FRSReleaseFactory::instance(),
+                                                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                                                PermissionsManager::instance()
+                                            );
+
+                                            $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $release->getPackageID());
                                         }
                                         ?>
 
@@ -664,6 +685,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                 </TD>
                             </TR>
                         </TABLE>
+
                     </FIELDSET>
                 </TD>
             </TR>
@@ -986,7 +1008,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             // the release_date that we showed MLS is 2004-06-02.
             // with mktime(0,0,0,2,6,2004); we will change the unix time in the database
             // and the people in India will discover that their release has been created on 2004-06-02
-            $rel = & $frsrf->getFRSReleaseFromDb($release['release_id']);
+            $rel = $frsrf->getFRSReleaseFromDb($release['release_id']);
             if (format_date('Y-m-d', $rel->getReleaseDate()) == $release['date']) {
                 // the date didn't change => don't update it
                 $unix_release_time = $rel->getReleaseDate();
@@ -1036,7 +1058,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         }
         if ($res) {
             // extract cross references
-            $reference_manager =& ReferenceManager::instance();
+            $reference_manager = ReferenceManager::instance();
             $reference_manager->extractCrossRef($release['release_notes'],$release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
             $reference_manager->extractCrossRef($release['change_log'],$release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
 
@@ -1072,11 +1094,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $project_files_dir = $GLOBALS['ftp_frs_dir_prefix'] . '/' . $group_unix_name;
 
             if ($is_update) {
-                $files =& $rel->getFiles();
+                $files = $rel->getFiles();
 
                 //remove files
                 foreach ($release_files_to_delete as $rel_file) {
-                    $res =& $frsff->getFRSFileFromDb($rel_file);
+                    $res = $frsff->getFRSFileFromDb($rel_file);
                     $fname = $res->getFileName();
                     $res = $frsff->delete_file($group_id, $rel_file);
                     if ($res == 0) {
@@ -1110,7 +1132,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                 if (! preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/", $release_time[$index])) {
                                     $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed_file', $fname));
                                 } else {
-                                    $res2 = & $frsff->getFRSFileFromDb($rel_file);
+                                    $res2 = $frsff->getFRSFileFromDb($rel_file);
 
                                     if (format_date('Y-m-d', $res2->getReleaseTime()) == $release_time[$index]) {
                                         $unix_release_time = $res2->getReleaseTime();
@@ -1209,7 +1231,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
             if (count($http_files_processor_type_list) > 0 || count($ftp_files_processor_type_list) > 0) {
                 //see if this release belongs to this project
-                $res1 = & $frsrf->getFRSReleaseFromDb($release_id, $group_id);
+                $res1 = $frsrf->getFRSReleaseFromDb($release_id, $group_id);
                 if (!$res1 || count($res1) < 1) {
                     //release not found for this project
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_not_yours'));

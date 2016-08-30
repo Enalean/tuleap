@@ -21,6 +21,7 @@
 namespace Tuleap\FRS;
 
 use DataAccessObject;
+use FRSPackage;
 use ProjectUGroup;
 
 class FRSPermissionDao extends DataAccessObject
@@ -139,13 +140,26 @@ class FRSPermissionDao extends DataAccessObject
         $project_id     = $this->da->escapeInt($project_id);
         $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
         $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
+        $package_read   = $this->da->quoteSmart(FRSPackage::PERM_READ)
+        ;
+
+        $this->da->startTransaction();
 
         $sql = "UPDATE frs_global_permissions
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id IN ($old_ugroup_ids)
                   AND project_id = $project_id";
+        $this->update($sql);
 
-        return $this->update($sql);
+        $sql = "UPDATE permissions
+                INNER JOIN frs_package ON permissions.object_id = CAST(frs_package.package_id AS CHAR)
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id IN ($old_ugroup_ids)
+                  AND frs_package.group_id = $project_id
+                  AND permission_type = $package_read";
+        $this->update($sql);
+
+        return $this->da->commit();
     }
 
     private function searchAllProjectsWithAnonymous()
@@ -190,12 +204,23 @@ class FRSPermissionDao extends DataAccessObject
     {
         $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
         $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $package_read  = $this->da->quoteSmart(FRSPackage::PERM_READ);
+
+        $this->da->startTransaction();
 
         $sql = "UPDATE frs_global_permissions
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id = $old_ugroup_id
                 ";
+        $this->update($sql);
 
-        return $this->update($sql);
+        $sql = "UPDATE permissions
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id
+                AND permission_type = $package_read
+                ";
+        $this->update($sql);
+
+        return $this->da->commit();
     }
 }

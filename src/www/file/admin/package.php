@@ -43,7 +43,9 @@ $project  = $project_manager->getProject($group_id);
 $router = new FRSPackageRouter(
     new FRSPackageController(
         FRSPackageFactory::instance(),
-        FRSReleaseFactory::instance()
+        FRSReleaseFactory::instance(),
+        new User_ForgeUserGroupFactory(new UserGroupDao()),
+        PermissionsManager::instance()
     ),
     FRSPackageFactory::instance(),
     new FRSPermissionManager(
