@@ -1,3 +1,6 @@
+Version 0.20 - Tuleap 8.19
+    * story #9427: Quickly switch between FRS/Scrum/Artifact release
+
 Version 0.19 - Tuleap 8.18
     * story #9281 define FRS global permissions (Read perm + forgeupgrade (site and project perm) + Update site and project at FRS level)
 

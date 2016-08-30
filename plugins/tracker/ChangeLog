@@ -1,3 +1,6 @@
+Version 5.996 - Tuleap 8.19
+    * story #9427: Quickly switch between FRS/Scrum/Artifact release
+
 Version 5.995 - Tuleap 8.19
     * request #9417: Missing CSRF protection in the semantic administration
 
