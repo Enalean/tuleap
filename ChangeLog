@@ -6,6 +6,7 @@ Version 8.19 (Not Released Yet)
 	* request #9419: It should be possible to create ldap users at XML import
 	* story #9393 See svn plugin access logs
 	* story #9427: Quickly switch between FRS/Scrum/Artifact release
+	* story #9409: define FRS permissions for packages and releases (Have consitent selectbox for FRS package)
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
