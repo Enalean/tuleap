@@ -11,6 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.3\n"
 
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "{{ reports_modal.kanban_label }} reports"
+msgstr "Rapports de {{ reports_modal.kanban_label }}"
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
 msgstr "Ajouter"
@@ -128,6 +132,10 @@ msgstr "Configuration générale"
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
 
+#: src/app/kanban-service.js
+msgid "Kanban {{ label }} successfuly deleted"
+msgstr "Le Kanban {{ label }} a été supprimé"
+
 #: src/app/app-kanban-controller.js
 msgid "Kanban {{ label }} successfuly deleted"
 msgstr "Le Kanban {{ label }} a été supprimé"
@@ -230,6 +238,10 @@ msgstr "Basculer l'affichage du backlog"
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
 msgstr "Basculer l'affichage de cette colonne"
+
+#: src/app/socket/socket-disconnect.tpl.html
+msgid "You are disconnected from real time. Please reload your page."
+msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid ""

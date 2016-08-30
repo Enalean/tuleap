@@ -5,6 +5,8 @@ angular
 KanbanService.$inject = [
     'Restangular',
     '$q',
+    '$window',
+    'gettextCatalog',
     'SharedPropertiesService',
     'RestErrorService'
 ];
@@ -12,6 +14,8 @@ KanbanService.$inject = [
 function KanbanService(
     Restangular,
     $q,
+    $window,
+    gettextCatalog,
     SharedPropertiesService,
     RestErrorService
 ) {
@@ -44,7 +48,10 @@ function KanbanService(
         addColumn           : addColumn,
         reorderColumns      : reorderColumns,
         removeColumn        : removeColumn,
-        editColumn          : editColumn
+        editColumn          : editColumn,
+        updateKanbanName    : updateKanbanName,
+        removeKanban        : removeKanban
+
     };
 
     function getKanban(id) {
@@ -200,11 +207,12 @@ function KanbanService(
             .catch(catchRestError);
     }
 
-    function moveInBacklog(kanban_id, dropped_item_id, compared_to) {
+    function moveInBacklog(kanban_id, dropped_item_id, compared_to, from_column) {
         var patch_arguments = {
             add: {
                 ids: [dropped_item_id]
-            }
+            },
+            from_column: from_column
         };
         if (compared_to) {
             patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
@@ -216,11 +224,12 @@ function KanbanService(
             .catch(catchRestError);
     }
 
-    function moveInArchive(kanban_id, dropped_item_id, compared_to) {
+    function moveInArchive(kanban_id, dropped_item_id, compared_to, from_column) {
         var patch_arguments = {
             add: {
                 ids: [dropped_item_id]
-            }
+            },
+            from_column: from_column
         };
         if (compared_to) {
             patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
@@ -232,11 +241,12 @@ function KanbanService(
             .catch(catchRestError);
     }
 
-    function moveInColumn(kanban_id, column_id, dropped_item_id, compared_to) {
+    function moveInColumn(kanban_id, column_id, dropped_item_id, compared_to, from_column) {
         var patch_arguments = {
             add: {
                 ids: [dropped_item_id]
-            }
+            },
+            from_column: from_column
         };
         if (compared_to) {
             patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
@@ -349,5 +359,18 @@ function KanbanService(
         RestErrorService.reload(data);
 
         return $q.reject();
+    }
+
+    function updateKanbanName(label) {
+        SharedPropertiesService.getKanban().label = label;
+    }
+
+    function removeKanban() {
+        var message = gettextCatalog.getString(
+            'Kanban {{ label }} successfuly deleted',
+            { label: SharedPropertiesService.getKanban().label }
+        );
+        $window.sessionStorage.setItem('tuleap_feedback', message);
+        $window.location.href = '/plugins/agiledashboard/?group_id=' + SharedPropertiesService.getProjectId();
     }
 }

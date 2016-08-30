@@ -3,13 +3,17 @@ angular
     .service('KanbanItemRestService', KanbanItemRestService);
 
 KanbanItemRestService.$inject = [
+    '$q',
     'Restangular',
-    'SharedPropertiesService'
+    'SharedPropertiesService',
+    'RestErrorService'
 ];
 
 function KanbanItemRestService(
+    $q,
     Restangular,
-    SharedPropertiesService
+    SharedPropertiesService,
+    RestErrorService
 ) {
     _.extend(Restangular.configuration.defaultHeaders, {
         'X-Client-UUID': SharedPropertiesService.getUUID()
@@ -40,6 +44,13 @@ function KanbanItemRestService(
         return Restangular.one('kanban_items', item_id)
             .get().then(function(response) {
                 return response.data;
-            });
+            })
+            .catch(catchRestError);
+    }
+
+    function catchRestError(data) {
+        RestErrorService.reload(data);
+
+        return $q.reject();
     }
 }

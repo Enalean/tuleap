@@ -3,20 +3,27 @@ angular
     .service('KanbanColumnService', KanbanColumnService);
 
 KanbanColumnService.$inject = [
+    '$q',
     '$filter',
-    'KanbanFilterValue'
+    'KanbanFilterValue',
+    'KanbanItemRestService',
+    'SharedPropertiesService'
 ];
 
 function KanbanColumnService(
+    $q,
     $filter,
-    KanbanFilterValue
+    KanbanFilterValue,
+    KanbanItemRestService,
+    SharedPropertiesService
 ) {
     var self = this;
     _.extend(self, {
-        addItem    : addItem,
-        filterItems: filterItems,
-        moveItem   : moveItem,
-        removeItem : removeItem
+        addItem             : addItem,
+        updateItemContent   : updateItemContent,
+        filterItems         : filterItems,
+        moveItem            : moveItem,
+        findAndMoveItem     : findAndMoveItem
     });
 
     function moveItem(
@@ -31,6 +38,47 @@ function KanbanColumnService(
         }
         removeItemFromFilteredContent(item, destination_column);
         addItem(item, destination_column, compared_to);
+    }
+
+    function findAndMoveItem(
+        id,
+        source_column,
+        destination_column,
+        compared_to
+    ) {
+        var promised_item = findItemInColumnById(id, source_column);
+
+        if (! promised_item) {
+            promised_item = KanbanItemRestService.getItem(id).then(function(item) {
+                if (! item) {
+                    return;
+                }
+
+                item.is_collapsed = SharedPropertiesService.doesUserPrefersCompactCards();
+                return item;
+            });
+        }
+
+        $q.when(promised_item).then(function(item) {
+            if (! item) {
+                return;
+            }
+
+            item.updating = false;
+
+            self.moveItem(
+                item,
+                source_column,
+                destination_column,
+                compared_to
+            );
+
+            self.filterItems(destination_column);
+        });
+    }
+
+    function findItemInColumnById(item_id, column) {
+        return _.find(column.content, {'id': item_id});
     }
 
     function removeItem(item, column) {
@@ -63,6 +111,21 @@ function KanbanColumnService(
 
     function hasColumnChanged(item, destination_column_id) {
         return item.in_column !== destination_column_id;
+    }
+
+    function updateItemContent(item, item_updated) {
+        var updated_item = _.pick(item_updated, function (value, key) {
+            return _.contains([
+                'color',
+                'item_name',
+                'label',
+                'card_fields'
+            ], key);
+        });
+
+        _.extend(item, updated_item);
+
+        updateItem(item, item_updated.in_column);
     }
 
     function updateItem(item, destination_column_id) {

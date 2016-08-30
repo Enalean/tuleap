@@ -31,7 +31,8 @@ describe("DroppedService -", function() {
         var kanban_id,
             kanban_item_id,
             column_id,
-            compared_to;
+            compared_to,
+            from_column;
 
         beforeEach(function() {
             kanban_id      = 1;
@@ -40,6 +41,7 @@ describe("DroppedService -", function() {
                 direction: 'after',
                 item_id  : 423
             };
+            from_column    = 912;
         });
 
         it("Given a kanban id, a numeric column id, a kanban item id, and a compared_to object, when I move the kanban item to the column, then KanbanService.moveInColumn will be called and a promise will be resolved", function() {
@@ -49,7 +51,8 @@ describe("DroppedService -", function() {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
 
             expect(promise).toBeResolved();
@@ -57,7 +60,8 @@ describe("DroppedService -", function() {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
         });
 
@@ -68,14 +72,16 @@ describe("DroppedService -", function() {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
 
             expect(promise).toBeResolved();
             expect(KanbanService.moveInBacklog).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
         });
 
@@ -86,14 +92,16 @@ describe("DroppedService -", function() {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
 
             expect(promise).toBeResolved();
             expect(KanbanService.moveInArchive).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
         });
     });

@@ -1,6 +1,7 @@
 <div class="tuleap-modal-loading" ng-if="kanban.loading_modal.loading"></div>
+<socket-disconnect></socket-disconnect>
 <div id="kanban-header">
-    <h1>{{ kanban.label }}</h1>
+    <h1>{{ kanban.kanban.label }}</h1>
 
     <button type="button" class="btn btn-small" ng-click="kanban.editKanban()" ng-show="kanban.showEditbutton()">
         <i class="icon-edit"></i>
