@@ -21,6 +21,7 @@ function ReleaseRestService(
         getAllLinkedArtifacts: getAllLinkedArtifacts,
         getLinkedArtifacts   : getLinkedArtifacts,
         getReleaseLinkNatures: getReleaseLinkNatures,
+        getMilestone         : getMilestone,
 
         linked_artifacts_pagination_limit : 50,
         linked_artifacts_pagination_offset: 0
@@ -99,5 +100,12 @@ function ReleaseRestService(
             offset,
             progress_callback
         );
+    }
+
+    function getMilestone(id) {
+        return $http.get('/api/v1/milestones/' + id)
+            .then(function(response) {
+                return response.data;
+            });
     }
 }

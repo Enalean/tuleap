@@ -21,6 +21,10 @@ msgstr ""
 msgid "Arch."
 msgstr ""
 
+#: src/app/release/release.tpl.html
+msgid "Artifact"
+msgstr ""
+
 #: src/app/release/files/files.tpl.html
 msgid "Changelog"
 msgstr ""
@@ -55,6 +59,10 @@ msgstr ""
 
 #: src/app/release/files/files.tpl.html
 msgid "MD5Sum"
+msgstr ""
+
+#: src/app/release/release.tpl.html
+msgid "Milestone"
 msgstr ""
 
 #: src/app/release/files/files.tpl.html

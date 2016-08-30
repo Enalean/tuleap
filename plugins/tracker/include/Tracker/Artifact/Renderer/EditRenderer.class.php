@@ -26,7 +26,18 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 use Tuleap\Tracker\Artifact\View\Nature;
 
-class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer {
+class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer
+{
+    /**
+     * Add tab at the top of artifact view
+     *
+     * Parameters:
+     *  - artifact  Tracker_Artifact
+     *  - collection    Tracker_Artifact_View_ViewCollection
+     *  - request   Codendi_Request
+     *  - user  PFUser
+     */
+    const EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection';
 
     /**
      * @var Tracker_FormElementFactory
@@ -161,6 +172,16 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 $view_collection->add(new Tracker_Artifact_View_Hierarchy($this->artifact, $request, $user));
             }
         }
+
+        EventManager::instance()->processEvent(
+            self::EVENT_ADD_VIEW_IN_COLLECTION,
+            array(
+                'artifact'   => $this->artifact,
+                'collection' => $view_collection,
+                'request'    => $request,
+                'user'       => $user
+            )
+        );
 
         return $view_collection->fetchRequestedView($request);
     }

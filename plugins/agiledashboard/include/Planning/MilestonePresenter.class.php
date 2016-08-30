@@ -73,6 +73,11 @@ class AgileDashboard_MilestonePresenter {
         return $this->milestone->getArtifactId();
     }
 
+    public function artifact()
+    {
+        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact');
+    }
+
     /**
      * @return array of (id, title, selected)
      */

@@ -176,6 +176,7 @@ plugin_agiledashboard	no_tracker_selected	Aucun tracker n'a été sélectionné.
 plugin_agiledashboard	no_tracker_available	Aucun tracker n'est disponible.
 plugin_agiledashboard	kanban_not_found	Le Kanban requis n'a pas pu être trouvé.
 plugin_agiledashboard	content_not_found	Aucun contenu n'a été trouvé.
+plugin_agiledashboard	Milestone	Jalon
 
 plugin_agiledashboard_first_kanban	error_existing_tracker	Un outil de suivi existant ($1) a empêché la création d'une première instance de kanban.
 plugin_agiledashboard_first_kanban	internal_error	Une erreur interne a empêché la création d'une première instance de kanban.

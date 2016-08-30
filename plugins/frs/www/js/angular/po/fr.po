@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/file-download/license-modal/license-modal.tpl.html
@@ -55,6 +55,10 @@ msgstr ""
 msgid "Arch."
 msgstr "Arch."
 
+#: src/app/release/release.tpl.html
+msgid "Artifact"
+msgstr "Artéfact"
+
 #: src/app/release/files/files.tpl.html
 msgid "Changelog"
 msgstr "Modifications"
@@ -90,6 +94,10 @@ msgstr "Artéfacts liés"
 #: src/app/release/files/files.tpl.html
 msgid "MD5Sum"
 msgstr "MD5Sum"
+
+#: src/app/release/release.tpl.html
+msgid "Milestone"
+msgstr "Jalon"
 
 #: src/app/release/files/files.tpl.html
 msgid "Name"

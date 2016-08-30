@@ -1,21 +1,31 @@
 describe("ReleaseController -", function() {
-    var $controller,
+    var $q,
+        $controller,
+        $rootScope,
         ReleaseController,
+        ReleaseRestService,
         SharedPropertiesService;
 
     beforeEach(function() {
         module('tuleap.frs');
 
         inject(function( // eslint-disable-line angular/di
+            _$q_,
+            _$rootScope_,
             _$controller_,
+            _ReleaseRestService_,
             _SharedPropertiesService_
         ) {
             $controller             = _$controller_;
+            $q                      = _$q_;
+            $rootScope              = _$rootScope_;
+            ReleaseRestService      = _ReleaseRestService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
         spyOn(SharedPropertiesService, "getProjectId");
         spyOn(SharedPropertiesService, "getRelease");
+        spyOn(ReleaseRestService, "getMilestone");
     });
 
     describe("init() -", function() {
@@ -34,6 +44,7 @@ describe("ReleaseController -", function() {
 
             SharedPropertiesService.getProjectId.and.returnValue(project_id);
             SharedPropertiesService.getRelease.and.returnValue(release);
+            ReleaseRestService.getMilestone.and.returnValue($q.when());
 
             ReleaseController = $controller('ReleaseController');
 
@@ -54,6 +65,39 @@ describe("ReleaseController -", function() {
             ReleaseController = $controller('ReleaseController');
 
             expect(ReleaseController.error_no_release_artifact).toBeTruthy();
+        });
+
+        it("Given that no artifact had been bound to the FRS release, when I init the release controller then the milestone property is null", function() {
+            var release = {
+                id: 92
+            };
+
+            SharedPropertiesService.getRelease.and.returnValue(release);
+
+            ReleaseController = $controller('ReleaseController');
+
+            expect(ReleaseController.milestone).toBeFalsy();
+        });
+
+        it("Given that the artifact bound to the FRS release is also a milestone, when I init the release controller then the milestone property is fed with the Milestone object", function() {
+            var release = {
+                id      : 44,
+                artifact: {
+                    id: 230
+                }
+            };
+
+            var milestone = {
+                id: 230
+            };
+
+            SharedPropertiesService.getRelease.and.returnValue(release);
+            ReleaseRestService.getMilestone.and.returnValue($q.when(milestone));
+
+            ReleaseController = $controller('ReleaseController');
+            $rootScope.$apply();
+
+            expect(ReleaseController.milestone.id).toEqual(230);
         });
     });
 });
