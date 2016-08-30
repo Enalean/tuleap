@@ -1,3 +1,6 @@
+Version 1.416 - Tuleap 8.19
+    * Fix request #9432: Can't import a configuration from a template file in Agile Dashboard
+
 Version 1.415 - Tuleap 8.19
     * story #9427: Quickly switch between FRS/Scrum/Artifact release
 
