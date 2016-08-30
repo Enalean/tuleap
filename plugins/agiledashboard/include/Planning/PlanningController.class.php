@@ -21,6 +21,7 @@
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -381,7 +382,8 @@ class Planning_Controller extends MVC2_PluginController {
                 $_FILES["template_file"]["tmp_name"]
             );
             if ($errors === '') {
-                $xml_importer->import($this->group_id, $_FILES["template_file"]["tmp_name"]);
+                $config = new ImportConfig();
+                $xml_importer->import($config, $this->group_id, $_FILES["template_file"]["tmp_name"]);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success')
