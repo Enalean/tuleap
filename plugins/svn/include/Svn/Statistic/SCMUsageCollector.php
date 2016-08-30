@@ -22,14 +22,14 @@ namespace Tuleap\Svn\Statistic;
 
 use Statistics_Formatter;
 
-class Collector
+class SCMUsageCollector
 {
     /**
-     * @var Dao
+     * @var SCMUsageDao
      */
     private $dao;
 
-    public function __construct(Dao $dao)
+    public function __construct(SCMUsageDao $dao)
     {
         $this->dao = $dao;
     }

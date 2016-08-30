@@ -22,7 +22,7 @@ namespace Tuleap\Svn\Statistic;
 
 use DataAccessObject;
 
-class Dao extends DataAccessObject
+class SCMUsageDao extends DataAccessObject
 {
     public function searchAccessesCount($start_date, $end_date, $project_id)
     {

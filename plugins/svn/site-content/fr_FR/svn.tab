@@ -124,3 +124,4 @@ plugin_svn_statistics	top_user	Top utilisateur
 plugin_svn_statistics	top_user_operation	Top utilisateur (nombre d'opérations en écriture)
 plugin_svn_statistics	top_project	Top projet
 plugin_svn_statistics	top_project_operation	Top projet (nombre d'opérations en écriture)
+plugin_svn_statistics	service_usage_activities	Activités de SVN avec dépôt multiple
