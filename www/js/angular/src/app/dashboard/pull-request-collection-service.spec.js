@@ -1,6 +1,6 @@
-describe('PullRequestsService', function() {
+describe('PullRequestCollectionService', function() {
     var $httpBackend,
-        PullRequestsService,
+        PullRequestCollectionService,
         SharedPropertiesService,
         _;
 
@@ -8,15 +8,16 @@ describe('PullRequestsService', function() {
         module('tuleap.pull-request');
 
         // eslint-disable-next-line angular/di
-        inject(function(_$httpBackend_,
-                        _PullRequestsService_,
-                        _SharedPropertiesService_,
-                        _lodash_
+        inject(function(
+            _$httpBackend_,
+            _PullRequestCollectionService_,
+            _SharedPropertiesService_,
+            _lodash_
         ) {
-            $httpBackend = _$httpBackend_;
-            _ = _lodash_;
-            PullRequestsService = _PullRequestsService_;
-            SharedPropertiesService = _SharedPropertiesService_;
+            $httpBackend                 = _$httpBackend_;
+            _                            = _lodash_;
+            PullRequestCollectionService = _PullRequestCollectionService_;
+            SharedPropertiesService      = _SharedPropertiesService_;
         });
     });
 
@@ -62,7 +63,7 @@ describe('PullRequestsService', function() {
             var expectedUrl = '/api/v1/git/' + repoId + '/pull_requests?limit=' + limit + '&offset=' + offset;
             $httpBackend.expectGET(expectedUrl).respond([]);
 
-            PullRequestsService.getPullRequests(repoId, limit, offset);
+            PullRequestCollectionService.getPullRequests(repoId, limit, offset);
 
             $httpBackend.verifyNoOutstandingExpectation();
         });
@@ -70,7 +71,7 @@ describe('PullRequestsService', function() {
         it('sets the list of pull requests in SharedPropertiesService by reverse order of creation date', function() {
             $httpBackend.whenGET().respond(backendData);
 
-            PullRequestsService.getPullRequests(repoId, limit, offset);
+            PullRequestCollectionService.getPullRequests(repoId, limit, offset);
             $httpBackend.flush();
 
             var processedPullRequests = SharedPropertiesService.getPullRequests();
@@ -80,7 +81,7 @@ describe('PullRequestsService', function() {
         it('sets flags for each pull request', function() {
             $httpBackend.whenGET().respond(backendData);
 
-            PullRequestsService.getPullRequests(repoId, limit, offset);
+            PullRequestCollectionService.getPullRequests(repoId, limit, offset);
             $httpBackend.flush();
 
             var processedPullRequests = SharedPropertiesService.getPullRequests();

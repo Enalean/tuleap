@@ -6,7 +6,7 @@ MainController.$inject = [
     'lodash',
     '$scope',
     '$state',
-    'PullRequestsService',
+    'PullRequestCollectionService',
     'SharedPropertiesService',
     'gettextCatalog',
     'amMoment'
@@ -17,7 +17,7 @@ function MainController(
     _,
     $scope,
     $state,
-    PullRequestsService,
+    PullRequestCollectionService,
     SharedPropertiesService,
     gettextCatalog,
     amMoment
@@ -43,10 +43,10 @@ function MainController(
     }
 
     function loadData(repository_id) {
-        return PullRequestsService.getPullRequests(
+        return PullRequestCollectionService.getPullRequests(
                 repository_id,
-                PullRequestsService.pull_requests_pagination.limit,
-                PullRequestsService.pull_requests_pagination.offset)
+                PullRequestCollectionService.pull_requests_pagination.limit,
+                PullRequestCollectionService.pull_requests_pagination.offset)
             .then(function(pull_requests) {
                 var wanted_pull_request_id = ($state.includes('pull-request')) ? parseInt($state.params.id, 10) : pull_requests[0].id;
                 SharedPropertiesService.setPullRequest(_.find(pull_requests, { id: wanted_pull_request_id }));

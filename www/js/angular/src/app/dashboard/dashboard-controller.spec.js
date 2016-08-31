@@ -1,4 +1,4 @@
-describe('PullRequestsController', function() {
+describe('DashboardController', function() {
     var $q,
         $rootScope,
         $state,
@@ -13,11 +13,12 @@ describe('PullRequestsController', function() {
         var $controller;
 
         // eslint-disable-next-line angular/di
-        inject(function(_$controller_,
-                        _$q_,
-                        _$rootScope_,
-                        _$state_,
-                        _SharedPropertiesService_
+        inject(function(
+            _$controller_,
+            _$q_,
+            _$rootScope_,
+            _$state_,
+            _SharedPropertiesService_
         ) {
             $controller = _$controller_;
             $q = _$q_;
@@ -46,7 +47,11 @@ describe('PullRequestsController', function() {
         SharedPropertiesService.setPullRequest(selectedPullRequest);
         SharedPropertiesService.setReadyPromise($q.when('ready'));
 
-        controller = $controller('PullRequestsController');
+        spyOn($state, 'go');
+
+        controller = $controller('DashboardController', {
+            $state: $state
+        });
     });
 
     describe('When app is ready', function() {
@@ -68,7 +73,6 @@ describe('PullRequestsController', function() {
 
         it('navigates to the overview of the given pull request', function() {
             var targetPullRequest = expectedPullRequests[1];
-            spyOn($state, 'go');
             controller.loadPullRequest(targetPullRequest);
 
             expect($state.go).toHaveBeenCalledWith('overview', { id: targetPullRequest.id });

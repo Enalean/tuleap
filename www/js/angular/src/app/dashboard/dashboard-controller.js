@@ -1,15 +1,15 @@
 angular
     .module('tuleap.pull-request')
-    .controller('PullRequestsController', PullRequestsController);
+    .controller('DashboardController', DashboardController);
 
-PullRequestsController.$inject = [
+DashboardController.$inject = [
     '$state',
     'lodash',
     'SharedPropertiesService',
     'PullRequestService'
 ];
 
-function PullRequestsController(
+function DashboardController(
     $state,
     _,
     SharedPropertiesService,

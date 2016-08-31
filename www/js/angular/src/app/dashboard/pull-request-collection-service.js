@@ -1,17 +1,17 @@
 angular
     .module('tuleap.pull-request')
-    .service('PullRequestsService', PullRequestsService);
+    .service('PullRequestCollectionService', PullRequestCollectionService);
 
-PullRequestsService.$inject = [
+PullRequestCollectionService.$inject = [
     'lodash',
     'SharedPropertiesService',
-    'PullRequestsRestService'
+    'PullRequestCollectionRestService'
 ];
 
-function PullRequestsService(
+function PullRequestCollectionService(
     _,
     SharedPropertiesService,
-    PullRequestsRestService
+    PullRequestCollectionRestService
 ) {
     var self = this;
 
@@ -25,7 +25,7 @@ function PullRequestsService(
     });
 
     function getPaginatedPullRequest(repository_id, limit, offset) {
-        return PullRequestsRestService.getPullRequests(repository_id, limit, offset)
+        return PullRequestCollectionRestService.getPullRequests(repository_id, limit, offset)
         .then(function(response) {
             self.pull_requests.push.apply(self.pull_requests, response.data.collection);
 

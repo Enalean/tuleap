@@ -3,7 +3,7 @@ describe('MainController', function() {
     var $q,
         $scope,
         $state,
-        PullRequestsService,
+        PullRequestCollectionService,
         SharedPropertiesService,
         repoId,
         userId;
@@ -14,19 +14,20 @@ describe('MainController', function() {
         var $controller, $rootScope;
 
         // eslint-disable-next-line angular/di
-        inject(function(_$controller_,
-                        _$q_,
-                        _$rootScope_,
-                        _$state_,
-                        _PullRequestsService_,
-                        _SharedPropertiesService_
+        inject(function(
+            _$controller_,
+            _$q_,
+            _$rootScope_,
+            _$state_,
+            _PullRequestCollectionService_,
+            _SharedPropertiesService_
         ) {
-            $controller = _$controller_;
-            $q = _$q_;
-            $rootScope  = _$rootScope_;
-            $state = _$state_;
-            PullRequestsService = _PullRequestsService_;
-            SharedPropertiesService = _SharedPropertiesService_;
+            $controller                  = _$controller_;
+            $q                           = _$q_;
+            $rootScope                   = _$rootScope_;
+            $state                       = _$state_;
+            PullRequestCollectionService = _PullRequestCollectionService_;
+            SharedPropertiesService      = _SharedPropertiesService_;
         });
 
         repoId = 1;
@@ -63,7 +64,7 @@ describe('MainController', function() {
             }];
             expectedPullRequest = expectedPullRequests[0];
 
-            spyOn(PullRequestsService, 'getPullRequests').and.returnValue($q.when(expectedPullRequests));
+            spyOn(PullRequestCollectionService, 'getPullRequests').and.returnValue($q.when(expectedPullRequests));
         });
 
         it('sets some shared properties', function() {
@@ -77,7 +78,7 @@ describe('MainController', function() {
             $scope.init(repoId, userId, 'fr');
             $scope.$apply();
 
-            expect(PullRequestsService.getPullRequests).toHaveBeenCalledWith(repoId, jasmine.any(Number), jasmine.any(Number));
+            expect(PullRequestCollectionService.getPullRequests).toHaveBeenCalledWith(repoId, jasmine.any(Number), jasmine.any(Number));
             expect(SharedPropertiesService.getPullRequest()).toEqual(expectedPullRequest);
         });
 

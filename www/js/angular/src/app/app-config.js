@@ -2,8 +2,12 @@ angular
     .module('tuleap.pull-request')
     .config(MainConfig);
 
-MainConfig.$inject = ['$urlRouterProvider'];
+MainConfig.$inject = [
+    '$urlRouterProvider'
+];
 
-function MainConfig($urlRouterProvider) {
-    $urlRouterProvider.otherwise('/pull-requests');
+function MainConfig(
+    $urlRouterProvider
+) {
+    $urlRouterProvider.otherwise('/dashboard');
 }

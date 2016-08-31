@@ -1,15 +1,15 @@
 angular
     .module('tuleap.pull-request')
-    .service('PullRequestsRestService', PullRequestsRestService);
+    .service('PullRequestCollectionRestService', PullRequestCollectionRestService);
 
-PullRequestsRestService.$inject = [
+PullRequestCollectionRestService.$inject = [
     '$http',
     '$q',
     'lodash',
     'ErrorModalService'
 ];
 
-function PullRequestsRestService(
+function PullRequestCollectionRestService(
     $http,
     $q,
     _,
