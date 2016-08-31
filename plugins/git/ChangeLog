@@ -1,3 +1,7 @@
+Version 4.256 - Tuleap 8.19
+    * Wrapp project id into extractCrossReference method
+
+
 Version 4.255 - Tuleap 8.19
     * request #9122: Don't remove deleted items if copy doesn't work
 

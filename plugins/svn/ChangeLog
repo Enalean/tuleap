@@ -1,3 +1,7 @@
+Version 0.87 - Tuleap 8.19
+    * Wrapp project id into extractCrossReference method
+
+
 Version 0.86 - Tuleap 8.19
     * Add SVN multi repo to the service usage statistics
 
