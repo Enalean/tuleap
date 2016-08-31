@@ -523,7 +523,6 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         // extract cross reference in the message
         $reference_manager =& ReferenceManager::instance();
         $g_id = get_forum_group_id($group_forum_id);
-        $GLOBALS['group_id'] = $g_id;   // don't know why group_id is not set in forum (needed for references)
         $reference_manager->extractCrossRef($subject,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
         $reference_manager->extractCrossRef($body,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
         
