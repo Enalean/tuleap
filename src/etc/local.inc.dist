@@ -460,9 +460,6 @@ $sys_generic_user_suffix = '';
 // Only used in news service for now
 $sys_max_number_of_emailed_people = 100;
 
-// Enable experimental feature to strip outlook quotes
-$sys_strip_outlook = 0;
-
 // Allow (or not) users to do a SVN commit without any commit message
 // Set to 0 to force commit message to not be empty
 $sys_allow_empty_svn_commit_message = 1;
