@@ -736,7 +736,10 @@ class ReferenceManager {
      * 
      * @retrun Boolean True if no error
      */
-    function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0, $source_key=null) {
+    public function extractCrossRef($html, $source_id, $source_type, $source_gid, $user_id = 0, $source_key = null)
+    {
+        $this->setProjectIdForProjectReferences($source_gid);
+
         $dao = $this->_getReferenceDao();
 
         if ($source_key == null) {
@@ -1173,5 +1176,10 @@ class ReferenceManager {
      */
     private function getArtifactDao() {
         return new ArtifactDao();
+    }
+
+    private function setProjectIdForProjectReferences($project_id)
+    {
+        $GLOBALS['group_id'] = $project_id;
     }
 }

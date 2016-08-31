@@ -108,8 +108,7 @@ class PostCommit {
     }
 
     private function extractReference(Repository $repository, CommitInfo $commit_info, PFUser $committer, $new_revision) {
-        $project_id          = $repository->getProject()->getID();
-        $GLOBALS['group_id'] = $project_id;
+        $project_id = $repository->getProject()->getID();
 
         $this->reference_manager->extractCrossRef(
             $commit_info->getCommitMessage(),

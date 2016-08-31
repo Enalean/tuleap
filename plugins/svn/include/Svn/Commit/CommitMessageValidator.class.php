@@ -57,20 +57,20 @@ class CommitMessageValidator {
         }
     }
 
-    private function assertCommitMessageContainsArtifactReference(RepositoryManager $repository_manager, ReferenceManager $reference_manager){
+    private function assertCommitMessageContainsArtifactReference(
+        RepositoryManager $repository_manager,
+        ReferenceManager $reference_manager
+    ) {
         $hookcfg = $repository_manager->getHookConfig($this->repository);
 
         if(!$hookcfg->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
             return;
         }
+
         $project = $this->repository->getProject();
 
-        // Marvelous, extractCrossRef depends on globals group_id to find the group
-        // when it's not explicit... yeah!
-        $GLOBALS['group_id'] = $project->getID();
         if (! $reference_manager->stringContainsReferences($this->commit_message, $project)) {
             throw new Exception('Commit message must contains a reference');
         }
     }
-
 }

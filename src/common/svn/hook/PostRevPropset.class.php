@@ -60,11 +60,9 @@ class SVN_Hook_PostRevPropset {
         $project = $this->svn_hooks->getProjectFromRepositoryPath($repository_path);
         $user    = $this->svn_hooks->getUserByName($user_name);
         $message = $this->svn_hooks->getMessageFromRevision($repository_path, $revision);
+
         $this->dao->updateCommitMessage($project->getID(), $revision, $message);
         $this->removePreviousCrossReferences($project, $revision, $old_commit_message);
-        // Marvelous, extractCrossRef depends on globals group_id to find the group
-        // when it's not explicit... yeah!
-        $GLOBALS['group_id'] = $project->getID();
         $this->reference_manager->extractCrossRef(
             $message,
             $revision,
