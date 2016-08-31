@@ -2,7 +2,7 @@
 
 set -e
 
-options=$(getopt -o h -l output-dir:,src-dir: -- "$@")
+options=$(getopt -o h -l output-dir:,src-dir:,npm-registry:,npm-user:,npm-password:,npm-email: -- "$@")
 
 eval set -- "$options"
 while true
@@ -13,6 +13,18 @@ do
         shift 2;;
     --src-dir)
         SRC_DIR=$2;
+        shift 2;;
+    --npm-registry)
+        NPM_REGISTRY=$2;
+        shift 2;;
+    --npm-user)
+        NPM_USER=$2;
+        shift 2;;
+    --npm-password)
+        NPM_PASSWORD=$2;
+        shift 2;;
+    --npm-email)
+        NPM_EMAIL=$2;
         shift 2;;
     --)
         shift 1; break ;;
@@ -29,7 +41,9 @@ fi
 docker rm srpms-builder || true
 docker rm rpm-builder   || true
 
-docker run -i --name srpms-builder -v "$SRC_DIR":/tuleap enalean/tuleap-buildsrpms
+docker run -i --name srpms-builder -v "$SRC_DIR":/tuleap \
+    -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" \
+    enalean/tuleap-buildsrpms
 
 docker run -i --name rpm-builder --volumes-from srpms-builder enalean/tuleap-buildrpms:centos6 --php php --folder rhel6
 docker cp rpm-builder:/rpms/RPMS/noarch "$RPM_DIR"/rhel6
