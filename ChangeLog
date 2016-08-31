@@ -16,6 +16,7 @@ Version 8.19 (Not Released Yet)
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usages in src/www/admin)
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/docman)
 	* request #9347: Tuleap RealTime independent of Tuleap
+	* request #9435: Be able to use the script docker_generate_packages.sh with a non default NPM registry
 
 	== Bug fix ==
 	* request #9406: Missing login CSRF protection
