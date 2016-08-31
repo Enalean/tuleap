@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,8 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
-class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
+class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
+{
 
     /** @var Tracker_Artifact */
     protected $task;
@@ -43,9 +44,32 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
     protected $us_computed_field;
 
     protected $old_request_with;
+
+    /** @var  NatureIsChildLinkRetriever */
     protected $artifact_retriever;
 
-    public function setUp() {
+    /** @var  Tracker_IDisplayTrackerLayout */
+    protected $layout;
+
+    protected $request;
+
+    /** @var  PFUser */
+    protected $user;
+
+    /** @var  Tracker_FormElementFactory */
+    protected $formelement_factory;
+
+    /** @var  Tracker_HierarchyFactory */
+    protected $hierarchy_factory;
+
+    /** @var  EventManager */
+    protected $event_manager;
+
+    /** @var  Tracker_Action_UpdateArtifact */
+    protected $action;
+
+    public function setUp()
+    {
         parent::setUp();
 
         $tracker_user_story_id     = 103;
@@ -70,7 +94,7 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
 
         $this->task = partial_mock(
             'Tracker_Artifact',
-            array('createNewChangeset'),
+            array('createNewChangeset', 'getLastChangeset'),
             array($this->artifact_id, $this->tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
         );
         $this->task->setHierarchyFactory($this->hierarchy_factory);
@@ -82,7 +106,7 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
         stub($this->computed_field)->fetchCardValue($this->task)->returns(42);
         stub($this->us_computed_field)->fetchCardValue($this->user_story)->returns(23);
 
-        $this->event_manager    = mock('EventManager');
+        $this->event_manager      = mock('EventManager');
         $this->artifact_retriever = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever');
 
         $this->action = new Tracker_Action_UpdateArtifact(
@@ -108,6 +132,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
 
     public function setUp() {
         parent::setUp();
+        stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         $this->setUpAjaxRequestHeaders();
     }
 
@@ -145,7 +170,6 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
         stub($user_story)->getId()->returns($user_story_id);
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($user_story);
 
-        $user_story_id = $this->user_story->getId();
         $expected      = array();
         expect($GLOBALS['Response'])->sendJSON($expected)->once();
 
@@ -159,7 +183,13 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     public function setUp() {
         parent::setUp();
         $this->setUpAjaxRequestHeaders();
-        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->computed_field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser(
+            $this->tracker_id,
+            Tracker::REMAINING_EFFORT_FIELD_NAME,
+            $this->user
+        )->returns($this->computed_field);
+
+
     }
 
     public function tearDown() {
@@ -167,7 +197,35 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         parent::tearDown();
     }
 
+    public function itSendTheAutocomputedValueOfTheArtifact()
+    {
+        $tracker = aMockTracker()->withId($this->tracker_id)->build();
+        $task    = aMockArtifact()->withId($this->artifact_id)->withTracker($tracker)->build();
+
+        $action = new Tracker_Action_UpdateArtifact(
+            $task,
+            $this->formelement_factory,
+            $this->event_manager,
+            $this->artifact_retriever
+        );
+
+        stub($GLOBALS['Language'])->getText('plugin_tracker', 'autocomputed_field')->returns('autocomputed');
+        stub($this->computed_field)->getName()->returns(Tracker::REMAINING_EFFORT_FIELD_NAME);
+        stub($task)->getTracker()->returns($tracker);
+        stub($this->computed_field)->fetchCardValue($task)->returns(42);
+        stub($tracker)->hasFormElementWithNameAndType()->returns(true);
+        stub($this->computed_field)->isArtifactValueAutocomputed()->returns(true);
+
+        $expected      = array(
+            $this->artifact_id => array('remaining_effort' => '42 (autocomputed)')
+        );
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
+
+        $action->process($this->layout, $this->request, $this->user);
+    }
+
     public function itSendsTheRemainingEffortOfTheArtifactAndItsParent() {
+        stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
@@ -181,6 +239,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     }
 
     public function itDoesNotSendParentsRemainingEffortWhenThereIsNoParent() {
+        stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
 
         $expected = array(
@@ -197,6 +256,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         $user_story_id         = 111;
         $user_story            = mock('Tracker_Artifact');
 
+        stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         stub($user_story)->getTracker()->returns($tracker_user_story);
         stub($user_story)->getId()->returns($user_story_id);
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($user_story);
@@ -208,7 +268,6 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
-
 }
 
 class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_BaseTest {
@@ -302,5 +361,3 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
 
     }
 }
-
-?>

@@ -140,6 +140,7 @@ class Tracker_Action_UpdateArtifact {
         $GLOBALS['Response']->sendJSON($cards_info);
     }
 
+
     private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user) {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
@@ -148,14 +149,28 @@ class Tracker_Action_UpdateArtifact {
             Tracker::REMAINING_EFFORT_FIELD_NAME,
             $current_user
         );
-
         if ($remaining_effort_field) {
             $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
+            $remaining_effort = $this->addAutocomputeLabelIfFieldIsAutcocomputed($artifact, $remaining_effort_field, $remaining_effort);
+
             $card_info[$artifact->getId()] = array(
                 Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
             );
         }
         return $card_info;
     }
+
+    private function addAutocomputeLabelIfFieldIsAutcocomputed(
+        Tracker_Artifact $artifact,
+        Tracker_FormElement_Field $remaining_effort_field,
+        $remaining_effort
+    ) {
+       if ($artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), array('computed'))
+            && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
+       ) {
+            $remaining_effort .= " (" . $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ")";
+       }
+
+       return $remaining_effort;
+    }
 }
-?>

@@ -28,5 +28,6 @@ codendi.locales['cardwall'] = {
     go_to_fullscreen      : 'Fullscreen',
     exit_fullscreen       : 'Exit fullscreen',
     no_fullscreen_title   : 'Oooooooooops!',
-    no_fullscreen_content : 'Dear Internet Explorer user,<br/><br/>We inform you the fullscreen feature is not available on your browser.<br/><br/>Best regards,<br/>The Tuleap team'
+    no_fullscreen_content : 'Dear Internet Explorer user,<br/><br/>We inform you the fullscreen feature is not available on your browser.<br/><br/>Best regards,<br/>The Tuleap team',
+    autocomputed_label    : 'autocomputed'
 };
