@@ -19,6 +19,7 @@
  */
 
 use Tuleap\FRS\FRSPackageController;
+use Tuleap\FRS\FRSReleaseController;
 
 require_once ('pre.php');
 require_once ('www/project/admin/permissions.php');
@@ -61,8 +62,15 @@ if ($action == 'permissions_frs_package') {
         $vGroupId->required();
         if ($request->valid($vReleaseId) && $request->valid($vGroupId)) {
             $group_id   = $request->get('group_id');
-            $release_id = $request->get('release_id');    
-            permission_display_selection_frs("RELEASE_READ", $release_id, $group_id);
+            $release_id = $request->get('release_id');
+            $project    = ProjectManager::instance()->getProject($group_id);
+            $release_controller = new FRSReleaseController(
+                FRSReleaseFactory::instance(),
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                PermissionsManager::instance()
+            );
+
+            $release_controller->displayUserGroups($project, FRSRelease::PERM_READ, $object_id);
         }
     } else {
         header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1

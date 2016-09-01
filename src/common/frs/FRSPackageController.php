@@ -166,7 +166,7 @@ class FRSPackageController
             $permission_type
         );
 
-        $renderer->renderToPage('package-permissions-presenter', $presenter);
+        $renderer->renderToPage('permissions-presenter', $presenter);
     }
 
 
@@ -209,7 +209,7 @@ class FRSPackageController
 
     private function isUgroupSelected(User_UGroup $user_group, array $package_ugroups)
     {
-        return count($package_ugroups) == 0 || in_array($user_group->getId(), $package_ugroups);
+        return in_array($user_group->getId(), $package_ugroups);
     }
 
     private function getTemplateDir()

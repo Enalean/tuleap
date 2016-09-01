@@ -721,44 +721,6 @@ function permission_display_selection_form($permission_type, $object_id, $group_
     echo permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url);
 }
 
-
-function permission_display_selection_frs($permission_type, $object_id = null, $group_id) {
-    $html = '';
-    // Get ugroups already defined for this permission_type
-    $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
-    $nb_set=db_numrows($res_ugroups);
-
-    // Now retrieve all possible ugroups for this project, as well as the default values
-    $sql="SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='".db_es($permission_type)."'";
-    $res=db_query($sql);
-    $predefined_ugroups='';
-    $default_values=array();
-    if (db_numrows($res)<1) {
-        $html .= "<p><b>".$GLOBALS['Language']->getText('global','error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions','perm_type_not_def',$permission_type);
-        return $html;
-    } else {
-        while ($row = db_fetch_array($res)) {
-            if ($predefined_ugroups) { $predefined_ugroups.= ' ,';}
-            $predefined_ugroups .= db_ei($row['ugroup_id']);
-            if ($row['is_default']) { $default_values[]=$row['ugroup_id'];}
-        }
-    }
-    $sql="SELECT * FROM ugroup WHERE group_id=".db_ei($group_id)." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
-    $res=db_query($sql);
-
-    $array = array();
-    while($row = db_fetch_array($res)) {
-        $name = util_translate_name_ugroup($row[1]);
-        $array[] = array(
-            'value' => $row[0],
-            'text' => $name
-        );
-    }
-    $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, false, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
-    $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
-    echo $html;
-}
-
 /**
  * Clear all permissions for the given object
  * Access rights to this function are checked (must be project admin!)
