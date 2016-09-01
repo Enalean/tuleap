@@ -236,6 +236,16 @@ class SvnRouter {
      * @return ServiceSvn
      */
     private function getService(HTTPRequest $request) {
+        $service = $request->getProject()->getService('plugin_svn');
+
+        if ($service === null) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_svn','url_can_not_be_processed')
+            );
+            $GLOBALS['Response']->redirect('/');
+        }
+
         return $request->getProject()->getService('plugin_svn');
     }
 }

@@ -106,6 +106,8 @@ plugin_svn	archived_repositories	Dépôts svn supprimés
 plugin_svn	restore_confirmation	Confirmer la restauration du dépôt
 plugin_svn	restore_no_repo_found	Aucun dépôt svn à restaurer.
 
+plugin_svn	anonymous_browse_access_denied	Vous ne pouvez pas naviguer dans le dépôt sans être authentifié.
+
 plugin_svn	logsdaily_field	Nom du dépôt
 plugin_svn	logsdaily_title	Les commits Subversion multi dépôts
 plugin_svn	log_read_label	Lecture
@@ -125,3 +127,5 @@ plugin_svn_statistics	top_user_operation	Top utilisateur (nombre d'opérations e
 plugin_svn_statistics	top_project	Top projet
 plugin_svn_statistics	top_project_operation	Top projet (nombre d'opérations en écriture)
 plugin_svn_statistics	service_usage_activities	Activités de SVN avec dépôt multiple
+
+plugin_svn	url_can_not_be_processed	L'action demandée ne peut pas être comprise, vous avez été redirigé vers la page d'accueil
