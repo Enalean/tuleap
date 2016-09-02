@@ -3,7 +3,7 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-// Copyright (c) Enalean, 2015. All rights reserved
+// Copyright (c) Enalean, 2015-2016. All rights reserved
 // 
 
 /*
@@ -26,162 +26,160 @@ $HTML->header(array('title'=>$Language->getText('include_user_home','devel_profi
 if (!$user) {
 	exit_error($Language->getText('include_user_home','no_such_user'),$Language->getText('include_user_home','no_such_user'));
 }
+$purifier     = Codendi_HTMLPurifier::instance();
+$current_user = UserManager::instance()->getCurrentUser();
+if ($current_user->isLoggedIn()) {
+    echo '
+    <H3>'.$Language->getText('include_user_home','devel_profile').'</H3>
+    <P>
+    <TABLE width=100% cellpadding=2 cellspacing=2 border=0><TR valign=top>
+    <TD width=50%>';
+
+    $HTML->box1_top($Language->getText('include_user_home','perso_info'));
+    echo '
+    &nbsp;
+    <BR>
+    <TABLE width=100% cellpadding=0 cellspacing=0 border=0>
+    <TR valign=top>
+        <TD>'.$Language->getText('include_user_home','user_id').': </TD>
+        <TD><B>'.$purifier->purify($user->getId()).'</B></TD>
+    </TR>
+    <TR valign=top>
+        <TD>'.$Language->getText('include_user_home','login_name').': </TD>
+        <TD><B>'.$purifier->purify($user->getUserName()).'</B></TD>
+    </TR>
+    <TR valign=top>
+        <TD>'.$Language->getText('include_user_home','real_name').': </TD>
+        <TD><B>'. $purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) .'</B></TD>
+    </TR>
+    <TR valign=top>
+        <TD>'.$Language->getText('include_user_home','email_addr').': </TD>
+        <TD>
+        <B>
+        <A HREF="mailto:'.urlencode($user->getEmail()).'">
+        '.$purifier->purify($user->getEmail()).'
+        </A></B>
+        </TD>
+    </TR>';
+
+    echo '
+    <TR>
+        <TD>
+        '.$Language->getText('include_user_home','member_since').':
+        </TD>
+        <TD><B>'.date("M d, Y",$user->getAddDate()).'</B></TD>
+
+    <TR>
+        <TD>
+        '.$Language->getText('include_user_home','user_status').':
+        </TD>
+        <TD><B>';
+            switch($user->getStatus()) {
+            case 'A':
+                echo $Language->getText('include_user_home','active');
+                break;
+            case 'R':
+                echo $Language->getText('include_user_home','restricted');
+                break;
+            case 'P':
+                echo $Language->getText('include_user_home','pending');
+                break;
+            case 'D':
+                echo $Language->getText('include_user_home','deleted');
+                break;
+            case 'S':
+                echo $Language->getText('include_user_home','suspended');
+                break;
+            default:
+                echo $Language->getText('include_user_home','unkown');
+            }
 
 
-echo '
-<H3>'.$Language->getText('include_user_home','devel_profile').'</H3>
-<P>
-<TABLE width=100% cellpadding=2 cellspacing=2 border=0><TR valign=top>
-<TD width=50%>';
+    echo '</B></TD>
+    </TR>';
 
-$HTML->box1_top($Language->getText('include_user_home','perso_info'));
-$hp = Codendi_HTMLPurifier::instance();
-echo '
-&nbsp;
-<BR>
-<TABLE width=100% cellpadding=0 cellspacing=0 border=0>
-<TR valign=top>
-	<TD>'.$Language->getText('include_user_home','user_id').': </TD>
-	<TD><B>'.$hp->purify($user->getId()).'</B></TD>
-</TR>
-<TR valign=top>
-	<TD>'.$Language->getText('include_user_home','login_name').': </TD>
-	<TD><B>'.$hp->purify($user->getUserName()).'</B></TD>
-</TR>
-<TR valign=top>
-	<TD>'.$Language->getText('include_user_home','real_name').': </TD>
-	<TD><B>'. $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) .'</B></TD>
-</TR>
-<TR valign=top>
-	<TD>'.$Language->getText('include_user_home','email_addr').': </TD>
-	<TD>
-	<B>
-	<A HREF="mailto:'.urlencode($user->getEmail()).'">
-	'.$hp->purify($user->getEmail()).'
-	</A></B>
-	</TD>
-</TR>';
+    $entry_label = array();
+    $entry_value = array();
 
-echo '
-<TR>
-	<TD>
-	'.$Language->getText('include_user_home','member_since').': 
-	</TD>
-	<TD><B>'.date("M d, Y",$user->getAddDate()).'</B></TD>
+    $em =& EventManager::instance();
+    $eParams = array();
+    $eParams['user_id']     =  $user->getId();
+    $eParams['entry_label'] =& $entry_label;
+    $eParams['entry_value'] =& $entry_value;
+    $em->processEvent('user_home_pi_entry', $eParams);
 
-<TR>
-	<TD>
-	'.$Language->getText('include_user_home','user_status').': 
-	</TD>
-	<TD><B>';
-        switch($user->getStatus()) {
-        case 'A':
-            echo $Language->getText('include_user_home','active');
-            break;
-        case 'R':
-            echo $Language->getText('include_user_home','restricted');
-            break;
-        case 'P':
-            echo $Language->getText('include_user_home','pending');
-            break;
-        case 'D':
-            echo $Language->getText('include_user_home','deleted');
-            break;
-        case 'S':
-            echo $Language->getText('include_user_home','suspended');
-            break;
-        default:
-            echo $Language->getText('include_user_home','unkown');
-        }
-
-
-echo '</B></TD>
-
-</TR>';
-
-$entry_label = array();
-$entry_value = array();
-
-$em =& EventManager::instance();
-$eParams = array();
-$eParams['user_id']     =  $user->getId();
-$eParams['entry_label'] =& $entry_label;
-$eParams['entry_value'] =& $entry_value;
-$em->processEvent('user_home_pi_entry', $eParams);
-
-foreach($entry_label as $key => $label) {
-    $value = $entry_value[$key];
-    print '
-<TR valign=top>
-	<TD>'.$label.'</TD>
-	<TD><B>'.$value.'</B></TD>
-</TR>
-';
-}
-
-$hooks_output = "";
-
-$em =& EventManager::instance();
-$eParams = array();
-$eParams['showdir']   =  isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
-$eParams['user_name'] =  $user->getUnixName();
-$eParams['ouput']     =& $hooks_output;
-$em->processEvent('user_home_pi_tail', $eParams);
-
-echo $hooks_output;
-?>
-
-</TR>
-
-</TABLE>
-<?php $HTML->box1_bottom(); ?>
-
-</TD>
-<TD>&nbsp;</TD>
-<TD width=50%>
-<?php $HTML->box1_top($Language->getText('include_user_home','proj_info')); 
-// now get listing of groups for that user
-$res_cat = db_query("SELECT groups.group_name, "
-	. "groups.unix_group_name, "
-	. "groups.group_id, "
-	. "user_group.admin_flags, "
-	. "user_group.bug_flags FROM "
-	. "groups,user_group WHERE user_group.user_id='".$user->getId()."' AND "
-	. "groups.group_id=user_group.group_id AND groups.access != '".db_es(Project::ACCESS_PRIVATE)."' AND groups.status='A' AND groups.type='1'");
-
-// see if there were any groups
-if (db_numrows($res_cat) < 1) {
-	echo '
-	<p>'.$Language->getText('include_user_home','not_member');
-} else { // endif no groups
-	print '<p>'.$Language->getText('include_user_home','is_member').":<BR>&nbsp;";
-	while ($row_cat = db_fetch_array($res_cat)) {
-        print ('<BR><A href="/projects/'.urlencode($row_cat['unix_group_name']).'/">'.$hp->purify($row_cat['group_name'])."</A>\n");
+    foreach($entry_label as $key => $label) {
+        $value = $entry_value[$key];
+        print '
+    <TR valign=top>
+        <TD>'.$label.'</TD>
+        <TD><B>'.$value.'</B></TD>
+    </TR>
+    ';
     }
-	print "</ul>";
-} // end if groups
 
-$HTML->box1_bottom(); ?>
-</TD></TR>
+    $hooks_output = "";
 
-<TR>
+    $em =& EventManager::instance();
+    $eParams = array();
+    $eParams['showdir']   =  isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
+    $eParams['user_name'] =  $user->getUnixName();
+    $eParams['ouput']     =& $hooks_output;
+    $em->processEvent('user_home_pi_tail', $eParams);
 
-<TD>
+    echo $hooks_output;
+    ?>
 
-<?php 
+    </TR>
 
-if (user_isloggedin()) {
+    </TABLE>
+    <?php $HTML->box1_bottom(); ?>
+
+    </TD>
+    <TD>&nbsp;</TD>
+    <TD width=50%>
+    <?php $HTML->box1_top($Language->getText('include_user_home','proj_info'));
+    // now get listing of groups for that user
+    $res_cat = db_query("SELECT groups.group_name, "
+        . "groups.unix_group_name, "
+        . "groups.group_id, "
+        . "user_group.admin_flags, "
+        . "user_group.bug_flags FROM "
+        . "groups,user_group WHERE user_group.user_id='".$user->getId()."' AND "
+        . "groups.group_id=user_group.group_id AND groups.access != '".db_es(Project::ACCESS_PRIVATE)."' AND groups.status='A' AND groups.type='1'");
+
+    // see if there were any groups
+    if (db_numrows($res_cat) < 1) {
+        echo '
+        <p>'.$Language->getText('include_user_home','not_member');
+    } else { // endif no groups
+        print '<p>'.$Language->getText('include_user_home','is_member').":<BR>&nbsp;";
+        while ($row_cat = db_fetch_array($res_cat)) {
+            print ('<BR><A href="/projects/'.urlencode($row_cat['unix_group_name']).'/">'.$purifier->purify($row_cat['group_name'])."</A>\n");
+        }
+        print "</ul>";
+    } // end if groups
+
+    $HTML->box1_bottom(); ?>
+    </TD></TR>
+
+    <TR>
+
+    <TD>
+
+    <?php
+
     $csrf_token = new CSRFSynchronizerToken('sendmessage.php');
 
-    $HTML->box1_top($Language->getText('include_user_home','send_message_to').' '. $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML));
+    $HTML->box1_top($Language->getText('include_user_home','send_message_to').' '. $purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML));
 
     echo '
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user->getId().'">';
     echo $csrf_token->fetchHTMLInput();
 
-	$my_name = $hp->purify(user_getrealname(user_getid()));
-    $cc      = (isset($_REQUEST['cc'])?$hp->purify(trim($_REQUEST['cc'])):"");
+	$my_name = $purifier->purify(user_getrealname(user_getid()));
+    $cc      = (isset($_REQUEST['cc'])?$purifier->purify(trim($_REQUEST['cc'])):"");
 	echo  '
     <div>
         <script type="text/javascript" src="/scripts/blocks.js"></script>
@@ -235,7 +233,7 @@ $js = "new UserAutoCompleter('cc','".util_get_dir_image_theme()."', true);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
 $rte = "
-var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
+var useLanguage = '". $purifier->purify(substr($current_user->getLocale(), 0, 2), CODENDI_PURIFIER_JS_QUOTE) ."';
 document.observe('dom:loaded', function() {
     var body_container = $$('#body')[0];
     var options = {
