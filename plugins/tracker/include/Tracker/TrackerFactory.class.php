@@ -90,16 +90,18 @@ class TrackerFactory {
     /**
      * Retrieve the list of deleted trackers.
      *
-     * @return Array
+     * @return array
      */
     public function getDeletedTrackers() {
         $pending_trackers = $this->getDao()->retrieveTrackersMarkAsDeleted();
         $deleted_trackers = array();
-        if ($pending_trackers && !$pending_trackers->isError()) {
-            foreach ($pending_trackers as $key => $pending_tracker) {
-                $deleted_trackers[$key] = $this->getTrackerById($pending_tracker['id']);
+
+        if ($pending_trackers && ! $pending_trackers->isError()) {
+            foreach ($pending_trackers as $pending_tracker) {
+                $deleted_trackers[] = $this->getTrackerById($pending_tracker['id']);
             }
         }
+
         return $deleted_trackers;
     }
 

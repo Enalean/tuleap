@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/reference/ReferenceManager.class.php');
-require_once 'common/templating/TemplateRendererFactory.class.php';
-
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 
@@ -757,13 +754,21 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @return Void
      */
     public function displayDeletedTrackers() {
-        $deletedTrackers = $this->getTrackerFactory()->getDeletedTrackers();
-        if (empty($deletedTrackers)) {
+        $deleted_trackers = $this->getTrackerFactory()->getDeletedTrackers();
+
+        if (empty($deleted_trackers)) {
             print '<h3>'.$GLOBALS['Language']->getText('plugin_tracker','no_pending').'</h3>';
         } else {
             $deleted_trackers_presenters =  array();
-            foreach ($deletedTrackers as $key => $tracker) {
-                $project                        = $tracker->getProject();
+            foreach ($deleted_trackers as $tracker) {
+                $project             = $tracker->getProject();
+                $tracker_ids_warning = array();
+
+                if (! $project || $project->getID() === null) {
+                    $tracker_ids_warning[] = $tracker->getId();
+                    continue;
+                }
+
                 $project_id                     = $project->getId();
                 $project_name                   = $project->getUnixName();
                 $tracker_id                     = $tracker->getId();
@@ -780,10 +785,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                                         $resotre_token
                                                    );
             }
-            $presenter        = new DeletedTrackersListPresenter($deleted_trackers_presenters);
+            $presenter = new DeletedTrackersListPresenter(
+                $deleted_trackers_presenters,
+                $tracker_ids_warning
+            );
+
             $template_factory = TemplateRendererFactory::build();
             $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-            $renderer->renderToPage(self::DELETED_TRACKERS_TEMPLATE_NAME,$presenter);
+
+            $renderer->renderToPage(self::DELETED_TRACKERS_TEMPLATE_NAME, $presenter);
         }
     }
 

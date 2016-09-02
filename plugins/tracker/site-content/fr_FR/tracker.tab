@@ -1749,3 +1749,4 @@ plugin_tracker	no_pending	Aucun outil de suivi en attente de suppression
 
 plugin_tracker	info_tracker_restored	L'outil de suivi '$1' a été proprement restauré
 plugin_tracker	tracker_action_restore	Restaurer
+plugin_tracker	tracker_restore_warning	Les outils de suivi suivant ne peuvent être affichés (des données semblent manquantes en base de données) :
