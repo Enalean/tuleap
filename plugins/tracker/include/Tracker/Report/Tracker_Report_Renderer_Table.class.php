@@ -1865,6 +1865,87 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
     }
 
+    private function exportHeadAllReportColumns(array $column)
+    {
+        $title  = $column['field']->getName();
+        if (isset($column['artlink_nature'])) {
+            $nature = $column['artlink_nature'];
+            if (!$nature) {
+                $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
+            }
+            $title .= " (" . $nature . ")";
+        }
+
+        return $title;
+    }
+
+    private function getNaturePresenterFactory()
+    {
+        return new NaturePresenterFactory(new NatureDao());;
+    }
+
+    private function exportHeadReportColumn(array $column)
+    {
+        $head   = array();
+        $title  = $column['field']->getName();
+        if ($this->report->getTracker()->isProjectAllowedToUseNature()) {
+            if ($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
+                $head[] = $title;
+                foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
+                    if (! $nature) {
+                        $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
+                    }
+                    $head[] = $title . " (" . $nature . ")";
+                }
+            } else {
+                $head[] = $title;
+            }
+        } else {
+            $head[] = $title;
+        }
+
+        return $head;
+    }
+
+    private function exportAllReportColumn(array $column, array $row)
+    {
+        $line = array();
+
+        $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
+        $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
+
+        if($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
+            foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
+                $line[] = $column['field']->fetchCSVChangesetValueWithNature(
+                    $row['changeset_id'],
+                    $nature,
+                    ''
+                );
+            }
+        }
+
+        return $line;
+    }
+
+    private function exportReportColumn(array $column, array $row)
+    {
+        $line = array();
+
+        if (isset($column['artlink_nature'])) {
+            $format = isset($column['artlink_nature_format']) ? $column['artlink_nature_format'] : '';
+            $line[] = $column['field']->fetchCSVChangesetValueWithNature(
+                $row['changeset_id'],
+                $column['artlink_nature'],
+                $format
+            );
+        } else {
+            $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
+            $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
+        }
+
+        return $line;
+    }
+
     /**
      * Export results to csv
      *
@@ -1880,7 +1961,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $columns = $this->reorderColumnsByRank($this->getColumns());
         } else {
             $columns = array();
-            $fields_without_nature = Tracker_FormElementFactory::instance()->getUsedFields($this->report->getTracker());
+            $fields_without_nature = $this->getFieldFactory()->getUsedFields($this->report->getTracker());
             foreach ($fields_without_nature as $field) {
                 $columns[]['field'] = $field;
             }
@@ -1888,23 +1969,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $lines = array();
         $head  = array('aid');
+
         foreach ($columns as $column) {
             if (! $this->canFieldBeExportedToCSV($column['field'])) {
                 continue;
             }
 
-            $title = $column['field']->getName();
-            if (isset($column['artlink_nature'])) {
-                if (isset($column['artlink_nature'])) {
-                    $nature = $column['artlink_nature'];
-                    if (! $nature) {
-                        $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
-                    }
-                    $title .= " (". $nature. ")";
-                }
-            }
+            if ($only_columns) {
+                $head[] = $this->exportHeadAllReportColumns($column);
+            } else {
+                $head = array_merge($head, $this->exportHeadReportColumn($column));
 
-            $head[] = $title;
+            }
         }
 
         $lines[] = $head;
@@ -1938,16 +2014,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         continue;
                     }
 
-                    if (isset($column['artlink_nature'])) {
-                        $format = isset($column['artlink_nature_format']) ? $column['artlink_nature_format'] : '';
-                        $line[] = $column['field']->fetchCSVChangesetValueWithNature(
-                            $row['changeset_id'],
-                            $column['artlink_nature'],
-                            $format
-                        );
+                    if ($only_columns) {
+                        $line = array_merge($line,$this->exportReportColumn($column, $row));
                     } else {
-                        $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
-                        $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
+                        $line = array_merge($line, $this->exportAllReportColumn($column, $row));
                     }
                 }
 

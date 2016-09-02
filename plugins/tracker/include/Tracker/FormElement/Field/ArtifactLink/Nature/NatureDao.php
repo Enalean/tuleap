@@ -99,6 +99,17 @@ class NatureDao extends DataAccessObject {
         return (bool)$row['nature'];
     }
 
+    public function searchAllUsedNatureByProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT DISTINCT nature
+                  FROM tracker_changeset_value_artifactlink
+                 WHERE group_id = $project_id
+                 ORDER BY nature ASC";
+
+        return $this->da->query($sql);
+    }
+
     public function searchAll() {
         $sql = "SELECT DISTINCT shortname, forward_label, reverse_label, IF(cv.nature IS NULL, 0, 1) as is_used
                            FROM plugin_tracker_artifactlink_natures AS n

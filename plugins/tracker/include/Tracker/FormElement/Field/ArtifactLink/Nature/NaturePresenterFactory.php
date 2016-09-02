@@ -21,6 +21,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
+use Project;
+
 class NaturePresenterFactory {
 
     /**
@@ -39,6 +41,17 @@ class NaturePresenterFactory {
         );
         foreach ( $this->dao->searchAll() as $row) {
             $natures[] = $this->instantiateFromRow($row);
+        }
+
+        return $natures;
+    }
+
+    /** @return NaturePresenter[] */
+    public function getAllUsedNaturesByProject(Project $project) {
+        $natures = array();
+
+        foreach ( $this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
+            $natures[] = $row['nature'];
         }
 
         return $natures;
