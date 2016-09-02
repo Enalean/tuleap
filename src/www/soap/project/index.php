@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,27 +53,29 @@ if ($request->exist('wsdl')) {
     $projectManager   = ProjectManager::instance();
     $soapLimitFactory = new SOAP_RequestLimitatorFactory();
 
+    $ugroup_dao         = new UGroupDao();
     $send_notifications = true;
     $ugroup_user_dao    = new UGroupUserDao();
     $ugroup_manager     = new UGroupManager();
     $ugroup_duplicator  = new Tuleap\Project\UgroupDuplicator(
-        new UGroupDao(),
+        $ugroup_dao,
         $ugroup_manager,
         new UGroupBinding($ugroup_user_dao, $ugroup_manager),
         $ugroup_user_dao,
         EventManager::instance()
     );
-    $projectCreator       = new ProjectCreator(
+
+    $projectCreator = new ProjectCreator(
         $projectManager,
         ReferenceManager::instance(),
         $ugroup_duplicator,
         $send_notifications,
-        new Tuleap\FRS\FRSPermissionFactory(
+        new Tuleap\FRS\FRSPermissionCreator(
             new Tuleap\FRS\FRSPermissionDao(),
-            $ugroup_manager,
-            new PermissionsManager(new PermissionsDAO())
+            $ugroup_dao
         )
     );
+
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);
     $limitator            = $soapLimitFactory->getLimitator();
@@ -112,5 +114,3 @@ if ($request->exist('wsdl')) {
     );
     $server->handle();
 }
-
-?>
