@@ -1,4 +1,9 @@
 <h2>{{ title }}</h2>
+
+{{# has_warnings }}
+    <p class="alert alert-warning">{{ warning_message }}</p>
+{{/ has_warnings }}
+
 <table class="table table-bordered table-striped">
 <thead>
      <tr>
