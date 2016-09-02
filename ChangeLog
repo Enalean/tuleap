@@ -28,6 +28,7 @@ Version 8.19 (Not Released Yet)
 	* request #9122: Don't remove deleted items if copy doesn't work
 	* story #9393: SVN custom logs are not working in new installation in HTTPS
 	* request #9395: A restricted user can not browse the SVN tree in SVN core if the SVN plugin is not installed
+	* request #9443: Project creation via SOAP is broken
 
 	== Plugins ==
 	* tracker: 5.999
