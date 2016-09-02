@@ -1,3 +1,6 @@
+Version 5.998 - Tuleap 8.19
+    * request #9428 Artifact link with nature are not well exported at CSV export
+
 Version 5.997 - Tuleap 8.19
     * request #9431: Remove sys_strip_outlook
 

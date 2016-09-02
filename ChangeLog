@@ -30,7 +30,7 @@ Version 8.19 (Not Released Yet)
 	* request #9395: A restricted user can not browse the SVN tree in SVN core if the SVN plugin is not installed
 
 	== Plugins ==
-	* tracker: 5.997
+	* tracker: 5.998
 	* git: 4.256
 	* ldap: 3.108
 	* mediawiki: 0.124
