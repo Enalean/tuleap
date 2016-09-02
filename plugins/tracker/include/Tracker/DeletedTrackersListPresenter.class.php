@@ -26,14 +26,25 @@ class DeletedTrackersListPresenter {
     public $restore_action_column_header;
     public $delete_action_column_header;
 
-    public function __construct($table_content) {
+    public function __construct(array $table_content, array $tracker_ids_warning) {
         $this->title                        = $GLOBALS['Language']->getText('plugin_tracker','pending_tv5_removal');
         $this->deleted_trackers_list        = $table_content;
+        $this->tracker_ids_warning          = $tracker_ids_warning;
         $this->id_column_header             = $GLOBALS['Language']->getText('tracker_include_report','id');
         $this->tracker_column_header        = $GLOBALS['Language']->getText('tracker_import_admin','tracker');
         $this->project_column_header        = $GLOBALS['Language']->getText('global','Project');
         $this->deletion_date_column_header  = $GLOBALS['Language']->getText('tracker_include_type','deletion_date');
         $this->restore_action_column_header = $GLOBALS['Language']->getText('plugin_tracker','tracker_action_restore');
+    }
+
+    public function has_warnings()
+    {
+        return count($this->tracker_ids_warning) > 0;
+    }
+
+    public function warning_message()
+    {
+        return $GLOBALS['Language']->getText('plugin_tracker','tracker_restore_warning') . implode(',', $this->tracker_ids_warning);
     }
 
     public function getTemplateDir() {
