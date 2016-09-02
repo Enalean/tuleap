@@ -62,7 +62,7 @@ class RepositoryDisplayController
     {
         try {
             $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
-            $service->renderInPage(
+            $service->renderInPageWithBodyClass(
                 $request,
                 $GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'),
                 'explorer/repository_display',
@@ -70,7 +70,8 @@ class RepositoryDisplayController
                     $repository,
                     $request,
                     $this->proxy->getContent($request), $this->permissions_manager
-                )
+                ),
+                $this->proxy->getBodyClass()
             );
         } catch (CannotFindRepositoryException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn', 'repository_not_found'));

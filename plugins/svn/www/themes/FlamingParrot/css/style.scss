@@ -5,6 +5,28 @@
     #svn-administration #notifications table > thead > tr > th {
         border-bottom-color: $main;
     }
+
+    &.viewvc-epel {
+        #svn-repository #svn-repository-viewvc {
+            border-top-color: $main;
+        }
+
+        .tuleap-viewvc-file-content-line:target {
+            background: transparentize($main, 0.9);
+            > .tuleap-viewvc-file-content-line-number {
+                border-left-color: $main;
+                box-shadow: inset 2px 0px 0px 0px $main;
+            }
+        }
+
+        #tuleap-viewvc-diff-changes > thead > tr > th,
+        #tuleap-viewvc-properties > table > thead > tr > th,
+        .log-revision.log-revision--selected > .log-revision-header,
+        #revision-changed-files > thead > tr > th,
+        #directory-content > thead > tr > th {
+            border-bottom-color: $main;
+        }
+    }
 }
 
 body {

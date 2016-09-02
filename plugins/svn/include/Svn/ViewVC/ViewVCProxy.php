@@ -25,4 +25,6 @@ use HTTPRequest;
 interface ViewVCProxy
 {
     public function getContent(HTTPRequest $request);
+
+    public function getBodyClass();
 }
