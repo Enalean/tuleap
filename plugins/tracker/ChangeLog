@@ -1,3 +1,6 @@
+Version 5.999 - Tuleap 8.19
+    * request #9440: Enhance Tracker restoration page
+
 Version 5.998 - Tuleap 8.19
     * request #9428 Artifact link with nature are not well exported at CSV export
 
