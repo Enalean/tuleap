@@ -792,6 +792,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     $vName = new Valid_String();
     $vPackage_id = new Valid_UInt();
     $vStatus_id =  new Valid_UInt();
+
     if ($vName->validate($res['name']) &&
         $vPackage_id->validate($res['package_id']) &&
         $vStatus_id->validate($res['status_id'])) {
@@ -897,13 +898,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $private_news = $request->get('private_news');
     } else {
         $private_news = 0;
-    }
-
-    if($request->validArray(new Valid_UInt('ugroups'))) {
-        $ugroups = $request->get('ugroups');
-    } else {
-        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
-        $GLOBALS['Response']->redirect('/file/showfiles.php?group_id='.$group_id);
     }
 
     if($request->valid(new Valid_WhiteList('release_submit_news',array(0,1)))) {
@@ -1077,6 +1071,10 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $reference_manager->extractCrossRef($release['change_log'],$release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
 
             //set the release permissions
+            $ugroups = array();
+            if ($request->get('ugroups')) {
+                $ugroups = $request->get('ugroups');
+            }
             list ($return_code, $feedbacks) = permission_process_selection_form($group_id, 'RELEASE_READ', $release_id, $ugroups);
             if (!$return_code) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'perm_update_err'));
