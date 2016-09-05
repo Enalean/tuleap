@@ -1,3 +1,12 @@
+Version 8.18-3 (Monday, September 5th)
+
+	== Bug Fix ==
+	* request #9395: A restricted user can not browse the SVN tree in SVN core if the SVN plugin is not installed
+	* request #9432: Can't import a configuration from a template file in Agile Dashboard
+	* request #9428: Artifact link with nature are not well exported at CSV export
+	* request #9440: Enhance Tracker restoration page
+	* request #9443: Project creation via SOAP is broken
+
 Version 8.18-2 (Monday, August 29th 2016)
 	== Bug fix ==
 	* request #9420: Openlist field can have an erroneous value when an artifact is created
