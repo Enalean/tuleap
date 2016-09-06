@@ -62,6 +62,7 @@ class LDAP_DirectorySynchronization {
                 $this->ldapSync($row, $users_are_suspendable);
             }
             $this->getLdapUserManager()->triggerRenameOfUsers();
+            $this->remindAdminsBeforeCleanUp();
         } else {
             echo "DB error: ".db_error().PHP_EOL;
         }
@@ -130,7 +131,6 @@ class LDAP_DirectorySynchronization {
                 }
             }
         }
-        $this->remindAdminsBeforeCleanUp();
     }
 
     /**
