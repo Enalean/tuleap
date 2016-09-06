@@ -43,7 +43,7 @@ class MockEM4UserManager extends BaseMockEventManager {
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,17 +62,24 @@ class MockEM4UserManager extends BaseMockEventManager {
  *
  */
 
-class UserManagerTest extends UnitTestCase {
-    const PASSWORD      = 'pwd';
+class UserManagerTest extends TuleapTestCase
+{
+    const SESSION_LIFETIME_2_WEEKS = 1209600;
+    const PASSWORD                 = 'pwd';
 
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse($this);
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    private $current_time;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->current_time = $_SERVER['REQUEST_TIME'];
+        ForgeConfig::store();
+        ForgeConfig::set('sys_session_lifetime', self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    function tearDown() {
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
+    public function tearDown()
+    {
+        ForgeConfig::restore();
     }
 
     function testCachingById() {
@@ -212,7 +219,11 @@ class UserManagerTest extends UnitTestCase {
 
         $cm->setReturnValue('getCookie', 'valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dao->setReturnReference('searchBySessionHash', $dar_valid_hash, array('valid_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_valid_hash,
+            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
         $dao->expectOnce('storeLastAccessDate', array(123, '*'));
@@ -235,7 +246,11 @@ class UserManagerTest extends UnitTestCase {
 
         $cm->setReturnValue('getCookie', 'invalid_hash');
         $dar_invalid_hash->setReturnValue('getRow', false);
-        $dao->setReturnReference('searchBySessionHash', $dar_invalid_hash, array('invalid_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_invalid_hash,
+            array('invalid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
         $um->setReturnReference('getDao', $dao);
@@ -263,11 +278,19 @@ class UserManagerTest extends UnitTestCase {
         $user123->expectOnce('setSessionHash', array('valid_hash'));
 
         $cm->setReturnValue('getCookie', 'empty_hash');
-        $dao->setReturnReference('searchBySessionHash', $dar_invalid_hash, array('empty_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_invalid_hash,
+            array('empty_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $dar_invalid_hash->setReturnValue('getRow', false);
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
-        $dao->setReturnReference('searchBySessionHash', $dar_valid_hash, array('valid_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_valid_hash,
+            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
@@ -306,7 +329,11 @@ class UserManagerTest extends UnitTestCase {
         $cm->expectCallCount('removeCookie', 1);
         $cm->expectAt(2, 'removeCookie', array('session_hash'));
         $dao->expectOnce('deleteSession', array('valid_hash'));
-        $dao->setReturnReference('searchBySessionHash', $dar_valid_hash, array('valid_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_valid_hash,
+            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
@@ -413,7 +440,11 @@ class UserManagerTest extends UnitTestCase {
 
         $cm->setReturnValue('getCookie', 'valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dao->setReturnReference('searchBySessionHash', $dar_valid_hash, array('valid_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_valid_hash,
+            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
@@ -444,7 +475,11 @@ class UserManagerTest extends UnitTestCase {
 
         $cm->setReturnValue('getCookie', 'valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dao->setReturnReference('searchBySessionHash', $dar_valid_hash, array('valid_hash'));
+        $dao->setReturnReference(
+            'searchBySessionHash',
+            $dar_valid_hash,
+            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
+        );
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,17 @@ class SessionDao extends DataAccessObject {
     /**
      * @return int the number of active sessions
      */
-    public function count() {
-        $row = $this->retrieve("SELECT count(*) AS nb FROM session")->getRow();
+    public function count($current_time, $session_lifetime)
+    {
+        $current_time     = $this->da->escapeInt($current_time);
+        $session_lifetime = $this->da->escapeInt($session_lifetime);
+
+        $row = $this->retrieve(
+            "SELECT count(*) AS nb FROM session WHERE time + $session_lifetime > $current_time"
+        )->getRow();
         return $row['nb'];
     }
-    
+
     /**
      * Purge the table
      *
@@ -36,4 +42,3 @@ class SessionDao extends DataAccessObject {
         return $this->update("TRUNCATE TABLE session");
     }
 }
-?>

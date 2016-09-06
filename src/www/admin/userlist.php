@@ -209,7 +209,8 @@ $nb_active_sessions  = 0;
 $display_nb_projects = false;
 if (! $group_id) {
     $session_dao         = new SessionDao();
-    $nb_active_sessions  = $session_dao->count();
+    $session_lifetime    = ForgeConfig::get('sys_session_lifetime');
+    $nb_active_sessions  = $session_dao->count($request->getFromServer('REQUEST_TIME'), $session_lifetime);
     $display_nb_projects = true;
 }
 $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
