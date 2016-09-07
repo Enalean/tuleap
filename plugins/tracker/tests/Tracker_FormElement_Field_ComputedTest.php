@@ -103,6 +103,79 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     }
 }
 
+class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
+{
+    private $field;
+    private $artifact;
+    private $old_changeset;
+    private $new_changeset_id;
+    private $submitter;
+    private $value_dao;
+    private $new_changeset_value_id;
+
+    public function setUp()
+    {
+        $this->field = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_Computed',
+            array(
+                'getProperty',
+                'getDao',
+                'getChangesetValueDao',
+                'userCanUpdate',
+                'isValid',
+                'getValueDao',
+                'getCurrentUser',
+                'getDeprecationRetriever'
+            )
+        );
+
+        $tracker                = aTracker()->withId(10)->build();
+        $this->artifact         = aMockArtifact()->withId(123)->withTracker($tracker)->build();
+        $this->old_changeset    = null;
+        $this->new_changeset_id = 4444;
+        $this->submitter        = aUser()->build();
+        $this->new_changeset_value_id = 66666;
+
+        $this->value_dao = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
+        stub($this->field)->getValueDao()->returns($this->value_dao);
+        $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
+        stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
+        stub($this->field)->userCanUpdate()->returns(true);
+        stub($this->field)->isValid()->returns(true);
+        stub($this->field)->getCurrentUser()->returns(mock('PFUser'));
+        stub($this->field)->getDeprecationRetriever()->returns(mock('Tuleap\Tracker\Deprecation\DeprecationRetriever'));
+    }
+
+    public function itCanRetrieveManualValuesWhenArrayIsGiven()
+    {
+        $value = array(
+            'manual_value'    => 20,
+            'is_autocomputed' => 0
+        );
+        $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, 20));
+        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter);
+    }
+
+    public function itCanRetrieveManualValueWhenDataComesFromJson()
+    {
+        $value = json_encode(
+            $value = array(
+                'manual_value'    => 20,
+                'is_autocomputed' => 0
+            )
+        );
+        $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, 20));
+        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter);
+    }
+
+    public function itRetrieveEmptyValueWhenDataIsIncorrect()
+    {
+        $value = 'aaa';
+        $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, null));
+        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter);
+    }
+}
+
 class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
 {
     private $artifact;
