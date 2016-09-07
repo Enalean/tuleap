@@ -33,7 +33,7 @@ Version 8.19 (Not Released Yet)
 	* request #9444: FRS error at release creation when nobody is selected in the package permission list
 
 	== Plugins ==
-	* tracker: 5.1000
+	* tracker: 5.1001
 	* git: 4.256
 	* ldap: 3.109
 	* mediawiki: 0.124
