@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\SvnCore\ViewVC;
+namespace Tuleap\CVS\ViewVC;
 
 require_once('viewvc_utils.php');
-require_once('www/svn/svn_utils.php');
+require_once('www/cvs/commit_utils.php');
 
 use ForgeConfig;
 use HTTPRequest;
@@ -111,21 +111,29 @@ class EPELViewVCProxy implements ViewVCProxy
         return false;
     }
 
+    /**
+     * @return string
+     */
+    private function getCVSRootPath(Project $project)
+    {
+        return ForgeConfig::get('cvs_prefix') . DIRECTORY_SEPARATOR . $project->getUnixNameMixedCase();
+    }
+
     public function displayContent(Project $project, HTTPRequest $request)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
             exit_error(
-                $GLOBALS['Language']->getText('svn_viewvc', 'access_denied'),
+                $GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess'),
                 $GLOBALS['Language']->getText(
-                    'svn_viewvc',
-                    'acc_den_comment',
+                    'cvs_viewvc',
+                    'error_noaccess_msg',
                     session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()))
                 )
             );
         }
 
-        viewvc_utils_track_browsing($project->getID(), 'svn');
+        viewvc_utils_track_browsing($project->getID(), 'cvs');
 
         //this is very important. default path must be /
         $path = "/";
@@ -146,8 +154,8 @@ class EPELViewVCProxy implements ViewVCProxy
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
             'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
             'TULEAP_REPO_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
-            'TULEAP_REPO_PATH='.escapeshellarg($project->getSVNRootPath()).' '.
-            ForgeConfig::get('tuleap_dir').'/src/common/svn/viewvc/viewvc-epel.cgi 2>&1';
+            'TULEAP_REPO_PATH='.escapeshellarg($this->getCVSRootPath($project)).' '.
+            ForgeConfig::get('tuleap_dir').'/src/common/cvs/ViewVC/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command);
 
@@ -174,10 +182,12 @@ class EPELViewVCProxy implements ViewVCProxy
             $length     = strpos($content, "</body>\n</html>") - $begin_doc;
 
             // Now insert references, and display
-            svn_header(array(
-                'title' => basename($path) . ' - ' . $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
-                'path' => urlencode($path)
-            ));
+            commits_header(
+                array(
+                    'title' => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
+                    'group' => $project->getID()
+                )
+            );
             echo util_make_reference_links(
                 substr($content, $begin_doc, $length),
                 $project->getID()
