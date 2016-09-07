@@ -33,7 +33,7 @@ Version 8.19 (Not Released Yet)
 	* request #9444: FRS error at release creation when nobody is selected in the package permission list
 
 	== Plugins ==
-	* tracker: 5.999
+	* tracker: 5.1000
 	* git: 4.256
 	* ldap: 3.109
 	* mediawiki: 0.124
@@ -45,7 +45,7 @@ Version 8.19 (Not Released Yet)
 	* webdav: 1.9.19
 	* docman: 2.26.119
 	* agiledashboard: 1.416
-	* cardwall: 1.66
+	* cardwall: 1.67
 	* frs: 0.20
 
 	== Themes ==

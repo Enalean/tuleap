@@ -1,3 +1,6 @@
+Version 1.67 - Tuleap 8.19
+    * request #9437: Fatal error when updating manual value of a computed field in AD card
+
 Version 1.66 - Tuleap 8.19
     * request #9417: Missing CSRF protection in the semantic administration
 
