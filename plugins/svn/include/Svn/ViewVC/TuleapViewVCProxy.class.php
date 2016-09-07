@@ -28,7 +28,7 @@ use CrossReferenceFactory;
 use ReferenceManager;
 use Codendi_HTMLPurifier;
 
-class ViewVCProxy
+class TuleapViewVCProxy implements ViewVCProxy
 {
 
     /**
@@ -74,9 +74,12 @@ class ViewVCProxy
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
 
+        if (strpos($request_uri, "annotate=") !== false) {
+            return true;
+        }
+
         if (strpos($request_uri, "view=patch") !== false ||
             strpos($request_uri, "view=graphimg") !== false ||
-            strpos($request_uri, "annotate=") !== false ||
             strpos($request_uri, "view=redirect_path") !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
            strpos($request_uri, "&rev=") !== false ) {
@@ -93,19 +96,6 @@ class ViewVCProxy
         }
 
         return true;
-    }
-
-    private function buildQueryString(HTTPRequest $request)
-    {
-        $request_uri = $request->getFromServer('REQUEST_URI');
-
-        if (strpos($request_uri, "/?") === false) {
-            return $request->getFromServer('QUERY_STRING');
-        } else {
-            $project = $this->project_manager->getProject($request->get('group_id'));
-            $repository = $this->repository_manager->getById($request->get('repo_id'), $project);
-            return "roottype=svn&root=".$repository->getFullName();
-        }
     }
 
     private function escapeStringFromServer(HTTPRequest $request, $key)
@@ -220,7 +210,7 @@ class ViewVCProxy
         $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
             'HTTP_USER_AGENT='.$this->escapeStringFromServer($request, 'HTTP_USER_AGENT').' '.
             'REMOTE_ADDR='.escapeshellarg(HTTPRequest::instance()->getIPAddress()).' '.
-            'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
+            'QUERY_STRING='.$this->escapeStringFromServer($request, 'QUERY_STRING').' '.
             'SERVER_SOFTWARE='.$this->escapeStringFromServer($request, 'SERVER_SOFTWARE').' '.
             'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
@@ -247,7 +237,7 @@ class ViewVCProxy
         $viewvc_location = $this->getViewVcLocationHeader($location_line);
 
         if ($viewvc_location) {
-            $content = substr($content, strpos($content, $location_line));
+            $GLOBALS['Response']->redirect($viewvc_location);
         }
 
         if ($parse) {

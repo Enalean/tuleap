@@ -37,7 +37,6 @@ class ExplorerPresenter {
     public $list_repositories;
     public $label_repository_name;
     public $no_repositories;
-    public $svn_plugin;
     public $create_repository;
     public $has_respositories;
     public $help_repository_name;
@@ -55,7 +54,6 @@ class ExplorerPresenter {
         $this->csrf_input                                 = $csrf->fetchHTMLInput();
         $this->repository_name                            = $repository_name;
         $this->list_repositories                          = $repository_manager->getRepositoriesInProject($project);
-        $this->svn_plugin                                 = SVN_BASE_URL;
         $this->title_list_repositories                    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
         $this->label_repository_name                      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
         $this->no_repositories                            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');

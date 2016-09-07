@@ -106,6 +106,8 @@ plugin_svn	archived_repositories	Deleted svn repositories
 plugin_svn	restore_confirmation	Confirm restore of the svn repository
 plugin_svn	restore_no_repo_found	No restorable svn repositories found.
 
+plugin_svn	anonymous_browse_access_denied	You can not browse the repository without being logged.
+
 plugin_svn	logsdaily_field	Repository name
 plugin_svn	logsdaily_title	Subversion commits multi repositories
 plugin_svn	log_read_label	Read
@@ -125,3 +127,5 @@ plugin_svn_statistics	top_user_operation	Top user (number of write operations)
 plugin_svn_statistics	top_project	Top project
 plugin_svn_statistics	top_project_operation	Top project (number of write operations)
 plugin_svn_statistics	service_usage_activities	SVN with multiple repositories activities
+
+plugin_svn	url_can_not_be_processed	The requested action can not be understood, you have been redirected to the homepage
