@@ -1,3 +1,6 @@
+Version 0.88 - Tuleap 8.19
+    * docker run -v /home/mgarnier/tuleap:/tuleap enalean/tuleap-generate-changelog
+
 Version 0.87 - Tuleap 8.19
     * Wrapp project id into extractCrossReference method
 
