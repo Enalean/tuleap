@@ -122,8 +122,14 @@ class ServiceManager {
         return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
     }
 
+    private function isServiceActiveInProject ($project, $name)
+    {
+        $project_id = $project->getId();
+        return $this->dao->isServiceActiveInProjectByShortName($project_id, $name);
+    }
+
     public function toggleServiceUsage(Project $project, $short_name, $is_used) {
-        if ($this->isServiceAvailableAtSiteLevelByShortName($short_name)) {
+        if ($this->isServiceAvailableAtSiteLevelByShortName($short_name) || $this->isServiceActiveInProject($project, $short_name)) {
             $previous_is_used = $project->getService($short_name);
             if ($previous_is_used != $is_used) {
                 $this->updateServiceUsage($project, $short_name, $is_used);
