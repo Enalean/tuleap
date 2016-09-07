@@ -10,6 +10,10 @@
 require_once('pre.php');
 require('../survey/survey_utils.php');
 
+if (! ForgeConfig::get('sys_use_surveys')) {
+	exit_permission_denied();
+}
+
 survey_header(array('title'=>$Language->getText('survey_s_resp','s_compl')));
 
 // select this survey from the database

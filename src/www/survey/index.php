@@ -11,6 +11,9 @@ require_once('pre.php');
 require_once('common/survey/SurveySingleton.class.php');
 require_once('../survey/survey_utils.php');
 
+if (! ForgeConfig::get('sys_use_surveys')) {
+    exit_permission_denied();
+}
 
 survey_header(array('title'=>$Language->getText('survey_index','s'),
 		    'help'=>'survey.html'));
