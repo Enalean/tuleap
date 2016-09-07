@@ -184,7 +184,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 if ($this->userIsTrackerAdmin($project, $user)) {
                                     $tracker_id   = $request->get('tracker_id');
                                     $group_id     = $request->get('group_id');
-                                    $token      = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?group_id='. $group_id .'&amp;tracker_id='.$tracker_id.'&amp;func=restore-tracker');
+                                    $token      = new CSRFSynchronizerToken('/tracker/admin/restore.php');
                                     $token->check();
                                     $tracker_name = $this->getTrackerFactory()->getTrackerById($tracker_id)->getName();
                                     $this->restoreDeletedTracker($tracker_id);
@@ -775,7 +775,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 $tracker_name                   = $tracker->getName();
                 $deletion_date                  = date('d-m-Y',$tracker->deletion_date);
 
-                $resotre_token                  = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?group_id='. $project_id .'&amp;tracker_id='.$tracker_id.'&amp;func=restore-tracker');
+                $resotre_token                  = new CSRFSynchronizerToken('/tracker/admin/restore.php');
                 $deleted_trackers_presenters [] = new DeletedTrackerPresenter(
                                                         $tracker_id,
                                                         $tracker_name,
