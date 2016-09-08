@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 
@@ -22,118 +35,54 @@ if ($project && !$project->isError()) {
     $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
     $request = HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
-    
-    if(!negotiate_content_project_home($project, $default_content_type)) {
-        if ($request->isAjax()) {
-            header('Content-type: application/json');
-            echo json_encode(
-                array(
-                    'id'   => $group_id, 
-                    'name' => $project->getPublicName(),
-                )
-            );
-            exit;
+
+    if ($request->isAjax()) {
+        header('Content-type: application/json');
+        echo json_encode(
+            array(
+                'id' => $group_id,
+                'name' => $project->getPublicName(),
+            )
+        );
+        exit;
+    }
+    // if the summary service is active we display the dashboard of the project
+    // otherwise we display the first active service on the list
+
+    if ($project->usesService('summary')) {
+        //now show the project page
+        include_once 'project_home.php';
+    } else {
+        $val = array_values($project->getServices());
+        foreach ($val as $containedSrv) {
+            if ($containedSrv->isUsed()) {
+                $service = $containedSrv;
+                break;
+            }
         }
-        // if the summary service is active we display the dashboard of the project
-        // otherwise we display the first active service on the list
-        
-        if ($project->usesService('summary')){
-            //now show the project page
-            include_once 'project_home.php';
+        if ($service->isIFrame()) {
+            $label = $service->getLabel();
+            if ($label == "service_" . $service->getShortName() . "_lbl_key") {
+                $label = $Language->getText('project_admin_editservice', $label);
+            } elseif (preg_match('/(.*):(.*)/', $label, $matches)) {
+                $label = $Language->getText($matches[1], $matches[2]);
+            }
+            $title = $label . ' - ' . $project->getPublicName();
+            site_project_header(array(
+                'title'  => $title,
+                'group'  => $request->get('group_id'),
+                'toptab' => $service->getId()
+            ));
+            $GLOBALS['HTML']->iframe($service->getUrl(),
+                array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
+            site_project_footer(array());
         } else {
-            $val = array_values($project->getServices());
-            foreach ($val as $containedSrv){
-               if ($containedSrv->isUsed()) {
-                   $service = $containedSrv;
-                   break;
-               } 
-            }
-            if ($service->isIFrame()){
-                $label = $service->getLabel();
-                if ($label == "service_". $service->getShortName() ."_lbl_key") {
-                    $label = $Language->getText('project_admin_editservice',$label);
-                } elseif(preg_match('/(.*):(.*)/', $label, $matches)) {
-                    $label = $Language->getText($matches[1], $matches[2]);
-                }
-                $title = $label .' - '. $project->getPublicName();
-                site_project_header(array('title' => $title, 'group' => $request->get('group_id'), 'toptab' => $service->getId()));
-                $GLOBALS['HTML']->iframe($service->getUrl(), array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
-                site_project_footer(array());
-            } else {
-                $GLOBALS['Response']->redirect($service->getUrl());
-            }
+            $GLOBALS['Response']->redirect($service->getUrl());
         }
     }
 } else {
-    if (!negotiate_content_projects_list($default_content_type)) {
-        header("HTTP/1.0 404 Not Found");
-        if (!$request->isAjax()) {
-            exit_no_group();
-        }
+    header("HTTP/1.0 404 Not Found");
+    if (! $request->isAjax()) {
+        exit_no_group();
     }
 }
-
-//
-// Following functions were imported from FusionForge (almost) "as is"
-// Code should be kept as close as possible (ideally shared).
-// 
-
-function negotiate_content_project_home(PFO_Project $project, $default_content_type) {
-    $script='project_home';
-    $content_type = util_negociate_alternate_content_types($script, $default_content_type);
-
-    // if a custom content-type is selected, then redirect to plugin's rendering
-    if($content_type != $default_content_type) {
-         $content             = '';
-         $accept_content_type = $content_type;
-         $content_type        = '';
-         $hook_params = array(
-            'groupname'    => $project->getUnixName(),
-            'accept'       => $accept_content_type,
-            'return'       => '',
-            'content_type' => &$content_type,
-            'group_id'     => $project->getID(),
-            'content'      => &$content,
-        );
-        EventManager::instance()->processEvent('content_negociated_project_home', $hook_params);
-        if ($content_type != ''){
-            header('Content-type: '. $content_type);
-            echo $content;
-        } else {
-            header('HTTP/1.1 406 Not Acceptable',true,406);
-        }
-        exit(0);
-    }
-    return false;
-}
-
-function negotiate_content_projects_list($default_content_type) {
-    $script = 'projects_list';
-    $content_type = util_negociate_alternate_content_types($script, $default_content_type);
-
-    if($content_type != $default_content_type) {
-        $content             = '';
-        $accept_content_type = $content_type;
-        $content_type        = '';
-        $hook_params = array(
-            'accept'       => $accept_content_type,
-            'return'       => '',
-            'content_type' => &$content_type,
-            'content'      => &$content,
-        );
-        EventManager::instance()->processEvent('content_negociated_projects_list', $hook_params);
-        if ($content_type != ''){
-            header('Content-type: '. $content_type);
-            echo $content;
-        } else {
-            header('HTTP/1.1 406 Not Acceptable',true,406);
-        }
-        exit(0);
-    }
-    return false;
-}
-
-// Local Variables:
-// mode: php
-// End:
-?>

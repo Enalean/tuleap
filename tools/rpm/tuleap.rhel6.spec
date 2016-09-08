@@ -340,36 +340,6 @@ Requires: tuleap
 %description plugin-fusionforge_compat
 Allows some fusionforge plugins to be installed in a Tuleap instance.
 
-%package plugin-doaprdf
-Summary: Doap
-Group: Development/Tools
-Version: @@PLUGIN_DOAPRDF_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: tuleap-plugin-fusionforge_compat
-%description plugin-doaprdf
-This plugin provides DOAP RDF documents for projects on /projects URLs with
-content-negociation (application/rdf+xml).
-
-%package plugin-foafprofiles
-Summary: Foaf Profiles
-Group: Development/Tools
-Version: @@PLUGIN_FOAFPROFILES_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: tuleap-plugin-fusionforge_compat
-%description plugin-foafprofiles
-This plugin provides FOAFPROFILES for projects user (application/rdf+xml).
-
-%package plugin-admssw
-Summary: Adms.sw
-Group: Development/Tools
-Version: @@PLUGIN_ADMSSW_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: tuleap-plugin-doaprdf
-Requires: %{php_base}-pear-HTTP
-%description plugin-admssw
-This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
-/projects URLs with content-negociation (application/rdf+xml).
-
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
@@ -1177,18 +1147,6 @@ fi
 %files plugin-fusionforge_compat
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/fusionforge_compat
-
-%files plugin-admssw
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/admssw
-
-%files plugin-doaprdf
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/doaprdf
-
-%files plugin-foafprofiles
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/foafprofiles
 
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
