@@ -31,6 +31,7 @@ Version 8.19 (Not Released Yet)
 	* request #9395: A restricted user can not browse the SVN tree in SVN core if the SVN plugin is not installed
 	* request #9443: Project creation via SOAP is broken
 	* request #9444: FRS error at release creation when nobody is selected in the package permission list
+	* request #9413: Tuleap is leaking private user information
 
 	== Plugins ==
 	* tracker: 5.1001
