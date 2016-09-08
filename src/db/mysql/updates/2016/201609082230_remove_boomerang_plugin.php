@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('boomerang');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $p->process(HTTPRequest::instance());
-} else {
-    header('Location: '.get_server_url());
+class b201609082230_remove_boomerang_plugin extends ForgeUpgrade_Bucket
+{
+    public function description()
+    {
+        return 'Remove boomerang plugin';
+    }
+
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+
+    public function up()
+    {
+        $sql = "DELETE FROM plugin WHERE name = 'boomerang'";
+
+        if (! $this->db->dbh->query($sql)) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                'The plugin boomerang has not been properly uninstalled'
+            );
+        }
+    }
 }
-?>

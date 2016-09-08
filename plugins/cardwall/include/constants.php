@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,6 @@
 
 define('CARDWALL_BASE_DIR', dirname(__FILE__));
 define('CARDWALL_BASE_URL', '/plugins/cardwall');
-
-/**
- * A cardwall has been displayed.
- *
- * Parameters:
- *  'html'            => Pane content of the cardwall.
- *
- * Expected Results:
- *  'html'            => Pane content of the cardwall with injected scripts.
- */
-define('CARDWALL_EVENT_DISPLAYED','cardwall_event_displayed');
 
 /**
  * Can we use standard javascript

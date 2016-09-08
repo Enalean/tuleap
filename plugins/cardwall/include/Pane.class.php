@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -113,13 +113,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent($template) {
-        $event_manager = EventManager::instance();
         $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         $html = $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????
-
-        $event_manager->processEvent(CARDWALL_EVENT_DISPLAYED, array('html' => &$html));
 
         return $html;
     }
