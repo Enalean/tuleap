@@ -6,6 +6,7 @@
     position: absolute;
     box-sizing: border-box;
     transition: all;
+    z-index: 100;
 
     > i {
         margin: 10px;
