@@ -89,8 +89,9 @@ function ExecutionService(
 
             $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
 
-            if (nb_fetched < total_executions) {
-                return getExecutions(campaign_id, limit, offset + limit, nb_fetched);
+            offset = offset + limit;
+            if (offset < total_executions) {
+                return getExecutions(campaign_id, limit, offset, nb_fetched);
             } else {
                 self.loading[campaign_id] = false;
                 return;
