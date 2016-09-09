@@ -174,22 +174,16 @@ class EPELViewVCProxy implements ViewVCProxy
 
         $parse = $this->displayViewVcHeader($request);
         if ($parse) {
-            //parse the html doc that we get from viewvc.
-            //remove the http header part as well as the html header and
-            //html body tags
-            $begin_body = stripos($content, "<body");
-            $begin_doc  = strpos($content, ">", $begin_body) + 1;
-            $length     = strpos($content, "</body>\n</html>") - $begin_doc;
-
             // Now insert references, and display
             commits_header(
                 array(
                     'title' => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
-                    'group' => $project->getID()
+                    'group' => $project->getID(),
+                    'body_class' => array('viewvc-epel')
                 )
             );
             echo util_make_reference_links(
-                substr($content, $begin_doc, $length),
+                $body,
                 $project->getID()
             );
             site_footer(array());
