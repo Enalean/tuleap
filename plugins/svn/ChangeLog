@@ -1,3 +1,6 @@
+Version 0.89 - Tuleap 8.19
+    * Use viewvc-theme-tuleap
+
 Version 0.88 - Tuleap 8.19
     * docker run -v /home/mgarnier/tuleap:/tuleap enalean/tuleap-generate-changelog
 
