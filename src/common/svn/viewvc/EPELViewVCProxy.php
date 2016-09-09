@@ -57,6 +57,14 @@ class EPELViewVCProxy implements ViewVCProxy
         return true;
     }
 
+    private function isViewingPatch(HTTPRequest $request)
+    {
+        $request_uri = $request->getFromServer('REQUEST_URI');
+        if (strpos($request_uri, "view=patch") !== false) {
+            return true;
+        }
+    }
+
     private function buildQueryString(HTTPRequest $request)
     {
         parse_str($request->getFromServer('QUERY_STRING'), $query_string_parts);
@@ -166,24 +174,20 @@ class EPELViewVCProxy implements ViewVCProxy
 
         $parse = $this->displayViewVcHeader($request);
         if ($parse) {
-            //parse the html doc that we get from viewvc.
-            //remove the http header part as well as the html header and
-            //html body tags
-            $begin_body = stripos($content, "<body");
-            $begin_doc  = strpos($content, ">", $begin_body) + 1;
-            $length     = strpos($content, "</body>\n</html>") - $begin_doc;
-
-            // Now insert references, and display
             svn_header(array(
-                'title' => basename($path) . ' - ' . $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
-                'path' => urlencode($path)
+                'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
+                'path' => urlencode($path),
+                'body_class' => array('viewvc-epel')
             ));
             echo util_make_reference_links(
-                substr($content, $begin_doc, $length),
+                $body,
                 $project->getID()
             );
             site_footer(array());
         } else {
+            if ($this->isViewingPatch($request)) {
+                header('Content-Type: text/plain');
+            }
             echo $body;
             exit();
         }
