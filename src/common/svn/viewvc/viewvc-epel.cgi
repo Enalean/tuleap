@@ -49,6 +49,7 @@ server = sapi.CgiServer()
 cfg = viewvc.load_config(CONF_PATHNAME, server)
 
 cfg.general.svn_roots[repo_name] = repo_path
+cfg.options.template_dir = '/usr/share/viewvc-theme-tuleap/templates'
 cfg.options.root_as_url_component = 0
 # Used by the views
 cfg.options.repo_name = repo_name
