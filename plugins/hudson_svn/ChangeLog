@@ -1,3 +1,6 @@
+Version 0.17 - Tuleap 8.19
+    * story #9322: pass additional parameters to Hudson jobs
+
 Version 0.16 - Tuleap 8.18
     * request #9375 Gulpify sass
 
