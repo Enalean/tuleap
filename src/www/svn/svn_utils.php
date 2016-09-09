@@ -64,7 +64,17 @@ function svn_header($params) {
     $toolbar[] = array('title' => $Language->getText('global','help'),
                        'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
 
-    $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar, $additional_params);
+    $service->displayHeader(
+        $params['title'],
+        array(
+            array(
+                'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_svn_lbl_key'),
+                'url' => '/svn/?group_id='.$group_id
+            )
+        ),
+        $toolbar,
+        $additional_params
+    );
 }
 
 function svn_header_admin($params) {
