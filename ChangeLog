@@ -10,6 +10,7 @@ Version 8.19 (Not Released Yet)
 		- Refactoring release introduce release router
 		- Have consistent selectbox for FRS package
 		- Have consistent selectbox for FRS release
+	* story #8610: Use viewvc-theme-tuleap in CVS
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
