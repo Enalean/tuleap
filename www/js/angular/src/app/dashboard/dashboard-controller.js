@@ -18,7 +18,15 @@ function DashboardController(
     var self = this;
 
     _.extend(self, {
-        init: init,
+        areClosedPullRequestsFullyLoaded  : PullRequestCollectionService.areClosedPullRequestsFullyLoaded,
+        areClosedPullRequestsHidden       : areClosedPullRequestsHidden,
+        areOpenPullRequestsFullyLoaded    : PullRequestCollectionService.areOpenPullRequestsFullyLoaded,
+        hideClosedPullRequests            : hideClosedPullRequests,
+        init                              : init,
+        isPullRequestClosed               : PullRequestService.isPullRequestClosed,
+        isThereAtLeastOneClosedPullRequest: PullRequestCollectionService.isThereAtLeastOneClosedPullRequest,
+        isThereAtLeastOneOpenpullRequest  : PullRequestCollectionService.isThereAtLeastOneOpenpullRequest,
+        loadClosedPullRequests            : loadClosedPullRequests,
 
         loading_pull_requests: true,
         pull_requests        : PullRequestCollectionService.all_pull_requests,
@@ -27,13 +35,51 @@ function DashboardController(
 
     self.init();
 
-    function init() {
-        self.loading_pull_requests = true;
+    var closed_pull_requests_hidden;
 
-        return PullRequestCollectionService.loadPullRequests()
+    function init() {
+        self.loading_pull_requests  = true;
+        closed_pull_requests_hidden = true;
+
+        var promise;
+        if (PullRequestCollectionService.areAllPullRequestsFullyLoaded()) {
+            promise = PullRequestCollectionService.loadAllPullRequests();
+        } else {
+            promise = PullRequestCollectionService.loadOpenPullRequests();
+        }
+
+        return promise
+        .then(function() {
+            TooltipService.setupTooltips();
+        })
         .finally(function() {
             self.loading_pull_requests = false;
-            TooltipService.setupTooltips();
         });
+    }
+
+    function loadClosedPullRequests() {
+        if (PullRequestCollectionService.areClosedPullRequestsFullyLoaded()) {
+            closed_pull_requests_hidden = false;
+            return false;
+        }
+
+        self.loading_pull_requests = true;
+
+        return PullRequestCollectionService.loadClosedPullRequests()
+        .then(function() {
+            TooltipService.setupTooltips();
+            closed_pull_requests_hidden = false;
+        })
+        .finally(function() {
+            self.loading_pull_requests = false;
+        });
+    }
+
+    function areClosedPullRequestsHidden() {
+        return closed_pull_requests_hidden;
+    }
+
+    function hideClosedPullRequests() {
+        closed_pull_requests_hidden = true;
     }
 }

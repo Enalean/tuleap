@@ -35,7 +35,7 @@ describe("PullRequestController -", function() {
         spyOn(SharedPropertiesService, "setReadyPromise");
         spyOn(PullRequestRestService, "getPullRequest").and.returnValue($q.when());
         spyOn(PullRequestCollectionService, "search");
-        PullRequestCollectionService.pull_requests_fully_loaded = false;
+        spyOn(PullRequestCollectionService, "areOpenPullRequestsFullyLoaded").and.returnValue(false);
 
         PullRequestController = $controller('PullRequestController');
         $rootScope.$apply();
@@ -53,7 +53,7 @@ describe("PullRequestController -", function() {
 
             var promise = $q.when(pull_request);
             PullRequestRestService.getPullRequest.and.returnValue(promise);
-            PullRequestCollectionService.pull_requests_fully_loaded = false;
+            PullRequestCollectionService.areOpenPullRequestsFullyLoaded.and.returnValue(false);
 
             PullRequestController.init();
             $rootScope.$apply();
@@ -71,7 +71,7 @@ describe("PullRequestController -", function() {
             };
             PullRequestCollectionService.search.and.returnValue(pull_request);
             SharedPropertiesService.setReadyPromise.and.callThrough();
-            PullRequestCollectionService.pull_requests_fully_loaded = true;
+            PullRequestCollectionService.areOpenPullRequestsFullyLoaded.and.returnValue(true);
 
             PullRequestController.init();
             $rootScope.$apply();
@@ -87,7 +87,7 @@ describe("PullRequestController -", function() {
             $state.params.id = pull_request_id;
             PullRequestCollectionService.search.and.returnValue();
             SharedPropertiesService.setReadyPromise.and.callThrough();
-            PullRequestCollectionService.pull_requests_fully_loaded = true;
+            PullRequestCollectionService.areOpenPullRequestsFullyLoaded.and.returnValue(true);
 
             PullRequestController.init();
             $rootScope.$apply();

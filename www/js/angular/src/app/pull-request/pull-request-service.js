@@ -19,8 +19,10 @@ function PullRequestService(
             merge  : 'merge',
             abandon: 'abandon'
         },
-        merge                    : merge,
+
         abandon                  : abandon,
+        isPullRequestClosed      : isPullRequestClosed,
+        merge                    : merge,
         updateTitleAndDescription: updateTitleAndDescription
     });
 
@@ -41,5 +43,11 @@ function PullRequestService(
             pull_request.title = response.data.title;
             pull_request.description = response.data.description;
         });
+    }
+
+    function isPullRequestClosed(pull_request) {
+        var closed_status = [self.valid_status_keys.merge, self.valid_status_keys.abandon];
+
+        return _.includes(closed_status, pull_request.status);
     }
 }

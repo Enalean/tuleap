@@ -70,8 +70,16 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
+#: src/app/dashboard/dashboard.tpl.html
+msgid "Hide closed pull requests"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Last CI Status"
+msgstr ""
+
+#: src/app/dashboard/dashboard.tpl.html
+msgid "Load closed pull requests"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
@@ -140,6 +148,14 @@ msgstr ""
 
 #: src/app/overview/overview.tpl.html
 msgid "Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
+msgstr ""
+
+#: src/app/dashboard/dashboard.tpl.html
+msgid "There are no closed pull requests"
+msgstr ""
+
+#: src/app/dashboard/dashboard.tpl.html
+msgid "There are no open pull requests"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html

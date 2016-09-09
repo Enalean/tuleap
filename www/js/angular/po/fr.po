@@ -3,21 +3,21 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.8.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
 msgid "Abandon"
 msgstr "Abandonner"
 
+#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 #: src/app/overview/overview.tpl.html
-#: src/app/pull-requests/pull-requests.tpl.html
 msgid "Abandoned"
 msgstr "Abandonné"
 
@@ -82,15 +82,23 @@ msgstr ""
 msgid "Files"
 msgstr "Fichiers"
 
+#: src/app/dashboard/dashboard.tpl.html
+msgid "Hide closed pull requests"
+msgstr "Cacher les pull requests fermées"
+
 #: src/app/overview/overview.tpl.html
 msgid "Last CI Status"
 msgstr "Statut intégration continue"
+
+#: src/app/dashboard/dashboard.tpl.html
+msgid "Load closed pull requests"
+msgstr "Charger les pull requests fermées"
 
 #: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr "Intégrer"
 
-#: src/app/pull-requests/pull-requests.tpl.html
+#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"
 msgstr "Intégré"
 
@@ -146,7 +154,7 @@ msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
 
-#: src/app/pull-requests/pull-requests.tpl.html
+#: src/app/dashboard/dashboard.tpl.html
 msgid "Pull requests"
 msgstr "Pull requests"
 
@@ -173,6 +181,14 @@ msgid ""
 msgstr ""
 "Succès le {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
 "DD HH:mm' }}"
+
+#: src/app/dashboard/dashboard.tpl.html
+msgid "There are no closed pull requests"
+msgstr "Il n'existe pas de pull requests fermées"
+
+#: src/app/dashboard/dashboard.tpl.html
+msgid "There are no open pull requests"
+msgstr "Il n'existe pas de pull requests ouvertes"
 
 #: src/app/overview/overview.tpl.html
 msgid "Title"

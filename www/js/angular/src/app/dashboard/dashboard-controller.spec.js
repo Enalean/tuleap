@@ -25,7 +25,12 @@ describe('DashboardController', function() {
             TooltipService               = _TooltipService_;
         });
 
-        spyOn(PullRequestCollectionService, "loadPullRequests").and.returnValue($q.when());
+        spyOn(PullRequestCollectionService, "loadOpenPullRequests").and.returnValue($q.when());
+        spyOn(PullRequestCollectionService, "loadClosedPullRequests");
+        spyOn(PullRequestCollectionService, "loadAllPullRequests");
+        spyOn(PullRequestCollectionService, "areAllPullRequestsFullyLoaded").and.returnValue(false);
+        spyOn(PullRequestCollectionService, "areClosedPullRequestsFullyLoaded");
+        spyOn(TooltipService, "setupTooltips");
 
         DashboardController = $controller('DashboardController', {
             PullRequestCollectionService: PullRequestCollectionService
@@ -33,18 +38,71 @@ describe('DashboardController', function() {
     });
 
     describe("init()", function() {
-        it("when the controller is created, then all the pull requests will be loaded and the loading flag will be set to false", function() {
-            spyOn(TooltipService, "setupTooltips");
-            PullRequestCollectionService.loadPullRequests.and.returnValue($q.when());
+        it("When the controller is created, then the open pull requests will be loaded and the loading flag will be set to false", function() {
+            PullRequestCollectionService.loadOpenPullRequests.and.returnValue($q.when());
 
             DashboardController.init();
             expect(DashboardController.loading_pull_requests).toBe(true);
 
             $rootScope.$apply();
 
-            expect(PullRequestCollectionService.loadPullRequests).toHaveBeenCalled();
+            expect(PullRequestCollectionService.loadOpenPullRequests).toHaveBeenCalled();
             expect(DashboardController.loading_pull_requests).toBe(false);
             expect(TooltipService.setupTooltips).toHaveBeenCalled();
+        });
+
+        it("Given that all the pull requests had already been loaded before, when the controller is created, then all the pull requests will be reloaded", function() {
+            PullRequestCollectionService.loadOpenPullRequests.calls.reset();
+            PullRequestCollectionService.areAllPullRequestsFullyLoaded.and.returnValue(true);
+            PullRequestCollectionService.loadAllPullRequests.and.returnValue($q.when());
+
+            DashboardController.init();
+            expect(DashboardController.loading_pull_requests).toBe(true);
+
+            $rootScope.$apply();
+
+            expect(PullRequestCollectionService.loadAllPullRequests).toHaveBeenCalled();
+            expect(PullRequestCollectionService.loadOpenPullRequests).not.toHaveBeenCalled();
+            expect(DashboardController.loading_pull_requests).toBe(false);
+            expect(TooltipService.setupTooltips).toHaveBeenCalled();
+        });
+    });
+
+    describe("loadClosedPullRequests()", function() {
+        beforeEach(function() {
+            $rootScope.$apply();
+        });
+
+        it("When I load the closed pull requests, then the collection service will load closed pull requests, the closed pull requests will be shown and the loading flag will be set to false", function() {
+            PullRequestCollectionService.loadClosedPullRequests.and.returnValue($q.when());
+
+            DashboardController.loadClosedPullRequests();
+            expect(DashboardController.loading_pull_requests).toBe(true);
+
+            $rootScope.$apply();
+
+            expect(PullRequestCollectionService.loadClosedPullRequests).toHaveBeenCalled();
+            expect(DashboardController.loading_pull_requests).toBe(false);
+            expect(TooltipService.setupTooltips).toHaveBeenCalled();
+        });
+
+        it("Given that all the closed pull requests had already been loaded before, when I load closed pull requests again, then they will be shown and the REST route will not be called again", function() {
+            PullRequestCollectionService.areClosedPullRequestsFullyLoaded.and.returnValue(true);
+
+            DashboardController.loadClosedPullRequests();
+            $rootScope.$apply();
+
+            expect(DashboardController.areClosedPullRequestsHidden()).toBe(false);
+            expect(PullRequestCollectionService.loadClosedPullRequests).not.toHaveBeenCalled();
+            expect(DashboardController.loading_pull_requests).toBe(false);
+        });
+    });
+
+    describe("hideClosedPullRequests()", function() {
+        it("When I hide closed pull requests, then the hidden flag will be true", function() {
+            DashboardController.hideClosedPullRequests();
+
+            expect(DashboardController.areClosedPullRequestsHidden()).toBe(true);
         });
     });
 });

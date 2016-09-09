@@ -30,4 +30,22 @@
         height: 16px;
         background: url('loader-mini.gif') no-repeat center center;
     }
+
+    .pull-request-list-load {
+        margin-top: 50px;
+        text-align: center;
+
+        .load-closed-pull-requests,
+        .hide-closed-pull-requests {
+            cursor: pointer;
+        }
+    }
+
+    > .no-pull-requests {
+        color: #AAA;
+        font-size: 0.9em;
+        margin: 50px 0 100px;
+        padding: 110px 0 0;
+        text-align: center;
+    }
 }

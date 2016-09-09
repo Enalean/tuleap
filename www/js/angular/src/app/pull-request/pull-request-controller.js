@@ -33,7 +33,7 @@ function PullRequestController(
         var pull_request_id = parseInt($state.params.id, 10);
         var promise;
 
-        if (PullRequestCollectionService.pull_requests_fully_loaded) {
+        if (PullRequestCollectionService.areOpenPullRequestsFullyLoaded()) {
             promise = searchForPullrequest(pull_request_id);
         } else {
             promise = loadPullrequest(pull_request_id);
