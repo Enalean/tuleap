@@ -26,6 +26,8 @@ require_once 'pre.php';
 require_once dirname(__FILE__).'/../../include/constants.php';
 
 $request = HTTPRequest::instance();
+$uri     = $request->getServerUrl() . TRACKER_BASE_URL .'/soap';
+
 if ($request->exist('wsdl')) {
     // Use a static wsdl file
     //$wsdl = file_get_contents(TRACKER_BASE_DIR .'/tracker.wsdl');
@@ -36,8 +38,6 @@ if ($request->exist('wsdl')) {
     // Use nusoap to generate the wsdl
     require_once 'nusoap.php';
     require_once 'utils_soap.php';
-
-    $uri    = $request->getServerUrl() . TRACKER_BASE_URL .'/soap';
 
     $server = new soap_server();
     $server->configureWSDL('TuleapTrackerV5API',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
