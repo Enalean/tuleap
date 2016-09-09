@@ -21,6 +21,7 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\HudsonSvn\BuildParams;
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
 use Tuleap\HudsonSvn\ContinuousIntegrationCollector;
 use Tuleap\HudsonSvn\SvnBackendLogger;
@@ -218,7 +219,8 @@ class hudson_svnPlugin extends Plugin {
         $launcher = new Launcher(
             $this->getJobFactory(),
             new SvnBackendLogger(),
-            new Jenkins_Client(new Http_Client())
+            new Jenkins_Client(new Http_Client()),
+            new BuildParams()
         );
 
         $launcher->launch($params['repository'], $params['commit_info']);

@@ -20,6 +20,8 @@
 
 namespace Tuleap\HudsonSvn;
 
+use ForgeConfig;
+
 class FormPresenter {
 
     /**
@@ -42,16 +44,27 @@ class FormPresenter {
     public $svn_paths_label;
     public $svn_paths_placeholder;
     public $label_svn_multirepo;
+    public $params_header;
+    public $project_param_description;
+    public $user_param_description;
+    public $repository_param_description;
+    public $path_param_description;
 
     public function __construct(array $repositories, $is_checked, $path) {
         $this->repositories = $repositories;
         $this->is_checked   = $is_checked;
         $this->path         = $path;
 
-        $this->selectbox_label       = $GLOBALS['Language']->getText('plugin_hudson_svn', 'selectbox_label');
-        $this->label_svn_multirepo   = $GLOBALS['Language']->getText('plugin_hudson_svn', 'label_svn_multirepo');
-        $this->svn_paths_helper      = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_helper');
-        $this->svn_paths_label       = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_label');
-        $this->svn_paths_placeholder = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_placeholder');
+        $this->selectbox_label              = $GLOBALS['Language']->getText('plugin_hudson_svn', 'selectbox_label');
+        $this->label_svn_multirepo          = $GLOBALS['Language']->getText('plugin_hudson_svn', 'label_svn_multirepo');
+        $this->svn_paths_helper             = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_helper');
+        $this->svn_paths_label              = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_label');
+        $this->svn_paths_placeholder        = $GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_placeholder');
+        $this->params_header                = $GLOBALS['Language']->getText('plugin_hudson_svn', 'params_header', ForgeConfig::get("sys_name"));
+
+        $this->project_param_description    = BuildParams::BUILD_PARAMETER_PROJECT .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'project_param');
+        $this->user_param_description       = BuildParams::BUILD_PARAMETER_USER .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'user_param', ForgeConfig::get("sys_name"));
+        $this->repository_param_description = BuildParams::BUILD_PARAMETER_REPOSITORY .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'repository_param');
+        $this->path_param_description       = BuildParams::BUILD_PARAMETER_PATH .' : '. $GLOBALS['Language']->getText('plugin_hudson_svn', 'path_param');
     }
 }
