@@ -32,6 +32,7 @@ Version 8.19 (Not Released Yet)
 	* request #9443: Project creation via SOAP is broken
 	* request #9444: FRS error at release creation when nobody is selected in the package permission list
 	* request #9413: Tuleap is leaking private user information
+	* request #9450: Unable to enable/disable a service
 
 	== Plugins ==
 	* tracker: 5.1001
