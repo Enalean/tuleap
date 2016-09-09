@@ -29,6 +29,10 @@
             vous offrir.
         </p>
         <form action="<?= $login_form_url ?>" method="POST">
+            <?php
+            $login_csrf = new CSRFSynchronizerToken('/account/login.php');
+            echo $login_csrf->fetchHTMLInput();
+            ?>
             <input type="text" name="form_loginname" class="<?= $login_input_span ?>" placeholder="Username" />
             <input type="password" name="form_pw" class="<?= $login_input_span ?>" placeholder="Password" />
             <input type="submit" class="btn" name="login" value="<?= $GLOBALS['Language']->getText('account_login', 'login_btn') ?>" />
