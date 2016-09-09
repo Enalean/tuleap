@@ -1,3 +1,39 @@
+body.viewvc-epel {
+
+    .main .content {
+        padding: 0 0 150px 0;
+    }
+
+    #svn-homepage,
+    #svn-administration {
+        margin: 12px;
+    }
+
+    #svn-repository {
+
+        > h2 {
+            margin: 10px 20px;
+        }
+
+        #svn-repository-url-bar {
+            margin: 0 20px;
+        }
+
+        #svn-repository-viewvc {
+            margin: 20px 0 0;
+            padding: 0;
+            background: none;
+            border: none;
+            border-top: 2px solid #E3E3E3;
+            border-radius: 0;
+        }
+    }
+
+    #svn-repository-help {
+        margin: 10px 20px;
+    }
+}
+
 #svn-homepage {
     form {
         margin: 30px 0 15px;
@@ -42,7 +78,7 @@
             margin: 0;
 
             > input[type="text"] {
-                width: 800px;
+                width: 500px;
             }
         }
     }

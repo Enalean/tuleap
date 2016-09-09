@@ -272,4 +272,9 @@ class TuleapViewVCProxy implements ViewVCProxy
             exit();
         }
     }
+
+    public function getBodyClass()
+    {
+        return '';
+    }
 }

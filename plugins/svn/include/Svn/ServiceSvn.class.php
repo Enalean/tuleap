@@ -49,14 +49,16 @@ class ServiceSvn extends Service
         return $this->permissions_manager;
     }
 
-    public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null)
+    public function renderInPage(HTTPRequest $request, $title, $template, $presenter)
     {
-        $this->displayHeader($request, $title);
+        $body_class = '';
+        $this->renderInPageWithBodyClass($request, $title, $template, $presenter, $body_class);
+    }
 
-        if ($presenter) {
-            $this->getRenderer()->renderToPage($template, $presenter);
-        }
-
+    public function renderInPageWithBodyClass(HTTPRequest $request, $title, $template, $presenter, $body_class)
+    {
+        $this->displaySVNHeader($request, $title, $body_class);
+        $this->getRenderer()->renderToPage($template, $presenter);
         $this->displayFooter();
         exit;
     }
@@ -66,22 +68,28 @@ class ServiceSvn extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR).'/templates');
     }
 
-    public function displayHeader(HTTPRequest $request, $title)
+    private function displaySVNHeader(HTTPRequest $request, $title, $body_class)
     {
+        $params = array(
+            'body_class' => array($body_class)
+        );
         $GLOBALS['HTML']->includeJavascriptSnippet(
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
-        $toolbar[]   = array(
-            'title' => "Repository List",
-            'url'   => "?group_id=" . $request->getProject()->getId());
+        $toolbar = array();
         if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
             $toolbar[] = array(
                 'title' => "Administration",
-                'url'   => "?group_id=" . $request->getProject()->getId() .
+                'url'   => SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId() .
                            "&action=admin-groups");
         }
         $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_svn', 'service_lbl_key');
-        $breadcrumbs = array();
-        parent::displayHeader($title, $breadcrumbs, $toolbar);
+        $breadcrumbs = array(
+            array(
+                'title' => "Repository List",
+                'url'   => SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId()
+            )
+        );
+        $this->displayHeader($title, $breadcrumbs, $toolbar, $params);
     }
 }

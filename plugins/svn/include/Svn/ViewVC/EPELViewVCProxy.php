@@ -76,6 +76,14 @@ class EPELViewVCProxy implements ViewVCProxy
         return true;
     }
 
+    private function isViewingPatch(HTTPRequest $request)
+    {
+        $request_uri = $request->getFromServer('REQUEST_URI');
+        if (strpos($request_uri, "view=patch") !== false) {
+            return true;
+        }
+    }
+
     private function buildQueryString(HTTPRequest $request)
     {
         parse_str($request->getFromServer('QUERY_STRING'), $query_string_parts);
@@ -211,19 +219,22 @@ class EPELViewVCProxy implements ViewVCProxy
                 );
             }
 
-
-            $begin_body = stripos($content, "<body");
-            $begin_doc  = strpos($content, ">", $begin_body) + 1;
-            $length     = strpos($content, "</body>\n</html>") - $begin_doc;
-
             // Now insert references, and display
             return util_make_reference_links(
-                substr($content, $begin_doc, $length),
+                $body,
                 $request->get('group_id')
             );
         } else {
+            if ($this->isViewingPatch($request)) {
+                header('Content-Type: text/plain');
+            }
             echo $body;
             exit();
         }
+    }
+
+    public function getBodyClass()
+    {
+        return 'viewvc-epel';
     }
 }
