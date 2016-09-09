@@ -33,6 +33,7 @@ Version 8.19 (Not Released Yet)
 	* request #9444: FRS error at release creation when nobody is selected in the package permission list
 	* request #9413: Tuleap is leaking private user information
 	* request #9450: Unable to enable/disable a service
+	* request #9464: User can't login from the homepage if the standard Tuleap homepage is not used
 
 	== Plugins ==
 	* tracker: 5.1001
