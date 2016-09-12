@@ -40,12 +40,12 @@
         background: $main;
     }
 
-    .dashboard {
+    .dashboard > h2 {
         border-color: $main;
     }
 
     .pull-request-summary:hover {
-        border-color: $main;
+        border-color: transparentize($main, .5);
     }
 }
 

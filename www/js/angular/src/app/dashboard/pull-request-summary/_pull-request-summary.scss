@@ -1,18 +1,15 @@
 .pull-request-summary {
-    $border-color: #eee;
-    $border-hover-color: #ccc;
-    $creation-date-color: #888;
-    $background-color: #fff;
+    $border-color: #e6e6e6;
+    $border-hover-color: #cccccc;
+    $creation-date-color: #888888;
     $margin-between-items: 15px;
 
     min-height: 50px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
     align-content: center;
-    background-color: $background-color;
     border-radius: 3px;
     border: 1px solid $border-color;
     cursor: pointer;
@@ -25,23 +22,38 @@
 
     .title {
         font-size: 14px;
+        min-width: 30px;
+        max-width: 50%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     .refs {
         margin-left: $margin-between-items;
+        white-space: nowrap;
     }
 
     .creation-date {
         color: $creation-date-color;
         margin-left: $margin-between-items;
+        white-space: nowrap;
+    }
+
+    .expander {
+        flex: 1 1 auto;
+        min-width: $margin-between-items;
     }
 
     .status {
         margin-left: $margin-between-items;
+        white-space: nowrap;
     }
 
     .author {
-        margin-left: auto;
+        margin-left: $margin-between-items;
+        font-size: 12px;
+        white-space: nowrap;
     }
 
     .actions {

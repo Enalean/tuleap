@@ -4,6 +4,7 @@
     <ul class="pull-requests-list">
         <li
             class="pull-request-list-item"
+            ng-class="{ closed: dashboard_controller.isPullRequestClosed(pull_request) }"
             ng-repeat="pull_request in dashboard_controller.pull_requests track by pull_request.id"
             ng-hide="dashboard_controller.areClosedPullRequestsHidden() && dashboard_controller.isPullRequestClosed(pull_request)"
         >

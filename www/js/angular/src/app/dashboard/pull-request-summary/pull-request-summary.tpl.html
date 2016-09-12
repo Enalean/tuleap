@@ -11,10 +11,7 @@
         class="refs"
         pull-request-data="::summary_controller.pull_request"
     ></pull-request-refs>
-    <small class="creation-date">
-        <i class="icon-calendar"></i>
-        {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
-    </small>
+    <span class="expander"></span>
     <span
         ng-if="::summary_controller.isAbandoned()"
         class="status label"
@@ -25,6 +22,10 @@
         class="status label label-success"
         translate
     >Merged</span>
+    <small class="creation-date">
+        <i class="icon-calendar"></i>
+        {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+    </small>
     <tuleap-username
         class="author"
         username="summary_controller.author"

@@ -1,38 +1,43 @@
 .dashboard {
-    padding: 25px 15px;
-    margin: 0 0 30px;
-    background: #F7F7F7;
-    border-top: 2px solid #AAA;
-
     @import 'pull-request-summary/pull-request-summary';
 
     > h2 {
-        display: inline-block;
+        display: block;
         margin: 0;
+        padding: 15px;
+        background: #f7f7f7;
+        border-top: 2px solid #aaaaaa;
     }
 
     .pull-requests-list {
-        margin: 0;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         justify-content: space-around;
         align-items: stretch;
-        align-content:  flex-start;
+        align-content: flex-start;
+        margin: 0;
+        padding: 25px 15px;
     }
 
     .pull-request-list-item {
         list-style: none;
-        margin: 5px 0 0 0;
+        margin: 0 0 10px;
+        background: #ffffff;
+
+        &.closed {
+            background: #efefef;
+        }
     }
 
     > .loading {
         height: 16px;
+        margin: 20px 0 0;
         background: url('loader-mini.gif') no-repeat center center;
     }
 
     .pull-request-list-load {
-        margin-top: 50px;
+        margin-top: 20px;
         text-align: center;
 
         .load-closed-pull-requests,
