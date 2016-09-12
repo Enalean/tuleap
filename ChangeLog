@@ -37,7 +37,7 @@ Version 8.19 (Not Released Yet)
 	* request #9464: User can't login from the homepage if the standard Tuleap homepage is not used
 
 	== Plugins ==
-	* tracker: 5.1001
+	* tracker: 5.1002
 	* git: 4.256
 	* ldap: 3.109
 	* mediawiki: 0.124

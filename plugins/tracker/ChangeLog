@@ -1,3 +1,6 @@
+Version 5.1002 - Tuleap 8.19
+    * request #9467: Fatal error when connecting to soap tracker client
+
 Version 5.1001 - Tuleap 8.19
     * request #9452: CSRF check error when trying to restore a tracker
 
