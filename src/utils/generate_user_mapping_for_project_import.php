@@ -100,7 +100,7 @@ try {
         $archive = new Import\ZipArchive($archive_path, ForgeConfig::get('tmp_dir'));
     }
 
-    $collection = $builder->buildFromArchive($archive);
+    $collection = $builder->build($archive);
     $collection->toCSV($output);
 
     exit(0);

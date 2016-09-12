@@ -42,7 +42,36 @@ class MappingFileOptimusPrimeTransformer {
     /** @return User\XML\Import\ReadyToBeImportedUsersCollection */
     public function transform(UsersToBeImportedCollection $collection_from_archive, $filename) {
         $csv_lines = $this->parseCSVFile($filename);
+        return $this->buildCollectionForImport($collection_from_archive, $csv_lines);
+    }
 
+    /** @return User\XML\Import\ReadyToBeImportedUsersCollection */
+    public function transformWithoutMap(UsersToBeImportedCollection $collection_from_archive, $default_action) {
+        $collection_for_import = new ReadyToBeImportedUsersCollection();
+        foreach ($collection_from_archive->toArray() as $username => $to_be_imported_user) {
+            if ($to_be_imported_user instanceof AlreadyExistingUser) {
+                $collection_for_import->add(
+                    $to_be_imported_user,
+                    $to_be_imported_user->getOriginalUserId(),
+                    $to_be_imported_user->getUserName(),
+                    $to_be_imported_user->getOriginalLdapId()
+                );
+            } else if ($to_be_imported_user instanceof ToBeCreatedUser) {
+                $collection_for_import->add(
+                    $this->transformUser($collection_from_archive, $username, $default_action, $to_be_imported_user),
+                    $to_be_imported_user->getOriginalUserId(),
+                    $to_be_imported_user->getUserName(),
+                    $to_be_imported_user->getOriginalLdapId()
+                );
+            } else {
+                throw new InvalidUserTypeException("$username: with --automap, user type `". get_class($to_be_imported_user) ."` is not supported");
+            }
+        }
+
+        return $collection_for_import;
+    }
+
+    private function buildCollectionForImport(UsersToBeImportedCollection $collection_from_archive, $csv_lines) {
         $collection_for_import = new ReadyToBeImportedUsersCollection();
         foreach ($collection_from_archive->toArray() as $username => $to_be_imported_user) {
             if (isset($csv_lines[$username])) {
