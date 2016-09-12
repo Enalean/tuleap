@@ -12,6 +12,7 @@ Version 8.19 (Not Released Yet)
 		- Have consistent selectbox for FRS release
 	* story #8610: Use viewvc-theme-tuleap in CVS
 	* story #8597: have a recent version of ViewVC (CVS, SVN core or plugin can use either viewvc or viewvc-tuleap)
+	* request #9455: XML import user mapping should provide an automap strategy
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
