@@ -143,17 +143,17 @@ function ExecutionDetailCtrl(
     }
 
     function pass(execution) {
-        execution.time  += $scope.timer.execution_time;
+        updateTime(execution);
         setNewStatus(execution, "passed");
     }
 
     function fail(execution) {
-        execution.time  += $scope.timer.execution_time;
+        updateTime(execution);
         setNewStatus(execution, "failed");
     }
 
     function block(execution) {
-        execution.time  += $scope.timer.execution_time;
+        updateTime(execution);
         setNewStatus(execution, "blocked");
     }
 
@@ -161,9 +161,20 @@ function ExecutionDetailCtrl(
         setNewStatus(execution, "notrun");
     }
 
+    function updateTime(execution) {
+        if (execution.time) {
+            execution.time += $scope.timer.execution_time;
+        }
+    }
+
     function setNewStatus(execution, new_status) {
-        execution.saving = true;
-        ExecutionRestService.putTestExecution(execution.id, new_status, execution.time, execution.results).then(function(data) {
+        execution.saving   = true;
+        var execution_time = null;
+
+        if (execution.time) {
+            execution_time = execution.time;
+        }
+        ExecutionRestService.putTestExecution(execution.id, new_status, execution_time, execution.results).then(function(data) {
             ExecutionService.updateTestExecution(data);
             resetTimer();
         }).catch(function(response) {
