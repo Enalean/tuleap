@@ -18,9 +18,17 @@ function MainController(
 ) {
     $scope.init = init;
 
-    function init(repository_id, user_id, language) {
+    function init(
+        repository_id,
+        user_id,
+        language,
+        nb_pull_request_badge,
+        nb_pull_requests
+    ) {
         SharedPropertiesService.setRepositoryId(repository_id);
         SharedPropertiesService.setUserId(user_id);
+        SharedPropertiesService.setNbPullRequestBadge(nb_pull_request_badge);
+        SharedPropertiesService.setNbPullRequest(nb_pull_requests);
 
         initLocale(language);
     }

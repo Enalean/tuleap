@@ -22,6 +22,8 @@ namespace Tuleap\PullRequest;
 
 class PullRequestPresenter
 {
+    /** @var int */
+    public $nb_pull_requests;
 
     /** @var int */
     public $repository_id;
@@ -33,15 +35,25 @@ class PullRequestPresenter
     public $language;
 
 
-    public function __construct($repository_id, $user_id, $language)
+    public function __construct($repository_id, $user_id, $language, $nb_pull_requests)
     {
-        $this->repository_id = $repository_id;
-        $this->user_id       = $user_id;
-        $this->language      = $language;
+        $this->repository_id         = $repository_id;
+        $this->user_id               = $user_id;
+        $this->language              = $language;
+        $this->nb_pull_requests      = $nb_pull_requests;
     }
 
     public function getTemplateName()
     {
         return 'index';
+    }
+
+    public function nb_pull_request_badge()
+    {
+        if ($this->nb_pull_requests <= 1) {
+            return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge', array($this->nb_pull_requests));
+        }
+
+        return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($this->nb_pull_requests));
     }
 }

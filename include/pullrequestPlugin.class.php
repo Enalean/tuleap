@@ -110,7 +110,8 @@ class pullrequestPlugin extends Plugin
     public function javascript_file()
     {
         if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-pullrequest.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-pullrequest.js"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/move-button-back.js"></script>';
         }
     }
 
@@ -295,8 +296,9 @@ class pullrequestPlugin extends Plugin
         $request    = $params['request'];
 
         if ($request->get('action') === 'pull-requests') {
-            $renderer  = $this->getTemplateRenderer();
-            $presenter = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale());
+            $nb_pull_requests = $this->getPullRequestFactory()->countPullRequestOfRepository($repository);
+            $renderer         = $this->getTemplateRenderer();
+            $presenter        = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale(), $nb_pull_requests);
 
             $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }

@@ -6,21 +6,27 @@ SharedPropertiesService.$inject = [];
 
 function SharedPropertiesService() {
     var property = {
-        readyPromise : null,
-        repository_id: null,
-        pull_request : null,
-        user_id      : null
+        readyPromise         : null,
+        repository_id        : null,
+        pull_request         : null,
+        user_id              : null,
+        nb_pull_request_badge: null,
+        nb_pull_requests     : null
     };
 
     return {
-        whenReady      : whenReady,
-        setReadyPromise: setReadyPromise,
-        getRepositoryId: getRepositoryId,
-        setRepositoryId: setRepositoryId,
-        getPullRequest : getPullRequest,
-        setPullRequest : setPullRequest,
-        getUserId      : getUserId,
-        setUserId      : setUserId
+        whenReady            : whenReady,
+        setReadyPromise      : setReadyPromise,
+        getRepositoryId      : getRepositoryId,
+        setRepositoryId      : setRepositoryId,
+        getPullRequest       : getPullRequest,
+        setPullRequest       : setPullRequest,
+        getUserId            : getUserId,
+        setUserId            : setUserId,
+        getNbPullRequestBadge: getNbPullRequestBadge,
+        setNbPullRequestBadge: setNbPullRequestBadge,
+        getNbPullRequest     : getNbPullRequest,
+        setNbPullRequest     : setNbPullRequest
     };
 
     function whenReady() {
@@ -53,5 +59,21 @@ function SharedPropertiesService() {
 
     function getUserId() {
         return property.user_id;
+    }
+
+    function getNbPullRequestBadge() {
+        return property.nb_pull_request_badge;
+    }
+
+    function setNbPullRequestBadge(nb_pull_request_badge) {
+        property.nb_pull_request_badge = nb_pull_request_badge;
+    }
+
+    function getNbPullRequest() {
+        return property.nb_pull_requests;
+    }
+
+    function setNbPullRequest(nb_pull_requests) {
+        property.nb_pull_requests = parseInt(nb_pull_requests, 10);
     }
 }

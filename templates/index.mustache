@@ -1,7 +1,14 @@
 <div id="pullrequest-app"
     ng-app="tuleap.pull-request"
     ng-controller="MainController"
-    ng-init="init('{{ repository_id }}', '{{ user_id }}', '{{ language }}')"
+    ng-init="init(
+        '{{ repository_id }}',
+        '{{ user_id }}',
+        '{{ language }}',
+        '{{ nb_pull_request_badge }}',
+        '{{ nb_pull_requests }}'
+    )"
 >
+    <button-back></button-back>
     <ui-view></ui-view>
 </div>
