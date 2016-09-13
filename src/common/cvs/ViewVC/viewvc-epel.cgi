@@ -39,8 +39,7 @@ requested_path = string.join(path_parts, '/')
 include.db_connect()
 
 if not cvsaccess.check_read_access(username, repo_path, requested_path):
-    print(' You are not authorized to access this directory.')
-    exit()
+    exit(128)
 
 import sapi
 import viewvc

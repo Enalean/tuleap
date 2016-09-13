@@ -23,6 +23,7 @@ namespace Tuleap\Svn\ViewVC;
 use HTTPRequest;
 use Tuleap\Svn\Repository\RepositoryManager;
 use ProjectManager;
+use Project;
 use ForgeConfig;
 use CrossReferenceFactory;
 use ReferenceManager;
@@ -110,11 +111,11 @@ class EPELViewVCProxy implements ViewVCProxy
         return $encoded_path;
     }
 
-    private function setLocaleOnCommand($command)
+    private function setLocaleOnCommand($command, &$return_var)
     {
         ob_start();
         putenv("LC_CTYPE=en_US.UTF-8");
-        passthru($command);
+        passthru($command, $return_var);
 
         return ob_get_clean();
     }
@@ -178,7 +179,11 @@ class EPELViewVCProxy implements ViewVCProxy
             'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
             ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc-epel.cgi 2>&1';
 
-        $content = $this->setLocaleOnCommand($command);
+        $content = $this->setLocaleOnCommand($command, $return_var);
+
+        if ($return_var === 128) {
+            return $this->getPermissionDeniedError($project);
+        }
 
         list($headers, $body) = http_split_header_body($content);
 
@@ -231,6 +236,21 @@ class EPELViewVCProxy implements ViewVCProxy
             echo $body;
             exit();
         }
+    }
+
+    private function getPermissionDeniedError(Project $project)
+    {
+        $purifier = $this->getPurifier();
+        $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()));
+
+        $title  = $purifier->purify($GLOBALS['Language']->getText('svn_viewvc', 'access_denied'));
+        $reason = $GLOBALS['Language']->getText('svn_viewvc', 'acc_den_comment', $purifier->purify($url));
+
+        return '<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css">
+            <div class="tuleap-viewvc-header">
+                <h3>'. $title .'</h3>
+                '. $reason .'
+            </div>';
     }
 
     public function getBodyClass()
