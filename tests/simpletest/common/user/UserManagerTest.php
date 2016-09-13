@@ -19,7 +19,7 @@ Mock::generatePartial('UserManager',
                       array('getUserInstanceFromRow',
                             'getCookieManager',
                             'getTokenManager',
-                            'generateSessionHash',
+                            'getSessionManager',
                             '_getPasswordLifetime',
                             '_getEventManager',
                             'getDao',
@@ -64,23 +64,7 @@ class MockEM4UserManager extends BaseMockEventManager {
 
 class UserManagerTest extends TuleapTestCase
 {
-    const SESSION_LIFETIME_2_WEEKS = 1209600;
-    const PASSWORD                 = 'pwd';
-
-    private $current_time;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->current_time = $_SERVER['REQUEST_TIME'];
-        ForgeConfig::store();
-        ForgeConfig::set('sys_session_lifetime', self::SESSION_LIFETIME_2_WEEKS);
-    }
-
-    public function tearDown()
-    {
-        ForgeConfig::restore();
-    }
+    const PASSWORD = 'pwd';
 
     function testCachingById() {
         $dao = mock('UserDao');
@@ -180,140 +164,9 @@ class UserManagerTest extends TuleapTestCase
         $this->assertTrue($um->isUserLoadedByUserName('user_123'));
     }
 
-    function testEmptySessionHash() {
-        $cm               = new MockCookieManager($this);
-        $userAnonymous    = mock('PFUser');
-        $dao              = new MockUserDao($this);
-        $um               = new UserManagerTestVersion($this);
-
-        $userAnonymous->setReturnValue('getId', 0);
-        $userAnonymous->setReturnValue('isAnonymous', true);
-
-        $cm->setReturnValue('getCookie', '');
-
-        $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('getCookieManager', $cm);
-        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
-
-        //expect that the user is cached
-        $um->expectOnce('getUserInstanceFromRow');
-
-        $user = $um->getCurrentUser();
-        $this->assertTrue($user->isAnonymous(), 'An empty session hash gives an anonymous user');
-
-        $this->assertReference($user, $um->getUserById($user->getId()));
-    }
-
-    function testValidSessionHash() {
-        $cm               = new MockCookieManager($this);
-        $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = mock('PFUser');
-        $dao              = new MockUserDao($this);
-        $um               = new UserManagerTestVersion($this);
-
-        $user123->setReturnValue('getId', 123);
-        $user123->setReturnValue('getUserName', 'user_123');
-        $user123->setReturnValue('isAnonymous', false);
-        $user123->setReturnValue('isSuspended', false);
-        $user123->setReturnValue('isDeleted',   false);
-
-        $cm->setReturnValue('getCookie', 'valid_hash');
-        $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_valid_hash,
-            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
-        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-
-        $dao->expectOnce('storeLastAccessDate', array(123, '*'));
-
-        $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('getCookieManager', $cm);
-
-        $user = $um->getCurrentUser();
-        $this->assertFalse($user->isAnonymous(), 'An valid session hash gives a registered user');
-    }
-
-    function testInvalidSessionHash() {
-        $cm               = new MockCookieManager($this);
-        $dar_invalid_hash = new MockDataAccessResult($this);
-        $userAnonymous    = mock('PFUser');
-        $dao              = new MockUserDao($this);
-        $um               = new UserManagerTestVersion($this);
-
-        $userAnonymous->setReturnValue('isAnonymous', true);
-
-        $cm->setReturnValue('getCookie', 'invalid_hash');
-        $dar_invalid_hash->setReturnValue('getRow', false);
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_invalid_hash,
-            array('invalid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
-        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
-
-        $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('getCookieManager', $cm);
-
-        $user = $um->getCurrentUser();
-        $this->assertTrue($user->isAnonymous(), 'An invalid session hash gives an anonymous user');
-    }
-
-    function testSessionContinue() {
-        $cm               = new MockCookieManager($this);
-        $dar_invalid_hash = new MockDataAccessResult($this);
-        $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = mock('PFUser');
-        $userAnonymous    = mock('PFUser');
-        $dao              = new MockUserDao($this);
-        $um               = new UserManagerTestVersion($this);
-
-        $userAnonymous->setReturnValue('getId', 0);
-        $userAnonymous->setReturnValue('isAnonymous', true);
-
-        $user123->setReturnValue('getId', 123);
-        $user123->setReturnValue('getUserName', 'user_123');
-        $user123->setReturnValue('isAnonymous', false);
-        $user123->expectOnce('setSessionHash', array('valid_hash'));
-
-        $cm->setReturnValue('getCookie', 'empty_hash');
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_invalid_hash,
-            array('empty_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
-        $dar_invalid_hash->setReturnValue('getRow', false);
-        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
-
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_valid_hash,
-            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
-        $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-
-        $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('getCookieManager', $cm);
-
-        $user1 = $um->getCurrentUser();
-        $this->assertTrue($user1->isAnonymous(), 'An invalid ip gives an anonymous user');
-
-        //The user is cached
-        $user2 = $um->getCurrentUser();
-        $this->assertTrue($user2->isAnonymous(), 'An invalid ip gives an anonymous user');
-
-        //Force refresh by providing a session_hash.
-        //This will continue the session for the protocols
-        //which don't handle cookies
-        $user3 = $um->getCurrentUser('valid_hash');
-        $this->assertFalse($user3->isAnonymous(), 'The session can be continued');
-    }
-
     function testLogout() {
         $cm               = new MockCookieManager($this);
-        $dar_valid_hash   = new MockDataAccessResult($this);
+        $session_manager  = mock('Tuleap\User\SessionManager');
         $user123          = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
@@ -328,25 +181,21 @@ class UserManagerTest extends TuleapTestCase
         $cm->setReturnValue('getCookie', 'valid_hash');
         $cm->expectCallCount('removeCookie', 1);
         $cm->expectAt(2, 'removeCookie', array('session_hash'));
-        $dao->expectOnce('deleteSession', array('valid_hash'));
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_valid_hash,
-            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
-        $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
+        stub($session_manager)->getUser()->returns($user123);
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('getCookieManager', $cm);
+        $um->setReturnReference('getSessionManager', $session_manager);
         $um->expectOnce('destroySession');
+        $session_manager->expectOnce('destroyCurrentSession', array($user123));
 
-        $user = $um->getCurrentUser();
         $um->logout();
     }
 
     function testGoodLogin() {
         $cm               = new MockCookieManager($this);
+        $session_manager  = mock('Tuleap\User\SessionManager');
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
@@ -361,18 +210,18 @@ class UserManagerTest extends TuleapTestCase
         $token         = stub('Rest_Token')->getTokenValue()->returns($token_value);
         $token_manager = stub('REST_TokenManager')->generateTokenForUser()->returns($token);
 
-        $dao->setReturnValue('createSession', $hash);
-
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
         $user123->setReturnValue('getUserPw', $password_handler->computeHashPassword(self::PASSWORD));
         $user123->setReturnValue('getStatus', 'A');
         $user123->setReturnValue('isAnonymous', false);
-        $user123->expectOnce('setSessionHash', array($hash));
 
         $cm->expectOnce('setHTTPOnlyCookie', array('session_hash', $hash, 0));
 
+        stub($session_manager)->createSession()->returns($hash);
+
         $user_manager->setReturnReference('getCookieManager', $cm);
+        stub($user_manager)->getSessionManager()->returns($session_manager);
         stub($user_manager)->getTokenManager()->returns($token_manager);
 
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
@@ -415,7 +264,6 @@ class UserManagerTest extends TuleapTestCase
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
-        $dao->expectNever('createSession');
         $dao->expectOnce('storeLoginFailure');
 
         $um->setReturnReference('getDao', $dao);
@@ -425,6 +273,7 @@ class UserManagerTest extends TuleapTestCase
     function testSuspenedUserGetSession() {
 
         $cm               = new MockCookieManager($this);
+        $session_manager  = mock('Tuleap\User\SessionManager');
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
         $userAnonymous    = mock('PFUser');
@@ -440,19 +289,16 @@ class UserManagerTest extends TuleapTestCase
 
         $cm->setReturnValue('getCookie', 'valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_valid_hash,
-            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        stub($session_manager)->getUser()->returns($user123);
 
         $dao->expectNever('storeLastAccessDate');
-        $dao->expectOnce('deleteAllUserSessions', array(123));
+        $session_manager->expectOnce('destroyAllSessions', array($user123));
 
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('getCookieManager', $cm);
+        $um->setReturnReference('getSessionManager', $session_manager);
 
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'A suspended user should not be able to use a valid session');
@@ -460,6 +306,7 @@ class UserManagerTest extends TuleapTestCase
 
     function testDeletedUserGetSession() {
         $cm               = new MockCookieManager($this);
+        $session_manager  = mock('Tuleap\User\SessionManager');
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
         $userAnonymous    = mock('PFUser');
@@ -475,19 +322,16 @@ class UserManagerTest extends TuleapTestCase
 
         $cm->setReturnValue('getCookie', 'valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dao->setReturnReference(
-            'searchBySessionHash',
-            $dar_valid_hash,
-            array('valid_hash', $this->current_time, self::SESSION_LIFETIME_2_WEEKS)
-        );
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        stub($session_manager)->getUser()->returns($user123);
 
         $dao->expectNever('storeLastAccessDate');
-        $dao->expectOnce('deleteAllUserSessions', array(123));
+        stub($session_manager)->expectOnce('destroyAllSessions', array($user123));
 
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('getCookieManager', $cm);
+        $um->setReturnReference('getSessionManager', $session_manager);
 
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'A deleted user should not be able to use a valid session');
@@ -585,18 +429,22 @@ class UserManagerTest extends TuleapTestCase
     	// True
     	$daotrue = new MockUserDao($this);
         $daotrue->setReturnValue('updateByRow', true);
-        $daotrue->expectNever('deleteAllUserSessions');
+        $session_manager_true = mock('Tuleap\User\SessionManager');
+        $session_manager_true->expectNever('destroyAllSessions');
     	$umtrue = new UserManagerTestVersion($this);
         stub($umtrue)->_getEventManager()->returns(mock('EventManager'));
+        stub($umtrue)->getSessionManager()->returns($session_manager_true);
         $umtrue->setReturnReference('getDao', $daotrue);
         $this->assertTrue($umtrue->updateDb($user));
 
         // False
         $daofalse = new MockUserDao($this);
         $daofalse->setReturnValue('updateByRow', false);
-        $daofalse->expectNever('deleteAllUserSessions');
+        $session_manager_false = mock('Tuleap\User\SessionManager');
+        $session_manager_false->expectNever('destroyAllSessions');
         $umfalse = new UserManagerTestVersion($this);
         stub($umfalse)->_getEventManager()->returns(mock('EventManager'));
+        stub($umfalse)->getSessionManager()->returns($session_manager_false);
         $umfalse->setReturnReference('getDao', $daofalse);
         $this->assertFalse($umfalse->updateDb($user));
     }
@@ -641,10 +489,13 @@ class UserManagerTest extends TuleapTestCase
 
         $dao = new MockUserDao($this);
         $dao->setReturnValue('updateByRow', true);
-        $dao->expectOnce('deleteAllUserSessions', array(123));
+
+        $session_manager = mock('Tuleap\User\SessionManager');
+        $session_manager->expectOnce('destroyAllSessions', array($user));
 
         $um = new UserManagerTestVersion($this);
         stub($um)->_getEventManager()->returns(mock('EventManager'));
+        stub($um)->getSessionManager()->returns($session_manager);
         $um->setReturnReference('getDao', $dao);
 
         $this->assertTrue($um->updateDb($user));
@@ -659,10 +510,13 @@ class UserManagerTest extends TuleapTestCase
 
         $dao = new MockUserDao($this);
         $dao->setReturnValue('updateByRow', true);
-        $dao->expectOnce('deleteAllUserSessions', array(123));
+
+        $session_manager = mock('Tuleap\User\SessionManager');
+        $session_manager->expectOnce('destroyAllSessions', array($user));
 
         $um = new UserManagerTestVersion($this);
         stub($um)->_getEventManager()->returns(mock('EventManager'));
+        stub($um)->getSessionManager()->returns($session_manager);
         $um->setReturnReference('getDao', $dao);
 
         $this->assertTrue($um->updateDb($user));
@@ -722,33 +576,6 @@ class UserManagerTest extends TuleapTestCase
 
         $this->expectException('UserNotActiveException');
         $um->loginAs('Johnny');
-    }
-
-    function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
-        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
-
-        $this->injectUser($um, 'Clooney', 'A');
-
-        $user_dao = new MockUserDao($this);
-        $user_dao->setReturnValue('createSession', false);
-        $um->_userdao = $user_dao;
-
-        $this->expectException('SessionNotCreatedException');
-        $um->loginAs('Clooney');
-    }
-
-    function testLoginAsCreatesASessionAndReturnsASessionHash() {
-        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
-
-        $userLoginAs = $this->injectUser($um, 'Clooney', 'A');
-
-        $user_dao = new MockUserDao($this);
-        $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
-        $um->_userdao = $user_dao;
-
-        $session_hash = $um->loginAs('Clooney');
-        $this->assertEqual($session_hash, 'session_hash');
-
     }
 
     private function aUserWithStatusAndId($status, $id) {

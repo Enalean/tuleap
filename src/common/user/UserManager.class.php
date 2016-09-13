@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\InvalidSessionException;
+use Tuleap\User\SessionManager;
+use Tuleap\User\SessionNotCreatedException;
+
 class UserManager {
 
     /**
@@ -361,33 +365,33 @@ class UserManager {
      */
     function getCurrentUser($session_hash = false) {
         if (!isset($this->_currentuser) || $session_hash !== false) {
-            $dar = null;
             if ($session_hash === false) {
                 $session_hash = $this->getCookieManager()->getCookie('session_hash');
             }
-            $now              = $_SERVER['REQUEST_TIME'];
-            $session_lifetime = $this->getSessionLifetime();
-            if ($dar = $this->getDao()->searchBySessionHash($session_hash, $now, $session_lifetime)) {
-                if ($row = $dar->getRow()) {
-                    $this->_currentuser = $this->_getUserInstanceFromRow($row);
-                    if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
-                        $this->getDao()->deleteAllUserSessions($this->_currentuser->getId());
-                        $this->_currentuser = null;
-                    } else {
-                        $accessInfo = $this->getUserAccessInfo($this->_currentuser);
-                        $this->_currentuser->setSessionHash($session_hash);
-                        $break_time = $now - $accessInfo['last_access_date'];
-                        //if the access is not later than 6 hours, it is not necessary to log it
-                        if ($break_time > 21600){
-                            $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
-                        }
+            try {
+                $session_manager    = $this->getSessionManager();
+                $now                = $_SERVER['REQUEST_TIME'];
+                $session_lifetime   = $this->getSessionLifetime();
+                $this->_currentuser = $session_manager->getUser($session_hash, $now, $session_lifetime);
+                if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
+                    $session_manager->destroyAllSessions($this->_currentuser);
+                    $this->_currentuser = null;
+                } else {
+                    $accessInfo = $this->getUserAccessInfo($this->_currentuser);
+                    $now = $_SERVER['REQUEST_TIME'];
+                    $break_time = $now - $accessInfo['last_access_date'];
+                    //if the access is not later than 6 hours, it is not necessary to log it
+                    if ($break_time > 21600) {
+                        $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
                     }
                 }
+            } catch (InvalidSessionException $e) {
+                $this->_currentuser = null;
             }
-            if (!isset($this->_currentuser)) {
+
+            if (! isset($this->_currentuser)) {
                 //No valid session_hash/ip found. User is anonymous
                 $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
-                $this->_currentuser->setSessionHash(false);
             }
             //cache the user
             $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
@@ -420,11 +424,11 @@ class UserManager {
      * - remove the cookie
      * - clear the session hash
      */
-    function logout() {
+    public function logout()
+    {
         $user = $this->getCurrentUser();
         if ($user->getSessionHash()) {
-            $this->getDao()->deleteSession($user->getSessionHash());
-            $user->setSessionHash(false);
+            $this->getSessionManager()->destroyCurrentSession($user);
             $this->getCookieManager()->removeCookie('session_hash');
             $this->destroySession();
         }
@@ -517,12 +521,13 @@ class UserManager {
     }
 
     private function openWebSession(PFUser $user) {
-        $session_hash = $this->createSession($user);
-        $user->setSessionHash($session_hash);
+        $session_manager    = $this->getSessionManager();
+        $request            = HTTPRequest::instance();
+        $session_identifier = $session_manager->createSession($user, $request, $request->getFromServer('REQUEST_TIME'));
 
         $this->getCookieManager()->setHTTPOnlyCookie(
             'session_hash',
-            $session_hash,
+            $session_identifier,
             $this->getExpireTimestamp($user)
         );
     }
@@ -594,7 +599,9 @@ class UserManager {
         $status_manager = new User_UserStatusManager();
         try {
             $status_manager->checkStatus($user_login_as);
-            return $this->createSession($user_login_as);
+            $request         = HTTPRequest::instance();
+            $session_manager = $this->getSessionManager();
+            return $session_manager->createSession($user_login_as, $request, $request->getFromServer('REQUEST_TIME'));
         } catch (User_StatusInvalidException $exception) {
             throw new UserNotActiveException();
         }
@@ -620,21 +627,6 @@ class UserManager {
         } catch (User_StatusInvalidException $exception) {
             throw new UserNotActiveException();
         }
-    }
-
-    /**
-     *
-     * @param PFUser $user
-     * @return String
-     * @throws SessionNotCreatedException
-     */
-    private function createSession(PFUser $user) {
-        $now = $_SERVER['REQUEST_TIME'];
-        $session_hash = $this->getDao()->createSession($user->getId(), $now);
-        if (!$session_hash) {
-            throw new SessionNotCreatedException();
-        }
-        return $session_hash;
     }
 
     /**
@@ -697,6 +689,18 @@ class UserManager {
     }
 
     /**
+     * @return SessionManager
+     */
+    protected function getSessionManager()
+    {
+        return new SessionManager(
+            $this,
+            new SessionDao(),
+            new RandomNumberGenerator()
+        );
+    }
+
+    /**
      * @return EventManager
      */
     function _getEventManager() {
@@ -734,7 +738,8 @@ class UserManager {
             $result = $this->getDao()->updateByRow($userRow);
             if ($result) {
                 if ($user->isSuspended() || $user->isDeleted()) {
-                    $this->getDao()->deleteAllUserSessions($user->getId());
+                    $session_manager = $this->getSessionManager();
+                    $session_manager->destroyAllSessions($user);
                 }
                 $this->_getEventManager()->processEvent(Event::USER_MANAGER_UPDATE_DB, array('old_user' => $old_user, 'new_user' => &$user));
             }

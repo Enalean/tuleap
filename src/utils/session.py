@@ -32,6 +32,7 @@ import string
 import Cookie
 import MySQLdb
 import include
+import hashlib
 
 global G_SESSION, G_USER
 G_USER    = {}
@@ -66,19 +67,28 @@ def session_set():
     c.load(os.environ["HTTP_COOKIE"])
 
     # if hash value given by browser then check to see if it is OK.
-    cookie_name=include.get_cookie_prefix()+'_session_hash'
-    if c.has_key(cookie_name):
+    cookie_name = include.get_cookie_prefix()+'_session_hash'
+    if cookie_name in c:
+        session_identifier_parts = c[cookie_name].value.split('.')
+
+        if len(session_identifier_parts) != 2:
+            G_SESSION = {}
+            G_USER = {}
+            return None
+
+        (session_id, session_token) = session_identifier_parts
+
         current_time = time.time()
         cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
         cursor.execute(
-            "SELECT user_id,session_hash,ip_addr,time FROM session WHERE session_hash=%s AND time + %s > %s ",
-            (c[cookie_name].value, include.sys_session_lifetime, current_time)
+            "SELECT * FROM session WHERE id = %s AND time + %s > %s",
+            (session_id, include.sys_session_lifetime, current_time)
         )
         row = cursor.fetchone()
         cursor.close()
 
-        # does hash value exists
-        if row is not None:
+        hashed_session_token = hashlib.sha256(session_token).hexdigest()
+        if row is not None and include.constant_time_str_compare(row['session_hash'], hashed_session_token):
                 id_is_good = True
 
     if id_is_good:
