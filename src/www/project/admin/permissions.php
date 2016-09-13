@@ -471,6 +471,7 @@ function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
 function permission_get_ugroups_permissions($group_id, $object_id, $permission_types, $use_default_permissions = true) {
    
     //We retrive ugroups (user defined)
+    $object_id = db_es($object_id);
     $sql="SELECT u.ugroup_id, u.name, p.permission_type ".
         " FROM permissions p, ugroup u ".
         " WHERE p.ugroup_id = u.ugroup_id ".

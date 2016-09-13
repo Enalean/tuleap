@@ -35,34 +35,16 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         $sql = "SELECT * FROM permissions";
         return $this->retrieve($sql);
     }
-    
-    /**
-    * Searches Permissions by PermissionType 
-    * @return DataAccessResult
-    */
-    function searchByPermissionType($permissionType) {
-        $sql = sprintf("SELECT object_id, ugroup_id FROM permissions WHERE permission_type = %s",
-				"'".$permissionType."'");
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Permissions by ObjectId 
-    * @return DataAccessResult
-    */
-    function searchByObjectId($objectId) {
-        $sql = sprintf("SELECT permission_type, ugroup_id FROM permissions WHERE object_id = '%s'",
-				"'".$objectId."'");
-        return $this->retrieve($sql);
-    }
 
     /**
     * Searches Permissions by UgroupId 
     * @return DataAccessResult
     */
-    function searchByUgroupId($ugroupId) {
-        $sql = sprintf("SELECT permission_type, object_id FROM permissions WHERE ugroup_id = %s",
-				"'".$ugroupId."'");
+    public function searchByUgroupId($ugroup_id)
+    {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT permission_type, object_id FROM permissions WHERE ugroup_id = $ugroup_id";
         return $this->retrieve($sql);
     }
 
@@ -131,15 +113,19 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     * Searches Permissions by ObjectId and Ugroups
     * @return DataAccessResult
     */
-    function searchPermissionsByObjectId($objectId, $ptype=null) { 	
-        if(is_array($objectId)) {
-            $_where_clause = " object_id IN ('".implode("','",$objectId)."')";
+    public function searchPermissionsByObjectId($object_id, $ptype=null)
+    {
+        if(is_array($object_id)) {
+            $object_ids_where = $this->da->quoteSmartImplode(',', $object_id, array('force_string' => true));
+            $_where_clause    = " object_id IN ($object_ids_where)";
         }
         else {
-            $_where_clause = " object_id = '".$objectId."'";
+            $object_id_where = $this->da->quoteSmart($object_id, array('force_string' => true));
+            $_where_clause   = " object_id = $object_id_where";
         }
         if($ptype !== null) {
-            $_where_clause .= ' AND permission_type IN (\''.implode(',',$ptype).'\')';
+            $ptype_where    = $this->da->quoteSmartImplode(',', $ptype);
+            $_where_clause .= " AND permission_type IN ($ptype_where)";
         }
 
         $sql = sprintf("SELECT * FROM permissions WHERE ".$_where_clause);
@@ -151,9 +137,10 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     * Searches Permissions by TrackerId and Ugroups
     * @return DataAccessResult
     */
-    function searchPermissionsByArtifactFieldId($objectId) {
-        $sql = sprintf("SELECT * FROM permissions WHERE object_id LIKE '%s#%%'" ,
-				$objectId);
+    public function searchPermissionsByArtifactFieldId($object_id)
+    {
+        $object_id = $this->da->escapeInt($object_id);
+        $sql       = "SELECT * FROM permissions WHERE object_id LIKE '$object_id#%'";
         return $this->retrieve($sql);
     }
 
@@ -172,21 +159,21 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
             $perms[$key] = $this->da->quoteSmart($value);
         }
         $sql = sprintf("DELETE FROM permissions ".
-                        " WHERE object_id = '%s' ".
+                        " WHERE object_id = %s ".
                         "   AND permission_type IN (%s) ",
-                        $this->da->quoteSmart($target),
-                        implode(', ', $perms)
+                        $this->da->quoteSmart($target, array('force_string' => true)),
+                        $this->da->quoteSmartImplode(',', $perms)
         );
         $this->update($sql);
         $sql = sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id) ".
                         " SELECT %s, permission_type, IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid ".
                         " FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)".
-                        " WHERE object_id = '%s' ".
+                        " WHERE object_id = %s ".
                         "   AND permission_type IN (%s) ",
-                        $this->da->quoteSmart($target),
-                        $toGroupId,
-                        $this->da->quoteSmart($source),
-                        implode(', ', $perms)
+                        $this->da->quoteSmart($target, array('force_string' => true)),
+                        $this->da->escapeInt($toGroupId),
+                        $this->da->quoteSmart($source, array('force_string' => true)),
+                        $this->da->quoteSmartImplode(',', $perms)
         );
         return $this->update($sql);
     }
@@ -207,11 +194,12 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     *
     * @return Boolean
     */
-    function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false) {
+    public function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false)
+    {
         
-        $from = $this->da->escapeInt($from);
-        $to = $this->da->escapeInt($to);
-        $permission_type = "('".implode("','", $permission_type)."')";
+        $from            = $this->da->quoteSmart($from, array('force_string' => true));
+        $to              = $this->da->quoteSmart($to, array('force_string' => true));
+        $permission_type = '(' . $this->da->quoteSmartImplode(',', $permission_type) . ')';
 
         //Duplicate static perms
         if ($ugroup_mapping !== false) {
@@ -242,18 +230,20 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return $this->update($sql);
     }
     
-    public function addPermission($permission_type, $object_id, $ugroup_id) {
+    public function addPermission($permission_type, $object_id, $ugroup_id)
+    {
         $permission_type = $this->da->quoteSmart($permission_type);
-        $object_id       = $this->da->quoteSmart($object_id);
+        $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
         $ugroup_id       = $this->da->escapeInt($ugroup_id);
         $sql = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
                 VALUES ($object_id, $permission_type, $ugroup_id)";
         return $this->update($sql);
     }
 
-    public function removePermission($permission_type, $object_id, $ugroup_id) {
+    public function removePermission($permission_type, $object_id, $ugroup_id)
+    {
         $permission_type = $this->da->quoteSmart($permission_type);
-        $object_id       = $this->da->quoteSmart($object_id);
+        $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
         $ugroup_id       = $this->da->escapeInt($ugroup_id);
         $sql = "DELETE FROM permissions
                 WHERE permission_type = $permission_type
@@ -272,7 +262,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      */
     function clearPermission($permissionType, $objectId) {
         $sql = ' DELETE FROM permissions '.
-               ' WHERE object_id = '.$this->da->quoteSmart($objectId).
+               ' WHERE object_id = '.$this->da->quoteSmart($objectId, array('force_string' => true)).
                ' AND permission_type = '.$this->da->quoteSmart($permissionType);
         return $this->update($sql);
     }

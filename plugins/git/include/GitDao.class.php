@@ -744,7 +744,7 @@ class GitDao extends DataAccessObject {
         $sql = "SELECT ugroup_id
                 FROM permissions
                 WHERE permission_type = $permission_type
-                AND object_id = $repository_id";
+                AND object_id = CAST($repository_id AS CHAR)";
 
         $rows = $this->retrieve($sql);
 
