@@ -13,7 +13,9 @@ Version 8.19 (Not Released Yet)
 	* story #8610:
 		- Use viewvc-theme-tuleap in CVS
 		- Dont truncate error message
-	* story #8597: have a recent version of ViewVC (CVS, SVN core or plugin can use either viewvc or viewvc-tuleap)
+	* story #8597:
+		- have a recent version of ViewVC (CVS, SVN core or plugin can use either viewvc or viewvc-tuleap)
+		- Update version of packages tuleap-core-subversion and tuleap-core-cvs to take the dependency change into account
 	* request #9455: XML import user mapping should provide an automap strategy
 
 	== Development ==
