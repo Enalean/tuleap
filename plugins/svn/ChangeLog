@@ -1,3 +1,6 @@
+Version 0.91 - Tuleap 8.19
+    * story #8610: Dont truncate error message
+
 Version 0.90 - Tuleap 8.19
     * Use viewvc-theme-tuleap in core SVN
 
