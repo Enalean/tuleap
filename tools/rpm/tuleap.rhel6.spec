@@ -117,7 +117,7 @@ Manage dependencies for Tuleap mailman integration
 %package core-subversion
 Summary: Subversion component for Tuleap
 Group: Development/Tools
-Version: 1.1
+Version: 1.2
 Release: @@RELEASE@@%{?dist}
 Requires: tuleap, subversion, mod_dav_svn, subversion-perl, highlight, tuleap-core-subversion-modperl
 Requires: viewvc, viewvc-theme-tuleap
