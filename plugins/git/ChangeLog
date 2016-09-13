@@ -1,3 +1,6 @@
+Version 4.257 - Tuleap 8.19
+    * request #9460: Performance issues when querying permissions table
+
 Version 4.256 - Tuleap 8.19
     * Wrapp project id into extractCrossReference method
 
