@@ -145,9 +145,12 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
     }
 
     protected function assertArtifactUGroupIdsEquals(Tracker_Artifact $artifact, array $expected_values) {
+        if ($expected_values) {
+            $expected_values = array_merge(array(ProjectUGroup::PROJECT_ADMIN), $expected_values);
+        }
         $this->assertArtifactUGroupIdsWithoutAdminsEquals(
             $artifact,
-            array_merge(array(ProjectUGroup::PROJECT_ADMIN), $expected_values)
+            $expected_values
         );
     }
 
