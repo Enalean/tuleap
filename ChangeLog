@@ -43,6 +43,8 @@ Version 8.19 (Not Released Yet)
 	* request #9464: User can't login from the homepage if the standard Tuleap homepage is not used
 	* request #9481: Fatal error when you try to browse a SVN core or CVS repo and you do not have access
 	* request #9487: Help link in the toolbar of the file release manager does not open into a new window
+	* request #9479: Copied/pasted item in docman doesn't have any permissions
+	* request #9478: Cannot apply permissions recursively in docman
 
 	== Plugins ==
 	* tracker: 5.1002
