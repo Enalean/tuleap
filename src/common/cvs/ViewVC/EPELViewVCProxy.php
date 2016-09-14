@@ -26,6 +26,7 @@ require_once('www/cvs/commit_utils.php');
 use ForgeConfig;
 use HTTPRequest;
 use Project;
+use Codendi_HTMLPurifier;
 
 class EPELViewVCProxy implements ViewVCProxy
 {
@@ -160,7 +161,8 @@ class EPELViewVCProxy implements ViewVCProxy
         $content = $this->setLocaleOnCommand($command, $return_var);
 
         if ($return_var === 128) {
-            return $this->getPermissionDeniedError($project);
+            $this->display($project, $this->getPermissionDeniedError($project));
+            return;
         }
 
         list($headers, $body) = http_split_header_body($content);
@@ -178,28 +180,32 @@ class EPELViewVCProxy implements ViewVCProxy
 
         $parse = $this->displayViewVcHeader($request);
         if ($parse) {
-            // Now insert references, and display
-            commits_header(
-                array(
-                    'title' => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
-                    'group' => $project->getID(),
-                    'body_class' => array('viewvc-epel')
-                )
-            );
-            echo util_make_reference_links(
-                $body,
-                $project->getID()
-            );
-            site_footer(array());
+            $this->display($project, $body);
         } else {
             echo $body;
             exit();
         }
     }
 
+    private function display(Project $project, $body)
+    {
+        commits_header(
+            array(
+                'title' => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
+                'group' => $project->getID(),
+                'body_class' => array('viewvc-epel')
+            )
+        );
+        echo util_make_reference_links(
+            $body,
+            $project->getID()
+        );
+        site_footer(array());
+    }
+
     private function getPermissionDeniedError(Project $project)
     {
-        $purifier = $this->getPurifier();
+        $purifier = Codendi_HTMLPurifier::instance();
         $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()));
 
         $title  = $purifier->purify($GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess'));
