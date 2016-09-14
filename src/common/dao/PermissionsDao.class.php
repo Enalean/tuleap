@@ -155,9 +155,6 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     * @return Boolean
     */
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
-        foreach($perms as $key => $value) {
-            $perms[$key] = $this->da->quoteSmart($value);
-        }
         $sql = sprintf("DELETE FROM permissions ".
                         " WHERE object_id = %s ".
                         "   AND permission_type IN (%s) ",
