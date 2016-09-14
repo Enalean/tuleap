@@ -1,3 +1,6 @@
+Version 1.9.20 - Tuleap 8.19
+    * request #9485: Webdav is broken due to a fatal error
+
 Version 1.9.19 - Tuleap 8.19
     * request #9407: HTTPS is not properly detected when behind a reverse proxy
 
