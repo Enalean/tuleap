@@ -191,7 +191,7 @@ class ServiceFile extends Service
             $toolbar[]   = array(
                 'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
                 'url'   => '/file/admin/?'. http_build_query(array(
-                    'group_id' => $project->getId(),
+                    'group_id' => $project->getID(),
                     'action'   => 'edit-permissions'
                 ))
             );
@@ -199,7 +199,8 @@ class ServiceFile extends Service
 
         $toolbar[] = array(
             'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
-            'url'   => "/help/show_help.php?section=frs.html");
+            'url'   => "javascript:help_window('/help/show_help.php?section=frs.html')"
+        );
 
         $breadcrumbs = array();
 
