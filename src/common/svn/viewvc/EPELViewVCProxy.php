@@ -26,6 +26,7 @@ require_once('www/svn/svn_utils.php');
 use ForgeConfig;
 use HTTPRequest;
 use Project;
+use Codendi_HTMLPurifier;
 
 class EPELViewVCProxy implements ViewVCProxy
 {
@@ -160,7 +161,8 @@ class EPELViewVCProxy implements ViewVCProxy
         $content = $this->setLocaleOnCommand($command, $return_var);
 
         if ($return_var === 128) {
-            return $this->getPermissionDeniedError($project);
+            $this->display($project, $path, $this->getPermissionDeniedError($project));
+            return;
         }
 
         list($headers, $body) = http_split_header_body($content);
@@ -178,16 +180,7 @@ class EPELViewVCProxy implements ViewVCProxy
 
         $parse = $this->displayViewVcHeader($request);
         if ($parse) {
-            svn_header(array(
-                'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
-                'path' => urlencode($path),
-                'body_class' => array('viewvc-epel')
-            ));
-            echo util_make_reference_links(
-                $body,
-                $project->getID()
-            );
-            site_footer(array());
+            $this->display($project, $path, $body);
         } else {
             if ($this->isViewingPatch($request)) {
                 header('Content-Type: text/plain');
@@ -197,9 +190,23 @@ class EPELViewVCProxy implements ViewVCProxy
         }
     }
 
+    private function display(Project $project, $path, $body)
+    {
+        svn_header(array(
+            'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
+            'path' => urlencode($path),
+            'body_class' => array('viewvc-epel')
+        ));
+        echo util_make_reference_links(
+            $body,
+            $project->getID()
+        );
+        site_footer(array());
+    }
+
     private function getPermissionDeniedError(Project $project)
     {
-        $purifier = $this->getPurifier();
+        $purifier = Codendi_HTMLPurifier::instance();
         $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()));
 
         $title  = $purifier->purify($GLOBALS['Language']->getText('svn_viewvc', 'access_denied'));
