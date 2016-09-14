@@ -212,15 +212,16 @@ class EPELViewVCProxy implements ViewVCProxy
                 );
                 $crossref_fact->fetchDatas();
                 if ($crossref_fact->getNbReferences() > 0) {
-                    $cross_ref .= '<h3> '.$GLOBALS['Language']->getText('cross_ref_fact_include', 'references').'</h3>';
+                    $cross_ref .= '<div class="viewvc-epel-references">';
+                    $cross_ref .= '<h4>'.$GLOBALS['Language']->getText('cross_ref_fact_include', 'references').'</h4>';
                     $cross_ref .= $crossref_fact->getHTMLDisplayCrossRefs();
+                    $cross_ref .= '</div>';
                 }
 
-                $revision = 'Revision '.$request->get('revision');
-                $content  = str_replace(
-                    "<h3>".$revision."</h3>",
-                    "<h3>".$this->getPurifier()->purify($revision) . "</h3>" . $cross_ref,
-                    $content
+                $body = str_replace(
+                    "<h4>Modified files</h4>",
+                    $cross_ref . "<h4>Modified files</h4>",
+                    $body
                 );
             }
 
