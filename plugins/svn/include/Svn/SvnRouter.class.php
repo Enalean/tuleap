@@ -111,9 +111,6 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->explorer_controller->createRepository($this->getService($request), $request);
                     break;
-                case "display-repository":
-                    $this->display_controller->displayRepository($this->getService($request), $request);
-                    break;
                 case "settings":
                 case "display-mail-notification":
                     $this->checkUserCanAdministrateARepository($request);

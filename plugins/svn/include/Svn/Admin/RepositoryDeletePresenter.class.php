@@ -43,6 +43,8 @@ class RepositoryDeletePresenter extends BaseAdminPresenter
     public $modal_title;
 
     public $sections;
+    public $comment_undone;
+    public $repository_full_name;
 
     public function __construct(
         Repository $repository,
@@ -52,9 +54,10 @@ class RepositoryDeletePresenter extends BaseAdminPresenter
     ) {
         parent::__construct();
 
-        $this->project_id               = $project->getId();
+        $this->project_id               = $project->getID();
         $this->repository_id            = $repository->getId();
         $this->repository_name          = $repository->getName();
+        $this->repository_full_name     = $repository->getFullName();
         $this->is_created               = $repository->isRepositoryCreated();
         $this->title                    = $title;
         $this->repository_delete_active = true;
