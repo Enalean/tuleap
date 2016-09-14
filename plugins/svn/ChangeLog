@@ -1,3 +1,6 @@
+Version 0.93 - Tuleap 8.19
+    * request #9484: On SVN plugin the URL to come back on a repository doesn't work
+
 Version 0.92 - Tuleap 8.19
     * request #9482: Cross references are not displayed when using EPEL's ViewVC in SVN plugin
 
