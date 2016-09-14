@@ -1,3 +1,6 @@
+Version 2.26.120 - Tuleap 8.19
+    * request #9483: Docman header actions tooltip does not work on subfolder
+
 Version 2.26.119 - Tuleap 8.19
     * request #9122: Don't remove deleted items if copy doesn't work
 
