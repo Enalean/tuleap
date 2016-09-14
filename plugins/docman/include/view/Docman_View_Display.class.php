@@ -20,15 +20,15 @@ require_once('Docman_View_Docman.class.php');
         echo '<h2>'. $this->_getTitle($params) .'</h2>';
     }
     function _breadCrumbs($params) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $item =& $params['item'];
-        $current_item       =& $item;
+        $hp                 = Codendi_HTMLPurifier::instance();
+        $item               = $params['item'];
+        $current_item       = $item;
         $current_item_title = $item->getTitle();
         $id                 = $item->getId();
-        $parents = array();
-        $item_factory =& $this->_getItemFactory($params);
+        $parents            = array();
+        $item_factory       = $this->_getItemFactory($params);
         while ($item->getParentId() != 0) {
-            $item =& $item_factory->getItemFromDb($item->getParentId());
+            $item = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = array(
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
