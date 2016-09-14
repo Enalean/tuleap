@@ -29,11 +29,9 @@ class Webdav_URLVerification extends URLVerification {
      * Constructor of the class
      *
      * @param String $host
-     *
-     * @return void
      */
-    function __construct($host) {
-        parent::__construct();
+    public function __construct($host)
+    {
         $this->webdavHost = $host;
     }
 
