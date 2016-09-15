@@ -144,7 +144,7 @@ class User_LoginManager {
     }
 
     private function isLegacyPasswordValid($password, $legacy_hashed_password) {
-        return $legacy_hashed_password === md5($password);
+        return hash_equals($legacy_hashed_password, md5($password));
     }
 
     private function isPasswordUpdatingNeeded($hashed_password) {
@@ -152,6 +152,6 @@ class User_LoginManager {
     }
 
     private function isLegacyPasswordRemovalNeeded($legacy_hashed_password) {
-        return !empty($legacy_hashed_password) && !ForgeConfig::get('sys_keep_md5_hashed_password') ;
+        return !empty($legacy_hashed_password);
     }
 }

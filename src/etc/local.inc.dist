@@ -518,9 +518,6 @@ $sys_cvs_convert_cp1252_to_utf8 = 0;
 // /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
 $sys_rest_api_over_http = 0;
 
-// Continue to store password hashed with MD5 for legacy purposes
-$sys_keep_md5_hashed_password = 1;
-
 // Comma separated list of IP addresses that are trusted reverse proxy.
 //
 // When you setup a reverse proxy in front of Tuleap (for SSL termination or
