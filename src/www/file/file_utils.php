@@ -569,7 +569,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $file_list_js = array();
     foreach ($file_list as $file) {
         echo '<option value="' . $hp->purify($file) . '">' . $hp->purify($file, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
-        $file_list_js = $hp->purify($file_list_js, CODENDI_PURIFIER_JS_QUOTE);
+        $file_list_js[] = $hp->purify($file, CODENDI_PURIFIER_JS_QUOTE);
     }
     echo '<script type="text/javascript">';
     echo "var available_ftp_files = ['" . implode("', '", $file_list_js) . "'];";
