@@ -65,7 +65,7 @@ define([
                     communicationService.emitPresences(socket);
                     scoresService.clearScoresInSeveralDays();
                 } else {
-                    console.log("Disconnecting socket ", socket.id);
+                    console.log('Disconnecting socket ', socket.id);
                     socket.disconnect('unauthorized');
                 }
             });
@@ -89,7 +89,7 @@ define([
                 communicationService.verifyAndSubscribe(socket, data);
 
                 if (! socket.auth) {
-                    console.log("Disconnecting socket ", socket.id);
+                    console.log('Disconnecting socket ', socket.id);
                     socket.disconnect('unauthorized');
                 }
             });

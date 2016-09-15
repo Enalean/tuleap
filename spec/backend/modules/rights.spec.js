@@ -63,7 +63,7 @@ describe("Module Rights", function() {
                 submitter_can_view: false,
                 submitter_only: ['@ug_111'],
                 tracker: ['@arealtime_project_admin', '@ug_159'],
-                artifact: ['@arealtime_project_admin']
+                artifact: []
             };
             expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
         });

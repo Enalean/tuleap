@@ -174,7 +174,7 @@ define([
             var find_right_artifact = false;
             var find_right_tracker  = hasUserRightsExist(u_group, user_rights.tracker);
 
-            if(user_rights.artifact.length > 1) {
+            if(user_rights.artifact.length > 0) {
                 find_right_artifact = hasUserRightsExist(u_group, user_rights.artifact);
             } else {
                 find_right_artifact = true;
