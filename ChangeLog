@@ -1,4 +1,4 @@
-Version 8.19 (Not Released Yet)
+Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
 	* story #9281: define FRS global permissions (Refactoring of package and release)
