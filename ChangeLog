@@ -45,6 +45,7 @@ Version 8.19 (Not Released Yet)
 	* request #9487: Help link in the toolbar of the file release manager does not open into a new window
 	* request #9479: Copied/pasted item in docman doesn't have any permissions
 	* request #9478: Cannot apply permissions recursively in docman
+	* request #9491: scp/ftp file list is empty on page load
 
 	== Plugins ==
 	* tracker: 5.1002
