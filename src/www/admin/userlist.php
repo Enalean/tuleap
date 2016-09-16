@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');    
 require_once('account.php');
@@ -61,20 +74,21 @@ function get_sort_values ($previous_sort_header, $current_sort_header, $sort_ord
 }
 
 function tooltip_values($nb_member_of, $nb_admin_of, $Language) {
+    $purifier = Codendi_HTMLPurifier::instance();
     if ($nb_member_of) {
         $tooltip_values = array(
-            'tooltip' => $Language->getText('admin_userlist', 'member_of', $nb_member_of),
-            'content' => $nb_member_of,
+            'tooltip' => $purifier->purify($Language->getText('admin_userlist', 'member_of', $nb_member_of)),
+            'content' => $purifier->purify($nb_member_of),
         );
 
         if ($nb_admin_of) {
-            $tooltip_values['tooltip'] .= '<br>'. $Language->getText('admin_userlist', 'admin_of', $nb_admin_of);
-            $tooltip_values['content'] .= ' ('.$nb_admin_of.')';
+            $tooltip_values['tooltip'] .= '<br>'. $purifier->purify($Language->getText('admin_userlist', 'admin_of', $nb_admin_of));
+            $tooltip_values['content'] .= $purifier->purify(' ('.$nb_admin_of.')');
         }
     } else {
         $tooltip_values = array(
-            'tooltip' => $Language->getText('admin_userlist','not_member_of'),
-            'content' => '-',
+            'tooltip' => $purifier->purify($Language->getText('admin_userlist','not_member_of')),
+            'content' => $purifier->purify('-'),
         );
     }
 
@@ -142,18 +156,18 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
 
     $odd_even = array('boxitem', 'boxitemalt');
     if ($user_name_search != "") {
-        $user_name_param="&user_name_search=$user_name_search";
+        $user_name_param="&user_name_search=" . urlencode($user_name_search);
     } else {
         $user_name_param="";
     }
     echo '<thead>';
-    echo "<tr><th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=user_name&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('include_user_home','login_name')." <span class=\"pull-right ".$sort_params["user_name_icon"]."\"></span></a></th>";
-    echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=realname&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('include_user_home','real_name')." <span class=\"pull-right ".$sort_params["realname_icon"]."\"></span></a></th>";
+    echo "<tr><th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$hp->purify($sort_params["sort_header"])."&current_sort_header=user_name&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$hp->purify($sort_params["order"])."&status_values=".$hp->purify($user_status)."\">".$hp->purify($Language->getText('include_user_home','login_name'))." <span class=\"pull-right ".$hp->purify($sort_params["user_name_icon"])."\"></span></a></th>";
+    echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$hp->purify($sort_params["sort_header"])."&current_sort_header=realname&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$hp->purify($sort_params["order"])."&status_values=".$hp->purify($user_status)."\">".$hp->purify($Language->getText('include_user_home','real_name'))." <span class=\"pull-right ".$hp->purify($sort_params["realname_icon"])."\"></span></a></th>";
     echo "<th>Profile</th>\n";
     if(!$group_id) {
         echo "<th>".$hp->purify($Language->getText('admin_userlist','nb_projects'))."</th>";
     }
-    echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=status&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('admin_userlist','status')." <span class=\"pull-right ".$sort_params["status_icon"]."\"></span></a></th>";
+    echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$hp->purify($sort_params["sort_header"])."&current_sort_header=status&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$hp->purify($sort_params["order"])."&status_values=".$hp->purify($user_status)."\">".$hp->purify($Language->getText('admin_userlist','status'))." <span class=\"pull-right ".$hp->purify($sort_params["status_icon"])."\"></span></a></th>";
     echo '</thead>';
     
     echo '<tbody>';
@@ -164,55 +178,55 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
             }
             switch ($usr['status']) {
                 case PFUser::STATUS_ACTIVE:
-                    $status = $Language->getText('admin_userlist','active');
-                    $name   = '<strong>'.$usr['user_name'].'</strong>';
+                    $status = $hp->purify($Language->getText('admin_userlist','active'));
+                    $name   = '<strong>'.$hp->purify($usr['user_name']).'</strong>';
                     break;
                 case PFUser::STATUS_RESTRICTED:
-                    $status = $Language->getText('admin_userlist','restricted');
-                    $name   = '<em>'.$usr['user_name'].'</em>';
+                    $status = $hp->purify($Language->getText('admin_userlist','restricted'));
+                    $name   = '<em>'.$hp->purify($usr['user_name']).'</em>';
                     break;
                 case PFUser::STATUS_DELETED:
-                    $status = $Language->getText('admin_userlist','deleted');
-                    $name   = '<i>'.$usr['user_name'].'</i>';
+                    $status = $hp->purify($Language->getText('admin_userlist','deleted'));
+                    $name   = '<i>'.$hp->purify($usr['user_name']).'</i>';
                     break;
                 case PFUser::STATUS_SUSPENDED:
-                    $status = $Language->getText('admin_userlist','suspended');
-                    $name   = $usr['user_name'];
+                    $status = $hp->purify($Language->getText('admin_userlist','suspended'));
+                    $name   = $hp->purify($usr['user_name']);
                     break;
                 case PFUser::STATUS_PENDING:
-                    $status = $Language->getText('admin_userlist','pending');
-                    $name   = '* '.$usr['user_name'];
+                    $status = $hp->purify($Language->getText('admin_userlist','pending'));
+                    $name   = $hp->purify('* '.$usr['user_name']);
                     break;
                 case PFUser::STATUS_VALIDATED:
-                    $status = $Language->getText('admin_userlist','validated');
-                    $name   = '(v) '.$usr['user_name'];
+                    $status = $hp->purify($Language->getText('admin_userlist','validated'));
+                    $name   = $hp->purify('(v) '.$usr['user_name']);
                     break;
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
-                    $status = $Language->getText('admin_userlist','validated_restricted');
-                    $name   = '(vr) '.$usr['user_name'];
+                    $status = $hp->purify($Language->getText('admin_userlist','validated_restricted'));
+                    $name   = $hp->purify('(vr) '.$usr['user_name']);
                     break;
             }
             echo "\n<TR>";
-            echo "\n<TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">".$name."</a></TD>";
+            echo "\n<TD><a href=\"usergroup.php?user_id=".$hp->purify($usr['user_id'])."\">".$name."</a></TD>";
             echo "\n<TD>". $hp->purify($usr['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
             echo "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
             if(!$group_id) {
                 echo "<TD class='tooltip_selector' data-toggle='tooltip' data-placement='top' data-original-title='".$hp->purify($tooltip_values['tooltip'])."'>".$hp->purify($tooltip_values['content'])."</TD>";
             }
-            echo "\n<TD><span class=\"site_admin_user_status_".$usr['status']."\">&nbsp;</span>".$status."</TD>";
+            echo "\n<TD><span class=\"site_admin_user_status_".$hp->purify($usr['status'])."\">&nbsp;</span>".$status."</TD>";
             echo "\n</TR>";
         }
     }
     echo "</tbody></TABLE>";
     echo '<div style="text-align:center">';
     if ($offset > 0) {
-        echo  '<a href="?offset='.($offset-$limit).$user_name_param.'&current_sort_header='.$sort_params["sort_header"].'&user_name_search='.$user_name_search.'&sort_order='.$sort_params["order"].'&status_values='.$hp->purify($user_status).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+        echo  '<a href="?offset='.$hp->purify(($offset-$limit).$user_name_param).'&current_sort_header='.$hp->purify($sort_params["sort_header"]).'&user_name_search='.$hp->purify($user_name_search).'&sort_order='.$hp->purify($sort_params["order"]).'&status_values='.$hp->purify($user_status).'">[ '.$hp->purify($Language->getText('project_admin_utils', 'previous')).'  ]</a>';
         echo '&nbsp;';
     }
     echo ($offset + count($result)).'/'.$res['numrows'];
     if (($offset + $limit) < $res['numrows']) {
         echo '&nbsp;';
-        echo '<a href="?offset='.($offset+$limit).$user_name_param.'&current_sort_header='.$sort_params["sort_header"].'&user_name_search='.$user_name_search.'&sort_order='.$sort_params["order"].'&status_values='.$hp->purify($user_status).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+        echo '<a href="?offset='.$hp->purify(($offset+$limit).$user_name_param).'&current_sort_header='.$hp->purify($sort_params["sort_header"]).'&user_name_search='.$hp->purify($user_name_search).'&sort_order='.$hp->purify($sort_params["order"]).'&status_values='.$hp->purify($user_status).'">[ '.$hp->purify($Language->getText('project_admin_utils', 'next')).' ]</a>';
     }
     echo '</div>';
 }
@@ -296,22 +310,23 @@ if (!$group_id) {
 /*
  * Show list of users
  */
+$purifier = Codendi_HTMLPurifier::instance();
 $HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
 echo "<p>";
-echo $Language->getText('admin_userlist','user_list').":  ";
+echo $purifier->purify($Language->getText('admin_userlist','user_list')).":  ";
 if (!$group_id) {
-    echo "<strong>".$Language->getText('admin_userlist','all_groups')."</strong>";
+    echo "<strong>".$purifier->purify($Language->getText('admin_userlist','all_groups'))."</strong>";
     echo '</p>';
     $session_dao = new SessionDao();
     echo '<p>';
     echo '<form action="/admin/sessions.php" method="post">';
     $csrf = new CSRFSynchronizerToken('/admin/sessions.php');
     echo $csrf->fetchHTMLInput();
-    echo $Language->getText('admin_userlist','active_sessions', $session_dao->count());
+    echo $Language->getText('admin_userlist','active_sessions', $purifier->purify($session_dao->count()));
     echo '</form>';
 } else {
     $pm = ProjectManager::instance();
-    echo "<strong>".$Language->getText('admin_userlist', 'group', array($pm->getProject($group_id)->getPublicName()))."</strong>";
+    echo "<strong>".$purifier->purify($Language->getText('admin_userlist', 'group', array(html_entity_decode($pm->getProject($group_id)->getPublicName()))))."</strong>";
 }
 /*
  * Add search field
@@ -325,19 +340,19 @@ echo '<form name="usersrch" action="userlist.php" method="get" class="form-horiz
          <td valign=top>
            <label> <strong>'.$Language->getText("admin_userlist","status").'</strong> </label>
              <select multiple name="status_values[]" size=8>
-               <option value="ANY" '.$anySelect.'>Any</option>
-               <option value="'.PFUser::STATUS_ACTIVE.'" '.getSelectedFromStatus(PFUser::STATUS_ACTIVE, $status_values).'>'.$Language->getText("admin_userlist","active").'</option>
-               <option value="'.PFUser::STATUS_RESTRICTED.'" '.getSelectedFromStatus(PFUser::STATUS_RESTRICTED, $status_values).'>'.$Language->getText("admin_userlist","restricted").'</option>
-               <option value="'.PFUser::STATUS_DELETED.'" '.getSelectedFromStatus(PFUser::STATUS_DELETED, $status_values).'>'.$Language->getText("admin_userlist","deleted").'</option>
-               <option value="'.PFUser::STATUS_SUSPENDED.'" '.getSelectedFromStatus(PFUser::STATUS_SUSPENDED, $status_values).'>'.$Language->getText("admin_userlist","suspended").'</option>
-               <option value="'.PFUser::STATUS_PENDING.'" '.getSelectedFromStatus(PFUser::STATUS_PENDING, $status_values).'>'.$Language->getText("admin_userlist","pending").'</option>
-               <option value="'.PFUser::STATUS_VALIDATED.'" '.getSelectedFromStatus(PFUser::STATUS_VALIDATED, $status_values).'>'.$Language->getText("admin_userlist","validated").'</option>
-               <option value="'.PFUser::STATUS_VALIDATED_RESTRICTED.'" '.getSelectedFromStatus(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values).'>'.$Language->getText("admin_userlist","validated_restricted").'</option>
+               <option value="ANY" '.$purifier->purify($anySelect).'>Any</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_ACTIVE).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_ACTIVE, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","active")).'</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_RESTRICTED).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_RESTRICTED, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","restricted")).'</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_DELETED).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_DELETED, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","deleted")).'</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_SUSPENDED).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_SUSPENDED, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","suspended")).'</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_PENDING).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_PENDING, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","pending")).'</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_VALIDATED).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_VALIDATED, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","validated")).'</option>
+               <option value="'.$purifier->purify(PFUser::STATUS_VALIDATED_RESTRICTED).'" '.$purifier->purify(getSelectedFromStatus(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values)).'>'.$purifier->purify($Language->getText("admin_userlist","validated_restricted")).'</option>
              </select>
          </td>
          <td valign=top>
            <p>
-             <label> <strong>'.$Language->getText('admin_main', 'search_user').'</strong> </label>
+             <label> <strong>'.$purifier->purify($Language->getText('admin_main', 'search_user')).'</strong> </label>
            </p>
            <input type="text" name="user_name_search" class="user_name_search" placeholder="'.$search_purify.'" value="'.$user_name_search_purify.'" />
          </td>
