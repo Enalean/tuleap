@@ -1,23 +1,24 @@
 <?php
 /*
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox, 2009. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Widget_WikiPage.class.php');
@@ -88,14 +89,14 @@ class Widget_WikiPage extends Widget {
     }
     function cloneContent($id, $owner_id, $owner_type) {
         $sql = "INSERT INTO widget_wikipage (owner_id, owner_type, title, group_id, wiki_page) 
-        SELECT  ". $owner_id .", '". $owner_type ."', title, group_id, wiki_page
+        SELECT  ". db_ei($owner_id) .", '". db_es($owner_type) ."', title, group_id, wiki_page
         FROM widget_wikipage
-        WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";
+        WHERE owner_id = ". db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
     function loadContent($id) {
-        $sql = "SELECT * FROM widget_wikipage WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $sql = "SELECT * FROM widget_wikipage WHERE owner_id = ". db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."' AND id = ". db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -123,7 +124,7 @@ class Widget_WikiPage extends Widget {
                 $WikiPage['title'] = $WikiPage_reader->get_title();
             }
             $sql = 'INSERT INTO widget_wikipage (owner_id, owner_type, title, group_id, wiki_page) 
-                    VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($WikiPage['title']) ."', '". db_escape_string($WikiPage['group_id']) ."', '". db_escape_string($WikiPage['wiki_page']) ."')";
+                    VALUES ('. dbe_i($this->owner_id) .", '". db_es($this->owner_type) ."', '". db_escape_string($WikiPage['title']) ."', '". db_escape_string($WikiPage['group_id']) ."', '". db_escape_string($WikiPage['wiki_page']) ."')";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -168,7 +169,7 @@ class Widget_WikiPage extends Widget {
         return $done;
     }
     function destroy($id) {
-        $sql = 'DELETE FROM widget_wikipage WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
+        $sql = 'DELETE FROM widget_wikipage WHERE id = '. db_ei($id) .' AND owner_id = '. db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."'";
         db_query($sql);
     }
     function isUnique() {
