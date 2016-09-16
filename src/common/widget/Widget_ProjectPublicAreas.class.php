@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Widget.class.php');
@@ -54,13 +55,13 @@ class Widget_ProjectPublicAreas extends Widget {
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
             
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
-                . "forum_group_list.group_id=$group_id AND forum.group_forum_id=forum_group_list.group_forum_id "
+                . "forum_group_list.group_id=" . db_ei($group_id) . " AND forum.group_forum_id=forum_group_list.group_forum_id "
                 . "AND forum_group_list.is_public=1");
             $row_count = db_fetch_array($res_count);
             $pos = strpos($project->getForumPage(), '/forum/');
             if ($pos ===0) {
                 print ' ( '.$GLOBALS['Language']->getText('include_project_home','msg',$row_count['count']).' ';
-                $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
+                $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=" . db_ei($group_id) . " "
                 . "AND is_public=1");
                 $row_count = db_fetch_array($res_count);
                 print $GLOBALS['Language']->getText('include_project_home','forums',$row_count['count'])." )\n";
@@ -82,7 +83,7 @@ class Widget_ProjectPublicAreas extends Widget {
             print '<p><a href="'.$project->getMailPage().'">';
             html_image("ic/mail16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','mail_lists'))); 
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
-            $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
+            $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1");
             $row_count = db_fetch_array($res_count);
             print ' ( '.$GLOBALS['Language']->getText('include_project_home','public_mail_lists',$row_count['count']).' )</p>';
         }
@@ -107,7 +108,7 @@ class Widget_ProjectPublicAreas extends Widget {
             print '<p><a href="/survey/?group_id='.$group_id.'">';
             html_image("ic/survey16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','surveys')));
             print ' '.$GLOBALS['Language']->getText('include_project_home','surveys').'</a>';
-            $sql="SELECT count(*) from surveys where group_id='$group_id' AND is_active='1'";
+            $sql="SELECT count(*) from surveys where group_id='" . db_ei($group_id) . "' AND is_active='1'";
             $result=db_query($sql);
             echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_surveys',db_result($result,0,0)).' )</p>';
         }
@@ -119,7 +120,7 @@ class Widget_ProjectPublicAreas extends Widget {
             html_image("ic/cvs16b.png", array('width' => '20', 'height' => '20', 'alt' => 'CVS'));
             print ' ' . $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
             // LJ Cvs checkouts added
-            $sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='$group_id'";
+            $sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
             $cvs_commit_num = db_result($result, 0, 0);
             $cvs_add_num = db_result($result, 0, 1);
@@ -146,7 +147,7 @@ class Widget_ProjectPublicAreas extends Widget {
             print '<p><a href="' . $project->getSvnPage() . '">';
             html_image("ic/svn16b.png", array('width' => '20', 'height' => '20', 'alt' => 'Subversion'));
             print ' ' . $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
-            $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='$group_id'";
+            $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
             $svn_accesses = db_result($result, 0, 0);
             if (!$svn_accesses)
