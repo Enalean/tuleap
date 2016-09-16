@@ -1,10 +1,23 @@
 <?php
-  //
-  // SourceForge: Breaking Down the Barriers to Open Source Development
-  // Copyright 1999-2000 (c) The SourceForge Crew
-  // http://sourceforge.net
-  //
-  // 
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 
 $vGroupId = new Valid_GroupId();
@@ -83,28 +96,6 @@ if (!$request->valid($vGroupId)) {
             $order_by = ' ORDER BY '.svn_utils_criteria_list_to_query($morder);
         }
     }
-
-    // MV: it seems this is not mandatory since there is already a mecanism with morder
-/*
-    //
-    // Memorize order by field as a user preference if explicitly specified.
-    // Automatically discard invalid field names.
-    //
-    if (isset($order) && $order) {
-        if ($order=='id' || $order=='description' || $order=='date' || $order=='submitted_by') {
-            if(user_isloggedin() &&
-               ($order != user_get_preference('commits_browse_order')) ) {
-                user_set_preference('commits_browse_order', $order);
-            }
-        } else {
-            $order = false;
-        }
-    } else {
-        if(user_isloggedin()) {
-            $order = user_get_preference('commits_browse_order');
-        }
-    }
-*/
 
     $vPath = new Valid_String('_path');
     $vPath->required();
@@ -224,23 +215,23 @@ if (!$request->valid($vGroupId)) {
     /*
      Show the new pop-up boxes to select assigned to and/or status
     */
-    echo '<H3>'.$Language->getText('svn_browse_revision','browse_commit').'</H3>'; 
+    echo '<H3>'.$hp->purify($Language->getText('svn_browse_revision','browse_commit')).'</H3>';
     echo '<FORM class="form-inline" name="commit_form" ACTION="" METHOD="GET">
         <TABLE BORDER="0">
-	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$hp->purify($group_id).'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-        <TR align="center"><TD><b>'.$Language->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','search').'</b></TD>'.
+        <TR align="center"><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','rev')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','commiter')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','path')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','search')).'</b></TD>'.
         '</TR>'.
-        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 CLASS="input-mini" NAME=_rev_id VALUE='.$hp->purify($_rev_id).'></TD>'.
+        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 CLASS="input-mini" NAME="_rev_id" VALUE="'.$hp->purify($_rev_id).'"></TD>'.
         '<TD>'. $tech_box .'</TD>'.
-        '<TD>'. '<INPUT type=text size=35 name=_path value='.$hp->purify($_path).'></TD>'.
-        '<TD>'. '<INPUT type=text size=35 name=_srch value='.$hp->purify($_srch).'></TD>'.
+        '<TD>'. '<INPUT type="text" size="35" name="_path" value="'.$hp->purify($_path).'"></TD>'.
+        '<TD>'. '<INPUT type="text" size="35" name="_srch" value="'.$hp->purify($_srch).'"></TD>'.
         '</TR></TABLE>'.
 	
-        '<br><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.
+        '<br><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$hp->purify($Language->getText('global','btn_browse')).'">'.
         ' <input TYPE="text" name="chunksz" CLASS="input-mini" size="3" MAXLENGTH="5" '.
-        'VALUE="'.$hp->purify($chunksz).'">'.$Language->getText('svn_browse_revision','commit_at_once').
+        'VALUE="'.$hp->purify($chunksz).'">'.$hp->purify($Language->getText('svn_browse_revision','commit_at_once')).
         '</FORM>';
 
 
@@ -258,11 +249,11 @@ if (!$request->valid($vGroupId)) {
     } else {
         echo '
 		<P>
-		<H3>'.$statement.'</H3>
+		<H3>'.$hp->purify($statement).'</H3>
 		<P>
 		<P>';
-        echo $Language->getText('svn_browse_revision','no_match');
-        echo db_error();
+        echo $hp->purify($Language->getText('svn_browse_revision','no_match'));
+        echo $hp->purify(db_error());
     }
     svn_footer(array());
 }
