@@ -380,14 +380,6 @@ Requires: php-mediawiki-tuleap >= 1.20.3-6
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
-%package plugin-boomerang
-Summary: Boomerang plugin
-Group: Development/Tools
-Version: @@PLUGIN_BOOMERANG_VERSION@@
-Release: @@RELEASE@@%{?dist}
-%description plugin-boomerang
-Allow performances evaluation in Tuleap.
-
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
@@ -647,9 +639,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
-
-# Plugin boomerang
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/boomerang
 
 # Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -1200,11 +1189,6 @@ fi
 %files plugin-foafprofiles
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
-
-%files plugin-boomerang
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/boomerang
-%dir %{APP_DATA_DIR}/boomerang
 
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
