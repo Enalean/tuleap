@@ -1,4 +1,7 @@
 Version 9.0 (Not Released Yet)
+	== Plugins ==
+	* cardwall: 1.68
+
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
 	* request #9502: SQL injection through widgets management
