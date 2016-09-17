@@ -33,6 +33,9 @@ class WidgetLayoutManager {
      * @return int
      */
     function getDefaultLayoutId($owner_id, $owner_type) {
+        $owner_type = db_es($owner_type);
+        $owner_id   = db_ei($owner_id);
+
         $sql = "SELECT l.*
             FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id)
             WHERE o.owner_type = '". $owner_type ."'
@@ -56,6 +59,9 @@ class WidgetLayoutManager {
     */
     public function displayLayout($owner_id, $owner_type)
     {
+        $owner_type = db_es($owner_type);
+        $owner_id   = db_ei($owner_id);
+
         $sql = "SELECT l.*
             FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id)
             WHERE o.owner_type = '". $owner_type ."'
@@ -71,15 +77,15 @@ class WidgetLayoutManager {
                 echo '<br />';
             }
             $layout = new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
-            $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout->id .' ORDER BY rank';
+            $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. db_ei($layout->id) .' ORDER BY rank';
             $req_rows = db_query($sql);
             while ($data = db_fetch_array($req_rows)) {
                 $row = new WidgetLayout_Row($data['id'], $data['rank']);
-                $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. $row->id;
+                $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. db_ei($row->id);
                 $req_cols = db_query($sql);
                 while ($data = db_fetch_array($req_cols)) {
                     $col = new WidgetLayout_Row_Column($data['id'], $data['width']);
-                    $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id .' AND column_id = '. $col->id .' ORDER BY rank';
+                    $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) .' AND column_id = '. db_ei($col->id) .' ORDER BY rank';
                     $req_content = db_query($sql);
                     while ($data = db_fetch_array($req_content)) {
                         $c = Widget::getInstance($data['name']);
@@ -145,7 +151,8 @@ class WidgetLayoutManager {
     */
     function createDefaultLayoutForUser($owner_id) {
         $service_manager = ServiceManager::instance();
-        $owner_type = self::OWNER_TYPE_USER;
+        $owner_id   = db_ei($owner_id);
+        $owner_type = db_es(self::OWNER_TYPE_USER);
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) VALUES (1, 1, $owner_id, '$owner_type')";
         if (db_query($sql)) {
 
@@ -169,7 +176,7 @@ class WidgetLayoutManager {
             $widgets = array();
             $em->processEvent('default_widgets_for_new_owner', array('widgets' => &$widgets, 'owner_type' => $owner_type));
             foreach($widgets as $widget) {
-                $sql .= ",($owner_id, '$owner_type', 1, ". $widget['column'] .", '". $widget['name'] ."', ". $widget['rank'] .")";
+                $sql .= ",($owner_id, '$owner_type', 1, ". db_ei($widget['column']) .", '". db_es($widget['name']) ."', ". db_ei($widget['rank']) .")";
             }
             db_query($sql);
         }
@@ -188,17 +195,19 @@ class WidgetLayoutManager {
     function createDefaultLayoutForProject($group_id, $template_id) {
         $pm = ProjectManager::instance();
         $pm->clear($group_id);
-        $project = $pm->getProject($group_id);
+        $project     = $pm->getProject($group_id);
+        $group_id    = db_ei($group_id);
+        $template_id = db_ei($template_id);
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type)
         SELECT layout_id, is_default, $group_id, owner_type
         FROM owner_layouts
-        WHERE owner_type = '". self::OWNER_TYPE_GROUP ."'
+        WHERE owner_type = '". db_es(self::OWNER_TYPE_GROUP) ."'
           AND owner_id = $template_id
         ";
         if (db_query($sql)) {
             $sql = "SELECT layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences, content_id
             FROM layouts_contents
-            WHERE owner_type = '". self::OWNER_TYPE_GROUP ."'
+            WHERE owner_type = '". db_es(self::OWNER_TYPE_GROUP) ."'
               AND owner_id = $template_id
             ";
             if ($req = db_query($sql)) {
@@ -209,7 +218,7 @@ class WidgetLayoutManager {
                         if ($w->canBeUsedByProject($project)) {
                             $content_id = $w->cloneContent($w->content_id, $group_id, self::OWNER_TYPE_GROUP);
                             $sql = "INSERT INTO layouts_contents(owner_id, owner_type, content_id, layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences)
-                            VALUES (". $group_id .", '". self::OWNER_TYPE_GROUP ."', ". $content_id .", ". $data['layout_id'] .", ". $data['column_id'] .", '". $data['name'] ."', ". $data['rank'] .", ". $data['is_minimized'] .", ". $data['is_removed'] .", ". $data['display_preferences'] .")
+                            VALUES (". $group_id .", '". db_es(self::OWNER_TYPE_GROUP) ."', ". db_ei($content_id) .", ". db_ei($data['layout_id']) .", ". db_ei($data['column_id']) .", '". db_es($data['name']) ."', ". db_ei($data['rank']) .", ". db_ei($data['is_minimized']) .", ". db_ei($data['is_removed']) .", ". db_ei($data['display_preferences']) .")
                             ";
                             db_query($sql);
                             echo db_error();
@@ -230,9 +239,9 @@ class WidgetLayoutManager {
         $used_widgets = array();
         $sql = "SELECT *
         FROM layouts_contents
-        WHERE owner_type = '". $owner_type ."'
-        AND owner_id = ". $owner_id .'
-        AND layout_id = '. $layout_id .'
+        WHERE owner_type = '". db_es($owner_type) ."'
+        AND owner_id = ". db_ei($owner_id) .'
+        AND layout_id = '. db_ei($layout_id) .'
         AND content_id = 0 AND column_id <> 0';
         $res = db_query($sql);
         while($data = db_fetch_array($res)) {
@@ -291,13 +300,13 @@ class WidgetLayoutManager {
                     <tr>
                       <td>
                         <div class="layout-manager-row-add">+</div>';
-            $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout_id .' ORDER BY rank';
+            $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. db_ei($layout_id) .' ORDER BY rank';
             $req_rows = db_query($sql);
             while ($data = db_fetch_array($req_rows)) {
                 echo '<table class="layout-manager-row" cellspacing="5" cellpadding="2" border="0">
                         <tr>
                           <td class="layout-manager-column-add">+</td>';
-                $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. $data['id'];
+                $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. db_ei($data['id']);
                 $req_cols = db_query($sql);
                 while ($data = db_fetch_array($req_cols)) {
                     echo '<td class="layout-manager-column">
@@ -341,8 +350,8 @@ class WidgetLayoutManager {
     function updateLayout($owner_id, $owner_type, $layout, $custom_layout) {
         $sql = "SELECT l.*
             FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id)
-            WHERE o.owner_type = '". $owner_type ."'
-              AND o.owner_id = ". $owner_id ."
+            WHERE o.owner_type = '". db_es($owner_type) ."'
+              AND o.owner_id = ". db_ei($owner_id) ."
               AND o.is_default = 1
         ";
         $req = db_query($sql);
@@ -384,7 +393,7 @@ class WidgetLayoutManager {
                                     $rank = 0;
                                     foreach($rows as $cols) {
                                         $sql = "INSERT INTO layouts_rows(layout_id, rank)
-                                                VALUES ($new_layout_id, ". $rank++ .")";
+                                                VALUES (" . db_ei($new_layout_id) .", ". db_ei($rank++) .")";
                                         if (db_query($sql)) {
                                             $sql = "SELECT LAST_INSERT_ID() AS id";
                                             if ($res = db_query($sql)) {
@@ -392,7 +401,7 @@ class WidgetLayoutManager {
                                                     $row_id = $data['id'];
                                                     foreach($cols as $width) {
                                                         $sql = "INSERT INTO layouts_rows_columns(layout_row_id, width)
-                                                                VALUES ($row_id, ". $width .")";
+                                                                VALUES (". db_ei($row_id) .", ". db_ei($width) .")";
                                                         db_query($sql);
                                                     }
                                                 }
@@ -422,19 +431,19 @@ class WidgetLayoutManager {
                             $last_new_col_id = $new_col['id'];
                         }
                         $sql = "UPDATE layouts_contents
-                                SET layout_id  = ". $new_layout_id ."
-                                  , column_id  = ". $last_new_col_id ."
-                                WHERE owner_type = '". $owner_type ."'
-                                  AND owner_id   = ". $owner_id ."
-                                  AND layout_id  = ". $old_layout_id ."
-                                  AND column_id  = ". $old_col['id'];
+                                SET layout_id  = ". db_ei($new_layout_id) ."
+                                  , column_id  = ". db_ei($last_new_col_id) ."
+                                WHERE owner_type = '". db_es($owner_type) ."'
+                                  AND owner_id   = ". db_ei($owner_id) ."
+                                  AND layout_id  = ". db_ei($old_layout_id) ."
+                                  AND column_id  = ". db_ei($old_col['id']);
                         db_query($sql);
                     }
                     $sql = "UPDATE owner_layouts
-                                SET layout_id  = ". $new_layout_id ."
-                                WHERE owner_type = '". $owner_type ."'
-                                  AND owner_id   = ". $owner_id ."
-                                  AND layout_id  = ". $old_layout_id;
+                                SET layout_id  = ". db_ei($new_layout_id) ."
+                                WHERE owner_type = '". db_es($owner_type) ."'
+                                  AND owner_id   = ". db_ei($owner_id) ."
+                                  AND layout_id  = ". db_ei($old_layout_id);
                     db_query($sql);
 
                     //If the old layout is custom remove it
@@ -442,14 +451,14 @@ class WidgetLayoutManager {
                         $structure = $this->_retrieveStructureOfLayout($old_layout_id);
                         foreach($structure['rows'] as $row) {
                             $sql = "DELETE FROM layouts_rows
-                                    WHERE id  = ". $row['id'];
+                                    WHERE id  = ". db_ei($row['id']);
                             db_query($sql);
                             $sql = "DELETE FROM layouts_rows_columns
-                                    WHERE layout_row_id  = ". $row['id'];
+                                    WHERE layout_row_id  = ".db_ei($row['id']);
                             db_query($sql);
                         }
                         $sql = "DELETE FROM layouts
-                                WHERE id  = ". $old_layout_id;
+                                WHERE id  = ". db_ei($old_layout_id);
                         db_query($sql);
                     }
 
@@ -461,11 +470,11 @@ class WidgetLayoutManager {
 
     function _retrieveStructureOfLayout($layout_id) {
         $structure = array('rows' => array(), 'columns' => array());
-        $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout_id .' ORDER BY rank';
+        $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. db_ei($layout_id) .' ORDER BY rank';
         $req_rows = db_query($sql);
         while ($row = db_fetch_array($req_rows)) {
             $structure['rows'][] = $row;
-            $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. $row['id'] .' ORDER BY id';
+            $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. db_ei($row['id']) .' ORDER BY id';
             $req_cols = db_query($sql);
             while ($col = db_fetch_array($req_cols)) {
                 $structure['columns'][] = $col;
@@ -593,11 +602,11 @@ class WidgetLayoutManager {
         LEFT JOIN (SELECT r.rank AS rank, c.id as id
         FROM layouts_rows AS r INNER JOIN layouts_rows_columns AS c
         ON (c.layout_row_id = r.id)
-        WHERE r.layout_id = $layout_id) AS col
+        WHERE r.layout_id = " . db_ei($layout_id) . ") AS col
         ON (u.column_id = col.id)
-        WHERE u.owner_type = '". $owner_type ."'
-          AND u.owner_id = ". $owner_id ."
-          AND u.layout_id = $layout_id
+        WHERE u.owner_type = '". db_es($owner_type) ."'
+          AND u.owner_id = ". db_ei($owner_id) ."
+          AND u.layout_id = " . db_ei($layout_id) . "
           AND u.column_id <> 0
         ORDER BY col.rank, col.id";
         $res = db_query($sql);
@@ -608,7 +617,7 @@ class WidgetLayoutManager {
                     FROM layouts_rows AS r
                          INNER JOIN layouts_rows_columns AS c
                          ON (c.layout_row_id = r.id)
-                    WHERE r.layout_id = $layout_id
+                    WHERE r.layout_id = " . db_ei($layout_id) . "
                     ORDER BY rank, id";
             $res = db_query($sql);
             $column_id = db_result($res, 0, 'id');
@@ -624,33 +633,33 @@ class WidgetLayoutManager {
 
         //See if it already exists but not used
         $sql = "SELECT column_id FROM layouts_contents
-        WHERE owner_type = '". $owner_type ."'
-          AND owner_id = ". $owner_id ."
-          AND layout_id = $layout_id
-          AND name = '$name'";
+        WHERE owner_type = '". db_es($owner_type) ."'
+          AND owner_id = ". db_ei($owner_id) ."
+          AND layout_id = " . db_ei($layout_id) . "
+          AND name = '". db_es($name) . "'";
         $res = db_query($sql);
         echo db_error();
         if (db_numrows($res) && !$widget->isUnique() && db_result($res, 0, 'column_id') == 0) {
             //search for rank
-            $sql = "SELECT min(rank) - 1 AS rank FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = $layout_id AND column_id = $column_id ";
+            $sql = "SELECT min(rank) - 1 AS rank FROM layouts_contents WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND layout_id = " . db_ei($layout_id) . " AND column_id = " . db_ei($column_id);
             $res = db_query($sql);
             echo db_error();
             $rank = db_result($res, 0, 'rank');
 
             //Update
             $sql = "UPDATE layouts_contents
-                SET column_id = ". $column_id .", rank = $rank
-                WHERE owner_type = '". $owner_type ."'
-                  AND owner_id = ". $owner_id ."
-                  AND name = '$name'
-                  AND layout_id = ". $layout_id;
+                SET column_id = ". db_ei($column_id) .", rank = " . db_ei($rank) . "
+                WHERE owner_type = '". db_es($owner_type) ."'
+                  AND owner_id = ". db_ei($owner_id) ."
+                  AND name = '" . db_es($name) . "'
+                  AND layout_id = ". db_ei($layout_id);
             $res = db_query($sql);
             echo db_error();
         } else {
             //Insert
             $sql = "INSERT INTO layouts_contents(owner_type, owner_id, layout_id, column_id, name, content_id, rank)
-            SELECT R1.owner_type, R1.owner_id, R1.layout_id, R1.column_id, '$name', $content_id, IFNULL(R2.rank, 1) - 1
-            FROM ( SELECT '$owner_type' AS owner_type, $owner_id AS owner_id, $layout_id AS layout_id, $column_id AS column_id ) AS R1
+            SELECT R1.owner_type, R1.owner_id, R1.layout_id, R1.column_id, '" . db_es($name) . "', " . db_ei($content_id) . ", IFNULL(R2.rank, 1) - 1
+            FROM ( SELECT '". db_es($owner_type) . "' AS owner_type, " . db_ei($owner_id) . " AS owner_id, " . db_ei($layout_id) . " AS layout_id, "  . db_ei($column_id) . " AS column_id ) AS R1
             LEFT JOIN layouts_contents AS R2 USING ( owner_type, owner_id, layout_id, column_id )
             ORDER BY rank ASC
             LIMIT 1";
@@ -684,7 +693,7 @@ class WidgetLayoutManager {
     * @param  instance_id
     */
     function removeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id, &$widget) {
-        $sql = "DELETE FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = $layout_id AND name = '$name' AND content_id = $instance_id";
+        $sql = "DELETE FROM layouts_contents WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND layout_id = " . db_ei($layout_id) . " AND name = '" . db_es($name) . "' AND content_id = " . db_ei($instance_id);
         db_query($sql);
         if (!db_error()) {
             $widget->destroy($instance_id);
@@ -701,7 +710,7 @@ class WidgetLayoutManager {
     * @param  instance_id
     */
     function mimizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id) {
-        $sql = "UPDATE layouts_contents SET is_minimized = 1 WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = ". $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+        $sql = "UPDATE layouts_contents SET is_minimized = 1 WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND layout_id = ". db_ei($layout_id) ." AND name = '". db_escape_string($name) ."' AND content_id = ". db_ei($instance_id);
         db_query($sql);
         echo db_error();
     }
@@ -716,7 +725,7 @@ class WidgetLayoutManager {
     * @param  instance_id
     */
     function maximizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id) {
-        $sql = "UPDATE layouts_contents SET is_minimized = 0 WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = ". $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+        $sql = "UPDATE layouts_contents SET is_minimized = 0 WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND layout_id = ". db_ei($layout_id) ." AND name = '". db_escape_string($name) ."' AND content_id = ". db_ei($instance_id);
         db_query($sql);
         echo db_error();
     }
@@ -731,7 +740,7 @@ class WidgetLayoutManager {
     * @param  instance_id
     */
     function displayWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id) {
-        $sql = "UPDATE layouts_contents SET display_preferences = 1, is_minimized = 0 WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = ". $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+        $sql = "UPDATE layouts_contents SET display_preferences = 1, is_minimized = 0 WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND layout_id = ". db_ei($layout_id) ." AND name = '". db_escape_string($name) ."' AND content_id = " . db_ei($instance_id);
         db_query($sql);
         echo db_error();
     }
@@ -746,7 +755,7 @@ class WidgetLayoutManager {
     * @param  instance_id
     */
     function hideWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id) {
-        $sql = "UPDATE layouts_contents SET display_preferences = 0 WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = ". $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+        $sql = "UPDATE layouts_contents SET display_preferences = 0 WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND layout_id = ". db_ei($layout_id) ." AND name = '". db_escape_string($name) ."' AND content_id = " . db_ei($instance_id);
         db_query($sql);
         echo db_error();
     }
@@ -777,7 +786,7 @@ class WidgetLayoutManager {
 
                 //Compute differences
                 $originals = array();
-                $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND column_id = ". $column_id .' ORDER BY rank';
+                $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) ." AND column_id = ". db_ei($column_id) .' ORDER BY rank';
                 $res = db_query($sql);
                 echo db_error();
                 while($data = db_fetch_array($res)) {
@@ -799,9 +808,9 @@ class WidgetLayoutManager {
                     $_and .= ')';
                     $sql = "UPDATE layouts_contents
                         SET column_id = 0
-                        WHERE owner_type = '". $owner_type ."'
-                          AND owner_id = ". $owner_id .'
-                          AND column_id = '. $column_id .
+                        WHERE owner_type = '". db_es($owner_type) ."'
+                          AND owner_id = ". db_ei($owner_id) .'
+                          AND column_id = '. db_ei($column_id) .
                           $_and;
                     $res = db_query($sql);
                     echo db_error();
@@ -822,11 +831,11 @@ class WidgetLayoutManager {
                     $_and .= ')';
                     //old and new column must be part of the same layout
                     $sql = 'UPDATE layouts_contents
-                        SET column_id = '. $column_id ."
-                        WHERE owner_type = '". $owner_type ."'
-                          AND owner_id = ". $owner_id .
+                        SET column_id = '. db_ei($column_id) ."
+                        WHERE owner_type = '". db_es($owner_type) ."'
+                          AND owner_id = ". db_ei($owner_id) .
                           $_and ."
-                          AND layout_id = ". $layout_id;
+                          AND layout_id = ". db_ei($layout_id);
                     $res = db_query($sql);
                     echo db_error();
                 }
@@ -836,7 +845,7 @@ class WidgetLayoutManager {
                 $rank = 0;
                 $values = array();
                 foreach($names as $name) {
-                    $sql = 'UPDATE layouts_contents SET rank = '. ($rank++) ." WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id .' AND column_id = '. $column_id ." AND name = '".$name[1]."' AND content_id = ". $name[0];
+                    $sql = 'UPDATE layouts_contents SET rank = '. db_ei($rank++) ." WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) .' AND column_id = '. db_ei($column_id) ." AND name = '".$name[1]."' AND content_id = ". $name[0];
                     db_query($sql);
                     echo db_error();
                 }

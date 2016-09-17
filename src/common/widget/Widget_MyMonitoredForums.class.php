@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Widget.class.php');
@@ -40,12 +41,12 @@ class Widget_MyMonitoredForums extends Widget {
              "AND groups.status = 'A' ".
             "AND forum_group_list.is_public <> 9 ".
              "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-             "AND forum_monitored_forums.user_id='".user_getid()."' ";
+             "AND forum_monitored_forums.user_id='". db_ei(user_getid()) ."' ";
         $um =& UserManager::instance();
         $current_user =& $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
-            $sql .= "AND groups.group_id IN (". implode(',', $projects) .") ";
+            $sql .= "AND groups.group_id IN (". db_ei_implode($projects) .") ";
         }
         $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
     
@@ -62,10 +63,10 @@ class Widget_MyMonitoredForums extends Widget {
                 $sql2="SELECT forum_group_list.group_forum_id,forum_group_list.forum_name ".
                     "FROM groups,forum_group_list,forum_monitored_forums ".
                     "WHERE groups.group_id=forum_group_list.group_id ".
-                    "AND groups.group_id=$group_id ".
+                    "AND groups.group_id=" . db_ei($group_id) ." ".
                     "AND forum_group_list.is_public <> 9 ".
                     "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-                    "AND forum_monitored_forums.user_id='".user_getid()."' LIMIT 100";
+                    "AND forum_monitored_forums.user_id='". db_ei(user_getid()) ."' LIMIT 100";
         
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
