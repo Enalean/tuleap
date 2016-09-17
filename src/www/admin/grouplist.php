@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');    
 require_once('www/admin/admin_utils.php');
@@ -80,21 +93,22 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 site_admin_header(array('title'=>$Language->getText('admin_grouplist','title')));
 
-print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
+print "<p>".$purifier->purify($Language->getText('admin_grouplist','for_categ')).": ";
 if ($group_name_search !="") {
-    print "<b>".$Language->getText('admin_grouplist', 'begins_with', array($purifier->purify($group_name_search)))."</b>\n";
+    print "<b>".$purifier->purify($Language->getText('admin_grouplist', 'begins_with', array($group_name_search)))."</b>\n";
 } else {
-    print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
+    print "<b>".$purifier->purify($Language->getText('admin_grouplist','all_categ'))."</b>\n";
 }
 
 /*
  * Add search field and Export CSV button
  */
-$grp_status = implode(',', $status);
-if ($grp_status == "") {
-    $grp_status = "ANY";
+$group_status = implode(',', $status);
+if ($group_status == "") {
+    $group_status = "ANY";
 }
 $group_name_search_purify   = $purifier->purify($group_name_search);
+$group_status_purify        = $purifier->purify($group_status);
 $search_purify              = $purifier->purify($Language->getText('admin_main', 'search'));
 $export                     = $purifier->purify($Language->getText('admin_main', 'export_csv'));
 echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-horizontal">
@@ -104,17 +118,17 @@ echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-hor
            <label> <strong>'.$Language->getText("admin_userlist","status").'</strong> </label>
              <select name="status[]" size=7 multiple="multiple">
                <option value="ANY" '.$anySelect.'>Any</option>
-               <option value="'.Project::STATUS_ACTIVE.'" '.getSelectedFromStatus(Project::STATUS_ACTIVE, $status).'>'.$Language->getText('admin_groupedit','status_A').'</option>
-               <option value="'.Project::STATUS_SYSTEM.'" '.getSelectedFromStatus(Project::STATUS_SYSTEM, $status).'>'.$Language->getText('admin_groupedit','status_s').'</option>
-               <option value="'.Project::STATUS_INCOMPLETE.'" '.getSelectedFromStatus(Project::STATUS_INCOMPLETE, $status).'>'.$Language->getText('admin_groupedit','status_I').'</option>
-               <option value="'.Project::STATUS_PENDING.'" '.getSelectedFromStatus(Project::STATUS_PENDING, $status).'>'.$Language->getText('admin_groupedit','status_P').'</option>
-               <option value="'.Project::STATUS_HOLDING.'" '.getSelectedFromStatus(Project::STATUS_HOLDING, $status).'>'.$Language->getText('admin_groupedit','status_H').'</option>
-               <option value="'.Project::STATUS_DELETED.'" '.getSelectedFromStatus(Project::STATUS_DELETED, $status).'>'.$Language->getText('admin_groupedit','status_D').'</option>
+               <option value="'.$purifier->purify(Project::STATUS_ACTIVE).'" '.$purifier->purify(getSelectedFromStatus(Project::STATUS_ACTIVE, $status)).'>'.$purifier->purify($Language->getText('admin_groupedit','status_A')).'</option>
+               <option value="'.$purifier->purify(Project::STATUS_SYSTEM).'" '.$purifier->purify(getSelectedFromStatus(Project::STATUS_SYSTEM, $status)).'>'.$purifier->purify($Language->getText('admin_groupedit','status_s')).'</option>
+               <option value="'.$purifier->purify(Project::STATUS_INCOMPLETE).'" '.$purifier->purify(getSelectedFromStatus(Project::STATUS_INCOMPLETE, $status)).'>'.$purifier->purify($Language->getText('admin_groupedit','status_I')).'</option>
+               <option value="'.$purifier->purify(Project::STATUS_PENDING).'" '.$purifier->purify(getSelectedFromStatus(Project::STATUS_PENDING, $status)).'>'.$purifier->purify($Language->getText('admin_groupedit','status_P')).'</option>
+               <option value="'.$purifier->purify(Project::STATUS_HOLDING).'" '.$purifier->purify(getSelectedFromStatus(Project::STATUS_HOLDING, $status)).'>'.$purifier->purify($Language->getText('admin_groupedit','status_H')).'</option>
+               <option value="'.$purifier->purify(Project::STATUS_DELETED).'" '.$purifier->purify(getSelectedFromStatus(Project::STATUS_DELETED, $status)).'>'.$purifier->purify($Language->getText('admin_groupedit','status_D')).'</option>
              </select>
          </td>
          <td valign=top>
            <p>
-             <label> <strong>'.$Language->getText('admin_main', 'search_group').'</strong> </label>
+             <label> <strong>'.$purifier->purify($Language->getText('admin_main', 'search_group')).'</strong> </label>
            </p>
            <input type="text" name="group_name_search" class="project_name_search" placeholder="'.$search_purify.'" value="'.$group_name_search_purify.'" />
          </td>
@@ -126,7 +140,7 @@ echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-hor
          </button>
        </div>
       </form>';
-echo '<form action="grouplist.php?group_name_search='.$group_name_search_purify.'&export&status='.$grp_status.'" method="post">';
+echo '<form action="grouplist.php?group_name_search='.$group_name_search_purify.'&export&status='.$group_status_purify.'" method="post">';
     echo '<input type="submit" class="btn" name="exp-csv" value="'.$export.'">';
 echo '</form>';
 ?>
@@ -134,12 +148,12 @@ echo '</form>';
 <TABLE class="table table-bordered table-striped table-hover">
 <thead>
 <TR>
-<TH><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TH>
-<TH><b><?php echo $Language->getText('admin_groupedit','unix_grp'); ?></b></TH>
-<TH><b><?php echo $Language->getText('global','status'); ?></b></TH>
-<TH><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TH>
-<TH><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TH>
-<TH><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TH>
+<TH><b><?php echo $purifier->purify($Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click'));?></b></TH>
+<TH><b><?php echo $purifier->purify($Language->getText('admin_groupedit','unix_grp')); ?></b></TH>
+<TH><b><?php echo $purifier->purify($Language->getText('global','status')); ?></b></TH>
+<TH><B><?php echo $purifier->purify($Language->getText('admin_groupedit','group_type')); ?></B></TH>
+<TH><b><?php echo $purifier->purify($Language->getText('admin_groupedit','public')); ?></b></TH>
+<TH><B><?php echo $purifier->purify($Language->getText('admin_grouplist','members')); ?></B></TH>
 </TR>
 </thead>
 <tbody>
@@ -156,7 +170,7 @@ if (! empty($group_name_search)) {
 
 if (! empty ($status)) {
     $status       = implode(',', $status);
-    $status_param = "&status=$status";
+    $status_param = "&status=" . urlencode($status);
 } else  {
     $status_param = "";
 }
@@ -165,16 +179,16 @@ if ($res['numrows'] > 0) {
     $daoUsers = new UserGroupDao(CodendiDataAccess::instance());
     foreach ($res['projects'] as $grp) {
         print "<tr>";
-        print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
-        print '<td>'.$grp['unix_group_name'].'</td>';
-        print '<td><span class="site_admin_project_status_'.$grp['status'].'">&nbsp;</span>'.$Language->getText('admin_groupedit', 'status_'.$grp['status']).'</td>';
+        print '<td><a href="groupedit.php?group_id='.$purifier->purify(urlencode($grp['group_id'])).'">'.$purifier->purify(html_entity_decode($grp['group_name'])).'</a></td>';
+        print '<td>'.$purifier->purify($grp['unix_group_name']).'</td>';
+        print '<td><span class="site_admin_project_status_'.$purifier->purify($grp['status']).'">&nbsp;</span>'.$purifier->purify($Language->getText('admin_groupedit', 'status_'.$grp['status'])).'</td>';
         // group type
-        print "<td>".$template->getLabel($grp['type'])."</td>";
+        print "<td>".$purifier->purify($template->getLabel($grp['type']))."</td>";
 
-        print '<td>'.$grp['access'].'</td>';
+        print '<td>'.$purifier->purify($grp['access']).'</td>';
 
         // members
-        print '<td>'.$daoUsers->returnUsersNumberByGroupId($grp['group_id']).'</td>';
+        print '<td>'.$purifier->purify($daoUsers->returnUsersNumberByGroupId($grp['group_id'])).'</td>';
 
         print "</tr>\n";
     }
@@ -184,7 +198,7 @@ if ($res['numrows'] > 0) {
     echo '<div style="text-align:center">';
 
     if ($offset > 0) {
-        echo  '<a href="?offset='.($offset-$limit).$group_name_param.$status_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+        echo  '<a href="?offset='.$purifier->purify(($offset-$limit).$group_name_param.$status_param).'">[ '. $purifier->purify($Language->getText('project_admin_utils', 'previous')).'  ]</a>';
         echo '&nbsp;';
     }
     
@@ -192,7 +206,7 @@ if ($res['numrows'] > 0) {
     
     if (($offset + $limit) < $res['numrows']) {
         echo '&nbsp;';
-        echo '<a href="?offset='.($offset+$limit).$group_name_param.$status_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+        echo '<a href="?offset='.$purifier->purify(($offset+$limit).$group_name_param.$status_param).'">[ '. $purifier->purify($Language->getText('project_admin_utils', 'next')).' ]</a>';
     }
     echo '</div>';
 } else {
