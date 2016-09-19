@@ -19,6 +19,7 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
@@ -27,6 +28,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\AuthenticatedResource;
 use ProjectManager;
@@ -64,6 +66,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
         $this->ugroup_manager  = new UGroupManager();
+        $this->json_decoder    = new JsonDecoder();
 
         parent::__construct();
     }
@@ -75,11 +78,16 @@ class ProjectResource extends AuthenticatedResource {
      *
      * If current user is site administrator, then returns all active projects.
      *
+     * <br>
+     * ?query is optional. When filled, it is a json object to search on shortname
+     * with exact match: {"shortname": "guinea-pig"}
+     *
      * @url GET
      * @access hybrid
      *
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int    $limit  Number of elements displayed per page
+     * @param int    $offset Position of the first element to display
+     * @param string $query  JSON object of search criteria properties {@from path}
      *
      * @throws 403
      * @throws 404
@@ -87,17 +95,30 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
      */
-    public function get($limit = 10, $offset = 0) {
+    public function get($limit = 10, $offset = 0, $query = '')
+    {
         $this->checkAccess();
 
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
+        $query = trim($query);
+        $user  = $this->user_manager->getCurrentUser();
 
-        $user                    = $this->user_manager->getCurrentUser();
+        if ($this->json_decoder->looksLikeJson($query)) {
+            $paginated_projects = $this->getMyAndPublicProjectsFromExactMatch($query, $user, $offset, $limit);
+        } elseif (! empty($query)) {
+            throw new RestException(400, 'query parameter must be a json object or empty');
+        } else {
+            $paginated_projects = $this->getMyAndPublicProjects($user, $offset, $limit);
+        }
+
+        return $this->sendProjectRepresentations($paginated_projects, $limit, $offset);
+    }
+
+    private function sendProjectRepresentations(PaginatedProjects $paginated_projects, $limit, $offset)
+    {
         $project_representations = array();
-        $paginated_projects      = $this->getMyAndPublicProjects($user, $offset, $limit);
-
         foreach($paginated_projects->getProjects() as $project) {
             $project_representations[] = $this->getProjectRepresentation($project);
         }
@@ -124,6 +145,21 @@ class ProjectResource extends AuthenticatedResource {
      */
     private function getMyAndPublicProjects(PFUser $user, $offset, $limit) {
         return $this->project_manager->getMyAndPublicProjectsForREST($user, $offset, $limit);
+    }
+
+    private function getMyAndPublicProjectsFromExactMatch($query, PFUser $user, $offset, $limit)
+    {
+        $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
+        if (! isset($json_query['shortname'])) {
+            throw new RestException(400, 'You can only search on "shorname"');
+        }
+
+        return $this->project_manager->getMyAndPublicProjectsForRESTByShortname(
+            $json_query['shortname'],
+            $user,
+            $offset,
+            $limit
+        );
     }
 
     /**
