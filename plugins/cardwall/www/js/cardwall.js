@@ -182,9 +182,6 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
         var container = this.createAndInjectTemporaryContainer();
 
-        if (! this.ajaxCallback()) {
-            return;
-        }
         this.options[ 'callback' ]            = this.ajaxCallback();
         this.options[ 'onComplete' ]          = this.success();
         this.options[ 'onFailure' ]           = this.fail;
@@ -271,7 +268,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             var parameters   = { },
                 linked_field = 'artifact[' + field_id +']';
             if (is_computed_field) {
-                if (! /^\d+$/.test(value)) {
+                if (! /^[0-9]*(\.[0-9]+)?$/.test(value)) {
                     return false;
                 }
 
@@ -303,7 +300,8 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
         switch (this.artifact_type ) {
             case 'float':
-                pattern = '[0-9]*(\.[0-9]*)?';
+            case 'computed':
+                pattern = '[0-9]*(\\.[0-9]+)?';
                 message = codendi.locales.cardwall_field_validation.error_message.float_type;
                 break;
             case 'int':
@@ -311,7 +309,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
                 message = codendi.locales.cardwall_field_validation.error_message.int_type;
                 break;
             default:
-                pattern = '.';
+                pattern = '.*';
                 message = '';
         }
 
@@ -380,16 +378,16 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     bindSelectedElementsToEditor : function( editor ) {
-        
+
         editor.getSelectedUsers = function() {
 
-            if (editor.element.select( '.avatar' ).length == 0) {                
+            if (editor.element.select( '.avatar' ).length == 0) {
                 this.options.selected = getSelectedUsersByDisplayType('realname');
             } else {
                 this.options.selected = getSelectedUsersByDisplayType('avatar');
             }
         };
-        
+
         function getSelectedUsersByDisplayType(classname) {
                 var values   = editor.element.select( '.'+ classname );
                 var users = { };
@@ -398,7 +396,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                     var id      = classname.readAttribute( 'data-user-id' );
                     users[ id ] = classname.readAttribute( 'title' );
                 });
-                
+
                 return users;
             }
     },
@@ -524,7 +522,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 return new_values;
             }
 
-            
+
         }
 
     },
