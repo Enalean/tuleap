@@ -550,26 +550,25 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     private function fetchSort() {
-        $html = '';
-        $html .= '<div class="tracker_report_table_sortby_panel">';
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $html         = '<div class="tracker_report_table_sortby_panel">';
         $sort_columns = $this->getSort();
         if ($this->sortHasUsedField()) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_report','sort_by');
             $html .= ' ';
-            $ff = $this->getFieldFactory();
             $sort = array();
             foreach($sort_columns as $row) {
                 if ($row['field'] && $row['field']->isUsed()) {
-                    $sort[] = '<a id="tracker_report_table_sort_by_'. $row['field_id'] .'"
+                    $sort[] = '<a id="tracker_report_table_sort_by_'. $purifier->purify($row['field_id']) .'"
                                   href="?' .
-                            http_build_query(array(
+                            $purifier->purify(http_build_query(array(
                                                    'report'                  => $this->report->id,
                                                    'renderer'                => $this->id,
                                                    'func'                    => 'renderer',
                                                    'renderer_table[sort_by]' => $row['field_id'],
                                                   )
-                            ) . '">' .
-                            $row['field']->getLabel() .
+                            )) . '">' .
+                            $purifier->purify($row['field']->getLabel()) .
                             $this->getSortIcon($row['is_desc']) .
                             '</a>';
                 }
