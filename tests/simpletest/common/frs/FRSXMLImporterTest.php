@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSPermission;
+
 class FRSPackageFactoryMock extends FRSPackageFactory {
     // bypass it for the tests as it calls global functions which access to the db
     function setDefaultPermissions(FRSPackage $package) {
@@ -34,7 +36,10 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory {
 }
 
 
-class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
+class FRSXMLImporterTest_BootStrap extends TuleapTestCase
+{
+
+    protected $frs_permission_creator;
 
     public function setUp() {
         $this->package_factory = new FRSPackageFactoryMock();
@@ -69,6 +74,7 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
         stub($this->ugroup_dao)->searchByGroupIdAndName()->returns(new DataAccessResultEmpty());
 
         $this->xml_import_helper = mock('XMLImportHelper');
+        $this->frs_permission_creator = mock('Tuleap\FRS\FRSPermissionCreator');
 
         $this->frs_importer = new FRSXMLImporter(
             mock('Logger'),
@@ -79,6 +85,7 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
             $this->user_finder,
             new UGroupManager($this->ugroup_dao),
             $this->xml_import_helper,
+            $this->frs_permission_creator,
             $this->processor_dao,
             $this->filetype_dao);
 
@@ -97,6 +104,7 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
     public function tearDown() {
         $GLOBALS['Language'] = null;
         FRSPackageFactory::clearInstance();
+        ProjectManager::clearInstance();
         FRSReleaseFactory::clearInstance();
         PermissionsManager::clearInstance();
         UserManager::clearInstance();
@@ -133,6 +141,33 @@ XML;
         $this->package_dao->expectAt(0, 'createFromArray', array($expected_package_array));
         $this->package_dao->expectCallCount('createFromArray', 1);
 
+        $frs_mapping = array();
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
+    }
+
+    public function itShouldImportPermissions()
+    {
+        $pm = ProjectManager::instance();
+        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+
+        expect($this->frs_permission_creator)->savePermissions()->count(2);
+        expect($this->frs_permission_creator)->savePermissions($project, array(2), FRSPermission::FRS_READER)->at(0);
+        expect($this->frs_permission_creator)->savePermissions($project, array(3), FRSPermission::FRS_ADMIN)->at(1);
+
+        $xml = <<<XML
+        <project>
+            <frs>
+                <read-access>
+                    <ugroup>registered_users</ugroup>
+                </read-access>
+                <admin-access>
+                    <ugroup>project_members</ugroup>
+                </admin-access>
+            </frs>
+        </project>
+XML;
+
+        $xml_element = new SimpleXMLElement($xml);
         $frs_mapping = array();
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
