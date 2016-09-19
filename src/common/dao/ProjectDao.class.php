@@ -268,6 +268,38 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchMyAndPublicProjectsForRESTByShortname($shortname, PFUser $user, $offset, $limit)
+    {
+        $user_id      = $this->da->escapeInt($user->getId());
+        $offset       = $this->da->escapeInt($offset);
+        $limit        = $this->da->escapeInt($limit);
+        $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $shortname    = $this->da->quoteSmart($shortname);
+
+        if ($user->isSuperUser()) {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
+                    FROM groups
+                    WHERE status = 'A'
+                      AND group_id > 100
+                      AND unix_group_name = $shortname
+                    ORDER BY group_id ASC
+                    LIMIT $offset, $limit";
+        } else {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
+                    FROM groups
+                      JOIN user_group USING (group_id)
+                    WHERE status = 'A'
+                      AND group_id > 100
+                      AND unix_group_name = $shortname
+                      AND (access != $private_type
+                        OR user_group.user_id = $user_id)
+                    ORDER BY group_id ASC
+                    LIMIT $offset, $limit";
+        }
+
+        return $this->retrieve($sql);
+    }
+
     public function getAllMyAndPublicProjects(PFUser $user) {
         $user_id      = $this->da->escapeInt($user->getId());
         $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);

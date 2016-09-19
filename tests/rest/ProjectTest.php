@@ -115,6 +115,20 @@ class ProjectTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+
+
+    public function testGETByShortname()
+    {
+        $response      = $this->getResponse($this->client->get('projects?query='. urlencode('{"shortname":"pbi-6348"}')));
+        $json_projects = $response->json();
+
+        $this->assertArrayHasKey('id', $json_projects[0]);
+        $this->assertEquals(REST_TestDataBuilder::PROJECT_PBI_ID, $json_projects[0]['id']);
+        $this->assertEquals(1, count($json_projects));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     private function valuesArePresent(array $values, array $array) {
         foreach ($values as $value) {
             if (! in_array($value, $array)) {
