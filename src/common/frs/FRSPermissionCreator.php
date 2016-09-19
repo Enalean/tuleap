@@ -57,16 +57,7 @@ class FRSPermissionCreator
 
     public function duplicate(Project $project, $template_id)
     {
-        $permissions = $this->permission_dao->searchBindingPermissionsByProject($project->getID(), $template_id);
-
-        $duplicate_permissions = array();
-        foreach ($permissions as $permission) {
-            $duplicate_permissions[] = $permission['ugroup_id'];
-        }
-
-        if (count($duplicate_permissions) > 0) {
-            $this->permission_dao->savePermissions($project->getId(), $permission['permission_type'], $duplicate_permissions);
-        }
+        $this->permission_dao->duplicate($project->getId(), $template_id);
     }
 
     private function getUGroupNames(array $ugroup_ids)
