@@ -1,4 +1,7 @@
 Version 9.0 (Not Released Yet)
+	== Enhancement ==
+	* story #9439: search for project name with REST
+
 	== Plugins ==
 	* cardwall: 1.68
 
