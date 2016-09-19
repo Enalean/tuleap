@@ -8,6 +8,7 @@ Version 9.0 (Not Released Yet)
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
 	* request #9502: SQL injection through widgets management
+	* request #9500: Reflected XSS in the Subversion revisions browsing
 
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
