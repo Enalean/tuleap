@@ -102,7 +102,7 @@ svn_admin_notification	retrieve_paths_fail	Aucun chemin spécifié
 #
 svn_browse_revision	browsing	Affichage des révisions Subversion
 svn_browse_revision	view_commit	Afficher les commits
-svn_browse_revision	browse_commit	Afficher les commits par&nbsp;:
+svn_browse_revision	browse_commit	Afficher les commits par :
 svn_browse_revision	rev	Révision
 svn_browse_revision	commiter	Soumis par
 svn_browse_revision	path	Chemin
