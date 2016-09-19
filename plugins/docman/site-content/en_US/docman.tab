@@ -481,7 +481,7 @@ plugin_docman	error_no_option	Please choose option for creating approval table
 plugin_docman	error_version_not_exist	Error: The given version of the item does not exist.
 plugin_docman	perm_denied	You do not have the permission to access the document
 plugin_docman	docman_no_perm	Permission denied set on documents. You can not view this documents unless administrator grant you access.
-plugin_docman	request_to_admin	<p><a href="/my/">Back to your personal page</a><em> or you can request it to him.</em></br> Write your message below and click on the button to send your request to the project administrators.
+plugin_docman	request_to_admin	<br><a href="/my/">Back to your personal page</a><em> or you can request it to him.</em></br> Write your message below and click on the button to send your request to the project administrators.
 plugin_docman	mail_subject_docman_permission_denied	$2 requests access to a document in "$1"
 plugin_docman	mail_content_docman_permission_denied	Dear document manager,\n\n$1 (login: $2) requests access to the following document in project "$4":\n<$3>\n\n$1 wrote a message for you:\n$6\n\nSomeone set permissions on this item, preventing users of having access to this resource.\nIf you decide to accept the request, please take the appropriate actions to grant him permission and communicate that information to the requester.\nOtherwise, please inform the requester ($7) that he will not get access to the requested data.\n--\n$1.
 plugin_docman	invalid_msg	Your message is not valid, you can not send the default message or an empty one.
