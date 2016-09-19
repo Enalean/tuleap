@@ -87,23 +87,26 @@ class FRSPermissionDao extends DataAccessObject
         return $this->da->commit();
     }
 
-    public function searchBindingPermissionsByProject($project_id, $template_id)
+    public function duplicate($project_id, $template_id)
     {
         $project_id  = $this->da->escapeInt($project_id);
         $template_id = $this->da->escapeInt($template_id);
 
-        $sql = "SELECT ugroup_id, permission_type
-                    FROM frs_global_permissions
-                    WHERE project_id = $template_id
-                    AND ugroup_id < 100
-                UNION
-                    SELECT dst_ugroup_id AS ugroup_id, permission_type
-                    FROM ugroup_mapping  AS mapping, frs_global_permissions AS permission
-                    WHERE mapping.to_group_id     = $project_id
-                        AND permission.project_id = $template_id
-                        AND permission.ugroup_id  = mapping.src_ugroup_id";
+        $sql = "INSERT INTO frs_global_permissions(project_id, permission_type, ugroup_id)
+                SELECT $project_id, permission_type, R.dst_ugroup_id
+                FROM frs_global_permissions
+                    INNER JOIN (
+                            SELECT src_ugroup_id, dst_ugroup_id
+                            FROM ugroup_mapping
+                            WHERE to_group_id = $project_id
+                        UNION
+                            SELECT ugroup_id AS src_ugroup_id, ugroup_id AS dst_ugroup_id
+                            FROM ugroup
+                            WHERE ugroup_id <= 100
+                    ) AS R ON (R.src_ugroup_id = ugroup_id)
+                WHERE project_id = $template_id";
 
-        return $this->retrieve($sql);
+        return $this->update($sql);
     }
 
     public function doesProjectHaveLegacyFrsAdminMembers($project_id)
