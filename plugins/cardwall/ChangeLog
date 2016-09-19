@@ -1,3 +1,6 @@
+Version 1.69 - Tuleap 8.20
+    * request #9437 Fatal error when updating manual value of of a computed field in AD card
+
 Version 1.68 - Tuleap 8.20
     * request #9494: Remove boomerang plugin
 
