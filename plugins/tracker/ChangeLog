@@ -1,3 +1,6 @@
+Version 5.1003 - Tuleap 8.20
+    * request #9465: Persistent XSS through the name of a field used to sort a renderer
+
 Version 5.1002 - Tuleap 8.19
     * request #9467: Fatal error when connecting to soap tracker client
 
