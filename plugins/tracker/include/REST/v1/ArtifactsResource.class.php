@@ -46,6 +46,7 @@ use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tracker_URLVerification;
 use \Tracker_Artifact_Changeset as Changeset;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 
 class ArtifactsResource extends AuthenticatedResource {
     const MAX_LIMIT      = 50;
