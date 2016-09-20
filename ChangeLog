@@ -10,6 +10,9 @@ Version 9.0 (Not Released Yet)
 	* request #9502: SQL injection through widgets management
 	* request #9500: Reflected XSS in the Subversion revisions browsing
 
+	== Bug fix ==
+	* request #9489: Wiki administration is not accessible to project administrator if they do not have explicit wiki admin rights
+
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
