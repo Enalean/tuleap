@@ -10,7 +10,7 @@
   "dependencies": {},
   "devDependencies": {
     "eslint": "^2.7.0",
-    "eslint-plugin-angular": "^1.0.0",
+    "eslint-plugin-angular": "1.3.0",
     "grunt": "1.0.1",
     "grunt-angular-gettext": "^0.2.15",
     "grunt-contrib-clean": "^1.0.0",
