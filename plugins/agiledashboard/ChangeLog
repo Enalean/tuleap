@@ -1,3 +1,6 @@
+Version 1.417 - Tuleap 8.20
+    * request #9509: Fix angular/di errors
+
 Version 1.416 - Tuleap 8.19
     * Fix request #9432: Can't import a configuration from a template file in Agile Dashboard
 

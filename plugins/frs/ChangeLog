@@ -1,3 +1,6 @@
+Version 0.21 - Tuleap 8.20
+    * request #9509: Fix angular/di errors
+
 Version 0.20 - Tuleap 8.19
     * story #9427: Quickly switch between FRS/Scrum/Artifact release
 
