@@ -197,7 +197,7 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
         }
-        if ($this->currentRequestIsForPlugin()) {
+        if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }
