@@ -27,6 +27,7 @@ sys.path.insert(0, LIBRARY_DIR)
 
 import include
 import svnaccess
+import session
 
 username = os.getenv('REMOTE_USER', '')
 project_name = os.getenv('TULEAP_PROJECT_NAME', '')
@@ -39,6 +40,7 @@ path_parts = filter(None, string.split(path_info, '/'))
 requested_path = string.join(path_parts, '/')
 
 include.db_connect()
+session.session_set()
 
 if not svnaccess.check_read_access(username, repo_path, requested_path):
     exit(128)
