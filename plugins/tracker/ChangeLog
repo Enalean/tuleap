@@ -1,3 +1,6 @@
+Version 5.1004 - Tuleap 8.20
+    * request #9510: No tooltip for artifacts in my personal page TV5 widget
+
 Version 5.1003 - Tuleap 8.20
     * request #9465: Persistent XSS through the name of a field used to sort a renderer
 
