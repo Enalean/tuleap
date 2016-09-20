@@ -168,7 +168,8 @@ class EPELViewVCProxy implements ViewVCProxy
             }
         }
 
-        $command = 'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.
+        $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
+            'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.
             'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
             'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
