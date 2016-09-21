@@ -78,15 +78,16 @@ class ProjectXMLImporter {
         UgroupDuplicator $ugroup_duplicator,
         FRSPermissionCreator $frs_permissions_creator
     ) {
-        $this->event_manager     = $event_manager;
-        $this->project_manager   = $project_manager;
-        $this->user_manager      = $user_manager;
-        $this->xml_validator     = $xml_validator;
-        $this->ugroup_manager    = $ugroup_manager;
-        $this->user_finder       = $user_finder;
-        $this->logger            = $logger;
-        $this->service_manager   = $service_manager;
-        $this->ugroup_duplicator = $ugroup_duplicator;
+        $this->event_manager           = $event_manager;
+        $this->project_manager         = $project_manager;
+        $this->user_manager            = $user_manager;
+        $this->xml_validator           = $xml_validator;
+        $this->ugroup_manager          = $ugroup_manager;
+        $this->user_finder             = $user_finder;
+        $this->logger                  = $logger;
+        $this->service_manager         = $service_manager;
+        $this->ugroup_duplicator       = $ugroup_duplicator;
+        $this->frs_permissions_creator = $frs_permissions_creator;
 
         $send_notifications = false;
         $force_activation   = true;
@@ -200,7 +201,9 @@ class ProjectXMLImporter {
             new FRSFileFactory(),
             $this->user_finder,
             $this->ugroup_manager,
-            new XMLImportHelper($this->user_manager));
+            new XMLImportHelper($this->user_manager),
+            $this->frs_permissions_creator
+        );
 
         $frs_release_mapping = array();
         $frs->import($configuration, $project, $xml_element, $extraction_path, $frs_release_mapping);
