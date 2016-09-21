@@ -1,3 +1,6 @@
+Version 5.1005 - Tuleap 8.20
+    * request #9511: Unable to add an artifact link via REST
+
 Version 5.1004 - Tuleap 8.20
     * request #9510: No tooltip for artifacts in my personal page TV5 widget
 
