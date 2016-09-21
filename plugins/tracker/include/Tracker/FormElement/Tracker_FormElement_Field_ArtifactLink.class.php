@@ -1457,12 +1457,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
                     continue;
                 }
-                if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                    if (!isset($value['natures'][$artifact_id])) {
-                        $is_valid = false;
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($artifact_id)));
-                    }
-                }
             }
         }
 

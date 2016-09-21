@@ -238,22 +238,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertFalse($f->isValid($a, array('new_values' => '1', 'natures' => array('1' => 'blalalala'))));
     }
 
-    function testIsValid_MissingNature() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-
-        $nature_dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
-        $nature_presenter_factory = new NaturePresenterFactory($nature_dao);
-        $f->setReturnValue('getNaturePresenterFactory', $nature_presenter_factory);
-
-        $a = new MockTracker_Artifact();
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
-        $a->setReturnValue('getTracker', $tracker);
-        stub($this->artifact_factory)->getArtifactById('1')->returns($a);
-
-        $this->assertFalse($f->isValid($a, array('new_values' => '1', 'natures' => array())));
-    }
-
     public function testIsValidRequiredFieldWithoutExistingValues() {
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnValue('isRequired', true);
