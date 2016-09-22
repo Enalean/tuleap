@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
         $this->user                  = aUser()->build();
 
         $this->nature_factory = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory');
-        stub($this->nature_factory)->getFromShortname()->returns(new NaturePresenter('', '', '', true));
+        stub($this->nature_factory)->getFromShortname()->returns(new NaturePresenter('', '', '', true, true));
 
         $this->command = new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand(
             $this->field,
