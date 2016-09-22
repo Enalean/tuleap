@@ -16,6 +16,9 @@ Version 9.0 (Not Released Yet)
 	* request #9489: Wiki administration is not accessible to project administrator if they do not have explicit wiki admin rights
 	* request #9490: Wiki does not detect properly HTTPS when behind a reverse proxy
 
+	== Clean Up ==
+	* request #9492: Disable surveys service by default
+
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
