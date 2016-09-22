@@ -1,3 +1,6 @@
+Version 5.1006 - Tuleap 8.20
+    * story #9468 import folders (Provide _in_folder link type (immutable))
+
 Version 5.1005 - Tuleap 8.20
     * request #9511: Unable to add an artifact link via REST
 
