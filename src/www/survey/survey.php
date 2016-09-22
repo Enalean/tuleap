@@ -9,6 +9,10 @@
 require_once('pre.php');
 require('../survey/survey_utils.php');
 
+if (! ForgeConfig::get('sys_use_surveys')) {
+    exit_permission_denied();
+}
+
 $request = HTTPRequest::instance();
 $group_id = $request->get('group_id');
 $valid = new Valid_UInt();

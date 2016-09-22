@@ -9,6 +9,9 @@
 require_once('pre.php');
 require('../survey/survey_utils.php');
 
+if (! ForgeConfig::get('sys_use_surveys')) {
+    exit_permission_denied();
+}
 
 survey_header(array('title'=>'Survey'));
 

@@ -415,6 +415,10 @@ $sys_use_trove = 1;
 // (1 to enable, 0 to disable)
 $sys_use_snippet = 1;
 
+// Enable surveys
+// (1 to enable, 0 to disable)
+$sys_use_surveys = 0;
+
 //Enable new project registration
 // (1 to enable, 0 to disable)
 $sys_use_project_registration = 1;
