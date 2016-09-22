@@ -1,2 +1,6 @@
 plugin_folders	descriptor_name	Artifacts Folders
 plugin_folders	descriptor_description	Add a "Folder" tab in an artifact
+
+
+plugin_folders	_is_folder_forward	Folder
+plugin_folders	_is_folder_reverse	In folder

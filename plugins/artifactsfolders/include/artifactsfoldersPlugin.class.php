@@ -19,6 +19,8 @@
  */
 
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
+use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 require_once 'autoload.php';
 
@@ -33,6 +35,10 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
+        if (defined('TRACKER_BASE_URL')) {
+            $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
+        }
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -53,5 +59,10 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->pluginInfo = new ArtifactsFoldersPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function event_get_artifactlink_natures($params)
+    {
+        $params['natures'][] = new NatureIsFolderPresenter();
     }
 }
