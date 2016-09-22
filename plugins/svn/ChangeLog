@@ -1,3 +1,6 @@
+Version 0.94 - Tuleap 8.20
+    * request #9508: Site admin can't access SVN tree with viewvc integration
+
 Version 0.93 - Tuleap 8.19
     * request #9484: On SVN plugin the URL to come back on a repository doesn't work
 
