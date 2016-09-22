@@ -1,3 +1,6 @@
+Version 2.26.121 - Tuleap 8.20
+    * request #9504: Prevent spoofing of permission request message
+
 Version 2.26.120 - Tuleap 8.19
     * request #9483: Docman header actions tooltip does not work on subfolder
 
