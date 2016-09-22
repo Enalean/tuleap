@@ -1,2 +1,6 @@
 plugin_folders	descriptor_name	Fichiers artéfacts
 plugin_folders	descriptor_description	Ajoute un onglet "Fichiers" dans un artéfact
+
+
+plugin_folders	_is_folder_forward	Dossier
+plugin_folders	_is_folder_reverse	Dans le dossier

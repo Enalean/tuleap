@@ -21,10 +21,18 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
+use EventManager;
 use Project;
 
-class NaturePresenterFactory {
-
+class NaturePresenterFactory
+{
+    /**
+     * Add new artifact link natures
+     *
+     * Parameters:
+     *  - natures: List of existing natures
+     */
+    const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
     /**
      * @var NatureDao
      */
@@ -39,6 +47,16 @@ class NaturePresenterFactory {
         $natures = array(
             new NatureIsChildPresenter()
         );
+
+        $params = array(
+            'natures' => &$natures
+        );
+
+        EventManager::instance()->processEvent(
+            self::EVENT_GET_ARTIFACTLINK_NATURES,
+            $params
+        );
+
         foreach ( $this->dao->searchAll() as $row) {
             $natures[] = $this->instantiateFromRow($row);
         }
