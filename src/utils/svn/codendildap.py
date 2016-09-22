@@ -23,6 +23,7 @@
 import ldap
 import MySQLdb
 import include
+import os
 
 ldapIncFile = include.sys_custompluginsroot+'/ldap/etc/ldap.inc';
 include.load_local_config(ldapIncFile)
@@ -62,10 +63,12 @@ def get_login_from_username(username):
         return ''
 
 def project_has_ldap_auth(svnrepo):
-    # This function is used in svnaccess::check_read_access that refer to svn
-    # repo with the /svnroot... (and may have a leading slash).
-    unix_group_name = svnrepo.replace('/svnroot/', '', 1);
-    unix_group_name = unix_group_name.replace('/','');
+    unix_group_name = os.getenv('TULEAP_PROJECT_NAME')
+    if unix_group_name is None:
+        # This function is used in svnaccess::check_read_access that refer to svn
+        # repo with the /svnroot... (and may have a leading slash).
+        unix_group_name = svnrepo.replace('/svnroot/', '', 1);
+        unix_group_name = unix_group_name.replace('/','');
     
     cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT NULL'+ 

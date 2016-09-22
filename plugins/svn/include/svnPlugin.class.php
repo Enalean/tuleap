@@ -417,7 +417,8 @@ class SvnPlugin extends Plugin {
                 ProjectManager::instance(),
                 $permissions_manager,
                 new AccessHistorySaver(new AccessHistoryDao()),
-                new ViewVCProxyFactory($this->getViewVCVersionChecker())
+                new ViewVCProxyFactory($this->getViewVCVersionChecker()),
+                EventManager::instance()
             ),
             new ImmutableTagController(
                 $repository_manager,
