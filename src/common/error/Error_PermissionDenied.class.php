@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -168,15 +169,15 @@ abstract class Error_PermissionDenied {
         $pm = $this->getProjectManager();
         $project = $pm->getProject($request->get('groupId'));
     
-        $um = $this->getUserManager();
-        $user = $um->getUserById($request->get('userId'));
+        $user_manager = $this->getUserManager();
+        $user         = $user_manager->getCurrentUser();
         
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin ='>'.$messageToAdmin;
         $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
         
-        $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
-        $urlData = get_server_url().$request->get('url_data');
+        $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id='.$request->get('groupId');
+        $urlData      = $request->getServerUrl() . $request->get('url_data');
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
 
@@ -201,7 +202,6 @@ abstract class Error_PermissionDenied {
 
         //from
         $from = $user->getEmail();
-        $hdrs = 'From: '.$from."\n";
         $mail->setFrom($from);
 
         $mail->setSubject($GLOBALS['Language']->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
@@ -253,16 +253,16 @@ abstract class Error_PermissionDenied {
      * Build the Permission Denied error interface
      */
     private function buildPermissionDeniedInterface(){
-        $groupId = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $this->url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
-        $userId = $this->getUserManager()->getCurrentUser()->getId();
-        $param = $this->returnBuildInterfaceParam();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $groupId  = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $this->url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
+        $param    = $this->returnBuildInterfaceParam();
 
 
         site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
 
-        echo "<b>" . $GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied') . "</b>";
+        echo "<b>" . $purifier->purify($GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied')) . "</b>";
         echo '<br></br>';
-        echo "<br>" . $GLOBALS['Language']->getText($this->getTextBase(), $param['index']);
+        echo "<br>" . $purifier->purify($GLOBALS['Language']->getText($this->getTextBase(), $param['index']), CODENDI_PURIFIER_FULL);
 
         //In case of restricted user, we only show the zone text area to ask for membership
         //just when the requested page belongs to a project
@@ -278,17 +278,15 @@ abstract class Error_PermissionDenied {
             }
             echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
             echo '<br></br>';
-            echo '<form action="' . $param['action'] . '" method="post" name="display_form">
-                  <textarea wrap="virtual" rows="5" cols="70" name="' . $param['name'] . '">' . $message . ' </textarea></p>
-                  <input type="hidden" id="func" name="func" value="' . $param['func'] . '">
-                  <input type="hidden" id="groupId" name="groupId" value="' . $groupId . '">
-                  <input type="hidden" id="userId" name="userId" value="' . $userId . '">
-                  <input type="hidden" id="data" name="url_data" value="' . $_SERVER['REQUEST_URI'] . '">
-                  <br><input name="Submit" type="submit" value="' . $GLOBALS['Language']->getText('include_exit', 'send_mail') . '"/></br>
+            echo '<form action="' . $purifier->purify($param['action']) . '" method="post" name="display_form">
+                  <textarea wrap="virtual" rows="5" cols="70" name="' . $purifier->purify($param['name']) . '">' . $purifier->purify($message) . ' </textarea></p>
+                  <input type="hidden" id="func" name="func" value="' . $purifier->purify($param['func']) . '">
+                  <input type="hidden" id="groupId" name="groupId" value="' . $purifier->purify($groupId) . '">
+                  <input type="hidden" id="data" name="url_data" value="' . $purifier->purify($_SERVER['REQUEST_URI']) . '">
+                  <br><input name="Submit" type="submit" value="' . $purifier->purify($GLOBALS['Language']->getText('include_exit', 'send_mail')) . '"/></br>
               </form>';
         }
 
         $GLOBALS['HTML']->footer(array('showfeedback' => false));
     }
 }
-?>
