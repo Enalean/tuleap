@@ -55,6 +55,12 @@ class MockTrackerBuilder {
         stub($this->tracker)->getStatusField()->returns($field);
         return $this;
     }
+
+    public function withParent(Tracker $tracker)
+    {
+        stub($this->tracker)->getParent()->returns($tracker);
+        return $this;
+    }
     
     public function havingFormElementWithNameAndType($name, $type_or_types) {
         stub($this->tracker)->hasFormElementWithNameAndType($name, $type_or_types)->returns(true);

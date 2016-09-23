@@ -156,7 +156,9 @@ class AgileDashboardPlugin extends Plugin {
                 new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
                 new AgileDashboard_Milestone_MilestoneDao(),
                 Tracker_HierarchyFactory::instance(),
-                $planning_factory
+                $planning_factory,
+                TrackerFactory::instance(),
+                Tracker_ArtifactFactory::instance()
             )
         );
         $additional_criterion = $provider->getCriterion($backlog_tracker, $user);

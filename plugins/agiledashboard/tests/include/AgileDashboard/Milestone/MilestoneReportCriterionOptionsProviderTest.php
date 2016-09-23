@@ -39,8 +39,15 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         $this->story_tracker   = aTracker()->withId('story')->withParent($this->epic_tracker)->build();
         $this->task_tracker    = aTracker()->withId('task')->withProjectId($this->task_tracker_project_id)->withParent($this->story_tracker)->build();
         $this->product_tracker = aTracker()->withId('product')->withParent(null)->build();
-        $this->release_tracker = aTracker()->withId($this->release_tracker_id)->withParent($this->product_tracker)->build();
-        $this->sprint_tracker  = aTracker()->withId($this->sprint_tracker_id)->withParent($this->epic_tracker)->build();
+        $this->release_tracker = aMockTracker()->withId($this->release_tracker_id)->withParent($this->product_tracker)->build();
+        $this->sprint_tracker  = aMockTracker()->withId($this->sprint_tracker_id)->withParent($this->epic_tracker)->build();
+
+        $this->release_artifact_123 = aMockArtifact()->withId(123)->build();
+        $this->release_artifact_124 = aMockArtifact()->withId(124)->build();
+        $this->sprint_artifact_1231 = stub('Tracker_Artifact')->getId()->returns(1231);
+        $this->sprint_artifact_1232 = stub('Tracker_Artifact')->getId()->returns(1232);
+        $this->sprint_artifact_1241 = stub('Tracker_Artifact')->getId()->returns(1241);
+
 
         $release_planning = stub('Planning')->getPlanningTracker()->returns($this->release_tracker);
         $sprint_planning  = stub('Planning')->getPlanningTracker()->returns($this->sprint_tracker);
@@ -59,6 +66,18 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
 
         $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($this->hierarchy_factory)->getAllParents($this->sprint_tracker)->returns(array($this->release_tracker, $this->product_tracker));
+
+        $this->tracker_factory = mock('TrackerFactory');
+        stub($this->tracker_factory)->getTrackerById(101)->returns($this->release_tracker);
+        stub($this->tracker_factory)->getTrackerById(1001)->returns($this->sprint_tracker);
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        stub($this->artifact_factory)->getArtifactById(123)->returns($this->release_artifact_123);
+        stub($this->artifact_factory)->getArtifactById(124)->returns($this->release_artifact_124);
+        stub($this->artifact_factory)->getArtifactById(1231)->returns($this->sprint_artifact_1231);
+        stub($this->artifact_factory)->getArtifactById(1232)->returns($this->sprint_artifact_1232);
+        stub($this->artifact_factory)->getArtifactById(1241)->returns($this->sprint_artifact_1241);
+
 
         $this->dao = mock('AgileDashboard_Milestone_MilestoneDao');
         stub($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->returnsDar(
@@ -86,7 +105,9 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
             $this->nearest_planning_tracker_provider,
             $this->dao,
             $this->hierarchy_factory,
-            $this->planning_factory
+            $this->planning_factory,
+            $this->tracker_factory,
+            $this->artifact_factory
         );
     }
 
@@ -99,22 +120,31 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
     public function itDoesNotSearchOnProductTrackerSinceThereIsNoPlanning() {
         stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns($this->sprint_tracker);
 
+        stub($this->release_tracker)->userCanView($this->user)->returns(true);
+        stub($this->sprint_tracker)->userCanView($this->user)->returns(true);
+
         expect($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->once();
 
         $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
     }
 
-    public function _itReturnsTheListOfOptions() {
-        stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker)->returns($this->sprint_tracker);
-        $this->assertEqual(
-            $this->provider->getSelectboxOptions($this->task_tracker, 124),
-            array(
-                '<option value="123" > Tuleap 6.5</option>',
-                '<option value="1231" >- Sprint 31</option>',
-                '<option value="1232" >- Sprint 32</option>',
-                '<option value="124" selected="selected"> Tuleap 6.6</option>',
-                '<option value="1241" >- Sprint 33</option>',
-            )
-        );
+    public function itDoesNotSearchOnMilestonesUserCantView()
+    {
+        stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns($this->sprint_tracker);
+
+        stub($this->release_tracker)->userCanView($this->user)->returns(false);
+        stub($this->sprint_tracker)->userCanView($this->user)->returns(true);
+
+        stub($this->release_artifact_123)->userCanView($this->user)->returns(false);
+        stub($this->release_artifact_124)->userCanView($this->user)->returns(true);
+        stub($this->sprint_artifact_1231)->userCanView($this->user)->returns(false);
+        stub($this->sprint_artifact_1232)->userCanView($this->user)->returns(true);
+        stub($this->sprint_artifact_1241)->userCanView($this->user)->returns(true);
+
+        expect($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->once();
+
+        $options = $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
+
+        $this->assertNoPattern('/Sprint 31/', implode('', $options));
     }
 }
