@@ -1,3 +1,6 @@
+Version 5.1007 - Tuleap 8.20
+    * story #9468 import folders (Hide _in_folder type in ArtifactLinkField)
+
 Version 5.1006 - Tuleap 8.20
     * story #9468 import folders (Provide _in_folder link type (immutable))
 
