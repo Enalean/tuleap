@@ -1064,7 +1064,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         } else {
                             $nature_presenter_factory = new NaturePresenterFactory(new NatureDao());
                             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-                            $natures = $nature_presenter_factory->getAllNatures();
+                            $natures = $nature_presenter_factory->getOnlyVisibleNatures();
                             $natures_presenter = array();
                             $selected_nature = $nature->shortname;
                             if (isset($prefill_natures[$artifact_id])) {

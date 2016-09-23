@@ -537,7 +537,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     private function getOptionsForCustomColumn($id_prefix, $id, $used) {
         $options = array();
-        $natures = $this->getNaturePresenterFactory()->getAllNatures();
+        $natures = $this->getNaturePresenterFactory()->getOnlyVisibleNatures();
 
         $column_id = $id .'_';
         $option = new Templating_Presenter_ButtonDropdownsOption(

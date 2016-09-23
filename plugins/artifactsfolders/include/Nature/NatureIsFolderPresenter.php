@@ -33,7 +33,8 @@ class NatureIsFolderPresenter extends NaturePresenter
             self::NATURE_IS_FOLDER,
             $GLOBALS['Language']->getText('plugin_folders', '_is_folder_forward'),
             $GLOBALS['Language']->getText('plugin_folders', '_is_folder_reverse'),
-            true
+            true,
+            false
         );
 
         $this->is_system = true;
