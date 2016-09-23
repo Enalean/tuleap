@@ -19,6 +19,7 @@ Version 9.0 (Not Released Yet)
 
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
+	* request #9517: Plugin FRS package is unnecessary big
 
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
