@@ -372,6 +372,7 @@ class UserManagerTest extends UnitTestCase {
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
         $user123->setReturnValue('getUserPw', md5('pwd'));
+        $user123->setReturnValue('getLegacyUserPw', '');
         $user123->setReturnValue('isAnonymous', false);
         $user123->expectNever('setSessionHash');
 

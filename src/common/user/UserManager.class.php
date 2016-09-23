@@ -711,7 +711,7 @@ class UserManager {
                     $userRow['clear_password'] = $user->getPassword();
                 }
             }
-            if ($user->getLegacyUserPw() !== '' && !ForgeConfig::get('sys_keep_md5_hashed_password')) {
+            if ($user->getLegacyUserPw() !== '') {
                 $userRow['user_pw'] = '';
             }
             $result = $this->getDao()->updateByRow($userRow);
