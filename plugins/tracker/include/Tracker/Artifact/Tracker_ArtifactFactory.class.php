@@ -267,7 +267,7 @@ class Tracker_ArtifactFactory {
                 if ($artifact->userCanView()) {
                     $artifacts[$row['tracker_id']]['artifacts'][$row['id']] = array(
                         'artifact' => $artifact,
-                        'title'    => $artifacts[$row['tracker_id']]['with_title'] ? $row['title'] : '',
+                        'title'    => $artifacts[$row['tracker_id']]['with_title'] ? $this->getTitleFromRowAsText($row) : '',
                     );
                 }
             }
@@ -330,7 +330,7 @@ class Tracker_ArtifactFactory {
             $row['use_artifact_permissions']
         );
         if (isset($row['title'])) {
-            $artifact->setTitle($row['title']);
+            $artifact->setTitle($this->getTitleFromRowAsText($row));
         }
         return $artifact;
     }
@@ -515,7 +515,7 @@ class Tracker_ArtifactFactory {
             if (isset($index_map[$artifact_id])) {
                 foreach ($index_map[$artifact_id] as $child_id) {
                     if (isset($artifacts[$child_id])) {
-                        $artifacts[$child_id]->setTitle($row['title']);
+                        $artifacts[$child_id]->setTitle($this->getTitleFromRowAsText($row));
                     }
                 }
             }
@@ -545,5 +545,18 @@ class Tracker_ArtifactFactory {
 
         return $filtered_ids;
     }
+
+    public function getTitleFromRowAsText($row)
+    {
+        if (! isset($row['title_format'])) {
+            return $row['title'];
+        }
+
+        $purifier = Codendi_HTMLPurifier::instance();
+        if ($row['title_format'] === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            return $purifier->purify($row['title'], CODENDI_PURIFIER_STRIP_HTML);
+        }
+
+        return $row['title'];
+    }
 }
-?>
