@@ -123,10 +123,12 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node
 				-name ".gitmodules" -o\
 				-path "*/.DS_Store" -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
+				-path $(PKG_NAME)-$(version)/plugins/frs/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
 			&& \
+			find $(PKG_NAME)-$(version)/plugins/frs/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/bin; \
 		} | \
