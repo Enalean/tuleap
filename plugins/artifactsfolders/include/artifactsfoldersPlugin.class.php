@@ -79,6 +79,9 @@ class ArtifactsFoldersPlugin extends Plugin
         $collection = $params['collection'];
 
         $project = $artifact->getTracker()->getProject();
+        if (! $this->isAllowed($project->getId())) {
+            return;
+        }
 
         $folder_usage_retriever = $this->getFolderUsageRetriever();
         if ($folder_usage_retriever->projectUsesArtifactsFolders($project, $user)) {
