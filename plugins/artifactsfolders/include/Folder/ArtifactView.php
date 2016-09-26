@@ -38,7 +38,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_folders', 'descriptor_name');
+        return $GLOBALS['Language']->getText('plugin_folders', 'tab_label');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */
