@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 /**
  * Represents an artifact or a specifict information of it
  */
-abstract class Tracker_Artifact_View_View {
-
+abstract class Tracker_Artifact_View_View
+{
     /** @var Tracker_Artifact */
     protected $artifact;
 
@@ -32,7 +32,8 @@ abstract class Tracker_Artifact_View_View {
     /** @var Codendi_Request */
     protected $request;
 
-    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user) {
+    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user)
+    {
         $this->artifact = $artifact;
         $this->request  = $request;
         $this->user     = $user;
@@ -41,7 +42,8 @@ abstract class Tracker_Artifact_View_View {
     /**
      * @return string url to reach the view
      */
-    public function getURL() {
+    public function getURL()
+    {
         return TRACKER_BASE_URL .'/?'. http_build_query(
             array(
                 'aid'  => $this->artifact->getId(),
@@ -65,4 +67,3 @@ abstract class Tracker_Artifact_View_View {
      */
     public abstract function fetch();
 }
-?>
