@@ -1,3 +1,10 @@
+Version 8.19-2 (Monday, September 26th 2016)
+	== Bug Fix ==
+	* request #9511: Unable to add an artifact link via REST
+	* request #9510: No tooltip for artifacts in my personal page TV5 widget
+	* request #9508: Site admin can't access SVN tree with viewvc integration
+	* request #9437: computed field in card fields now respect [0-9]*(\.[0-9]+)? pattern 
+
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
