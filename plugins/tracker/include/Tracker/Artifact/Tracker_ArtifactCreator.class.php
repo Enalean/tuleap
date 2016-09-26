@@ -140,7 +140,17 @@ class Tracker_ArtifactCreator {
             return false;
         }
 
-        return $this->createFirstChangesetNoValidation($tracker, $artifact, $fields_data, $user, $submitted_on, $send_notification);
+        if (! $this->createFirstChangesetNoValidation($tracker, $artifact, $fields_data, $user, $submitted_on, $send_notification)) {
+            $this->revertBareArtifactInsertion($artifact);
+            return false;
+        }
+
+        return $artifact;
+    }
+
+    private function revertBareArtifactInsertion(Tracker_Artifact $artifact)
+    {
+        $this->artifact_dao->delete($artifact->getId());
     }
 
     /**
