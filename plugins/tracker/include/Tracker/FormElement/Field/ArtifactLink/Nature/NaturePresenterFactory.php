@@ -33,6 +33,14 @@ class NaturePresenterFactory
      *  - natures: List of existing natures
      */
     const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
+
+    /**
+     * Return presneter from nature shortname
+     *
+     * Parameters:
+     *  - nature: input nature shortname
+     */
+    const EVENT_GET_NATURE_PRESENTER = 'event_get_nature_presenter';
     /**
      * @var NatureDao
      */
@@ -114,11 +122,33 @@ class NaturePresenterFactory
             return new NatureIsChildPresenter();
         }
 
+        $nature_presenter = $this->getNaturePresenterByShortname($shortname);
+        if ($nature_presenter) {
+            return $nature_presenter;
+        }
+
         $row = $this->dao->getFromShortname($shortname);
         if(!$row) {
             return null;
         }
         return $this->instantiateFromRow($row);
+    }
+
+    private function getNaturePresenterByShortname($shortname)
+    {
+        $presenter = null;
+
+        $params  = array(
+            'presenter' => &$presenter,
+            'shortname' => $shortname
+        );
+
+        EventManager::instance()->processEvent(
+            self::EVENT_GET_NATURE_PRESENTER,
+            $params
+        );
+
+        return $presenter;
     }
 
     public function instantiateFromRow($row) {

@@ -221,6 +221,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if (array_key_exists('links', $value) && is_array($value['links'])){
             $link_ids = array();
             foreach ($value['links'] as $link) {
+
                 if (array_key_exists('id', $link)) {
                     $link_ids[] = $link['id'];
                 }
@@ -554,7 +555,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $ids = array();
             // build an array of artifact_id / last_changeset_id for fetch renderer method
             foreach ($artifact_links as $artifact_link) {
-                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
+                if (
+                    $artifact_link->getTracker()->isActive()
+                    && $artifact_link->userCanView($current_user)
+                    && ! $this->hideArtifact($artifact_link)
+                ) {
                     if (!isset($ids[$artifact_link->getTrackerId()])) {
                         $ids[$artifact_link->getTrackerId()] = array(
                         'id'                => '',
@@ -653,10 +658,21 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $html;
     }
 
+    private function hideArtifact(Tracker_ArtifactLinkInfo $artifactlink_info)
+    {
+        return $artifactlink_info->shouldLinkBeHidden(
+            $artifactlink_info->getNature()
+         );
+    }
+
     private function fetchNatureTables(array $artifact_links, $is_reverse_artifact_links, PFUser $current_user) {
         $by_nature = array();
         foreach ($artifact_links as $artifact_link) {
-            if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
+            if (
+                $artifact_link->getTracker()->isActive()
+                && $artifact_link->userCanView($current_user)
+                && ! $this->hideArtifact($artifact_link)
+            ) {
                 $nature = $artifact_link->getNature();
                 if(!isset($by_nature[$nature])) {
                     $by_nature[$nature] = array();

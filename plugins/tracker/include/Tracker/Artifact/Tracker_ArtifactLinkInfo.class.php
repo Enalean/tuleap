@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2016. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -171,5 +171,20 @@ class Tracker_ArtifactLinkInfo {
 
     public function __toString() {
         return $this->getLabel();
+    }
+
+    public function shouldLinkBeHidden($nature)
+    {
+        $hide_artifact = false;
+        $params = array(
+            'nature'        => $nature,
+            'hide_artifact' => &$hide_artifact
+        );
+        EventManager::instance()->processEvent(
+            Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT,
+            $params
+        );
+
+        return $params['hide_artifact'];
     }
 }
