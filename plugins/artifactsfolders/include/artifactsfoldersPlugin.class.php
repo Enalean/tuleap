@@ -21,6 +21,9 @@
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
 use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
+use Tuleap\ArtifactsFolders\Folder\Dao;
+use Tuleap\ArtifactsFolders\Folder\ArtifactView;
 
 require_once 'autoload.php';
 
@@ -37,6 +40,7 @@ class ArtifactsFoldersPlugin extends Plugin
     {
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
+            $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
         }
 
         return parent::getHooksAndCallbacks();
@@ -64,5 +68,31 @@ class ArtifactsFoldersPlugin extends Plugin
     public function event_get_artifactlink_natures($params)
     {
         $params['natures'][] = new NatureIsFolderPresenter();
+    }
+
+    /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    {
+        $user       = $params['user'];
+        $request    = $params['request'];
+        $artifact   = $params['artifact'];
+        $collection = $params['collection'];
+
+        $project = $artifact->getTracker()->getProject();
+
+        $folder_usage_retriever = $this->getFolderUsageRetriever();
+        if ($folder_usage_retriever->projectUsesArtifactsFolders($project, $user)) {
+            $collection->add(new ArtifactView($artifact, $request, $user));
+        }
+    }
+
+    /**
+     * @return FolderUsageRetriever
+     */
+    private function getFolderUsageRetriever()
+    {
+        $dao = new Dao();
+
+        return new FolderUsageRetriever($dao, TrackerFactory::instance());
     }
 }
