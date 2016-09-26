@@ -4,7 +4,7 @@ Version 9.0 (Not Released Yet)
 
 	== Plugins ==
 	* cardwall: 1.68
-	* tracker: 5.1005
+	* tracker: 5.1009
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
