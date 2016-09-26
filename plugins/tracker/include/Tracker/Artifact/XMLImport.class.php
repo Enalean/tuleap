@@ -206,36 +206,6 @@ class Tracker_Artifact_XMLImport {
     }
 
     /**
-     * Import only one artifact with its changesets. Artifact link are not
-     * imported because this function can't use an array of artifact id mapping.
-     * Don't use this to import a whole tracker.
-     *
-     * @return Tracker_Artifact|null The created artifact
-     */
-    public function importOneArtifactFromXML(
-        Tracker $tracker,
-        SimpleXMLElement $xml_artifact,
-        $extraction_path,
-        TrackerXmlFieldsMapping $xml_fields_mapping,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
-    ) {
-        try {
-            $this->logger->info("Import {$xml_artifact['id']}");
-            $tracker->getWorkflow()->disable();
-            $artifact = $this->importBareArtifact($tracker, $xml_artifact);
-            if(count($xml_artifact->changeset) > 0) {
-                $fields_data_builder = $this->createFieldsDataBuilder(
-                    $tracker, $xml_artifact,
-                    $extraction_path, $xml_fields_mapping, $artifacts_id_mapping);
-                $this->importAllChangesetsBySubmitionDate($artifact, $changesets, $fields_data_builder);
-            }
-            return $artifact;
-        } catch (Exception $exception) {
-            $this->logger->error("".get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
-        }
-    }
-
-    /**
      * @return Tracker_Artifact|null The created artifact
      */
     public function importBareArtifact(
