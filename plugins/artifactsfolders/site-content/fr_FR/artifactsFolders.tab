@@ -1,5 +1,5 @@
-plugin_folders	descriptor_name	Fichiers artéfacts
-plugin_folders	descriptor_description	Ajoute un onglet "Fichiers" dans un artéfact
+plugin_folders	descriptor_name	Dossier artéfacts
+plugin_folders	descriptor_description	Ajoute un onglet "Dossier" dans un artéfact
 
 
 plugin_folders	_is_folder_forward	Dossier
