@@ -24,10 +24,10 @@ use Codendi_Request;
 use PFUser;
 use Tracker_Artifact_View_View;
 use Tracker_Artifact;
+use TemplateRendererFactory;
 
 class ArtifactView extends Tracker_Artifact_View_View
 {
-    const NO_URL     = '#';
     const IDENTIFIER = 'artifactsfolders';
 
     public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user)
@@ -50,11 +50,9 @@ class ArtifactView extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch()
     {
-        // Nothing to fetch
-    }
+        $renderer  = TemplateRendererFactory::build()->getRenderer(ARTIFACTSFOLDERS_TEMPLATE_DIR);
+        $presenter = new Presenter();
 
-    public function getURL()
-    {
-        return self::NO_URL;
+        return $renderer->renderToString($presenter->getTemplateFileName(), $presenter);
     }
 }
