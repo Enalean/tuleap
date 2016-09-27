@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 8.20
+    * story #9468: Fix name of the tab in artifact view
+
 Version 0.8 - Tuleap 8.20
     * story #9468: Do not display the tab if project is not allowed to
 
