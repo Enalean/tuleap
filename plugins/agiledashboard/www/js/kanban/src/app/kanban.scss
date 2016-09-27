@@ -14,6 +14,7 @@ $kanban-column-footer-height: 48px;
 @import "edit-kanban/edit-kanban";
 @import "kanban-item/kanban-item";
 @import "highlight-filter/highlight";
+@import "reports-modal/reports-modal";
 
 @-webkit-keyframes loading-header {
     0%, 50%, 100% {

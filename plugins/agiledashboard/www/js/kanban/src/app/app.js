@@ -3,6 +3,7 @@ angular.module('kanban', [
     'ngSanitize',
     'angular-locker',
     'angularMoment',
+    'chart.js',
     'dragularModule',
     'gettext',
     'jwt',

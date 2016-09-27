@@ -104,10 +104,6 @@ msgstr "Éditer"
 msgid "Edit this Kanban"
 msgstr "Éditer ce Kanban"
 
-#: src/app/card-fields/card-computed-field/card-computed-field.tpl.html
-msgid "Empty"
-msgstr "Aucun(e)"
-
 #: src/app/error/error.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
@@ -155,6 +151,10 @@ msgstr "Déplacer en bas"
 msgid "Move to top"
 msgstr "Déplacer en haut"
 
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "My Kanban reports"
+msgstr "Mes rapports Kanban"
+
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"
@@ -175,12 +175,20 @@ msgstr "Enregistrer"
 msgid "Show details"
 msgstr "Afficher plus de détails"
 
+#: src/app/kanban.tpl.html
+msgid "Show reports"
+msgstr "Afficher les rapports"
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid ""
 "The deletion of a Kanban is irreversible. Please be certain before doing it."
 msgstr ""
 "La suppression d'un Kanban est irréversible. Veuillez être certain de ce que "
 "vous faites."
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "This view is under construction"
+msgstr "Cette vue est en cours de construction"
 
 #: src/app/kanban.tpl.html
 msgid "Toggle the archive"
@@ -209,6 +217,9 @@ msgstr ""
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
+
+#~ msgid "Empty"
+#~ msgstr "Aucun(e)"
 
 #~ msgid "Are you sure to delete this Kanban?"
 #~ msgstr "Êtes-vous sûr de vouloir supprimer ce Kanban ?"
