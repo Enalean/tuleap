@@ -6,4 +6,4 @@ plugin_folders	_is_folder_forward	Dossier
 plugin_folders	_is_folder_reverse	Dans le dossier
 plugin_folders	tab_label	Dossier
 
-plugin_folders	no_content	Aucun contenu pour le moment.
+plugin_folders	empty_state	Il n'y a pas d'artéfact dans ce folder.

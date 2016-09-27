@@ -298,7 +298,7 @@ plugin_tracker_include_artifactfile	not_attached	File not attached: File size mu
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactHtml.class.php
 #
-plugin_tracker_include_artifact	project	Project:
+plugin_tracker_include_artifact	project	Project
 plugin_tracker_include_artifact	submit	Submit Changes
 plugin_tracker_include_artifact	follow_ups	Follow-ups
 plugin_tracker_include_artifact	cc_list	CC List

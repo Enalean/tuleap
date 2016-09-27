@@ -39,9 +39,11 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
+
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook('cssfile');
         }
 
         return parent::getHooksAndCallbacks();
@@ -64,6 +66,13 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->pluginInfo = new ArtifactsFoldersPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function cssfile()
+    {
+        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+        }
     }
 
     public function event_get_artifactlink_natures($params)
