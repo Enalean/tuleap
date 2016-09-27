@@ -5,7 +5,7 @@ Version 8.20 (Not Released Yet)
 	== Plugins ==
 	* cardwall: 1.69
 	* tracker: 5.1013
-	* svn: 0.94
+	* svn: 0.95
 	* artifactfolders: 0.5
 	* frs: 0.21
 	* agiledashboard: 1.419
@@ -22,6 +22,7 @@ Version 8.20 (Not Released Yet)
 	== Bug fix ==
 	* request #9489: Wiki administration is not accessible to project administrator if they do not have explicit wiki admin rights
 	* request #9490: Wiki does not detect properly HTTPS when behind a reverse proxy
+	* request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
 
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
