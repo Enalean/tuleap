@@ -13,8 +13,30 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td colspan="9" class="no-artifacts-in-folder">{{ empty_state }}</td>
-        </tr>
+        {{^ artifacts }}
+            <tr>
+                <td colspan="9" class="no-artifacts-in-folder">{{ empty_state }}</td>
+            </tr>
+        {{/ artifacts }}
+        {{# artifacts }}
+            <tr>
+                <td><a href="{{ html_url }}" class="direct-link-to-artifact">{{ xref }}</a></td>
+                <td>{{ project_label }}</td>
+                <td>{{ tracker_label }}</td>
+                <td>{{ title }}</td>
+                <td>{{ status }}</td>
+                <td>{{ last_modified_date }}</td>
+                <td>{{ submitted_by_user }}</td>
+                <td>
+                    {{^ assignees }}
+                        –
+                    {{/ assignees }}
+                    {{# assignees }}
+                        {{ . }}
+                    {{/ assignees }}
+                </td>
+                <td>?</td>
+            </tr>
+        {{/ artifacts }}
     </tbody>
 </table>

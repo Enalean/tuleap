@@ -20,6 +20,9 @@
 
 namespace Tuleap\ArtifactsFolders\Folder;
 
+use DateTime;
+use Tracker_Artifact_PaginatedArtifacts;
+
 class Presenter
 {
     public $empty_state;
@@ -31,8 +34,9 @@ class Presenter
     public $last_update_label;
     public $submitted_by_label;
     public $assigned_to_label;
+    public $artifacts;
 
-    public function __construct()
+    public function __construct(array $artifacts)
     {
         $this->id_label           = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
         $this->project_label      = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'project');
@@ -44,5 +48,6 @@ class Presenter
         $this->assigned_to_label  = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'assignedto_label');
         $this->folder_label       = $GLOBALS['Language']->getText('plugin_folders', 'tab_label');
         $this->empty_state        = $GLOBALS['Language']->getText('plugin_folders', 'empty_state');
+        $this->artifacts          = $artifacts;
     }
 }
