@@ -1,3 +1,6 @@
+Version 1.418 - Tuleap 8.20
+    * request #9518: html entities displayed in kanban cards
+
 Version 1.417 - Tuleap 8.20
     * request #9509: Fix angular/di errors
 

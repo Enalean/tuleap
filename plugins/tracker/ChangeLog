@@ -1,3 +1,6 @@
+Version 5.1010 - Tuleap 8.20
+    * request #9518: html entities displayed in kanban cards
+
 Version 5.1009 - Tuleap 8.20
     * request #9520: Refactoring: remove dead code
 
