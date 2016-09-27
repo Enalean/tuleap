@@ -1,10 +1,15 @@
-Version 9.0 (Not Released Yet)
+Version 8.20 (Not Released Yet)
 	== Enhancement ==
 	* story #9439: search for project name with REST
 
 	== Plugins ==
-	* cardwall: 1.68
+	* cardwall: 1.69
 	* tracker: 5.1009
+	* svn: 0.94
+	* artifactfolders: 0.5
+	* frs: 0.21
+	* agiledashboard: 1.417
+	* docman: 2.26.121
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
