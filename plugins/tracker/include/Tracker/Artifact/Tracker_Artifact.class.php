@@ -550,7 +550,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($title_field->userCanRead()) {
                     if ($last_changeset = $this->getLastChangeset()) {
                         if ($title_field_value = $last_changeset->getValue($title_field)) {
-                            $this->title = $title_field_value->getText();
+                            $this->title = $title_field_value->getContentAsText();
                         }
                     }
                 }

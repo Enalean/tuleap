@@ -108,16 +108,19 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             array(
                 'id'                          => $this->open_story_id,
                 Tracker_Semantic_Title::NAME  => 'Story is open',
+                'title_format'                => 'text',
                 Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN
             ),
             array(
                 'id'                          => $this->open_unplanned_story_id,
                 Tracker_Semantic_Title::NAME  => 'Story is open and unplanned',
+                'title_format'                => 'text',
                 Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN
             ),
             array(
                 'id'                          => $this->closed_story_id,
                 Tracker_Semantic_Title::NAME  => 'Story is closed',
+                'title_format'                => 'text',
                 Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_CLOSED
             )
         );
@@ -129,6 +132,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         );
 
         stub($this->artifact_factory)->getParents()->returns(array());
+        stub($this->artifact_factory)->getTitleFromRowAsText()->returnsAt(0, 'Story is open');
+        stub($this->artifact_factory)->getTitleFromRowAsText()->returnsAt(1, 'Story is open and unplanned');
+        stub($this->artifact_factory)->getTitleFromRowAsText()->returnsAt(2, 'Story is closed');
     }
 
     public function itCreatesContentWithOneElementInTodo() {

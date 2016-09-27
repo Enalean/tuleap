@@ -227,7 +227,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         $select_fields = array('artifact.id');
         $join_fields   = array();
         if (in_array(Tracker_Semantic_Title::NAME, $semantics)) {
-            $select_fields[] = 'CVT.value as '.Tracker_Semantic_Title::NAME;
+            $select_fields[] = 'CVT.value as '.Tracker_Semantic_Title::NAME.', CVT.body_format AS title_format';
             $join_fields[]   = 'LEFT JOIN (
                                   tracker_changeset_value                 AS CV0
                                   INNER JOIN tracker_semantic_title       AS ST  ON (

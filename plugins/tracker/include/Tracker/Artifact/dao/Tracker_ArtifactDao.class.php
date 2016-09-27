@@ -39,7 +39,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
 
     public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT A.*, CVT.value AS title
+        $sql = "SELECT A.*, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     LEFT JOIN (
@@ -56,7 +56,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $offset     = $this->da->escapeInt($offset);
         $order      = ($reverse_order) ? 'DESC' : 'ASC';
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT.value AS title
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     LEFT JOIN (
@@ -117,7 +117,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT_title.value as title
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT_title.value as title, CVT_title.body_format AS title_format
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
@@ -172,7 +172,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      */
     public function searchOpenSubmittedByUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, A.submitted_by, A.submitted_on
+        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -209,7 +209,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      */
     public function searchOpenAssignedToUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, A.submitted_by, A.submitted_on
+        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -253,7 +253,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      */
     public function searchOpenSubmittedByOrAssignedToUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, A.submitted_by, A.submitted_on
+        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -602,7 +602,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
 
     public function getTitles(array $artifact_ids) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT artifact.id, CVT.value as title
+        $sql = "SELECT artifact.id, CVT.value as title, CVT.body_format AS title_format
                 FROM tracker_artifact artifact
                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
                     LEFT JOIN (

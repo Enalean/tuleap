@@ -157,7 +157,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
                 continue;
             }
 
-            $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
+            $artifact->setTitle($this->artifact_factory->getTitleFromRowAsText($semantics[$artifact_id]));
 
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self);
             $backlog_item->setStatus($semantics[$artifact_id][Tracker_Semantic_Status::NAME]);
@@ -210,7 +210,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
                 continue;
             }
 
-            $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
+            $artifact->setTitle($this->artifact_factory->getTitleFromRowAsText($semantics[$artifact_id]));
 
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self);
             $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
@@ -365,6 +365,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = '';
         if ($this->userCanReadBacklogTitleField($user, $tracker)) {
             $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = $row[Tracker_Semantic_Title::NAME];
+            $semantics[$artifact->getId()]['title_format'] = $row['title_format'];
         }
     }
 
@@ -456,7 +457,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             return;
         }
 
-        $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
+        $artifact->setTitle($this->artifact_factory->getTitleFromRowAsText($semantics[$artifact_id]));
 
         $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self);
 
