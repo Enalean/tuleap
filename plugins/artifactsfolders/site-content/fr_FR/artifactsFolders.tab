@@ -4,3 +4,5 @@ plugin_folders	descriptor_description	Ajoute un onglet "Dossier" dans un artéfa
 
 plugin_folders	_is_folder_forward	Dossier
 plugin_folders	_is_folder_reverse	Dans le dossier
+
+plugin_folders	no_content	Aucun contenu pour le moment.

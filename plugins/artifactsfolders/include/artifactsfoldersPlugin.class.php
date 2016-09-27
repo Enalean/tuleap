@@ -26,6 +26,7 @@ use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\ArtifactView;
 
 require_once 'autoload.php';
+require_once 'constants.php';
 
 class ArtifactsFoldersPlugin extends Plugin
 {
