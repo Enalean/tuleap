@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2016. All rights reserved
  *
@@ -34,16 +33,21 @@ class RepositoryDisplayPresenter
     public $help_command;
     public $help_message;
 
-    public function __construct(Repository $repository, HTTPRequest $request, $viewvc_html, SvnPermissionManager $permissions_manager)
-    {
-        $this->repository   = $repository;
-        $this->help_command = "svn checkout --username ".$request->getCurrentUser()->getName()." ".$this->repository->getSvnUrl();
-        $this->viewvc_html  = $viewvc_html;
-        $this->settings_url = SVN_BASE_URL .'/?'. http_build_query(array(
-            'group_id' => $repository->getProject()->getID(),
-            'action'   => 'settings',
-            'repo_id'  => $repository->getId()
-        ));
+    public function __construct(
+        Repository $repository,
+        HTTPRequest $request,
+        $viewvc_html,
+        SvnPermissionManager $permissions_manager,
+        $username
+    ) {
+        $this->repository            = $repository;
+        $this->help_command          = "svn checkout --username " . $username . " " . $this->repository->getSvnUrl();
+        $this->viewvc_html           = $viewvc_html;
+        $this->settings_url          = SVN_BASE_URL . '/?' . http_build_query(array(
+                'group_id' => $repository->getProject()->getID(),
+                'action' => 'settings',
+                'repo_id' => $repository->getId()
+            ));
         $this->is_user_admin         = $permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser());
         $this->is_repository_created = $repository->isRepositoryCreated();
 
@@ -51,11 +55,13 @@ class RepositoryDisplayPresenter
         $this->repository_not_created = $GLOBALS['Language']->getText('plugin_svn', 'repository_not_created');
     }
 
-    public function repository_name() {
+    public function repository_name()
+    {
         return $this->repository->getName();
     }
 
-    public function svn_url() {
+    public function svn_url()
+    {
         return $this->repository->getSvnUrl();
     }
 }

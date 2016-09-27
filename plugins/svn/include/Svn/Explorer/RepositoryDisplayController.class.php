@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Explorer;
 
+use Event;
+use EventManager;
 use HTTPRequest;
 use ProjectManager;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
@@ -41,13 +43,18 @@ class RepositoryDisplayController
      * @var \Tuleap\Svn\ViewVC\ViewVCProxy
      */
     private $proxy;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
         SvnPermissionManager $permissions_manager,
         AccessHistorySaver $access_history_saver,
-        ViewVCProxyFactory $viewvc_proxy_factory
+        ViewVCProxyFactory $viewvc_proxy_factory,
+        EventManager $event_manager
     ) {
         $this->permissions_manager = $permissions_manager;
         $this->repository_manager  = $repository_manager;
@@ -56,12 +63,27 @@ class RepositoryDisplayController
             $project_manager,
             $access_history_saver
         );
+        $this->event_manager = $event_manager;
     }
 
     public function displayRepository(ServiceSvn $service, HTTPRequest $request)
     {
         try {
             $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+
+            $has_plugin_intro  = false;
+            $plugin_intro_info = '';
+            $this->event_manager->processEvent(Event::SVN_INTRO, array(
+                'svn_intro_in_plugin' => &$has_plugin_intro,
+                'svn_intro_info'      => &$plugin_intro_info,
+                'group_id'            => $repository->getProject()->getID(),
+                'user_id'             => $request->getCurrentUser()->getId()
+            ));
+            $username = $request->getCurrentUser()->getUserName();
+            if ($plugin_intro_info) {
+                $username = $plugin_intro_info->getLogin();
+            }
+
             $service->renderInPageWithBodyClass(
                 $request,
                 $GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'),
@@ -69,7 +91,8 @@ class RepositoryDisplayController
                 new RepositoryDisplayPresenter(
                     $repository,
                     $request,
-                    $this->proxy->getContent($request), $this->permissions_manager
+                    $this->proxy->getContent($request), $this->permissions_manager,
+                    $username
                 ),
                 $this->proxy->getBodyClass()
             );

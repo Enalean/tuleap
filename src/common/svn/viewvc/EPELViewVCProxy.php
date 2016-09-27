@@ -155,6 +155,7 @@ class EPELViewVCProxy implements ViewVCProxy
             'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
             'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
+            'TULEAP_PROJECT_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($project->getSVNRootPath()).' '.
             ForgeConfig::get('tuleap_dir').'/src/common/svn/viewvc/viewvc-epel.cgi 2>&1';

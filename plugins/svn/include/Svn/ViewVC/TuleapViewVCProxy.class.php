@@ -220,6 +220,7 @@ class TuleapViewVCProxy implements ViewVCProxy
             'HTTP_HOST='.$this->escapeStringFromServer($request, 'HTTP_HOST').' '.
             'DOCUMENT_ROOT='.$this->escapeStringFromServer($request, 'DOCUMENT_ROOT').' '.
             'CODENDI_LOCAL_INC='.$this->escapeStringFromServer($request, 'CODENDI_LOCAL_INC').' '.
+            'TULEAP_PROJECT_NAME='.escapeshellarg($repository->getProject()->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_NAME='.escapeshellarg($repository->getFullName()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
             ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc.cgi 2>&1';
