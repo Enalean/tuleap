@@ -1,3 +1,6 @@
+Version 0.8 - Tuleap 8.20
+    * story #9468: Do not display the tab if project is not allowed to
+
 Version 0.7 - Tuleap 8.20
     * story #9468 import folders (Display empty content in the tab)
 
