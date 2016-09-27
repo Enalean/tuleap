@@ -1,3 +1,6 @@
+Version 5.1012 - Tuleap 8.20
+    * request #9520: Rogue artifacts created when global rules are violated
+
 Version 5.1011 - Tuleap 8.20
     * request #9462: Fatal error in Tracker report when user cannot see Milestone trackers
 
