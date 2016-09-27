@@ -141,8 +141,9 @@ class LDAP_UserDao extends DataAccessObject {
     {
         $user_id  = $this->da->quoteSmart($userId);
         $ldap_uid = $this->da->quoteSmart($ldapUid, array('force_string'));
-        $sql = "REPLACE INTO plugin_ldap_user(user_id, ldap_uid)
-                VALUES ($user_id, $ldap_uid)";
+
+        $sql = "INSERT INTO plugin_ldap_user(user_id, ldap_uid) VALUES ($user_id, $ldap_uid)
+                ON DUPLICATE KEY UPDATE ldap_uid = $ldap_uid";
         return $this->update($sql);
     }
 
