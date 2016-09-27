@@ -53,6 +53,6 @@ class ArtifactView extends Tracker_Artifact_View_View
         $renderer  = TemplateRendererFactory::build()->getRenderer(ARTIFACTSFOLDERS_TEMPLATE_DIR);
         $presenter = new Presenter();
 
-        return $renderer->renderToString($presenter->getTemplateFileName(), $presenter);
+        return $renderer->renderToString('artifact-tab', $presenter);
     }
 }

@@ -290,7 +290,7 @@ plugin_tracker_include_artifactfile	not_attached	Fichier pas attaché&nbsp;: la 
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactHtml.class.php
 #
-plugin_tracker_include_artifact	project	Projet :
+plugin_tracker_include_artifact	project	Projet
 plugin_tracker_include_artifact	submit	Valider
 plugin_tracker_include_artifact	follow_ups	Commentaires
 plugin_tracker_include_artifact	cc_list	Destinataires en copie (CC)

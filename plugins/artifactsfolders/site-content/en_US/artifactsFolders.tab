@@ -4,5 +4,6 @@ plugin_folders	descriptor_description	Add a "Folder" tab in an artifact
 
 plugin_folders	_is_folder_forward	Folder
 plugin_folders	_is_folder_reverse	In folder
+plugin_folders	tab_label	Folder
 
-plugin_folders	no_content	There is no content for now.
+plugin_folders	empty_state	There isn't any artifact in this folder.
