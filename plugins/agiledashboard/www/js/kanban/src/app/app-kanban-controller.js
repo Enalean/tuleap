@@ -102,6 +102,7 @@ function KanbanCtrl(
     self.toggleCollapsedMode          = toggleCollapsedMode;
     self.moveKanbanItemToTop          = moveKanbanItemToTop;
     self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
+    self.openReportModal              = openReportModal;
 
     function init() {
         initViewMode();
@@ -326,16 +327,27 @@ function KanbanCtrl(
         }).result.catch(
             reloadIfSomethingIsWrong
         );
+    }
 
-        function reloadIfSomethingIsWrong(reason) {
-            if (reason && reason.status) {
-                // the edit-kanban-controller dismissed the dialog
-                // due to an error in PATCH response and it's passed to us
-                // the failing request as a reason so that we can display
-                // the error details in the error modal.
-                // For more details, see https://angular-ui.github.io/bootstrap/#/modal
-                reload(reason);
-            }
+    function openReportModal() {
+        $modal.open({
+            backdrop   : true,
+            templateUrl: 'reports-modal/reports-modal.tpl.html',
+            controller : 'ReportsModalController as reports_modal',
+            windowClass: 'reports-modal'
+        }).result.catch(
+            reloadIfSomethingIsWrong
+        );
+    }
+
+    function reloadIfSomethingIsWrong(reason) {
+        if (reason && reason.status) {
+            // the modal's controller dismissed the dialog
+            // due to an error in PATCH response and it's passed to us
+            // the failing request as a reason so that we can display
+            // the error details in the error modal.
+            // For more details, see https://angular-ui.github.io/bootstrap/#/modal
+            reload(reason);
         }
     }
 

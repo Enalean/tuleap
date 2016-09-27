@@ -93,7 +93,9 @@ module.exports = {
             'vendor/angular-socket-io/socket.js',
             'vendor/socket.io-client/socket.io.js',
             'vendor/angular-locker/dist/angular-locker.min.js',
-            'vendor/dragular/dist/dragular.js'
+            'vendor/dragular/dist/dragular.js',
+            'vendor/chart.js/dist/Chart.js',
+            'vendor/angular-chart.js/dist/angular-chart.js',
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
