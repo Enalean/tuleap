@@ -4,6 +4,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "{{ reports_modal.kanban_label }} reports"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
 msgstr ""
@@ -116,6 +120,11 @@ msgstr ""
 msgid "Kanban:"
 msgstr ""
 
+#. moment.js Date format
+#: src/app/reports-modal/reports-modal-controller.js
+msgid "MM/DD"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
 msgstr ""
@@ -128,8 +137,8 @@ msgstr ""
 msgid "Move to top"
 msgstr ""
 
-#: src/app/reports-modal/reports-modal.tpl.html
-msgid "My Kanban reports"
+#: src/app/reports-modal/reports-modal-controller.js
+msgid "Nb. of cards"
 msgstr ""
 
 #: src/app/error/error.tpl.html
@@ -158,10 +167,6 @@ msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "The deletion of a Kanban is irreversible. Please be certain before doing it."
-msgstr ""
-
-#: src/app/reports-modal/reports-modal.tpl.html
-msgid "This view is under construction"
 msgstr ""
 
 #: src/app/kanban.tpl.html

@@ -96,6 +96,7 @@ module.exports = {
             'vendor/dragular/dist/dragular.js',
             'vendor/chart.js/dist/Chart.js',
             'vendor/angular-chart.js/dist/angular-chart.js',
+            'vendor/d3/d3.js'
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
