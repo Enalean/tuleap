@@ -10,7 +10,7 @@ Version 8.20 (Not Released Yet)
 	* frs: 0.21
 	* agiledashboard: 1.421
 	* docman: 2.26.121
-	* artifactsfolders: 0.10
+	* artifactsfolders: 0.11
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
