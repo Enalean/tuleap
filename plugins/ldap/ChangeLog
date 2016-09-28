@@ -1,3 +1,6 @@
+Version 3.110 - Tuleap 8.20
+    * request #9523: Ldap user confirmation login date can be reset
+
 Version 3.109 - Tuleap 8.19
     * request #9445: Too many reminders sent to admins about users to be deleted
 
