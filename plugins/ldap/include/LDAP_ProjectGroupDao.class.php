@@ -38,7 +38,7 @@ extends DataAccessObject
      * 
      * @return LDAP_UserDao
      */
-    function __construct(DataAccess $da) 
+    public function __construct(DataAccess $da)
     {
         parent::__construct($da);
     }
@@ -50,7 +50,7 @@ extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($groupId)
+    public function searchByGroupId($groupId)
     {
         $sql = 'SELECT * FROM plugin_ldap_project_group'.
             ' WHERE group_id = '.db_ei($groupId);
@@ -65,15 +65,17 @@ extends DataAccessObject
     /**
      * Associate one Codendi user group to an LDAP group
      *
-     * @param Integer $groupId Project id
-     * @param String  $ldapDn  LDAP group distinguish name
-     * 
      * @return Boolean
      */
-    function linkGroupLdap($groupId, $ldapDn) 
+    public function linkGroupLdap($project_id, $ldap_dn, $bind, $synchronization)
     {
-        $sql = 'INSERT INTO plugin_ldap_project_group (group_id, ldap_group_dn)'.
-            ' VALUES ('.db_ei($groupId).',"'.db_es($ldapDn).'")';
+        $project_id      = $this->da->escapeInt($project_id);
+        $ldap_dn         = $this->da->quoteSmart($ldap_dn);
+        $synchronization = $this->da->quoteSmart($synchronization);
+
+        $sql = "INSERT INTO plugin_ldap_project_group (group_id, ldap_group_dn, synchro_policy)
+                VALUES ($project_id, $ldap_dn, $synchronization)";
+
         return $this->update($sql);
     }
     
@@ -84,7 +86,7 @@ extends DataAccessObject
      * 
      * @return Boolean
      */
-    function unlinkGroupLdap($groupId) 
+    public function unlinkGroupLdap($groupId)
     {
         $sql = 'DELETE FROM plugin_ldap_project_group'.
             ' WHERE group_id = '.db_ei($groupId);
@@ -99,7 +101,7 @@ extends DataAccessObject
      * 
      * @return Boolean
      */
-    function addUserToGroup($groupId, $name)
+    public function addUserToGroup($groupId, $name)
     {
         include_once 'account.php';
         return account_add_user_to_group($groupId, $name);
@@ -113,11 +115,23 @@ extends DataAccessObject
      * 
      * @return Boolean
      */
-    function removeUserFromGroup($groupId, $userId)
+    public function removeUserFromGroup($groupId, $userId)
     {
         include_once 'account.php';
         return account_remove_user_from_group($groupId, $userId);
     }
-}
 
-?>
+    public function isProjectBindingSynchronized($project_id)
+    {
+        $project_id              = $this->da->escapeInt($project_id);
+        $auto_synchronized_value = $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+
+        $sql = "SELECT NULL
+                FROM plugin_ldap_project_group
+                WHERE group_id = $project_id
+                  AND synchro_policy = $auto_synchronized_value
+                LIMIT 1";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+}
