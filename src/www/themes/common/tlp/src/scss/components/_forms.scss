@@ -117,6 +117,21 @@ $tlp-form-element-select-small-background-size: 6px;
 }
 
 /**
+ * Property
+ */
+.tlp-property {
+    margin: 0 0 $tlp-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tlp-label {
+        cursor: default;
+    }
+}
+
+/**
  * Inputs
  */
 %tlp-form-element {

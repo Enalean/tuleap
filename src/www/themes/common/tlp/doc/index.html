@@ -67,6 +67,7 @@
                 <a href="#forms">Forms</a>
                 <nav class="sub-nav">
                     <ul>
+                        <li class="nav-item sub-nav-item"><a href="#forms-properties">Properties</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-inputs">Inputs</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-search">Search</a></li>
                         <li class="nav-item sub-nav-item"><a href="#forms-textareas">Textareas</a></li>
@@ -114,14 +115,13 @@
                 <section class="doc-section">
                     <h3 class="doc-subsection-title">Framed content <code class="code-inline">.tlp-framed</code></h3>
 
-                    <p>By default there isn't margins on the main container; this allows you to be able to use the full
-                        with of the viewport (for example when you use <a href="#tabs">tabs</a>).
-                    </p>
-
-                    <p>However most of the time you will need to add some margins (for example when you use
-                        <a href="#panes">panes</a>). This is achieving by using
-                        <code class="code-inline">.tlp-framed</code>.
-                    </p>
+                    <div class="doc-information">
+                        <p>By default there isn't margins on the main container; this allows you to be able to use
+                            the full with of the viewport (for example when you use <a href="#tabs">tabs</a>).<br>
+                            However most of the time you will need to add some margins (for example when you use
+                            <a href="#panes">panes</a>). This is achieving by using <code class="code-inline">.tlp-framed</code>.
+                        </p>
+                    </div>
 
                     <div class="demo">
                         <div class="example example-layout"></div>
@@ -138,10 +138,12 @@
                 </section>
 
                 <section class="doc-section">
-
-                    <p>Use <code class="code-inline">.tlp-framed-vertically</code> or
-                        <code class="code-inline">.tlp-framed-horizontally</code> if you need to add margin only at the
-                        top/bottom or to the left/right of the container.</p>
+                    <div class="doc-information">
+                        <p>Use <code class="code-inline">.tlp-framed-vertically</code> or
+                            <code class="code-inline">.tlp-framed-horizontally</code> if you need to add margin only at the
+                            top/bottom or to the left/right of the container.
+                        </p>
+                    </div>
 
                     <div class="demo">
                         <div class="example example-layout"></div>
@@ -158,14 +160,15 @@
                 </section>
 
                 <section class="doc-section">
-
-                    <p>Use all of them to produce complex layout.
-                        <a href="javascript:toggleMargins('layout-complex-example');"
-                           class="tlp-button-secondary tlp-button-outline tlp-button-mini"
-                        >
-                            <i class="fa fa-eye-slash"></i> Show / hide margins
-                        </a>
-                    </p>
+                    <div class="doc-information">
+                        <p>Use all of them to produce complex layout.
+                            <a href="javascript:toggleMargins('layout-complex-example');"
+                               class="tlp-button-secondary tlp-button-outline tlp-button-mini"
+                            >
+                                <i class="fa fa-eye-slash"></i> Show / hide margins
+                            </a>
+                        </p>
+                    </div>
 
                     <div class="demo">
                         <div class="example example-layout example-hide-margins" id="layout-complex-example"></div>
@@ -198,8 +201,10 @@
                 <section class="doc-section">
                     <h3 class="doc-subsection-title">Centered content <code class="code-inline">.tlp-centered</code></h3>
 
-                    <p>In order to center content, you can use the
-                        <code class="code-inline">.tlp-centered</code> on the container.</p>
+                    <div class="doc-information">
+                        <p>In order to center content, you can use the
+                            <code class="code-inline">.tlp-centered</code> on the container.</p>
+                    </div>
 
                     <div class="demo">
                         <div class="example example-layout"></div>
@@ -216,8 +221,11 @@
                 </section>
 
                 <section class="doc-section">
-                    <p>You can also combine <code class="code-inline">.tlp-centered</code> with
-                        <code class="code-inline">.tlp-framed</code> to add margins.</p>
+                    <div class="doc-information">
+                        <p>You can also combine <code class="code-inline">.tlp-centered</code> with
+                            <code class="code-inline">.tlp-framed</code> to add margins.
+                        </p>
+                    </div>
 
                     <div class="demo">
                         <div class="example example-layout"></div>
@@ -242,7 +250,9 @@
                 <section class="doc-section" id="ui-colors">
                     <h3 class="doc-subsection-title">UI colors <code class="code-inline">$tlp-ui-[type]</code></h3>
 
-                    <p>These colors change depending on the selected theme color.</p>
+                    <div class="doc-information">
+                        <p>These colors change depending on the selected theme color.</p>
+                    </div>
 
                     <div class="demo">
                         <table class="tlp-table doc-table-color">
@@ -522,7 +532,9 @@
             <h2 class="doc-section-title">Icons <code class="code-inline">.fa .fa-[icon]</code></h2>
 
             <div class="section-content">
-                <p>We use FontAwesome 4.6.3 as our main icon library. The complete list can be found <a href="http://fortawesome.github.io/Font-Awesome/icons/">here</a>.</p>
+                <div class="doc-information">
+                    <p>We use FontAwesome 4.6.3 as our main icon library. The complete list can be found <a href="http://fortawesome.github.io/Font-Awesome/icons/">here</a>.</p>
+                </div>
 
                 <div class="demo">
                     <div class="example"></div>
@@ -799,11 +811,13 @@ Semantics, a large language ocean.
             <h2 class="doc-section-title">Tables <code class="code-inline">.tlp-table</code></h2>
 
             <div class="section-content">
-                <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
-                <ul>
-                    <li>Use <code class="code-inline">.tlp-table-cell-numeric</code> on numeric cells to right align numeric value (header must be aligned with the content, so apply this class also on the <code class="code-inline">th</code>).</li>
-                    <li>Use <code class="code-inline">.tlp-table-cell-actions</code> on action cells to right align the buttons and to prevent the wrapping. No title is required for this kind of column.</li>
-                </ul>
+                <div class="doc-information">
+                    <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
+                    <ul>
+                        <li>Use <code class="code-inline">.tlp-table-cell-numeric</code> on numeric cells to right align numeric value (header must be aligned with the content, so apply this class also on the <code class="code-inline">th</code>).</li>
+                        <li>Use <code class="code-inline">.tlp-table-cell-actions</code> on action cells to right align the buttons and to prevent the wrapping. No title is required for this kind of column.</li>
+                    </ul>
+                </div>
 
                 <div class="demo">
                     <div class="example"></div>
@@ -964,21 +978,74 @@ Semantics, a large language ocean.
         <section class="doc-section" id="forms">
             <h2 class="doc-section-title">Forms <code class="code-inline">.tlp-form-element</code></h2>
 
-            <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
-            <ul>
-                <li>When it is suitable, use the good input type (<code class="code-inline">password</code>, <code class="code-inline">number</code>, <code class="code-inline">email</code>, <code class="code-inline">search</code>, <code class="code-inline">url</code>, …).</li>
-                <li>To disable a form element, use <code class="code-inline">.tlp-form-element-disabled</code> and <code class="code-inline">disabled</code> attribute.</li>
-                <li>To set a form element required, use <code class="code-inline">required</code> attribute and add <code class="code-inline">&lt;i class="fa fa-asterisk"&gt;&lt;/i&gt;</code> in the label.</li>
-                <li>To put a form element in error, use <code class="code-inline">.tlp-form-element-error</code>.</li>
-                <li>By default, form elements are displayed using <code class="code-inline">width: 100%</code>. You can override this by setting a custom width in css or by adding:
-                    <ul>
-                        <li>the <code class="code-inline">size</code> attribute on inputs when it makes sens (e.g. <code class="code-inline">size="4"</code> for a year)</li>
-                        <li>the <code class="code-inline">cols</code> attribute on textareas when it makes sens (you can also play with <code class="code-inline">rows</code> attribute)</li>
-                        <li>the <code class="code-inline">.tlp-select-adjusted</code> class on selects and multi-selects</li>
-                    </ul>
+            <div class="doc-information">
+                <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
+                <ul>
+                    <li>When it is suitable, use the good input type (<code class="code-inline">password</code>, <code class="code-inline">number</code>, <code class="code-inline">email</code>, <code class="code-inline">search</code>, <code class="code-inline">url</code>, …).</li>
+                    <li>To disable a form element, use <code class="code-inline">.tlp-form-element-disabled</code> and <code class="code-inline">disabled</code> attribute.</li>
+                    <li>To set a form element required, use <code class="code-inline">required</code> attribute and add <code class="code-inline">&lt;i class="fa fa-asterisk"&gt;&lt;/i&gt;</code> in the label.</li>
+                    <li>To put a form element in error, use <code class="code-inline">.tlp-form-element-error</code>.</li>
+                    <li>By default, form elements are displayed using <code class="code-inline">width: 100%</code>. You can override this by setting a custom width in css or by adding:
+                        <ul>
+                            <li>the <code class="code-inline">size</code> attribute on inputs when it makes sens (e.g. <code class="code-inline">size="4"</code> for a year)</li>
+                            <li>the <code class="code-inline">cols</code> attribute on textareas when it makes sens (you can also play with <code class="code-inline">rows</code> attribute)</li>
+                            <li>the <code class="code-inline">.tlp-select-adjusted</code> class on selects and multi-selects</li>
+                        </ul>
 
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <section class="doc-section" id="forms-properties">
+                <h3 class="doc-subsection-title">Properties</h3>
+                <div class="demo">
+                    <div class="example"></div>
+                    <div class="code">
+                        <textarea>
+<div class="tlp-property">
+    <label class="tlp-label">Simple value</label>
+    <p>Muted, I currently have 4 windows open up… and I don’t know why.</p>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">Paragraph value</label>
+    <p>Far far away, behind the word mountains,
+    far from the <a href="javascript:;">countries Vokalia and Consonantia</a>,
+    there live the blind texts. Separated they live
+    in Bookmarksgrove right at the coast of the
+    Semantics, a large language ocean. A small river
+    named Duden flows by their place and supplies it
+    with the necessary regelialia. It is a
+    paradisematic country, in which roasted parts of
+    sentences fly into your mouth. Even the
+    all-powerful Pointing has no control about the
+    blind texts it is an almost unorthographic life
+    One day however a small line of blind text by
+    the name of Lorem Ipsum decided to leave for the
+    far World of Grammar. The Big Oxmox advised her
+    not to do so, because there were thousands of
+    bad Commas, …
+    </p>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">Blockquote value</label>
+    <blockquote>Far far away, behind the word mountains,
+    far from the countries Vokalia and Consonantia,
+    there live the blind texts. Separated they live
+    in Bookmarksgrove right at the coast of the
+    Semantics, a large language ocean.
+    </blockquote>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">Badge value</label>
+    <span class="tlp-badge-primary">Badge</span>
+</div>
+</textarea>
+                    </div>
+                </div>
+            </section>
 
             <section class="doc-section" id="forms-inputs">
                 <h3 class="doc-subsection-title">Inputs</h3>
@@ -1531,9 +1598,11 @@ tlp.select2(document.querySelector('#area-select2-large'), {
             </section>
             <section class="doc-section" id="forms-multi-select2">
                 <h3 class="doc-subsection-title">Multi select2</h3>
-                <p>
-                    <i class="fa fa-warning"></i> There's a known issue concerning the tags/tokenization so this feature is not presented here (see discussion here: <a href="https://github.com/select2/select2/issues/3566">https://github.com/select2/select2/issues/3566</a>)
-                </p>
+                <div class="doc-information">
+                    <p>
+                        <i class="fa fa-warning"></i> There's a known issue concerning the tags/tokenization so this feature is not presented here (see discussion here: <a href="https://github.com/select2/select2/issues/3566">https://github.com/select2/select2/issues/3566</a>).
+                    </p>
+                </div>
 
                 <div class="demo">
                     <div class="example"></div>
@@ -1922,9 +1991,12 @@ tlp.select2(document.querySelector('#types-select2-large'), {
             <section class="doc-section" id="forms-datetime">
                 <h3 class="doc-subsection-title">Date/time picker <code class="code-inline">.tlp-input-date</code></h3>
 
-                <p>Date/time picker is based on <a href="https://chmln.github.io/flatpickr/">flatpickr</a>.</p>
-                <p>You need to explicitely activate the date picker by calling
-                    <code class="code-inline">tlp.datePicker(element);</code> in your javascript.</p>
+                <div class="doc-information">
+                    <p>Date/time picker is based on <a href="https://chmln.github.io/flatpickr/">flatpickr</a>.</p>
+                    <p>You need to explicitely activate the date picker by calling
+                        <code class="code-inline">tlp.datePicker(element);</code> in your javascript.
+                    </p>
+                </div>
 
                 <div class="demo">
                     <div class="example"></div>
@@ -2180,23 +2252,25 @@ tlp.select2(document.querySelector('#types-select2-large'), {
                 <section class="doc-section">
                     <h3 class="doc-subsection-title">Usage</h3>
 
-                    <ul>
-                        <li>When there are both cancel and primary action buttons, then the primary button is always on the right.</li>
-                        <li>To be able to use large buttons on the footer you should use the class
-                            <code class="code-inline">tlp-modal-footer-large</code>.</li>
-                        <li>Buttons that have <code class="code-inline">data-dismiss="modal"</code> attribute in the modal
-                            will close it.</li>
-                        <li>Click on the backdrop or on the escape key will also close the modal.</li>
-                        <li>You can remove closing modal on the escape key pressed: <code class="code-inline">var the_modal = tlp.modal('element-id', {keyboard: false} );</code></li>
-                        <li>You must explicitly call the modal in javascript: <code class="code-inline">var the_modal = tlp.modal('element-id');</code>.
-                            This will return a <code class="code-inline">Modal</code> instance. You can then call
-                            <code class="code-inline">show()</code>,
-                            <code class="code-inline">hide()</code>, or
-                            <code class="code-inline">toggle()</code> methods on this instance.
-                        </li>
-                        <li>On the <code class="code-inline">the_modal.show()</code> method an event <code class="code-inline">tlp-modal-shown</code> is dispatched.</li>
-                        <li>On the <code class="code-inline">the_modal.hide()</code> method an event <code class="code-inline">tlp-modal-hidden</code> is dispatched.</li>
-                    </ul>
+                    <div class="doc-information">
+                        <ul>
+                            <li>When there are both cancel and primary action buttons, then the primary button is always on the right.</li>
+                            <li>To be able to use large buttons on the footer you should use the class
+                                <code class="code-inline">tlp-modal-footer-large</code>.</li>
+                            <li>Buttons that have <code class="code-inline">data-dismiss="modal"</code> attribute in the modal
+                                will close it.</li>
+                            <li>Click on the backdrop or on the escape key will also close the modal.</li>
+                            <li>You can remove closing modal on the escape key pressed: <code class="code-inline">var the_modal = tlp.modal('element-id', {keyboard: false} );</code></li>
+                            <li>You must explicitly call the modal in javascript: <code class="code-inline">var the_modal = tlp.modal('element-id');</code>.
+                                This will return a <code class="code-inline">Modal</code> instance. You can then call
+                                <code class="code-inline">show()</code>,
+                                <code class="code-inline">hide()</code>, or
+                                <code class="code-inline">toggle()</code> methods on this instance.
+                            </li>
+                            <li>On the <code class="code-inline">the_modal.show()</code> method an event <code class="code-inline">tlp-modal-shown</code> is dispatched.</li>
+                            <li>On the <code class="code-inline">the_modal.hide()</code> method an event <code class="code-inline">tlp-modal-hidden</code> is dispatched.</li>
+                        </ul>
+                    </div>
 
 
                     <div class="demo">
