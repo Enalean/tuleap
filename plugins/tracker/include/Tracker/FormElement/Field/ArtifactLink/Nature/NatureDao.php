@@ -214,4 +214,22 @@ class NatureDao extends DataAccessObject {
         return $this->retrieveIds($sql);
     }
 
+    public function hasReverseLinkedArtifacts($artifact_id, $nature)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $nature      = $this->da->quoteSmart($nature);
+
+        $sql = "SELECT NULL
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id )
+                    INNER JOIN tracker                              AS t          ON t.id = parent_art.tracker_id
+                WHERE linked_art.id  = $artifact_id
+                    AND IFNULL(artlink.nature, '') = $nature
+                LIMIT 1";
+
+        return count($this->retrieve($sql)) > 0;
+    }
 }
