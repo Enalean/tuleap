@@ -15,3 +15,21 @@
         color: #999999;
     }
 }
+
+.artifacts-folders-rollup {
+    white-space: nowrap;
+}
+
+.artifacts-folders-rollup-icon {
+    padding: 0 15px 0 0;
+    font-size: 14px;
+    cursor: pointer;
+
+    &.icon-caret-right {
+        padding: 0 8px 0 3px;
+    }
+
+    &.icon-caret-down {
+        padding: 0 6px 0 2px;
+    }
+}

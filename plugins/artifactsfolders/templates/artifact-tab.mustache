@@ -20,7 +20,9 @@
         {{/ artifacts }}
         {{# artifacts }}
             <tr>
-                <td><a href="{{ html_url }}" class="direct-link-to-artifact">{{ xref }}</a></td>
+                <td class="artifacts-folders-rollup">
+                    <a href="{{ html_url }}" class="direct-link-to-artifact" data-artifact-id="{{ id }}">{{ xref }}</a>
+                </td>
                 <td>{{ project_label }}</td>
                 <td>{{ tracker_label }}</td>
                 <td>{{ title }}</td>
