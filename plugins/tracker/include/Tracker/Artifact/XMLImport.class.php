@@ -1,4 +1,6 @@
 <?php
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
@@ -44,6 +46,12 @@ class Tracker_Artifact_XMLImport {
     /** @var WrapperLogger */
     private $logger;
 
+    /** @var Tracker_ArtifactFactory  */
+    private $tracker_artifact_factory;
+
+    /** @var NatureDao  */
+    private $nature_dao;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
@@ -52,17 +60,20 @@ class Tracker_Artifact_XMLImport {
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
         Logger $logger,
-        $send_notifications
+        $send_notifications,
+        Tracker_ArtifactFactory $tracker_artifact_factory,
+        NatureDao $nature_dao
     ) {
-
-        $this->rng_validator         = $rng_validator;
-        $this->artifact_creator      = $artifact_creator;
-        $this->new_changeset_creator = $new_changeset_creator;
-        $this->formelement_factory   = $formelement_factory;
-        $this->user_finder           = $user_finder;
-        $this->static_value_dao      = $static_value_dao;
-        $this->logger                = new WrapperLogger($logger, 'XML import');
-        $this->send_notifications    = $send_notifications;
+        $this->rng_validator            = $rng_validator;
+        $this->artifact_creator         = $artifact_creator;
+        $this->new_changeset_creator    = $new_changeset_creator;
+        $this->formelement_factory      = $formelement_factory;
+        $this->user_finder              = $user_finder;
+        $this->static_value_dao         = $static_value_dao;
+        $this->logger                   = new WrapperLogger($logger, 'XML import');
+        $this->send_notifications       = $send_notifications;
+        $this->tracker_artifact_factory = $tracker_artifact_factory;
+        $this->nature_dao               = $nature_dao;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -201,7 +212,9 @@ class Tracker_Artifact_XMLImport {
             $this->static_value_dao,
             $this->logger,
             $xml_fields_mapping,
-            $artifacts_id_mapping
+            $artifacts_id_mapping,
+            $this->tracker_artifact_factory,
+            $this->nature_dao
         );
     }
 
@@ -298,7 +311,7 @@ class Tracker_Artifact_XMLImport {
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
-        $fields_data = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by);
+        $fields_data = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact);
         if (count($fields_data) === 0) {
             return null;
         }
@@ -339,10 +352,11 @@ class Tracker_Artifact_XMLImport {
             $initial_comment_body   = (string)$xml_changeset->comments->comment[0]->body;
             $initial_comment_format = (string)$xml_changeset->comments->comment[0]->body['format'];
         }
+
         $submitted_by = $this->getSubmittedBy($xml_changeset);
         $changeset = $this->new_changeset_creator->create(
             $artifact,
-            $fields_data_builder->getFieldsData($xml_changeset, $submitted_by),
+            $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact),
             $initial_comment_body,
             $submitted_by,
             $this->getSubmittedOn($xml_changeset),

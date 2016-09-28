@@ -5,6 +5,7 @@
   <include href="project-definition.rng"/>
   <include href="git-definition.rng"/>
   <include href="frs-definition.rng"/>
+  <include href="nature-definition.rng"/>
   <include href="mediawiki-definition.rng"/>
   <include href="xml_project_agiledashboard_planning.rng"/>
   <include href="xml_project_cardwall_data.rng"/>
@@ -33,6 +34,11 @@
         <optional>
           <element name="frs">
             <ref name="frs"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="natures">
+            <ref name="natures"/>
           </element>
         </optional>
         <optional>

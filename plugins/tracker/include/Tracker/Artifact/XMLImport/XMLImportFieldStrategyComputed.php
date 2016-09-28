@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
+use Tracker_Artifact;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategy;
 use Tracker_FormElement_Field;
 use SimpleXMLElement;
@@ -28,8 +29,12 @@ use Tracker_FormElement_Field_Computed;
 
 class XMLImportFieldStrategyComputed implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by)
-    {
+    public function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
+    ) {
         $computed_value = array();
 
         if (isset($field_change->manual_value)) {

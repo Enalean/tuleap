@@ -26,6 +26,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDontExistInPlateformException;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -211,13 +212,17 @@ try {
         new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao())
     );
 
-     if (empty($project_id)) {
-        $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
-        $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
-        $xml_importer->importNewFromArchive($configuration, $archive, $system_event_runner, $project_name_override);
-     } else {
-        $xml_importer->importFromArchive($configuration, $project_id, $archive);
-     }
+    try {
+        if (empty($project_id)) {
+            $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
+            $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
+            $xml_importer->importNewFromArchive($configuration, $archive, $system_event_runner, $project_name_override);
+        } else {
+            $xml_importer->importFromArchive($configuration, $project_id, $archive);
+        }
+    } catch (NatureDontExistInPlateformException $exception) {
+        $broker_log->error("Some natures used in trackers are not created on plateform.");
+    }
 
     $archive->cleanUp();
 

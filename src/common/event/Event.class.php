@@ -1226,4 +1226,12 @@ class Event {
      *
      */
     const UGROUP_DUPLICATION = 'ugroup_duplication';
+    /**
+     * When a project is created, ask plugins if they authorized project creation
+     *
+     * Parameters:
+     *  - xml_content => (input) SimpleXmlElement
+     *
+     */
+    const IMPORT_XML_IS_PROJECT_VALID = 'import_xml_is_project_valid';
 }

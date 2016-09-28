@@ -26,9 +26,16 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
      * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
      *
+     * @param PFUser $submitted_by
+     * @param Tracker_Artifact $artifact
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
+    public function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
+    ) {
         $data = array(
             'use_artifact_permissions' => (int)$field_change['use_perm'],
             'u_groups' => array()

@@ -26,9 +26,16 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Arti
      * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
      *
+     * @param PFUser $submitted_by
+     * @param Tracker_Artifact $artifact
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
+    public function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
+    ) {
         $timestamp = strtotime((string) $field_change->value);
         if ($timestamp > 0) {
             return $field->formatDate(strtotime($field_change->value));
