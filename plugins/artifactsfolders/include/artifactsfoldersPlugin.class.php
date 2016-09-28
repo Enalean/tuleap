@@ -34,6 +34,7 @@ require_once 'constants.php';
 class ArtifactsFoldersPlugin extends Plugin
 {
 
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -46,6 +47,7 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(Event::JAVASCRIPT_FOOTER);
+            $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
             $this->addHook('cssfile');
         }
 
@@ -120,14 +122,35 @@ class ArtifactsFoldersPlugin extends Plugin
             && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureIsFolderPresenter::NATURE_IS_FOLDER);
     }
 
+    public function add_property_to_tracker(array $params)
+    {
+        if ($params['is_folder']) {
+            $this->setFolderProperty($params);
+        }
+    }
+
+    private function setFolderProperty(array $params)
+    {
+        if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($params['project'])) {
+            if (! $this->getDao()->create($params['tracker_id'])) {
+                $params['warning'] = 'Error while setting Folder flag for tracker '.$params['tracker_id'].'.';
+            }
+        } else {
+            $params['warning'] = 'Cannot set tracker '.$params['tracker_id'].' as a Folder tracker because you already have one defined for this project';
+        }
+    }
+
+    private function getDao()
+    {
+        return new Dao();
+    }
+
     /**
      * @return FolderUsageRetriever
      */
     private function getFolderUsageRetriever()
     {
-        $dao = new Dao();
-
-        return new FolderUsageRetriever($dao, TrackerFactory::instance());
+        return new FolderUsageRetriever($this->getDao(), TrackerFactory::instance());
     }
 
     private function getPresenterBuilder($dao)

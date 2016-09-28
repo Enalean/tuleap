@@ -45,4 +45,13 @@ class Dao extends DataAccessObject
 
         return count($this->retrieve($sql)) > 0;
     }
+
+    public function create($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "INSERT INTO plugin_artifactsfolders_tracker_usage VALUES ($tracker_id)";
+
+        return $this->update($sql);
+    }
 }
