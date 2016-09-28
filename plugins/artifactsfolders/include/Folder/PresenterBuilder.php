@@ -61,7 +61,7 @@ class PresenterBuilder
     {
         $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
             $folder->getId(),
-            NatureIsFolderPresenter::NATURE_IS_FOLDER,
+            NatureIsFolderPresenter::NATURE_IN_FOLDER,
             PHP_INT_MAX,
             0
         );

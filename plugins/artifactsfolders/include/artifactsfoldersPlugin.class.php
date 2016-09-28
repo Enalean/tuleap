@@ -121,7 +121,7 @@ class ArtifactsFoldersPlugin extends Plugin
 
         return
             $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
-            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureIsFolderPresenter::NATURE_IS_FOLDER);
+            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureIsFolderPresenter::NATURE_IN_FOLDER);
     }
 
     public function add_property_to_tracker(array $params)
@@ -171,12 +171,12 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function hide_artifact($params)
     {
-        $params['hide_artifact'] = $params['nature'] === NatureIsFolderPresenter::NATURE_IS_FOLDER;
+        $params['hide_artifact'] = $params['nature'] === NatureIsFolderPresenter::NATURE_IN_FOLDER;
     }
 
     public function event_get_nature_presenter($params)
     {
-        if ($params['shortname'] === NatureIsFolderPresenter::NATURE_IS_FOLDER) {
+        if ($params['shortname'] === NatureIsFolderPresenter::NATURE_IN_FOLDER) {
             $params['presenter'] = new NatureIsFolderPresenter();
         }
     }
