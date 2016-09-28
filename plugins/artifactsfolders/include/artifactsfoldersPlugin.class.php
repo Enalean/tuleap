@@ -67,13 +67,14 @@ class ArtifactsFoldersPlugin extends Plugin
         if (! $this->pluginInfo) {
             $this->pluginInfo = new ArtifactsFoldersPluginInfo($this);
         }
+
         return $this->pluginInfo;
     }
 
     public function cssfile()
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
         }
     }
 
@@ -95,15 +96,20 @@ class ArtifactsFoldersPlugin extends Plugin
             return;
         }
 
-        $folder_usage_retriever = $this->getFolderUsageRetriever();
-        if ($folder_usage_retriever->projectUsesArtifactsFolders($project, $user)) {
-            $collection->add(new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder()));
+        $dao = new NatureDao();
+        if ($this->canAddOurView($dao, $artifact, $project, $user)) {
+            $view = new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder($dao));
+            $collection->add($view);
         }
     }
 
-    private function getPresenterBuilder()
+    private function canAddOurView(NatureDao $dao, Tracker_Artifact $artifact, Project $project, PFUser $user)
     {
-        return new PresenterBuilder(new NatureDao(), Tracker_ArtifactFactory::instance());
+        $folder_usage_retriever = $this->getFolderUsageRetriever();
+
+        return
+            $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
+            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureIsFolderPresenter::NATURE_IS_FOLDER);
     }
 
     /**
@@ -114,5 +120,10 @@ class ArtifactsFoldersPlugin extends Plugin
         $dao = new Dao();
 
         return new FolderUsageRetriever($dao, TrackerFactory::instance());
+    }
+
+    private function getPresenterBuilder($dao)
+    {
+        return new PresenterBuilder($dao, Tracker_ArtifactFactory::instance());
     }
 }
