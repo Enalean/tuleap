@@ -4,7 +4,7 @@ Version 8.20 (Not Released Yet)
 
 	== Plugins ==
 	* cardwall: 1.69
-	* tracker: 5.1014
+	* tracker: 5.1015
 	* svn: 0.95
 	* artifactfolders: 0.5
 	* frs: 0.21
@@ -27,6 +27,9 @@ Version 8.20 (Not Released Yet)
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
 	* request #9517: Plugin FRS package is unnecessary big
+
+	== Enhancement ==
+	* request #9010: Import/Export of artifactlinks
 
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
