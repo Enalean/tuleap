@@ -822,6 +822,7 @@ Semantics, a large language ocean.
                 <div class="doc-information">
                     <p><i class="fa fa-thumbs-o-up"></i> Good practices:</p>
                     <ul>
+                        <li>Use <code class="code-inline">.tlp-table-actions</code> on a bloc element before the table if needed (e.g. "+ Add" button…).</li>
                         <li>Use <code class="code-inline">.tlp-table-cell-numeric</code> on numeric cells to right align numeric value (header must be aligned with the content, so apply this class also on the <code class="code-inline">th</code>).</li>
                         <li>Use <code class="code-inline">.tlp-table-cell-actions</code> on action cells to right align the buttons and to prevent the wrapping. No title is required for this kind of column.</li>
                     </ul>
@@ -831,6 +832,14 @@ Semantics, a large language ocean.
                     <div class="example"></div>
                     <div class="code">
                         <textarea>
+<div class="tlp-table-actions">
+    <button type="button" class="tlp-button-primary tlp-table-actions-element"><i class="tlp-button-icon fa fa-plus"></i> Add user</button>
+    <button type="button" class="tlp-button-primary tlp-button-outline tlp-table-actions-element"><i class="fa fa-download"></i> Export CSV</button>
+    <div class="tlp-table-actions-spacer"></div>
+    <div class="tlp-form-element tlp-table-actions-element tlp-table-actions-element">
+        <input type="search" class="tlp-search" placeholder="Firstname…">
+    </div>
+</div>
 <table class="tlp-table">
     <thead>
         <tr>

@@ -23,6 +23,30 @@ $tlp-table-header-background  : #ffffff;
 $tlp-table-row-background-even: #fcfcfc;
 $tlp-table-row-background-odd : #ffffff;
 
+/**
+ * Table actions
+ */
+.tlp-table-actions {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.tlp-table-actions-element {
+    margin: 0 $tlp-spacing / 2 0 0;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-table-actions-spacer {
+    flex: 1;
+}
+
+
+/**
+ * Table
+ */
 .tlp-table {
     width: 100%;
     border-radius: $tlp-table-radius;
