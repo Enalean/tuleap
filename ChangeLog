@@ -4,13 +4,13 @@ Version 8.20 (Not Released Yet)
 
 	== Plugins ==
 	* cardwall: 1.69
-	* tracker: 5.1015
+	* tracker: 5.1016
 	* svn: 0.95
 	* artifactfolders: 0.5
 	* frs: 0.21
 	* agiledashboard: 1.421
 	* docman: 2.26.121
-	* artifactsfolders: 0.11
+	* artifactsfolders: 0.12
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration

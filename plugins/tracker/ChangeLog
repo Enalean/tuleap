@@ -1,3 +1,6 @@
+Version 5.1016 - Tuleap 8.20
+    * story #9468: Do not display the tab if there is no Artifact in the folder
+
 Version 5.1015 - Tuleap 8.20
     * request #9010: Import/Export of artifactlinks
 
