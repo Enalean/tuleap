@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\AgileDashboard\REST\DataBuilder;
+
 require_once dirname(__FILE__).'/bootstrap.php';
 
 /**
@@ -535,5 +537,221 @@ class KanbanTest extends RestBase {
         $response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
 
         $this->assertEquals($response->getStatusCode(), 404);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGETCumulativeFlowInvalidDate()
+    {
+        $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
+                array(
+                    'start_date'             => '2016-09-29',
+                    'end_date'               => '2016-09-28',
+                    'interval_between_point' => 1
+                ));
+
+        $response = $this->getResponse($this->client->get($url));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGETCumulativeFlowTooMuchPointsRequested()
+    {
+        $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
+                array(
+                    'start_date'             => '2011-04-19',
+                    'end_date'               => '2016-09-29',
+                    'interval_between_point' => 1
+                ));
+
+        $response = $this->getResponse($this->client->get($url));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testGETCumulativeFlow()
+    {
+        $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
+                array(
+                    'start_date'             => '2016-09-22',
+                    'end_date'               => '2016-09-28',
+                    'interval_between_point' => 1
+                ));
+
+        $response      = $this->getResponse($this->client->get($url));
+        $item          = $response->json();
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $columns = $item['columns'];
+        $this->assertEquals(5 , count($columns));
+
+        $archive_column = $columns[0];
+        $this->assertEquals('Archive', $archive_column['label']);
+        $this->assertEquals(array(
+            array(
+                'start_date'         => '2016-09-22',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-23',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-24',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-25',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-26',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-27',
+                'kanban_items_count' => 2
+            ),
+            array(
+                'start_date'         => '2016-09-28',
+                'kanban_items_count' => 3
+            )
+        ), $archive_column['values']);
+
+        $open3_column = $columns[1];
+        $this->assertEquals('Open3', $open3_column['label']);
+        $this->assertEquals(array(
+            array(
+                'start_date'         => '2016-09-22',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-23',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-24',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-25',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-26',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-27',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-28',
+                'kanban_items_count' => 0
+            )
+        ), $open3_column['values']);
+
+        $open2_column = $columns[2];
+        $this->assertEquals('Open2', $open2_column['label']);
+        $this->assertEquals(array(
+            array(
+                'start_date'         => '2016-09-22',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-23',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-24',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-25',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-26',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-27',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-28',
+                'kanban_items_count' => 0
+            )
+        ), $open2_column['values']);
+
+        $open1_column = $columns[3];
+        $this->assertEquals('Open1', $open1_column['label']);
+        $this->assertEquals(array(
+            array(
+                'start_date'         => '2016-09-22',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-23',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-24',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-25',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-26',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-27',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-28',
+                'kanban_items_count' => 0
+            )
+        ), $open1_column['values']);
+
+        $backlog_column = $columns[4];
+        $this->assertEquals('Backlog', $backlog_column['label']);
+        $this->assertEquals(array(
+            array(
+                'start_date'         => '2016-09-22',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-23',
+                'kanban_items_count' => 1
+            ),
+            array(
+                'start_date'         => '2016-09-24',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-25',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-26',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-27',
+                'kanban_items_count' => 0
+            ),
+            array(
+                'start_date'         => '2016-09-28',
+                'kanban_items_count' => 0
+            )
+        ), $backlog_column['values']);
     }
 }

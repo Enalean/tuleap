@@ -172,10 +172,10 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/07-computedfield
     load_project /usr/share/tuleap/tests/rest/_fixtures/08-public-including-restricted
 
-    seed_plugin_data
-
     echo "Load initial data"
     php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php ng
+
+    seed_plugin_data
 }
 
 seed_plugin_data() {
@@ -185,6 +185,9 @@ seed_plugin_data() {
             load_project "$fixture_dir"
         fi
     done
+
+    echo "Load plugins initial data"
+    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data_plugins.php ng
 }
 
 setup_tuleap

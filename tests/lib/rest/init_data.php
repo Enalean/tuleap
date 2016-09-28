@@ -41,4 +41,4 @@ $data_builder
     ->generateComputedFieldTree()
     ->deleteTracker()
     ->activateDebug()
-    ->initPlugins();
+    ->initPluginsLeakingInCoreTests();

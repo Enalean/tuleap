@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once dirname(__FILE__).'/TrackerDataBuilder.php';
 
-$data_builder = new TrackerDataBuilder();
-$data_builder->setUp();
+require_once 'pre.php';
+require_once dirname(__FILE__).'/../autoload.php';
+
+if (isset($argv[1]) && $argv[1] == 'ng') {
+    $data_builder = new REST_TestDataBuilderNG();
+} else {
+    $data_builder = new REST_TestDataBuilder();
+}
+$data_builder
+    ->activatePlugins()
+    ->activateDebug()
+    ->initPlugins();
