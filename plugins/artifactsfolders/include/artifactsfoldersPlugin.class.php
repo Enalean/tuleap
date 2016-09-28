@@ -19,7 +19,9 @@
  */
 
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
+use Tuleap\ArtifactsFolders\Folder\PresenterBuilder;
 use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\Dao;
@@ -95,8 +97,13 @@ class ArtifactsFoldersPlugin extends Plugin
 
         $folder_usage_retriever = $this->getFolderUsageRetriever();
         if ($folder_usage_retriever->projectUsesArtifactsFolders($project, $user)) {
-            $collection->add(new ArtifactView($artifact, $request, $user));
+            $collection->add(new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder()));
         }
+    }
+
+    private function getPresenterBuilder()
+    {
+        return new PresenterBuilder(new NatureDao(), Tracker_ArtifactFactory::instance());
     }
 
     /**
