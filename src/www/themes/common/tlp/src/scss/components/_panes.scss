@@ -18,10 +18,20 @@
  */
 
 .tlp-pane {
+    display: flex;
     margin: 0 0 $tlp-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: $tlp-ui-white;
+}
+
+.tlp-pane-container {
+    flex: 1 1 auto;
+    border-right: 1px solid $tlp-ui-border-light;
+
+    &:last-child {
+        border-right: 0;
+    }
 }
 
 .tlp-pane-header {
@@ -35,6 +45,11 @@
     font-weight: 600;
     letter-spacing: .5px;
     text-transform: uppercase;
+}
+
+.tlp-pane-title-icon {
+    margin: 0 5px 0 0;
+    font-size: 14px;
 }
 
 .tlp-pane-section {

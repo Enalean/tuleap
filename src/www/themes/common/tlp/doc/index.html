@@ -101,7 +101,15 @@
             <li class="nav-item"><a href="#tooltips">Tooltips</a></li>
             <li class="nav-item"><a href="#popovers">Popovers</a></li>
             <li class="nav-item"><a href="#modals">Modals</a></li>
-            <li class="nav-item"><a href="#panes">Panes</a></li>
+            <li class="nav-item">
+                <a href="#panes">Panes</a>
+                <nav class="sub-nav">
+                    <ul>
+                        <li class="nav-item sub-nav-item"><a href="#panes-simple">Simple panes</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#panes-splitted">Splitted panes</a></li>
+                    </ul>
+                </nav>
+            </li>
             <li class="nav-item"><a href="#tabs">Tabs</a></li>
             <li class="nav-item"><a href="#pagination">Pagination</a></li>
         </ul>
@@ -2461,27 +2469,131 @@ tlp.select2(document.querySelector('#types-select2-large'), {
 
         <section class="doc-section" id="panes">
             <h2 class="doc-section-title">Panes <code class="code-inline">.tlp-pane</code></h2>
-            <div class="demo">
-                <div class="example"></div>
-                <div class="code">
-                    <textarea>
+
+            <div class="section-content">
+                <section class="doc-section" id="panes-simple">
+                    <h3 class="doc-subsection-title">Simple panes</h3>
+                    <div class="demo">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
 <section class="tlp-pane">
-    <div class="tlp-pane-header">
-        <h1 class="tlp-pane-title">Title of the pane</h1>
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Simple pane</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>Here goes the content of the pane.</p>
+            <p>The pane can have more than one section.</p>
+            <p>Far far away, behind the word mountains,
+            far from the countries Vokalia and
+            Consonantia, ...</p>
+        </section>
     </div>
-    <section class="tlp-pane-section">
-        <p>Here goes the content of the pane.</p>
-        <p>The pane can have more than one section.</p>
-    </section>
-    <section class="tlp-pane-section">
-        <p>Far far away, behind the word mountains,
-        far from the countries Vokalia and
-        Consonantia, ...</p>
-    </section>
+</section>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> Simple pane with table</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Allen</td>
+                        <td>Woody</td>
+                        <td>
+                            <span class="tlp-badge-success tlp-badge-outline">Active</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>George</td>
+                        <td>Harrison</td>
+                        <td>
+                            <span class="tlp-badge-danger tlp-badge-outline">Deleted</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Graam</td>
+                        <td>Parson</td>
+                        <td>
+                            <span class="tlp-badge-success tlp-badge-outline">Active</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
 </section>
 </textarea>
-                </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="doc-section" id="panes-splitted">
+                    <h3 class="doc-subsection-title">Splitted panes</h3>
+                    <div class="demo">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Horizontally splitted pane</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>Here goes the content of the pane.</p>
+            <p>The pane can have more than one section.</p>
         </section>
+        <section class="tlp-pane-section">
+            <p>Far far away, behind the word mountains,
+            far from the countries Vokalia and
+            Consonantia, ...</p>
+        </section>
+    </div>
+</section>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Vertically splitted pane</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>Here goes the content of the pane.</p>
+            <p>The pane can have more than one section.</p>
+        </section>
+        <section class="tlp-pane-section">
+            <p>Far far away, behind the word mountains,
+            far from the countries Vokalia and
+            Consonantia, ...</p>
+        </section>
+    </div>
+    <div class="tlp-pane-container">
+        <section class="tlp-pane-section">
+            <p>Here goes the content of the pane.</p>
+            <p>The pane can have more than one section.</p>
+        </section>
+        <section class="tlp-pane-section">
+            <p>Far far away, behind the word mountains,
+            far from the countries Vokalia and
+            Consonantia, ...</p>
+        </section>
+    </div>
+</section>
+</textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
         <section class="doc-section" id="tabs">
             <h2 class="doc-section-title">Tabs <code class="code-inline">.tlp-tabs</code></h2>
 
