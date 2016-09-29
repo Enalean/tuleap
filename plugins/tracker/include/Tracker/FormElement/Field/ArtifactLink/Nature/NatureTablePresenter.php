@@ -56,7 +56,7 @@ class NatureTablePresenter {
         $language                 = $GLOBALS['Language'];
         $this->id_label           = $language->getText('plugin_tracker_formelement_admin', 'artifactid_label');
         $this->project_label      = $language->getText('plugin_tracker_include_artifact', 'project');
-        $this->tracker_label      = 'Tracker';
+        $this->tracker_label      = $language->getText('plugin_tracker_import_admin', 'tracker');
         $this->summary_label      = $language->getText('plugin_tracker_include_artifact', 'summary');
         $this->status_label       = $language->getText('plugin_tracker_admin_semantic', 'status_label');
         $this->last_update_label  = $language->getText('plugin_tracker_formelement_admin', 'lastupdatedate_label');

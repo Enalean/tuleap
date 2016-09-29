@@ -76,7 +76,7 @@ plugin_git	gerrit_title	Migration to Gerrit
 plugin_git	gerrit_url	Please choose the Gerrit server:
 plugin_git	gerrit_migration_description	You are about to migrate your repository <em>$1</em> to Gerrit.
 plugin_git	gerrit_migration_more_description	The management of the repository (permissions, ...) will be delegated to Gerrit: <ul><li>A project <em>$1</em> will be created on the chosen server.</li><li>The current repository will become a mirror of the Gerrit reference.</li></ul>
-plugin_git	gerrit_migrated_more_description	As a reminder, the management of the repository (permissions, ...) has been delegated to Gerrit: <ul><li>A project <em>$1</em> has been created on the server $2.</li><li>The current repository is now a mirror of the Gerrit reference.</li></ul>
+plugin_git	gerrit_migrated_more_description	As a reminder, the management of the repository (permissions, ...) has been delegated to Gerrit: <ul><li>A project <em>$1</em> has been created on the server <a href="$2">$2</a>.</li><li>The current repository is now a mirror of the Gerrit reference.</li></ul>
 plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
 plugin_git	gerrit_past_project_warn	This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server
 plugin_git	gerrit_past_project_delete	Delete gerrit project

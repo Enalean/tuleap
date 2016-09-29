@@ -150,7 +150,6 @@ while (list ($package_id, $package) = each($packages)) {
                 $html .= '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
                 $html .= '       '. $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) ));
                 $html .= '</a>';
-                //$html .= '     &nbsp;&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES, 'UTF-8') .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES, 'UTF-8') .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
             }
             $html .= ' &nbsp; ';
             $html .= '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '&group_id='.$group_id.'">';

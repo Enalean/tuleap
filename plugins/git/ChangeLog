@@ -1,3 +1,19 @@
+Version 4.258 - Tuleap 8.20
+    * request #9526: Git mail notification should not be computed if nobody wants a notification
+
+Version 4.257 - Tuleap 8.19
+    * request #9460: Performance issues when querying permissions table
+
+Version 4.256 - Tuleap 8.19
+    * Wrapp project id into extractCrossReference method
+
+
+Version 4.255 - Tuleap 8.19
+    * request #9122: Don't remove deleted items if copy doesn't work
+
+Version 4.253 - Tuleap 8.19
+    * request #9397: Manually push SSH keys to a Gerrit server can be confusing if two servers use the same hostname
+
 Version 4.252 - Tuleap 8.19
     * Remove split usage in Git plugin
 

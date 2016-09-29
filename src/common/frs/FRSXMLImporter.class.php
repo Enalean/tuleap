@@ -19,6 +19,8 @@
  */
 
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermission;
 
 class FRSXMLImporter {
 
@@ -54,6 +56,9 @@ class FRSXMLImporter {
     /** @var UGroupManager */
     private $ugroup_manager;
 
+    /** @var FRSPermissionCreator */
+    private $permission_creator;
+
     public function __construct(
         Logger $logger,
         XML_RNGValidator $xml_validator,
@@ -63,6 +68,7 @@ class FRSXMLImporter {
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
         XMLImportHelper $xml_import_helper,
+        FRSPermissionCreator $permission_creator,
         FRSProcessorDao $processor_dao = null,
         FRSFileTypeDao $filetype_dao = null,
         PermissionsManager $permission_manager = null)
@@ -78,6 +84,7 @@ class FRSXMLImporter {
         $this->permission_manager = $permission_manager;
         $this->ugroup_manager = $ugroup_manager;
         $this->xml_import_helper = $xml_import_helper;
+        $this->permission_creator = $permission_creator;
     }
 
     private function getFileTypeDao(){
@@ -115,6 +122,8 @@ class FRSXMLImporter {
             return true;
         }
 
+        $this->importRights($project, $xml_frs);
+
         $created_id_map = array( 'package' => array() );
         foreach($xml_frs->package as $xml_pkg) {
             $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
@@ -132,6 +141,40 @@ class FRSXMLImporter {
             )
         );
         return true;
+    }
+
+    private function importRights(Project $project, SimpleXMLElement $xml_frs)
+    {
+        if ($xml_frs->{'read-access'}) {
+            $this->logger->info("Importing read access rights for {$project->getUnixName()}");
+            $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_frs->{'read-access'});
+            if(count($ugroups_ids) > 0) {
+                $this->permission_creator->savePermissions($project, $ugroups_ids, FRSPermission::FRS_READER);
+            }
+        }
+
+        if ($xml_frs->{'admin-access'}) {
+            $this->logger->info("Importing admin access rights for {$project->getUnixName()}");
+            $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_frs->{'admin-access'});
+            if(count($ugroups_ids) > 0) {
+                $this->permission_creator->savePermissions($project, $ugroups_ids, FRSPermission::FRS_ADMIN);
+            }
+        }
+    }
+
+    private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
+    {
+        $ugroup_ids = array();
+        foreach($permission_xmlnode->ugroup as $ugroup) {
+            $ugroup_name = (string)$ugroup;
+            $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+            if($ugroup === null) {
+                $this->logger->warn("Could not find any ugroup named $ugroup_name, skip it.");
+                continue;
+            }
+            array_push($ugroup_ids, $ugroup->getId());
+        }
+        return $ugroup_ids;
     }
 
     private function importPackage(

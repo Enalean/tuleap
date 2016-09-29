@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013. All rights reserved.
+* Copyright Enalean (c) 2013-2016. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -21,7 +21,6 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once('common/dao/include/DataAccessObject.class.php');
 
 class AgileDashboard_Semantic_Dao_InitialEffortDao extends DataAccessObject {
 
@@ -56,5 +55,16 @@ class AgileDashboard_Semantic_Dao_InitialEffortDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    /**
+     * @return bool
+     */
+    public function delete($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "DELETE FROM plugin_agiledashboard_semantic_initial_effort WHERE tracker_id = $tracker_id";
+
+        return $this->update($sql);
+    }
 }
-?>

@@ -58,10 +58,10 @@ class UsersToBeImportedCollectionBuilder {
     }
 
     /** @return UsersToBeImportedCollection */
-    public function build(SimpleXMLElement $xml) {
+    public function build(ArchiveInterface $archive) {
         $collection = new UsersToBeImportedCollection();
 
-        foreach ($xml as $user) {
+        foreach ($this->getXMLFromArchive($archive) as $user) {
             $to_be_imported_user = $this->instantiateUserToBeImported($user);
             $collection->add($to_be_imported_user);
         }
@@ -70,7 +70,24 @@ class UsersToBeImportedCollectionBuilder {
     }
 
     /** @return UsersToBeImportedCollection */
-    public function buildFromArchive(ArchiveInterface $archive) {
+    public function buildWithoutEmail(ArchiveInterface $archive) {
+        $collection = new UsersToBeImportedCollection();
+
+        foreach ($this->getXMLFromArchive($archive) as $user) {
+            $to_be_imported_user = $this->instantiateUserToBeImportedWithoutEmail($user);
+            $collection->add($to_be_imported_user);
+        }
+
+        return $collection;
+    }
+
+    /**
+     *
+     * @param ArchiveInterface $archive
+     * @return SimpleXMLElement
+     * @throws UsersXMLNotFoundException
+     */
+    private function getXMLFromArchive(ArchiveInterface $archive) {
         $xml_contents = $archive->getUsersXML();
         if (! $xml_contents) {
             throw new UsersXMLNotFoundException();
@@ -81,7 +98,24 @@ class UsersToBeImportedCollectionBuilder {
         $rng_path = realpath(__DIR__ .'/../../../xml/resources/users.rng');
         $this->xml_validator->validate($xml_element, $rng_path);
 
-        return $this->build($xml_element);
+        return $xml_element;
+    }
+
+    private function instantiateUserToBeImportedWithoutEmail(SimpleXMLElement $xml_user) {
+        $tuleap_user = $this->getExistingUserFromXML($xml_user);
+
+        if ($tuleap_user) {
+            return $this->instantiateMatchingUser($tuleap_user, $xml_user);
+        }
+
+        return new ToBeCreatedUser(
+            (string) $xml_user->username,
+            (string) $xml_user->realname,
+            (string) $xml_user->email,
+            (string) $xml_user->id,
+            (string) $xml_user->ldapid
+        );
+
     }
 
     private function instantiateUserToBeImported(SimpleXMLElement $user) {

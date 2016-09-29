@@ -53,6 +53,11 @@ class FlamingParrot_NavBarPresenter {
     /** @var Tuleap\User\UserActionPresenter[] */
     public $user_actions;
 
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $logout_csrf;
+
     public function __construct(
         $imgroot,
         PFUser $user,
@@ -64,7 +69,8 @@ class FlamingParrot_NavBarPresenter {
         $display_new_account,
         $motd,
         FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection,
-        array $user_actions
+        array $user_actions,
+        CSRFSynchronizerToken $logout_csrf
     ) {
         $this->imgroot                = $imgroot;
         $this->user                   = $user;
@@ -79,6 +85,7 @@ class FlamingParrot_NavBarPresenter {
         $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
         $this->navbar_items           = $navbar_items_collection->getItems();
         $this->user_actions           = $user_actions;
+        $this->logout_csrf            = $logout_csrf;
     }
 
     public function imgroot() {

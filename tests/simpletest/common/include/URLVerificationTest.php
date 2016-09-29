@@ -39,7 +39,6 @@ Mock::generatePartial(
     'URLVerificationTestVersion3',
     array('isException',
           'verifyProtocol',
-          'verifyHost',
           'verifyRequest',
           'getUrlChunks',
           'checkRestrictedAccess',
@@ -54,7 +53,6 @@ Mock::generatePartial(
     'URLVerificationTestVersion4',
     array('isException',
           'verifyProtocol',
-          'verifyHost',
           'verifyRequest',
           'getUrlChunks',
           'checkRestrictedAccess',
@@ -85,6 +83,7 @@ class URLVerificationBaseTest extends TuleapTestCase {
 
     protected $user_manager;
     protected $user;
+    protected $request;
 
     function setUp() {
         parent::setUp();
@@ -105,6 +104,8 @@ class URLVerificationBaseTest extends TuleapTestCase {
         stub($this->user_manager)->getCurrentUser()->returns($this->user);
 
         UserManager::setInstance($this->user_manager);
+
+        $this->request = mock('HTTPRequest');
     }
 
     function tearDown() {
@@ -199,16 +200,16 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $GLOBALS['sys_force_ssl'] = 1;
         $urlVerification = new URLVerification();
 
-        $urlVerification->verifyProtocol($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], 'https');
     }
 
     function testVerifyProtocolHTTPSAndForceSslEquals1() {
-        $server = array('HTTPS' => 'on');
+        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 1;
         $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], null);
     }
@@ -217,16 +218,16 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $server = array();
         $GLOBALS['sys_force_ssl'] = 0;
         $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], null);
     }
 
     function testVerifyProtocolHTTPSAndForceSslEquals0() {
-        $server = array('HTTPS' => 'on');
+        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 0;
         $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], null);
     }
@@ -234,14 +235,14 @@ class URLVerificationTest extends URLVerificationBaseTest {
    function testVerifyHostHTTPSAndForceSslEquals1() {
         $server = array('HTTP_HOST'   => 'secure.example.com',
                         'SERVER_NAME' => 'secure.example.com',
-                        'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
+        stub($this->request)->isSecure()->returns(true);
 
         $GLOBALS['sys_force_ssl']      = 1;
         $GLOBALS['sys_https_host']     = 'secure.example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], null);
     }
@@ -255,7 +256,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $GLOBALS['sys_default_domain'] = 'example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], null);
     }
@@ -263,14 +264,14 @@ class URLVerificationTest extends URLVerificationBaseTest {
     function testVerifyHostHTTPSAndForceSslEquals0() {
         $server = array('HTTP_HOST'   => 'secure.example.com',
                         'SERVER_NAME' => 'secure.example.com',
-                        'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
+        stub($this->request)->isSecure()->returns(true);
 
         $GLOBALS['sys_force_ssl']      = 0;
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], null);
     }
@@ -285,7 +286,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], 'secure.example.com');
     }
@@ -300,7 +301,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], null);
     }
@@ -308,15 +309,15 @@ class URLVerificationTest extends URLVerificationBaseTest {
     function testVerifyHostInvalidHostHTTPSForceSslEquals0() {
         $server = array('HTTP_HOST'   => 'test.example.com',
                         'SERVER_NAME' => 'test.example.com',
-                        'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
+        stub($this->request)->isSecure()->returns(true);
 
         $GLOBALS['sys_force_ssl']      = 0;
         $GLOBALS['sys_default_domain'] = 'example.com';
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], null);
     }
@@ -324,15 +325,15 @@ class URLVerificationTest extends URLVerificationBaseTest {
     function testVerifyHostInvalidHostForceSslEquals1() {
         $server = array('HTTP_HOST'   => 'test.example.com',
                         'SERVER_NAME' => 'test.example.com',
-                        'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
+        stub($this->request)->isSecure()->returns(true);
 
         $GLOBALS['sys_force_ssl']      = 1;
         $GLOBALS['sys_default_domain'] = 'example.com';
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
+        $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], null);
     }
@@ -466,7 +467,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://example.com');
+        $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), 'https://example.com');
     }
 
     function testGetRedirectionProtocolAndHostModified() {
@@ -478,20 +479,20 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), 'http://secure.example.com/user.php');
+        $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), 'http://secure.example.com/user.php');
     }
 
     function testGetRedirectionRequestModified() {
         $server = array('HTTP_HOST' => 'secure.example.com',
-                        'REQUEST_URI' => '/user.php',
-                        'HTTPS'       => 'on',);
+                        'REQUEST_URI' => '/user.php');
+        stub($this->request)->isSecure()->returns(true);
         $chunks =  array('script'=> '/project.php');
 
         $urlVerification = new URLVerificationTestVersion2($this);
 
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), '/project.php');
+        $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), '/project.php');
     }
 
     function testAssertValidUrlWithException() {
@@ -500,7 +501,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
         $urlVerification->expectNever('header');
         $server = array();
-        $urlVerification->assertValidUrl($server);
+        $urlVerification->assertValidUrl($server, $this->request);
     }
 
     function testAssertValidUrlWithNoRedirection() {
@@ -515,7 +516,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $server = array(
             'REQUEST_URI' => '/'
         );
-        $urlVerification->assertValidUrl($server);
+        $urlVerification->assertValidUrl($server, $this->request);
     }
 
     function testAssertValidUrlWithRedirection() {
@@ -530,7 +531,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $server = array(
             'REQUEST_URI' => '/'
         );
-        $urlVerification->assertValidUrl($server);
+        $urlVerification->assertValidUrl($server, $this->request);
     }
 
     function testCheckNotActiveProjectApi() {
@@ -545,7 +546,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->expectNever('displayRestrictedUserError');
         $urlVerification->expectNever('displayPrivateProjectError');
 
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/api/'));
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/api/'), $this->request);
     }
 
     function testCheckNotActiveProjectError() {
@@ -562,7 +563,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->expectNever('displayRestrictedUserError');
         $urlVerification->expectNever('displayPrivateProjectError');
 
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'));
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
     }
 
     function testCheckNotActiveProjectNoError() {
@@ -579,7 +580,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->expectNever('displayRestrictedUserError');
         $urlVerification->expectNever('displayPrivateProjectError');
 
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'));
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
     }
 
     function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject() {
@@ -591,7 +592,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->expectNever('displayRestrictedUserError');
         $urlVerification->expectNever('displayPrivateProjectError');
 
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'));
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
     }
 
     function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsPublic() {
@@ -609,7 +610,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->expectNever('displayRestrictedUserError');
         $urlVerification->expectNever('displayPrivateProjectError');
 
-        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'));
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
     }
 
     function testRestrictedUserCanAccessSearchOnTracker() {

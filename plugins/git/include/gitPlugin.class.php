@@ -683,14 +683,15 @@ class GitPlugin extends Plugin {
         $remote_servers = $this->getGerritServerFactory()->getRemoteServersForUser($user);
 
         if (count($remote_servers) > 0) {
-            $html = '<br />'.
-                $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
+            $purifier = Codendi_HTMLPurifier::instance();
+            $html     = '<br />'.
+                $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info')) .
                 '<ul>';
 
             foreach ($remote_servers as $server) {
                 $html .= '<li>
-                        <a href="'.$server->getBaseUrl().'/#/settings/ssh-keys">'.
-                            $server->getHost().'
+                        <a href="'. $purifier->purify($server->getBaseUrl()) .'/#/settings/ssh-keys">'.
+                            $purifier->purify($server->getBaseUrl()) .'
                         </a>
                     </li>';
             }
@@ -699,8 +700,8 @@ class GitPlugin extends Plugin {
                 <form action="" method="post">
                     <input type="submit"
                         class="btn btn-small"
-                        title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
-                        value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
+                        title="'. $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title')) .'"
+                        value="'. $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value')) .'"
                         name="ssh_key_push"/>
                 </form>';
         }

@@ -1,3 +1,30 @@
+Version 1.421 - Tuleap 8.20
+    * request #9524: Kanban column counts does not take into account permissions when the column is closed
+
+Version 1.420 - Tuleap 8.20
+    * story #9463: see cumulative flow diagram (Add reports modal)
+
+Version 1.419 - Tuleap 8.20
+    * request #9462: Fatal error in Tracker report when user cannot see Milestone trackers
+
+Version 1.418 - Tuleap 8.20
+    * request #9518: html entities displayed in kanban cards
+
+Version 1.417 - Tuleap 8.20
+    * request #9509: Fix angular/di errors
+
+Version 1.416 - Tuleap 8.19
+    * Fix request #9432: Can't import a configuration from a template file in Agile Dashboard
+
+Version 1.415 - Tuleap 8.19
+    * story #9427: Quickly switch between FRS/Scrum/Artifact release
+
+Version 1.414 - Tuleap 8.19
+    * request #9417: Missing CSRF protection in the semantic administration
+
+Version 1.413 - Tuleap 8.19
+    * request #9415: Impossible to unset the semantic Initial effort
+
 Version 1.412 - Tuleap 8.18
     * request #9387: Computed card fields manual values should be filtered
 

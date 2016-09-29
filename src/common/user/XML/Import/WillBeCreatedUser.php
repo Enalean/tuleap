@@ -44,16 +44,21 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
     /** @var string */
     private $status;
 
+    /** @var string */
+    private $ldap_id;
+
     public function __construct(
         $username,
         $realname,
         $email,
-        $status
+        $status,
+        $ldap_id
     ) {
         $this->username = $username;
         $this->realname = $realname;
         $this->email    = $email;
         $this->status   = $status;
+        $this->ldap_id  = $ldap_id;
     }
 
     public function getUserName() {
@@ -80,7 +85,7 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         $fake_user->setUserName($this->username);
         $fake_user->setRealName($this->realname);
         $fake_user->setPassword($random_password);
-        $fake_user->setLdapId('');
+        $fake_user->setLdapId($this->ldap_id);
         $fake_user->setRegisterPurpose('Created by xml import');
         $fake_user->setEmail($this->email);
         $fake_user->setStatus($this->status);

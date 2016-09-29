@@ -18,8 +18,6 @@ if (isset($group_id) && $group_id) {
 	$log_group=0;
 }
 
-$request =& HTTPRequest::instance();
-
 $log_time=time();
 
 $sql = 'INSERT INTO activity_log'.

@@ -283,16 +283,6 @@ echo $footerEnd;
 			$sidebar['LANGUAGES'] = true;
 		}
 
-		if (session_loggedin()) {
-			$efbox_log_text = _('Log Out');
-			$efbox_log_link = "/account/logout.php?return_to=" .
-			    urlencode(getStringFromServer('REQUEST_URI'));
-		} else {
-			$efbox_log_text = _('Log In');
-			$efbox_log_link = "/account/login.php?return_to=" .
-			    urlencode(getStringFromServer('REQUEST_URI'));
-		}
-
                 echo '<div class="tuleap-panel">';
 
 		foreach ( $sidebar as $boxName => $content ) {

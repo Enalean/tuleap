@@ -22,21 +22,28 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use InoOicClient\Oic\Authorization\Dispatcher;
 use InoOicClient\Oic\Authorization\Request;
+use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 
 class AuthorizationDispatcher extends Dispatcher {
+    /**
+     * @var Generator
+     */
+    private $uri_generator;
 
-    public function __construct(StateManager $state_manager) {
+    public function __construct(StateManager $state_manager, Generator $uri_generator) {
         $this->setStateManager($state_manager);
+        $this->uri_generator = $uri_generator;
     }
 
     public function createAuthorizationRequestUri(Request $request, Provider $provider, $return_to) {
         $state_manager = $this->getStateManager();
         $state         = $state_manager->initState($provider, $return_to);
         $request->setState($state->getSignedState());
+        $request->setNonce($state->getNonce());
 
         $this->setLastRequest($request);
-        return $this->getUriGenerator()->createAuthorizationRequestUri($request);
+        return $this->uri_generator->createAuthorizationRequestUri($request);
     }
 }

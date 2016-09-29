@@ -30,6 +30,13 @@ function commits_header($params) {
     $params['toptab']='cvs';
     $group_id        = $params['group'];
 
+    $additional_params = array();
+    if (isset($params['body_class'])) {
+        $additional_params = array(
+            'body_class' => $params['body_class']
+        );
+    }
+
     $pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
 
@@ -37,26 +44,44 @@ function commits_header($params) {
         exit_error($GLOBALS['Language']->getText('global', 'error'),
                    $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off'));
     }
-    echo site_project_header($params);
+    $service = $project->getService(Service::CVS);
 
-    echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_info').'</A>';
+    $toolbar = array();
+    $toolbar[] = array('title' => $GLOBALS['Language']->getText('svn_utils','svn_info'),
+        'url'   => '/cvs/?func=info&group_id='.$group_id);
 
     if ($project->isPublic() || user_isloggedin()) {
-        $uri = session_make_url('/cvs/viewvc.php/?root='.$project->getUnixName(false).'&roottype=cvs');
-        echo ' | <A HREF="'.$uri.'">'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse').'</A>';
+        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse'),
+            'url'   => '/cvs/viewvc.php/?root='.$project->getUnixName(false).'&roottype=cvs');
     }
+
     if (user_isloggedin()) {
-        echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_my').'</A>';
-        echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_query').'</A>';
+        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_my'),
+            'url'   => '/cvs/?func=browse&group_id='.$group_id.'&set=my');
+        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_query'),
+            'url'   => '/cvs/?func=browse&group_id='.$group_id);
     }
     if (user_ismember($group_id, 'A')) {
-        echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_admin').'</A>';
+        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_admin'),
+            'url'   => '/cvs/?func=admin&group_id='.$group_id);
     }
-    if (!isset($params['help'])) { $params['help'] = "cvs.html";}
-    echo ' | '.help_button($params['help'],false,$GLOBALS['Language']->getText('global', 'help'));
+    if (!isset($params['help'])) {
+        $params['help'] = "cvs.html";
+    }
+    $toolbar[] = array('title' => $GLOBALS['Language']->getText('global','help'),
+        'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
 
-    echo '</B>';
-    echo ' <hr width="300" size="1" align="left" noshade>';
+    $service->displayHeader(
+        $params['title'],
+        array(
+            array(
+                'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_cvs_lbl_key'),
+                'url' => '/cvs/?group_id='.$group_id
+            )
+        ),
+        $toolbar,
+        $additional_params
+    );
 }
 
 function commits_footer($params) {

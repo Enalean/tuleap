@@ -1,3 +1,111 @@
+Version 8.20 (Not Released Yet)
+	== Enhancement ==
+	* story #9439: search for project name with REST
+
+	== Plugins ==
+	* cardwall: 1.69
+	* tracker: 5.1016
+	* svn: 0.95
+	* artifactfolders: 0.5
+	* frs: 0.21
+	* agiledashboard: 1.421
+	* docman: 2.26.121
+	* artifactsfolders: 0.13
+	* ldap: 3.111
+	* git: 4.258
+
+	== Security ==
+	* request #9501: Reflected XSS in the project list page in the site administration
+	* request #9502: SQL injection through widgets management
+	* request #9500: Reflected XSS in the Subversion revisions browsing
+	* request #9512: No access control of administration pages for french wiki
+	* request #9497: Remove legacy password storage
+
+	== Bug fix ==
+	* request #9489: Wiki administration is not accessible to project administrator if they do not have explicit wiki admin rights
+	* request #9490: Wiki does not detect properly HTTPS when behind a reverse proxy
+	* request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
+
+	== Clean Up ==
+	* request #9492: Disable surveys service by default
+	* request #9517: Plugin FRS package is unnecessary big
+
+	== Enhancement ==
+	* request #9010: Import/Export of artifactlinks
+
+Version 8.19 (Thursday, September 15th 2016)
+	== Enhancement ==
+	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
+	* story #9281: define FRS global permissions (Refactoring of package and release)
+	* story #9409: define FRS permissions for packages and releases (Refactoring : add package router)
+	* request #9419: It should be possible to create ldap users at XML import
+	* story #9393 See svn plugin access logs
+	* story #9427: Quickly switch between FRS/Scrum/Artifact release
+	* story #9409: define FRS permissions for packages and releases
+		- Refactoring release introduce release router
+		- Have consistent selectbox for FRS package
+		- Have consistent selectbox for FRS release
+	* story #8610:
+		- Use viewvc-theme-tuleap in CVS
+		- Dont truncate error message
+	* story #8597:
+		- have a recent version of ViewVC (CVS, SVN core or plugin can use either viewvc or viewvc-tuleap)
+		- Update version of packages tuleap-core-subversion and tuleap-core-cvs to take the dependency change into account
+	* request #9455: XML import user mapping should provide an automap strategy
+
+	== Development ==
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/file)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in Git plugin)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in Tracker plugin)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usages in src/www/admin)
+	* request #9202: Make Tuleap compatible with PHP 5.6 (Remove split usage in src/www/docman)
+	* request #9347: Tuleap RealTime independent of Tuleap
+	* request #9435: Be able to use the script docker_generate_packages.sh with a non default NPM registry
+	* request #9449: Remove Gravatar usage
+
+	== Bug fix ==
+	* request #9406: Missing login CSRF protection
+	* story #9393: SVN custom logs are not working in new installation
+	* request #9414: Removing the backup cron for new installation
+	* request #9407: HTTPS is not properly detected when behind a reverse proxy
+	* request #9122: Don't remove deleted items if copy doesn't work
+	* story #9393: SVN custom logs are not working in new installation in HTTPS
+	* request #9395: A restricted user can not browse the SVN tree in SVN core if the SVN plugin is not installed
+	* request #9443: Project creation via SOAP is broken
+	* request #9444: FRS error at release creation when nobody is selected in the package permission list
+	* request #9413: Tuleap is leaking private user information
+	* request #9450: Unable to enable/disable a service
+	* request #9464: User can't login from the homepage if the standard Tuleap homepage is not used
+	* request #9481: Fatal error when you try to browse a SVN core or CVS repo and you do not have access
+	* request #9487: Help link in the toolbar of the file release manager does not open into a new window
+	* request #9479: Copied/pasted item in docman doesn't have any permissions
+	* request #9478: Cannot apply permissions recursively in docman
+	* request #9491: scp/ftp file list is empty on page load
+
+	== Plugins ==
+	* tracker: 5.1002
+	* git: 4.257
+	* ldap: 3.109
+	* mediawiki: 0.124
+	* pluginsadministration: 1.20
+	* userlog: 1.10
+	* svn: 0.93
+	* openidconnectclient: 0.26
+	* statistics: 0.64
+	* webdav: 1.9.20
+	* docman: 2.26.120
+	* agiledashboard: 1.416
+	* cardwall: 1.67
+	* frs: 0.20
+	* hudson: 1.34
+	* hudson_svn: 0.17
+
+	== Themes ==
+	* FlamingParrot: 1.151
+
+    == Api ==
+	* REST API: 1.17
+
 Version 8.18 (Thursday, August 18th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions

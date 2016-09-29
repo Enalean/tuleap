@@ -22,6 +22,7 @@ require_once "account.php";
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDontExistInPlateformException;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -78,15 +79,16 @@ class ProjectXMLImporter {
         UgroupDuplicator $ugroup_duplicator,
         FRSPermissionCreator $frs_permissions_creator
     ) {
-        $this->event_manager     = $event_manager;
-        $this->project_manager   = $project_manager;
-        $this->user_manager      = $user_manager;
-        $this->xml_validator     = $xml_validator;
-        $this->ugroup_manager    = $ugroup_manager;
-        $this->user_finder       = $user_finder;
-        $this->logger            = $logger;
-        $this->service_manager   = $service_manager;
-        $this->ugroup_duplicator = $ugroup_duplicator;
+        $this->event_manager           = $event_manager;
+        $this->project_manager         = $project_manager;
+        $this->user_manager            = $user_manager;
+        $this->xml_validator           = $xml_validator;
+        $this->ugroup_manager          = $ugroup_manager;
+        $this->user_finder             = $user_finder;
+        $this->logger                  = $logger;
+        $this->service_manager         = $service_manager;
+        $this->ugroup_duplicator       = $ugroup_duplicator;
+        $this->frs_permissions_creator = $frs_permissions_creator;
 
         $send_notifications = false;
         $force_activation   = true;
@@ -110,6 +112,18 @@ class ProjectXMLImporter {
         $this->logger->info('Start importing new project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
+
+        $error                 = false;
+        $params['xml_content'] = $xml_element;
+        $params['error']       = &$error;
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_IS_PROJECT_VALID,
+            $params
+        );
+
+        if ($params['error']) {
+            throw new NatureDontExistInPlateformException();
+        }
 
         if (!empty($project_name_override)) {
             $xml_element['unix-name'] = $project_name_override;
@@ -144,6 +158,18 @@ class ProjectXMLImporter {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
+
+        $error                 = false;
+        $params['xml_content'] = $xml_element;
+        $params['error']       = &$error;
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_IS_PROJECT_VALID,
+            $params
+        );
+
+        if ($params['error']) {
+            throw new NatureDontExistInPlateformException();
+        }
 
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
     }
@@ -200,7 +226,9 @@ class ProjectXMLImporter {
             new FRSFileFactory(),
             $this->user_finder,
             $this->ugroup_manager,
-            new XMLImportHelper($this->user_manager));
+            new XMLImportHelper($this->user_manager),
+            $this->frs_permissions_creator
+        );
 
         $frs_release_mapping = array();
         $frs->import($configuration, $project, $xml_element, $extraction_path, $frs_release_mapping);

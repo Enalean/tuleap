@@ -67,9 +67,10 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
         $html = '';
         $html .= '<ul>';
         if (user_isloggedin()) {
-            
-            $html .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
-            $html .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
+            $html       .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
+            $logout_csrf = new CSRFSynchronizerToken('logout_action');
+            $logout_link = '/account/logout.php?' . http_build_query(array($logout_csrf->getTokenName() => $logout_csrf->getToken()));
+            $html       .= '<li><a href="' . $logout_link . '">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
             if((isset($GLOBALS['sys_use_project_registration']) && $GLOBALS['sys_use_project_registration'] ==1) || !isset($GLOBALS['sys_use_project_registration'])) {
                 $html .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
             } 

@@ -21,6 +21,7 @@
 use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
+use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 
 
 require_once(__DIR__ . '/../bootstrap.php');
@@ -38,10 +39,11 @@ class FlowTest extends TuleapTestCase {
         $state->setReturnValue('getSignedState', $signed_state);
         $state_manager    = mock('Tuleap\OpenIDConnectClient\Authentication\StateManager');
         $state_manager->setReturnValue('initState', $state);
+        $uri_generator    = new Generator();
 
         $flow             = new Flow(
             $state_manager,
-            new AuthorizationDispatcher($state_manager),
+            new AuthorizationDispatcher($state_manager, $uri_generator),
             $provider_manager,
             new IDTokenVerifier()
         );
@@ -67,10 +69,11 @@ class FlowTest extends TuleapTestCase {
         $state->setReturnValue('getSignedState', $signed_state);
         $state_manager    = mock('Tuleap\OpenIDConnectClient\Authentication\StateManager');
         $state_manager->setReturnValue('initState', $state);
+        $uri_generator    = new Generator();
 
         $flow             = new Flow(
             $state_manager,
-            new AuthorizationDispatcher($state_manager),
+            new AuthorizationDispatcher($state_manager, $uri_generator),
             $provider_manager,
             new IDTokenVerifier()
         );

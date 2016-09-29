@@ -167,12 +167,14 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
     tuleap.agiledashboard.cardwall.card.AbstractElementEditor, {
 
     initialize : function( element ) {
-        this.options = { };
-        this.element        = element;
-        this.field_id       = element.readAttribute( 'data-field-id' );
-        this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
-        this.update_url     = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
-        this.artifact_type  = element.readAttribute( 'data-field-type' );
+        this.options           = { };
+        this.element           = element;
+        this.field_id          = element.readAttribute( 'data-field-id' );
+        this.artifact_id       = element.up( '.card' ).readAttribute( 'data-artifact-id' );
+        this.update_url        = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
+        this.artifact_type     = element.readAttribute( 'data-field-type' );
+        this.is_computed_field = (element.readAttribute( 'data-field-is-autocomputed' ) !== null);
+        this.old_value         = element.readAttribute( 'data-field-old-value' );
 
         if(! this.userCanEdit() ) {
             return;
@@ -185,7 +187,53 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
         this.options[ 'onFailure' ]           = this.fail;
         this.options[ 'onFormCustomization' ] = this.addValidationOnTextEditor.bind(this);
 
-        new Ajax.InPlaceEditor( container, this.update_url, this.options );
+        if (this.is_computed_field) {
+            this.options[ 'onEnterEditMode' ]     = this.appendAutocomputedOverrideDiv.bind(this);
+            this.options[ 'onLeaveEditMode' ]     = this.removeAutocomputedOverrideDiv.bind(this);
+        }
+
+        this.in_place_editor = new Ajax.InPlaceEditor( container, this.update_url, this.options );
+    },
+
+    appendAutocomputedOverrideDiv : function (in_place_editor) {
+        var self = this;
+        var autocompute_override_div = new Element('div');
+
+        autocompute_override_div.writeAttribute('class', 'autocomputed_override');
+        autocompute_override_div.update($(in_place_editor.element).up().previous().innerHTML);
+
+        autocompute_override_div.select('a')[0].observe('click', function (event) {
+            event.preventDefault();
+
+            self.bindAutocomputeLink.bind(self)(this.readAttribute('data-field-id'));
+        });
+
+        $(in_place_editor.element).up().insert({ top: autocompute_override_div });
+    },
+
+    removeAutocomputedOverrideDiv : function (in_place_editor) {
+        $(in_place_editor.element).previous().remove();
+    },
+
+    bindAutocomputeLink : function(field_id) {
+        var parameters = { },
+            linked_field = 'artifact[' + field_id +']';
+
+        var self = this;
+
+        var post_value = {
+            is_autocomputed: 1,
+            manual_value: ''
+        };
+        parameters[linked_field]      = JSON.stringify(post_value);
+
+        new Ajax.Request(self.update_url, {
+            parameters: parameters,
+            onComplete: function(transport) {
+                self.in_place_editor.wrapUp(transport);
+            },
+            onFailure: self.fail
+        });
     },
 
     createAndInjectTemporaryContainer : function () {
@@ -199,21 +247,41 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
     },
 
     getClickableArea : function() {
+        var autocompute_label = '';
+
+        if (this.element.readAttribute('data-field-is-autocomputed') === '1') {
+            autocompute_label = ' ('+ codendi.locales.cardwall.autocomputed_label +')';
+        }
+
         if( this.element.innerHTML == '' ) {
             return ' - ' ;
         }
 
-        return this.element.innerHTML;
+        return this.element.innerHTML + autocompute_label;
     },
 
     ajaxCallback : function() {
-        var field_id = this.field_id;
+        var field_id          = this.field_id;
+        var is_computed_field = this.is_computed_field;
 
         return function setRequestData(form, value) {
-            var parameters = { },
+            var parameters   = { },
                 linked_field = 'artifact[' + field_id +']';
+            if (is_computed_field) {
+                if (! /^[0-9]*(\.[0-9]+)?$/.test(value)) {
+                    return false;
+                }
 
-            parameters[ linked_field ] = value;
+                var post_value = {
+                    is_autocomputed: 0,
+                    manual_value: value
+                };
+
+                parameters[linked_field] = JSON.stringify(post_value);
+            } else {
+                parameters[linked_field] = value;
+            }
+
             return parameters;
         }
     },
@@ -232,7 +300,8 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
         switch (this.artifact_type ) {
             case 'float':
-                pattern = '[0-9]*(\.[0-9]*)?';
+            case 'computed':
+                pattern = '[0-9]*(\\.[0-9]+)?';
                 message = codendi.locales.cardwall_field_validation.error_message.float_type;
                 break;
             case 'int':
@@ -240,7 +309,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
                 message = codendi.locales.cardwall_field_validation.error_message.int_type;
                 break;
             default:
-                pattern = '.';
+                pattern = '.*';
                 message = '';
         }
 
@@ -309,16 +378,16 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     bindSelectedElementsToEditor : function( editor ) {
-        
+
         editor.getSelectedUsers = function() {
 
-            if (editor.element.select( '.avatar' ).length == 0) {                
+            if (editor.element.select( '.avatar' ).length == 0) {
                 this.options.selected = getSelectedUsersByDisplayType('realname');
             } else {
                 this.options.selected = getSelectedUsersByDisplayType('avatar');
             }
         };
-        
+
         function getSelectedUsersByDisplayType(classname) {
                 var values   = editor.element.select( '.'+ classname );
                 var users = { };
@@ -327,7 +396,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                     var id      = classname.readAttribute( 'data-user-id' );
                     users[ id ] = classname.readAttribute( 'title' );
                 });
-                
+
                 return users;
             }
     },
@@ -453,7 +522,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 return new_values;
             }
 
-            
+
         }
 
     },

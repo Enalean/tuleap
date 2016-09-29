@@ -29,5 +29,6 @@ codendi.locales['cardwall'] = {
     go_to_fullscreen      : 'Plein écran',
     exit_fullscreen       : 'Quitter le plein écran',
     no_fullscreen_title   : 'Ouuuuuuups !',
-    no_fullscreen_content : 'Cher utilisateur d\'Internet Explorer,<br/><br/>Nous vous informons que la fonctionnalité "Plein écran" n\' est pas disponible sur votre navigateur.<br/><br/>Bien cordialement,<br/>L\'équipe Tuleap'
+    no_fullscreen_content : 'Cher utilisateur d\'Internet Explorer,<br/><br/>Nous vous informons que la fonctionnalité "Plein écran" n\' est pas disponible sur votre navigateur.<br/><br/>Bien cordialement,<br/>L\'équipe Tuleap',
+    autocomputed_label    : 'valeur calculée'
 };

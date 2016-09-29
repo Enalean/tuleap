@@ -1,3 +1,9 @@
+Version 0.26 - Tuleap 8.19
+    * request #9403: User info endpoint should not be mandatory
+
+Version 0.25 - Tuleap 8.19
+    * request #9408: Prevent mix-up attacks with OpenID Connect
+
 Version 0.24 - Tuleap 8.18
     * request #9399: OpenID Connect style is broken
 

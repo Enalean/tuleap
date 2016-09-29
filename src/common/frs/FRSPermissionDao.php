@@ -21,6 +21,8 @@
 namespace Tuleap\FRS;
 
 use DataAccessObject;
+use FRSPackage;
+use FRSRelease;
 use ProjectUGroup;
 
 class FRSPermissionDao extends DataAccessObject
@@ -85,23 +87,26 @@ class FRSPermissionDao extends DataAccessObject
         return $this->da->commit();
     }
 
-    public function searchBindingPermissionsByProject($project_id, $template_id)
+    public function duplicate($project_id, $template_id)
     {
         $project_id  = $this->da->escapeInt($project_id);
         $template_id = $this->da->escapeInt($template_id);
 
-        $sql = "SELECT ugroup_id, permission_type
-                    FROM frs_global_permissions
-                    WHERE project_id = $template_id
-                    AND ugroup_id < 100
-                UNION
-                    SELECT dst_ugroup_id AS ugroup_id, permission_type
-                    FROM ugroup_mapping  AS mapping, frs_global_permissions AS permission
-                    WHERE mapping.to_group_id     = $project_id
-                        AND permission.project_id = $template_id
-                        AND permission.ugroup_id  = mapping.src_ugroup_id";
+        $sql = "INSERT INTO frs_global_permissions(project_id, permission_type, ugroup_id)
+                SELECT $project_id, permission_type, R.dst_ugroup_id
+                FROM frs_global_permissions
+                    INNER JOIN (
+                            SELECT src_ugroup_id, dst_ugroup_id
+                            FROM ugroup_mapping
+                            WHERE to_group_id = $project_id
+                        UNION
+                            SELECT ugroup_id AS src_ugroup_id, ugroup_id AS dst_ugroup_id
+                            FROM ugroup
+                            WHERE ugroup_id <= 100
+                    ) AS R ON (R.src_ugroup_id = ugroup_id)
+                WHERE project_id = $template_id";
 
-        return $this->retrieve($sql);
+        return $this->update($sql);
     }
 
     public function doesProjectHaveLegacyFrsAdminMembers($project_id)
@@ -139,13 +144,27 @@ class FRSPermissionDao extends DataAccessObject
         $project_id     = $this->da->escapeInt($project_id);
         $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
         $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
+        $package_read   = $this->da->quoteSmart(FRSPackage::PERM_READ);
+        $release_read   = $this->da->quoteSmart(FRSRelease::PERM_READ);
+
+        $this->da->startTransaction();
 
         $sql = "UPDATE frs_global_permissions
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id IN ($old_ugroup_ids)
                   AND project_id = $project_id";
+        $this->update($sql);
 
-        return $this->update($sql);
+        $sql = "UPDATE permissions
+                INNER JOIN frs_package ON permissions.object_id = CAST(frs_package.package_id AS CHAR)
+                INNER JOIN frs_release ON frs_release.package_id = frs_package.package_id
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id IN ($old_ugroup_ids)
+                  AND frs_package.group_id = $project_id
+                  AND permission_type IN ($package_read, $release_read)";
+        $this->update($sql);
+
+        return $this->da->commit();
     }
 
     private function searchAllProjectsWithAnonymous()
@@ -190,12 +209,24 @@ class FRSPermissionDao extends DataAccessObject
     {
         $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
         $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $package_read  = $this->da->quoteSmart(FRSPackage::PERM_READ);
+        $release_read  = $this->da->quoteSmart(FRSRelease::PERM_READ);
+
+        $this->da->startTransaction();
 
         $sql = "UPDATE frs_global_permissions
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id = $old_ugroup_id
                 ";
+        $this->update($sql);
 
-        return $this->update($sql);
+        $sql = "UPDATE permissions
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id
+                AND permission_type IN ($package_read, $release_read)
+                ";
+        $this->update($sql);
+
+        return $this->da->commit();
     }
 }

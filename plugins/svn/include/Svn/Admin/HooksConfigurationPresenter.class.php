@@ -31,6 +31,7 @@ class HooksConfigurationPresenter extends BaseAdminPresenter {
     public $csrf_input;
     public $title;
     public $repository_name;
+    public $repository_full_name;
 
     public $hooks_config_subtitle;
     public $comment;
@@ -39,6 +40,8 @@ class HooksConfigurationPresenter extends BaseAdminPresenter {
     public $label_pre_commit_must_contain_reference;
     public $label_allow_commit_message_changes;
     public $submit;
+    public $repository_id;
+    public $sections;
 
     public function __construct(
         Repository $repository,
@@ -50,11 +53,12 @@ class HooksConfigurationPresenter extends BaseAdminPresenter {
     ) {
         parent::__construct();
 
-        $this->project_id                 = $project->getId();
+        $this->project_id                 = $project->getID();
         $this->repository_id              = $repository->getId();
         $this->csrf_input                 = $token->fetchHTMLInput();
         $this->title                      = $title;
         $this->repository_name            = $repository->getName();
+        $this->repository_full_name       = $repository->getFullName();
         $this->commit_rule_active         = true;
         $this->pre_commit_must_contain_reference = $pre_commit_must_contain_reference;
         $this->allow_commit_message_changes      = $allow_commit_message_changes;

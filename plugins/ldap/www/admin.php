@@ -96,7 +96,6 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
         $toAdd       = $ldapGroupManager->getUsersToBeAdded($bindOption);
         $notImpacted = $ldapGroupManager->getUsersNotImpacted($bindOption);
 
-        
         if(is_array($toAdd)) {
             // Display
             $um = UserManager::instance();
@@ -138,9 +137,15 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
             echo '<form method="post" action="?group_id='.$groupId.'">';
             echo '<input type="hidden" name="ldap_group" value="'.$hp->purify($request->get('ldap_group')).'" />';
             echo '<input type="hidden" name="confirm" value="yes" />';
-            if($bindOption == 'preserve_members') {
+
+            if ($bindOption == 'preserve_members') {
                 echo '<input type="hidden" name="preserve_members" value="on" />';
             }
+
+            if ($synchro === LDAP_GroupManager::AUTO_SYNCHRONIZATION) {
+                echo '<input type="hidden" name="synchronize" value="on" />';
+            }
+
             echo '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
             echo '<input type="submit" name="update" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />';
             echo '</form>';
@@ -156,4 +161,3 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
 } else {
     $GLOBALS['Response']->redirect('/project/admin/index.php?group_id='.$groupId);
 }
-?>

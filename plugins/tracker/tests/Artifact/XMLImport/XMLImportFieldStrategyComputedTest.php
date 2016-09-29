@@ -37,7 +37,7 @@ class XMLImportFieldStrategyComputedTest extends \TuleapTestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user);
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, mock('Tracker_Artifact'));
         $expected_result = array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0');
 
         $this->assertIdentical($change_computed, $expected_result);
@@ -53,7 +53,7 @@ class XMLImportFieldStrategyComputedTest extends \TuleapTestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user);
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, mock('Tracker_Artifact'));
         $expected_result = array(Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1');
 
         $this->assertIdentical($change_computed, $expected_result);
@@ -70,7 +70,7 @@ class XMLImportFieldStrategyComputedTest extends \TuleapTestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user);
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, mock('Tracker_Artifact'));
         $expected_result = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'

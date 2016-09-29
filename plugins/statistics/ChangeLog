@@ -1,3 +1,6 @@
+Version 0.64 - Tuleap 8.19
+    * request #9407: HTTPS is not properly detected when behind a reverse proxy
+
 Version 0.63 - Tuleap 8.18
     * request #9375 Gulpify sass
 

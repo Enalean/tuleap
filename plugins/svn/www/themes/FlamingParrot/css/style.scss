@@ -5,6 +5,17 @@
     #svn-administration #notifications table > thead > tr > th {
         border-bottom-color: $main;
     }
+
+    &.viewvc-epel {
+        #svn-repository #svn-repository-viewvc {
+            border-top-color: $main;
+        }
+
+        .tuleap-viewvc-header {
+            background: #FCFCFC;
+            padding: 20px;
+        }
+    }
 }
 
 body {

@@ -48,11 +48,16 @@ use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Reference\Extractor;
+use Tuleap\Svn\ViewVC\ViewVCProxyFactory;
 use Tuleap\Svn\XMLImporter;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\Commit\Svnlook;
+use Tuleap\Svn\ViewVC\AccessHistorySaver;
+use Tuleap\Svn\ViewVC\AccessHistoryDao;
+use Tuleap\Svn\Logs\QueryBuilder;
+use Tuleap\ViewVCVersionChecker;
 
 /**
  * SVN plugin
@@ -103,6 +108,9 @@ class SvnPlugin extends Plugin {
         $this->addHook('codendi_daily_start');
         $this->addHook('show_pending_documents');
         $this->addHook('project_is_deleted');
+        $this->addHook('logs_daily');
+        $this->addHook('statistics_collector');
+        $this->addHook('plugin_statistics_service_usage');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -299,6 +307,14 @@ class SvnPlugin extends Plugin {
         return new User_ForgeUserGroupFactory(new UserGroupDao());
     }
 
+    /**
+     * @return ViewVCVersionChecker
+     */
+    private function getViewVCVersionChecker()
+    {
+        return new ViewVCVersionChecker();
+    }
+
 
     public function process(HTTPRequest $request) {
         $project_id = $request->getProject()->getId();
@@ -324,7 +340,10 @@ class SvnPlugin extends Plugin {
 
     public function cssFile($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="/viewvc-static/styles.css" />';
+            $viewvc_version_checker = $this->getViewVCVersionChecker();
+            if ($viewvc_version_checker->isTuleapViewVCInstalled()) {
+                echo '<link rel="stylesheet" type="text/css" href="/viewvc-static/styles.css" />';
+            }
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
@@ -396,7 +415,10 @@ class SvnPlugin extends Plugin {
             new RepositoryDisplayController(
                 $repository_manager,
                 ProjectManager::instance(),
-                $permissions_manager
+                $permissions_manager,
+                new AccessHistorySaver(new AccessHistoryDao()),
+                new ViewVCProxyFactory($this->getViewVCVersionChecker()),
+                EventManager::instance()
             ),
             new ImmutableTagController(
                 $repository_manager,
@@ -492,4 +514,39 @@ class SvnPlugin extends Plugin {
         $tab_content        = $restore_controller->displayRestorableRepositories($archived_repositories, $project_id);
         $params['html'][]   = $tab_content;
     }
+
+    public function logs_daily($params)
+    {
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['group_id']);
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
+            $builder = new QueryBuilder();
+            $query  = $builder->buildQuery($project, $params['span'], $params['who']);
+
+             $params['logs'][] = array(
+                'sql'   => $query,
+                'field' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_field'),
+                'title' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_title')
+            );
+        }
+    }
+
+    public function statistics_collector(array $params)
+    {
+        if (! empty($params['formatter']))
+        {
+            $statistic_dao       = new \Tuleap\Svn\Statistic\SCMUsageDao();
+            $statistic_collector = new \Tuleap\Svn\Statistic\SCMUsageCollector($statistic_dao);
+
+            echo $statistic_collector->collect($params['formatter']);
+        }
+    }
+
+    public function plugin_statistics_service_usage(array $params)
+    {
+        $statistic_dao       = new \Tuleap\Svn\Statistic\ServiceUsageDao();
+        $statistic_collector = new \Tuleap\Svn\Statistic\ServiceUsageCollector($statistic_dao);
+        $statistic_collector->collect($params['csv_exporter'], $params['start_date'], $params['end_date']);
+    }
+
 }

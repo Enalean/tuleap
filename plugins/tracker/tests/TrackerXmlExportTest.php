@@ -26,6 +26,9 @@ class TrackerXmlExportTest extends TuleapTestCase {
     private $tracker2;
     private $xml_export;
 
+    /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao */
+    private $nature_dao;
+
     public function setUp() {
         parent::setUp();
 
@@ -34,13 +37,16 @@ class TrackerXmlExportTest extends TuleapTestCase {
         $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId()->returns(array($this->tracker1, $this->tracker2));
         stub($tracker_factory)->getTrackerById(456)->returns($this->tracker1);
 
+        $this->nature_dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
+
         $this->xml_export = new TrackerXmlExport(
             $tracker_factory,
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('XML_RNGValidator'),
             mock('Tracker_Artifact_XMLExport'),
             mock('UserXMLExporter'),
-            mock('EventManager')
+            mock('EventManager'),
+            $this->nature_dao
         );
     }
 
@@ -53,6 +59,12 @@ class TrackerXmlExportTest extends TuleapTestCase {
 
         expect($this->tracker1)->exportToXML()->once();
         expect($this->tracker2)->exportToXML()->once();
+
+        stub($this->nature_dao)->searchAllUsedNatureByProject()->returnsDar(
+            array(
+                'nature' => 'fixed in'
+            )
+        );
 
         $this->xml_export->exportToXMl(
             $group_id,
@@ -70,6 +82,12 @@ class TrackerXmlExportTest extends TuleapTestCase {
 
         expect($this->tracker1)->exportToXML()->once();
         expect($this->tracker2)->exportToXML()->never();
+
+        stub($this->nature_dao)->searchAllUsedNatureByProject()->returnsDar(
+            array(
+                'nature' => 'fixed in'
+            )
+        );
 
         $this->xml_export->exportToXMl(
             $group_id,

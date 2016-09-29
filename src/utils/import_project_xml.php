@@ -26,6 +26,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDontExistInPlateformException;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -43,7 +44,8 @@ $usage_options .= 'm:'; // give me the path of the user mapping file
 $usage_options .= 'h';  // help message
 $usage_long_options = array(
     'force::',
-    'help'
+    'help',
+    'automap::'
 );
 
 function usage() {
@@ -62,8 +64,21 @@ Import a project structure
   -h              Display this help
 
 Long options:
-  --force=<something>  Force something. Supported values: references.
-  --help               Display this help
+  --automap=strategy,action    Automatically map users without taking email into account
+                               the second argument is the default action for accounts to
+                               create.
+                               Supported strategies:
+                                   no-email    Map with matching ldap id or username.
+                                               Email is not taken into account
+                               Supported actions:
+                                   create:A    Create account with status Active
+                                   create:S    Create account with status Suspended
+
+  --force=<something>          Force something
+                               Supported values:
+                                   references
+
+  --help                       Display this help
 
 EOT;
     exit(1);
@@ -102,10 +117,26 @@ if (! isset($arguments['i'])) {
     $archive_path = $arguments['i'];
 }
 
-if (! isset($arguments['m'])) {
-    usage();
-} else {
+$automap = false;
+if (isset($arguments['automap'])) {
+    $automap = true;
+    $automap_arg = trim($arguments['automap']);
+    if (strpos($automap_arg, ',') !== false) {
+        list($automap_strategy, $default_action) = explode(',', $automap_arg);
+        if ($automap_strategy !== "no-email") {
+            fwrite(STDERR, 'Unsupported automap strategy'.PHP_EOL);
+            exit(1);
+        }
+    } else {
+        fwrite(STDERR, 'When using automap, you need to specify a default action, eg: --automap=no-email,create:A'.PHP_EOL);
+        exit(1);
+    }
+}
+
+if (isset($arguments['m'])) {
     $mapping_path = $arguments['m'];
+} elseif (! $automap) {
+    usage();
 }
 
 if (isset($arguments['force']) && trim($arguments['force']) != '') {
@@ -147,8 +178,13 @@ try {
 
     $archive->extractFiles();
 
-    $collection_from_archive = $builder->buildFromArchive($archive);
-    $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
+    if ($automap) {
+        $collection_from_archive = $builder->buildWithoutEmail($archive);
+        $users_collection        = $transformer->transformWithoutMap($collection_from_archive, $default_action);
+    } else {
+        $collection_from_archive = $builder->build($archive);
+        $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
+    }
     $users_collection->process($user_manager, $broker_log);
 
     $user_finder = new User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
@@ -176,13 +212,17 @@ try {
         new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao())
     );
 
-     if (empty($project_id)) {
-        $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
-        $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
-        $xml_importer->importNewFromArchive($configuration, $archive, $system_event_runner, $project_name_override);
-     } else {
-        $xml_importer->importFromArchive($configuration, $project_id, $archive);
-     }
+    try {
+        if (empty($project_id)) {
+            $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
+            $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
+            $xml_importer->importNewFromArchive($configuration, $archive, $system_event_runner, $project_name_override);
+        } else {
+            $xml_importer->importFromArchive($configuration, $project_id, $archive);
+        }
+    } catch (NatureDontExistInPlateformException $exception) {
+        $broker_log->error("Some natures used in trackers are not created on plateform.");
+    }
 
     $archive->cleanUp();
 

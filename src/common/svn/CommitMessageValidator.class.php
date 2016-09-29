@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -35,13 +35,10 @@ class SVN_CommitMessageValidator {
     }
 
     public function assertCommitMessageIsValid(Project $project, $commit_message) {
-        if ($project->isSVNMandatoryRef()) {
-            // Marvelous, extractCrossRef depends on globals group_id to find the group
-            // when it's not explicit... yeah!
-            $GLOBALS['group_id'] = $project->getID();
-            if (! $this->reference_manager->stringContainsReferences($commit_message, $project)) {
-                throw new Exception('Commit message must contains a reference');
-            }
+        if ($project->isSVNMandatoryRef()
+            && ! $this->reference_manager->stringContainsReferences($commit_message, $project)
+        ) {
+            throw new Exception('Commit message must contains a reference');
         }
     }
 }

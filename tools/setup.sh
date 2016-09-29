@@ -746,7 +746,6 @@ setup_tuleap() {
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_keep_md5_hashed_password = 1' 'sys_keep_md5_hashed_password = 0'
     if [ "$disable_subdomains" = "y" ]; then
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
@@ -1314,25 +1313,6 @@ todo "  For instance: contact/contact.txt "
 todo ""
 todo "Default admin credentials are login: admin / password: $siteadmin_password"
 todo "CHANGE DEFAULT CREDENTIALS BEFORE FIRST USAGE"
-
-##############################################
-# Crontab configuration
-#
-
-# XXX: Writing to /tmp/foo as root is a security issue, should use mktemp
-# or similar, or better we should use /etc/cron.d/tuleap
-
-echo "Installing root user crontab..."
-crontab -u root -l > /tmp/cronfile
-
-$GREP -q "Tuleap" /tmp/cronfile
-if [ $? -ne 0 ]; then
-    $CAT <<EOF >>/tmp/cronfile
-# Tuleap: weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /usr/lib/$PROJECT_NAME/bin/backup_job
-EOF
-    crontab -u root /tmp/cronfile
-fi
 
 ##############################################
 # Create Tuleap profile script

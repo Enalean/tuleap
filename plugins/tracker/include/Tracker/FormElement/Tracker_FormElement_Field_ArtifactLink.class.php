@@ -518,7 +518,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'"
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             if($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                $natures        = $this->getNaturePresenterFactory()->getAllNatures();
+                $natures        = $this->getNaturePresenterFactory()->getOnlyVisibleNatures();
                 $natures_presenter = array();
                 foreach($natures as $nature) {
                     $natures_presenter[] = array(
@@ -1456,12 +1456,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     );
 
                     continue;
-                }
-                if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                    if (!isset($value['natures'][$artifact_id])) {
-                        $is_valid = false;
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($artifact_id)));
-                    }
                 }
             }
         }

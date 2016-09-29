@@ -1,36 +1,6 @@
-<h2>{{ permission_title }}</h2>
-
-<div>
-    <div>
-        <p> {{ access_control_intro }} </p>
-        <p> {{ administrator_info }} </p>
-    </div>
-    <form method="POST" action="{{ frs_admins_form_action }}">
-        <input type="hidden" value="{{ project_id }}" name="group_id"/>
-        <div class="frs_permissions">
-            <div class="frs_permissions_read">
-                <label>
-                    {{ permission_read_title }}
-                </label>
-                <select size="8" multiple name="frs_readers[]">
-                    {{# ugroups_reader }}
-                        <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-                    {{/ ugroups_reader }}
-                </select>
-            </div>
-            <div class="frs_permissions_write">
-                <label>
-                    {{ write_title }}
-                </label>
-                <select size="8" multiple name="frs_admins[]">
-                    {{# ugroups_admin }}
-                        <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-                    {{/ ugroups_admin }}
-                </select>
-            </div>
-        </div>
-        <p>
-            <input class="btn btn-primary" type="submit" value="{{ frs_admins_submit_button }}" name="submit"/>
-        </p>
-    </form>
-</div>
+<select size="8" multiple name="ugroups[]">
+    {{# user_groups }}
+        <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+    {{/ user_groups }}
+</select>
+<p>{{{ permission_information }}}</p>

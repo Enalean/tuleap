@@ -1,0 +1,31 @@
+<form method="POST" action="{{ frs_admins_form_action }}" id="frs-admin-perms-form">
+    <input type="hidden" value="{{ project_id }}" name="group_id"/>
+
+    <section>
+        <h2>{{ administrators_title }}</h2>
+
+        <p>{{ administrator_info }}</p>
+
+        <select size="8" multiple name="permission_frs_admins[]">
+            {{# ugroups_admin }}
+                <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+            {{/ ugroups_admin }}
+        </select>
+    </section>
+
+    <section>
+        <h2>{{ readers_title }}</h2>
+
+        <p>{{ readers_info }}</p>
+
+        <select size="8" multiple name="permission_frs_readers[]">
+            {{# ugroups_reader }}
+                <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+            {{/ ugroups_reader }}
+        </select>
+    </section>
+
+    <button type="submit" class="btn btn-primary" id="frs-admin-perms-submit">
+        <i class="icon-save"></i> {{ frs_admins_submit_button }}
+    </button>
+</form>

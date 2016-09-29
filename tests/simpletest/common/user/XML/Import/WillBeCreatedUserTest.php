@@ -42,7 +42,8 @@ class WillBeCreatedUser_processTest extends TuleapTestCase {
             'cstevens',
             'Cat Stevens',
             'cstevens@example.com',
-            'S'
+            'S',
+            'ed143'
         );
     }
 

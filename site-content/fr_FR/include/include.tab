@@ -47,7 +47,7 @@ include_exit	need_to_login	Désolé, vous devez <A HREF="/account/login.php">êt
 include_exit	choose_proj_err	Erreur - Veuillez choisir un projet
 include_exit	no_gid_err	Erreur - Aucun group_id spécifié.
 include_exit	missing_param_err	Erreur - Paramètres manquants
-include_exit	private_project_no_perm	Project Privé. Vous ne pouvez accéder qu'aux projets privés dont vous êtes membre.<p><a href="/my/">Retourner à votre page personnelle.</a>
+include_exit	private_project_no_perm	Project Privé. Vous ne pouvez accéder qu'aux projets privés dont vous êtes membre.<br><a href="/my/">Retourner à votre page personnelle.</a>
 include_exit	request_to_admin	<em> Ou demander  à  être membre en ajoutant juste un message puis envoyer.</em>
 include_exit	send_mail	Envoyer mail
 include_exit	request_sent	<b>Votre demande a bien été envoyée. Vous serez informés de la décision des administrateurs.</b>

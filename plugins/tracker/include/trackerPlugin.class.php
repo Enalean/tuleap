@@ -21,6 +21,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
 
@@ -82,6 +83,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
         $this->_addHook(Event::IMPORT_XML_PROJECT);
+        $this->_addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->_addHook('plugin_statistics_service_usage');
@@ -206,7 +208,7 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
         }
-        if ($this->currentRequestIsForPlugin()) {
+        if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }
@@ -769,13 +771,9 @@ class trackerPlugin extends Plugin {
                 $user_xml_exporter
             ),
             $user_xml_exporter,
-            EventManager::instance()
+            EventManager::instance(),
+            new NatureDao()
         );
-    }
-
-    private function getXmlRngValidator()
-    {
-        return new XML_RNGValidator();
     }
 
     /**
@@ -796,6 +794,36 @@ class trackerPlugin extends Plugin {
         );
 
         $import_spotter->endImport();
+    }
+
+    public function import_xml_is_project_valid($params)
+    {
+        if(! $this->checkNaturesExistsOnPlateform($params['xml_content'])) {
+            $params['error'] = true;
+        }
+    }
+
+    private function checkNaturesExistsOnPlateform(SimpleXMLElement $xml)
+    {
+        if(! $xml->trackers['use-natures'][0]) {
+            return true;
+        }
+
+        $plateform_natures["nature"] = array();
+        foreach($this->getNatureDao()->searchAll() as $nature) {
+            $plateform_natures["nature"][] = $nature['shortname'];
+        }
+        $plateform_natures["nature"][] = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        $xml_natures                   = (array)$xml->natures;
+
+        $not_in_plateform = array_diff($xml_natures['nature'], $plateform_natures['nature']);
+
+        return count($not_in_plateform) === 0;
+    }
+
+    private function getNatureDao()
+    {
+        return new NatureDao();
     }
 
     /**

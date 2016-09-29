@@ -21,6 +21,13 @@ function svn_header($params) {
     $params['toptab'] = 'svn';
     $params['group']  = $group_id;
 
+    $additional_params = array();
+    if (isset($params['body_class'])) {
+        $additional_params = array(
+            'body_class' => $params['body_class']
+        );
+    }
+
     $project = ProjectManager::instance()->getProject($group_id);
     $service = $project->getService('svn');
     if (!$service) {
@@ -57,7 +64,17 @@ function svn_header($params) {
     $toolbar[] = array('title' => $Language->getText('global','help'),
                        'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
 
-    $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
+    $service->displayHeader(
+        $params['title'],
+        array(
+            array(
+                'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_svn_lbl_key'),
+                'url' => '/svn/?group_id='.$group_id
+            )
+        ),
+        $toolbar,
+        $additional_params
+    );
 }
 
 function svn_header_admin($params) {

@@ -871,7 +871,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public function getDefaultValue() {
         $default_values = parent::getDefaultValue();
 
-        if (! $default_values) {
+        if (! $default_values || $default_values === array(parent::NONE_VALUE)) {
             return '';
         }
 

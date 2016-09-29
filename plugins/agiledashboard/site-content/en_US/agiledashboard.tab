@@ -132,6 +132,7 @@ plugin_agiledashboard_admin_semantic	initial_effort_impossible	You cannot define
 plugin_agiledashboard_admin_semantic	initial_effort_now	The initial effort is now: $1
 plugin_agiledashboard_admin_semantic	bad_field_initial_effort	The field you submitted is not a numeric field
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Unable to save the <em>initial effort</em>
+plugin_agiledashboard_admin_semantic	deleted_initial_effort	Initial effort semantic has been unset
 
 plugin_agiledashboard	config_title	Configuration
 plugin_agiledashboard	invalid_request	The request is invalid.
@@ -174,6 +175,7 @@ plugin_agiledashboard	no_tracker_selected	No tracker has been selected.
 plugin_agiledashboard	no_tracker_available	No tracker is available.
 plugin_agiledashboard	kanban_not_found	Kanban not found.
 plugin_agiledashboard	content_not_found	Content not found.
+plugin_agiledashboard	Milestone	Milestone
 
 plugin_agiledashboard_first_kanban	error_existing_tracker	We tried to create a first kanban for you but an existing tracker ($1) prevented it.
 plugin_agiledashboard_first_kanban	internal_error	We tried to create a first kanban for you but an internal error prevented it.

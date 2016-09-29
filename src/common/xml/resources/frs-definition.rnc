@@ -1,6 +1,8 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 frs =
+    element   read-access         { element ugroup { ugroup_name }+ }? &
+    element   admin-access        { element ugroup { ugroup_name }+ }? &
     element package {
         attribute id     { xsd:integer }? &
         attribute name   { xsd:string  }  &
@@ -34,11 +36,6 @@ frs =
             }*
         }*
     }* &
-    element administrators {
-        element user {
-            user_content
-        }*
-    }? &
     element references {
         references
     }?

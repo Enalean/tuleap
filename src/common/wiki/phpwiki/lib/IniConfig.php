@@ -741,13 +741,15 @@ function fixup_dynamic_configs($file) {
         if (!defined($var) and !empty($HTTP_SERVER_VARS[$var]))
             define($var, $HTTP_SERVER_VARS[$var]);
     }
+    $tuleap_request = HTTPRequest::instance();
     if (!defined('SERVER_NAME')) define('SERVER_NAME', '127.0.0.1');
     if (!defined('SERVER_PORT')) define('SERVER_PORT', 80);
     if (!defined('SERVER_PROTOCOL')) {
-        if (empty($HTTP_SERVER_VARS['HTTPS']) || $HTTP_SERVER_VARS['HTTPS'] == 'off')
-            define('SERVER_PROTOCOL', 'http');
-        else
+        if ($tuleap_request->isSecure()) {
             define('SERVER_PROTOCOL', 'https');
+        } else {
+            define('SERVER_PROTOCOL', 'http');
+        }
     }
 
     if (!defined('SCRIPT_NAME'))
@@ -781,16 +783,8 @@ function fixup_dynamic_configs($file) {
             }
         }
     }
-     
-    if (SERVER_PORT
-        && SERVER_PORT != (SERVER_PROTOCOL == 'https' ? 443 : 80)) {
-        define('SERVER_URL',
-               SERVER_PROTOCOL . '://' . SERVER_NAME . ':' . SERVER_PORT);
-    }
-    else {
-        define('SERVER_URL',
-               SERVER_PROTOCOL . '://' . SERVER_NAME);
-    }
+
+    define('SERVER_URL', $tuleap_request->getServerUrl());
 
     if (!defined('VIRTUAL_PATH')) {
         // We'd like to auto-detect when the cases where apaches

@@ -56,6 +56,11 @@ class ImmutableTagPresenter extends BaseAdminPresenter
     public $repository_id;
     public $whitelist;
     public $immutable_tags_whitelist;
+    public $repository_name;
+    public $repository_full_name;
+    public $title;
+    public $impacted_svn_empty_state;
+    public $sections;
 
     public function __construct(
         Repository $repository,
@@ -67,9 +72,10 @@ class ImmutableTagPresenter extends BaseAdminPresenter
 
         $this->repository_id                   = $repository->getId();
         $this->repository_name                 = $repository->getName();
+        $this->repository_full_name            = $repository->getFullName();
         $this->project_id                      = $repository->getProject()->getID();
         $this->immutable_tags_path             = $immutable_tags->getPaths();
-        $this->immutable_tags_whitelist        = $immutable_tags->getWhiteList();
+        $this->immutable_tags_whitelist        = $immutable_tags->getWhitelist();
         $this->immutable_tag_url_active        = true;
 
         $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));

@@ -22,17 +22,27 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use InoOicClient\Oic\Authorization\State\StateFactoryInterface;
 use RandomNumberGenerator;
-use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class StateFactory implements StateFactoryInterface {
-
+class StateFactory implements StateFactoryInterface
+{
+    /**
+     * @var string
+     */
     private $key;
 
-    public function __construct(RandomNumberGenerator $random_number_generator) {
-        $this->key = $random_number_generator->getNumber();
+    /**
+     * @var string
+     */
+    private $nonce;
+
+    public function __construct(RandomNumberGenerator $random_number_generator)
+    {
+        $this->key   = $random_number_generator->getNumber();
+        $this->nonce = $random_number_generator->getNumber();
     }
 
-    public function createState($provider_id = null, $return_to = null) {
-        return new State($provider_id, $return_to, $this->key);
+    public function createState($provider_id = null, $return_to = null)
+    {
+        return new State($provider_id, $return_to, $this->key, $this->nonce);
     }
 }

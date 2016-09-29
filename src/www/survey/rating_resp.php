@@ -8,6 +8,9 @@
 
 require_once('pre.php');
 
+if (! ForgeConfig::get('sys_use_surveys')) {
+    exit_permission_denied();
+}
 
 $HTML->header(array('title'=>$Language->getText('survey_rating_resp','voting')));
 

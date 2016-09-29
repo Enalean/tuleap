@@ -55,7 +55,8 @@ class StateManager extends Manager {
                 return State::createFromSignature(
                     $signed_state,
                     $stored_state->getReturnTo(),
-                    $stored_state->getSecretKey()
+                    $stored_state->getSecretKey(),
+                    $stored_state->getNonce()
                 );
             } catch (Exception $ex) {
                 throw new StateMismatchException('Invalid state hash returned from server');

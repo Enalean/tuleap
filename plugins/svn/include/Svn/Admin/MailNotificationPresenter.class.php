@@ -43,6 +43,7 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $csrf_mailing_list;
     public $csrf_input_delete;
     public $repository_name;
+    public $repository_full_name;
     public $no_notifications_message;
 
     public function __construct(
@@ -61,6 +62,7 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         $this->list_mails                 = $notifications_details;
         $this->title                      = $title;
         $this->repository_name            = $repository->getName();
+        $this->repository_full_name       = $repository->getFullName();
         $this->notification_active        = true;
 
         $this->notification_subtitle         = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');

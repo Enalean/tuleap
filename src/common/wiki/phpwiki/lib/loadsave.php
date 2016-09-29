@@ -1289,7 +1289,7 @@ function SetupWiki (&$request)
             if ($lf = FindLocalizedFile($pgsrc . $finder->_pathsep . $epage, 1)) {
                 LoadAny($request, $lf);
             } else { // load english version of required action page
-                LoadAny($request, FindFile(DEFAULT_WIKI_PGSRC . $finder->_pathsep . urlencode($f)));
+                LoadAny($request, FindFile(WIKI_PGSRC . $finder->_pathsep . urlencode($f)));
                 $page = $f;
             }
         }

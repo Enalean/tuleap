@@ -14,9 +14,7 @@ NameVirtualHost *:80
 
     LogFormat "%v %h %l %u %t \"%r\" %>s %b" commonvhost
     CustomLog logs/access_log commonvhost
-    #Uncomment the two following lines in order to display the username newt to the access url
-    #LogFormat "%h %l %{username}n %t \"%r\" %>s %b" common_with_tuleap_unix_username
-    #CustomLog logs/access_log_with_username common_with_tuleap_unix_username
+    CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION
 </VirtualHost>
 
 #
@@ -212,8 +210,5 @@ NameVirtualHost *:80
 
     LogFormat "%v %h %l %u %t \"%r\" %>s %b" commonvhost
     CustomLog logs/access_log commonvhost
-
-    #Uncomment the two following lines in order to display the username newt to the access url
-    #LogFormat "%h %l %{username}n %t \"%r\" %>s %b" common_with_tuleap_unix_username
-    #CustomLog logs/access_log_with_username common_with_tuleap_unix_username
+    CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION
 </VirtualHost>

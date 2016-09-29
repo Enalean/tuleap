@@ -149,33 +149,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
         $this->assertEqual(count($field_change->value), 0);
     }
 
-    public function itDoesNotExportArtifactsThatAreNotChildrenNatureMode() {
-        stub($this->changeset_value)->getValue()->returns(array(
-            $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
-            $this->anArtifactLinkInfoUserCanView(222, 102, 'somekindofnature'),
-        ));
-
-        $artifact = mock('Tracker_Artifact');
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
-        stub($artifact)->getTracker()->returns($tracker);
-
-        $this->exporter->export(
-            $this->artifact_xml,
-            $this->changeset_xml,
-            $artifact,
-            $this->changeset_value
-        );
-
-        $field_change = $this->changeset_xml->field_change;
-
-        $this->assertEqual((string)$field_change['field_name'], 'artifact links');
-        $this->assertEqual((string)$field_change['type'], 'art_link');
-
-        $this->assertEqual((int)$field_change->value[0], 111);
-        $this->assertEqual(count($field_change->value), 1);
-    }
-
     public function itDoesNotExportChildrenUserCannotSee() {
         stub($this->changeset_value)->getValue()->returns(array(
             $this->anArtifactLinkInfoUserCannotView(111, 101, null),

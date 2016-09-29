@@ -111,9 +111,6 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->explorer_controller->createRepository($this->getService($request), $request);
                     break;
-                case "display-repository":
-                    $this->display_controller->displayRepository($this->getService($request), $request);
-                    break;
                 case "settings":
                 case "display-mail-notification":
                     $this->checkUserCanAdministrateARepository($request);
@@ -236,6 +233,16 @@ class SvnRouter {
      * @return ServiceSvn
      */
     private function getService(HTTPRequest $request) {
+        $service = $request->getProject()->getService('plugin_svn');
+
+        if ($service === null) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_svn','url_can_not_be_processed')
+            );
+            $GLOBALS['Response']->redirect('/');
+        }
+
         return $request->getProject()->getService('plugin_svn');
     }
 }

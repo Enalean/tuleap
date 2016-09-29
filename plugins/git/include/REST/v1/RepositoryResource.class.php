@@ -190,27 +190,35 @@ class RepositoryResource extends AuthenticatedResource {
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
      * </pre>
      *
+     * <p>
+     * $query parameter is optional, by default we return all pull requests. If
+     * query={"status":"open"} then only open pull requests are returned and if
+     * query={"status":"closed"} then only closed pull requests are returned.
+     * </p>
+     *
      * @url GET {id}/pull_requests
      *
      * @access protected
      *
-     * @param  int $id     Id of the repository
-     * @param  int $limit  Number of elements displayed per page {@from path}
-     * @param  int $offset Position of the first element to display {@from path}
+     * @param int    $id     Id of the repository
+     * @param string $query  JSON object of search criteria properties {@from path}
+     * @param int    $limit  Number of elements displayed per page {@from path}
+     * @param int    $offset Position of the first element to display {@from path}
      *
      * @return Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation
      *
      * @throws 403
      * @throws 404
      */
-    public function getPullRequests($id, $limit = self::MAX_LIMIT, $offset = 0) {
+    public function getPullRequests($id, $query = '', $limit = self::MAX_LIMIT, $offset = 0)
+    {
         $this->checkAccess();
         $this->checkPullRequestEndpointsAvailable();
         $this->checkLimit($limit);
 
         $user       = $this->getCurrentUser();
         $repository = $this->getRepository($user, $id);
-        $result     = $this->getPaginatedPullRequests($repository, $limit, $offset);
+        $result     = $this->getPaginatedPullRequests($repository, $query, $limit, $offset);
 
         $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, $result->total_size);
@@ -412,7 +420,7 @@ class RepositoryResource extends AuthenticatedResource {
         return $repository;
     }
 
-    private function getPaginatedPullRequests(GitRepository $repository, $limit, $offset) {
+    private function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset) {
         $result = null;
 
         EventManager::instance()->processEvent(
@@ -420,6 +428,7 @@ class RepositoryResource extends AuthenticatedResource {
             array(
                 'version'    => 'v1',
                 'repository' => $repository,
+                'query'      => $query,
                 'limit'      => $limit,
                 'offset'     => $offset,
                 'result'     => &$result

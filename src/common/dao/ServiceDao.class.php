@@ -58,10 +58,17 @@ class ServiceDao extends DataAccessObject {
     }
 
     public function isServiceAvailableAtSiteLevelByShortName($name) {
+        return $this->isServiceActiveInProjectByShortName(100, $name);
+    }
+
+    public function isServiceActiveInProjectByShortName($project_id, $name)
+    {
+        $project_id = $this->da->escapeInt($project_id);
         $name = $this->da->quoteSmart($name);
+
         $sql  = "SELECT NULL
                  FROM service
-                 WHERE group_id = 100
+                 WHERE group_id = $project_id
                      AND is_active = 1
                      AND short_name = $name
                  LIMIT 1";

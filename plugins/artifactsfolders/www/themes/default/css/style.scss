@@ -1,0 +1,35 @@
+#artifacts-folders-content {
+    > thead > tr {
+        background: #E4E4E4;
+
+        > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    .no-artifacts-in-folder {
+        text-align: center;
+        padding: 20px;
+        color: #999999;
+    }
+}
+
+.artifacts-folders-rollup {
+    white-space: nowrap;
+}
+
+.artifacts-folders-rollup-icon {
+    padding: 0 15px 0 0;
+    font-size: 14px;
+    cursor: pointer;
+
+    &.icon-caret-right {
+        padding: 0 8px 0 3px;
+    }
+
+    &.icon-caret-down {
+        padding: 0 6px 0 2px;
+    }
+}

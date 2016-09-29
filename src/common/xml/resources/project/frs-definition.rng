@@ -2,6 +2,24 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="frs">
     <interleave>
+      <optional>
+        <element name="read-access">
+          <oneOrMore>
+            <element name="ugroup">
+              <ref name="ugroup_name"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="admin-access">
+          <oneOrMore>
+            <element name="ugroup">
+              <ref name="ugroup_name"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <zeroOrMore>
         <element name="package">
           <interleave>
@@ -123,15 +141,6 @@
           </interleave>
         </element>
       </zeroOrMore>
-      <optional>
-        <element name="administrators">
-          <zeroOrMore>
-            <element name="user">
-              <ref name="user_content"/>
-            </element>
-          </zeroOrMore>
-        </element>
-      </optional>
       <optional>
         <element name="references">
           <ref name="references"/>

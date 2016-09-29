@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class TrackerXmlExport
 {
@@ -48,13 +49,17 @@ class TrackerXmlExport
     /** @var EventManager */
     private $event_manager;
 
+    /** @var  NatureDao */
+    private $nature_dao;
+
     public function __construct(
         TrackerFactory $tracker_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         XML_RNGValidator $rng_validator,
         Tracker_Artifact_XMLExport $artifact_xml_export,
         UserXMLExporter $user_xml_exporter,
-        EventManager $event_manager
+        EventManager $event_manager,
+        NatureDao $nature_dao
     ) {
         $this->tracker_factory         = $tracker_factory;
         $this->trigger_rules_manager   = $trigger_rules_manager;
@@ -62,6 +67,7 @@ class TrackerXmlExport
         $this->artifact_xml_export     = $artifact_xml_export;
         $this->user_xml_exporter       = $user_xml_exporter;
         $this->event_manager           = $event_manager;
+        $this->nature_dao              = $nature_dao;
     }
 
     public function exportToXmlFull(
@@ -75,10 +81,11 @@ class TrackerXmlExport
 
         $xml_trackers = $xml_content->addChild('trackers');
 
+        $this->addUsedNature($xml_content, $group_id);
         foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
-                $artifacts = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
+                $artifacts = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping, $group_id);
                 $this->artifact_xml_export->export($tracker, $artifacts, $user, $archive);
             }
         }
@@ -94,6 +101,18 @@ class TrackerXmlExport
         $this->validateTrackerExport($xml_trackers);
     }
 
+    private function addUsedNature(SimpleXMLElement $xml, $project_id)
+    {
+        $natures      = $xml->addChild('natures');
+        $used_natures = $this->nature_dao->searchAllUsedNatureByProject($project_id);
+
+        foreach ($used_natures as $nature) {
+            if ($nature['nature']) {
+                $natures->addChild('nature', $nature['nature']);
+            }
+        }
+    }
+
     public function exportToXml(
         $group_id,
         SimpleXMLElement $xml_content,
@@ -104,10 +123,11 @@ class TrackerXmlExport
 
         $xml_trackers = $xml_content->addChild('trackers');
 
+        $this->addUsedNature($xml_content, $group_id);
         foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
-                $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
+                $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping, $group_id);
             }
         }
 
@@ -115,17 +135,25 @@ class TrackerXmlExport
         $this->validateTrackerExport($xml_trackers);
     }
 
-    private function exportTracker(SimpleXMLElement $xml_trackers, Tracker $tracker, &$xml_field_mapping)
+    private function exportTracker(SimpleXMLElement $xml_trackers, Tracker $tracker, &$xml_field_mapping, $project_id)
     {
         $child = null;
 
         if ($tracker->isActive()) {
             $child = $xml_trackers->addChild('tracker');
             $tracker->exportToXML($child, $xml_field_mapping);
+
+            if (isset($tracker) && $tracker->isProjectAllowedToUseNature()) {
+                if (! isset($xml_trackers['use-natures'])) {
+                    $xml_trackers->addAttribute('use-natures', 'true');
+                }
+            }
         }
 
         return $child;
     }
+
+
 
     private function exportTriggers(SimpleXMLElement $xml_trackers, $xml_field_mapping, $exported_trackers)
     {

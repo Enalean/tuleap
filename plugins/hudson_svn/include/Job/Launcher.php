@@ -20,6 +20,7 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
+use Tuleap\HudsonSvn\BuildParams;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Commit\CommitInfo;
 use Jenkins_Client;
@@ -39,14 +40,20 @@ class Launcher {
      * @var Factory
      */
     private $factory;
+
+    /** @var Jenkins_Client  */
     private $ci_client;
+
+    /** @var BuildParams  */
+    private $build_params;
 
     private $launched_jobs = array();
 
-    public function __construct(Factory $factory, Logger $logger, Jenkins_Client $ci_client) {
-        $this->factory   = $factory;
-        $this->logger    = $logger;
-        $this->ci_client = $ci_client;
+    public function __construct(Factory $factory, Logger $logger, Jenkins_Client $ci_client, BuildParams $build_params) {
+        $this->factory      = $factory;
+        $this->logger       = $logger;
+        $this->ci_client    = $ci_client;
+        $this->build_params = $build_params;
     }
 
     public function launch(Repository $repository, CommitInfo $commit_info) {
@@ -71,7 +78,10 @@ class Launcher {
                 $this->logger->info("Launching job #$job_id triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl());
                 try {
                     $this->ci_client->setToken($job->getToken());
-                    $this->ci_client->launchJobBuild($job->getUrl());
+                    $this->ci_client->launchJobBuild(
+                        $job->getUrl(),
+                        $this->build_params->getAdditionalSvnParameters($repository, $commit_info)
+                    );
 
                     $this->launched_jobs[] = $job->getUrl();
                 } catch(Jenkins_ClientUnableToLaunchBuildException $exception) {

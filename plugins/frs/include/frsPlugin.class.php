@@ -47,7 +47,10 @@ class frsPlugin extends \Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+    }
 
+    public function getHooksAndCallbacks()
+    {
         $this->addHook('frs_edit_form_additional_info');
         $this->addHook('frs_process_edit_form');
         $this->addHook('cssfile');
@@ -55,6 +58,16 @@ class frsPlugin extends \Plugin
         $this->addHook(self::FRS_RELEASE_VIEW);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+
+        if (defined('TRACKER_BASE_URL')) {
+            $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+        }
+
+        if (defined('AGILEDASHBOARD_BASE_DIR')) {
+            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+        }
+
+        return parent::getHooksAndCallbacks();
     }
 
     /**
@@ -128,6 +141,7 @@ class frsPlugin extends \Plugin
         return new Updater(new Dao(), $this->getLinkRetriever());
     }
 
+    /** @return Retriever */
     private function getLinkRetriever()
     {
         return new Retriever(new Dao());
@@ -191,6 +205,30 @@ class frsPlugin extends \Plugin
             if ($artifact_id) {
                 $this->getLinkUpdater()->updateLink($release_id, $artifact_id);
             }
+        }
+    }
+
+    /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    {
+        $user       = $params['user'];
+        $request    = $params['request'];
+        $artifact   = $params['artifact'];
+        $collection = $params['collection'];
+
+        $release_id = $this->getLinkRetriever()->getLinkedReleaseId($artifact);
+        if ($release_id) {
+            $collection->add(new Tuleap\FRS\ArtifactView($release_id, $artifact, $request, $user));
+        }
+    }
+
+    /** @see AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE */
+    public function agiledashboard_event_additional_panes_on_milestone($params)
+    {
+        $milestone  = $params['milestone'];
+        $release_id = $this->getLinkRetriever()->getLinkedReleaseId($milestone->getArtifact());
+        if ($release_id) {
+            $params['panes'][] = new Tuleap\FRS\AgileDashboardPaneInfo($milestone, $release_id);
         }
     }
 }

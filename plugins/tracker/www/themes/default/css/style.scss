@@ -3268,6 +3268,24 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
+.card-details .autocomputed_override {
+    display: none;
+}
+
+.valueOf_remaining_effort > .autocomputed_override {
+    display: flex;
+    justify-content: space-between;
+
+    > .original-value {
+        display: block;
+        color: #AAAAAA;
+    }
+
+    > a > i {
+        margin: 0 3px 0 0;
+    }
+}
+
 .tracker_artifact_field-computed {
     .auto-computed {
         margin: 0 0 0 3px;
@@ -3344,4 +3362,8 @@ select[name='add_notempty_condition[]'] {
     &.icon-caret-down {
         padding: 0 6px 0 2px;
     }
+}
+
+#tracker-semantic-removal-action {
+    margin: 0;
 }

@@ -80,6 +80,8 @@ extends LDAP_GroupManager
         return new LDAP_ProjectGroupDao(CodendiDataAccess::instance());
     }
 
+    public function isProjectBindingSynchronized($project_id)
+    {
+        return $this->getDao()->isProjectBindingSynchronized($project_id);
+    }
 }
-
-?>

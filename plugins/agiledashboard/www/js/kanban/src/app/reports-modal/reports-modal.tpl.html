@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="reports_modal.cancel()">
+        <i class="icon-remove"></i>
+    </button>
+    <h2 translate>My Kanban reports</h2>
+</div>
+<div class="modal-body">
+    <h3>
+        <i class="icon-cogs"></i>
+        <span translate>This view is under construction</span>
+    </h3>
+    <canvas
+        chart-line
+        chart-data="reports_modal.chartjs_data"
+        chart-series="reports_modal.chartjs_series"
+        chart-labels="reports_modal.chartjs_labels"
+        chart-options="reports_modal.chartjs_options"
+    ></canvas>
+</div>

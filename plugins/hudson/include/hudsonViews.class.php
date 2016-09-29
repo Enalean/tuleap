@@ -463,7 +463,7 @@ class hudsonViews extends Views {
             foreach ($services as $service) {
                 echo $service[$add_or_edit .'_form'];
             }
-            echo '          <label>
+            echo '          <label class="hudson_token_label">
                                 '.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'
                                 <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" value="'. $purifier->purify($token) .'" />
                             </label>

@@ -44,9 +44,17 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
      * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
      *
+     * @param PFUser $submitted_by
+     * @param Tracker_Artifact $artifact
      * @return mixed
+     * @throws Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
+    public function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact
+    ) {
         $values      = $field_change->value;
 
         $files_infos = array();

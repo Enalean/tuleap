@@ -29,7 +29,6 @@ PLUGIN_ADMSSW_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/admssw/VERSION)
 PLUGIN_DOAPRDF_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/doaprdf/VERSION)
 PLUGIN_FOAFPROFILES_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/foafprofiles/VERSION)
 PLUGIN_MEDIAWIKI_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/mediawiki/VERSION)
-PLUGIN_BOOMERANG_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/boomerang/VERSION)
 PLUGIN_OPENIDCONNECTCLIENT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/openidconnectclient/VERSION)
 PLUGIN_PROFTPD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/proftpd/VERSION)
 PLUGIN_SVN_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/svn/VERSION)
@@ -135,10 +134,12 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/README.md -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/src -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
+				-path $(PKG_NAME)-$(version)/plugins/frs/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
 			&& \
+			find $(PKG_NAME)-$(version)/plugins/frs/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/bin; \
 		} | \
@@ -183,7 +184,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@/$(PLUGIN_ARCHIVEDELETEDITEMS_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FUSIONFORGE_COMPAT_VERSION@@/$(PLUGIN_FUSIONFORGE_COMPAT_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_ADMSSW_VERSION@@/$(PLUGIN_ADMSSW_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_BOOMERANG_VERSION@@/$(PLUGIN_BOOMERANG_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_DOAPRDF_VERSION@@/$(PLUGIN_DOAPRDF_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FOAFPROFILES_VERSION@@/$(PLUGIN_FOAFPROFILES_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_MEDIAWIKI_VERSION@@/$(PLUGIN_MEDIAWIKI_VERSION)/g' |\

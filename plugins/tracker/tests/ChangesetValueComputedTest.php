@@ -37,7 +37,7 @@ class ChangesetValueComputedTest extends TuleapTestCase
 
         stub($GLOBALS['Language'])->getText('plugin_tracker_artifact', 'changed_from')->returns('changed from');
         stub($GLOBALS['Language'])->getText('plugin_tracker_artifact', 'to')->returns('to');
-        stub($GLOBALS['Language'])->getText('plugin_tracker', 'autocompute_field')->returns('autocomputed');
+        stub($GLOBALS['Language'])->getText('plugin_tracker', 'autocomputed_field')->returns('autocomputed');
 
         $this->field = stub('Tracker_FormElement_Field_Computed')->getName()->returns('field_computed');
         $this->user  = aUser()->withId(101)->build();

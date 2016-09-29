@@ -38,16 +38,26 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
     /** @var PlanningFactory */
     private $planning_factory;
 
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
     public function __construct(
         AgileDashboard_Planning_NearestPlanningTrackerProvider $nearest_planning_tracker_provider,
         AgileDashboard_Milestone_MilestoneDao $dao,
         Tracker_HierarchyFactory $hierarchy_factory,
-        PlanningFactory $planning_factory
+        PlanningFactory $planning_factory,
+        TrackerFactory $tracker_factory,
+        Tracker_ArtifactFactory $artifact_factory
     ) {
         $this->nearest_planning_tracker_provider = $nearest_planning_tracker_provider;
         $this->hierarchy_factory                 = $hierarchy_factory;
         $this->dao                               = $dao;
         $this->planning_factory                  = $planning_factory;
+        $this->tracker_factory                   = $tracker_factory;
+        $this->artifact_factory                  = $artifact_factory;
     }
 
     /**
@@ -80,20 +90,27 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
 
         foreach ($this->dao->getAllMilestoneByTrackers($planning_trackers_ids) as $row) {
             foreach ($planning_trackers_ids as $index => $id) {
-                $milestone_id    = $row['m'. $id .'_id'];
-                $milestone_title = $row['m'. $id .'_title'];
+                $tracker = $this->tracker_factory->getTrackerById($id);
+                if ($tracker->userCanView($user)) {
+                    $milestone_id    = $row['m'. $id .'_id'];
+                    $milestone_title = $row['m'. $id .'_title'];
 
-                if (! $milestone_id) {
-                    continue;
+                    if (! $milestone_id) {
+                        continue;
+                    }
+
+                    if ($current_milestone[$id] === $milestone_id) {
+                        continue;
+                    }
+
+                    $milestone               = $this->artifact_factory->getArtifactById((int)$milestone_id);
+                    $user_can_view_milestone = $milestone->userCanView($user);
+                    if ($user_can_view_milestone) {
+                        $content                = str_pad('', $index, '-') .' '. $hp->purify($milestone_title);
+                        $options[]              = $this->getOptionForSelectBox($selected_milestone_id, $milestone_id, $content);
+                        $current_milestone[$id] = $milestone_id;
+                    }
                 }
-
-                if ($current_milestone[$id] === $milestone_id) {
-                    continue;
-                }
-
-                $content                = str_pad('', $index, '-') .' '. $hp->purify($milestone_title);
-                $options[]              = $this->getOptionForSelectBox($selected_milestone_id, $milestone_id, $content);
-                $current_milestone[$id] = $milestone_id;
             }
         }
 
@@ -115,13 +132,20 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
     }
 
     private function addTopBacklogPlanningEntry($selected_milestone_id, Tracker $backlog_tracker, PFUser $user) {
-        $top_planning         = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
-        $backlog_trackers_ids = $top_planning->getBacklogTrackersIds();
 
-        if ( in_array($backlog_tracker->getId(), $backlog_trackers_ids)) {
-            return $this->getOptionForSelectBox($selected_milestone_id, self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
+        try {
+            $top_planning  = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
+        } catch (Planning_NoPlanningsException $exception) {
+            return;
         }
 
+        if ($top_planning) {
+            $backlog_trackers_ids = $top_planning->getBacklogTrackersIds();
+
+            if (in_array($backlog_tracker->getId(), $backlog_trackers_ids)) {
+                return $this->getOptionForSelectBox($selected_milestone_id, self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
+            }
+        }
         return;
     }
 

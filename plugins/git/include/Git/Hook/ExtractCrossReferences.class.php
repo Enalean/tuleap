@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -45,9 +45,12 @@ class Git_Hook_ExtractCrossReferences {
     public function execute(Git_Hook_PushDetails $push_details, $commit_sha1) {
         $rev_id = $push_details->getRepository()->getFullName().'/'.$commit_sha1;
         $text   = $this->git_exec->catFile($commit_sha1);
-        $GLOBALS['group_id'] = $push_details->getRepository()->getProject()->getId();
-        $this->reference_manager->extractCrossRef($text, $rev_id, Git::REFERENCE_NATURE, $push_details->getRepository()->getProject()->getId(), $push_details->getUser()->getId());
+        $this->reference_manager->extractCrossRef(
+            $text,
+            $rev_id,
+            Git::REFERENCE_NATURE,
+            $push_details->getRepository()->getProject()->getId(),
+            $push_details->getUser()->getId()
+        );
     }
 }
-
-?>

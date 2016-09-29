@@ -105,3 +105,27 @@ plugin_svn	delete_repository_exception	Une erreur est survenue lors de la suppre
 plugin_svn	archived_repositories	Dépôts svn supprimés
 plugin_svn	restore_confirmation	Confirmer la restauration du dépôt
 plugin_svn	restore_no_repo_found	Aucun dépôt svn à restaurer.
+
+plugin_svn	anonymous_browse_access_denied	Vous ne pouvez pas naviguer dans le dépôt sans être authentifié.
+
+plugin_svn	logsdaily_field	Nom du dépôt
+plugin_svn	logsdaily_title	Les commits Subversion multi dépôts
+plugin_svn	log_read_label	Lecture
+plugin_svn	log_write_label	Écriture
+plugin_svn	log_browse_label	Accès depuis l'interface
+
+plugin_svn_statistics	month	Mois
+plugin_svn_statistics	total_number_browse	Nombre total d'opérations concernant SVN depuis l'interface
+plugin_svn_statistics	total_number_read	Nombre total d'opérations concernant SVN en lecture
+plugin_svn_statistics	total_number_write	Nombre total d'opérations concernant SVN en écriture
+plugin_svn_statistics	total_number_project_read	Nombre total de projets avec des opérations SVN en lecture
+plugin_svn_statistics	total_number_user_read	Nombre total d'utilisateurs ayant réalisé des opérations SVN en lecture
+plugin_svn_statistics	total_number_project_write	Nombre total de projets avec des opérations SVN en écriture
+plugin_svn_statistics	total_number_user_write	Nombre total d'utilisateurs ayant réalisé des opérations SVN en écriture
+plugin_svn_statistics	top_user	Top utilisateur
+plugin_svn_statistics	top_user_operation	Top utilisateur (nombre d'opérations en écriture)
+plugin_svn_statistics	top_project	Top projet
+plugin_svn_statistics	top_project_operation	Top projet (nombre d'opérations en écriture)
+plugin_svn_statistics	service_usage_activities	Activités de SVN avec dépôt multiple
+
+plugin_svn	url_can_not_be_processed	L'action demandée ne peut pas être comprise, vous avez été redirigé vers la page d'accueil

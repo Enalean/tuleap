@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2016. All rights reserved
  *
@@ -21,44 +20,87 @@
 
 namespace Tuleap\Svn\Explorer;
 
+use Event;
+use EventManager;
+use HTTPRequest;
+use ProjectManager;
+use Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\SvnPermissionManager;
-use HTTPRequest;
-use Tuleap\Svn\Explorer\RepositoryDisplayPresenter;
-use \Tuleap\Svn\Repository\RepositoryManager;
-use \Tuleap\Svn\Repository\RepositoryNotFoundException;
-use Tuleap\Svn\ViewVCProxy\ViewVCProxy;
-use ProjectManager;
+use Tuleap\Svn\ViewVC\AccessHistorySaver;
+use Tuleap\Svn\ViewVC\ViewVCProxyFactory;
 
 class RepositoryDisplayController
 {
-
     /** @var SvnPermissionManager */
     private $permissions_manager;
+    /**
+     * @var RepositoryManager
+     */
+    private $repository_manager;
+    /**
+     * @var \Tuleap\Svn\ViewVC\ViewVCProxy
+     */
+    private $proxy;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
-        SvnPermissionManager $permissions_manager
+        SvnPermissionManager $permissions_manager,
+        AccessHistorySaver $access_history_saver,
+        ViewVCProxyFactory $viewvc_proxy_factory,
+        EventManager $event_manager
     ) {
         $this->permissions_manager = $permissions_manager;
         $this->repository_manager  = $repository_manager;
-        $this->proxy               = new ViewVCProxy($repository_manager, $project_manager);
+        $this->proxy               = $viewvc_proxy_factory->getViewVCProxy(
+            $repository_manager,
+            $project_manager,
+            $access_history_saver
+        );
+        $this->event_manager = $event_manager;
     }
 
     public function displayRepository(ServiceSvn $service, HTTPRequest $request)
     {
         try {
             $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
-            $service->renderInPage(
+
+            $has_plugin_intro  = false;
+            $plugin_intro_info = '';
+            $this->event_manager->processEvent(Event::SVN_INTRO, array(
+                'svn_intro_in_plugin' => &$has_plugin_intro,
+                'svn_intro_info'      => &$plugin_intro_info,
+                'group_id'            => $repository->getProject()->getID(),
+                'user_id'             => $request->getCurrentUser()->getId()
+            ));
+            $username = $request->getCurrentUser()->getUserName();
+            if ($plugin_intro_info) {
+                $username = $plugin_intro_info->getLogin();
+            }
+
+            $service->renderInPageWithBodyClass(
                 $request,
                 $GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'),
                 'explorer/repository_display',
-                new RepositoryDisplayPresenter($repository, $request, $this->proxy->getContent($request), $this->permissions_manager)
+                new RepositoryDisplayPresenter(
+                    $repository,
+                    $request,
+                    $this->proxy->getContent($request), $this->permissions_manager,
+                    $username
+                ),
+                $this->proxy->getBodyClass()
             );
-        } catch (RepositoryNotFoundException $e) {
+        } catch (CannotFindRepositoryException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn', 'repository_not_found'));
-            $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
+            $GLOBALS['Response']->redirect(
+                SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getID()))
+            );
         }
     }
 }

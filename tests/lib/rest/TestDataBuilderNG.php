@@ -26,7 +26,6 @@ class REST_TestDataBuilderNG extends REST_TestDataBuilder {
 
     public function generateUsers() {
         $user_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
-        $user_1->setLdapId(self::TEST_USER_1_LDAPID);
         $user_1->setPassword(self::TEST_USER_1_PASS);
         $this->user_manager->updateDb($user_1);
 

@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/reference/ReferenceManager.class.php');
-require_once 'common/templating/TemplateRendererFactory.class.php';
-
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 
@@ -187,7 +184,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 if ($this->userIsTrackerAdmin($project, $user)) {
                                     $tracker_id   = $request->get('tracker_id');
                                     $group_id     = $request->get('group_id');
-                                    $token      = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?group_id='. $group_id .'&amp;tracker_id='.$tracker_id.'&amp;func=restore-tracker');
+                                    $token      = new CSRFSynchronizerToken('/tracker/admin/restore.php');
                                     $token->check();
                                     $tracker_name = $this->getTrackerFactory()->getTrackerById($tracker_id)->getName();
                                     $this->restoreDeletedTracker($tracker_id);
@@ -757,20 +754,28 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @return Void
      */
     public function displayDeletedTrackers() {
-        $deletedTrackers = $this->getTrackerFactory()->getDeletedTrackers();
-        if (empty($deletedTrackers)) {
+        $deleted_trackers = $this->getTrackerFactory()->getDeletedTrackers();
+
+        if (empty($deleted_trackers)) {
             print '<h3>'.$GLOBALS['Language']->getText('plugin_tracker','no_pending').'</h3>';
         } else {
             $deleted_trackers_presenters =  array();
-            foreach ($deletedTrackers as $key => $tracker) {
-                $project                        = $tracker->getProject();
+            foreach ($deleted_trackers as $tracker) {
+                $project             = $tracker->getProject();
+                $tracker_ids_warning = array();
+
+                if (! $project || $project->getID() === null) {
+                    $tracker_ids_warning[] = $tracker->getId();
+                    continue;
+                }
+
                 $project_id                     = $project->getId();
                 $project_name                   = $project->getUnixName();
                 $tracker_id                     = $tracker->getId();
                 $tracker_name                   = $tracker->getName();
                 $deletion_date                  = date('d-m-Y',$tracker->deletion_date);
 
-                $resotre_token                  = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?group_id='. $project_id .'&amp;tracker_id='.$tracker_id.'&amp;func=restore-tracker');
+                $resotre_token                  = new CSRFSynchronizerToken('/tracker/admin/restore.php');
                 $deleted_trackers_presenters [] = new DeletedTrackerPresenter(
                                                         $tracker_id,
                                                         $tracker_name,
@@ -780,10 +785,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                                         $resotre_token
                                                    );
             }
-            $presenter        = new DeletedTrackersListPresenter($deleted_trackers_presenters);
+            $presenter = new DeletedTrackersListPresenter(
+                $deleted_trackers_presenters,
+                $tracker_ids_warning
+            );
+
             $template_factory = TemplateRendererFactory::build();
             $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-            $renderer->renderToPage(self::DELETED_TRACKERS_TEMPLATE_NAME,$presenter);
+
+            $renderer->renderToPage(self::DELETED_TRACKERS_TEMPLATE_NAME, $presenter);
         }
     }
 

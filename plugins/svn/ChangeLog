@@ -1,3 +1,55 @@
+Version 0.95 - Tuleap 8.20
+    * request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
+
+Version 0.94 - Tuleap 8.20
+    * request #9508: Site admin can't access SVN tree with viewvc integration
+
+Version 0.93 - Tuleap 8.19
+    * request #9484: On SVN plugin the URL to come back on a repository doesn't work
+
+Version 0.92 - Tuleap 8.19
+    * request #9482: Cross references are not displayed when using EPEL's ViewVC in SVN plugin
+
+Version 0.91 - Tuleap 8.19
+    * story #8610: Dont truncate error message
+
+Version 0.90 - Tuleap 8.19
+    * Use viewvc-theme-tuleap in core SVN
+
+Version 0.89 - Tuleap 8.19
+    * Use viewvc-theme-tuleap
+
+Version 0.88 - Tuleap 8.19
+    * docker run -v /home/mgarnier/tuleap:/tuleap enalean/tuleap-generate-changelog
+
+Version 0.87 - Tuleap 8.19
+    * Wrapp project id into extractCrossReference method
+
+
+Version 0.86 - Tuleap 8.19
+    * Add SVN multi repo to the service usage statistics
+
+Version 0.85 - Tuleap 8.19
+    * Add SVN multi repo to the SCM usage statistics
+
+Version 0.84 - Tuleap 8.19
+    * story #9393: Display data in project access log
+
+Version 0.83 - Tuleap 8.19
+    * story #9393: Store ViewVC access
+
+Version 0.82 - Tuleap 8.19
+    * db_stats_svn_plugin_history.pl script stores data in database
+
+Version 0.81 - Tuleap 8.19
+    * Create db_stats_svn_plugin_history.pl script
+
+Version 0.80 - Tuleap 8.19
+    * request #9122: Don't remove deleted items if copy doesn't work
+
+Version 0.79 - Tuleap 8.19
+    * request #9416 SVN import doesn't properly take into account empty ugroups
+
 Version 0.78 - Tuleap 8.18
     * request #9388: An error is thrown when a user tries to install the SVN plugin
 

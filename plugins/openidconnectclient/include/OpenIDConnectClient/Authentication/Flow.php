@@ -138,7 +138,7 @@ class Flow extends Basic {
             $token_response   = $this->getTokenDispatcher()->sendTokenRequest($token_request);
             $access_token     = $token_response->getAccessToken();
             $encoded_id_token = $token_response->getIdToken();
-            $id_token         = $this->id_token_verifier->validate($provider, $encoded_id_token);
+            $id_token         = $this->id_token_verifier->validate($provider, $state->getNonce(), $encoded_id_token);
         } catch (Exception $ex) {
             throw new TokenRequestException(
                 sprintf("Exception during token request: [%s] %s", get_class($ex), $ex->getMessage()),
@@ -172,5 +172,21 @@ class Flow extends Basic {
         }
         $this->clientInfo->fromArray($this->options->get(self::OPT_CLIENT_INFO, array()));
         return $this->clientInfo;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUserInfo($access_token)
+    {
+        $user_info_request  = $this->createUserInfoRequest($access_token);
+        $user_info_endpoint = $user_info_request->getUserInfoEndpoint();
+
+        if (empty($user_info_endpoint)) {
+            return array();
+        }
+
+        $user_info_response = $this->getUserInfoDispatcher()->sendUserInfoRequest($user_info_request);
+        return $user_info_response->getClaims();
     }
 }

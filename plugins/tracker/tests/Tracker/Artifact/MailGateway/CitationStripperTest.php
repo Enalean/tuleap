@@ -26,17 +26,11 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
     /** @var Tracker_Artifact_MailGateway_CitationStripper */
     private $citation_stripper;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->fixtures_dir      = dirname(__FILE__) .'/_fixtures';
         $this->citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
-        ForgeConfig::store();
-        ForgeConfig::set('sys_strip_outlook', 1);
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        ForgeConfig::restore();
     }
 
     public function itStripsCitationFromTextContent() {

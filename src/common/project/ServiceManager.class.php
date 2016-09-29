@@ -32,7 +32,6 @@ class ServiceManager {
         Service::HOMEPAGE,
         Service::FORUM,
         Service::ML,
-        Service::SURVEY,
         Service::NEWS,
         Service::CVS,
         Service::FILE,
@@ -49,6 +48,9 @@ class ServiceManager {
 
     public function __construct(ServiceDao $dao) {
         $this->dao = $dao;
+        if (ForgeConfig::get('sys_use_surveys')) {
+            $this->list_of_core_services[] = Service::SURVEY;
+        }
     }
 
     /**
@@ -122,8 +124,14 @@ class ServiceManager {
         return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
     }
 
+    private function isServiceActiveInProject ($project, $name)
+    {
+        $project_id = $project->getId();
+        return $this->dao->isServiceActiveInProjectByShortName($project_id, $name);
+    }
+
     public function toggleServiceUsage(Project $project, $short_name, $is_used) {
-        if ($this->isServiceAvailableAtSiteLevelByShortName($short_name)) {
+        if ($this->isServiceAvailableAtSiteLevelByShortName($short_name) || $this->isServiceActiveInProject($project, $short_name)) {
             $previous_is_used = $project->getService($short_name);
             if ($previous_is_used != $is_used) {
                 $this->updateServiceUsage($project, $short_name, $is_used);

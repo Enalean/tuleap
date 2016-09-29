@@ -29,6 +29,24 @@
             translate
         >Linked Artifacts</a>
     </li>
+    <li
+            ng-if="$ctrl.milestone"
+    >
+        <a
+                ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
+        >
+            <span translate>Milestone</span> <i class="icon-external-link"></i>
+        </a>
+    </li>
+    <li
+        ng-if="! $ctrl.error_no_release_artifact"
+    >
+        <a
+            ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
+        >
+            <span translate>Artifact</span> <i class="icon-external-link"></i>
+        </a>
+    </li>
 </ul>
 
 <ui-view></ui-view>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -21,8 +21,6 @@
  
 
 class Tracker_Semantic_Contributor extends Tracker_Semantic {
-
-    const NO_VALUE = '';
 
     /**
      * @var Tracker_FormElement_Field_List
@@ -119,15 +117,18 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      * @return string html
      */
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedUserSbFields($this->tracker)) {
             
-            $html .= '<form method="POST" action="'. $this->geturl() .'">';
+            $html .= '<form method="POST" action="'. $this->getUrl() .'">';
+            $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="list_field_id">';
-            $select .= '<option value="'.self::NO_VALUE.'" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
+            if (! $this->getFieldId()) {
+                $select .= '<option value="" selected="selected">' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field')) . '</option>';
+            }
 
             foreach ($list_fields as $list_field) {
                 if ($list_field->getId() == $this->getFieldId()) {
@@ -135,17 +136,24 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
                 } else {
                     $selected = '';
                 }
-                $select .= '<option value="' . $list_field->getId() . '" ' . $selected . '>' . $hp->purify($list_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+                $select .= '<option value="' . $purifier->purify($list_field->getId()) . '" ' . $selected . '>' . $purifier->purify($list_field->getLabel()) . '</option>';
             }
             $select .= '</select>';
             
-            $submit = '<input type="submit" name="update" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+            $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
+            $unset_btn .= $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unset')) .'</button>';
+
+            $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
+            $submit_btn .= $purifier->purify($GLOBALS['Language']->getText('global', 'save_change')) .'</button>';
             
             if (!$this->getFieldId()) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_no_field');
-                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice') . $select .' '. $submit .'</p>'; 
+                $html .= '<p>' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice'));
+                $html .= $select .' <br> '. $submit_btn;
+                $html .= '</p>';
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_field', array($select)) . $submit;
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_field', array($select));
+                $html .= $submit_btn .' '. $purifier->purify($GLOBALS['Language']->getText('global', 'or')) .' '. $unset_btn;
             }
             $html .= '</form>';
         } else {
@@ -168,6 +176,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
+            $this->getCSRFToken()->check();
             if ($field = Tracker_FormElementFactory::instance()->getUsedUserSbFieldById($this->tracker, $request->get('list_field_id'))) {
                 $this->list_field = $field;
                 if ($this->save()) {
@@ -175,17 +184,22 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_now', array($field->getLabel())));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_contributor'));
-                }
-            } elseif ($request->get('list_field_id') == self::NO_VALUE) {
-                if ($this->delete()) {
-                    $this->sendContributorChangeEvent();
-                    $GLOBALS['Response']->redirect($this->getUrl());
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_contributor'));
+                    $GLOBALS['Response']->addFeedback('error',
+                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_contributor'));
                 }
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_contributor'));
+            }
+        } else if ($request->exist('delete')) {
+            $this->getCSRFToken()->check();
+            if ($this->delete()) {
+                $this->sendContributorChangeEvent();
+                $GLOBALS['Response']->redirect($this->getUrl());
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_contributor')
+                );
             }
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
@@ -267,4 +281,3 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
     }
 
 }
-?>

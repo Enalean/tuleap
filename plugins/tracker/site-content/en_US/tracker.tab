@@ -298,7 +298,7 @@ plugin_tracker_include_artifactfile	not_attached	File not attached: File size mu
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactHtml.class.php
 #
-plugin_tracker_include_artifact	project	Project:
+plugin_tracker_include_artifact	project	Project
 plugin_tracker_include_artifact	submit	Submit Changes
 plugin_tracker_include_artifact	follow_ups	Follow-ups
 plugin_tracker_include_artifact	cc_list	CC List
@@ -1658,7 +1658,7 @@ plugin_tracker_deprecation_field	title_autocompute	Auto-compute
 plugin_tracker_deprecation_field	title_original_value	Computed value:
 plugin_tracker_deprecation_field	warning_permissions	You will not able to edit by hand the field "$1" since no update and submit permissions will be granted.
 
-plugin_tracker	autocompute_field	auto-computed
+plugin_tracker	autocomputed_field	autocomputed
 
 plugin_tracker_config	title	Trackers Configuration
 plugin_tracker_config	email_gateway	Email Gateway
@@ -1748,3 +1748,4 @@ plugin_tracker	no_pending	No Tracker pending for Deletion
 
 plugin_tracker	info_tracker_restored	The tracker '$1' has been properly restored
 plugin_tracker	tracker_action_restore	Restore
+plugin_tracker	tracker_restore_warning	The following trackers cannot be displayed (data seems missing in database):

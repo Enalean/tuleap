@@ -56,4 +56,15 @@ class Dao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchLinkedReleaseForArtifact($artifact_id)
+    {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT *
+                FROM plugin_frs_release_artifact
+                WHERE artifact_id = $artifact_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

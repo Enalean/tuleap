@@ -111,11 +111,17 @@ $sys_cookie_prefix = 'TULEAP';
 //
 //
 
-// The ip address of the node server.
-// For example : $node_server = '192.168.1.13:443';
+// The ip address of the nodejs server.
 // Server node support only the protocol https
 // Specify the port which the server listens
+// If you want a nodejs server independently of Tuleap server specify two variables :
+// - nodejs_server is a FQDN/public IP for the communication between the browser and nodejs.
+//      For example : $node_server = 'rt.example.com:443';
+// - nodejs_server_int is a FQDN/private IP for the communication between Tuleap and nodejs.
+//      For example : $node_server_int = '192.168.1.13:443';
+// Otherwise set the ip only on $nodejs_server.
 $nodejs_server = '';
+$nodejs_server_int = '';
 
 // The private key sharing between tuleap server and nodejs server.
 // To protect data sending between servers.
@@ -409,6 +415,10 @@ $sys_use_trove = 1;
 // (1 to enable, 0 to disable)
 $sys_use_snippet = 1;
 
+// Enable surveys
+// (1 to enable, 0 to disable)
+$sys_use_surveys = 0;
+
 //Enable new project registration
 // (1 to enable, 0 to disable)
 $sys_use_project_registration = 1;
@@ -453,9 +463,6 @@ $sys_generic_user_suffix = '';
 // by email.
 // Only used in news service for now
 $sys_max_number_of_emailed_people = 100;
-
-// Enable experimental feature to strip outlook quotes
-$sys_strip_outlook = 0;
 
 // Allow (or not) users to do a SVN commit without any commit message
 // Set to 0 to force commit message to not be empty
@@ -510,9 +517,6 @@ $sys_cvs_convert_cp1252_to_utf8 = 0;
 // Can query REST API without using HTTPS
 // /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
 $sys_rest_api_over_http = 0;
-
-// Continue to store password hashed with MD5 for legacy purposes
-$sys_keep_md5_hashed_password = 1;
 
 // Comma separated list of IP addresses that are trusted reverse proxy.
 //

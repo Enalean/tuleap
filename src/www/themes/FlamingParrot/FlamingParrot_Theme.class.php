@@ -240,6 +240,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
             $this->getExtraTabs(),
             $projects_presenters
         );
+        $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
@@ -252,7 +253,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
                 $this->displayNewAccount(),
                 $this->getMOTD(),
                 $navbar_items_builder->buildNavBarItemPresentersCollection(),
-                $this->getUserActions($current_user)
+                $this->getUserActions($current_user),
+                $csrf_logout_token
             )
         );
 
@@ -403,7 +405,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         }
 
         $login_presenter_builder = new User_LoginPresenterBuilder();
-        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure);
+        $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
+        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
 
         $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
 

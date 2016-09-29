@@ -291,10 +291,13 @@ class TrackerDao extends DataAccessObject {
     * @return DataAccessResult
     */
     public function retrieveTrackersMarkAsDeleted() {
-        $sql = "SELECT *
-                FROM $this->table_name
-                WHERE deletion_date > 0
-                ORDER BY name";
+        $sql = "SELECT tracker.*
+                FROM tracker
+                    INNER JOIN groups USING (group_id)
+                WHERE tracker.deletion_date > 0
+                    AND groups.status <> 'D'
+                ORDER BY tracker.group_id";
+
         return $this->retrieve($sql);
     }
 

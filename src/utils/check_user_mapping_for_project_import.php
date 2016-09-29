@@ -101,7 +101,7 @@ try {
         $archive = new Import\ZipArchive($archive_path, ForgeConfig::get('tmp_dir'));
     }
 
-    $collection_from_archive = $builder->buildFromArchive($archive);
+    $collection_from_archive = $builder->build($archive);
     $transformer->transform($collection_from_archive, $mapping_path);
     $console->info('Everything is awesome! ♪♫');
 

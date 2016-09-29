@@ -25,21 +25,27 @@ class User_LoginPresenter {
     private $toggle_ssl;
     private $allow_password_recovery;
     private $additional_connectors;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     public function __construct(
-            $return_to,
-            $pv,
-            $form_loginname,
-            $toggle_ssl,
-            $additional_connectors,
-            $allow_password_recovery = true
-        ) {
-        $this->return_to = $return_to;
-        $this->pv = $pv;
-        $this->form_loginname = $form_loginname;
-        $this->toggle_ssl = $toggle_ssl;
+        $return_to,
+        $pv,
+        $form_loginname,
+        $toggle_ssl,
+        $additional_connectors,
+        CSRFSynchronizerToken $csrf_token,
+        $allow_password_recovery = true
+    ) {
+        $this->return_to               = $return_to;
+        $this->pv                      = $pv;
+        $this->form_loginname          = $form_loginname;
+        $this->toggle_ssl              = $toggle_ssl;
         $this->allow_password_recovery = $allow_password_recovery;
-        $this->additional_connectors = $additional_connectors;
+        $this->additional_connectors   = $additional_connectors;
+        $this->csrf_token              = $csrf_token;
     }
 
     public function getTemplateDir() {
@@ -132,5 +138,29 @@ class User_LoginPresenter {
 
     public function additional_connectors() {
         return $this->additional_connectors;
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    public function getCSRFToken()
+    {
+        return $this->csrf_token;
+    }
+
+    /**
+     * @return string
+     */
+    public function csrf_token_name()
+    {
+        return $this->csrf_token->getTokenName();
+    }
+
+    /**
+     * @return string
+     */
+    public function csrf_token_value()
+    {
+        return $this->csrf_token->getToken();
     }
 }

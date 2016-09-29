@@ -128,6 +128,10 @@ msgstr ""
 msgid "Move to top"
 msgstr ""
 
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "My Kanban reports"
+msgstr ""
+
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr ""
@@ -148,8 +152,16 @@ msgstr ""
 msgid "Show details"
 msgstr ""
 
+#: src/app/kanban.tpl.html
+msgid "Show reports"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "The deletion of a Kanban is irreversible. Please be certain before doing it."
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "This view is under construction"
 msgstr ""
 
 #: src/app/kanban.tpl.html

@@ -25,15 +25,8 @@
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../../include/constants.php';
 
-// Check if we the server is in secure mode or not.
-if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-    $protocol = "https";
-} else {
-    $protocol = "http";
-}
-
-$server_uri  = $protocol .'://'. ForgeConfig::get('sys_default_domain');
-$uri         = $server_uri . TRACKER_BASE_URL .'/soap';
+$request = HTTPRequest::instance();
+$uri     = $request->getServerUrl() . TRACKER_BASE_URL .'/soap';
 
 if ($request->exist('wsdl')) {
     // Use a static wsdl file

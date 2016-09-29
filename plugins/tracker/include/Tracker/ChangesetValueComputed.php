@@ -61,14 +61,14 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
         if ($previous_numeric !== $next_numeric) {
             if ($previous_numeric === null) {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from')." ".
-                $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field')." ".
+                $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field')." ".
                 $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
                 $purifier->purify($next_numeric);
             } elseif ($next_numeric === null) {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') ." ".
                 $purifier->purify($previous_numeric). " ".
                 $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
-                $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field');
+                $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field');
             } else {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').
                     ' ' . $purifier->purify($previous_numeric) . ' ' .

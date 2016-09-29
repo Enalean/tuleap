@@ -1,6 +1,7 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean 2016. All rights reserved
  *
  * Originally written by Manuel Vacelet, 2006
  * 
@@ -164,12 +165,20 @@ class Docman_VersionFactory {
      *
      * @return Void
      */
-    public function archiveBeforePurge($version) {
+    public function archiveBeforePurge($version)
+    {
         $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
         $prefix  = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
+        $status = true;
+        $error  = null;
         $params  = array('source_path'    => $version->getPath(),
-                         'archive_prefix' => $prefix);
+                         'archive_prefix' => $prefix,
+                         'status'         => &$status,
+                         'error'          => &$error
+        );
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
+
+        return $params['status'];
     }
 
     /**
@@ -179,12 +188,14 @@ class Docman_VersionFactory {
      *
      * @return Boolean
      */
-    public function purgeDeletedVersion($version) {
-        $this->archiveBeforePurge($version);
-
-        if (file_exists($version->getPath()) && $this->physicalDeleteVersion($version->getPath())) {
-            $dao = $this->_getVersionDao();
-            return $dao->setPurgeDate($version->getId(), time());
+    public function purgeDeletedVersion($version)
+    {
+        $successfully_purged = $this->archiveBeforePurge($version);
+        if ($successfully_purged) {
+            if (file_exists($version->getPath()) && $this->physicalDeleteVersion($version->getPath())) {
+                $dao = $this->_getVersionDao();
+                return $dao->setPurgeDate($version->getId(), time());
+            }
         }
         return false;
     }
@@ -292,5 +303,3 @@ class Docman_VersionFactory {
         return false;
     }
 }
-
-?>

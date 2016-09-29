@@ -117,10 +117,10 @@ Manage dependencies for Tuleap mailman integration
 %package core-subversion
 Summary: Subversion component for Tuleap
 Group: Development/Tools
-Version: 1.1
+Version: 1.2
 Release: @@RELEASE@@%{?dist}
 Requires: tuleap, subversion, mod_dav_svn, subversion-perl, highlight, tuleap-core-subversion-modperl
-Requires: viewvc-tuleap
+Requires: viewvc, viewvc-theme-tuleap
 %description core-subversion
 Manage dependencies for Tuleap Subversion integration
 
@@ -142,7 +142,7 @@ Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: @@RELEASE@@%{?dist}
 Requires: tuleap, xinetd, rcs, cvsgraph, highlight, perl-CGI
-Requires: viewvc-tuleap
+Requires: viewvc, viewvc-theme-tuleap
 Requires: cvs-tuleap
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
@@ -170,7 +170,7 @@ Version: @@PLUGIN_SVN_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{PKG_NAME}, subversion, mod_dav_svn, subversion-perl, highlight, tuleap-core-subversion-modperl
-Requires: viewvc-tuleap
+Requires: viewvc, viewvc-theme-tuleap
 %description plugin-svn
 Integration of Subversion software configuration management tool with Tuleap.
 
@@ -380,14 +380,6 @@ Requires: php-mediawiki-tuleap >= 1.20.3-6
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
-%package plugin-boomerang
-Summary: Boomerang plugin
-Group: Development/Tools
-Version: @@PLUGIN_BOOMERANG_VERSION@@
-Release: @@RELEASE@@%{?dist}
-%description plugin-boomerang
-Allow performances evaluation in Tuleap.
-
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
@@ -537,6 +529,8 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
+# Do not package artifactsFolders yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -656,9 +650,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
-
-# Plugin boomerang
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/boomerang
 
 # Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -1213,11 +1204,6 @@ fi
 %files plugin-foafprofiles
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
-
-%files plugin-boomerang
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/boomerang
-%dir %{APP_DATA_DIR}/boomerang
 
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)

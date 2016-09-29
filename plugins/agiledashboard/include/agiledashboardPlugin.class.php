@@ -84,6 +84,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
             $this->addHook(ITEM_PRIORITY_CHANGE);
+            $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -155,7 +156,9 @@ class AgileDashboardPlugin extends Plugin {
                 new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
                 new AgileDashboard_Milestone_MilestoneDao(),
                 Tracker_HierarchyFactory::instance(),
-                $planning_factory
+                $planning_factory,
+                TrackerFactory::instance(),
+                Tracker_ArtifactFactory::instance()
             )
         );
         $additional_criterion = $provider->getCriterion($backlog_tracker, $user);
@@ -823,6 +826,20 @@ class AgileDashboardPlugin extends Plugin {
             $params['result'],
             $this->getHierarchyChecker()->getDeniedTrackersForATrackerHierarchy($params['tracker'], $params['user'])
         );
+    }
+
+    /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    {
+        $user       = $params['user'];
+        $request    = $params['request'];
+        $artifact   = $params['artifact'];
+        $collection = $params['collection'];
+
+        $milestone = $this->getMilestoneFactory()->getBareMilestoneByArtifact($user, $artifact);
+        if ($milestone) {
+            $collection->add(new Tuleap\AgileDashboard\Milestone\ArtifactView($milestone, $request, $user));
+        }
     }
 
     /**

@@ -1,3 +1,15 @@
+Version 1.69 - Tuleap 8.20
+    * request #9437 Fatal error when updating manual value of of a computed field in AD card
+
+Version 1.68 - Tuleap 8.20
+    * request #9494: Remove boomerang plugin
+
+Version 1.67 - Tuleap 8.19
+    * request #9437: Fatal error when updating manual value of a computed field in AD card
+
+Version 1.66 - Tuleap 8.19
+    * request #9417: Missing CSRF protection in the semantic administration
+
 Version 1.65 - Tuleap 8.18
     * request #9375 Gulpify sass
 

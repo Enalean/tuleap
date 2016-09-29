@@ -8,7 +8,7 @@ define('LOG_SOAP_REQUESTS', false);
 
 // Check if we the server is in secure mode or not.
 $request = HTTPRequest::instance();
-if ($request->isSecure() || ForgeConfig::get('sys_force_ssl') == 1) {
+if ($request->isSecure()) {
     $protocol = "https";
 } else {
     $protocol = "http";

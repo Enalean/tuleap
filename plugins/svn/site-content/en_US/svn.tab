@@ -105,3 +105,27 @@ plugin_svn	delete_repository_exception	An error occured when deleting repository
 plugin_svn	archived_repositories	Deleted svn repositories
 plugin_svn	restore_confirmation	Confirm restore of the svn repository
 plugin_svn	restore_no_repo_found	No restorable svn repositories found.
+
+plugin_svn	anonymous_browse_access_denied	You can not browse the repository without being logged.
+
+plugin_svn	logsdaily_field	Repository name
+plugin_svn	logsdaily_title	Subversion commits multi repositories
+plugin_svn	log_read_label	Read
+plugin_svn	log_write_label	Write
+plugin_svn	log_browse_label	Browse
+
+plugin_svn_statistics	month	Month
+plugin_svn_statistics	total_number_browse	Total number of SVN browse operations
+plugin_svn_statistics	total_number_read	Total number of SVN read operations
+plugin_svn_statistics	total_number_write	Total number of SVN write operations
+plugin_svn_statistics	total_number_project_read	Total number of projects with SVN read operations
+plugin_svn_statistics	total_number_user_read	Total number of users with SVN read operations
+plugin_svn_statistics	total_number_project_write	Total number of projects with SVN write operations
+plugin_svn_statistics	total_number_user_write	Total number of users with SVN write operations
+plugin_svn_statistics	top_user	Top user
+plugin_svn_statistics	top_user_operation	Top user (number of write operations)
+plugin_svn_statistics	top_project	Top project
+plugin_svn_statistics	top_project_operation	Top project (number of write operations)
+plugin_svn_statistics	service_usage_activities	SVN with multiple repositories activities
+
+plugin_svn	url_can_not_be_processed	The requested action can not be understood, you have been redirected to the homepage

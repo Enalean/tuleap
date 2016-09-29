@@ -389,9 +389,6 @@ $sys_generic_user_suffix = '';
 // Only used in news service for now
 $sys_max_number_of_emailed_people = 100;
 
-// Enable experimental feature to strip outlook quotes
-$sys_strip_outlook = 0;
-
 // Allow (or not) users to do a SVN commit without any commit message
 // Set to 0 to force commit message to not be empty
 $sys_allow_empty_svn_commit_message = 1;
@@ -445,9 +442,6 @@ $sys_cvs_convert_cp1252_to_utf8 = 0;
 // Can query REST API without using HTTPS
 // /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
 $sys_rest_api_over_http = 0;
-
-// Continue to store password hashed with MD5 for legacy purposes
-$sys_keep_md5_hashed_password = 1;
 
 // Comma separated list of IP addresses that are trusted reverse proxy.
 //

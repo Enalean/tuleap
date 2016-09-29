@@ -21,8 +21,18 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NaturePresenterFactory {
+use EventManager;
+use Project;
 
+class NaturePresenterFactory
+{
+    /**
+     * Add new artifact link natures
+     *
+     * Parameters:
+     *  - natures: List of existing natures
+     */
+    const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
     /**
      * @var NatureDao
      */
@@ -34,11 +44,61 @@ class NaturePresenterFactory {
 
     /** @return NaturePresenter[] */
     public function getAllNatures() {
-        $natures = array(
-            new NatureIsChildPresenter()
+        $natures = $this->getDefaultNatures();
+        $natures = array_merge($natures, $this->getPluginsNatures());
+        $natures = array_merge($natures, $this->getCustomNatures());
+
+        return $natures;
+    }
+
+    public function getOnlyVisibleNatures()
+    {
+        return array_filter(
+            $this->getAllNatures(),
+            function (NaturePresenter $nature) {
+                return $nature->is_visible;
+            }
         );
+    }
+
+    private function getDefaultNatures()
+    {
+        return array(new NatureIsChildPresenter());
+    }
+
+    private function getPluginsNatures()
+    {
+        $natures = array();
+
+        $params  = array(
+            'natures' => &$natures
+        );
+
+        EventManager::instance()->processEvent(
+            self::EVENT_GET_ARTIFACTLINK_NATURES,
+            $params
+        );
+
+        return $natures;
+    }
+
+    private function getCustomNatures()
+    {
+        $natures = array();
+
         foreach ( $this->dao->searchAll() as $row) {
             $natures[] = $this->instantiateFromRow($row);
+        }
+
+        return $natures;
+    }
+
+    /** @return NaturePresenter[] */
+    public function getAllUsedNaturesByProject(Project $project) {
+        $natures = array();
+
+        foreach ( $this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
+            $natures[] = $row['nature'];
         }
 
         return $natures;
@@ -47,7 +107,7 @@ class NaturePresenterFactory {
     /** @return NaturePresenter | null */
     public function getFromShortname($shortname) {
         if($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
-            return new NaturePresenter('', '', '', true);
+            return new NaturePresenter('', '', '', true, true);
         }
 
         if($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
@@ -66,7 +126,8 @@ class NaturePresenterFactory {
             $row['shortname'],
             $row['forward_label'],
             $row['reverse_label'],
-            (bool)$row['is_used']
+            (bool)$row['is_used'],
+            true
         );
     }
 }

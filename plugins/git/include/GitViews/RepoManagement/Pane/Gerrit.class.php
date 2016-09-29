@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
+use Codendi_HTMLPurifier;
 use GitRepository;
 use Codendi_Request;
 use Tuleap\Git\GerritCanMigrateChecker;
@@ -269,6 +270,7 @@ class Gerrit extends Pane
 
     private function getMigratedToGerritInfo()
     {
+        $purifier       = Codendi_HTMLPurifier::instance();
         $driver         = $this->getGerritDriverForRepository($this->repository);
         $gerrit_project = $driver->getGerritProjectName($this->repository);
         $gerrit_server  = $this->getGerritServerForRepository($this->repository);
@@ -276,10 +278,16 @@ class Gerrit extends Pane
 
         $html  = '';
         $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array($this->repository->getName(), $gerrit_project, $link));
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array(
+            $purifier->purify($this->repository->getName()),
+            $purifier->purify($gerrit_project),
+            $purifier->purify($link)
+        ));
         $html .= '</p>';
         $html .= '<div class="git_repomanagement_gerrit_more_description">';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description', array($gerrit_project, $gerrit_server->getHost()));
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description',
+            array($purifier->purify($gerrit_project), $purifier->purify($gerrit_server->getBaseUrl()))
+        );
         $html .= '</div>';
         return $html;
     }

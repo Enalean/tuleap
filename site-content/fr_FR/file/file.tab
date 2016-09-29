@@ -299,19 +299,20 @@ file_file_utils	update_proc_fail	Modification non effectuée.
 file_file_utils	delete_proc_success	Processeur effacé.
 file_file_utils	delete_proc_fail	Suppression non effectuée.
 file_file_utils	del_proc	Effacer ce processeur ?
-file_file_utils	permissions	Permissions
-file_file_utils	permissions_title	Permissions
+file_file_utils	permissions	Droits d'accès
+file_file_utils	administrators_title	Administrateurs du service Fichier
+file_file_utils	readers_title	Lecteurs
 file_file_utils	permission_read_title	Lecture
 file_file_utils	title_frs_administration	Administration des fichiers
 file_file_utils	access_control_intro	Cette section permet de définir les groupes d'utilisateurs qui peuvent lire et/ou écrire du contenu dans le service Fichier.
 file_file_utils	administrator_info	Les administrateurs de projet ainsi que les groupes d'utilisateurs ayant le droit d'écriture peuvent administrer ce service.
-file_file_utils	frs_admins_submit_button	Soumettre
+file_file_utils	readers_info	Les groupes d'utilisateurs suivant ont accès au service. L'accès a un paquet peut être restreint via les permissions du paquet (bien que la sélection de groupes d'utilisateurs pour les paquets ne peut être plus large que ci-dessous)
+file_file_utils	frs_admins_submit_button	Sauvegarder les droits d'accès
 file_file_utils	updated_permissions	Les permissions ont été mises à jour
-file_file_utils	write_title	Ecrire
+file_file_utils	write_title	Administrateurs
 file_file_utils	no_data_selected	Aucune donnée selectionnée.
 file_file_utils	toolbar_admin	Admin
 file_file_utils	toolbar_help	Aide
-file_file_utils	error_permission_incorrect	Les permissions attribuées semblent incorrectes, les membres du projet ont plus de droit que les administrateurs de projet.
 file_file_utils	error_data_incorrect	Les données semblent incorrectes.
 #
 #-----------------------------------------------

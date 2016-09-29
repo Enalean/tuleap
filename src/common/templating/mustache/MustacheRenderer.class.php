@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,14 +43,21 @@ class MustacheRenderer extends TemplateRenderer {
         MustacheException::UNKNOWN_PARTIAL          => true,
         MustacheException::UNKNOWN_PRAGMA           => true,
     ));
-    
-    public function __construct($plugin_templates_dir) {
+
+    public function __construct($plugin_templates_dir)
+    {
         $this->template_engine = $this->buildTemplateEngine();
-        if (is_array($plugin_templates_dir)) {
-            $this->template_loader = new MustacheChainedPathLoader($plugin_templates_dir);
-        } else {
-            $this->template_loader = new MustacheLoader($plugin_templates_dir);
+
+        if (! is_array($plugin_templates_dir)) {
+            $plugin_templates_dir = array($plugin_templates_dir);
         }
+
+        $common_templates_dir = ForgeConfig::get('codendi_dir') .'/src/templates/common/';
+        if (is_dir($common_templates_dir)) {
+            $plugin_templates_dir[] = $common_templates_dir;
+        }
+
+        $this->template_loader = new MustacheChainedPathLoader($plugin_templates_dir);
     }
     
     /**
@@ -70,5 +77,3 @@ class MustacheRenderer extends TemplateRenderer {
        return $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
     }
 }
-
-?>

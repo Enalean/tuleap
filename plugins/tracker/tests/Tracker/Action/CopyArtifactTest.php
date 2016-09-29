@@ -182,7 +182,6 @@ XML;
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(false);
 
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
-        expect($this->xml_importer)->importOneArtifactFromXML()->never();
 
         expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
 
@@ -191,7 +190,6 @@ XML;
 
     public function itRedirectsToTheTrackerIfXMLImportFailed() {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-        stub($this->xml_importer)->importOneArtifactFromXML()->returns(null);
 
         expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
 
@@ -233,7 +231,6 @@ XML;
 
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
         expect($this->xml_updater)->update()->never();
-        expect($this->xml_importer)->importOneArtifactFromXML()->never();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -251,7 +248,6 @@ XML;
 
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
         expect($this->xml_updater)->update()->never();
-        expect($this->xml_importer)->importOneArtifactFromXML()->never();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -269,7 +265,6 @@ XML;
 
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
         expect($this->xml_updater)->update()->never();
-        expect($this->xml_importer)->importOneArtifactFromXML()->never();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -292,7 +287,6 @@ XML;
 
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
         expect($this->xml_updater)->update()->never();
-        expect($this->xml_importer)->importOneArtifactFromXML()->never();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

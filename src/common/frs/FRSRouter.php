@@ -50,7 +50,7 @@ class FRSRouter
     {
         $user = UserManager::instance()->getCurrentUser();
         if (! $request->get('action')) {
-            $this->useDefaultRoute($request, $project, $user);
+            $this->useDefaultRoute($project, $user);
             return;
         }
 
@@ -59,11 +59,17 @@ class FRSRouter
 
         switch ($action) {
             case "edit-permissions":
-                $this->useDefaultRoute($request, $project, $user);
+                $this->useDefaultRoute($project, $user);
                 break;
             case "admin-frs-admins":
-                $admin_ugroups_ids  = $request->get('frs_admins');
-                $reader_ugroups_ids = $request->get('frs_readers');
+                $admin_ugroups_ids  = $request->get('permission_frs_admins');
+                $reader_ugroups_ids = $request->get('permission_frs_readers');
+                if (! $admin_ugroups_ids) {
+                    $admin_ugroups_ids = array();
+                }
+                if (! $reader_ugroups_ids) {
+                    $reader_ugroups_ids = array();
+                }
 
                 if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_data_incorrect'));
@@ -71,16 +77,11 @@ class FRSRouter
                     return;
                 }
 
-                try {
-                    $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
-                } catch (FRSWrongPermissiongrantedException $e) {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_permission_incorrect'));
-                }
-
+                $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
                 $this->redirectToDefaultRoute($project);
                 break;
             default:
-                $this->useDefaultRoute($request, $project, $user);
+                $this->useDefaultRoute($project, $user);
                 break;
         }
     }
@@ -95,11 +96,8 @@ class FRSRouter
         ));
     }
 
-    private function useDefaultRoute(HTTPRequest $request, Project $project, PFUser $user)
+    private function useDefaultRoute(Project $project, PFUser $user)
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-
-        $this->permission_controller->displayToolbar($project);
         $this->permission_controller->displayPermissions($project, $user);
     }
 }

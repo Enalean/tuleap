@@ -171,13 +171,6 @@ class UserDao extends DataAccessObject {
             $columns[] = 'password';
             $values[]  = $this->password_handler->computeHashPassword($user_pw);
 
-            $columns[] = 'user_pw';
-            if (ForgeConfig::get('sys_keep_md5_hashed_password')) {
-                $values[] = md5($user_pw);
-            } else {
-                $values[] = '';
-            }
-
             $columns[] = 'unix_pw';
             $values[]  = $this->password_handler->computeUnixPassword($user_pw);
         }
@@ -281,11 +274,11 @@ class UserDao extends DataAccessObject {
         $stmt = array();
         if (isset($user['clear_password'])) {
             $stmt[] = 'password='.$this->da->quoteSmart($this->password_handler->computeHashPassword($user['clear_password']));
-            if(ForgeConfig::get('sys_keep_md5_hashed_password')) {
-                $stmt[] = 'user_pw='.$this->da->quoteSmart(md5($user['clear_password']));
-            } else {
-                $stmt[] = 'user_pw=""';
-            }
+            /*
+             * Legacy column that was used to store password hashed with MD5
+             * We need to keep it for old instances with non migrated accounts yet
+             */
+            $stmt[] = 'user_pw=""';
             $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
             $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
             unset($user['clear_password']);

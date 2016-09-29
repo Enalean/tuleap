@@ -24,6 +24,15 @@
               placeholder="{{ svn_paths_placeholder }}"
             >{{ path }}</textarea>
             <p class="help">{{ svn_paths_helper }}</p>
+            <div class="workflow_action workflow_action_ci_build">
+                <p class="help">{{ params_header }}</p>
+                <ul class="help">
+                    <li>{{ project_param_description }}</li>
+                    <li>{{ user_param_description }}</li>
+                    <li>{{ repository_param_description }}</li>
+                    <li>{{ path_param_description }}</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

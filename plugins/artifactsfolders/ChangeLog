@@ -1,0 +1,23 @@
+Version 0.13 - Tuleap 8.20
+    * Introduce rollup view in Folder tab
+
+Version 0.12 - Tuleap 8.20
+    * story #9468: Do not display the tab if there is no Artifact in the folder
+
+Version 0.11 - Tuleap 8.20
+    * story #9468: Display artifacts that are in the folder
+
+Version 0.10 - Tuleap 8.20
+    * story #9468: Display empty table in Folder tab
+
+Version 0.9 - Tuleap 8.20
+    * story #9468: Fix name of the tab in artifact view
+
+Version 0.8 - Tuleap 8.20
+    * story #9468: Do not display the tab if project is not allowed to
+
+Version 0.7 - Tuleap 8.20
+    * story #9468 import folders (Display empty content in the tab)
+
+Version 0.6 - Tuleap 8.20
+    * story #9468: Folder is translated as 'Dossier' in French
