@@ -44,7 +44,7 @@ class ArtifactInNatureTablePresenter {
         $current_user       = \UserManager::instance()->getCurrentUser();
 
         $this->direct_link_to_artifact   = $artifact->fetchDirectLinkToArtifact();
-        $this->project_public_name       = $project->getPublicName();
+        $this->project_public_name       = $project->getUnconvertedPublicName();
         $this->tracker_name              = $this->emptyStringIfNull($tracker->getName());
         $this->artifact_id               = $artifact->getId();
         $this->artifact_title            = $this->emptyStringIfNull($artifact->getTitle());
