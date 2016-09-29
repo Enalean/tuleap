@@ -56,6 +56,10 @@ class ArtifactPresenter
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
             $this->assignees[] = $this->getDisplayName($assignee);
         }
+
+        if (! $this->status) {
+            $this->status = '';
+        }
     }
 
     private function getDisplayName(PFUser $user)

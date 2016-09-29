@@ -41,10 +41,10 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
-
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook(Event::JAVASCRIPT_FOOTER);
             $this->addHook('cssfile');
         }
 
@@ -75,6 +75,13 @@ class ArtifactsFoldersPlugin extends Plugin
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+        }
+    }
+
+    public function javascript_footer($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
+            echo '</script>' . $this->getMinifiedAssetHTML() . '</script>';
         }
     }
 
