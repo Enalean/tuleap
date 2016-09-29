@@ -35,6 +35,7 @@ class ArtifactPresenter
     public $status;
     public $title;
     public $submitted_by_user;
+    public $submitted_by_url;
     public $last_modified_date;
     public $assignees;
 
@@ -44,12 +45,19 @@ class ArtifactPresenter
         $this->html_url          = $artifact->getUri();
         $this->xref              = $artifact->getXRef();
         $this->tracker_label     = $artifact->getTracker()->getName();
-        $this->project_label     = $artifact->getTracker()->getProject()->getPublicName();
+        $this->project_label     = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
         $this->status            = $artifact->getStatus();
         $this->title             = $artifact->getTitle();
-        $this->submitted_by_user = $this->getDisplayName($artifact->getSubmittedByUser());
+        $this->submitted_by_url  = '';
+        $this->submitted_by_user = '';
 
-        $date = new DateTime('@'. $artifact->getLastUpdateDate());
+        $submitter = $artifact->getSubmittedByUser();
+        if ($submitter) {
+            $this->submitted_by_url  = '/users/' . $submitter->getName();
+            $this->submitted_by_user = $this->getDisplayName($submitter);
+        }
+
+        $date                     = new DateTime('@' . $artifact->getLastUpdateDate());
         $this->last_modified_date = $date->format($GLOBALS['Language']->getText('system', 'datefmt'));
 
         $this->assignees = array();
