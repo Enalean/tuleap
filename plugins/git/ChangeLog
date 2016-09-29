@@ -1,3 +1,6 @@
+Version 4.258 - Tuleap 8.20
+    * request #9526: Git mail notification should not be computed if nobody wants a notification
+
 Version 4.257 - Tuleap 8.19
     * request #9460: Performance issues when querying permissions table
 
