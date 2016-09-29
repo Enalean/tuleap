@@ -128,7 +128,12 @@ class Git_Hook_PostReceive {
     /**
      * @return bool
      */
-    private function sendMail(GitRepository $repository, MailBuilder $mail_builder, $oldrev, $newrev, $refname) {
+    private function sendMail(GitRepository $repository, MailBuilder $mail_builder, $oldrev, $newrev, $refname)
+    {
+        $notified_mails = $repository->getNotifiedMails();
+        if (count($notified_mails) === 0) {
+            return true;
+        }
         $mail_raw_output  = array();
         $exit_status_code = 0;
         exec('GIT_DIR=' . escapeshellarg($repository->getFullPath()) .
