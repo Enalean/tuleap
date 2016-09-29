@@ -117,17 +117,19 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
             $links[] = $tab['link'];
         }
 
-        $item = new FlamingParrot_NavBarItemDropdownPresenter(
-            'extra-tabs',
-            $this->isNavBarItemActive($links),
-            $GLOBALS['Language']->getText('include_menu', 'extras')
-        );
+        if (count($links) > 0) {
+            $item = new FlamingParrot_NavBarItemDropdownPresenter(
+                'extra-tabs',
+                $this->isNavBarItemActive($links),
+                $GLOBALS['Language']->getText('include_menu', 'extras')
+            );
 
-        $item->addSection(
-            new FlamingParrot_NavBarItemDropdownSectionPresenter($items)
-        );
+            $item->addSection(
+                new FlamingParrot_NavBarItemDropdownSectionPresenter($items)
+            );
 
-        $collection->addItem($item);
+            $collection->addItem($item);
+        }
     }
 
     private function addHelpItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
