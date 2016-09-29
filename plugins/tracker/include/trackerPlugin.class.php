@@ -40,7 +40,6 @@ class trackerPlugin extends Plugin {
     const SERVICE_SHORTNAME                       = 'plugin_tracker';
     const TRUNCATED_SERVICE_NAME                  = 'Trackers';
 
-
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
@@ -809,6 +808,8 @@ class trackerPlugin extends Plugin {
             $plateform_natures["nature"][] = $nature['shortname'];
         }
 
+        $this->addCustomNatures($plateform_natures["nature"]);
+
         foreach ($xml->natures->nature as $nature) {
             if (! in_array((string)$nature, $plateform_natures['nature'])) {
                 return false;
@@ -816,6 +817,14 @@ class trackerPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    private function addCustomNatures(array &$natures) {
+        $params['natures'] = &$natures;
+        EventManager::instance()->processEvent(
+            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES,
+            $params
+        );
     }
 
     private function getNatureDao()

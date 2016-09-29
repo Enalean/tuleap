@@ -35,8 +35,6 @@ require_once 'constants.php';
 
 class ArtifactsFoldersPlugin extends Plugin
 {
-
-
     public function __construct($id)
     {
         parent::__construct($id);
@@ -50,6 +48,8 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(Event::JAVASCRIPT_FOOTER);
             $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_NATURE_VALID);
             $this->addHook('cssfile');
             $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
             $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
@@ -198,5 +198,20 @@ class ArtifactsFoldersPlugin extends Plugin
         );
 
         $router->route($request);
+    }
+
+    public function tracker_add_system_natures($params)
+    {
+        $params['natures'][] = NatureIsFolderPresenter::NATURE_IN_FOLDER;
+    }
+
+    public function tracker_is_nature_valid($params)
+    {
+        if ($this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
+            && $params['nature'] === NatureIsFolderPresenter::NATURE_IN_FOLDER
+        ) {
+            $params['error'] =  "Link between ".$params['artifact']->getId() ." and ". $params['children_id'] . " is inconsistent because tracker ".
+                $params['tracker_id'] . " is not defined as a Folder. Artifact ".$params['artifact']->getId() ." added without nature.";
+        }
     }
 }
