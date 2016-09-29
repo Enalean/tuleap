@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 8.20
+    * Introduce rollup view in Folder tab
+
 Version 0.12 - Tuleap 8.20
     * story #9468: Do not display the tab if there is no Artifact in the folder
 
