@@ -11,7 +11,7 @@ Version 8.20 (Not Released Yet)
 	* agiledashboard: 1.421
 	* docman: 2.26.121
 	* artifactsfolders: 0.12
-	* ldap: 3.110
+	* ldap: 3.111
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration

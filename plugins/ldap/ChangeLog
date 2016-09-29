@@ -1,3 +1,6 @@
+Version 3.111 - Tuleap 8.20
+    * story #9396 have project members automatically synchronized with LDAP (Add synchronize checkbox)
+
 Version 3.110 - Tuleap 8.20
     * request #9523: Ldap user confirmation login date can be reset
 
