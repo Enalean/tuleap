@@ -49,6 +49,7 @@ npm run build
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www/js/angular
 %{__cp} -ar www/index.php www/themes $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www
 %{__cp} -ar www/js/angular/bin $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www/js/angular
+find www/js/ -mindepth 1 -maxdepth 1 ! -name angular -exec %{__cp} -ar {} $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www/js \;
 
 %pre
 if [ "$1" -eq "1" ]; then
