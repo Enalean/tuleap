@@ -1,3 +1,6 @@
+Version 3.112 - Tuleap 8.20
+    * story #9396: have project members automatically synchronized with LDAP (Add new projet members during daily synchonization)
+
 Version 3.111 - Tuleap 8.20
     * story #9396 have project members automatically synchronized with LDAP (Add synchronize checkbox)
 
