@@ -1,3 +1,6 @@
+Version 1.422 - Tuleap 8.20
+    * story #9463 see cumulative flow diagram (REST route for kanban cumulative flow)
+
 Version 1.421 - Tuleap 8.20
     * request #9524: Kanban column counts does not take into account permissions when the column is closed
 

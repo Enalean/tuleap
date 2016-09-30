@@ -8,11 +8,11 @@ Version 8.20 (Not Released Yet)
 	* svn: 0.95
 	* artifactfolders: 0.5
 	* frs: 0.21
-	* agiledashboard: 1.421
+	* agiledashboard: 1.422
 	* docman: 2.26.121
 	* artifactsfolders: 0.15
 	* ldap: 3.111
-	* git: 4.258
+	* git: 4.259
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
