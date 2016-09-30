@@ -44,7 +44,8 @@ class FolderUsageRetriever
 
     public function projectUsesArtifactsFolders(Project $project, PFUser $user)
     {
-        $project_tracker_ids = $this->getProjectTrackerIds($project, $user);
+        $project_tracker     = $this->tracker_factory->getTrackersByGroupIdUserCanView($project->getID(), $user);
+        $project_tracker_ids = $this->getProjectTrackerIds($project_tracker);
 
         return $this->dao->projectUsesArtifactsFolders($project_tracker_ids);
     }
@@ -52,15 +53,21 @@ class FolderUsageRetriever
     /**
      * @return array
      */
-    private function getProjectTrackerIds(Project $project, PFUser $user)
+    private function getProjectTrackerIds(array $project_tracker)
     {
-        $project_tracker = $this->tracker_factory->getTrackersByGroupIdUserCanView($project->getID(), $user);
-
         $project_tracker_ids = array();
         foreach ($project_tracker as $tracker) {
             $project_tracker_ids[] = $tracker->getId();
         }
 
         return $project_tracker_ids;
+    }
+
+    public function doesProjectHaveAFolderTracker(Project $project)
+    {
+        $project_tracker     = $this->tracker_factory->getTrackersByGroupId($project->getID());
+        $project_tracker_ids = $this->getProjectTrackerIds($project_tracker);
+
+        return $this->dao->projectUsesArtifactsFolders($project_tracker_ids);
     }
 }
