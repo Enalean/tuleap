@@ -84,4 +84,22 @@ extends LDAP_GroupManager
     {
         return $this->getDao()->isProjectBindingSynchronized($project_id);
     }
+
+    private function getSynchronizedProjects()
+    {
+        return $this->getDao()->getSynchronizedProjects();
+    }
+
+    public function synchronize()
+    {
+        foreach ($this->getSynchronizedProjects() as $row) {
+            $this->setId($row['group_id']);
+            $this->setGroupDn($row['ldap_group_dn']);
+
+            $is_nightly_synchronized = self::AUTO_SYNCHRONIZATION;
+            $display_feedback        = false;
+
+            $this->bindWithLdap(self::PRESERVE_MEMBERS_OPTION, $is_nightly_synchronized, $display_feedback);
+        }
+    }
 }

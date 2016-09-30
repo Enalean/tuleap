@@ -893,6 +893,10 @@ class LdapPlugin extends Plugin {
                 //Synchronize the ugroups with the ldap ones
                 $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
                 $ldapUserGroupManager->synchronizeUgroups();
+
+                $ldap_project_group_manager = new LDAP_ProjectGroupManager($this->getLdap());
+                $ldap_project_group_manager->synchronize();
+
                 return true;
             }
         }

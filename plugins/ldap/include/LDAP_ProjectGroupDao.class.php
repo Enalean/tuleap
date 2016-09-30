@@ -134,4 +134,15 @@ extends DataAccessObject
 
         return count($this->retrieve($sql)) > 0;
     }
+
+    public function getSynchronizedProjects()
+    {
+        $auto_synchronized_value = $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+
+        $sql = "SELECT *
+                FROM plugin_ldap_project_group
+                WHERE synchro_policy = $auto_synchronized_value";
+
+        return $this->retrieve($sql);
+    }
 }
