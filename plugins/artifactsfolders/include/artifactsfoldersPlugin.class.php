@@ -49,6 +49,8 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(Event::JAVASCRIPT_FOOTER);
             $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
             $this->addHook('cssfile');
+            $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
+            $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         }
 
         return parent::getHooksAndCallbacks();
@@ -165,5 +167,17 @@ class ArtifactsFoldersPlugin extends Plugin
                 new Tracker_FormElement_Field_Value_ArtifactLinkDao()
             )
         );
+    }
+
+    public function hide_artifact($params)
+    {
+        $params['hide_artifact'] = $params['nature'] === NatureIsFolderPresenter::NATURE_IS_FOLDER;
+    }
+
+    public function event_get_nature_presenter($params)
+    {
+        if ($params['shortname'] === NatureIsFolderPresenter::NATURE_IS_FOLDER) {
+            $params['presenter'] = new NatureIsFolderPresenter();
+        }
     }
 }
