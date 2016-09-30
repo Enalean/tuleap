@@ -19,7 +19,9 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
+use DateTime;
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use AgileDashboard_PermissionsManager;
@@ -66,6 +68,9 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
+use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -1015,6 +1020,82 @@ class KanbanResource extends AuthenticatedResource {
 
             $this->node_js_client->sendMessage($message);
         }
+    }
+
+    /**
+     * Get cumulative flow
+     *
+     * For each column, get the total number of kanban items that were in this column for the requested period.
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url GET {id}/cumulative_flow
+     * @access hybrid
+     *
+     * @param int    $id                     Id of the kanban
+     * @param string $start_date             Start date of the cumulative flow in ISO format (YYYY-MM-DD) {@from path}{@type date}
+     * @param string $end_date               End date of the cumulative flow in ISO format (YYYY-MM-DD) {@from path}{@type date}
+     * @param int    $interval_between_point Number of days between 2 points of the cumulative flow {@from path}{@type int}{@min 1}
+     *
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    public function getCumulativeFlow($id, $start_date, $end_date, $interval_between_point)
+    {
+        $this->checkAccess();
+        $user             = $this->getCurrentUser();
+        $kanban           = $this->getKanban($user, $id);
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+
+        $representation_builder = new DiagramRepresentationBuilder(
+            new KanbanCumulativeFlowDiagramDao(),
+            $this->kanban_column_factory,
+            $artifact_factory
+        );
+
+        Header::allowOptionsGet();
+
+        $datetime_start = new DateTime($start_date);
+        $datetime_end   = new DateTime($end_date);
+        if ($datetime_start > $datetime_end) {
+            throw new RestException(400, '`start_date` must be older than `end_date`');
+        }
+
+        try {
+            $diagram_representation = $representation_builder->build(
+                $kanban,
+                $user,
+                $datetime_start,
+                $datetime_end,
+                $interval_between_point
+            );
+        } catch (TooMuchPointsException $exception) {
+            throw new RestException(
+                400,
+                'Number of points requested is too large, you can request for ' . DiagramRepresentationBuilder::MAX_POSSIBLE_POINTS . 'maximum'
+            );
+        }
+
+        return $diagram_representation;
+    }
+
+    /**
+     * @url OPTIONS {id}/cumulative_flow
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @param int $id Id of the Kanban
+     */
+    public function optionsCumulativeFlow($id)
+    {
+        Header::allowOptionsGet();
     }
 
     private function checkColumnIdsExist(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids) {

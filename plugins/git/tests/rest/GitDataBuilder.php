@@ -35,7 +35,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 class GitDataBuilder extends REST_TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
-    const PROJECT_TEST_GIT_ID        = 109;
+    const PROJECT_TEST_GIT_ID        = 111;
     const REPOSITORY_GIT_ID          = 1;
 
     /** @var SystemEventManager */

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="kanban-cumulative-flow" full-name="Kanban Cumulative Flow" description="For kanban cumulative flow test" access="public">
+    <long-description>A test project for Kanban Cumulative Flow</long-description>
+    <services>
+        <service shortname="plugin_tracker" enabled="1"/>
+        <service shortname="plugin_agiledashboard" enabled="1"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T188" parent_id="0" instantiate_for_new_projects="1" stop_notification="1">
+            <name><![CDATA[kanban_cumulative_flow_test]]></name>
+            <item_name>kanban_cumulative_flow_test</item_name>
+            <description><![CDATA[Kanban cumulative flow test]]></description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="sb" ID="F1642" rank="0">
+                    <name>status</name>
+                    <label><![CDATA[status]]></label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V1232" label="Open1" is_hidden="0"/>
+                            <item ID="V1233" label="Open2" is_hidden="0"/>
+                            <item ID="V1234" label="Open3" is_hidden="0"/>
+                            <item ID="V1235" label="Archive1" is_hidden="0"/>
+                            <item ID="V1236" label="Archive2" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="status">
+                    <shortname>status</shortname>
+                    <label>Status</label>
+                    <description>Define the status of an artifact</description>
+                    <field REF="F1642"/>
+                    <open_values>
+                        <open_value REF="V1232"/>
+                        <open_value REF="V1233"/>
+                        <open_value REF="V1234"/>
+                    </open_values>
+                </semantic>
+                <semantic type="tooltip"/>
+                <semantic type="plugin_cardwall_card_fields"/>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>The system default artifact report</description>
+                    <criterias/>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <workflow/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F1642" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F1642" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F1642" ugroup="UGROUP_PROJECT_MEMBERS"
+                            type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+            <artifacts>
+                <artifact id="140">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-22T10:47:37+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-23T11:48:55+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2016-09-23T11:48:55+02:00</submitted_on>
+                                <body format="text"><![CDATA[]]></body>
+                            </comment>
+                        </comments>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1232</value>
+                        </field_change>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-23T11:49:11+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2016-09-23T11:49:11+02:00</submitted_on>
+                                <body format="text"><![CDATA[]]></body>
+                            </comment>
+                        </comments>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1233</value>
+                        </field_change>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-23T11:49:33+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2016-09-28T11:49:33+02:00</submitted_on>
+                                <body format="text"><![CDATA[]]></body>
+                            </comment>
+                        </comments>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1235</value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="141">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-23T11:49:24+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1233</value>
+                        </field_change>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-27T11:49:33+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2016-09-27T11:49:33+02:00</submitted_on>
+                                <body format="text"><![CDATA[]]></body>
+                            </comment>
+                        </comments>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1235</value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="142">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-23T11:49:24+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1232</value>
+                        </field_change>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-09-26T11:49:33+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2016-09-26T11:49:33+02:00</submitted_on>
+                                <body format="text"><![CDATA[]]></body>
+                            </comment>
+                        </comments>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">1236</value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+            </artifacts>
+        </tracker>
+    </trackers>
+</project>

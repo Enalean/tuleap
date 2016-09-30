@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All rights reserved
+ * Copyright (c) Enalean, 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+require_once dirname(__FILE__).'/TrackerDataBuilder.php';
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/DataBuilder.php';
+$data_builder = new TrackerDataBuilder();
+$data_builder->setUp();

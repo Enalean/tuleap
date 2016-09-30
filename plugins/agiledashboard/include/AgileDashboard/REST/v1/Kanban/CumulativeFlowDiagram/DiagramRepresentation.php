@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,12 +11,22 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/DataBuilder.php';
+namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+
+class DiagramRepresentation
+{
+    /** @var array */
+    public $columns;
+
+    public function build($columns)
+    {
+        $this->columns = $columns;
+    }
+}
