@@ -34,27 +34,24 @@ class ArtifactPresenter
     public $project_label;
     public $status;
     public $title;
-    public $submitted_by_user;
-    public $submitted_by_url;
+    public $submitter;
     public $last_modified_date;
     public $assignees;
 
     public function build(PFUser $current_user, Tracker_Artifact $artifact)
     {
-        $this->id                = $artifact->getId();
-        $this->html_url          = $artifact->getUri();
-        $this->xref              = $artifact->getXRef();
-        $this->tracker_label     = $artifact->getTracker()->getName();
-        $this->project_label     = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
-        $this->status            = $artifact->getStatus();
-        $this->title             = $artifact->getTitle();
-        $this->submitted_by_url  = '';
-        $this->submitted_by_user = '';
+        $this->id            = $artifact->getId();
+        $this->html_url      = $artifact->getUri();
+        $this->xref          = $artifact->getXRef();
+        $this->tracker_label = $artifact->getTracker()->getName();
+        $this->project_label = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
+        $this->status        = $artifact->getStatus();
+        $this->title         = $artifact->getTitle();
+        $this->submitter     = false;
 
         $submitter = $artifact->getSubmittedByUser();
         if ($submitter) {
-            $this->submitted_by_url  = '/users/' . $submitter->getName();
-            $this->submitted_by_user = $this->getDisplayName($submitter);
+            $this->submitter = $this->getUserPresenter($submitter);
         }
 
         $date                     = new DateTime('@' . $artifact->getLastUpdateDate());
@@ -62,12 +59,22 @@ class ArtifactPresenter
 
         $this->assignees = array();
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
-            $this->assignees[] = $this->getDisplayName($assignee);
+            $this->assignees[] = $this->getUserPresenter($assignee);
         }
 
         if (! $this->status) {
             $this->status = '';
         }
+    }
+
+    private function getUserPresenter(PFUser $user)
+    {
+        $user_helper = UserHelper::instance();
+
+        return array(
+            'url'          => $user_helper->getUserUrl($user),
+            'display_name' => $this->getDisplayName($user)
+        );
     }
 
     private function getDisplayName(PFUser $user)
