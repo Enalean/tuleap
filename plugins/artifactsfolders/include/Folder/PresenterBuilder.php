@@ -30,52 +30,30 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 class PresenterBuilder
 {
     /**
-     * @var NatureDao
-     */
-    private $nature_dao;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
      * @var Dao
      */
     private $folder_dao;
 
+    /**
+     * @var ArtifactPresenterBuilder
+     */
+    private $artifact_presenter_builder;
+
     public function __construct(
         Dao $folder_dao,
-        NatureDao $nature_dao,
-        Tracker_ArtifactFactory $artifact_factory,
+        ArtifactPresenterBuilder $artifact_presenter_builder,
         NatureIsChildLinkRetriever $retriever
     ) {
-        $this->nature_dao       = $nature_dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->retriever        = $retriever;
-        $this->folder_dao       = $folder_dao;
+        $this->retriever                  = $retriever;
+        $this->folder_dao                 = $folder_dao;
+        $this->artifact_presenter_builder = $artifact_presenter_builder;
     }
 
     /** @return Presenter */
     public function build(PFUser $user, Tracker_Artifact $folder)
     {
-        $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
-            $folder->getId(),
-            NatureIsFolderPresenter::NATURE_IN_FOLDER,
-            PHP_INT_MAX,
-            0
-        );
-
-        $artifact_representations = array();
-        foreach ($linked_artifacts_ids as $artifact_id) {
-            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
-            if ($artifact) {
-                $artifact_representations[] = $this->getArtifactRepresentation($user, $artifact);
-            }
-        }
-
         return new Presenter(
-            $artifact_representations,
+            $this->artifact_presenter_builder->buildInFolder($user, $folder),
             $this->getHierarchyOfFolder($folder)
         );
     }
@@ -106,13 +84,5 @@ class PresenterBuilder
         }
 
         return $parent_folder;
-    }
-
-    private function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
-    {
-        $artifact_representation = new ArtifactPresenter();
-        $artifact_representation->build($user, $artifact);
-
-        return $artifact_representation;
     }
 }

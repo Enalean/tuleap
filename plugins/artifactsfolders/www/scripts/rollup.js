@@ -32,36 +32,26 @@
             next_row    = row.nextElementSibling,
             tbody       = row.parentNode,
             icon        = document.createElement('i'),
-            artifact_id = link.dataset.artifactId,
-            limit       = 50,
-            children    = [];
+            artifact_id = link.dataset.artifactId;
 
         cell.classList.add('artifacts-folders-rollup');
         icon.classList.add('artifacts-folders-rollup-icon');
         cell.insertBefore(icon, link);
 
-        loadChildrenRecursively(0);
+        loadChildrenRecursively();
 
-        function loadChildrenRecursively(offset) {
+        function loadChildrenRecursively() {
             new Ajax.Request(
-                '/api/artifacts/'+ artifact_id +'/linked_artifacts',
+                '/plugins/artifactsfolders/',
                 {
                     method: 'GET',
-                    requestHeaders: {
-                        Accept: 'application/json'
-                    },
                     parameters: {
-                        direction: 'forward',
-                        nature   : '_is_child',
-                        offset   : offset,
-                        limit    : limit
+                        action: 'get-children',
+                        aid   : artifact_id
                     },
                     onSuccess: function (transport) {
-                        children = children.concat(transport.responseJSON.collection);
-
-                        if (offset + limit < transport.getResponseHeader('X-Pagination-Size')) {
-                            loadChildrenRecursively(offset + limit);
-                        } else if (children.length > 0) {
+                        var children = transport.responseJSON;
+                        if (children.length) {
                             injectChildrenInTable(children);
                         }
                     }
@@ -99,8 +89,7 @@
         }
 
         function injectChildInTable(child) {
-            var additional_row = document.createElement('tr'),
-                modified_date  = new Date(child.last_modified_date);
+            var additional_row = document.createElement('tr');
 
             additional_row.dataset.childOf = row_id;
             additional_row.innerHTML = ' \
@@ -110,12 +99,12 @@
                             data-artifact-id="'+ child.id +'" \
                         >'+ child.xref +'</a> \
                     </td> \
-                    <td>'+ child.project.label +'</td> \
-                    <td>'+ child.tracker.label +'</td> \
+                    <td>'+ child.project_label +'</td> \
+                    <td>'+ child.tracker_label +'</td> \
                     <td>'+ child.title +'</td> \
                     <td>'+ (child.status || '') +'</td> \
-                    <td>'+ formatDate(modified_date) +'</td> \
-                    <td>'+ formatUser(child.submitted_by_user) +'</td> \
+                    <td>'+ child.last_modified_date +'</td> \
+                    <td>'+ formatUser(child.submitter) +'</td> \
                     <td>'+ child.assignees.map(formatUser).join(', ') +'</td> \
                     <td>?</td>';
 
@@ -151,16 +140,8 @@
         }
     }
 
-    function formatDate(date) {
-        return date.getFullYear()
-            +'-'+ ("0" + date.getMonth()).substr(-2)
-            +'-'+ ("0" + date.getDay()).substr(-2)
-            +' '+ ("0" + date.getHours()).substr(-2)
-            +':'+ ("0" + date.getMinutes()).substr(-2);
-    }
-
     function formatUser(user_json) {
-        return '<a href="'+ user_json.user_url +'"> \
+        return '<a href="'+ user_json.url +'"> \
                     '+ user_json.display_name +' \
                 </a>';
     }
