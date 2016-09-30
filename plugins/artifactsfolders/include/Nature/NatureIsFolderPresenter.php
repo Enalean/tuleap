@@ -25,12 +25,12 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 class NatureIsFolderPresenter extends NaturePresenter
 {
-    const NATURE_IS_FOLDER = '_is_folder';
+    const NATURE_IN_FOLDER = '_in_folder';
 
     public function __construct()
     {
         parent::__construct(
-            self::NATURE_IS_FOLDER,
+            self::NATURE_IN_FOLDER,
             $GLOBALS['Language']->getText('plugin_folders', '_is_folder_forward'),
             $GLOBALS['Language']->getText('plugin_folders', '_is_folder_reverse'),
             true,
