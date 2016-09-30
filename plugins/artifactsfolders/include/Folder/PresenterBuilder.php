@@ -20,39 +20,47 @@
 
 namespace Tuleap\ArtifactsFolders\Folder;
 
-use Codendi_Request;
 use PFUser;
-use Tracker_Artifact_View_View;
 use Tracker_Artifact;
-use Tracker_FormElementFactory;
 use Tracker_ArtifactFactory;
-use TemplateRendererFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class PresenterBuilder
 {
     /**
      * @var NatureDao
      */
-    private $dao;
+    private $nature_dao;
 
     /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
 
-    public function __construct(NatureDao $dao, Tracker_ArtifactFactory $artifact_factory)
-    {
-        $this->dao              = $dao;
+    /**
+     * @var Dao
+     */
+    private $folder_dao;
+
+    public function __construct(
+        Dao $folder_dao,
+        NatureDao $nature_dao,
+        Tracker_ArtifactFactory $artifact_factory,
+        NatureIsChildLinkRetriever $retriever
+    ) {
+        $this->nature_dao       = $nature_dao;
         $this->artifact_factory = $artifact_factory;
+        $this->retriever        = $retriever;
+        $this->folder_dao       = $folder_dao;
     }
 
     /** @return Presenter */
-    public function build(PFUser $user, Tracker_Artifact $artifact)
+    public function build(PFUser $user, Tracker_Artifact $folder)
     {
-        $linked_artifacts_ids = $this->dao->getReverseLinkedArtifactIds(
-            $artifact->getId(),
+        $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
+            $folder->getId(),
             NatureIsFolderPresenter::NATURE_IS_FOLDER,
             PHP_INT_MAX,
             0
@@ -67,8 +75,37 @@ class PresenterBuilder
         }
 
         return new Presenter(
-            $artifact_representations
+            $artifact_representations,
+            $this->getHierarchyOfFolder($folder)
         );
+    }
+
+    private function getHierarchyOfFolder(Tracker_Artifact $folder)
+    {
+        $hierarchy = array();
+        foreach ($this->retriever->getParentsHierarchy($folder)->getArtifacts() as $ancestors) {
+            $parent_folder = $this->getFirstParentThatIsAFolder($ancestors);
+            if (! $parent_folder) {
+                break;
+            }
+
+            $hierarchy[] = $parent_folder;
+        }
+        array_unshift($hierarchy, $folder);
+
+        return array_reverse($hierarchy);
+    }
+
+    private function getFirstParentThatIsAFolder($ancestors)
+    {
+        $parent_folder = null;
+        foreach ($ancestors as $parent) {
+            if ($this->folder_dao->isTrackerConfiguredToContainFolders($parent->getTrackerId())) {
+                $parent_folder = $parent;
+            }
+        }
+
+        return $parent_folder;
     }
 
     private function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
