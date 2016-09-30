@@ -22,6 +22,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use DateTime;
 use Tracker_Artifact_PaginatedArtifacts;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 
 class Presenter
 {
@@ -35,8 +36,9 @@ class Presenter
     public $submitted_by_label;
     public $assigned_to_label;
     public $artifacts;
+    public $folder_hierarchy;
 
-    public function __construct(array $artifacts)
+    public function __construct(array $artifacts, array $folder_hierarchy)
     {
         $this->id_label           = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
         $this->project_label      = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'project');
@@ -49,5 +51,6 @@ class Presenter
         $this->folder_label       = $GLOBALS['Language']->getText('plugin_folders', 'tab_label');
         $this->empty_state        = $GLOBALS['Language']->getText('plugin_folders', 'empty_state');
         $this->artifacts          = $artifacts;
+        $this->folder_hierarchy   = $folder_hierarchy;
     }
 }

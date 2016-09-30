@@ -22,6 +22,7 @@ use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
 use Tuleap\ArtifactsFolders\Folder\PresenterBuilder;
 use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\Dao;
@@ -131,6 +132,15 @@ class ArtifactsFoldersPlugin extends Plugin
 
     private function getPresenterBuilder($dao)
     {
-        return new PresenterBuilder($dao, Tracker_ArtifactFactory::instance());
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        return new PresenterBuilder(
+            new Dao(),
+            $dao,
+            $artifact_factory,
+            new NatureIsChildLinkRetriever(
+                $artifact_factory,
+                new Tracker_FormElement_Field_Value_ArtifactLinkDao()
+            )
+        );
     }
 }

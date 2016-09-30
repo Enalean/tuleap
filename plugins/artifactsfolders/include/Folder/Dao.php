@@ -36,4 +36,13 @@ class Dao extends DataAccessObject
 
         return $result->rowCount() > 0;
     }
+
+    public function isTrackerConfiguredToContainFolders($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT NULL FROM plugin_artifactsfolders_tracker_usage WHERE tracker_id = $tracker_id";
+
+        return count($this->retrieve($sql)) > 0;
+    }
 }

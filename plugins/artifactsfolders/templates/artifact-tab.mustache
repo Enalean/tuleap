@@ -37,7 +37,12 @@
                         {{ . }}
                     {{/ assignees }}
                 </td>
-                <td>?</td>
+                <td>
+                    {{# folder_hierarchy }}
+                        <i class="icon-angle-right"></i>
+                        <a class="direct-link-to-artifact" href="{{ getUri }}&view=artifactsfolders">{{ getTitle }}</a>
+                    {{/ folder_hierarchy }}
+                </td>
             </tr>
         {{/ artifacts }}
     </tbody>
