@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 8.20
+    * story #9468: Change property _is_folder by _in_folder
+
 Version 0.18 - Tuleap 8.20
     * Assignee is clickable
 
