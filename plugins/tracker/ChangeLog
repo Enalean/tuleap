@@ -1,3 +1,6 @@
+Version 5.1019 - Tuleap 8.20
+    * story #9468: Don't display artifact link when nature is '_is_folder'
+
 Version 5.1018 - Tuleap 8.20
     * XML import - handle new attribute 'is_folder' for tracker
 

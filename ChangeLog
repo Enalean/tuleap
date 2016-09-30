@@ -4,13 +4,13 @@ Version 8.20 (Not Released Yet)
 
 	== Plugins ==
 	* cardwall: 1.69
-	* tracker: 5.1018
+	* tracker: 5.1019
 	* svn: 0.95
 	* artifactfolders: 0.5
 	* frs: 0.21
 	* agiledashboard: 1.422
 	* docman: 2.26.121
-	* artifactsfolders: 0.16
+	* artifactsfolders: 0.17
 	* ldap: 3.111
 	* git: 4.259
 
