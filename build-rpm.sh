@@ -21,7 +21,7 @@ LAST_TAG=$(git describe --abbrev=0 --tags)
 if [ $LAST_TAG == $PACKAGE_VERSION ]; then
     NB_COMMITS=$(git log --oneline $LAST_TAG..HEAD | wc -l)
     if [ $NB_COMMITS -gt 0 ]; then
-	RELEASE=$NB_COMMITS
+	RELEASE=$(($NB_COMMITS + 1))
     fi
 fi
 
