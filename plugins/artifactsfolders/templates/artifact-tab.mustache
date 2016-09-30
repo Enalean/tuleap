@@ -28,13 +28,17 @@
                 <td>{{ title }}</td>
                 <td>{{ status }}</td>
                 <td>{{ last_modified_date }}</td>
-                <td><a href="{{ submitted_by_url }}">{{ submitted_by_user }}</a></td>
+                <td>
+                    {{# submitter }}
+                        <a href="{{ url }}">{{ display_name }}</a>
+                    {{/submitter}}
+                </td>
                 <td>
                     {{^ assignees }}
                         –
                     {{/ assignees }}
                     {{# assignees }}
-                        {{ . }}
+                        <a href="{{ url }}">{{ display_name }}</a>
                     {{/ assignees }}
                 </td>
                 <td>
