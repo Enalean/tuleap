@@ -1,3 +1,6 @@
+Version 0.16 - Tuleap 8.20
+    * Submitter of the artifact is clickable
+
 Version 0.15 - Tuleap 8.20
     * XML import - handle new attribute 'is_folder' for tracker
 
