@@ -800,16 +800,22 @@ class trackerPlugin extends Plugin {
             return true;
         }
 
-        $plateform_natures["nature"] = array();
+        if (! (array)$xml->natures) {
+            return true;
+        }
+
+        $plateform_natures["nature"] = array(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
         foreach($this->getNatureDao()->searchAll() as $nature) {
             $plateform_natures["nature"][] = $nature['shortname'];
         }
-        $plateform_natures["nature"][] = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
-        $xml_natures                   = (array)$xml->natures;
 
-        $not_in_plateform = array_diff($xml_natures['nature'], $plateform_natures['nature']);
+        foreach ($xml->natures->nature as $nature) {
+            if (! in_array((string)$nature, $plateform_natures['nature'])) {
+                return false;
+            }
+        }
 
-        return count($not_in_plateform) === 0;
+        return true;
     }
 
     private function getNatureDao()
