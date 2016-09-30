@@ -46,7 +46,8 @@ class ArtifactPresenter
         $this->tracker_label = $artifact->getTracker()->getName();
         $this->project_label = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
         $this->status        = $artifact->getStatus();
-        $this->title         = $artifact->getTitle();
+        $this->title         = $this->displayTitle($artifact);
+
         $this->submitter     = false;
 
         $submitter = $artifact->getSubmittedByUser();
@@ -84,5 +85,14 @@ class ArtifactPresenter
         }
 
         return UserHelper::instance()->getDisplayNameFromUser($user);
+    }
+
+    private function displayTitle(Tracker_Artifact $artifact)
+    {
+        if (! $artifact->getTitle()) {
+            return "";
+        }
+
+        return $artifact->getTitle();
     }
 }
