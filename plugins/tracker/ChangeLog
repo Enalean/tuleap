@@ -1,3 +1,6 @@
+Version 5.1020 - Tuleap 8.20
+    * story #9468 import folders (Notices displayed with <natures>)
+
 Version 5.1019 - Tuleap 8.20
     * story #9468: Don't display artifact link when nature is '_is_folder'
 
