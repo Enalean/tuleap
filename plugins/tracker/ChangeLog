@@ -1,3 +1,6 @@
+Version 5.1018 - Tuleap 8.20
+    * XML import - handle new attribute 'is_folder' for tracker
+
 Version 5.1017 - Tuleap 8.20
     * request #9528: In artifact linkproject public name encoding is not well displayed
 
