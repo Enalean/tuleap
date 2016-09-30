@@ -26,12 +26,12 @@ use Tuleap\Trafficlights\Dao;
 class TrafficlightsDataBuilder extends REST_TestDataBuilder
 {
 
-    const PROJECT_TEST_MGMT_ID        = 110;
+    const PROJECT_TEST_MGMT_ID        = 112;
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
 
-    const CAMPAIGN_TRACKER_ID         = 30;
-    const TEST_DEF_TRACKER_ID         = 31;
-    const TEST_EXEC_TRACKER_ID        = 32;
+    const CAMPAIGN_TRACKER_ID         = 31;
+    const TEST_DEF_TRACKER_ID         = 32;
+    const TEST_EXEC_TRACKER_ID        = 33;
 
     const USER_TESTER_NAME   = 'rest_api_ttl_1';
     const USER_TESTER_PASS   = 'welcome0';
