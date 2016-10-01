@@ -19,7 +19,10 @@
  */
 
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
+use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
+use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\PresenterBuilder;
+use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
@@ -160,8 +163,7 @@ class ArtifactsFoldersPlugin extends Plugin
         $artifact_factory = Tracker_ArtifactFactory::instance();
         return new PresenterBuilder(
             new Dao(),
-            $dao,
-            $artifact_factory,
+            new ArtifactPresenterBuilder($dao, $artifact_factory),
             new NatureIsChildLinkRetriever(
                 $artifact_factory,
                 new Tracker_FormElement_Field_Value_ArtifactLinkDao()
@@ -179,5 +181,21 @@ class ArtifactsFoldersPlugin extends Plugin
         if ($params['shortname'] === NatureIsFolderPresenter::NATURE_IN_FOLDER) {
             $params['presenter'] = new NatureIsFolderPresenter();
         }
+    }
+
+    public function process(HTTPRequest $request)
+    {
+        if (! defined('TRACKER_BASE_URL')) {
+            return;
+        }
+
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $router = new Router(
+            $artifact_factory,
+            new Tracker_URLVerification(),
+            new Controller(new ArtifactPresenterBuilder(new NatureDao(), $artifact_factory))
+        );
+
+        $router->route($request);
     }
 }
