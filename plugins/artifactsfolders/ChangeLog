@@ -1,3 +1,6 @@
+Version 0.20 - Tuleap 8.20
+    * story #9468: Refactoring: use tailored route to retrieve children
+
 Version 0.19 - Tuleap 8.20
     * story #9468: Change property _is_folder by _in_folder
 
