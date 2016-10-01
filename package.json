@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "tuleap-realtime",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "main": "server.js",
   "dependencies": {
     "amdefine": "^1.0.0",
