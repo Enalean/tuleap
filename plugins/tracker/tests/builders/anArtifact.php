@@ -40,7 +40,6 @@ class Test_Artifact_Builder {
     private $parent_without_permission_checking;
     private $submitted_by;
     private $submitted_on;
-    private $user_can_view = array();
     private $submitted_by_user;
 
     public function withId($id) {
@@ -111,11 +110,6 @@ class Test_Artifact_Builder {
         return $this;
     }
 
-    public function userCanView(PFUser $user) {
-        $this->user_can_view[] = $user;
-        return $this;
-    }
-
     public function withSubmitter(PFUser $user) {
         $this->submitted_by_user = $user;
         return $this;
@@ -146,9 +140,6 @@ class Test_Artifact_Builder {
         }
         if ($this->submitted_by_user) {
             $artifact->setSubmittedByUser($this->submitted_by_user);
-        }
-        foreach ($this->user_can_view as $user) {
-            $artifact->setUserCanView($user, true);
         }
         return $artifact;
     }

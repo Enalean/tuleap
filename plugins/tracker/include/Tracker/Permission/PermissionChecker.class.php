@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,20 +77,7 @@ class Tracker_Permission_PermissionChecker {
     }
 
     private function isTrackerAdmin(PFUser $user, Tracker_Artifact $artifact) {
-        $permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
-
-        foreach ($permissions  as $permission_type => $ugroups) {
-            switch($permission_type) {
-                case Tracker::PERMISSION_ADMIN:
-                    foreach ($ugroups as $ugroup) {
-                        if ($this->userBelongsToGroup($user, $artifact, $ugroup)) {
-                            return true;
-                        }
-                    }
-                break;
-            }
-        }
-        return false;
+        return $artifact->getTracker()->userIsAdmin($user);
     }
 
     private function userCanViewArtifact(PFUser $user, Tracker_Artifact $artifact) {
