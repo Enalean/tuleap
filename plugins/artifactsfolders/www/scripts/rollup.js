@@ -95,15 +95,15 @@
             additional_row.innerHTML = ' \
                     <td class="artifacts-folders-rollup" style="padding-left: '+ (depth * 20) +'px;"> \
                         <a class="direct-link-to-artifact" \
-                            href="'+ child.html_url +'" \
-                            data-artifact-id="'+ child.id +'" \
-                        >'+ child.xref +'</a> \
+                            href="'+ tuleap.escaper.html(child.html_url) +'" \
+                            data-artifact-id="'+ tuleap.escaper.html(child.id) +'" \
+                        >'+ tuleap.escaper.html(child.xref) +'</a> \
                     </td> \
-                    <td>'+ child.project_label +'</td> \
-                    <td>'+ child.tracker_label +'</td> \
-                    <td>'+ child.title +'</td> \
-                    <td>'+ (child.status || '') +'</td> \
-                    <td>'+ child.last_modified_date +'</td> \
+                    <td>'+ tuleap.escaper.html(child.project_label) +'</td> \
+                    <td>'+ tuleap.escaper.html(child.tracker_label) +'</td> \
+                    <td>'+ tuleap.escaper.html(child.title) +'</td> \
+                    <td>'+ tuleap.escaper.html(child.status || '') +'</td> \
+                    <td>'+ tuleap.escaper.html(child.last_modified_date) +'</td> \
                     <td>'+ formatUser(child.submitter) +'</td> \
                     <td>'+ child.assignees.map(formatUser).join(', ') +'</td> \
                     <td>'+ formatFolders(child.folder_hierarchy) +'</td>';
@@ -123,7 +123,10 @@
 
         folder_hierarchy.forEach(function (folder) {
             html += '<i class="icon-angle-right"></i> \
-                <a class="direct-link-to-artifact" href="'+ folder.url +'&view=artifactsfolders">'+ folder.title +'</a> ';
+                <a class="direct-link-to-artifact" \
+                href="'+ tuleap.escaper.html(folder.url) +'&view=artifactsfolders">'+
+                tuleap.escaper.html(folder.title) +
+                '</a> ';
         });
 
         return html;
@@ -152,8 +155,8 @@
     }
 
     function formatUser(user_json) {
-        return '<a href="'+ user_json.url +'"> \
-                    '+ user_json.display_name +' \
+        return '<a href="'+ tuleap.escaper.html(user_json.url) +'"> \
+                    '+ tuleap.escaper.html(user_json.display_name) +' \
                 </a>';
     }
 })();
