@@ -51,7 +51,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         this.body = this.container.down('tbody');
         this.row_template = new Template('<tr class="artifact-child" data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
-                    <a href="#" class="toggle-child"><img src="'+ imgroot +'pointer_right.png" /></a> \
+                    <a href="#" class="toggle-child"><img src="'+ tuleap.escaper.html(imgroot +'pointer_right.png') +'" /></a> \
                     <a href="#{url}">#{xref}</a> \
                 </td> \
                 <td>#{title}</td> \
@@ -67,8 +67,8 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
                 <thead> \
                     <tr class="boxtable artifact-children-table-head"> \
                         <th class="boxtitle"></th> \
-                        <th class="boxtitle">'+ title +'</th> \
-                        <th class="boxtitle">'+ status +'</th> \
+                        <th class="boxtitle">'+ tuleap.escaper.html(title) +'</th> \
+                        <th class="boxtitle">'+ tuleap.escaper.html(status) +'</th> \
                     </tr> \
                 </thead> \
                 <tbody> \
@@ -77,7 +77,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
     },
 
     insertRoot: function (root) {
-        this.body.insert(this.row_template.evaluate(root));
+        this.body.insert(this.row_template.evaluate(this.escapeTemplateItem(root)));
         var element = this.body.childElements().last();
         element.setAttribute('data-is-root', 1);
         element.hide();
@@ -86,8 +86,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
 
     insertChildAfter: function (parent_element, child) {
         var element;
-
-        parent_element.insert({after: this.row_template.evaluate(child)});
+        parent_element.insert({after: this.row_template.evaluate(this.escapeTemplateItem(child))});
 
         element = parent_element.next();
         if (! child.has_children) {
@@ -120,6 +119,17 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         this.container.up('body').setStyle({
             cursor: 'default'
         });
+    },
+
+    escapeTemplateItem: function (item) {
+        return {
+            id: tuleap.escaper.html(item.id),
+            parent_id: tuleap.escaper.html(item.parent_id),
+            url: tuleap.escaper.html(item.url),
+            xref: tuleap.escaper.html(item.xref),
+            title: tuleap.escaper.html(item.title),
+            status: tuleap.escaper.html(item.status)
+        }
     }
 });
 
