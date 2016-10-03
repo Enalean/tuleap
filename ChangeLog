@@ -1,3 +1,10 @@
+Version 8.18-6 (Monday, October 3rd)
+	== Bug Fix ==
+	* request #9506: HTML entity is displayed in the browse revision page
+	* request #9500: Reflected XSS in the Subversion revisions browsing
+	* request #9502: SQL injection through widgets management
+	* request #9501: Reflected XSS in the project list page in the site administration
+
 Version 8.18-5 (Thursday, September 15th)
 	== Bug Fix ==
 	* request #9460: Performance issues when querying permissions table
