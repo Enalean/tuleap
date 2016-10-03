@@ -1,3 +1,6 @@
+Version 0.23 - Tuleap 8.20
+    * story #9468: Display folder the children belongs to
+
 Version 0.22 - Tuleap 8.20
     * story #9468: Refactoring: folder hierarchy should be per artifact
 
