@@ -245,43 +245,50 @@ function user_del_preference($preference_name) {
 }
 
 function user_display_choose_password($page,$user_id = false) {
-    $request = & HTTPRequest :: instance();
+	$purifier = Codendi_HTMLPurifier::instance();
 	?>
     <table><tr valign='top'><td>
     <?
 
     if ($page == 'admin_creation') {
-        echo $GLOBALS['Language']->getText('account_change_pw', 'new_password');
+        echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password'));
 ?>:
      <br><div class="input-append"><input type="text" value="" id="form_pw" name="form_pw"></div>
      <script type="text/javascript" src="/scripts/user.js"></script>
      
     
-    <? } else { echo $GLOBALS['Language']->getText('account_change_pw', 'new_password'); ?>:
+    <? } else { echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
     <br><input type="password" value="" id="form_pw" name="form_pw">
-    <p><? echo $GLOBALS['Language']->getText('account_change_pw', 'new_password2'); ?>:
+    <p><? echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
     <br><input type="password" value="" name="form_pw2">
     <? } ?>
     </td><td>
     <div class="password_strategy">
-        <p class="robustness"><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?>
-			<span class="password_strategy_good"><?php echo $GLOBALS['Language']->getText('account_check_pw', 'good'); ?></span>
-			<span class="password_strategy_bad"><?php echo $GLOBALS['Language']->getText('account_check_pw', 'bad'); ?></span></p>
+        <p class="robustness"><?=$purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'password_robustness'))?>
+			<span class="password_strategy_good"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'good')); ?></span>
+			<span class="password_strategy_bad"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'bad')); ?></span></p>
         <?php
         $password_strategy = new PasswordStrategy();
         include($GLOBALS['Language']->getContent('account/password_strategy'));
         foreach($password_strategy->validators as $key => $v) {
-            echo '<p class="password_validator_msg_'. $key .'"><i class="icon-remove password_strategy_bad"></i> '. $v->description() .'</p>';
+            echo '<p class="password_validator_msg_'. $purifier->purify($key) .'"><i class="icon-remove password_strategy_bad"></i> '. $purifier->purify($v->description()) .'</p>';
         }
         ?>
     </blockquote>
     </td></tr></table>
     <script type="text/javascript">
-    var password_validators = [<?= implode(', ', array_keys($password_strategy->validators)) ?>];
+	<?php
+	$password_validators_js = array();
+	$validator_keys = array_keys($password_strategy->validators);
+	foreach ($validator_keys as $validator_key) {
+		$password_validators_js[] = "'" . $purifier->purify($validator_key, CODENDI_PURIFIER_JS_QUOTE) . "'";
+	}
+	?>
+    var password_validators = [<?= implode(', ', $password_validators_js) ?>];
     </script>
     <?php
     if ($user_id) {
-        echo '<input type="hidden" name="user_id" value="'. $user_id .'" />';
+        echo '<input type="hidden" name="user_id" value="'. $purifier->purify($user_id) .'" />';
     }
 }
 
