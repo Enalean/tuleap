@@ -34,6 +34,9 @@ Version 8.20 (Not Released Yet)
 	== Enhancement ==
 	* request #9010: Import/Export of artifactlinks
 
+    == Api ==
+	* REST API: 1.18
+
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
