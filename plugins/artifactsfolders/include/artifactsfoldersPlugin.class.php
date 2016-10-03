@@ -22,7 +22,7 @@ use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
 use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
-use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
+use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -94,7 +94,7 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function event_get_artifactlink_natures($params)
     {
-        $params['natures'][] = new NatureIsFolderPresenter();
+        $params['natures'][] = new NatureInFolderPresenter();
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
@@ -123,7 +123,7 @@ class ArtifactsFoldersPlugin extends Plugin
 
         return
             $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
-            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureIsFolderPresenter::NATURE_IN_FOLDER);
+            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureInFolderPresenter::NATURE_IN_FOLDER);
     }
 
     public function add_property_to_tracker(array $params)
@@ -175,13 +175,13 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function hide_artifact($params)
     {
-        $params['hide_artifact'] = $params['nature'] === NatureIsFolderPresenter::NATURE_IN_FOLDER;
+        $params['hide_artifact'] = $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER;
     }
 
     public function event_get_nature_presenter($params)
     {
-        if ($params['shortname'] === NatureIsFolderPresenter::NATURE_IN_FOLDER) {
-            $params['presenter'] = new NatureIsFolderPresenter();
+        if ($params['shortname'] === NatureInFolderPresenter::NATURE_IN_FOLDER) {
+            $params['presenter'] = new NatureInFolderPresenter();
         }
     }
 
@@ -202,13 +202,13 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function tracker_add_system_natures($params)
     {
-        $params['natures'][] = NatureIsFolderPresenter::NATURE_IN_FOLDER;
+        $params['natures'][] = NatureInFolderPresenter::NATURE_IN_FOLDER;
     }
 
     public function tracker_is_nature_valid($params)
     {
         if ($this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
-            && $params['nature'] === NatureIsFolderPresenter::NATURE_IN_FOLDER
+            && $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER
         ) {
             $params['error'] =  "Link between ".$params['artifact']->getId() ." and ". $params['children_id'] . " is inconsistent because tracker ".
                 $params['tracker_id'] . " is not defined as a Folder. Artifact ".$params['artifact']->getId() ." added without nature.";

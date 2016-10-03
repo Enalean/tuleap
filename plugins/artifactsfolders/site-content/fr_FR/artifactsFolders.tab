@@ -2,8 +2,8 @@ plugin_folders	descriptor_name	Dossier artéfacts
 plugin_folders	descriptor_description	Ajoute un onglet "Dossier" dans un artéfact
 
 
-plugin_folders	_is_folder_forward	Dossier
-plugin_folders	_is_folder_reverse	Dans le dossier
+plugin_folders	_in_folder_forward	Dossier
+plugin_folders	_in_folder_reverse	Dans le dossier
 plugin_folders	tab_label	Dossier
 
 plugin_folders	empty_state	Il n'y a pas d'artéfact dans ce folder.

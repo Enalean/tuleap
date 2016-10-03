@@ -23,7 +23,7 @@ namespace Tuleap\ArtifactsFolders\Nature;
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
-class NatureIsFolderPresenter extends NaturePresenter
+class NatureInFolderPresenter extends NaturePresenter
 {
     const NATURE_IN_FOLDER = '_in_folder';
 
@@ -31,8 +31,8 @@ class NatureIsFolderPresenter extends NaturePresenter
     {
         parent::__construct(
             self::NATURE_IN_FOLDER,
-            $GLOBALS['Language']->getText('plugin_folders', '_is_folder_forward'),
-            $GLOBALS['Language']->getText('plugin_folders', '_is_folder_reverse'),
+            $GLOBALS['Language']->getText('plugin_folders', '_in_folder_forward'),
+            $GLOBALS['Language']->getText('plugin_folders', '_in_folder_reverse'),
             true,
             false
         );
