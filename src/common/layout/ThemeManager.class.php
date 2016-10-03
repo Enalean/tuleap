@@ -48,7 +48,7 @@ class ThemeManager
             }
         }
 
-        return new Layout('/themes/common');
+        return new DivBasedTabbedLayout('/themes/common');
     }
 
     private function isAllowedTheme(PFUser $current_user, $name)
