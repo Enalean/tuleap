@@ -100,14 +100,23 @@ extends LDAP_GroupManager
     public function synchronize()
     {
         foreach ($this->getSynchronizedProjects() as $row) {
+            $dn = $row['ldap_group_dn'];
+
             $this->setId($row['group_id']);
-            $this->setGroupDn($row['ldap_group_dn']);
+            $this->setGroupDn($dn);
 
             $is_nightly_synchronized = self::AUTO_SYNCHRONIZATION;
             $display_feedback        = false;
 
-            $this->bindWithLdap($row['bind_option'], $is_nightly_synchronized, $display_feedback);
+            if ($this->doesLdapGroupExist($dn)) {
+                $this->bindWithLdap($row['bind_option'], $is_nightly_synchronized, $display_feedback);
+            }
         }
+    }
+
+    private function doesLdapGroupExist($dn)
+    {
+        return $this->getLdap()->searchDn($dn);
     }
 
     private function logInProjectHistory($project_id, $user_id)
