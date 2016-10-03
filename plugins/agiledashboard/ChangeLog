@@ -1,3 +1,6 @@
+Version 1.423 - Tuleap 8.20
+    * story #9463 see cumulative flow diagram (Performance improvement for the kanban cumulative flow REST route)
+
 Version 1.422 - Tuleap 8.20
     * story #9463 see cumulative flow diagram (REST route for kanban cumulative flow)
 
