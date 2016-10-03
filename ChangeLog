@@ -1,3 +1,10 @@
+Version 8.18-5 (Thursday, September 15th)
+	== Bug Fix ==
+	* request #9460: Performance issues when querying permissions table
+	* request #9479 and request #9478: Permissions to items of the document manager are not applied during a copy or when the permissions are applied recursively
+	* request #9485: Webdav is broken due to a fatal error
+	* request #9491: scp/ftp file list is empty on page load
+
 Version 8.18-4 (Monday, September 12th)
 	== Bug Fix ==
 	* request #9444: FRS error at release creation
