@@ -1,3 +1,6 @@
+Version 0.22 - Tuleap 8.20
+    * story #9468: Refactoring: folder hierarchy should be per artifact
+
 Version 0.21 - Tuleap 8.20
     * story #9468: A fatal error is thrown when tracker has no semantic title
 
