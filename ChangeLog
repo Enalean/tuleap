@@ -13,6 +13,7 @@ Version 8.20 (Not Released Yet)
 	* artifactsfolders: 0.22
 	* ldap: 3.112
 	* git: 4.259
+	* tracker_encryption: 1.2
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration

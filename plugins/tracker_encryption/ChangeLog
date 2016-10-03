@@ -1,2 +1,5 @@
+Version 1.2 - Tuleap 8.20
+    * request #9519: Add the possibility to empty an encrypted field already set
+
 Version 1.1 - Tuleap 8.17
     * request #9025: Introduce plugin tracker encryption in a early development stage
