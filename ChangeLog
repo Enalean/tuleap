@@ -1,3 +1,12 @@
+Version 8.19-3 (Monday, October 3rd 2016)
+	== Bug Fix ==
+	* request #9523: Ldap user confirmation login date can be reset
+	* request #9462: Fatal error in Tracker report when user cannot see Milestone trackers
+	* request #9500: Reflected XSS in the Subversion revisions browsing
+	* request #9506: HTML entity is displayed in the browse revision page
+	* request #9502: SQL injection through widgets management
+	* request #9501: Reflected XSS in the project list page in the site administration
+
 Version 8.19-2 (Monday, September 26th 2016)
 	== Bug Fix ==
 	* request #9511: Unable to add an artifact link via REST
