@@ -1,3 +1,6 @@
+Version 0.21 - Tuleap 8.20
+    * story #9468: A fatal error is thrown when tracker has no semantic title
+
 Version 0.20 - Tuleap 8.20
     * story #9468: Refactoring: use tailored route to retrieve children
 
