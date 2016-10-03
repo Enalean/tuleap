@@ -112,8 +112,8 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
         stub($tracker)->userIsAdmin($this->user)->returns(true);
 
         $artifacts = array(
-            anArtifact()->withId(11)->userCanView($this->user)->withTracker($tracker)->build(),
-            anArtifact()->withId(12)->userCanView($this->user)->withTracker($tracker)->build(),
+            anArtifact()->withId(11)->withTracker($tracker)->build(),
+            anArtifact()->withId(12)->withTracker($tracker)->build(),
         );
 
         $artiafct_as_dar1 = anArtifactDar()->withId(55)->build();
@@ -123,8 +123,8 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
             $artiafct_as_dar2
         );
 
-        $child_artifact1 = anArtifact()->withId(22)->userCanView($this->user)->withTracker($tracker)->build();
-        $child_artifact2 = anArtifact()->withId(88)->userCanView($this->user)->withTracker($tracker)->build();
+        $child_artifact1 = anArtifact()->withId(22)->withTracker($tracker)->build();
+        $child_artifact2 = anArtifact()->withId(88)->withTracker($tracker)->build();
 
         stub($this->artifact_factory)->getInstanceFromRow($artiafct_as_dar1)->returns($child_artifact1);
         stub($this->artifact_factory)->getInstanceFromRow($artiafct_as_dar2)->returns($child_artifact2);

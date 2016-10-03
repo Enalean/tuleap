@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
@@ -94,9 +95,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /** @var Tracker_Artifact */
     private $parent_without_permission_checking;
-
-    /** @var Boolean[] */
-    private $can_view_cache = array();
 
     /** @var PFUser*/
     private $submitted_by_user;
@@ -169,30 +167,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return boolean user can view the artifact
      */
-    public function userCanView(PFUser $user = null) {
-        $um = $this->getUserManager();
-        $project_manager = $this->getProjectManager();
+    public function userCanView(PFUser $user = null)
+    {
+        $user_manager       = $this->getUserManager();
+        $permission_checker = new Tracker_Permission_PermissionChecker($user_manager, $this->getProjectManager());
 
-        if (! $user) {
-            $user = $um->getCurrentUser();
-        }
-        if ($user instanceof Tracker_UserWithReadAllPermission) {
-            return true;
+        if ($user === null) {
+            $user = $user_manager->getCurrentUser();
         }
 
-        if (! isset($this->can_view_cache[$user->getId()])) {
-            if ($this->getTracker()->userIsAdmin($user) || $user->isSuperUser()) {
-                $this->setUserCanView($user, true);
-            } else {
-                $permission_checker = new Tracker_Permission_PermissionChecker($um, $project_manager);
-                $this->setUserCanView($user, $permission_checker->userCanView($user, $this));
-            }
-        }
-        return $this->can_view_cache[$user->getId()];
-    }
-
-    public function setUserCanView(PFUser $user, $can_view) {
-        $this->can_view_cache[$user->getId()] = $can_view;
+        return PermissionsCache::userCanView($this, $user, $permission_checker);
     }
 
     public function userCanUpdate(PFUser $user) {
