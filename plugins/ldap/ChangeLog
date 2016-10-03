@@ -1,3 +1,6 @@
+Version 3.114 - Tuleap 8.20
+    * story #9396 have project members automatically synchronized with LDAP (Deal with deleted LDAP group)
+
 Version 3.113 - Tuleap 8.20
     * story #9396: Warn that project admins are not removed during daily synchronization
 
