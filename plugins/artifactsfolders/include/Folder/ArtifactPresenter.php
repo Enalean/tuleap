@@ -49,7 +49,7 @@ class ArtifactPresenter
         $this->status           = $artifact->getStatus();
         $this->title            = $this->getTitle($artifact);
         $this->submitter        = false;
-        $this->folder_hierarchy = $folder_hierarchy;
+        $this->folder_hierarchy = $this->getFolderHierarchyPresenter($folder_hierarchy);
 
         $submitter = $artifact->getSubmittedByUser();
         if ($submitter) {
@@ -67,6 +67,24 @@ class ArtifactPresenter
         if (! $this->status) {
             $this->status = '';
         }
+    }
+
+    private function getFolderHierarchyPresenter(array $folder_hierarchy)
+    {
+        return array_map(
+            function (Tracker_Artifact $folder) {
+                $title = $folder->getTitle();
+                if (! $title) {
+                    $title = $folder->getXRef();
+                }
+
+                return array(
+                    'url'   => $folder->getUri(),
+                    'title' => $title
+                );
+            },
+            $folder_hierarchy
+        );
     }
 
     private function getUserPresenter(PFUser $user)

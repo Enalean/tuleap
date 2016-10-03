@@ -21,6 +21,7 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use DataAccessObject;
+use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
 
 class Dao extends DataAccessObject
 {
@@ -53,5 +54,27 @@ class Dao extends DataAccessObject
         $sql = "INSERT INTO plugin_artifactsfolders_tracker_usage VALUES ($tracker_id)";
 
         return $this->update($sql);
+    }
+
+    public function searchFoldersTheArtifactBelongsTo($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $in_folder   = $this->da->quoteSmart(NatureIsFolderPresenter::NATURE_IN_FOLDER);
+
+        $sql = "SELECT a.id AS artifact_id, folder.*
+                FROM tracker_artifact AS a
+                    INNER JOIN tracker_changeset AS c ON (a.last_changeset_id = c.id AND a.id = $artifact_id)
+                    INNER JOIN tracker_changeset_value AS cv ON (cv.changeset_id = c.id)
+                    INNER JOIN tracker_changeset_value_artifactlink AS al ON (
+                        al.changeset_value_id = cv.id
+                        AND al.nature = $in_folder
+                    )
+                    INNER JOIN tracker_artifact AS folder ON (folder.id = al.artifact_id)
+                    INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker ON (
+                        folder.tracker_id = folder_tracker.tracker_id
+                    )
+                ";
+
+        return $this->retrieve($sql);
     }
 }

@@ -87,9 +87,21 @@ class ArtifactPresenterBuilder
             0
         );
 
-        $folder_hierarchy = array();
+        return $this->getListOfChildrenRepresentation($user, $linked_artifacts_ids);
+    }
 
-        return $this->getListOfArtifactRepresentation($user, $linked_artifacts_ids, $folder_hierarchy);
+    private function getListOfChildrenRepresentation(PFUser $user, $list_of_artifact_ids)
+    {
+        $artifact_representations = array();
+        foreach ($list_of_artifact_ids as $artifact_id) {
+            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
+            if ($artifact) {
+                $folder_hierarchy           = $this->getHierarchyOfFolderForChild($user, $artifact);
+                $artifact_representations[] = $this->getArtifactRepresentation($user, $artifact, $folder_hierarchy);
+            }
+        }
+
+        return $artifact_representations;
     }
 
     private function getListOfArtifactRepresentation(PFUser $user, $list_of_artifact_ids, array $folder_hierarchy)
@@ -111,6 +123,20 @@ class ArtifactPresenterBuilder
         $artifact_representation->build($user, $artifact, $folder_hierarchy);
 
         return $artifact_representation;
+    }
+
+    private function getHierarchyOfFolderForChild(PFUser $user, Tracker_Artifact $artifact)
+    {
+        $hierarchy = array();
+        foreach ($this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId()) as $row) {
+            $folder    = $this->artifact_factory->getInstanceFromRow($row);
+            if ($folder->userCanView($user)) {
+                $hierarchy = $this->getHierarchyOfFolder($folder);
+                break;
+            }
+        }
+
+        return $hierarchy;
     }
 
     private function getHierarchyOfFolder(Tracker_Artifact $folder)
