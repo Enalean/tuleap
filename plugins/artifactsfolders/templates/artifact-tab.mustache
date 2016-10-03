@@ -34,9 +34,6 @@
                     {{/submitter}}
                 </td>
                 <td>
-                    {{^ assignees }}
-                        –
-                    {{/ assignees }}
                     {{# assignees }}
                         <a href="{{ url }}">{{ display_name }}</a>
                     {{/ assignees }}
@@ -44,7 +41,7 @@
                 <td>
                     {{# folder_hierarchy }}
                         <i class="icon-angle-right"></i>
-                        <a class="direct-link-to-artifact" href="{{ getUri }}&view=artifactsfolders">{{ getTitle }}</a>
+                        <a class="direct-link-to-artifact" href="{{ url }}&view=artifactsfolders">{{ title }}</a>
                     {{/ folder_hierarchy }}
                 </td>
             </tr>

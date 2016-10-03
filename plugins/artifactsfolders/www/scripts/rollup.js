@@ -106,7 +106,7 @@
                     <td>'+ child.last_modified_date +'</td> \
                     <td>'+ formatUser(child.submitter) +'</td> \
                     <td>'+ child.assignees.map(formatUser).join(', ') +'</td> \
-                    <td>?</td>';
+                    <td>'+ formatFolders(child.folder_hierarchy) +'</td>';
 
             if (next_row) {
                 tbody.insertBefore(additional_row, next_row);
@@ -116,6 +116,17 @@
 
             return additional_row;
         }
+    }
+
+    function formatFolders(folder_hierarchy) {
+        var html = '';
+
+        folder_hierarchy.forEach(function (folder) {
+            html += '<i class="icon-angle-right"></i> \
+                <a class="direct-link-to-artifact" href="'+ folder.url +'&view=artifactsfolders">'+ folder.title +'</a> ';
+        });
+
+        return html;
     }
 
     function collapseRow(row) {
