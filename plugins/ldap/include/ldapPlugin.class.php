@@ -779,9 +779,14 @@ class LdapPlugin extends Plugin {
                 $groupName = '';
             }
 
-            $checked = '';
+            $synchro_checked = '';
             if ($projectMembersManager->isProjectBindingSynchronized($project_id)) {
-                $checked = 'checked="checked"';
+                $synchro_checked = 'checked="checked"';
+            }
+
+            $bind_checked = '';
+            if ($projectMembersManager->doesProjectBindingKeepUsers($project_id)) {
+                $bind_checked = 'checked="checked"';
             }
 
             $html = '<hr />'.PHP_EOL;
@@ -793,8 +798,8 @@ class LdapPlugin extends Plugin {
                             <input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />
                         </div>
                     </div>';
-            $html .= '<label class="checkbox" for="preserve_members"><input type="checkbox" id="preserve_members" name="preserve_members" checked="checked" />'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
-            $html .= '<label class="checkbox" for="synchronize"><input type="checkbox" id="synchronize" name="synchronize" '. $checked .'/>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_info').')</label>';
+            $html .= '<label class="checkbox" for="preserve_members"><input type="checkbox" id="preserve_members" name="preserve_members" '. $bind_checked .' />'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
+            $html .= '<label class="checkbox" for="synchronize"><input type="checkbox" id="synchronize" name="synchronize" '. $synchro_checked .'/>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_info').')</label>';
             $html .= '<br />'.PHP_EOL;
             $html .= '<input type="submit" name="delete" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'" />'.PHP_EOL;
             $html .= '<input type="submit" name="check" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />'.PHP_EOL;

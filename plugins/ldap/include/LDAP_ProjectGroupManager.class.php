@@ -54,6 +54,8 @@ extends LDAP_GroupManager
      */
     protected function removeUserFromGroup($groupId, $userId)
     {
+        $this->logInProjectHistory($groupId, $userId);
+
         return $this->getDao()->removeUserFromGroup($groupId, $userId);
     }
 
@@ -85,6 +87,11 @@ extends LDAP_GroupManager
         return $this->getDao()->isProjectBindingSynchronized($project_id);
     }
 
+    public function doesProjectBindingKeepUsers($project_id)
+    {
+        return $this->getDao()->doesProjectBindingKeepUsers($project_id);
+    }
+
     private function getSynchronizedProjects()
     {
         return $this->getDao()->getSynchronizedProjects();
@@ -99,7 +106,24 @@ extends LDAP_GroupManager
             $is_nightly_synchronized = self::AUTO_SYNCHRONIZATION;
             $display_feedback        = false;
 
-            $this->bindWithLdap(self::PRESERVE_MEMBERS_OPTION, $is_nightly_synchronized, $display_feedback);
+            $this->bindWithLdap($row['bind_option'], $is_nightly_synchronized, $display_feedback);
         }
+    }
+
+    private function logInProjectHistory($project_id, $user_id)
+    {
+        $project_log_dao = new ProjectHistoryDao();
+        $user            = UserManager::instance()->getUserById($user_id);
+
+        if ($user->isAdmin($project_id)) {
+            $project_log_dao->groupAddHistory(
+                'project_admins_daily_synchronization_user_not_removed',
+                $user->getUnixName(),
+                $this->id,
+                array()
+            );
+        }
+
+        return true;
     }
 }
