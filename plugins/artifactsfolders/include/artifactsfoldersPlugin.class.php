@@ -21,7 +21,6 @@
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
 use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
 use Tuleap\ArtifactsFolders\Folder\Controller;
-use Tuleap\ArtifactsFolders\Folder\PresenterBuilder;
 use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -113,7 +112,7 @@ class ArtifactsFoldersPlugin extends Plugin
 
         $dao = new NatureDao();
         if ($this->canAddOurView($dao, $artifact, $project, $user)) {
-            $view = new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder($dao));
+            $view = new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder());
             $collection->add($view);
         }
     }
@@ -138,10 +137,10 @@ class ArtifactsFoldersPlugin extends Plugin
     {
         if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($params['project'])) {
             if (! $this->getDao()->create($params['tracker_id'])) {
-                $params['warning'] = 'Error while setting Folder flag for tracker '.$params['tracker_id'].'.';
+                $params['warning'] = 'Error while setting Folder flag for tracker ' . $params['tracker_id'] . '.';
             }
         } else {
-            $params['warning'] = 'Cannot set tracker '.$params['tracker_id'].' as a Folder tracker because you already have one defined for this project';
+            $params['warning'] = 'Cannot set tracker ' . $params['tracker_id'] . ' as a Folder tracker because you already have one defined for this project';
         }
     }
 
@@ -158,16 +157,19 @@ class ArtifactsFoldersPlugin extends Plugin
         return new FolderUsageRetriever($this->getDao(), TrackerFactory::instance());
     }
 
-    private function getPresenterBuilder($dao)
+    private function getPresenterBuilder()
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        return new PresenterBuilder(
+        $dao              = new NatureDao();
+
+        return new ArtifactPresenterBuilder(
             new Dao(),
-            new ArtifactPresenterBuilder($dao, $artifact_factory),
             new NatureIsChildLinkRetriever(
                 $artifact_factory,
                 new Tracker_FormElement_Field_Value_ArtifactLinkDao()
-            )
+            ),
+            $dao,
+            $artifact_factory
         );
     }
 
@@ -189,11 +191,10 @@ class ArtifactsFoldersPlugin extends Plugin
             return;
         }
 
-        $artifact_factory = Tracker_ArtifactFactory::instance();
         $router = new Router(
-            $artifact_factory,
+            Tracker_ArtifactFactory::instance(),
             new Tracker_URLVerification(),
-            new Controller(new ArtifactPresenterBuilder(new NatureDao(), $artifact_factory))
+            new Controller($this->getPresenterBuilder())
         );
 
         $router->route($request);

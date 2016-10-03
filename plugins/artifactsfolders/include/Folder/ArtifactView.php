@@ -31,18 +31,18 @@ class ArtifactView extends Tracker_Artifact_View_View
     const IDENTIFIER = 'artifactsfolders';
 
     /**
-     * @var PresenterBuilder
+     * @var ArtifactPresenterBuilder
      */
-    private $presenter_builder;
+    private $artifact_presenter_builder;
 
     public function __construct(
         Tracker_Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
-        PresenterBuilder $presenter_builder
+        ArtifactPresenterBuilder $artifact_presenter_builder
     ) {
         parent::__construct($artifact, $request, $user);
-        $this->presenter_builder = $presenter_builder;
+        $this->artifact_presenter_builder = $artifact_presenter_builder;
     }
 
     /** @see Tracker_Artifact_View_View::getTitle() */
@@ -62,6 +62,11 @@ class ArtifactView extends Tracker_Artifact_View_View
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(ARTIFACTSFOLDERS_TEMPLATE_DIR);
 
-        return $renderer->renderToString('artifact-tab', $this->presenter_builder->build($this->user, $this->artifact));
+        return $renderer->renderToString(
+            'artifact-tab',
+            new Presenter(
+                $this->artifact_presenter_builder->buildInFolder($this->user, $this->artifact)
+            )
+        );
     }
 }

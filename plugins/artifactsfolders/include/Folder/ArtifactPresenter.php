@@ -37,18 +37,19 @@ class ArtifactPresenter
     public $submitter;
     public $last_modified_date;
     public $assignees;
+    public $folder_hierarchy;
 
-    public function build(PFUser $current_user, Tracker_Artifact $artifact)
+    public function build(PFUser $current_user, Tracker_Artifact $artifact, array $folder_hierarchy)
     {
-        $this->id            = $artifact->getId();
-        $this->html_url      = $artifact->getUri();
-        $this->xref          = $artifact->getXRef();
-        $this->tracker_label = $artifact->getTracker()->getName();
-        $this->project_label = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
-        $this->status        = $artifact->getStatus();
-        $this->title         = $this->displayTitle($artifact);
-
-        $this->submitter     = false;
+        $this->id               = $artifact->getId();
+        $this->html_url         = $artifact->getUri();
+        $this->xref             = $artifact->getXRef();
+        $this->tracker_label    = $artifact->getTracker()->getName();
+        $this->project_label    = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
+        $this->status           = $artifact->getStatus();
+        $this->title            = $this->getTitle($artifact);
+        $this->submitter        = false;
+        $this->folder_hierarchy = $folder_hierarchy;
 
         $submitter = $artifact->getSubmittedByUser();
         if ($submitter) {
@@ -87,12 +88,14 @@ class ArtifactPresenter
         return UserHelper::instance()->getDisplayNameFromUser($user);
     }
 
-    private function displayTitle(Tracker_Artifact $artifact)
+    private function getTitle(Tracker_Artifact $artifact)
     {
-        if (! $artifact->getTitle()) {
+        $title = $artifact->getTitle();
+
+        if (! $title) {
             return "";
         }
 
-        return $artifact->getTitle();
+        return $title;
     }
 }
