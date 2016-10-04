@@ -1,3 +1,6 @@
+Version 5.1024 - Tuleap 8.20
+    * Refactoring: do not talk about is_folder in tracker
+
 Version 5.1023 - Tuleap 8.20
     * story #9468: Take _in_folder into account during import
 
