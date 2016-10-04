@@ -22,6 +22,8 @@
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -174,6 +176,8 @@ class GitPlugin extends Plugin {
         }
 
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
+
+        $this->addHook('root_daily_start');
     }
 
     public function getHooksAndCallbacks()
@@ -1883,5 +1887,12 @@ class GitPlugin extends Plugin {
         $dao = new HistoryDao();
 
         return new GitPhpAccessLogger($dao);
+    }
+
+    public function root_daily_start()
+    {
+        $logger = new GitBackendLogger();
+        $parser = new Gitolite3LogParser($logger, new System_Command(), new HttpUserValidator());
+        $parser->parseLogs(GITOLITE3_LOGS_PATH);
     }
 }

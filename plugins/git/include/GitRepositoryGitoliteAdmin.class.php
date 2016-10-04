@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,21 +21,26 @@
 /**
  * Special object to manage interactions with gitolite admin repository
  */
-class GitRepositoryGitoliteAdmin extends GitRepository {
-    const ID   = '-2';
-    const NAME = 'gitolite-admin.git';
+class GitRepositoryGitoliteAdmin extends GitRepository
+{
+    const ID       = '-2';
+    const NAME     = 'gitolite-admin.git';
+    const USERNAME = 'id_rsa_gl-adm';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->setId(self::ID);
         $this->setPath(self::NAME);
     }
 
-    public function getPathWithoutLazyLoading() {
+    public function getPathWithoutLazyLoading()
+    {
         return self::NAME;
     }
 
-    public function getBackendType() {
+    public function getBackendType()
+    {
         return GitDao::BACKEND_GITOLITE;
     }
 }

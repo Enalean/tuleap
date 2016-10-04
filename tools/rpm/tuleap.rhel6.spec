@@ -765,6 +765,8 @@ else
     true
 fi
 
+chmod 750 /var/lib/gitolite
+
 #
 #
 #
