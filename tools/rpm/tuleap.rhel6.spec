@@ -453,6 +453,15 @@ Requires: tuleap, tuleap-plugin-tracker
 %description plugin-referencealias-tracker
 This plugin allows to import references like "artfXXX" or "trackerYYYY" for the tracker plugin.
 
+%package plugin-artifactsfolders
+Summary: Artifacts Folders
+Group: Development/Tools
+Version: @@PLUGIN_ARTIFACTSFOLDERS_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap, tuleap-plugin-tracker
+%description plugin-artifactsfolders
+Add a "Folder" tab in an artifact
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -520,8 +529,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
-# Do not package artifactsFolders yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1232,6 +1239,10 @@ fi
 %files plugin-referencealias-tracker
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/referencealias_tracker
+
+%files plugin-artifactsfolders
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/artifactsfolders
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)
