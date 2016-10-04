@@ -47,24 +47,47 @@ $tlp-table-row-background-odd : #ffffff;
 /**
  * Table
  */
+%tlp-table-th {
+    padding: $tlp-table-cell-padding;
+    background: $tlp-table-header-background;
+    color: $tlp-theme-color;
+    font-weight: 600;
+
+    &.tlp-table-cell-numeric {
+        text-align: right;
+    }
+}
+
 .tlp-table {
     width: 100%;
     border-radius: $tlp-table-radius;
     overflow: hidden;
 
     > thead > tr > th {
-        padding: $tlp-table-cell-padding;
-        border-bottom: 2px solid $tlp-theme-color;
-        background: $tlp-table-header-background;
-        color: $tlp-theme-color;
-        font-weight: 600;
+        @extend %tlp-table-th;
 
-        &.tlp-table-cell-numeric {
-            text-align: right;
-        }
+        border-bottom: 2px solid $tlp-theme-color;
+    }
+
+    > tfoot > tr > th {
+        @extend %tlp-table-th;
+
+        border-top: 2px solid $tlp-theme-color;
     }
 
     > tbody {
+        > tr:nth-child(even) > td {
+            background: $tlp-table-row-background-even;
+        }
+
+        > tr:nth-child(odd) > td {
+            background: $tlp-table-row-background-odd;
+        }
+
+        > tr:hover > td {
+            background: transparentize($tlp-theme-color, .95);
+        }
+
         > tr > td {
             padding: $tlp-table-cell-padding;
             border-bottom: 1px solid $tlp-ui-border-normal;
@@ -79,6 +102,16 @@ $tlp-table-row-background-odd : #ffffff;
                 white-space: nowrap;
             }
 
+            &.tlp-table-cell-section {
+                padding: 5px $tlp-table-cell-padding;
+                background: $tlp-theme-background-color;
+                color: $tlp-theme-color;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: .3px;
+                text-transform: uppercase;
+            }
+
             > .tlp-badge-primary,
             > .tlp-badge-secondary,
             > .tlp-badge-info,
@@ -91,18 +124,6 @@ $tlp-table-row-background-odd : #ffffff;
             > .tlp-button-small {
                 margin: -5px 0 -3px;
             }
-        }
-
-        > tr:nth-child(even) > td {
-            background: $tlp-table-row-background-even;
-        }
-
-        > tr:nth-child(odd) > td {
-            background: $tlp-table-row-background-odd;
-        }
-
-        > tr:hover > td {
-            background: transparentize($tlp-theme-color, .95);
         }
 
         > tr:last-child > td {
