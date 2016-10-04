@@ -37,6 +37,9 @@ Version 8.20 (Not Released Yet)
     == Api ==
 	* REST API: 1.18
 
+    == Themes ==
+	* FlamingParrot: 1.152
+
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==
 	* story #9281: define FRS global permissions (Refactoring : Read and Write lists will be in includable mustache)
