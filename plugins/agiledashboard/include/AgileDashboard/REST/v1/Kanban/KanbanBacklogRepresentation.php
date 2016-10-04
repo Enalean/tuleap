@@ -38,12 +38,11 @@ class KanbanBacklogRepresentation {
 
         $data    = $dao->searchPaginatedBacklogItemsByTrackerId($kanban->getTrackerId(), $limit, $offset);
 
-        $this->total_size = 0;
+        $this->total_size = (int) $dao->foundRows();
         $this->collection = array();
         foreach ($data as $row) {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
-                $this->total_size   += 1;
                 $item_representation = new KanbanItemRepresentation();
                 $item_representation->build(
                     $artifact,

@@ -40,7 +40,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
 
-        $sql = "SELECT A.*
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     INNER JOIN (
@@ -88,7 +88,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
 
-        $sql = "SELECT A.*
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     INNER JOIN (
@@ -138,7 +138,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
 
-        $sql = "SELECT A.*
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     INNER JOIN (
