@@ -23,6 +23,27 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
+    /**
+     * Add customs natures to tracker
+     *
+     * Parameters:
+     *  - tracker_id: input int
+     *  - error : output string
+     */
+    const TRACKER_ADD_SYSTEM_NATURES = 'tracker_add_system_natures';
+
+    /**
+     * Check that nature is respects rules
+     *
+     * Parameters:
+     *  - tracker_id: input in
+     *  - error : output string
+     *  - artifact: input Tracker_Artifact
+     *  - children_id: input int
+     *  - shortname: input string
+     */
+    const TRACKER_IS_NATURE_VALID = 'tracker_is_nature_valid';
+
     /** @var Tracker_XML_Importer_ArtifactImportedMapping */
     private $artifact_id_mapping;
 
@@ -58,7 +79,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         PFUser $submitted_by,
         Tracker_Artifact $artifact
     ) {
-        $new_values     = $this->extractArtifactLinkFromXml($field_change);
+        $new_values     = $this->extractArtifactLinkFromXml($field_change, $artifact);
         $last_changeset = $artifact->getLastChangeset();
 
         $removed_values = array();
@@ -75,32 +96,67 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         );
     }
 
-    private function extractArtifactLinkFromXml(SimpleXMLElement $field_change)
+    private function extractArtifactLinkFromXml(SimpleXMLElement $field_change, Tracker_Artifact $artifact)
     {
         $artifact_links = array();
         $natures        = array();
 
         foreach ($field_change->value as $artifact_link) {
             $linked_artifact_id = (int)$artifact_link;
-            $linked_nature      = (string)$artifact_link['nature'];
 
             if ($this->artifact_id_mapping->containsSource($linked_artifact_id)) {
-                $link = $this->artifact_id_mapping->get($linked_artifact_id);
-                $artifact_links[] = $link;
+                $link             = $this->artifact_id_mapping->get($linked_artifact_id);
+                $linked_nature    = $this->getNatureFromMappedArtifact($artifact, $artifact_link, $link);
                 $natures[$link]   = $linked_nature;
+                $artifact_links[] = $link;
 
-                if ($linked_nature && $linked_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
-                    $nature = $this->nature_dao->getNatureByShortname($linked_nature);
-                    if ($nature->count() === 0) {
-                        $this->logger->error("Nature $linked_nature not found on plateform. Artifact $linked_artifact_id added without nature.");
-                    }
-                }
+                $this->checkNatureExistOnPlateform($linked_nature, $linked_artifact_id);
             } else {
                 $this->logger->error("Could not find artifact with id=$linked_artifact_id in xml.");
             }
         }
 
         return array("new_values" => $artifact_links, "natures" => $natures);
+    }
+
+    private function checkNatureExistOnPlateform($linked_nature, $linked_artifact_id)
+    {
+        $system_nature = array();
+        $this->retrieveSystemNatures($system_nature);
+
+        if ($linked_nature && ! in_array($linked_nature, $system_nature)) {
+            $nature = $this->nature_dao->getNatureByShortname($linked_nature);
+            if ($nature->count() === 0) {
+                $this->logger->error("Nature $linked_nature not found on plateform. Artifact $linked_artifact_id added without nature.");
+            }
+        }
+    }
+
+    private function getNatureFromMappedArtifact(
+        Tracker_Artifact $artifact,
+        SimpleXMLElement $xml_element,
+        $mapped_artifact_id
+    ) {
+        $nature       = (string)$xml_element['nature'];
+        $xml_artifact = $this->artifact_factory->getArtifactById($mapped_artifact_id);
+        if ($xml_artifact) {
+            $error_message = $this->isLinkValid($xml_artifact->getTrackerId(), $artifact, $mapped_artifact_id, $nature);
+            if ($error_message !== "") {
+                $this->logger->error($error_message);
+                return "";
+            }
+        }
+
+        return $nature;
+    }
+
+    private function retrieveSystemNatures(array &$natures) {
+        $params['natures']   = &$natures;
+        $params['natures'][] = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        EventManager::instance()->processEvent(
+            self::TRACKER_ADD_SYSTEM_NATURES,
+            $params
+        );
     }
 
     private function removeValuesIfDontExistInLastChangeset(
@@ -119,5 +175,21 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         }
 
         return $removed_artifacts;
+    }
+
+    private function isLinkValid($tracker_id, Tracker_Artifact $artifact, $children_id, $nature)
+    {
+        $error                 = "";
+        $params['error']       = &$error;
+        $params['tracker_id']  = &$tracker_id;
+        $params['artifact']    = $artifact;
+        $params['children_id'] = $children_id;
+        $params['nature']      = $nature;
+        EventManager::instance()->processEvent(
+            self::TRACKER_IS_NATURE_VALID,
+            $params
+        );
+
+        return $params['error'];
     }
 }
