@@ -24,5 +24,15 @@
         padding: 25px 15px;
         height: 50vmin;
         max-height: 50vmin;
+
+        .loading {
+            background: url('loader-mini.gif') no-repeat center center;
+            min-height: 26px;
+            margin: 20px 0 10px;
+        }
+
+        .pointer-cursor {
+            cursor: pointer;
+        }
     }
 }
