@@ -1,3 +1,6 @@
+Version 0.25 - Tuleap 8.20
+    * story #9468: Take _in_folder into account during import
+
 Version 0.24 - Tuleap 8.20
     * story #9468: Fix DOM based XSS in rollup.js
 

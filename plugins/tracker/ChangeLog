@@ -1,3 +1,6 @@
+Version 5.1023 - Tuleap 8.20
+    * story #9468: Take _in_folder into account during import
+
 Version 5.1022 - Tuleap 8.20
     * request #9539: XSS in the children view tab of an artifact
 
