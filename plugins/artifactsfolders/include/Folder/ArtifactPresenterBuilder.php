@@ -25,7 +25,7 @@ use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
+use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactPresenterBuilder
@@ -67,7 +67,7 @@ class ArtifactPresenterBuilder
     {
         $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
             $folder->getId(),
-            NatureIsFolderPresenter::NATURE_IN_FOLDER,
+            NatureInFolderPresenter::NATURE_IN_FOLDER,
             PHP_INT_MAX,
             0
         );
