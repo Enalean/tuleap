@@ -23,15 +23,17 @@ use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
 
-class TrackerXmlImport {
+class TrackerXmlImport
+{
 
     /**
      * Add attributes to tracker
      *
      * Parameters:
-     *  - tracker_id: input in
-     *  - project: input Project
-     *  - warning : output string
+     *  - xml_element: input SimpleXMLElement
+     *  - tracker_id:  input int
+     *  - project:     input Project
+     *  - logger:      output Logger
      */
     const ADD_PROPERTY_TO_TRACKER = 'add_property_to_tracker';
 
@@ -509,21 +511,15 @@ class TrackerXmlImport {
 
     private function addTrackerProperties($tracker_id, Project $project, SimpleXMLElement $xml_element)
     {
-        $is_folder            = isset($xml_element['is_folder']) ? PHPCast::toBoolean($xml_element['is_folder']) : false;
-        $warning              = '';
-        $params['tracker_id'] = $tracker_id;
-        $params['project']    = $project;
-        $params['warning']    = &$warning;
-        $params['is_folder']  = $is_folder;
-
         $this->event_manager->processEvent(
             self::ADD_PROPERTY_TO_TRACKER,
-            $params
+            array(
+                'xml_element' => $xml_element,
+                'tracker_id'  => $tracker_id,
+                'project'     => $project,
+                'logger'      => $this->logger
+            )
         );
-
-        if ($params['warning']) {
-            $this->logger->warn($params['warning']);
-        }
     }
 
     /**

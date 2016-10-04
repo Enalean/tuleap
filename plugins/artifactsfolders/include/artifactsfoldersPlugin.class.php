@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\ArtifactView;
+use Tuleap\XML\PHPCast;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -126,21 +127,25 @@ class ArtifactsFoldersPlugin extends Plugin
             && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureInFolderPresenter::NATURE_IN_FOLDER);
     }
 
+    /** @see TrackerXmlImport::ADD_PROPERTY_TO_TRACKER */
     public function add_property_to_tracker(array $params)
     {
-        if ($params['is_folder']) {
-            $this->setFolderProperty($params);
+        $xml_element = $params['xml_element'];
+        $is_folder   = isset($xml_element['is_folder']) ? PHPCast::toBoolean($xml_element['is_folder']) : false;
+
+        if ($is_folder) {
+            $this->setFolderProperty($params['project'], $params['tracker_id'], $params['logger']);
         }
     }
 
-    private function setFolderProperty(array $params)
+    private function setFolderProperty(Project $project, $tracker_id, Logger $logger)
     {
-        if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($params['project'])) {
-            if (! $this->getDao()->create($params['tracker_id'])) {
-                $params['warning'] = 'Error while setting Folder flag for tracker ' . $params['tracker_id'] . '.';
+        if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($project)) {
+            if (! $this->getDao()->create($tracker_id)) {
+                $logger->warn("Error while setting Folder flag for tracker $tracker_id.");
             }
         } else {
-            $params['warning'] = 'Cannot set tracker ' . $params['tracker_id'] . ' as a Folder tracker because you already have one defined for this project';
+            $logger->warn("Cannot set tracker $tracker_id as a Folder tracker because you already have one defined for this project");
         }
     }
 
@@ -210,8 +215,8 @@ class ArtifactsFoldersPlugin extends Plugin
         if ($this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
             && $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER
         ) {
-            $params['error'] =  "Link between ".$params['artifact']->getId() ." and ". $params['children_id'] . " is inconsistent because tracker ".
-                $params['tracker_id'] . " is not defined as a Folder. Artifact ".$params['artifact']->getId() ." added without nature.";
+            $params['error'] = "Link between " . $params['artifact']->getId() . " and " . $params['children_id'] . " is inconsistent because tracker " .
+                $params['tracker_id'] . " is not defined as a Folder. Artifact " . $params['artifact']->getId() . " added without nature.";
         }
     }
 }
