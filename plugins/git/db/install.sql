@@ -232,3 +232,11 @@ CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_rewinders
     ugroup_id int(11) NOT NULL,
     PRIMARY KEY (permission_id, ugroup_id)
 );
+
+CREATE TABLE plugin_git_full_history (
+  repository_id int(10) unsigned NOT NULL,
+  user_id int(11) NOT NULL,
+  day int(11) NOT NULL,
+  git_browse_operations int(11) NOT NULL default 0,
+  PRIMARY KEY (repository_id, user_id, day)
+);

@@ -19,6 +19,8 @@
  */
 
 
+use Tuleap\Git\History\GitPhpAccessLogger;
+
 class GitViews_ShowRepo {
     /**
      * @var GitRepository
@@ -65,7 +67,8 @@ class GitViews_ShowRepo {
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         array $gerrit_servers,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        GitPhpAccessLogger $access_loger
     ) {
         $this->repository         = $repository;
         $this->controller         = $controller;
@@ -75,6 +78,7 @@ class GitViews_ShowRepo {
         $this->gerrit_servers     = $gerrit_servers;
         $this->url_manager        = $url_manager;
         $this->mirror_data_mapper = $mirror_data_mapper;
+        $this->access_loger       = $access_loger;
     }
 
 
@@ -96,6 +100,7 @@ class GitViews_ShowRepo {
                 $this->driver_factory,
                 $this->gerrit_usermanager,
                 $this->mirror_data_mapper,
+                $this->access_loger,
                 $this->gerrit_servers,
                 $this->controller->getPlugin()->getThemePath()
             );

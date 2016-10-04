@@ -42,6 +42,8 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\History\Dao as HistoryDao;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1246,7 +1248,8 @@ class GitPlugin extends Plugin {
             $this->getPermissionChangesDetector(),
             $this->getDefaultPermissionsUpdater(),
             new ProjectHistoryDao(),
-            $this->getDescriptionUpdater()
+            $this->getDescriptionUpdater(),
+            $this->getGitPhpAccessLogger()
         );
     }
 
@@ -1837,5 +1840,15 @@ class GitPlugin extends Plugin {
         );
 
         $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+    }
+
+    /**
+     * @return GitPhpAccessLogger
+     */
+    private function getGitPhpAccessLogger()
+    {
+        $dao = new HistoryDao();
+
+        return new GitPhpAccessLogger($dao);
     }
 }
