@@ -71,13 +71,13 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
         );
     }
 
-    protected function addToBeCreatedUserToCollection() {
+    protected function addToBeCreatedUserToCollection($id=104) {
         $this->collection->add(
             new ToBeCreatedUser(
                 'to.be.created',
                 'To Be Created',
                 'to.be.created@example.com',
-                104,
+                $id,
                 'ldap1234'
             )
         );
@@ -436,5 +436,67 @@ class MappingFileOptimusPrimeTransformer_activateTest extends MappingFileOptimus
         $this->expectException('User\XML\Import\InvalidMappingFileException');
 
         $this->transformer->transform($this->collection, $this->filename);
+    }
+}
+
+class MappingFileOptimusPrimeTransformer_transformWithoutMapTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+
+    public function itThrowsAnExceptionWhenUserIsNotSupported() {
+        $this->addEmailDoesNotMatchUserToCollection();
+
+        $this->expectException();
+
+        $this->transformer->transformWithoutMap($this->collection, 'create:A');
+    }
+
+    public function itActivatesUserThatWasSuspended() {
+        $this->addToBeActivatedUserToCollection();
+
+        $collection_for_import = $this->transformer->transformWithoutMap($this->collection, 'create:A');
+
+        $user = $collection_for_import->getUserById(104);
+
+        $this->assertIsA($user, 'User\XML\Import\WillBeActivatedUser');
+    }
+
+    public function itCreatesMissingUsers() {
+        $this->addToBeCreatedUserToCollection();
+
+        $collection_for_import = $this->transformer->transformWithoutMap($this->collection, 'create:A');
+
+        $user = $collection_for_import->getUserById(104);
+
+        $this->assertIsA($user, 'User\XML\Import\WillBeCreatedUser');
+    }
+
+    public function itDoesNothingForUsersThatAreAlreadyActive() {
+        $this->addAlreadyExistingUserToCollection();
+
+        $collection_for_import = $this->transformer->transformWithoutMap($this->collection, 'create:A');
+
+        $user = $collection_for_import->getUserById(104);
+
+        $this->assertIsA($user, 'User\XML\Import\AlreadyExistingUser');
+    }
+
+    public function itDoesNothingForAlreadyExistingUsers() {
+        $this->addAlreadyExistingUserToCollection();
+
+        $collection_for_import = $this->transformer->transformWithoutMap($this->collection, 'create:A');
+
+        $user = $collection_for_import->getUserById(104);
+
+        $this->assertIsA($user, 'User\XML\Import\AlreadyExistingUser');
+    }
+
+    public function itManageSeveralUsersWithoutOveralpingResponsabilities() {
+        $this->addToBeActivatedUserToCollection(104);
+        $this->addToBeCreatedUserToCollection(105);
+
+        $collection_for_import = $this->transformer->transformWithoutMap($this->collection, 'create:A');
+
+        $this->assertIsA($collection_for_import->getUserById(104), 'User\XML\Import\WillBeActivatedUser');
+        $this->assertIsA($collection_for_import->getUserById(105), 'User\XML\Import\WillBeCreatedUser');
+
     }
 }
