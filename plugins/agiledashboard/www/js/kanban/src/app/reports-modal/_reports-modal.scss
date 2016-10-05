@@ -20,19 +20,33 @@
     }
 
     > .modal-body {
-        box-sizing: border-box;
-        padding: 25px 15px;
-        height: 50vmin;
-        max-height: 50vmin;
+        max-height: 100%;
 
-        .loading {
-            background: url('loader-mini.gif') no-repeat center center;
-            min-height: 26px;
-            margin: 20px 0 10px;
+        > .canvas {
+            box-sizing: border-box;
+            padding: 25px 15px;
+            height: 50vmin;
+            max-height: 50vmin;
+
+            .pointer-cursor {
+                cursor: pointer;
+            }
         }
 
-        .pointer-cursor {
-            cursor: pointer;
+        > .loading {
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            background: url('loader-mini.gif') no-repeat center center;
+            min-height: 26px;
+        }
+
+        > .params {
+            float: right;
+
+            .params-select {
+               max-width: 132px;
+            }
         }
     }
 }
