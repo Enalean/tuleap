@@ -23,6 +23,7 @@
 require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
@@ -69,6 +70,11 @@ class Git extends PluginController {
     const REFERENCE_NATURE  = 'git_commit';
 
     const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
+
+    /**
+     * @var VersionDetector
+     */
+    private $detector;
 
     /**
      * Lists all git-related permission types.
@@ -274,7 +280,8 @@ class Git extends PluginController {
         DefaultPermissionsUpdater $default_permission_updater,
         ProjectHistoryDao $history_dao,
         DescriptionUpdater $description_updater,
-        GitPhpAccessLogger $access_loger
+        GitPhpAccessLogger $access_loger,
+        VersionDetector $detector
     ) {
         parent::__construct($user_manager, $request);
 
@@ -351,6 +358,7 @@ class Git extends PluginController {
         $this->default_permission_updater              = $default_permission_updater;
         $this->history_dao                             = $history_dao;
         $this->description_updater                     = $description_updater;
+        $this->detector                                = $detector;
     }
 
     protected function instantiateView() {
@@ -393,7 +401,8 @@ class Git extends PluginController {
             new URLVerification(),
             $logger,
             $this->gerrit_server_factory,
-            new ReplicationHTTPUserAuthenticator($password_handler, $this->gerrit_server_factory)
+            new ReplicationHTTPUserAuthenticator($password_handler, $this->gerrit_server_factory),
+            $this->detector
         );
 
         $http_wrapper = new Git_HTTP_Wrapper($logger);
