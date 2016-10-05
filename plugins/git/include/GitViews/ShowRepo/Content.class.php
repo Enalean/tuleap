@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Git\History\GitPhpAccessLogger;
 
 class GitViews_ShowRepo_Content {
 
@@ -88,6 +89,7 @@ class GitViews_ShowRepo_Content {
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        GitPhpAccessLogger $access_loger,
         array $gerrit_servers,
         $theme_path
     ) {
@@ -102,6 +104,7 @@ class GitViews_ShowRepo_Content {
         $this->mirror_data_mapper = $mirror_data_mapper;
         $this->theme_path         = $theme_path;
         $this->url_manager        = $url_manager;
+        $this->access_loger       = $access_loger;
     }
 
     public function display() {
@@ -139,6 +142,8 @@ class GitViews_ShowRepo_Content {
         if ($this->repository->isCreated()) {
             $is_download = false;
             $html       .= $this->gitphp_viewer->getContent($is_download);
+
+            $this->access_loger->logAccess($this->repository, $this->request->getCurrentUser());
         } else {
             $html .= $this->getWaitingForRepositoryCreationInfo();
         }

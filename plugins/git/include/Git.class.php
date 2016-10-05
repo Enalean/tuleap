@@ -39,6 +39,7 @@ use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\History\GitPhpAccessLogger;
 
 /**
  * Git
@@ -272,7 +273,8 @@ class Git extends PluginController {
         PermissionChangesDetector $permission_changes_detector,
         DefaultPermissionsUpdater $default_permission_updater,
         ProjectHistoryDao $history_dao,
-        DescriptionUpdater $description_updater
+        DescriptionUpdater $description_updater,
+        GitPhpAccessLogger $access_loger
     ) {
         parent::__construct($user_manager, $request);
 
@@ -297,6 +299,7 @@ class Git extends PluginController {
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
         $this->webhook_dao                = $webhook_dao;
         $this->ci_token_manager           = $ci_token_manager;
+        $this->access_loger               = $access_loger;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -359,7 +362,8 @@ class Git extends PluginController {
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
             $this->default_fine_grained_permission_factory,
-            $this->fine_grained_builder
+            $this->fine_grained_builder,
+            $this->access_loger
         );
     }
 
