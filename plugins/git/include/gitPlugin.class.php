@@ -73,7 +73,10 @@ class GitPlugin extends Plugin {
 
     const SYSTEM_NATURE_NAME = 'git_revision';
 
-    public function __construct($id) {
+    private static $FREQUENCIES_GIT_READ = 'git';
+
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
@@ -172,6 +175,16 @@ class GitPlugin extends Plugin {
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
     }
 
+    public function getHooksAndCallbacks()
+    {
+        if (defined('STATISTICS_BASE_DIR')) {
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
+        }
+
+        return parent::getHooksAndCallbacks();
+    }
+
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
     }
@@ -191,6 +204,24 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
+     */
+    public function plugin_statistics_frequence_stat_entries($params)
+    {
+        $params['entries'][self::$FREQUENCIES_GIT_READ] = 'Git read access';
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
+     */
+    public function plugin_statistics_frequence_stat_sample($params)
+    {
+        if ($params['character'] === self::$FREQUENCIES_GIT_READ) {
+            $params['sample'] = new Tuleap\Git\Statistics\FrequenciesSample();
+        }
     }
 
     /**
