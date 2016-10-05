@@ -34,8 +34,9 @@ Version 8.20 (Not Released Yet)
 
 	== Enhancement ==
 	* request #9010: Import/Export of artifactlinks
+	* request #9466: Enforce that plugins can only be used with the Tuleap core they have been designed for
 
-    == Api ==
+        == Api ==
 	* REST API: 1.18
 
     == Themes ==
