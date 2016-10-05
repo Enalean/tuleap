@@ -492,3 +492,5 @@ plugin_git	fine_grained_bad_request	La requête n'est pas valide.
 plugin_git	fine_grained_delete_ok	Permission suprimée avec succès.
 plugin_git	fine_grained_delete_error	Erreur lors de la suppression de la permission.
 plugin_git	fine_grained_bad_pattern	L'expression $1 n'est pas bien formée. Elle ne sera pas pris en compte.
+
+plugin_git	stats_read	Nombre total des accès en lecture git
