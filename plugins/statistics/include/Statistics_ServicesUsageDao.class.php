@@ -164,7 +164,19 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getGitActivities() {
+    public function getGitRead()
+    {
+        $sql = "SELECT project_id AS group_id, count(*) AS result
+                FROM  plugin_git_full_history
+                    INNER JOIN plugin_git USING(repository_id)
+                WHERE time <= $this->end_date
+                    AND time >= $this->start_date
+                GROUP BY project_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getGitWrite() {
         $sql = "SELECT project_id AS group_id, count(*) AS result
                 FROM  plugin_git_log
                     INNER JOIN plugin_git USING(repository_id)
