@@ -29,23 +29,72 @@ class Gitolite3LogParserTest extends \TuleapTestCase
 
     /** @var Gitolite3LogParser */
     private $parser;
+
     /** @var  GitBackendLogger */
     private $logger;
+
+    /** @var  Dao */
+    private $history_dao;
+
+    /** @var Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator */
+    private $user_validator;
+
+    /** @var Tuleap\Git\Gitolite\GitoliteFileLogsDao */
+    private $file_logs_dao;
 
     public function setUp()
     {
         parent::setUp();
-        $this->logger = mock('GitBackendLogger');
-        $this->parser = new Gitolite3LogParser(
+        $this->logger         = mock('GitBackendLogger');
+        $factory              = mock('GitRepositoryFactory');
+        $user_manager         = mock('UserManager');
+        $this->history_dao    = mock('Tuleap\Git\History\Dao');
+        $this->user_validator = mock('Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator');
+        $this->file_logs_dao  = mock('Tuleap\Git\Gitolite\GitoliteFileLogsDao');
+        $this->parser         = new Gitolite3LogParser(
             $this->logger,
             mock('System_Command'),
-            mock('Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator')
+            $this->user_validator,
+            $this->history_dao,
+            $factory,
+            $user_manager,
+            $this->file_logs_dao
         );
+
+        $repository = mock('GitRepository');
+        stub($factory)->getFromFullPath()->returns($repository);
+        stub($repository)->getId()->returns(1);
+
+        $user = mock('PFUser');
+        stub($user_manager)->getUserByUserName()->returns($user);
+        stub($user)->getId()->returns(101);
     }
 
-    public function itOnlyParseNonGitAdminLogs()
+    public function itDoesNotParseGitoliteAdministratorLogs()
     {
-        $this->logger->expectCallCount('debug', 2);
-        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/');
+        $this->history_dao->expectCallCount('insertGitPhpView', 2);
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
+    }
+
+    public function itDoesNotParseGerritSystemUsers()
+    {
+        $this->history_dao->expectCallCount('insertGitPhpView', 3);
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-11.log');
+    }
+
+    public function itDoesNotParseTwoTimesSameLines()
+    {
+        stub($this->user_validator)->isLoginAnHTTPUserLogin()->returns(false);
+        stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 2259));
+        $this->history_dao->expectCallCount('insertGitPhpView', 0);
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
+    }
+
+    public function itParseLinesIfTheyAreNew()
+    {
+        stub($this->user_validator)->isLoginAnHTTPUserLogin()->returns(false);
+        stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 1362));
+        $this->history_dao->expectCallCount('insertGitPhpView', 0);
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 }
