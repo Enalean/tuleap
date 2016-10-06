@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 
@@ -34,61 +47,29 @@ if (! $user) {
     }
     exit_error("Invalid User","That user does not exist.");
 } else {
-    if(!negociate_content_user_home($user, $default_content_type)) {
-        // default HTML view
+    // default HTML view
 
-        $user_id = $user->getId();
-
-        if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
-            $path = $default_avatar_path;
-            if ($user->hasAvatar()) {
-                $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') .'/user/avatar/');
-                $path = $avatar_path .DIRECTORY_SEPARATOR.
-                        substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
-                        DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
-                if (! is_file($path)) {
-                    $path = $default_avatar_path;
-                }
+    $user_id = $user->getId();
+    if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
+        $path = $default_avatar_path;
+        if ($user->hasAvatar()) {
+            $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') .'/user/avatar/');
+            $path = $avatar_path .DIRECTORY_SEPARATOR.
+                    substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
+                    DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
+            if (! is_file($path)) {
+                $path = $default_avatar_path;
             }
-            header('Content-type: image/png');
-            header("Cache-Control: no-cache, must-revalidate");
-            header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-            readfile($path);
-            exit;
-        } else {
-            //now show the user page
-            require_once('user_home.php');
         }
+        header('Content-type: image/png');
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+        readfile($path);
+        exit;
+    } else {
+        //now show the user page
+        require_once('user_home.php');
     }
-
-}
-
-//
-// Following function was imported from FusionForge (almost) "as is"
-// Code should be kept as close as possible (ideally shared).
-//
-
-function negociate_content_user_home(PFO_User $user, $default_content_type) {
-    $script='user_home';
-    $content_type = util_negociate_alternate_content_types($script, $default_content_type);
-    if($content_type != $default_content_type) {
-        $content = '';
-        $params = array(
-            'username'     => $user->getUnixName(),
-            'accept'       => $content_type,
-            'content'      => &$content,
-            'content_type' => &$content_type,
-        );
-        EventManager::instance()->processEvent('content_negociated_user_home', $params);
-        if ($content_type != ''){
-                header('Content-type: '. $content_type);
-                echo $content;
-        } else {
-                header('HTTP/1.1 406 Not Acceptable', true, 406);
-        }
-        exit(0);
-    }
-    return false;
 }
 
 // Local Variables:
