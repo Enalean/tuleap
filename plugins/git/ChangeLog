@@ -1,3 +1,6 @@
+Version 4.265 - Tuleap 8.20
+    * Display data in project access log
+
 Version 4.264 - Tuleap 8.20
     * story #9436: Parse gitolite3 log file
 
