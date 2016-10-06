@@ -24,6 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
@@ -68,6 +69,8 @@ class Git extends PluginController {
 
     const REFERENCE_KEYWORD = 'git';
     const REFERENCE_NATURE  = 'git_commit';
+
+    const READ_PERM = 'R';
 
     const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
@@ -401,7 +404,11 @@ class Git extends PluginController {
             new URLVerification(),
             $logger,
             $this->gerrit_server_factory,
-            new ReplicationHTTPUserAuthenticator($password_handler, $this->gerrit_server_factory),
+            new ReplicationHTTPUserAuthenticator(
+                $password_handler,
+                $this->gerrit_server_factory,
+                new HttpUserValidator()
+            ),
             $this->detector
         );
 

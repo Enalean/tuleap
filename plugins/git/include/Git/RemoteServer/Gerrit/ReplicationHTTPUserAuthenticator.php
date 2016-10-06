@@ -25,6 +25,7 @@ use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_NotFoundException;
 use GitRepository;
 use PasswordHandler;
+use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use User_InvalidPasswordException;
 use Rule_UserName;
 
@@ -41,10 +42,19 @@ class ReplicationHTTPUserAuthenticator
      */
     private $password_handler;
 
-    public function __construct(PasswordHandler $password_handler, Git_RemoteServer_GerritServerFactory $server_factory)
-    {
+    /**
+     * @var HttpUserValidator
+     */
+    private $user_validator;
+
+    public function __construct(
+        PasswordHandler $password_handler,
+        Git_RemoteServer_GerritServerFactory $server_factory,
+        HttpUserValidator $user_validator
+    ) {
         $this->password_handler = $password_handler;
         $this->server_factory   = $server_factory;
+        $this->user_validator   = $user_validator;
     }
 
     /**
@@ -53,7 +63,7 @@ class ReplicationHTTPUserAuthenticator
      */
     public function authenticate(GitRepository $repository, $login, $password)
     {
-        if (! $this->isLoginAnHTTPUserLogin($login)) {
+        if (! $this->user_validator->isLoginAnHTTPUserLogin($login)) {
             throw new User_InvalidPasswordException();
         }
 
@@ -67,13 +77,6 @@ class ReplicationHTTPUserAuthenticator
         }
 
         throw new User_InvalidPasswordException();
-    }
-
-    private function isLoginAnHTTPUserLogin($login)
-    {
-        $pattern = '/^'.Rule_UserName::RESERVED_PREFIX.Git_RemoteServer_GerritServer::GENERIC_USER_PREFIX.'[0-9]+$/';
-
-        return preg_match($pattern, $login);
     }
 
     private function checkPasswordStorageConformity(Git_RemoteServer_GerritServer $gerrit_server, $password)
