@@ -1,3 +1,6 @@
+Version 1.426 - Tuleap 8.20
+    * story #9463: Cumulative flow diagram with params (Performance improvement for the kanban cumulative flow REST route)
+
 Version 1.425 - Tuleap 8.20
     * request #9524: Do not try to take into account permissions to compute the total size of a Kanban column
 
