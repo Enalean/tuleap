@@ -1,3 +1,6 @@
+Version 4.261 - Tuleap 8.20
+    * Create new object to detect gitolite detector
+
 Version 4.260 - Tuleap 8.20
     * Log when user see the repository content through GitPhp
 
