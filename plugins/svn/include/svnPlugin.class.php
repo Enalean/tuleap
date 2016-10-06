@@ -316,26 +316,33 @@ class SvnPlugin extends Plugin {
     }
 
 
-    public function process(HTTPRequest $request) {
-        $project_id = $request->getProject()->getId();
-        if (! $project_id) {
-            $project_id = $this->getProjectIdFromViewVcURL($request);
+    public function process(HTTPRequest $request)
+    {
+        $project = $request->getProject();
+        if (! $project->getID()) {
+            $project = $this->getProjectFromViewVcURL($request);
         }
 
+        $project_id = $project->getId();
         if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','plugin_not_activated'));
-            $GLOBALS['Response']->redirect('/projects/'.$request->getProject()->getUnixNameMixedCase().'/');
+            $GLOBALS['Response']->addFeedback(
+                'error', $GLOBALS['Language']->getText(
+                'plugin_svn_manage_repository', 'plugin_not_activated'
+            )
+            );
+            $GLOBALS['Response']->redirect('/projects/' . $project->getUnixNameMixedCase() . '/');
         } else {
             $this->getRouter()->route($request);
         }
     }
 
-    private function getProjectIdFromViewVcURL(HTTPRequest $request) {
+    private function getProjectFromViewVcURL(HTTPRequest $request)
+    {
         $svn_root          = $request->get('root');
         $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
-        $project           = ProjectManager::instance()->getProject($project_shortname);
+        $project           = ProjectManager::instance()->getValidProjectByShortNameOrId($project_shortname);
 
-        return $project->getID();
+        return $project;
     }
 
     public function cssFile($params) {
