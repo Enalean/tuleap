@@ -33,6 +33,7 @@ Version 8.20 (Not Released Yet)
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
 	* request #9517: Plugin FRS package is unnecessary big
+	* request #9495, request #9496 and request #9463: remove doaprdf, admssw and foafprofiles plugins
 
 	== Enhancement ==
 	* request #9010: Import/Export of artifactlinks
