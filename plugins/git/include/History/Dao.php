@@ -24,15 +24,14 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public function insertGitPhpView($repository_id, $user_id, $day)
+    public function insertGitPhpView($repository_id, $user_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
         $user_id       = $this->da->escapeInt($user_id);
-        $day           = $this->da->escapeInt($day);
+        $time          = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
 
-        $sql = "INSERT INTO plugin_git_full_history (repository_id, user_id, day, git_browse_operations)
-                VALUES ($repository_id, $user_id, $day, 1)
-                ON DUPLICATE KEY UPDATE git_browse_operations = git_browse_operations+1";
+        $sql = "INSERT INTO plugin_git_full_history (time, repository_id, user_id)
+                VALUES ($time, $repository_id, $user_id)";
 
         return $this->update($sql);
     }
