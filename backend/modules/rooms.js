@@ -239,9 +239,8 @@ define([
                 if (MessageContentVerifier.hasCardFields(data)) {
                     data.artifact = self.rights.filterMessageByRights(socket.username, rights_user, data.artifact);
                 }
-                if (! _.isEmpty(data)) {
-                    socket_sender.to(socket.id).emit(message.cmd, data);
-                }
+
+                socket_sender.to(socket.id).emit(message.cmd, data);
             });
         }
 
