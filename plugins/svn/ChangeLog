@@ -1,3 +1,6 @@
+Version 0.96 - Tuleap 8.20
+    * request #9553 SVN multirepository access error when projects are restriced
+
 Version 0.95 - Tuleap 8.20
     * request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
 
