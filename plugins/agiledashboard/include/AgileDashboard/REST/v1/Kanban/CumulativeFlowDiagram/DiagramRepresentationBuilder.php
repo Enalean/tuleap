@@ -74,13 +74,11 @@ class DiagramRepresentationBuilder
     ) {
         $dates = $this->getDates($start_date, $end_date, $interval_between_point);
 
-        $archive_representation          = $this->getArchiveColumnRepresentation($kanban, $user, $dates);
-        $open_column_representations     = $this->getOpenColumnsRepresentation($kanban, $user, $dates);
-        $ordered_cumulative_flow_columns = array_merge(array($archive_representation), $open_column_representations);
+        $cumulative_flow_columns_representation = $this->getColumnsRepresentation($kanban, $user, $dates);
 
         $diagram_representation = new DiagramRepresentation();
         $diagram_representation->build(
-            $ordered_cumulative_flow_columns
+            $cumulative_flow_columns_representation
         );
 
         return $diagram_representation;
@@ -108,26 +106,107 @@ class DiagramRepresentationBuilder
     }
 
     /**
-     * @return DiagramColumnRepresentation
+     * @return DiagramColumnRepresentation[]
      * @throws DataAccessException
      */
-    private function getArchiveColumnRepresentation(AgileDashboard_Kanban $kanban, PFUser $user, array $dates)
+    private function getColumnsRepresentation(AgileDashboard_Kanban $kanban, PFUser $user, array $dates)
     {
-        $archive_items_count = array_fill_keys($dates, 0);
-        $items_in_archive    = $this->kanban_cumulative_flow_diagram_dao->searchKanbanItemsInArchive(
+        $items_in_columns = $this->kanban_cumulative_flow_diagram_dao->searchKanbanItemsByDates(
             $kanban->getTrackerId(),
             $dates
         );
-        if ($items_in_archive === false) {
+        if ($items_in_columns === false) {
             throw new DataAccessException();
         }
-        foreach ($items_in_archive as $row) {
+
+        $items_count_for_archive            = array_fill_keys($dates, 0);
+        $items_count_grouped_by_open_column = array(
+            self::BACKLOG_BINDVALUE_ID => array_fill_keys($dates, 0)
+        );
+        $columns = $this->kanban_column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
+        foreach ($columns as $column) {
+            $items_count_grouped_by_open_column[$column->getId()] = array_fill_keys($dates, 0);
+        }
+
+        foreach ($items_in_columns as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
-                $archive_items_count[$row['day']] += 1;
+                if (isset($items_count_grouped_by_open_column[$row['column_id']])) {
+                    $items_count_grouped_by_open_column[$row['column_id']][$row['day']] += 1;
+                } else {
+                    $items_count_for_archive[$row['day']] += 1;
+                }
             }
         }
 
+        $ordered_column_representations = array_merge(
+            array($this->buildArchiveColumnRepresentation($items_count_for_archive)),
+            $this->buildOpenColumnsRepresentation($items_count_grouped_by_open_column, $columns)
+        );
+
+        return $ordered_column_representations;
+    }
+
+    /**
+     * @return DiagramColumnRepresentation[]
+     */
+    private function buildOpenColumnsRepresentation(array $items_count_grouped_by_open_column, array $open_columns)
+    {
+        $open_column_representations_item_counts = array();
+        foreach ($items_count_grouped_by_open_column as $column_id => $items_count) {
+            foreach ($items_count as $day => $count) {
+                $diagram_point_representation = new DiagramPointRepresentation();
+                $diagram_point_representation->build(
+                    $day,
+                    $count
+                );
+                $open_column_representations_item_counts[$column_id][] = $diagram_point_representation;
+            }
+        }
+
+        $ordered_open_column_representations = array();
+
+        $reversed_columns = array_reverse($open_columns);
+        foreach ($reversed_columns as $column) {
+            $values = $open_column_representations_item_counts[$column->getId()];
+
+            $column_representation = new DiagramColumnRepresentation();
+            $column_representation->build(
+                $column->getId(),
+                $column->getLabel(),
+                $values
+            );
+
+            $ordered_open_column_representations[] = $column_representation;
+        }
+
+        $ordered_open_column_representations[] = $this->buildBacklogColumnRepresentation(
+            $open_column_representations_item_counts
+        );
+
+        return $ordered_open_column_representations;
+    }
+
+    /**
+     * @return DiagramColumnRepresentation
+     */
+    private function buildBacklogColumnRepresentation(array $open_column_representations_item_counts)
+    {
+        $backlog_representation = new DiagramColumnRepresentation();
+        $backlog_representation->build(
+            KanbanColumnRepresentation::BACKLOG_COLUMN,
+            'Backlog',
+            $open_column_representations_item_counts[self::BACKLOG_BINDVALUE_ID]
+        );
+        return $backlog_representation;
+    }
+
+
+    /**
+     * @return DiagramColumnRepresentation
+     */
+    private function buildArchiveColumnRepresentation(array $archive_items_count)
+    {
         $archive_representation_item_counts = array();
         foreach ($archive_items_count as $day => $kanban_item_counts) {
             $diagram_representation = new DiagramPointRepresentation();
@@ -146,82 +225,5 @@ class DiagramRepresentationBuilder
         );
 
         return $archive_representation;
-    }
-
-    /**
-     * @return DiagramColumnRepresentation[]
-     * @throws DataAccessException
-     */
-    private function getOpenColumnsRepresentation(AgileDashboard_Kanban $kanban, PFUser $user, array $dates)
-    {
-        $items_count_grouped_by_column = array();
-        $items_in_open_columns         = $this->kanban_cumulative_flow_diagram_dao->searchKanbanItemsInOpenColumns(
-            $kanban->getTrackerId(),
-            $dates
-        );
-        if ($items_in_open_columns === false) {
-            throw new DataAccessException();
-        }
-
-        $items_count_grouped_by_column[self::BACKLOG_BINDVALUE_ID] = array_fill_keys($dates, 0);
-        $columns = $this->kanban_column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
-        foreach ($columns as $column) {
-            $items_count_grouped_by_column[$column->getId()] = array_fill_keys($dates, 0);
-        }
-
-        foreach ($items_in_open_columns as $row) {
-            $artifact = $this->artifact_factory->getInstanceFromRow($row);
-            if ($artifact->userCanView($user)) {
-                $items_count_grouped_by_column[$row['column_id']][$row['day']] += 1;
-            }
-        }
-
-        $open_column_representations_item_counts = array();
-        foreach ($items_count_grouped_by_column as $column_id => $items_count) {
-            foreach ($items_count as $day => $count) {
-                $diagram_representation = new DiagramPointRepresentation();
-                $diagram_representation->build(
-                    $day,
-                    $count
-                );
-                $open_column_representations_item_counts[$column_id][] = $diagram_representation;
-            }
-        }
-
-        $ordered_open_column_representations = array();
-        $reversed_columns                    = array_reverse($columns);
-
-        foreach ($reversed_columns as $column) {
-            $values = $open_column_representations_item_counts[$column->getId()];
-
-            $column_representation = new DiagramColumnRepresentation();
-            $column_representation->build(
-                $column->getId(),
-                $column->getLabel(),
-                $values
-            );
-
-            $ordered_open_column_representations[] = $column_representation;
-        }
-
-        $ordered_open_column_representations[] = $this->getBacklogColumnRepresentation(
-            $open_column_representations_item_counts
-        );
-
-        return $ordered_open_column_representations;
-    }
-
-    /**
-     * @return DiagramColumnRepresentation
-     */
-    private function getBacklogColumnRepresentation(array $open_column_representations_item_counts)
-    {
-        $backlog_representation = new DiagramColumnRepresentation();
-        $backlog_representation->build(
-            KanbanColumnRepresentation::BACKLOG_COLUMN,
-            'Backlog',
-            $open_column_representations_item_counts[self::BACKLOG_BINDVALUE_ID]
-        );
-        return $backlog_representation;
     }
 }
