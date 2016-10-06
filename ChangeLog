@@ -14,7 +14,7 @@ Version 8.20 (Not Released Yet)
 	* ldap: 3.114
 	* git: 4.264
 	* tracker_encryption: 1.2
-	* statistics: 0.65
+	* statistics: 0.66
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
