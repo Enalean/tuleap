@@ -1,3 +1,6 @@
+Version 4.262 - Tuleap 8.20
+    * story #9436: Display git read access in frequency graph
+
 Version 4.261 - Tuleap 8.20
     * Create new object to detect gitolite detector
 

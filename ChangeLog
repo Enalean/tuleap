@@ -12,8 +12,9 @@ Version 8.20 (Not Released Yet)
 	* docman: 2.26.121
 	* artifactsfolders: 0.27
 	* ldap: 3.114
-	* git: 4.261
+	* git: 4.262
 	* tracker_encryption: 1.2
+	* statistics: 0.65
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
