@@ -49,13 +49,13 @@ class FRSReleaseRouter
 
     public function route(HTTPRequest $request, Project $project, PFUser $user)
     {
+        if (! $this->package_factory->userCanAdmin($user, $project->getGroupId())) {
+            exit_permission_denied();
+        }
+
         if ($request->get('id')) {
             $release_id = $request->get('id');
             $release    = $this->release_factory->getFRSReleaseFromDb($release_id, $project->getGroupId());
-        } else {
-            if (! $this->package_factory->userCanAdmin($user, $project->getGroupId())) {
-                exit_permission_denied();
-            }
         }
 
         $package_id = $request->get('package_id');
