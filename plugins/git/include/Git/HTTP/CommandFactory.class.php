@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\Gitolite\VersionDetector;
 
 class Git_HTTP_CommandFactory {
 
@@ -57,6 +58,11 @@ class Git_HTTP_CommandFactory {
      */
     private $gerrit_server_factory;
 
+    /**
+     * @var VersionDetector
+     */
+    private $detector;
+
     public function __construct(
         GitRepositoryFactory $repository_factory,
         User_LoginManager $login_manager,
@@ -64,7 +70,8 @@ class Git_HTTP_CommandFactory {
         URLVerification $url_verification,
         Logger $logger,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        ReplicationHTTPUserAuthenticator $authenticator
+        ReplicationHTTPUserAuthenticator $authenticator,
+        VersionDetector $detector
     ) {
         $this->repository_factory    = $repository_factory;
         $this->login_manager         = $login_manager;
@@ -73,6 +80,7 @@ class Git_HTTP_CommandFactory {
         $this->url_verification      = $url_verification;
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->authenticator         = $authenticator;
+        $this->detector              = $detector;
     }
 
     public function getCommandForRepository(GitRepository $repository, Git_URL $url) {
@@ -165,7 +173,7 @@ class Git_HTTP_CommandFactory {
     }
 
     private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command) {
-         if (is_file('/usr/share/gitolite3/gitolite-shell')) {
+        if ($this->detector->isGitolite3()) {
             return new Git_HTTP_CommandGitolite3($user, $command);
         }
         return new Git_HTTP_CommandGitolite($user, $command);

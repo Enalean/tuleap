@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -1249,7 +1250,8 @@ class GitPlugin extends Plugin {
             $this->getDefaultPermissionsUpdater(),
             new ProjectHistoryDao(),
             $this->getDescriptionUpdater(),
-            $this->getGitPhpAccessLogger()
+            $this->getGitPhpAccessLogger(),
+            new VersionDetector()
         );
     }
 
