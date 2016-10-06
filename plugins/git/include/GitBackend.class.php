@@ -314,6 +314,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex,       $gitolite,       false);
         $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
         $this->retrieveLoggedPushesStatistics($formatter);
+        $this->retrieveReadAccessStatistics($formatter);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
         return $content;
@@ -373,7 +374,28 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
             $formatter->addLine($gitCommits);
             $formatter->addLine($gitUsers);
             $formatter->addLine($gitRepo);
+            $formatter->addEmptyLine();
         }
+    }
+
+    private function retrieveReadAccessStatistics(Statistics_Formatter $formatter)
+    {
+        $dao   = new Tuleap\Git\History\Dao();
+        $stats = $dao->searchStatistics($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        if (count($stats) === 0) {
+            return;
+        }
+
+        $header = array($GLOBALS['Language']->getText('plugin_statistics', 'scm_month'));
+        $line   = array($GLOBALS['Language']->getText('plugin_git', 'stats_read'));
+        foreach ($stats as $row) {
+            $header[] = $row['month']." ".$row['year'];
+            $line[]   = intval($row['nb']);
+        }
+
+        $formatter->addLine($header);
+        $formatter->addLine($line);
+        $formatter->addEmptyLine();
     }
 
     public function getAllowedCharsInNamePattern() {

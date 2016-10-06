@@ -35,4 +35,27 @@ class Dao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function searchStatistics($start_date, $end_date, $project_id = null)
+    {
+        $start_date     = $this->da->quoteSmart($start_date);
+        $end_date       = $this->da->quoteSmart($end_date);
+        $project_id     = $this->da->escapeInt($project_id);
+        $project_filter = "";
+
+        if (! empty($project_id)) {
+            $project_filter = " AND project_id = " . $project_id;
+        }
+
+        $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(time), '%M') AS month,
+                    YEAR(FROM_UNIXTIME(time)) AS year,
+                    COUNT(*) AS nb
+                FROM plugin_git_full_history JOIN plugin_git USING(repository_id)
+                WHERE time BETWEEN UNIX_TIMESTAMP($start_date) AND UNIX_TIMESTAMP($end_date)
+                    $project_filter
+                GROUP BY year, month
+                ORDER BY year, STR_TO_DATE(month,'%M')";
+
+        return $this->retrieve($sql);
+    }
 }
