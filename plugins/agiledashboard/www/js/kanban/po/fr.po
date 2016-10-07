@@ -80,6 +80,10 @@ msgstr "Confirmer la suppression"
 msgid "Confirm deletion of this Kanban"
 msgstr "Confirmer la suppression de ce Kanban"
 
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Cumulative flow chart"
+msgstr "Diagramme de flux cumulé"
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Danger zone"
 msgstr "Zone de danger"
@@ -210,6 +214,10 @@ msgid ""
 msgstr ""
 "La suppression d'un Kanban est irréversible. Veuillez être certain de ce que "
 "vous faites."
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Timeframe:"
+msgstr "Période de temps :"
 
 #: src/app/kanban.tpl.html
 msgid "Toggle the archive"

@@ -6,28 +6,29 @@
 </div>
 
 <div class="modal-body">
+    <h3 class="nvd3-title" translate>Cumulative flow chart</h3>
     <div ng-if="reports_modal.loading" class="loading"></div>
     <form class="params">
-        <select
-                class="params-select"
+        <label for="params-select">{{ 'Timeframe:' | translate }}
+            <select
+                id="params-select"
                 ng-model="reports_modal.key_last_data"
                 ng-change="reports_modal.loadData()"
-        >
-            <option value="last_seven_days" selected="selected" translate>Last 7 days</option>
-            <option value="last_month" translate>Last month</option>
-            <option value="last_three_months" translate>Last 3 months</option>
-            <option value="last_six_months" translate>Last 6 months</option>
-            <option value="last_year" translate>Last year</option>
-        </select>
+            >
+                <option value="last_seven_days" selected="selected" translate>Last 7 days</option>
+                <option value="last_month" translate>Last month</option>
+                <option value="last_three_months" translate>Last 3 months</option>
+                <option value="last_six_months" translate>Last 6 months</option>
+                <option value="last_year" translate>Last year</option>
+            </select>
+        </label>
     </form>
-    <div class="canvas">
-        <canvas
-                chart-line
-                chart-data="reports_modal.chartjs_data"
-                chart-series="reports_modal.chartjs_series"
-                chart-labels="reports_modal.chartjs_labels"
-                chart-options="reports_modal.chartjs_options"
-                chart-colors="reports_modal.chartjs_colors"
-        ></canvas>
+    <div class="chart">
+        <nvd3
+            ng-if="! reports_modal.loading"
+            options="reports_modal.options"
+            data="reports_modal.data"
+            on-ready="reports_modal.onReady"
+        ></nvd3>
     </div>
 </div>
