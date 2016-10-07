@@ -99,7 +99,15 @@
             </li>
             <li class="nav-item"><a href="#switch">Switch</a></li>
             <li class="nav-item"><a href="#dropdowns">Dropdowns</a></li>
-            <li class="nav-item"><a href="#tooltips">Tooltips</a></li>
+            <li class="nav-item">
+                <a href="#tooltips">Tooltips</a>
+                <nav class="sub-nav">
+                    <ul>
+                        <li class="nav-item sub-nav-item"><a href="#tooltips-html-tags">Tooltips on tags</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#tooltips-placements">Tooltips placements</a></li>
+                    </ul>
+                </nav>
+            </li>
             <li class="nav-item"><a href="#popovers">Popovers</a></li>
             <li class="nav-item"><a href="#modals">Modals</a></li>
             <li class="nav-item">
@@ -2264,17 +2272,53 @@ tlp.select2(document.querySelector('#types-select2-large'), {
 
             </div>
         </section>
-        <section class="doc-section" id="tooltips">
-            <h2 class="doc-section-title">Tooltips</h2>
-            <div class="section-content">
-              <div class="demo">
-                  <div class="example"></div>
-                  <div class="code">
-                      <textarea>
 
+        <section class="doc-section" id="tooltips">
+            <h2 class="doc-section-title">Tooltips <code class="code-inline">.tlp-tooltip[data-tlp-tooltip]</code></h2>
+
+            <div class="section-content">
+                <section class="doc-section" id="tooltips-html-tags">
+                    <h3 class="doc-subsection-title">Tooltip on differents HTML tags</h3>
+                    <div class="demo">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="Hey look, I'm a tooltip!">Tooltip on span</span>
+<br><br>
+<a href="javascript:;" class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="Hey look, I'm a tooltip!">Tooltip on link</a>
+<br><br>
+<span class="tlp-badge-success tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="Hey look, I'm a tooltip!">
+    Tooltip on badge
+</span>
+<br><br>
+<button type="button" class="tlp-button-primary tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="Hey look, I'm a tooltip!">
+    Tooltip on button
+</button>
 </textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="tooltips-placements">
+                    <h3 class="doc-subsection-title">Tooltips placements <code class="code-inline">.tlp-tooltip-[placement]</code></h3>
+                    <div class="demo">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="Hey look, I'm a tooltip!">Tooltip top</span>
+<br><br>
+<span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="Hey look, I'm a tooltip!">Tooltip right</span>
+<br><br>
+<span class="tlp-tooltip tlp-tooltip-bottom" data-tlp-tooltip="Hey look, I'm a tooltip!">Tooltip bottom</span>
+<br><br>
+<span class="tlp-tooltip tlp-tooltip-left" data-tlp-tooltip="Hey look, I'm a tooltip!">Tooltip left</span>
+</textarea>
+                        </div>
+                    </div>
+                </section>
             </div>
         </section>
+
         <section class="doc-section" id="popovers">
             <h2 class="doc-section-title">Popovers</h2>
 
@@ -2282,6 +2326,7 @@ tlp.select2(document.querySelector('#types-select2-large'), {
 
             </div>
         </section>
+
         <section class="doc-section" id="modals">
             <h2 class="doc-section-title">Modals <code class="code-inline">.tlp-modal</code></h2>
 
