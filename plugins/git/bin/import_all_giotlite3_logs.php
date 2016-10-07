@@ -29,17 +29,28 @@ use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\History\Dao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 
-$detector = new VersionDetector();
-if ($detector->isGitolite3()) {
-    $gitolite_parser = new Gitolite3LogParser(
-        new GitBackendLogger(),
-        new System_Command(),
-        new HttpUserValidator(),
-        new Dao(),
-        new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
-        UserManager::instance(),
-        new GitoliteFileLogsDao()
-    );
+$console    = new Log_ConsoleLogger();
+$logger     = new GitBackendLogger();
+$broker_log = new BrokerLogger(array($logger, $console));
 
-    $gitolite_parser->parseAllLogs(GITOLITE3_LOGS_PATH);
+$detector = new VersionDetector();
+if (! $detector->isGitolite3()) {
+    $broker_log->error("You are currently using Gitolite2. Parsing logs only works for Gitolite3.");
+    exit(1);
 }
+
+$broker_log->info("Starting parse gitolite3 logs.");
+$gitolite_parser = new Gitolite3LogParser(
+    $broker_log,
+    new System_Command(),
+    new HttpUserValidator(),
+    new Dao(),
+    new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
+    UserManager::instance(),
+    new GitoliteFileLogsDao()
+);
+$gitolite_parser->parseAllLogs(GITOLITE3_LOGS_PATH);
+
+$broker_log->info("Logs parsed with success.");
+
+exit(1);
