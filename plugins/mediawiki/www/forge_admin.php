@@ -27,9 +27,7 @@ require_once dirname(__FILE__) .'/../include/MediawikiSiteAdminController.class.
 /**
  * HACK
  */
-require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
-$ff_plugin = new fusionforge_compatPlugin();
-$ff_plugin->loaded();
+require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
 $vWhiteList = new Valid_WhiteList('action', array('save_permissions', 'save_language', 'index', 'site_index', 'site_update_allowed_project_list'));
 $vWhiteList->required();

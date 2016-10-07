@@ -42,4 +42,3 @@ function forge_get_config($key, $scope = 'core') {
     }
     return ForgeConfig::get($key);
 }
-

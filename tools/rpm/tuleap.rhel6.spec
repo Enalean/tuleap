@@ -338,11 +338,11 @@ Archive deleted items before purging them from filesystem
 %package plugin-fusionforge_compat
 Summary: FusionForge Compatibility
 Group: Development/Tools
-Version: @@PLUGIN_FUSIONFORGE_COMPAT_VERSION@@
+Version: 0.9
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-fusionforge_compat
-Allows some fusionforge plugins to be installed in a Tuleap instance.
+This is an empty package. If this package is still installed on your system it can be removed safely.
+Please check Tuleap deployment guide for more information.
 
 %package plugin-mediawiki
 Summary: Mediawiki plugin
@@ -350,7 +350,6 @@ Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: tuleap-plugin-fusionforge_compat
 Requires: php-mediawiki-tuleap >= 1.20.3-6
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
@@ -1167,8 +1166,6 @@ fi
 %{APP_DIR}/plugins/archivedeleteditems
 
 %files plugin-fusionforge_compat
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/fusionforge_compat
 
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
