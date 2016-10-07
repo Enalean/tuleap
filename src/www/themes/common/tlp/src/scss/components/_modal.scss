@@ -67,13 +67,6 @@ $tlp-modal-transition: 150ms ease-out;
     background: $tlp-ui-info;
 }
 
-.tlp-modal-full-screen {
-    width: calc(100% - 2 * #{$tlp-spacing});
-    height: calc(100% - 2 * #{$tlp-spacing});
-    max-height: calc(100% - 2 * #{$tlp-spacing});
-    margin: $tlp-spacing;
-}
-
 .tlp-modal-header {
     display: flex;
     align-items: center;
@@ -125,10 +118,21 @@ $tlp-modal-transition: 150ms ease-out;
 }
 
 .tlp-modal-action {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-spacing / 2 0 0;
 
     &:last-child {
         margin: 0;
+    }
+}
+
+.tlp-modal-full-screen {
+    width: calc(100% - 2 * #{$tlp-spacing});
+    height: calc(100% - 2 * #{$tlp-spacing});
+    max-height: calc(100% - 2 * #{$tlp-spacing});
+    margin: $tlp-spacing;
+
+    > .tlp-modal-body {
+        max-height: none;
     }
 }
 
