@@ -1,3 +1,6 @@
+Version 4.269 - Tuleap 8.20
+    * story #9436: Add log when parsing logs
+
 Version 4.268 - Tuleap 8.20
     * story #9436: Store access in DB
 
