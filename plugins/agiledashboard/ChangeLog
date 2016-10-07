@@ -1,3 +1,6 @@
+Version 1.427 - Tuleap 8.20
+    * Update corresponding version of tuleap-realtime
+
 Version 1.426 - Tuleap 8.20
     * story #9463: Cumulative flow diagram with params (Performance improvement for the kanban cumulative flow REST route)
 
