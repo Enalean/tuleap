@@ -310,6 +310,7 @@ class Git extends PluginController {
         $this->webhook_dao                = $webhook_dao;
         $this->ci_token_manager           = $ci_token_manager;
         $this->access_loger               = $access_loger;
+        $this->detector                   = $detector;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -361,7 +362,6 @@ class Git extends PluginController {
         $this->default_permission_updater              = $default_permission_updater;
         $this->history_dao                             = $history_dao;
         $this->description_updater                     = $description_updater;
-        $this->detector                                = $detector;
     }
 
     protected function instantiateView() {
