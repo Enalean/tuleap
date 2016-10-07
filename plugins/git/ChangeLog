@@ -1,3 +1,6 @@
+Version 4.268 - Tuleap 8.20
+    * story #9436: Store access in DB
+
 Version 4.267 - Tuleap 8.20
     * story #9436: Fix HTTP clone fatal error
 
