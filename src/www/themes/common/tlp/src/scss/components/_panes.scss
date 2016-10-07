@@ -38,13 +38,25 @@
     padding: $tlp-spacing;
 }
 
-.tlp-pane-title {
-    margin: 0;
-    color: $tlp-ui-dimmed;
+%tlp-pane-title {
     font-size: 15px;
     font-weight: 600;
     letter-spacing: .5px;
     text-transform: uppercase;
+}
+
+.tlp-pane-title {
+    @extend %tlp-pane-title;
+
+    margin: 0;
+    color: $tlp-ui-dimmed;
+}
+
+.tlp-pane-subtitle {
+    @extend %tlp-pane-title;
+
+    margin: 0 0 $tlp-spacing;
+    color: $tlp-theme-color;
 }
 
 .tlp-pane-title-icon {
