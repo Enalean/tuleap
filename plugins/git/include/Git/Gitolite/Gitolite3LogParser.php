@@ -91,6 +91,7 @@ class Gitolite3LogParser
     public function parseAllLogs($path)
     {
         $iterator = new DirectoryIterator($path);
+        $this->logger->info('Starting import logs from '. $path);
         foreach ($iterator as $file) {
             if (! $file->isDot() && preg_match('/^gitolite-\d{4}-\d{2}.log$/', $file->getFilename())) {
                 $this->parseLogs($path . $file);
@@ -112,9 +113,15 @@ class Gitolite3LogParser
         if (file_exists($log)) {
             $log_file = fopen("$log", "r");
             if (! $log_file) {
+                $this->logger->error('Cannot open '.$log_file);
                 throw new CannotAccessToGitoliteLogException();
             } else {
                 $last_read_char = $this->file_logs_dao->getLastReadLine($log);
+                if (! $last_read_char) {
+                    $this->logger->info('Start import of new file: '.$log);
+                } else {
+                    $this->logger->info('Import file: '.$log . ' from last position');
+                }
                 fseek($log_file, $last_read_char['end_line']);
                 while (! feof($log_file)) {
                     $log_line = fgetcsv($log_file, 0, "\t");
