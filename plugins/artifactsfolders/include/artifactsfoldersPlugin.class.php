@@ -19,7 +19,11 @@
  */
 
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
+use Tuleap\ArtifactsFolders\Folder\ArtifactLinkInformationPrepender;
 use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
+use Tuleap\ArtifactsFolders\Folder\DataFromRequestAugmentor;
+use Tuleap\ArtifactsFolders\Folder\FolderForArtifactGoldenRetriever;
+use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
@@ -55,6 +59,8 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
             $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
+            $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
+            $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
         }
 
         return parent::getHooksAndCallbacks();
@@ -224,31 +230,41 @@ class ArtifactsFoldersPlugin extends Plugin
     /** @see Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION */
     public function prepend_artifactlink_information($params)
     {
-        if ($params['reverse_artifact_links']) {
-            return;
-        }
+        $prepender = new ArtifactLinkInformationPrepender(
+            Tracker_ArtifactFactory::instance(),
+            new Dao(),
+            $this->getFolderForArtifactRetriever()
+        );
 
-        $folder = $this->getFolderOfArtifact($params['artifact'], $params['current_user']);
-        if (! $folder) {
-            return;
-        }
-
-        $current_folder  = $GLOBALS['Language']->getText('plugin_folders', 'current_folder');
-        $params['html'] .= '<p>'. $current_folder .' '. $folder->fetchDirectLinkToArtifactWithTitle() .'</p>';
+        $params['html'] .= $prepender->prependArtifactLinkInformation(
+            $params['artifact'],
+            $params['current_user'],
+            $params['reverse_artifact_links'],
+            $params['read_only']
+        );
     }
 
-    private function getFolderOfArtifact(Tracker_Artifact $artifact, PFUser $current_user)
+    /** @see Tracker_FormELement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE */
+    public function get_post_save_new_changeset_queue(array $params)
     {
-        $folder_dao       = new Dao();
-        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $params['queue']->add(
+            new PostSaveNewChangesetCommand($params['field'], HTTPRequest::instance(), $this->getDao())
+        );
+    }
 
-        foreach ($folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId()) as $row) {
-            $folder = $artifact_factory->getInstanceFromRow($row);
-            if ($folder->userCanView($current_user)) {
-                return $folder;
-            }
-        }
+    /** @see Tracker_FormELement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST */
+    public function after_augment_data_from_request(array $params)
+    {
+        $augmentor = new DataFromRequestAugmentor(
+            HTTPRequest::instance(),
+            Tracker_ArtifactFactory::instance(),
+            $this->getFolderForArtifactRetriever()
+        );
+        $augmentor->augmentDataFromRequest($params['fields_data'][$params['field']->getId()]);
+    }
 
-        return null;
+    private function getFolderForArtifactRetriever()
+    {
+        return new FolderForArtifactGoldenRetriever(Tracker_ArtifactFactory::instance(), $this->getDao());
     }
 }

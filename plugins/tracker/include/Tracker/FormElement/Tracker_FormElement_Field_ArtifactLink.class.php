@@ -53,6 +53,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
 
     /**
+     * Allow to add command to the queue that is processed after a changeset is created.
+     * Add PostSaveNewChangesetCommand objects to the queue.
+     *
+     * Parameters:
+     *    'queue' => input/output Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
+     *    'field' => input Tracker_FormElement_Field
+     */
+    const GET_POST_SAVE_NEW_CHANGESET_QUEUE = 'get_post_save_new_changeset_queue';
+
+    /**
+     * Called just after augmentDataFromRequest has been called.
+     *
+     * Parameters:
+     *    'fields_data' => input/output array
+     *    'field'       => input Tracker_FormElement_Field
+     */
+    const AFTER_AUGMENT_DATA_FROM_REQUEST = 'after_augment_data_from_request';
+
+    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
@@ -1546,10 +1565,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         Tracker_Artifact_Changeset $new_changeset,
         Tracker_Artifact_Changeset $previous_changeset = null
     ) {
+        $queue = $this->getPostNewChangesetQueue();
+        $queue->execute($artifact, $submitter, $new_changeset, $previous_changeset);
+    }
+
+    private function getPostNewChangesetQueue()
+    {
         $queue = new Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue();
         $queue->add($this->getUpdateLinkingDirectionCommand());
         $queue->add($this->getProcessChildrenTriggersCommand());
-        $queue->execute($artifact, $submitter, $new_changeset, $previous_changeset);
+
+        EventManager::instance()->processEvent(
+            self::GET_POST_SAVE_NEW_CHANGESET_QUEUE,
+            array(
+                'field' => $this,
+                'queue' => $queue
+            )
+        );
+
+        return $queue;
     }
 
     /**
@@ -1749,19 +1783,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this->addNewValuesInNaturesArray($fields_data);
         }
 
-        if (empty($fields_data[$this->getId()]['parent'])) {
-            return;
-        }
-
-        $parent = intval($fields_data[$this->getId()]['parent']);
-        if ($parent > 0) {
-            if (isset($fields_data[$this->getId()]['new_values'])) {
-                $new_values   = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+        if (! empty($fields_data[$this->getId()]['parent'])) {
+            $parent = intval($fields_data[$this->getId()]['parent']);
+            if ($parent > 0) {
+                if (isset($fields_data[$this->getId()]['new_values'])) {
+                    $new_values = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+                }
+                $new_values[]                              = $parent;
+                $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
             }
-            $new_values[] = $parent;
-            $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
         }
 
+        EventManager::instance()->processEvent(
+            self::AFTER_AUGMENT_DATA_FROM_REQUEST,
+            array(
+                'fields_data' => &$fields_data,
+                'field'       => $this
+            )
+        );
     }
 
     private function addNewValuesInNaturesArray(&$fields_data) {

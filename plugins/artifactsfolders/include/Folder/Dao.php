@@ -77,4 +77,57 @@ class Dao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function searchFoldersInProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT A.*
+                FROM tracker_artifact AS A
+                  INNER JOIN tracker AS T ON (T.id = A.tracker_id AND T.group_id = $project_id)
+                  INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker USING (tracker_id)";
+
+        return $this->retrieve($sql);
+    }
+
+    public function addInFolderNature($changeset_id, $field_id, $artifact_folder_id, $nature)
+    {
+        $changeset_id       = $this->da->escapeInt($changeset_id);
+        $field_id           = $this->da->escapeInt($field_id);
+        $artifact_folder_id = $this->da->escapeInt($artifact_folder_id);
+        $nature             = $this->da->quoteSmart($nature);
+
+        $sql = "INSERT INTO tracker_changeset_value_artifactlink
+                SELECT cv.id, $artifact_folder_id, item_name, group_id, $nature
+                FROM tracker_artifact AS a
+                    INNER JOIN tracker AS t ON (
+                        t.id = a.tracker_id
+                        AND a.id = $artifact_folder_id
+                    )
+                    INNER JOIN tracker_changeset_value AS cv ON (
+                        cv.field_id = $field_id
+                        AND cv.changeset_id = $changeset_id
+                    )
+                ON DUPLICATE KEY UPDATE nature = $nature";
+
+        return $this->update($sql);
+    }
+
+    public function removeInFolderLink($changeset_id, $field_id, $artifact_folder_id)
+    {
+        $changeset_id       = $this->da->escapeInt($changeset_id);
+        $field_id           = $this->da->escapeInt($field_id);
+        $artifact_folder_id = $this->da->escapeInt($artifact_folder_id);
+
+        $sql = "DELETE cval.*
+                FROM tracker_changeset_value_artifactlink AS cval
+                    INNER JOIN tracker_changeset_value AS cv ON (
+                        cval.changeset_value_id = cv.id
+                        AND cv.field_id = $field_id
+                        AND cv.changeset_id = $changeset_id
+                    )
+                WHERE cval.artifact_id = $artifact_folder_id";
+
+        return $this->update($sql);
+    }
 }
