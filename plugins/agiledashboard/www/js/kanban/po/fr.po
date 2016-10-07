@@ -9,11 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
-
-#: src/app/reports-modal/reports-modal.tpl.html
-msgid "{{ reports_modal.kanban_label }} reports"
-msgstr "Rapports de {{ reports_modal.kanban_label }}"
+"X-Generator: Poedit 1.8.3\n"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
@@ -124,17 +120,37 @@ msgstr "Filtrer..."
 msgid "General configuration"
 msgstr "Configuration générale"
 
-#: src/app/app-kanban-controller.js
-msgid "Kanban {{ label }} successfuly deleted"
-msgstr "Le Kanban {{ label }} a été supprimé"
-
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
 
 #: src/app/app-kanban-controller.js
+msgid "Kanban {{ label }} successfuly deleted"
+msgstr "Le Kanban {{ label }} a été supprimé"
+
+#: src/app/app-kanban-controller.js
 msgid "Kanban:"
 msgstr "Kanban :"
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last 3 months"
+msgstr "3 derniers mois"
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last 6 months"
+msgstr "6 derniers mois"
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last 7 days"
+msgstr "7 derniers jours"
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last month"
+msgstr "Dernier mois"
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last year"
+msgstr "Dernière année"
 
 #. moment.js Date format
 #: src/app/reports-modal/reports-modal-controller.js
@@ -165,12 +181,12 @@ msgid "Nb. of cards"
 msgstr "Nb. de cartes"
 
 #: src/app/error/error.tpl.html
-msgid "Oh snap!"
-msgstr "Oups !"
-
-#: src/app/error/error.tpl.html
 msgid "OK, reload the page"
 msgstr "OK, rafraichir la page"
+
+#: src/app/error/error.tpl.html
+msgid "Oh snap!"
+msgstr "Oups !"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Remove"
@@ -222,3 +238,7 @@ msgstr ""
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "{{ reports_modal.kanban_label }} reports"
+msgstr "Rapports de {{ reports_modal.kanban_label }}"

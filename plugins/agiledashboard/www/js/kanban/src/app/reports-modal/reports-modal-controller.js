@@ -8,7 +8,7 @@ ReportsModalController.$inject = [
     'd3',
     'gettextCatalog',
     'SharedPropertiesService',
-    'DiagramRestService',
+    'DiagramRestService'
 ];
 
 function ReportsModalController(
@@ -57,7 +57,7 @@ function ReportsModalController(
                 time: {
                     displayFormats: {
                         /// moment.js Date format
-                        day: gettextCatalog.getString('MM/DD'),
+                        day: gettextCatalog.getString('MM/DD')
                     },
                     minUnit: 'day'
                 }
@@ -82,29 +82,44 @@ function ReportsModalController(
     self.chartjs_series = [];
     self.chartjs_colors = [];
     self.kanban_label   = "";
+    self.params         = {
+        last_seven_days: {
+            number: 7,
+            time_unit: 'day',
+            interval_between_points: 1
+        },
+        last_month: {
+            number: 1,
+            time_unit: 'month',
+            interval_between_points: 1
+        },
+        last_three_months: {
+            number: 3,
+            time_unit: 'month',
+            interval_between_points: 7
+        },
+        last_six_months: {
+            number: 6,
+            time_unit: 'month',
+            interval_between_points: 7
+        },
+        last_year: {
+            number: 1,
+            time_unit: 'year',
+            interval_between_points: 7
+        }
+    };
+    self.value_last_data = self.params.last_seven_days;
+    self.key_last_data   = 'last_seven_days';
 
-    self.cancel = function() { $modalInstance.dismiss('cancel'); };
-    self.init   = init;
+    self.cancel         = function() { $modalInstance.dismiss('cancel'); };
+    self.init           = init;
+    self.loadData       = loadData;
 
     self.init();
 
     function init() {
-        self.loading = true;
-        self.kanban_label = SharedPropertiesService.getKanban().label;
-        var kanban_id     = SharedPropertiesService.getKanban().id;
-        var start_date    = moment().subtract(6, 'days').format('YYYY-MM-DD');
-        var end_date      = moment().format('YYYY-MM-DD');
-        var interval_between_points = 1;
-
-        DiagramRestService.getCumulativeFlowDiagram(
-            kanban_id,
-            start_date,
-            end_date,
-            interval_between_points
-        ).then(setChartjsData)
-        .finally(function() {
-            self.loading = false;
-        });
+        self.loadData();
     }
     function setChartjsData(cumulative_flow_data) {
         var first_column    = _.first(cumulative_flow_data.columns).values;
@@ -161,5 +176,24 @@ function ReportsModalController(
         }
 
         return colors;
+    }
+
+    function loadData() {
+        self.loading         = true;
+        self.value_last_data = self.params[self.key_last_data];
+        self.kanban_label    = SharedPropertiesService.getKanban().label;
+        var kanban_id        = SharedPropertiesService.getKanban().id;
+        var start_date       = moment().subtract(self.value_last_data.number, self.value_last_data.time_unit).format('YYYY-MM-DD');
+        var end_date         = moment().format('YYYY-MM-DD');
+
+        DiagramRestService.getCumulativeFlowDiagram(
+            kanban_id,
+            start_date,
+            end_date,
+            self.value_last_data.interval_between_points
+        ).then(setChartjsData)
+         .finally(function() {
+             self.loading = false;
+         });
     }
 }
