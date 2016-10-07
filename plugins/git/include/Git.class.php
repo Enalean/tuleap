@@ -58,6 +58,8 @@ class Git extends PluginController {
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
+    const READ_PERM  = 'R';
+
     const DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
     const DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
     const DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS';
@@ -69,8 +71,6 @@ class Git extends PluginController {
 
     const REFERENCE_KEYWORD = 'git';
     const REFERENCE_NATURE  = 'git_commit';
-
-    const READ_PERM = 'R';
 
     const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 

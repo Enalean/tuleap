@@ -239,3 +239,9 @@ CREATE TABLE plugin_git_full_history (
   user_id int(11) NOT NULL,
   INDEX time_idx(time)
 );
+
+CREATE TABLE plugin_git_file_logs_parse (
+  file_name VARCHAR(255) NOT NULL,
+  end_line INT(11),
+  PRIMARY KEY (file_name)
+)

@@ -34,7 +34,8 @@ class GitPhpAccessLogger
     {
         return $this->dao->insertGitPhpView(
             $repository->getId(),
-            $user->getId()
+            $user->getId(),
+            $_SERVER['REQUEST_TIME']
         );
     }
 }

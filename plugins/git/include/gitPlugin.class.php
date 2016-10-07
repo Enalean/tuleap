@@ -24,6 +24,7 @@ use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
+use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -1876,7 +1877,8 @@ class GitPlugin extends Plugin {
             EventManager::instance()
         );
 
-        $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+        $importer->import($params['configuration'], $params['project'], UserManager::
+        instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
     }
 
     /**
@@ -1891,8 +1893,28 @@ class GitPlugin extends Plugin {
 
     public function root_daily_start()
     {
-        $logger = new GitBackendLogger();
-        $parser = new Gitolite3LogParser($logger, new System_Command(), new HttpUserValidator());
-        $parser->parseLogs(GITOLITE3_LOGS_PATH);
+        $detector = new VersionDetector();
+
+        if ($detector->isGitolite3()) {
+            $this->parseCurrentAndPrevisousMonthLogs();
+        }
+    }
+
+    private function parseCurrentAndPrevisousMonthLogs()
+    {
+        $this->getGitolite3Parser()->parseCurrentAndPreviousMonthLogs(GITOLITE3_LOGS_PATH);
+    }
+
+    private function getGitolite3Parser()
+    {
+        return new Gitolite3LogParser(
+            new GitBackendLogger(),
+            new System_Command(),
+            new HttpUserValidator(),
+            new HistoryDao(),
+            $this->getRepositoryFactory(),
+            UserManager::instance(),
+            new GitoliteFileLogsDao()
+        );
     }
 }

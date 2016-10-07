@@ -24,11 +24,11 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public function insertGitPhpView($repository_id, $user_id)
+    public function insertGitPhpView($repository_id, $user_id, $timestamp)
     {
         $repository_id = $this->da->escapeInt($repository_id);
         $user_id       = $this->da->escapeInt($user_id);
-        $time          = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        $time          = $this->da->escapeInt($timestamp);
 
         $sql = "INSERT INTO plugin_git_full_history (time, repository_id, user_id)
                 VALUES ($time, $repository_id, $user_id)";
