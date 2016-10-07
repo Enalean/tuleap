@@ -41,6 +41,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     const NO_NATURE               = '';
 
     /**
+     * Display some information at the top of the artifact link field value
+     *
+     * Parameters:
+     *   'html'                   => output string html
+     *   'artifact'               => input Tracker_Artifact
+     *   'current_user'           => input PFUser
+     *   'read_only'              => input boolean
+     *   'reverse_artifact_links' => input boolean
+     */
+    const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
+
+    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
@@ -496,6 +508,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         } else {
             $html .= '<div class="artifact-link-value">';
         }
+
+        EventManager::instance()->processEvent(
+            self::PREPEND_ARTIFACTLINK_INFORMATION,
+            array(
+                'html'                   => &$html,
+                'artifact'               => $artifact,
+                'current_user'           => $current_user,
+                'read_only'              => $read_only,
+                'reverse_artifact_links' => $reverse_artifact_links
+            )
+        );
 
         $html .= '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
 
