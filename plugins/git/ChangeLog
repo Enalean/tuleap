@@ -1,3 +1,6 @@
+Version 4.267 - Tuleap 8.20
+    * story #9436: Fix HTTP clone fatal error
+
 Version 4.266 - Tuleap 8.20
     * request #9557: Gerrit remote server can not be saved anymore
 
