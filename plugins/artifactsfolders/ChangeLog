@@ -1,3 +1,6 @@
+Version 0.28 - Tuleap 8.20
+    * Display current folder of an artifact
+
 Version 0.27 - Tuleap 8.20
     * Refactoring: do not talk about is_folder in tracker
 
