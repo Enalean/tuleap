@@ -1,3 +1,6 @@
+Version 4.266 - Tuleap 8.20
+    * request #9557: Gerrit remote server can not be saved anymore
+
 Version 4.265 - Tuleap 8.20
     * Display data in project access log
 
