@@ -49,4 +49,8 @@ interface ArchiveInterface extends \Tuleap\Project\XML\ArchiveInterface {
      * @param string $contents  Stuff to add
      */
     public function addFromString($localname, $contents);
+
+    public function getArchivePath();
+
+    public function isADirectory();
 }

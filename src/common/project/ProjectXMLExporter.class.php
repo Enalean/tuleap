@@ -113,17 +113,19 @@ class ProjectXMLExporter {
         SimpleXMLElement $into_xml,
         array $options,
         PFUser $user,
-        ArchiveInterface $archive
+        ArchiveInterface $archive,
+        $temporary_dump_path_on_filesystem
     ) {
         $this->logger->info("Export plugins");
 
         $params = array(
-            'project'           => $project,
-            'options'           => $options,
-            'into_xml'          => $into_xml,
-            'user'              => $user,
-            'user_xml_exporter' => $this->user_xml_exporter,
-            'archive'           => $archive,
+            'project'                           => $project,
+            'options'                           => $options,
+            'into_xml'                          => $into_xml,
+            'user'                              => $user,
+            'user_xml_exporter'                 => $this->user_xml_exporter,
+            'archive'                           => $archive,
+            'temporary_dump_path_on_filesystem' => $temporary_dump_path_on_filesystem
         );
 
         $this->event_manager->processEvent(
@@ -132,7 +134,7 @@ class ProjectXMLExporter {
         );
     }
 
-    public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive) {
+    public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem) {
         $this->logger->info("Start exporting project " . $project->getPublicName());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -140,7 +142,7 @@ class ProjectXMLExporter {
 
         $this->exportProjectInfo($project, $xml_element);
         $this->exportProjectUgroups($project, $xml_element);
-        $this->exportPlugins($project, $xml_element, $options, $user, $archive);
+        $this->exportPlugins($project, $xml_element, $options, $user, $archive, $temporary_dump_path_on_filesystem);
 
         $this->logger->info("Finish exporting project " . $project->getPublicName());
 

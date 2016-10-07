@@ -24,6 +24,10 @@ class ProjectXMLExporterTest extends TuleapTestCase {
     private $ugroup_manager;
     private $project;
     private $xml_exporter;
+    /**
+     * @var string
+     */
+    private $export_dir;
 
     public function setUp() {
         $this->event_manager  = mock('EventManager');
@@ -43,6 +47,7 @@ class ProjectXMLExporterTest extends TuleapTestCase {
         $this->options = array(
             'tracker_id' => 10
         );
+        $this->export_dir = "__fixtures";
 
         $this->archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
         $this->user    = mock('PFUser');
@@ -88,7 +93,7 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             '*'
         )->once();
 
-        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive);
+        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive,  $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertNotNull($xml_objet->ugroups);
@@ -147,7 +152,7 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             '*'
         )->once();
 
-        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive);
+        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertNotNull($xml_objet->ugroups);
@@ -198,7 +203,7 @@ class ProjectXMLExporterTest extends TuleapTestCase {
         stub($this->ugroup_manager)->getUGroup()->returns($project_ugroup_dynamic);
         stub($this->ugroup_manager)->getStaticUGroups()->returns(array());
 
-        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive);
+        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertEqual((string)$xml_objet['unix-name'], 'myproject');

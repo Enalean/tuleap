@@ -59,4 +59,14 @@ class ZipArchive implements ArchiveInterface {
             throw new ArchiveException("Unable to add $localname into archive: ".$this->archive->getStatusString());
         }
     }
+
+    public function getArchivePath()
+    {
+        return $this->archive_path;
+    }
+
+    public function isADirectory()
+    {
+        return false;
+    }
 }

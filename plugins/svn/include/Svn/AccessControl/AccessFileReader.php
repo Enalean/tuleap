@@ -70,14 +70,24 @@ class AccessFileReader {
     }
 
     private function isDefaultBlockStarting($line) {
-        return strpos($line, '# BEGIN CODENDI DEFAULT') !== false;
+        return strpos($line, $this->getBeginDefault()) !== false;
     }
 
     private function isDefaultBlockEnding($line) {
-        return strpos($line, '# END CODENDI DEFAULT') !== false;
+        return strpos($line, $this->getEndDefault()) !== false;
     }
 
     private function getPath(Repository $repository) {
         return $repository->getSystemPath() .'/'. self::$FILENAME;
+    }
+
+    private function getBeginDefault()
+    {
+        return '# BEGIN CODENDI DEFAULT';
+    }
+
+    private function getEndDefault()
+    {
+        return '# END CODENDI DEFAULT';
     }
 }

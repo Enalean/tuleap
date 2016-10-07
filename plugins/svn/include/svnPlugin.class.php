@@ -57,6 +57,7 @@ use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\AccessHistoryDao;
 use Tuleap\Svn\Logs\QueryBuilder;
+use Tuleap\Svn\XMLSvnExporter;
 use Tuleap\ViewVCVersionChecker;
 use Tuleap\Svn\Service\ServiceActivator;
 /**
@@ -115,8 +116,35 @@ class SvnPlugin extends Plugin {
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
-
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
+        $this->addHook(Event::EXPORT_XML_PROJECT);
+    }
+
+    public function export_xml_project($params)
+    {
+        if (! isset($params['options']['all'])) {
+            return;
+        }
+
+
+        $this->getSvnExporter($params['project'])->exportToXml(
+            $params['into_xml'],
+            $params['archive'],
+            $params['temporary_dump_path_on_filesystem']
+        );
+    }
+
+    private function getSvnExporter(Project $project)
+    {
+        return new XMLSvnExporter(
+            $this->getRepositoryManager(),
+            $project,
+            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new XML_SimpleXMLCDATAFactory(),
+            $this->getMailNotificationManager(),
+            new System_Command(),
+            new SvnLogger()
+        );
     }
 
     public function getPluginInfo() {
