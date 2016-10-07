@@ -54,6 +54,7 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook('cssfile');
             $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
             $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
+            $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
         }
 
         return parent::getHooksAndCallbacks();
@@ -218,5 +219,36 @@ class ArtifactsFoldersPlugin extends Plugin
             $params['error'] = "Link between " . $params['artifact']->getId() . " and " . $params['children_id'] . " is inconsistent because tracker " .
                 $params['tracker_id'] . " is not defined as a Folder. Artifact " . $params['artifact']->getId() . " added without nature.";
         }
+    }
+
+    /** @see Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION */
+    public function prepend_artifactlink_information($params)
+    {
+        if ($params['reverse_artifact_links']) {
+            return;
+        }
+
+        $folder = $this->getFolderOfArtifact($params['artifact'], $params['current_user']);
+        if (! $folder) {
+            return;
+        }
+
+        $current_folder  = $GLOBALS['Language']->getText('plugin_folders', 'current_folder');
+        $params['html'] .= '<p>'. $current_folder .' '. $folder->fetchDirectLinkToArtifactWithTitle() .'</p>';
+    }
+
+    private function getFolderOfArtifact(Tracker_Artifact $artifact, PFUser $current_user)
+    {
+        $folder_dao       = new Dao();
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+
+        foreach ($folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId()) as $row) {
+            $folder = $artifact_factory->getInstanceFromRow($row);
+            if ($folder->userCanView($current_user)) {
+                return $folder;
+            }
+        }
+
+        return null;
     }
 }
