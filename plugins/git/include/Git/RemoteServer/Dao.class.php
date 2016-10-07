@@ -176,7 +176,6 @@ class Git_RemoteServer_Dao extends DataAccessObject {
             WHERE id = $id";
         }
 
-        echo $sql; die();
         return $this->updateAndGetLastId($sql);
     }
 
