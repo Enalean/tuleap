@@ -6,6 +6,10 @@ set -e
 
 svnadmin="svnadmin"
 
+if svnadmin --version | head -1 | grep -v --quiet --no-messages 'version 1.6'; then
+    svnadmin="svnadmin --bypass-prop-validation"
+fi
+
 repository_path="$1"
 dumpfile_path="$2"
 
@@ -20,5 +24,7 @@ if [ ! -f "$dumpfile_path" ]; then
 fi
 
 umask 0027
+
+set -x
 
 exec $svnadmin load $repository_path < $dumpfile_path 2>&1
