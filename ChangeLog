@@ -1,7 +1,4 @@
 Version 8.20 (Not Released Yet)
-	== Enhancement ==
-	* story #9439: search for project name with REST
-
 	== Plugins ==
 	* cardwall: 1.69
 	* tracker: 5.1025
@@ -29,6 +26,7 @@ Version 8.20 (Not Released Yet)
 	* request #9490: Wiki does not detect properly HTTPS when behind a reverse proxy
 	* request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
 	* request #9538: Reflected XSS in the page allowing to change the password of a user
+	* request #9552: XML import --automap doesn't properly managed suspended users
 
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
@@ -36,13 +34,14 @@ Version 8.20 (Not Released Yet)
 	* request #9495, request #9496 and request #9493: remove doaprdf, admssw and foafprofiles plugins
 
 	== Enhancement ==
+	* story #9439: search for project name with REST
 	* request #9010: Import/Export of artifactlinks
 	* request #9466: Enforce that plugins can only be used with the Tuleap core they have been designed for
 
-        == Api ==
+	== Api ==
 	* REST API: 1.18
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.152
 
 Version 8.19 (Thursday, September 15th 2016)
