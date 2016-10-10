@@ -23,6 +23,7 @@ use Tuleap\ArtifactsFolders\Folder\ArtifactLinkInformationPrepender;
 use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
 use Tuleap\ArtifactsFolders\Folder\DataFromRequestAugmentor;
 use Tuleap\ArtifactsFolders\Folder\FolderForArtifactGoldenRetriever;
+use Tuleap\ArtifactsFolders\Folder\FolderHierarchicalRepresentationCollectionBuilder;
 use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
@@ -172,17 +173,19 @@ class ArtifactsFoldersPlugin extends Plugin
 
     private function getPresenterBuilder()
     {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $dao              = new NatureDao();
-
         return new ArtifactPresenterBuilder(
             new Dao(),
-            new NatureIsChildLinkRetriever(
-                $artifact_factory,
-                new Tracker_FormElement_Field_Value_ArtifactLinkDao()
-            ),
-            $dao,
-            $artifact_factory
+            $this->getNatureIsChildLinkRetriever(),
+            new NatureDao(),
+            Tracker_ArtifactFactory::instance()
+        );
+    }
+
+    private function getNatureIsChildLinkRetriever()
+    {
+        return new NatureIsChildLinkRetriever(
+            Tracker_ArtifactFactory::instance(),
+            new Tracker_FormElement_Field_Value_ArtifactLinkDao()
         );
     }
 
@@ -232,9 +235,12 @@ class ArtifactsFoldersPlugin extends Plugin
     public function prepend_artifactlink_information($params)
     {
         $prepender = new ArtifactLinkInformationPrepender(
-            Tracker_ArtifactFactory::instance(),
-            new Dao(),
-            $this->getFolderForArtifactRetriever()
+            $this->getFolderForArtifactRetriever(),
+            new FolderHierarchicalRepresentationCollectionBuilder(
+                Tracker_ArtifactFactory::instance(),
+                new Dao(),
+                $this->getNatureIsChildLinkRetriever()
+            )
         );
 
         $params['html'] .= $prepender->prependArtifactLinkInformation(

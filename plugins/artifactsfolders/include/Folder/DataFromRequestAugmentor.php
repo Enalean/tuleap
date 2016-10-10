@@ -56,7 +56,7 @@ class DataFromRequestAugmentor
             return;
         }
 
-        $new_artifact_folder_id = intval($this->request->get('new-artifact-folder'));
+        $new_artifact_folder_id = (int) $this->request->get('new-artifact-folder');
         $previous_folder        = $this->getExistingFolderForArtifactInRequest();
 
         if (! $new_artifact_folder_id && ! $previous_folder) {
@@ -65,7 +65,7 @@ class DataFromRequestAugmentor
             $this->removeFolderFromFieldsData($fields_data, $previous_folder->getId());
         } elseif ($new_artifact_folder_id && ! $previous_folder) {
             $this->addFolderInFieldsData($fields_data, $new_artifact_folder_id);
-        } elseif ($new_artifact_folder_id && $previous_folder->getId() !== $new_artifact_folder_id) {
+        } elseif ($new_artifact_folder_id && (int) $previous_folder->getId() !== $new_artifact_folder_id) {
             $this->removeFolderFromFieldsData($fields_data, $previous_folder->getId());
             $this->addFolderInFieldsData($fields_data, $new_artifact_folder_id);
         }

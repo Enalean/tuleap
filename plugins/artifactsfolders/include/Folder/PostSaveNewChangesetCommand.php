@@ -47,8 +47,8 @@ class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactL
 
     public function __construct(Tracker_FormElement_Field $field, Codendi_Request $request, Dao $folder_dao)
     {
-        $this->field = $field;
-        $this->request = $request;
+        $this->field      = $field;
+        $this->request    = $request;
         $this->folder_dao = $folder_dao;
     }
 
@@ -71,7 +71,11 @@ class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactL
                 NatureInFolderPresenter::NATURE_IN_FOLDER
             );
         } else {
-            $this->folder_dao->removeInFolderLink($new_changeset->getId(), $this->field->getId(), $new_artifact_folder_id);
+            $this->folder_dao->removeInFolderLink(
+                $new_changeset->getId(),
+                $this->field->getId(),
+                $new_artifact_folder_id
+            );
         }
     }
 }
