@@ -56,19 +56,31 @@ class MappingFileOptimusPrimeTransformer {
                     $to_be_imported_user->getUserName(),
                     $to_be_imported_user->getOriginalLdapId()
                 );
-            } else if ($to_be_imported_user instanceof ToBeCreatedUser) {
+            } else if ($to_be_imported_user instanceof ToBeCreatedUser || $to_be_imported_user instanceof ToBeActivatedUser) {
                 $collection_for_import->add(
-                    $this->transformUser($collection_from_archive, $username, $default_action, $to_be_imported_user),
+                    $this->transformUserWithoutMap($collection_from_archive, $username, $default_action, $to_be_imported_user),
                     $to_be_imported_user->getOriginalUserId(),
                     $to_be_imported_user->getUserName(),
                     $to_be_imported_user->getOriginalLdapId()
                 );
             } else {
-                throw new InvalidUserTypeException("$username: with --automap, user type `". get_class($to_be_imported_user) ."` is not supported");
+                throw new InvalidUserTypeException("$username: with --automap, user type `". get_class($to_be_imported_user) ."` is not supported. User: ".$to_be_imported_user->getUserName());
             }
         }
 
         return $collection_for_import;
+    }
+
+    private function transformUserWithoutMap(
+        UsersToBeImportedCollection $collection_from_archive,
+        $username,
+        $action,
+        User $to_be_imported_user
+    ) {
+        if ($to_be_imported_user instanceof ToBeActivatedUser) {
+            $action = ToBeActivatedUser::ACTION;
+        }
+        return $this->transformUser($collection_from_archive, $username, $action, $to_be_imported_user);
     }
 
     private function buildCollectionForImport(UsersToBeImportedCollection $collection_from_archive, $csv_lines) {
@@ -113,7 +125,7 @@ class MappingFileOptimusPrimeTransformer {
         }
 
         if (! $to_be_imported_user->isActionAllowed($action)) {
-            throw new InvalidMappingFileException("Action $action is not allowed for user $username");
+            throw new InvalidMappingFileException("Action $action is not allowed for user $username (".  get_class($to_be_imported_user) .")");
         }
 
         if ($action === ToBeMappedUser::ACTION) {
