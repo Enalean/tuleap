@@ -21,11 +21,7 @@
 namespace Tuleap\BotMattermostAgileDashboard\BotAgileDashboard;
 
 use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\Exception\BotNotFoundException;
-use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
-use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboard;
-use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
 
 class BotAgileDashboardFactory
 {
@@ -68,5 +64,17 @@ class BotAgileDashboardFactory
         }
 
         return $bots_agiledashboard;
+    }
+
+    public function getBotsForSummary()
+    {
+        $dar  = $this->dao->searchBotsForSummary();
+        $bots = array();
+
+        foreach ($dar as $row) {
+            $bots[] = $this->bot_factory->getBotById($row['id']);
+        }
+
+        return $bots;
     }
 }

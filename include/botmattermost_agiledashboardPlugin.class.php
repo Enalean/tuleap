@@ -18,12 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\Controller;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
+use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
+use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
+use Tuleap\BotMattermost\SenderServices\EncoderMessage;
+use Tuleap\BotMattermost\SenderServices\Sender;
+
+
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -40,6 +47,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
             $this->addHook('javascript_file');
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN);
         }
+        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
     }
 
     public function getDependencies()
@@ -78,9 +86,25 @@ class botmattermost_agiledashboardPlugin extends Plugin
     {
         $render = $this->getRenderToString();
         $params['additional_panes']['notification'] = array (
-            'title'     => 'Notification',
-            'output'    => $render,
+            'title'  => 'Notification',
+            'output' => $render,
         );
+    }
+
+    public function proccess_system_check()
+    {
+        $stand_up_notification_sender = new StandUpNotificationSender(
+            new BotAgileDashboardFactory(
+                new BotAgileDashboardDao,
+                new BotFactory(new BotDao())
+            ),
+            new Sender(
+                new EncoderMessage(),
+                new StandUpNotificationBuilder(),
+                new ClientBotMattermost()
+            )
+        );
+        $stand_up_notification_sender->send();
     }
 
     private function getRenderToString()

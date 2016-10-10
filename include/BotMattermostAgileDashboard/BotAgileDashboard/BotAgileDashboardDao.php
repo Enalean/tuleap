@@ -21,9 +21,14 @@
 namespace Tuleap\BotMattermostAgileDashboard\BotAgileDashboard;
 
 use DataAccessObject;
+use DateInterval;
+use DateTime;
+use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
 
 class BotAgileDashboardDao extends DataAccessObject
 {
+
+    const SYSTEM_EVENT_INTERVAL = '00:30:00';
 
     public function searchTime($bot_id, $project_id)
     {
@@ -91,5 +96,19 @@ class BotAgileDashboardDao extends DataAccessObject
                 WHERE project_id = $project_id";
 
         return $this->update($sql);
+    }
+
+    public function searchBotsForSummary()
+    {
+        $interval = $this->da->quoteSmart(self::SYSTEM_EVENT_INTERVAL);
+
+        $sql = "SELECT *
+                FROM plugin_botmattermost_bot
+                INNER JOIN plugin_botmattermost_agiledashboard
+                ON plugin_botmattermost_bot.id = plugin_botmattermost_agiledashboard.bot_id
+                WHERE SUBTIME(CURRENT_TIME(), $interval) < send_time
+                  AND send_time <= CURRENT_TIME()";
+
+        return $this->retrieve($sql);
     }
 }
