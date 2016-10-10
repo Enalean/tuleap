@@ -45,6 +45,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     const ACTION_BUTTONS    = 'tracker_artifact_action_buttons';
 
+    /**
+     * Display the form to copy an artifact
+     *
+     * Parameters:
+     *  — artifact     => (in) Tracker_Artifact
+     *  — current_user => (in) PFUser
+     */
+    const DISPLAY_COPY_OF_ARTIFACT = 'display_copy_of_artifact';
+
     public $id;
     public $tracker_id;
     public $use_artifact_permissions;
@@ -822,6 +831,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'copy-artifact':
                 $art_link = $this->fetchDirectLinkToArtifact();
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_mode_info', array($art_link)), CODENDI_PURIFIER_LIGHT);
+                EventManager::instance()->processEvent(
+                    self::DISPLAY_COPY_OF_ARTIFACT,
+                    array(
+                        'artifact'     => $this,
+                        'current_user' => $current_user
+                    )
+                );
 
                 $renderer = new Tracker_Artifact_CopyRenderer(
                     $this->getEventManager(),

@@ -61,6 +61,7 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
+            $this->addHook(Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT);
         }
 
         return parent::getHooksAndCallbacks();
@@ -266,5 +267,29 @@ class ArtifactsFoldersPlugin extends Plugin
     private function getFolderForArtifactRetriever()
     {
         return new FolderForArtifactGoldenRetriever(Tracker_ArtifactFactory::instance(), $this->getDao());
+    }
+
+    /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
+    public function display_copy_of_artifact($params)
+    {
+        $folder = $this->getFolderForArtifactRetriever()->getFolder($params['artifact'], $params['current_user']);
+        if (! $folder) {
+            return;
+        }
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText(
+                'plugin_folders',
+                'no_copy',
+                array(
+                    $purifier->purify($folder->getUri()),
+                    $folder->getXRefAndTitle()
+                )
+            ),
+            CODENDI_PURIFIER_FULL
+        );
     }
 }
