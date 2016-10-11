@@ -1,3 +1,7 @@
+Version 8.18-7 (Tuesday, October 11th 2016)
+	== Bug Fix ==
+	* request #9568: Access to a tracker page will throw a fatal error if the cardwall is enabled but not the agiledashboard
+
 Version 8.18-6 (Monday, October 3rd)
 	== Bug Fix ==
 	* request #9506: HTML entity is displayed in the browse revision page
