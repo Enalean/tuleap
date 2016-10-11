@@ -52,8 +52,7 @@ class StandUpNotificationBuilder
     public function buildNotificationText(PFUser $user, $project_id)
     {
         $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $project_id);
-
-        $text = '';
+        $text           = '';
 
         foreach ($last_plannings as $last_planning) {
             $text .= $this->markdown_formatter->addLineOfText(
@@ -67,14 +66,13 @@ class StandUpNotificationBuilder
     private function buildPlanningNotificationText(Planning $last_planning, PFUser $user)
     {
         $milestones = $this->milestone_factory->getAllCurrentMilestones($user, $last_planning);
+
         if (! empty($milestones)) {
-            $text = $this->markdown_formatter->addTitleOfLevel(
-                $GLOBALS['Language']->getText(
-                    'plugin_botmattermost_agiledashboard', 'notification_builder_title_stand_up_summary'
-                ).
-                ' '.$last_planning->getPlanningTracker()->getName()
-                , 4
-            );
+            $title = $GLOBALS['Language']->getText(
+                'plugin_botmattermost_agiledashboard', 'notification_builder_title_stand_up_summary'
+            ).' '.$last_planning->getPlanningTracker()->getName();
+            $text = $this->markdown_formatter->addTitleOfLevel($title, 4);
+
             foreach ($milestones as $milestone) {
                 $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
                 $text .= $this->markdown_formatter->addSeparationLine();
@@ -93,7 +91,7 @@ class StandUpNotificationBuilder
 
     private function buildMilestoneNotificationText(Planning_Milestone $milestone, PFUser $user)
     {
-        $milestone_table  = $this->markdown_formatter->createSimpleTableText(
+        $milestone_table = $this->markdown_formatter->createSimpleTableText(
             $this->getMilestoneInformation($milestone, $user)
         );
 
@@ -108,15 +106,39 @@ class StandUpNotificationBuilder
 
     private function buildLinkedArtifactsNotificationTextByMilestone(Planning_Milestone $milestone, PFUser $user)
     {
-        $linked_artifacts = $milestone->getLinkedArtifacts($user);
+        $linked_artifacts = $this->getLinkedArtifactsWithRecentModification($milestone, $user);
         $text = '';
 
         if (! empty($linked_artifacts)) {
-            $artifacts_table = $this->buildLinkedArtifactTable($milestone->getLinkedArtifacts($user));
+            $artifacts_table = $this->buildLinkedArtifactTable($linked_artifacts);
             $text .= $this->markdown_formatter->addLineOfText($artifacts_table);
+        } else {
+            $text .= $this->markdown_formatter->addTitleOfLevel(
+                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_no_update').
+                ' '.$milestone->getArtifactTitle(),
+                5
+            );
         }
 
         return $text;
+    }
+
+    private function getLinkedArtifactsWithRecentModification(Planning_Milestone $milestone, PFUser $user)
+    {
+        $artifacts = array();
+
+        foreach ($milestone->getLinkedArtifacts($user) as $artifact) {
+            if ($this->checkModificationOnArtifact($artifact)) {
+                $artifacts[] = $artifact;
+            }
+        }
+
+        return $artifacts;
+    }
+
+    private function checkModificationOnArtifact(Tracker_Artifact $artifact)
+    {
+        return $artifact->getLastUpdateDate() > strtotime('-1 day', time());
     }
 
     private function getMilestoneInformation(Planning_Milestone $milestone, PFUser $user)
@@ -155,7 +177,7 @@ class StandUpNotificationBuilder
 
     private function getDateTime($date)
     {
-        return date('d M h:i', $date);
+        return date('d M H:i', $date);
     }
 
     private function buildArtifactLink(Tracker_Artifact $tracker_Artifact)

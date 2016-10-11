@@ -34,7 +34,7 @@ class MarkdownFormatterTest extends TuleapTestCase
         $this->markdown_formatter = new MarkdownFormatter();
     }
 
-    public function itVerifiesThatAddTitleOfCorrectLevel()
+    public function itVerifiesThatAddMarkdownTitleOfCorrectLevel()
     {
         $title = 'title';
 
@@ -91,7 +91,7 @@ class MarkdownFormatterTest extends TuleapTestCase
         );
     }
 
-    public function itVerifiesThatAddSeparationLine()
+    public function itVerifiesThatAddMarkdownSeparationLine()
     {
         $result = $this->markdown_formatter->addSeparationLine();
 
