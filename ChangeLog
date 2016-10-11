@@ -27,6 +27,7 @@ Version 8.20 (Not Released Yet)
 	* request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
 	* request #9538: Reflected XSS in the page allowing to change the password of a user
 	* request #9552: XML import --automap doesn't properly managed suspended users
+	* request #9466: Enforce that plugins are updated in the same time than Tuleap core
 
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
