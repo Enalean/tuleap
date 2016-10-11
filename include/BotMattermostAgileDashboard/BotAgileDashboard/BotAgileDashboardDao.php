@@ -21,9 +21,6 @@
 namespace Tuleap\BotMattermostAgileDashboard\BotAgileDashboard;
 
 use DataAccessObject;
-use DateInterval;
-use DateTime;
-use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
 
 class BotAgileDashboardDao extends DataAccessObject
 {
@@ -98,9 +95,9 @@ class BotAgileDashboardDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function searchBotsForSummary()
+    public function searchAgileDashboardBotsForSummary()
     {
-        $interval = $this->da->quoteSmart(self::SYSTEM_EVENT_INTERVAL);
+        $interval   = $this->da->quoteSmart(self::SYSTEM_EVENT_INTERVAL);
 
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot

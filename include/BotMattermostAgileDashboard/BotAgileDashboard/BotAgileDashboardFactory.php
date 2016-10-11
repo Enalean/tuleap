@@ -66,15 +66,19 @@ class BotAgileDashboardFactory
         return $bots_agiledashboard;
     }
 
-    public function getBotsForSummary()
+    public function getAgileDashboardBotsForSummary()
     {
-        $dar  = $this->dao->searchBotsForSummary();
-        $bots = array();
+        $dar  = $this->dao->searchAgileDashboardBotsForSummary();
+        $bots_agiledashboard = array();
 
         foreach ($dar as $row) {
-            $bots[] = $this->bot_factory->getBotById($row['id']);
+            $bots_agiledashboard[] = new BotAgileDashboard(
+                $this->bot_factory->getBotById($row['id']),
+                $row['project_id'],
+                $row['send_time']
+            );
         }
 
-        return $bots;
+        return $bots_agiledashboard;
     }
 }

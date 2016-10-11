@@ -25,12 +25,11 @@ use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\Controller;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
+use Tuleap\BotMattermostAgileDashboard\SenderServices\MarkdownFormatter;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
-
-
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -93,6 +92,14 @@ class botmattermost_agiledashboardPlugin extends Plugin
 
     public function proccess_system_check()
     {
+        $artifact_factory         = Tracker_ArtifactFactory::instance();
+        $milestone_status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao(),
+            $artifact_factory
+        );
+        $planning_factory = PlanningFactory::build();
+
         $stand_up_notification_sender = new StandUpNotificationSender(
             new BotAgileDashboardFactory(
                 new BotAgileDashboardDao,
@@ -100,22 +107,39 @@ class botmattermost_agiledashboardPlugin extends Plugin
             ),
             new Sender(
                 new EncoderMessage(),
-                new StandUpNotificationBuilder(),
                 new ClientBotMattermost()
-            )
+            ),
+            new StandUpNotificationBuilder(
+                new Planning_MilestoneFactory(
+                    $planning_factory,
+                    $artifact_factory,
+                    Tracker_FormElementFactory::instance(),
+                    TrackerFactory::instance(),
+                    $milestone_status_counter,
+                    new PlanningPermissionsManager(),
+                    new AgileDashboard_Milestone_MilestoneDao()
+                ),
+                $milestone_status_counter,
+                new MarkdownFormatter(),
+                $planning_factory
+            ),
+            ProjectManager::instance()
         );
+
         $stand_up_notification_sender->send();
     }
 
+
     private function getRenderToString()
     {
-        return $this->getController(HTTPRequest::instance())->render();
+        return $this->getController($this->getRequest())->render();
     }
 
     private function getController(HTTPRequest $request)
     {
         $bot_factory = new BotFactory(new BotDao());
         $project_id  = $request->getProject()->getID();
+
         return new Controller(
             $request,
             new CSRFSynchronizerToken(AGILEDASHBOARD_BASE_URL.'/?group_id='.$project_id.'&action=admin&pane=notification'),
@@ -127,9 +151,14 @@ class botmattermost_agiledashboardPlugin extends Plugin
         );
     }
 
+    private function getRequest()
+    {
+        return HTTPRequest::instance();
+    }
+
     public function process()
     {
-        $request = HTTPRequest::instance();
+        $request = $this->getRequest();
         if ($this->isAllowed($request->getProject()->getID())) {
             $this->getController($request)->save();
         }

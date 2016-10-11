@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
+use ProjectManager;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
@@ -28,20 +29,61 @@ class StandUpNotificationSender
 {
     private $bot_agiledashboard_factory;
     private $sender;
+    private $notification_builder;
+    private $project_manager;
 
-    public function __construct(BotAgileDashboardFactory $bot_agiledashboard_factory, Sender $sender)
-    {
+    public function __construct(
+        BotAgileDashboardFactory $bot_agiledashboard_factory,
+        Sender $sender,
+        StandUpNotificationBuilder $notification_builder,
+        ProjectManager $project_manager
+    ) {
         $this->bot_agiledashboard_factory = $bot_agiledashboard_factory;
         $this->sender                     = $sender;
+        $this->notification_builder       = $notification_builder;
+        $this->project_manager            = $project_manager;
     }
 
     public function send()
     {
         try {
-            $bots = $this->bot_agiledashboard_factory->getBotsForSummary();
-            $this->sender->pushNotifications($bots);
+            $agile_dashboard_bots = $this->bot_agiledashboard_factory->getAgileDashboardBotsForSummary();
+            $projects_ids         = $this->getProjectsIdsFromAgileDashboardBots($agile_dashboard_bots);
+
+            foreach ($projects_ids as $project_id) {
+                $bots   = $this->getBotsByProjectId($agile_dashboard_bots, $project_id);
+                $admins = $this->project_manager->getProject((int)$project_id)->getAdmins();
+                $text   = $this->notification_builder->buildNotificationText($admins[0], $project_id);
+
+                $this->sender->pushNotifications($bots, $text);
+            }
         } catch (BotNotFoundException $e) {
             // Nothing to do
         }
+    }
+
+    private function getProjectsIdsFromAgileDashboardBots(array $bots)
+    {
+        $projects_ids = array();
+        foreach ($bots as $bot) {
+            $project_id = $bot->getProjectId();
+            if (! in_array($project_id, $projects_ids)) {
+                $projects_ids[] = $project_id;
+            }
+        }
+
+        return $projects_ids;
+    }
+
+    private function getBotsByProjectId(array $agile_dashboard_bots, $project_id)
+    {
+        $bots = array();
+        foreach ($agile_dashboard_bots as $bot_agile_dashboard) {
+            if ($bot_agile_dashboard->getProjectId() === $project_id) {
+                $bots[] = $bot_agile_dashboard->getBot();
+            }
+        }
+
+        return $bots;
     }
 }

@@ -40,7 +40,7 @@ class BotAgileDashboard
 
     public function getBot()
     {
-        $this->bot;
+        return $this->bot;
     }
 
     private function isAssigned()
@@ -65,5 +65,10 @@ class BotAgileDashboard
     public function getSendTime()
     {
         return $this->send_time;
+    }
+
+    public function getProjectId()
+    {
+        return $this->project_id;
     }
 }
