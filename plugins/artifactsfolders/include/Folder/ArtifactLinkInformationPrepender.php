@@ -21,30 +21,26 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use Codendi_HTMLPurifier;
-use Project;
 use Tracker_Artifact;
-use Tracker_ArtifactFactory;
 use PFUser;
-use Tracker_Hierarchy_Dao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactLinkInformationPrepender
 {
     /**
-     * @var FolderForArtifactGoldenRetriever
+     * @var HierarchyOfFolderBuilder
      */
-    private $folder_retriever;
+    private $hierarchy_builder;
     /**
      * @var FolderHierarchicalRepresentationCollectionBuilder
      */
     private $builder;
 
     public function __construct(
-        FolderForArtifactGoldenRetriever $folder_retriever,
+        HierarchyOfFolderBuilder $hierarchy_builder,
         FolderHierarchicalRepresentationCollectionBuilder $builder
     ) {
-        $this->folder_retriever = $folder_retriever;
-        $this->builder          = $builder;
+        $this->hierarchy_builder = $hierarchy_builder;
+        $this->builder           = $builder;
     }
 
     public function prependArtifactLinkInformation(
@@ -57,14 +53,18 @@ class ArtifactLinkInformationPrepender
             return;
         }
 
-        $value  = false;
-        $folder = $this->folder_retriever->getFolder($artifact, $current_user);
+        $value            = false;
+        $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolderForArtifact($current_user, $artifact);
         if ($read_only) {
-            if ($folder) {
-                $value = $folder->fetchDirectLinkToArtifactWithTitle();
+            if ($folder_hierarchy) {
+                $value = $this->fetchLinkToFolder($folder_hierarchy);
             }
         } else {
-            $value = $this->fetchSelectBox($artifact, $current_user, $folder);
+            $current_folder = null;
+            if ($folder_hierarchy) {
+                $current_folder = end($folder_hierarchy);
+            }
+            $value = $this->fetchSelectBox($artifact, $current_user, $current_folder);
         }
 
         if (! $value) {
@@ -76,6 +76,22 @@ class ArtifactLinkInformationPrepender
         return '<p>' . $current_folder . ' ' . $value . '</p>';
     }
 
+    private function fetchLinkToFolder(array $folder_hierarchy)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $folders = array();
+        /** @var Tracker_Artifact $folder */
+        foreach ($folder_hierarchy as $folder) {
+            $link = '<a href="' . $purifier->purify($folder->getUri()) . '" class="direct-link-to-artifact">';
+            $link .= $purifier->purify($folder->getTitle());
+            $link .= '</a>';
+
+            $folders[] = $link;
+        }
+
+        return implode(' <i class="icon-angle-right"></i> ', $folders);
+    }
+
     private function fetchSelectBox(
         Tracker_Artifact $artifact,
         PFUser $current_user,
@@ -84,7 +100,11 @@ class ArtifactLinkInformationPrepender
         $project = $artifact->getTracker()->getProject();
 
         $options    = array();
-        $collection = $this->builder->buildFolderHierarchicalRepresentationCollection($artifact, $project, $current_user);
+        $collection = $this->builder->buildFolderHierarchicalRepresentationCollection(
+            $artifact,
+            $project,
+            $current_user
+        );
         $collection->collectOptions($options, $current_folder);
 
         if (count($options) === 0) {
