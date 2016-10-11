@@ -3,7 +3,6 @@ angular.module('kanban', [
     'ngSanitize',
     'angular-locker',
     'angularMoment',
-    'chart.js',
     'dragularModule',
     'gettext',
     'jwt',
@@ -19,4 +18,5 @@ angular.module('kanban', [
     'ui.tree',
     'user-preferences',
     'uuid-generator',
+    'nvd3'
 ]);

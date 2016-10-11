@@ -34,8 +34,8 @@ describe("ReportsModalController -", function() {
         kanban_id    = 2;
         kanban_label = "Italy Kanban";
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
-            id   : kanban_id,
-            label: kanban_label
+            id     : kanban_id,
+            label  : kanban_label
         });
         spyOn(DiagramRestService, "getCumulativeFlowDiagram").and.returnValue($q(angular.noop));
 
@@ -78,7 +78,6 @@ describe("ReportsModalController -", function() {
                     }
                 ]
             };
-
             DiagramRestService.getCumulativeFlowDiagram.and.returnValue($q.when(cumulative_flow_data));
 
             ReportsModalController.init();
@@ -97,19 +96,25 @@ describe("ReportsModalController -", function() {
             );
 
             expect(ReportsModalController.kanban_label).toEqual(kanban_label);
-            expect(ReportsModalController.chartjs_options).toBeDefined();
-            expect(ReportsModalController.chartjs_colors).toBeDefined();
-            expect(ReportsModalController.chartjs_labels).toEqual([
-                '2012-12-07',
-                '2012-09-02'
-            ]);
-            expect(ReportsModalController.chartjs_series).toEqual([
-                'Backlog',
-                'Review'
-            ]);
-            expect(ReportsModalController.chartjs_data).toEqual([
-                [4, 5],
-                [3, 9]
+            expect(ReportsModalController.options).toBeDefined();
+            expect(ReportsModalController.data).toEqual([
+                {
+                    id      : 'backlog',
+                    label   : 'Backlog',
+                    key     : 'Backlog',
+                    values  : [
+                        { start_date: '2012-12-07', kanban_items_count: 4 },
+                        { start_date: jasmine.any(String), kanban_items_count: 5 }
+                    ]
+                }, {
+                    id    : '431',
+                    label : 'Review',
+                    key   : 'Review',
+                    values: [
+                        { start_date: '2012-12-07', kanban_items_count: 3 },
+                        { start_date: jasmine.any(String), kanban_items_count: 9 }
+                    ]
+                }
             ]);
         });
     });
