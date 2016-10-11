@@ -21,35 +21,30 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use Codendi_HTMLPurifier;
+use Project;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use PFUser;
+use Tracker_Hierarchy_Dao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactLinkInformationPrepender
 {
     /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Dao
-     */
-    private $folder_dao;
-
-    /**
      * @var FolderForArtifactGoldenRetriever
      */
-    private $retriever;
+    private $folder_retriever;
+    /**
+     * @var FolderHierarchicalRepresentationCollectionBuilder
+     */
+    private $builder;
 
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        Dao $folder_dao,
-        FolderForArtifactGoldenRetriever $retriever
+        FolderForArtifactGoldenRetriever $folder_retriever,
+        FolderHierarchicalRepresentationCollectionBuilder $builder
     ) {
-        $this->artifact_factory = $artifact_factory;
-        $this->folder_dao       = $folder_dao;
-        $this->retriever        = $retriever;
+        $this->folder_retriever = $folder_retriever;
+        $this->builder          = $builder;
     }
 
     public function prependArtifactLinkInformation(
@@ -63,7 +58,7 @@ class ArtifactLinkInformationPrepender
         }
 
         $value  = false;
-        $folder = $this->retriever->getFolder($artifact, $current_user);
+        $folder = $this->folder_retriever->getFolder($artifact, $current_user);
         if ($read_only) {
             if ($folder) {
                 $value = $folder->fetchDirectLinkToArtifactWithTitle();
@@ -86,31 +81,19 @@ class ArtifactLinkInformationPrepender
         PFUser $current_user,
         Tracker_Artifact $current_folder = null
     ) {
-        $purify           = Codendi_HTMLPurifier::instance();
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $folder_dao       = new Dao();
-        $project          = $artifact->getTracker()->getProject();
+        $project = $artifact->getTracker()->getProject();
 
-        $folders = array();
-        foreach ($folder_dao->searchFoldersInProject($project->getId()) as $row) {
-            $folder = $artifact_factory->getInstanceFromRow($row);
-            if ($folder->userCanView($current_user)) {
-                $selected = '';
-                if ($current_folder && $current_folder->getId() === $folder->getId()) {
-                    $selected = 'selected';
-                }
-                $option = '<option value="' . $folder->getId() . '" ' . $selected . '>';
-                $option .= $purify->purify($folder->getXRef() . ' ' . $folder->getTitle());
-                $option .= '</option>';
+        $options    = array();
+        $collection = $this->builder->buildFolderHierarchicalRepresentationCollection($artifact, $project, $current_user);
+        $collection->collectOptions($options, $current_folder);
 
-                $folders[] = $option;
-            }
-        }
-
-        if (count($folders) === 0) {
+        if (count($options) === 0) {
             return;
         }
 
-        return '<select name="new-artifact-folder"><option value=""></option>' . implode('', $folders) . '</select>';
+        return '<select name="new-artifact-folder">
+            <option value="" class="not-anymore-in-folder">'
+            . $GLOBALS['Language']->getText('plugin_folders', 'no_folder') . '</option>'
+            . implode('', $options) . '</select>';
     }
 }
