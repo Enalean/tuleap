@@ -37,7 +37,7 @@ class MarkdownFormatter
         return $this->addLineOfText($level.$title);
     }
 
-    public function createTableText(array $infos)
+    public function createSimpleTableText(array $infos)
     {
         $table_header = '';
         $interline    = '';
@@ -58,5 +58,37 @@ class MarkdownFormatter
     public function addLineOfText($text)
     {
         return $text.PHP_EOL;
+    }
+
+    public function createTableText(array $table_header, array $table_body)
+    {
+        $table_text_header = '';
+        $interline    = '';
+        foreach ($table_header as $column_name) {
+            $table_text_header .= '| '.$column_name.' ';
+            $interline    .= '| :--';
+        }
+        $table = $this->addOneRowOfTable($table_text_header);
+        $table .= $this->addOneRowOfTable($interline);
+        foreach ($table_body as $row) {
+            $table_text_body   = '';
+            foreach($row as $column_value) {
+                $table_text_body .= '| '.$column_value.' ';
+            }
+            $table .= $this->addOneRowOfTable($table_text_body);
+        }
+
+        return $table;
+    }
+
+    private function addOneRowOfTable($new_row)
+    {
+        $end_of_line  = '|'.PHP_EOL;
+        return $new_row.$end_of_line;
+    }
+
+    public function addSeparationLine()
+    {
+        return $this->addLineOfText("***");
     }
 }

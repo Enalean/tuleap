@@ -46,14 +46,14 @@ class MarkdownFormatterTest extends TuleapTestCase
         $this->assertEqual($result, '### title'.PHP_EOL);
     }
 
-    public function itVerifiesThatCreateMarkdownTable()
+    public function itVerifiesThatCreateSimpleMarkdownTable()
     {
         $infos  = array(
             'info name 1' => 'info value 1',
             'info name 2' => 'info value 2',
             'info name 3' => 'info value 3'
         );
-        $result = $this->markdown_formatter->createTableText($infos);
+        $result = $this->markdown_formatter->createSimpleTableText($infos);
 
         $this->assertEqual(
             $result,
@@ -69,5 +69,32 @@ class MarkdownFormatterTest extends TuleapTestCase
         $result = $this->markdown_formatter->addLineOfText($text);
 
         $this->assertEqual($result, 'text'.PHP_EOL);
+    }
+
+    public function itVerifiesThatCreateMarkdownTable()
+    {
+        $table_header = array('column name 1', 'column name 2', 'column name 3');
+        $element1     = array('value 1 of element 1', 'value 2 of element 1', 'value 3 of element 1');
+        $element2     = array('value 1 of element 2', 'value 2 of element 2', 'value 3 of element 2');
+        $element3     = array('value 1 of element 3', 'value 2 of element 3', 'value 3 of element 3');
+        $elements     = array($element1, $element2, $element3);
+
+        $result = $this->markdown_formatter->createTableText($table_header, $elements);
+
+        $this->assertEqual(
+            $result,
+            '| column name 1 | column name 2 | column name 3 |'.PHP_EOL.
+            '| :--| :--| :--|'.PHP_EOL.
+            '| value 1 of element 1 | value 2 of element 1 | value 3 of element 1 |'.PHP_EOL.
+            '| value 1 of element 2 | value 2 of element 2 | value 3 of element 2 |'.PHP_EOL.
+            '| value 1 of element 3 | value 2 of element 3 | value 3 of element 3 |'.PHP_EOL
+        );
+    }
+
+    public function itVerifiesThatAddSeparationLine()
+    {
+        $result = $this->markdown_formatter->addSeparationLine();
+
+        $this->assertEqual($result, '***'.PHP_EOL);
     }
 }

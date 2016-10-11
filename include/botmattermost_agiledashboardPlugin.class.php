@@ -28,6 +28,7 @@ use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\MarkdownFormatter;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
+use Tuleap\BotMattermostAgileDashboard\SenderServices\MarkdownFormater;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 

@@ -27,6 +27,7 @@ use Planning;
 use Planning_MilestoneFactory;
 use Planning_Milestone;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Tracker_Artifact;
 
 
 class StandUpNotificationBuilder
@@ -75,9 +76,8 @@ class StandUpNotificationBuilder
                 , 4
             );
             foreach ($milestones as $milestone) {
-                $milestone = $this->milestone_factory->updateMilestoneContextualInfo(
-                    $user, $milestone
-                );
+                $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
+                $text .= $this->markdown_formatter->addSeparationLine();
                 $text .= $this->markdown_formatter->addLineOfText(
                     $this->buildMilestoneNotificationText($milestone, $user)
                 );
@@ -93,10 +93,38 @@ class StandUpNotificationBuilder
 
     private function buildMilestoneNotificationText(Planning_Milestone $milestone, PFUser $user)
     {
-        $status          = $this->milestone_status_counter->getStatus($user, $milestone->getArtifactId());
-        $milestone_infos = array(
+        $milestone_table  = $this->markdown_formatter->createSimpleTableText(
+            $this->getMilestoneInformation($milestone, $user)
+        );
+
+        $text = $this->markdown_formatter->addTitleOfLevel(
+            $milestone->getArtifactTitle().' '.$this->buildMilestoneDatesInfo($milestone), 4
+        );
+        $text .= $this->markdown_formatter->addLineOfText($milestone_table);
+        $text .= $this->buildLinkedArtifactsNotificationTextByMilestone($milestone, $user);
+
+        return $text;
+    }
+
+    private function buildLinkedArtifactsNotificationTextByMilestone(Planning_Milestone $milestone, PFUser $user)
+    {
+        $linked_artifacts = $milestone->getLinkedArtifacts($user);
+        $text = '';
+
+        if (! empty($linked_artifacts)) {
+            $artifacts_table = $this->buildLinkedArtifactTable($milestone->getLinkedArtifacts($user));
+            $text .= $this->markdown_formatter->addLineOfText($artifacts_table);
+        }
+
+        return $text;
+    }
+
+    private function getMilestoneInformation(Planning_Milestone $milestone, PFUser $user)
+    {
+        $status           = $this->milestone_status_counter->getStatus($user, $milestone->getArtifactId());
+        $milestone_infos  = array(
             $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id')
-            => $this->buildArtifactLink($milestone),
+            => $this->buildArtifactLink($milestone->getArtifact()),
             $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_open')
             => $status['open'],
             $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_closed')
@@ -104,24 +132,15 @@ class StandUpNotificationBuilder
             $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_days_remaining')
             => $this->getMilestoneDaysRemaining($milestone)
         );
+        $remaining_effort = $milestone->getRemainingEffort();
 
-        $table = $this->markdown_formatter->createTableText($milestone_infos);
-        $text  = $this->markdown_formatter->addTitleOfLevel(
-            $milestone->getArtifactTitle().' '.$this->buildMilestoneDatesInfo($milestone), 4
-        );
-        $text .= $this->markdown_formatter->addLineOfText($table);
+        if (isset($remaining_effort)) {
+            $milestone_infos[$GLOBALS['Language']->getText(
+                'plugin_botmattermost_agiledashboard', 'notification_builder_remaining_effort'
+            )] = $remaining_effort;
+        }
 
-        return $text;
-    }
-
-    private function getMilestoneStartDate(Planning_Milestone $milestone)
-    {
-        return date('d M', $milestone->getStartDate());
-    }
-
-    private function getMilestoneEndDate(Planning_Milestone $milestone)
-    {
-        return date('d M', $milestone->getEndDate());
+        return $milestone_infos;
     }
 
     private function getMilestoneDaysRemaining(Planning_Milestone $milestone)
@@ -129,16 +148,56 @@ class StandUpNotificationBuilder
         return max($milestone->getDaysUntilEnd(), 0);
     }
 
-    private function buildArtifactLink(Planning_Milestone $milestone)
+    private function getDate($date)
     {
-        $url_artifact = ForgeConfig::get('sys_https_host').$milestone->getArtifact()->getUri();
-        $link_name = 'Sprint #'.$milestone->getArtifactId();
+        return date('d M', $date);
+    }
+
+    private function getDateTime($date)
+    {
+        return date('d M h:i', $date);
+    }
+
+    private function buildArtifactLink(Tracker_Artifact $tracker_Artifact)
+    {
+        $url_artifact = ForgeConfig::get('sys_https_host').$tracker_Artifact->getUri();
+        $link_name    = $tracker_Artifact->getTracker()->getDescription().' #'.$tracker_Artifact->getId();
 
         return "[$link_name]($url_artifact)";
     }
 
     private function buildMilestoneDatesInfo(Planning_Milestone $milestone)
     {
-        return '_'.$this->getMilestoneStartDate($milestone).' - '.$this->getMilestoneEndDate($milestone).'_';
+        return '_'.$this->getDate($milestone->getStartDate()).' - '.$this->getDate($milestone->getEndDate()).'_';
+    }
+
+    private function buildLinkedArtifactTable(array $tracker_artifacts)
+    {
+        $table_header = array(
+            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id'),
+            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_title'),
+            $GLOBALS['Language']->getText(
+                'plugin_botmattermost_agiledashboard', 'notification_builder_artifact_status'
+            ),
+            $GLOBALS['Language']->getText(
+                'plugin_botmattermost_agiledashboard', 'notification_builder_artifact_last_modification'
+            )
+        );
+        $table_body   = array();
+        foreach ($tracker_artifacts as $tracker_artifact) {
+            $table_body[] = $this->getTrackerArtifactInfo($tracker_artifact);
+        }
+
+        return $this->markdown_formatter->createTableText($table_header, $table_body);
+    }
+
+    private function getTrackerArtifactInfo(Tracker_Artifact $tracker_artifact)
+    {
+        return array(
+            $this->buildArtifactLink($tracker_artifact),
+            $tracker_artifact->getTitle(),
+            $tracker_artifact->getStatus(),
+            $this->getDateTime($tracker_artifact->getLastUpdateDate()),
+        );
     }
 }
