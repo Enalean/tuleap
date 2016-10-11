@@ -203,8 +203,8 @@ class cardwallPlugin extends Plugin {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
-            $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
-            if ($agiledashboard_plugin->currentRequestIsForPlugin()) {
+            $agiledashboard_plugin = PluginManager::instance()->getAvailablePluginByName('agiledashboard');
+            if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
                 $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
                 echo $tracker_plugin->getMinifiedAssetHTML()."\n";
             }
