@@ -1,3 +1,6 @@
+Version 1.70 - Tuleap 8.20
+    * request #9568 Access to a tracker page will throw a fatal error if the cardwall is enabled but not the agiledashboard
+
 Version 1.69 - Tuleap 8.20
     * request #9437 Fatal error when updating manual value of of a computed field in AD card
 
