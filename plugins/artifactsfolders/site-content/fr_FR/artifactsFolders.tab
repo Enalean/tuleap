@@ -8,3 +8,4 @@ plugin_folders	tab_label	Dossier
 
 plugin_folders	empty_state	Il n'y a pas d'artéfact dans ce dossier.
 plugin_folders	current_folder	Actuellement dans le dossier :
+plugin_folders	no_copy	Le lien entre l'artéfact et le dossier <a href="$1">$2</a> ne sera pas copié.
