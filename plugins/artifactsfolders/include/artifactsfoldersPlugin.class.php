@@ -22,8 +22,8 @@ use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
 use Tuleap\ArtifactsFolders\Folder\ArtifactLinkInformationPrepender;
 use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
 use Tuleap\ArtifactsFolders\Folder\DataFromRequestAugmentor;
-use Tuleap\ArtifactsFolders\Folder\FolderForArtifactGoldenRetriever;
 use Tuleap\ArtifactsFolders\Folder\FolderHierarchicalRepresentationCollectionBuilder;
+use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
@@ -174,9 +174,17 @@ class ArtifactsFoldersPlugin extends Plugin
     private function getPresenterBuilder()
     {
         return new ArtifactPresenterBuilder(
+            $this->getHierarchyOfFolderBuilder(),
+            new NatureDao(),
+            Tracker_ArtifactFactory::instance()
+        );
+    }
+
+    private function getHierarchyOfFolderBuilder()
+    {
+        return new HierarchyOfFolderBuilder(
             new Dao(),
             $this->getNatureIsChildLinkRetriever(),
-            new NatureDao(),
             Tracker_ArtifactFactory::instance()
         );
     }
@@ -235,7 +243,7 @@ class ArtifactsFoldersPlugin extends Plugin
     public function prepend_artifactlink_information($params)
     {
         $prepender = new ArtifactLinkInformationPrepender(
-            $this->getFolderForArtifactRetriever(),
+            $this->getHierarchyOfFolderBuilder(),
             new FolderHierarchicalRepresentationCollectionBuilder(
                 Tracker_ArtifactFactory::instance(),
                 new Dao(),
@@ -265,24 +273,23 @@ class ArtifactsFoldersPlugin extends Plugin
         $augmentor = new DataFromRequestAugmentor(
             HTTPRequest::instance(),
             Tracker_ArtifactFactory::instance(),
-            $this->getFolderForArtifactRetriever()
+            $this->getHierarchyOfFolderBuilder()
         );
         $augmentor->augmentDataFromRequest($params['fields_data'][$params['field']->getId()]);
-    }
-
-    private function getFolderForArtifactRetriever()
-    {
-        return new FolderForArtifactGoldenRetriever(Tracker_ArtifactFactory::instance(), $this->getDao());
     }
 
     /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
     public function display_copy_of_artifact($params)
     {
-        $folder = $this->getFolderForArtifactRetriever()->getFolder($params['artifact'], $params['current_user']);
-        if (! $folder) {
+        $folder_hierarchy = $this->getHierarchyOfFolderBuilder()->getHierarchyOfFolderForArtifact(
+            $params['current_user'],
+            $params['artifact']
+        );
+        if (! $folder_hierarchy) {
             return;
         }
 
+        $folder   = end($folder_hierarchy);
         $purifier = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->addFeedback(

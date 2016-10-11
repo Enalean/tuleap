@@ -22,7 +22,6 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use Codendi_Request;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 
 class DataFromRequestAugmentor
@@ -31,23 +30,25 @@ class DataFromRequestAugmentor
      * @var Codendi_Request
      */
     private $request;
+
     /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
+
     /**
-     * @var FolderForArtifactGoldenRetriever
+     * @var HierarchyOfFolderBuilder
      */
-    private $retriever;
+    private $hierarchy_builder;
 
     public function __construct(
         Codendi_Request $request,
         Tracker_ArtifactFactory $artifact_factory,
-        FolderForArtifactGoldenRetriever $retriever
+        HierarchyOfFolderBuilder $hierarchy_builder
     ) {
-        $this->request          = $request;
-        $this->artifact_factory = $artifact_factory;
-        $this->retriever        = $retriever;
+        $this->request           = $request;
+        $this->artifact_factory  = $artifact_factory;
+        $this->hierarchy_builder = $hierarchy_builder;
     }
 
     public function augmentDataFromRequest(array &$fields_data)
@@ -78,7 +79,12 @@ class DataFromRequestAugmentor
             return null;
         }
 
-        return $this->retriever->getFolder($artifact, $this->request->getCurrentUser());
+        $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolderForArtifact(
+            $this->request->getCurrentUser(),
+            $artifact
+        );
+
+        return end($folder_hierarchy);
     }
 
     private function removeFolderFromFieldsData(array &$fields_data, $folder_id)
