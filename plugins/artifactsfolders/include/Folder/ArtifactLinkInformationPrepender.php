@@ -82,7 +82,9 @@ class ArtifactLinkInformationPrepender
         $folders = array();
         /** @var Tracker_Artifact $folder */
         foreach ($folder_hierarchy as $folder) {
-            $link = '<a href="' . $purifier->purify($folder->getUri()) . '" class="direct-link-to-artifact">';
+            $uri = $folder->getUri().'&view=artifactsfolders';
+
+            $link = '<a href="' . $purifier->purify($uri) . '" class="direct-link-to-artifact">';
             $link .= $purifier->purify($folder->getTitle());
             $link .= '</a>';
 
