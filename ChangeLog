@@ -29,6 +29,7 @@ Version 8.20 (Not Released Yet)
 	* request #9538: Reflected XSS in the page allowing to change the password of a user
 	* request #9552: XML import --automap doesn't properly managed suspended users
 	* request #9466: Enforce that plugins are updated in the same time than Tuleap core
+	* request #9574: SVN core cross ref does not work if the platform is accessible only in HTTPS
 
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
