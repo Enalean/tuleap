@@ -12,6 +12,7 @@ Version 8.20 (Not Released Yet)
 	* git: 4.269
 	* tracker_encryption: 1.2
 	* statistics: 0.66
+	* hudson: 1.35
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration

@@ -1,3 +1,6 @@
+Version 1.35 - Tuleap 8.20
+    * request #9567: Update Hudson/Jenkins plugins to mention Jenkins instead of Hudson
+
 Version 1.34 - Tuleap 8.19
     * story #9322: pass additional parameters to Hudson jobs
 
