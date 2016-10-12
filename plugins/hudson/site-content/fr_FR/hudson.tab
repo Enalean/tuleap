@@ -1,17 +1,17 @@
-plugin_hudson	descriptor_description	Intégration continue avec Hudson
+plugin_hudson	descriptor_description	Intégration continue avec Hudson/Jenkins
 plugin_hudson	descriptor_name	Intégration Continue
 
 plugin_hudson	title	Intégration Continue
 
 plugin_hudson	service_lbl_key	Intégration Continue
-plugin_hudson	service_desc_key	Intégration Continue avec Hudson
+plugin_hudson	service_desc_key	Intégration Continue avec Hudson/Jenkins
 
-plugin_hudson	reference_job_desc_key	Job Hudson
-plugin_hudson	reference_build_desc_key	Build Hudson
-plugin_hudson	reference_job_nature_key	Job Hudson
-plugin_hudson	reference_build_nature_key	Build Hudson
+plugin_hudson	reference_job_desc_key	Job Jenkins
+plugin_hudson	reference_build_desc_key	Build Jenkins
+plugin_hudson	reference_job_nature_key	Job Jenkins
+plugin_hudson	reference_build_nature_key	Build Jenkins
 
-plugin_hudson	no_jobs_linked	Aucun job Hudson associé à ce projet. Pour ajouter un job, cliquez sur le lien ci-dessous.
+plugin_hudson	no_jobs_linked	Aucun job Jenkins associé à ce projet. Pour ajouter un job, cliquez sur le lien ci-dessous.
 plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Dernier succès
 plugin_hudson	header_table_lastfailure	Dernier échec
@@ -28,7 +28,7 @@ plugin_hudson	show_build	Voir le build #$1 du job $2
 plugin_hudson	weather_report	Tendance :
 plugin_hudson	rss_feed	Flux RSS de tous les builds du job $1
 
-plugin_hudson	service_not_used	Le service Hudson n'est pas actif
+plugin_hudson	service_not_used	Le service d'intégration continue n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
 plugin_hudson	addjob_title	Soumettre
 plugin_hudson	addjob	Ajouter un job
@@ -48,22 +48,22 @@ plugin_hudson	form_job_with_token	avec le token (optionnel) :
 plugin_hudson	wrong_job_url	URL du job incorrecte : $1
 plugin_hudson	job_url_file_not_found	Fichier non trouvé à l'Url : $1
 plugin_hudson	job_url_file_error	Impossible de lire le fichier à l'Url : $1
-plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monJob ou http://monICserveur/hudson/job/myJob/buildWithParameters?param1=value1 pour les jobs avec parametres
+plugin_hudson	form_joburl_example	ex : http://monICserveur/jenkins/job/monJob ou http://monICserveur/jenkins/job/myJob/buildWithParameters?param1=value1 pour les jobs avec parametres
 plugin_hudson	form_jobname_help	Nom (sans espace) utilisé pour référencer ce job. Ex : job #$1
 plugin_hudson	form_addjob_button	Ajouter
 plugin_hudson	editjob_title	Modifier le job
 plugin_hudson	form_editjob_button	Modifier
-plugin_hudson	job_url_missing	Url du job Hudson manquante (ex: http://monserveurIC:8080/hudson/job/MonJob)
-plugin_hudson	job_id_missing	Identifiant du job Hudson manquant.
-plugin_hudson	add_job_error	Impossible d'ajouter le job Hudson
-plugin_hudson	job_added	Le job Hudson a été ajouté.
+plugin_hudson	job_url_missing	URL du job Jenkins manquante (ex: http://monserveurIC:8080/jenkins/job/MonJob)
+plugin_hudson	job_id_missing	Identifiant du job Jenkins manquant.
+plugin_hudson	add_job_error	Impossible d'ajouter le job Jenkins
+plugin_hudson	job_added	Le job Jenkins a été ajouté.
 plugin_hudson	edit_job	Editer ce job
-plugin_hudson	edit_job_error	Impossible de modifier le job Hudson
+plugin_hudson	edit_job_error	Impossible de modifier le job Jenkins
 plugin_hudson	edit_jobname_spacesreplaced	Les espaces sont interdits dans le nom du job. Ils ont été remplacés par un "_".
-plugin_hudson	job_updated	Le job Hudson a été modifié.
+plugin_hudson	job_updated	Le job Jenkins a été modifié.
 plugin_hudson	delete_job	Supprimer ce job de ce projet
-plugin_hudson	delete_job_error	Impossible de supprimer le job Hudson
-plugin_hudson	job_deleted	Le job Hudson a été supprimé.
+plugin_hudson	delete_job_error	Impossible de supprimer le job Jenkins
+plugin_hudson	job_deleted	Le job Jenkins a été supprimé.
 plugin_hudson	delete_job_confirmation	Etes-vous sûr de vouloir supprimer le job $1 du projet $2 ?
 plugin_hudson	back_to_jobs	Revenir à la liste des jobs
 
@@ -84,12 +84,12 @@ plugin_hudson	global_status_blue	Succès
 plugin_hudson	global_status_yellow	Un job ou plus instable
 plugin_hudson	global_status_red	Un job ou plus en échec ou en attente
 
-plugin_hudson	my_jobs	Mes jobs Hudson
+plugin_hudson	my_jobs	Mes jobs Jenkins
 plugin_hudson	monitored_jobs	Jobs suivis :
 plugin_hudson	monitored_job	Job suivi :
 plugin_hudson	use_global_status	Utiliser le status global :
-plugin_hudson	project_jobs	Jobs Hudson
-plugin_hudson	project_job_details	Job Hudson : $1
+plugin_hudson	project_jobs	Jobs Jenkins
+plugin_hudson	project_job_details	Job Jenkins : $1
 plugin_hudson	project_job_lastbuilds	Derniers builds $1
 plugin_hudson	project_job_testresults_widget_title	Résultats des tests $1 ($2 / $3)
 plugin_hudson	project_job_testresults_projectname	Resultats des tests $1
@@ -118,6 +118,6 @@ plugin_hudson	widget_description_jobsoverview	Affiche un aperçu de tous les job
 
 widget_categ_label	ci	Intégration Continue
 
-plugin_hudson	error_object_not_found	Erreur : Objet Hudson non trouvé.
+plugin_hudson	error_object_not_found	Erreur : Objet Jenkins non trouvé.
 
 plugin_hudson	job_count	Nombre de jobs jusqu'au $1
