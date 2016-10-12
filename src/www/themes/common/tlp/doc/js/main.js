@@ -18,14 +18,14 @@
  */
 
 (function colorSwitcher() {
-    var color_switchers = document.querySelectorAll('.color-switcher > li'),
+    var color_switchers = document.querySelectorAll('.color-switcher > a'),
         stylesheet      = document.getElementById('tlp-stylesheet');
 
     [].forEach.call(color_switchers, function(color_switcher) {
         color_switcher.addEventListener('click', function(event) {
             if (! this.classList.contains('active')) {
                 var color                 = this.classList[0].replace('switch-to-', '');
-                var active_color_switcher = document.querySelector('.color-switcher > li.active');
+                var active_color_switcher = document.querySelector('.color-switcher > a.active');
 
                 active_color_switcher.classList.remove('active');
 
@@ -64,7 +64,11 @@
     }
 
     function updateHexaColor(name) {
-        var element = document.querySelector('.doc-color-' + name)
+        var element = document.querySelector('.doc-color-' + name);
+        if (! element) {
+            return;
+        }
+
         var color = document.defaultView.getComputedStyle(element, null).getPropertyValue('background-color');
         if (color.search("rgb") !== -1) {
             color = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
@@ -82,36 +86,29 @@ window.toggleMargins = function (id) {
     document.getElementById(id).classList.toggle('example-hide-margins');
 };
 
-window.onscroll = function scrollspy() {
-    var sections        = document.querySelectorAll('.doc-section'),
-        sections_offset = {};
+var last_known_scroll_position = 0;
+var ticking = false;
 
-    [].forEach.call(sections, function(section) {
-        if (section.id) {
-            sections_offset[section.id] = section.offsetTop;
-        }
-    });
-
-    var scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
-
-    for (id in sections_offset) {
-        if (sections_offset[id] <= scrollPosition + 50) {
-            var sub_nav_item_active = document.querySelector('.sub-nav-item.active');
-            if (sub_nav_item_active) {
-                sub_nav_item_active.classList.remove('active');
-            }
-
-            var nav_item_active = document.querySelector('.nav-item.active');
-            if (nav_item_active) {
-                nav_item_active.classList.remove('active');
-            }
-
-            var nav_item_pointed = document.querySelector('.nav-item > a[href*=' + id + ']').parentNode;
-            nav_item_pointed.classList.add('active');
-
-            if (nav_item_pointed.classList.contains('sub-nav-item')) {
-                nav_item_pointed.closest('.nav-item:not(.sub-nav-item)').classList.add('active');
-            }
-        }
+function showAtTopLink(scroll_pos) {
+    var back_to_top = document.querySelector('#back-to-top');
+    if (! back_to_top) {
+        return;
     }
-};
+
+    if (scroll_pos > 600) {
+        back_to_top.style.display = 'flex';
+    } else {
+        back_to_top.style.display = 'none';
+    }
+}
+
+window.addEventListener('scroll', function(e) {
+    last_known_scroll_position = window.scrollY;
+    if (! ticking) {
+        window.requestAnimationFrame(function() {
+            showAtTopLink(last_known_scroll_position);
+            ticking = false;
+        });
+    }
+    ticking = true;
+});

@@ -1,0 +1,10 @@
+{
+  "label": "Structure & Navigation",
+  "children": [
+    "layout",
+    "panes",
+    "alerts",
+    "tabs",
+    "pagination"
+  ]
+}

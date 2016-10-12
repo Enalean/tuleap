@@ -87,13 +87,13 @@ $nav-margin: 30px;
         }
     }
 
-    .example-layout {
+    [id^=example-layout-] {
         > div {
             border: 1px solid $tlp-ui-border-normal;
         }
     }
 
-    .example-modal-static .tlp-modal {
+    #example-modals-structure .tlp-modal {
 
         > .tlp-modal-body {
             border-right-color: $tlp-ui-border-normal;
@@ -110,7 +110,6 @@ $nav-margin: 30px;
 
 body {
     min-height: 100vh;
-    padding: 0 30px 0 ($nav-width + $nav-margin * 2);
 
     &.orange {
         @import 'src/scss/variables-orange';

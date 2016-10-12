@@ -1,0 +1,10 @@
+{
+  "label": "Layout",
+  "children": [
+    "framed",
+    "vertically",
+    "complex",
+    "centered",
+    "centered-and-framed"
+  ]
+}

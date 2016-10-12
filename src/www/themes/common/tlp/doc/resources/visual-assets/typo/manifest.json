@@ -1,0 +1,9 @@
+{
+  "label": "Typography",
+  "children": [
+    "titles",
+    "titles-desc",
+    "paragraphs",
+    "lists"
+  ]
+}

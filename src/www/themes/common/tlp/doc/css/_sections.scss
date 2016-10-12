@@ -27,8 +27,15 @@ main {
 }
 
 .doc-section {
-    margin: 0 0 200px;
+    margin: 0 0 100px;
     border-radius: 3px;
+
+    &[id]::before {
+        display: block;
+        height: 100px; /* fixed header height*/
+        margin: -100px 0 0; /* negative fixed header height */
+        content: '';
+    }
 
     .doc-section {
         margin: 0 0 130px;

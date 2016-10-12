@@ -71,7 +71,7 @@
         }
     }
 
-    .example-modal-static {
+    .example-modals-structure {
         .tlp-modal {
             display: flex;
             position: relative;
@@ -95,7 +95,7 @@
         }
     }
 
-    .example-layout {
+    [id^=example-layout-] {
         > div {
             min-height: 300px;
 

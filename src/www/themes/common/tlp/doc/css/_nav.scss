@@ -23,34 +23,33 @@ $nav-item-color: #888888;
 
 .main-nav {
     position: fixed;
-    top: 40px;
-    left: $nav-margin;
+    top: 0;
+    width: 100%;
+    z-index: 100;
 
-    ul {
-        padding: 0;
-        line-height: 1;
-        list-style: none;
+    > .tlp-tab:first-child {
+        padding: 4px 30px 2px 0;
+
+        > #doc-title {
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: -6px;
+        }
+
+        > .fa-dot-circle-o {
+            margin: 0 0 0 16px;
+        }
     }
 }
 
-#doc-title {
-    width: 110px;
-    margin: 0 0 $nav-blocks-margin;
-    padding: 5px;
-    font-size: 40px;
-    font-weight: 600;
-    letter-spacing: -6px;
-    text-align: center;
+.doc-main {
+    margin-top: 90px;
 }
 
 .color-switcher {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 110px;
-    margin: 0 0 $nav-blocks-margin;
+    text-align: center;
 
-    > li {
+    > a {
         @keyframes bounceIn {
             0%   { transform: scale(1);   }
             40%  { transform: scale(1.6); }
@@ -66,7 +65,7 @@ $nav-item-color: #888888;
         flex: 0 0 auto;
         width: 16px;
         height: 16px;
-        margin: 10px;
+        margin: 10px auto;
         border-radius: 50%;
         cursor: pointer;
 
@@ -101,37 +100,25 @@ $nav-item-color: #888888;
     }
 }
 
-.nav-item {
-    margin: 10px 0 0;
-    font-size: 13px;
-
-    &:first-child {
-        margin: 0;
-    }
-
-    &.separator {
-        height: 10px;
-        margin: 0;
-    }
-
-    &.active .sub-nav {
-        display: block;
-    }
-
-    a {
-        display: block;
-        padding: 5px;
-        border-left: 3px solid transparent;
-        color: $nav-item-color;
-        text-decoration: none;
-    }
-}
-
-.sub-nav {
+#back-to-top {
     display: none;
-    padding: 0 0 0 10px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    transition: opacity .25s ease-in-out;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .1);
+    color: #ffffff;
+    font-size: 50px;
+    text-decoration: none;
+    opacity: .2;
+    z-index: 100;
 
-    .nav-item {
-        margin: 5px 0 0;
+    &:hover {
+        opacity: 1;
     }
 }

@@ -1,0 +1,12 @@
+{
+  "label": "Buttons",
+  "children": [
+    "types",
+    "tags",
+    "disabled",
+    "sizes",
+    "icon",
+    "outline",
+    "bar"
+  ]
+}
