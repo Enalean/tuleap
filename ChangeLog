@@ -1,3 +1,7 @@
+Version 8.18-8 (Wednesday, October 12th 2016)
+	== Bug Fix ==
+	* request #9483: Header actions tooltip does not work on subfolder
+
 Version 8.18-7 (Tuesday, October 11th 2016)
 	== Bug Fix ==
 	* request #9568: Access to a tracker page will throw a fatal error if the cardwall is enabled but not the agiledashboard
