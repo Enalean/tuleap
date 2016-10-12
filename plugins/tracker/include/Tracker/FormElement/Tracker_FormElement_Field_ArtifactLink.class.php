@@ -41,6 +41,37 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     const NO_NATURE               = '';
 
     /**
+     * Display some information at the top of the artifact link field value
+     *
+     * Parameters:
+     *   'html'                   => output string html
+     *   'artifact'               => input Tracker_Artifact
+     *   'current_user'           => input PFUser
+     *   'read_only'              => input boolean
+     *   'reverse_artifact_links' => input boolean
+     */
+    const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
+
+    /**
+     * Allow to add command to the queue that is processed after a changeset is created.
+     * Add PostSaveNewChangesetCommand objects to the queue.
+     *
+     * Parameters:
+     *    'queue' => input/output Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
+     *    'field' => input Tracker_FormElement_Field
+     */
+    const GET_POST_SAVE_NEW_CHANGESET_QUEUE = 'get_post_save_new_changeset_queue';
+
+    /**
+     * Called just after augmentDataFromRequest has been called.
+     *
+     * Parameters:
+     *    'fields_data' => input/output array
+     *    'field'       => input Tracker_FormElement_Field
+     */
+    const AFTER_AUGMENT_DATA_FROM_REQUEST = 'after_augment_data_from_request';
+
+    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
@@ -221,6 +252,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if (array_key_exists('links', $value) && is_array($value['links'])){
             $link_ids = array();
             foreach ($value['links'] as $link) {
+
                 if (array_key_exists('id', $link)) {
                     $link_ids[] = $link['id'];
                 }
@@ -496,6 +528,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '<div class="artifact-link-value">';
         }
 
+        EventManager::instance()->processEvent(
+            self::PREPEND_ARTIFACTLINK_INFORMATION,
+            array(
+                'html'                   => &$html,
+                'artifact'               => $artifact,
+                'current_user'           => $current_user,
+                'read_only'              => $read_only,
+                'reverse_artifact_links' => $reverse_artifact_links
+            )
+        );
+
         $html .= '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
 
         $html_name_new = '';
@@ -554,7 +597,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $ids = array();
             // build an array of artifact_id / last_changeset_id for fetch renderer method
             foreach ($artifact_links as $artifact_link) {
-                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
+                if (
+                    $artifact_link->getTracker()->isActive()
+                    && $artifact_link->userCanView($current_user)
+                    && ! $this->hideArtifact($artifact_link)
+                ) {
                     if (!isset($ids[$artifact_link->getTrackerId()])) {
                         $ids[$artifact_link->getTrackerId()] = array(
                         'id'                => '',
@@ -653,10 +700,21 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $html;
     }
 
+    private function hideArtifact(Tracker_ArtifactLinkInfo $artifactlink_info)
+    {
+        return $artifactlink_info->shouldLinkBeHidden(
+            $artifactlink_info->getNature()
+         );
+    }
+
     private function fetchNatureTables(array $artifact_links, $is_reverse_artifact_links, PFUser $current_user) {
         $by_nature = array();
         foreach ($artifact_links as $artifact_link) {
-            if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
+            if (
+                $artifact_link->getTracker()->isActive()
+                && $artifact_link->userCanView($current_user)
+                && ! $this->hideArtifact($artifact_link)
+            ) {
                 $nature = $artifact_link->getNature();
                 if(!isset($by_nature[$nature])) {
                     $by_nature[$nature] = array();
@@ -1507,10 +1565,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         Tracker_Artifact_Changeset $new_changeset,
         Tracker_Artifact_Changeset $previous_changeset = null
     ) {
+        $queue = $this->getPostNewChangesetQueue();
+        $queue->execute($artifact, $submitter, $new_changeset, $previous_changeset);
+    }
+
+    private function getPostNewChangesetQueue()
+    {
         $queue = new Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue();
         $queue->add($this->getUpdateLinkingDirectionCommand());
         $queue->add($this->getProcessChildrenTriggersCommand());
-        $queue->execute($artifact, $submitter, $new_changeset, $previous_changeset);
+
+        EventManager::instance()->processEvent(
+            self::GET_POST_SAVE_NEW_CHANGESET_QUEUE,
+            array(
+                'field' => $this,
+                'queue' => $queue
+            )
+        );
+
+        return $queue;
     }
 
     /**
@@ -1710,19 +1783,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this->addNewValuesInNaturesArray($fields_data);
         }
 
-        if (empty($fields_data[$this->getId()]['parent'])) {
-            return;
-        }
-
-        $parent = intval($fields_data[$this->getId()]['parent']);
-        if ($parent > 0) {
-            if (isset($fields_data[$this->getId()]['new_values'])) {
-                $new_values   = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+        if (! empty($fields_data[$this->getId()]['parent'])) {
+            $parent = intval($fields_data[$this->getId()]['parent']);
+            if ($parent > 0) {
+                if (isset($fields_data[$this->getId()]['new_values'])) {
+                    $new_values = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+                }
+                $new_values[]                              = $parent;
+                $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
             }
-            $new_values[] = $parent;
-            $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
         }
 
+        EventManager::instance()->processEvent(
+            self::AFTER_AUGMENT_DATA_FROM_REQUEST,
+            array(
+                'fields_data' => &$fields_data,
+                'field'       => $this
+            )
+        );
     }
 
     private function addNewValuesInNaturesArray(&$fields_data) {

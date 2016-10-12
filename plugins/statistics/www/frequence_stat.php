@@ -200,7 +200,7 @@ if (isset($advsrch) && $advsrch == 1) {
     print '</select>';
 
 
-    print '(or use <a id="id_link_simple" "href="frequence_stat.php?advsrch=1" >Advanced Search</a>)';
+    print '(or use <a id="id_link_simple" href="frequence_stat.php?advsrch=1" >Advanced Search</a>)';
 
     print '<input type="hidden" name="advsrch" value="0" id="id_simple">';
 

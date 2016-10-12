@@ -109,3 +109,5 @@ plugin_ldap	ldap_sync_mail_notification_subject	[Synchronisation LDAP quotidienn
 plugin_ldap	ldap_sync_mail_notification_body	Chers administrateurs de projet,<br/> l'utilisateur $1 <$2> a été suspendu aprés la synchronisation LDAP quotidienne.<br/>Veuillez nettoyer les données de votre projet ($3) qui font référence à cet utilisateur (telque les assignements d'artefacts, les groupes d'utilisateurs,etc.).<br> Ce nettoyage sera fait automatiquement arpès $4 jours; l'utilisateur concerné sera supprimé de touts les projets et son statut sera modifié de Suspendu à Détruit.
 plugin_ldap	ldap_sync_reminder_mail_notification_subject	[Rappel][Synchronisation LDAP] L'utilisateur $1 sera détruit demain
 plugin_ldap	ldap_sync_reminder_mail_notification_body	Chers administrateurs de projet,<br/>L'utilisateur $1 <$2> sera automatiquement supprimé de votre projet ($3) demain. Son statut sera modifié de Suspendu à Détruit.<br/>Veuillez nettoyer les données de votre projet qui font référence à cet utilisateur.
+
+project_admin_utils	project_admins_daily_synchronization_user_not_removed	Synchronisation journalière des membres du projet : administrateur non retiré

@@ -24,6 +24,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\History\GitPhpAccessLogger;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -78,7 +79,8 @@ class GitViews extends PluginViews {
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
-        FineGrainedRepresentationBuilder $fine_grained_builder
+        FineGrainedRepresentationBuilder $fine_grained_builder,
+        GitPhpAccessLogger $access_loger
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int)$this->request->get('group_id');
@@ -93,6 +95,7 @@ class GitViews extends PluginViews {
         $this->fine_grained_retriever                  = $fine_grained_retriever;
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_builder                    = $fine_grained_builder;
+        $this->access_loger                            = $access_loger;
     }
 
     public function header() {
@@ -211,7 +214,8 @@ class GitViews extends PluginViews {
             $params['driver_factory'],
             $params['gerrit_usermanager'],
             $params['gerrit_servers'],
-            $this->mirror_data_mapper
+            $this->mirror_data_mapper,
+            $this->access_loger
         );
         $index_view->display();
     }

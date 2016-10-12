@@ -81,9 +81,38 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
 
         stub($this->nature_dao)->getNatureByShortname()->returnsDar(array());
         stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
+        stub($this->artifact_factory)->getArtifactById()->returns($this->artifact);
 
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         $expected_res =  array("new_values" => '2,1', 'removed_values' => array(), 'natures' => array('1' => '', '2' => ''));
+        $this->assertEqual($expected_res, $res);
+    }
+
+    public function itShouldImportSystemNatures() {
+        $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $mapping->add(100, 1);
+        $mapping->add(101, 2);
+        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+            $mapping,
+            $this->logger,
+            $this->artifact_factory,
+            $this->nature_dao,
+            $this->nature_creator
+        );
+
+        $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
+                  <field_change field_name="artlink" type="art_link">
+                    <value nature="_is_child">101</value>
+                    <value nature="_in_folder">100</value>
+                  </field_change>');
+
+        stub($this->nature_dao)->getNatureByShortname()->returnsDar(array());
+        stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
+        stub($this->artifact_factory)->getArtifactById()->returns($this->artifact);
+
+        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $expected_res =  array("new_values" => '2,1', 'removed_values' => array(), 'natures' => array('1' => '_in_folder', '2' => '_is_child'));
+
         $this->assertEqual($expected_res, $res);
     }
 
@@ -109,6 +138,7 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
 
         stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
         stub($this->nature_dao)->getNatureByShortname()->returnsDar(array('titi'));
+        stub($this->artifact_factory)->getArtifactById()->returns($this->artifact);
 
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         $expected_res =  array("new_values" => '2,1,3', 'removed_values' => array(), 'natures' => array('1' => 'titi', '2' => 'toto', '3' => ''));
@@ -131,6 +161,7 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
 
         stub($this->nature_dao)->getNatureByShortname()->returnsDar(array());
         stub($this->artlink_strategy)->getLastChangeset($xml_change)->returns(null);
+        stub($this->artifact_factory)->getArtifactById()->returns($this->artifact);
 
         $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         expect($this->logger)->error()->count(1);
@@ -159,6 +190,7 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         $changeset = mock('Tracker_Artifact_Changeset');
         stub($changeset)->getValues()->returns(array($changeset_value));
         stub($this->artifact)->getLastChangeset()->returns($changeset);
+        stub($this->artifact_factory)->getArtifactById()->returns($this->artifact);
 
         stub($this->nature_dao)->getNatureByShortname()->returnsDar(array('toto'));
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);

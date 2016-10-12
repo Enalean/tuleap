@@ -14,6 +14,10 @@
         padding: 20px;
         color: #999999;
     }
+
+    .icon-angle-right:first-child {
+        display: none;
+    }
 }
 
 .artifacts-folders-rollup {
@@ -32,4 +36,8 @@
     &.icon-caret-down {
         padding: 0 6px 0 2px;
     }
+}
+
+.not-anymore-in-folder {
+    font-style: italic;
 }

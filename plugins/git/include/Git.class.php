@@ -23,6 +23,8 @@
 require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
@@ -39,6 +41,7 @@ use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\Git\History\GitPhpAccessLogger;
 
 /**
  * Git
@@ -55,6 +58,8 @@ class Git extends PluginController {
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
+    const READ_PERM  = 'R';
+
     const DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
     const DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
     const DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS';
@@ -68,6 +73,11 @@ class Git extends PluginController {
     const REFERENCE_NATURE  = 'git_commit';
 
     const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
+
+    /**
+     * @var VersionDetector
+     */
+    private $detector;
 
     /**
      * Lists all git-related permission types.
@@ -272,7 +282,9 @@ class Git extends PluginController {
         PermissionChangesDetector $permission_changes_detector,
         DefaultPermissionsUpdater $default_permission_updater,
         ProjectHistoryDao $history_dao,
-        DescriptionUpdater $description_updater
+        DescriptionUpdater $description_updater,
+        GitPhpAccessLogger $access_loger,
+        VersionDetector $detector
     ) {
         parent::__construct($user_manager, $request);
 
@@ -297,6 +309,8 @@ class Git extends PluginController {
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
         $this->webhook_dao                = $webhook_dao;
         $this->ci_token_manager           = $ci_token_manager;
+        $this->access_loger               = $access_loger;
+        $this->detector                   = $detector;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -359,7 +373,8 @@ class Git extends PluginController {
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
             $this->default_fine_grained_permission_factory,
-            $this->fine_grained_builder
+            $this->fine_grained_builder,
+            $this->access_loger
         );
     }
 
@@ -389,7 +404,12 @@ class Git extends PluginController {
             new URLVerification(),
             $logger,
             $this->gerrit_server_factory,
-            new ReplicationHTTPUserAuthenticator($password_handler, $this->gerrit_server_factory)
+            new ReplicationHTTPUserAuthenticator(
+                $password_handler,
+                $this->gerrit_server_factory,
+                new HttpUserValidator()
+            ),
+            $this->detector
         );
 
         $http_wrapper = new Git_HTTP_Wrapper($logger);

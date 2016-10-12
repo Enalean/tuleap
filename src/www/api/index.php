@@ -27,6 +27,7 @@ use Tuleap\REST\GateKeeper;
 use Luracast\Restler\Restler;
 use Luracast\Restler\Explorer;
 use Luracast\Restler\Defaults;
+use Luracast\Restler\Format\JsonFormat;
 
 try {
     $gate_keeper = new GateKeeper();
@@ -52,6 +53,9 @@ Explorer::$useFormatAsExtension = false;
 Explorer::$hideProtected = false;
 // Use /api/v1/projects uri
 Defaults::$useUrlBasedVersioning = true;
+
+// Do not unescape unicode or it will break the api (see request #9162)
+JsonFormat::$unEscapedUnicode = false;
 
 if (ForgeConfig::get('DEBUG_MODE')) {
     $restler = new Restler(false, true);

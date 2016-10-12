@@ -1,3 +1,9 @@
+Version 0.66 - Tuleap 8.20
+    * Export data in Service usage
+
+Version 0.65 - Tuleap 8.20
+    * story #9436: Display git read access in frequency graph
+
 Version 0.64 - Tuleap 8.19
     * request #9407: HTTPS is not properly detected when behind a reverse proxy
 

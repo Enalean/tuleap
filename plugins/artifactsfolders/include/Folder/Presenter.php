@@ -20,9 +20,6 @@
 
 namespace Tuleap\ArtifactsFolders\Folder;
 
-use DateTime;
-use Tracker_Artifact_PaginatedArtifacts;
-
 class Presenter
 {
     public $empty_state;

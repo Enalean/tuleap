@@ -2,18 +2,33 @@
     <button type="button" class="close" ng-click="reports_modal.cancel()">
         <i class="icon-remove"></i>
     </button>
-    <h2 translate>My Kanban reports</h2>
+    <h2 translate>{{ reports_modal.kanban_label }} reports</h2>
 </div>
+
 <div class="modal-body">
-    <h3>
-        <i class="icon-cogs"></i>
-        <span translate>This view is under construction</span>
-    </h3>
-    <canvas
-        chart-line
-        chart-data="reports_modal.chartjs_data"
-        chart-series="reports_modal.chartjs_series"
-        chart-labels="reports_modal.chartjs_labels"
-        chart-options="reports_modal.chartjs_options"
-    ></canvas>
+    <h3 class="nvd3-title" translate>Cumulative flow chart</h3>
+    <div ng-if="reports_modal.loading" class="loading"></div>
+    <form class="params">
+        <label for="params-select">{{ 'Timeframe:' | translate }}
+            <select
+                id="params-select"
+                ng-model="reports_modal.key_last_data"
+                ng-change="reports_modal.loadData()"
+            >
+                <option value="last_seven_days" selected="selected" translate>Last 7 days</option>
+                <option value="last_month" translate>Last month</option>
+                <option value="last_three_months" translate>Last 3 months</option>
+                <option value="last_six_months" translate>Last 6 months</option>
+                <option value="last_year" translate>Last year</option>
+            </select>
+        </label>
+    </form>
+    <div class="chart">
+        <nvd3
+            ng-if="! reports_modal.loading"
+            options="reports_modal.options"
+            data="reports_modal.data"
+            on-ready="reports_modal.onReady"
+        ></nvd3>
+    </div>
 </div>

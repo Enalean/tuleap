@@ -1,18 +1,18 @@
 Version 8.20 (Not Released Yet)
-	== Enhancement ==
-	* story #9439: search for project name with REST
-
 	== Plugins ==
-	* cardwall: 1.69
-	* tracker: 5.1016
-	* svn: 0.95
+	* cardwall: 1.70
+	* tracker: 5.1026
+	* svn: 0.98
 	* artifactfolders: 0.5
 	* frs: 0.21
-	* agiledashboard: 1.421
+	* agiledashboard: 1.429
 	* docman: 2.26.121
-	* artifactsfolders: 0.13
-	* ldap: 3.111
-	* git: 4.258
+	* artifactsfolders: 0.32
+	* ldap: 3.114
+	* git: 4.269
+	* tracker_encryption: 1.2
+	* statistics: 0.66
+	* hudson: 1.35
 
 	== Security ==
 	* request #9501: Reflected XSS in the project list page in the site administration
@@ -20,18 +20,32 @@ Version 8.20 (Not Released Yet)
 	* request #9500: Reflected XSS in the Subversion revisions browsing
 	* request #9512: No access control of administration pages for french wiki
 	* request #9497: Remove legacy password storage
+	* request #9550: FRS release form can be submitted if user is not granted
 
 	== Bug fix ==
 	* request #9489: Wiki administration is not accessible to project administrator if they do not have explicit wiki admin rights
 	* request #9490: Wiki does not detect properly HTTPS when behind a reverse proxy
 	* request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
+	* request #9538: Reflected XSS in the page allowing to change the password of a user
+	* request #9552: XML import --automap doesn't properly managed suspended users
+	* request #9466: Enforce that plugins are updated in the same time than Tuleap core
+	* request #9574: SVN core cross ref does not work if the platform is accessible only in HTTPS
 
 	== Clean Up ==
 	* request #9492: Disable surveys service by default
 	* request #9517: Plugin FRS package is unnecessary big
+	* request #9495, request #9496 and request #9493: remove doaprdf, admssw and foafprofiles plugins
 
 	== Enhancement ==
+	* story #9439: search for project name with REST
 	* request #9010: Import/Export of artifactlinks
+	* request #9466: Enforce that plugins can only be used with the Tuleap core they have been designed for
+
+	== Api ==
+	* REST API: 1.18
+
+	== Themes ==
+	* FlamingParrot: 1.152
 
 Version 8.19 (Thursday, September 15th 2016)
 	== Enhancement ==

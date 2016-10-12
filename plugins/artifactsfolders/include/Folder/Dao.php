@@ -21,6 +21,7 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use DataAccessObject;
+use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 
 class Dao extends DataAccessObject
 {
@@ -35,5 +36,98 @@ class Dao extends DataAccessObject
         $result = $this->da->query($sql);
 
         return $result->rowCount() > 0;
+    }
+
+    public function isTrackerConfiguredToContainFolders($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT NULL FROM plugin_artifactsfolders_tracker_usage WHERE tracker_id = $tracker_id";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
+    public function create($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "INSERT INTO plugin_artifactsfolders_tracker_usage VALUES ($tracker_id)";
+
+        return $this->update($sql);
+    }
+
+    public function searchFoldersTheArtifactBelongsTo($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $in_folder   = $this->da->quoteSmart(NatureInFolderPresenter::NATURE_IN_FOLDER);
+
+        $sql = "SELECT a.id AS artifact_id, folder.*
+                FROM tracker_artifact AS a
+                    INNER JOIN tracker_changeset AS c ON (a.last_changeset_id = c.id AND a.id = $artifact_id)
+                    INNER JOIN tracker_changeset_value AS cv ON (cv.changeset_id = c.id)
+                    INNER JOIN tracker_changeset_value_artifactlink AS al ON (
+                        al.changeset_value_id = cv.id
+                        AND al.nature = $in_folder
+                    )
+                    INNER JOIN tracker_artifact AS folder ON (folder.id = al.artifact_id)
+                    INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker ON (
+                        folder.tracker_id = folder_tracker.tracker_id
+                    )
+                ";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchFoldersInProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT A.*
+                FROM tracker_artifact AS A
+                  INNER JOIN tracker AS T ON (T.id = A.tracker_id AND T.group_id = $project_id)
+                  INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker USING (tracker_id)";
+
+        return $this->retrieve($sql);
+    }
+
+    public function addInFolderNature($changeset_id, $field_id, $artifact_folder_id, $nature)
+    {
+        $changeset_id       = $this->da->escapeInt($changeset_id);
+        $field_id           = $this->da->escapeInt($field_id);
+        $artifact_folder_id = $this->da->escapeInt($artifact_folder_id);
+        $nature             = $this->da->quoteSmart($nature);
+
+        $sql = "INSERT INTO tracker_changeset_value_artifactlink
+                SELECT cv.id, $artifact_folder_id, item_name, group_id, $nature
+                FROM tracker_artifact AS a
+                    INNER JOIN tracker AS t ON (
+                        t.id = a.tracker_id
+                        AND a.id = $artifact_folder_id
+                    )
+                    INNER JOIN tracker_changeset_value AS cv ON (
+                        cv.field_id = $field_id
+                        AND cv.changeset_id = $changeset_id
+                    )
+                ON DUPLICATE KEY UPDATE nature = $nature";
+
+        return $this->update($sql);
+    }
+
+    public function removeInFolderLink($changeset_id, $field_id, $artifact_folder_id)
+    {
+        $changeset_id       = $this->da->escapeInt($changeset_id);
+        $field_id           = $this->da->escapeInt($field_id);
+        $artifact_folder_id = $this->da->escapeInt($artifact_folder_id);
+
+        $sql = "DELETE cval.*
+                FROM tracker_changeset_value_artifactlink AS cval
+                    INNER JOIN tracker_changeset_value AS cv ON (
+                        cval.changeset_value_id = cv.id
+                        AND cv.field_id = $field_id
+                        AND cv.changeset_id = $changeset_id
+                    )
+                WHERE cval.artifact_id = $artifact_folder_id";
+
+        return $this->update($sql);
     }
 }

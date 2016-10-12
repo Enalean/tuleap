@@ -29,6 +29,7 @@ CREATE TABLE plugin_ldap_project_group (
     group_id int(11) NOT NULL default 0,
     ldap_group_dn VARCHAR(255) NOT NULL default 0,
     synchro_policy VARCHAR(255) NOT NULL default 'never',
+    bind_option varchar(255) NOT NULL default 'bind',
     PRIMARY KEY  (group_id, ldap_group_dn)
 );
 DROP TABLE IF EXISTS plugin_ldap_suspended_user;

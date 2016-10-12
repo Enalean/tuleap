@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Artifact;
+use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;

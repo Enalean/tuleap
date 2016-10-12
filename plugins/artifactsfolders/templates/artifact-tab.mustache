@@ -28,16 +28,22 @@
                 <td>{{ title }}</td>
                 <td>{{ status }}</td>
                 <td>{{ last_modified_date }}</td>
-                <td>{{ submitted_by_user }}</td>
                 <td>
-                    {{^ assignees }}
-                        –
-                    {{/ assignees }}
+                    {{# submitter }}
+                        <a href="{{ url }}">{{ display_name }}</a>
+                    {{/submitter}}
+                </td>
+                <td>
                     {{# assignees }}
-                        {{ . }}
+                        <a href="{{ url }}">{{ display_name }}</a>
                     {{/ assignees }}
                 </td>
-                <td>?</td>
+                <td>
+                    {{# folder_hierarchy }}
+                        <i class="icon-angle-right"></i>
+                        <a class="direct-link-to-artifact" href="{{ url }}&view=artifactsfolders">{{ title }}</a>
+                    {{/ folder_hierarchy }}
+                </td>
             </tr>
         {{/ artifacts }}
     </tbody>

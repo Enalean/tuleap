@@ -1,3 +1,36 @@
+Version 4.269 - Tuleap 8.20
+    * story #9436: Add log when parsing logs
+
+Version 4.268 - Tuleap 8.20
+    * story #9436: Store access in DB
+
+Version 4.267 - Tuleap 8.20
+    * story #9436: Fix HTTP clone fatal error
+
+Version 4.266 - Tuleap 8.20
+    * request #9557: Gerrit remote server can not be saved anymore
+
+Version 4.265 - Tuleap 8.20
+    * Display data in project access log
+
+Version 4.264 - Tuleap 8.20
+    * story #9436: Parse gitolite3 log file
+
+Version 4.263 - Tuleap 8.20
+    * story #9436: Export data in SCM usage
+
+Version 4.262 - Tuleap 8.20
+    * story #9436: Display git read access in frequency graph
+
+Version 4.261 - Tuleap 8.20
+    * Create new object to detect gitolite detector
+
+Version 4.260 - Tuleap 8.20
+    * Log when user see the repository content through GitPhp
+
+Version 4.259 - Tuleap 8.20
+    * story #9463 see cumulative flow diagram (REST route for kanban cumulative flow)
+
 Version 4.258 - Tuleap 8.20
     * request #9526: Git mail notification should not be computed if nobody wants a notification
 

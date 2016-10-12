@@ -131,7 +131,8 @@ if (!$error && $request->exist('export')) {
     //GIT
     $p = $pluginManager->getPluginByName('git');
     if ($p && $pluginManager->isPluginAvailable($p)) {
-        $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+        $csv_exporter->buildDatas($dao->getGitWrite(), "GIT write");
+        $csv_exporter->buildDatas($dao->getGitRead(), "GIT read");
     }
 
     //FRS

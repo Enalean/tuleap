@@ -26,6 +26,17 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfLinksFormatt
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
 {
+    /**
+     * Plugin can choose to hide artifacts
+     *
+     * Parameters:
+     *  - nature        => (input) String
+     *  - hide_artifact => (output) Bool
+     *  - artifact      => Tracker_Artifact
+     *
+     */
+    const HIDE_ARTIFACT = 'hide_artifact';
+
     /** @var Tracker_ArtifactLinkInfo[] */
     private $previous;
 
@@ -78,11 +89,26 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         NaturePresenterFactory $nature_factory,
         CollectionOfLinksFormatter $formatter
     ) {
+        if($artifactlinkinfo->getNature() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getNature())) {
+            return;
+        }
         $nature = $nature_factory->getFromShortname($artifactlinkinfo->getNature());
         if (! isset($this->added_by_nature[$nature->shortname])) {
             $this->added_by_nature[$nature->shortname] = new AddedLinkByNatureCollection($nature, $formatter);
         }
         $this->added_by_nature[$nature->shortname]->add($artifactlinkinfo);
+    }
+
+    private function getNatureFormChangesets(
+        Tracker_ArtifactLinkInfo $previous_link,
+        Tracker_ArtifactLinkInfo $next_link
+    ) {
+        $nature = $next_link->getNature();
+        if ($previous_link->getNature()) {
+            $nature = $previous_link->getNature();
+        }
+
+        return $nature;
     }
 
     private function fillUpdatedByNature(
@@ -95,6 +121,12 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         if (! $tracker->isProjectAllowedToUseNature()) {
             return;
         }
+
+        $nature = $this->getNatureFormChangesets($previous_link, $next_link);
+        if ($nature !== "" && $previous_link->shouldLinkBeHidden($nature)) {
+            return;
+        }
+
 
         $previous_nature = $nature_factory->getFromShortname($previous_link->getNature());
         $next_nature     = $nature_factory->getFromShortname($next_link->getNature());

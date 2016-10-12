@@ -277,8 +277,8 @@ plugin_git	widget_user_pushes_details	Détails
 plugin_git	widget_project_pushes_max_weeks	Pour garantir la lisibilité du graphique, le nombre de semaines ne doit pas dépasser 25.
 plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 semaine(s)
 
-plugin_git	logsdaily_field	Nom du répertoire
-plugin_git	logsdaily_title	Les Git push
+plugin_git	logsdaily_field	Dépôt
+plugin_git	logsdaily_title	Les accès Git
 
 plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
 plugin_git	delegated_to_gerrit_error	Une erreur s'est produite lors de la migration vers gerrit $1. <strong>N'utilisez pas le dépôt gerrit</strong>, consultez <a href="$2">le rapport d'erreur</a> et contacter l'administration site.
@@ -492,3 +492,5 @@ plugin_git	fine_grained_bad_request	La requête n'est pas valide.
 plugin_git	fine_grained_delete_ok	Permission suprimée avec succès.
 plugin_git	fine_grained_delete_error	Erreur lors de la suppression de la permission.
 plugin_git	fine_grained_bad_pattern	L'expression $1 n'est pas bien formée. Elle ne sera pas pris en compte.
+
+plugin_git	stats_read	Nombre total des accès en lecture git

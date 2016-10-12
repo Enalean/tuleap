@@ -21,6 +21,10 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
+use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -42,6 +46,8 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\History\Dao as HistoryDao;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -71,7 +77,10 @@ class GitPlugin extends Plugin {
 
     const SYSTEM_NATURE_NAME = 'git_revision';
 
-    public function __construct($id) {
+    private static $FREQUENCIES_GIT_READ = 'git';
+
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
@@ -168,7 +177,20 @@ class GitPlugin extends Plugin {
         }
 
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
+
+        $this->addHook('root_daily_start');
+    }
+
+    public function getHooksAndCallbacks()
+    {
         $this->addHook(Event::IS_IN_SITEADMIN);
+
+        if (defined('STATISTICS_BASE_DIR')) {
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
+        }
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getServiceShortname() {
@@ -198,6 +220,24 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
+     */
+    public function plugin_statistics_frequence_stat_entries($params)
+    {
+        $params['entries'][self::$FREQUENCIES_GIT_READ] = 'Git read access';
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
+     */
+    public function plugin_statistics_frequence_stat_sample($params)
+    {
+        if ($params['character'] === self::$FREQUENCIES_GIT_READ) {
+            $params['sample'] = new Tuleap\Git\Statistics\FrequenciesSample();
+        }
     }
 
     /**
@@ -1255,7 +1295,9 @@ class GitPlugin extends Plugin {
             $this->getPermissionChangesDetector(),
             $this->getDefaultPermissionsUpdater(),
             new ProjectHistoryDao(),
-            $this->getDescriptionUpdater()
+            $this->getDescriptionUpdater(),
+            $this->getGitPhpAccessLogger(),
+            new VersionDetector()
         );
     }
 
@@ -1845,6 +1887,44 @@ class GitPlugin extends Plugin {
             EventManager::instance()
         );
 
-        $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+        $importer->import($params['configuration'], $params['project'], UserManager::
+        instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+    }
+
+    /**
+     * @return GitPhpAccessLogger
+     */
+    private function getGitPhpAccessLogger()
+    {
+        $dao = new HistoryDao();
+
+        return new GitPhpAccessLogger($dao);
+    }
+
+    public function root_daily_start()
+    {
+        $detector = new VersionDetector();
+
+        if ($detector->isGitolite3()) {
+            $this->parseCurrentAndPrevisousMonthLogs();
+        }
+    }
+
+    private function parseCurrentAndPrevisousMonthLogs()
+    {
+        $this->getGitolite3Parser()->parseCurrentAndPreviousMonthLogs(GITOLITE3_LOGS_PATH);
+    }
+
+    private function getGitolite3Parser()
+    {
+        return new Gitolite3LogParser(
+            new GitBackendLogger(),
+            new System_Command(),
+            new HttpUserValidator(),
+            new HistoryDao(),
+            $this->getRepositoryFactory(),
+            UserManager::instance(),
+            new GitoliteFileLogsDao()
+        );
     }
 }

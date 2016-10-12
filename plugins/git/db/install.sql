@@ -232,3 +232,16 @@ CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_rewinders
     ugroup_id int(11) NOT NULL,
     PRIMARY KEY (permission_id, ugroup_id)
 );
+
+CREATE TABLE plugin_git_full_history (
+  time int(11) UNSIGNED NOT NULL,
+  repository_id int(10) unsigned NOT NULL,
+  user_id int(11) NOT NULL,
+  INDEX time_idx(time)
+);
+
+CREATE TABLE plugin_git_file_logs_parse (
+  file_name VARCHAR(255) NOT NULL,
+  end_line INT(11),
+  PRIMARY KEY (file_name)
+)

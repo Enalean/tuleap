@@ -57,7 +57,8 @@ class EPELViewVCProxy implements ViewVCProxy
             return true;
         }
 
-        if (strpos($request_uri, "view=patch") !== false ||
+        if ($this->isViewingPatch($request) ||
+            $this->isCheckoutingFile($request) ||
             strpos($request_uri, "view=graphimg") !== false ||
             strpos($request_uri, "view=redirect_path") !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
@@ -68,8 +69,7 @@ class EPELViewVCProxy implements ViewVCProxy
         if (strpos($request_uri, "/?") === false &&
             strpos($request_uri, "&r1=") === false &&
             strpos($request_uri, "&r2=") === false &&
-            (strpos($request_uri, "view=") === false ||
-             strpos($request_uri, "view=co") !== false )
+            strpos($request_uri, "view=") === false
         ) {
             return false;
         }
@@ -77,12 +77,22 @@ class EPELViewVCProxy implements ViewVCProxy
         return true;
     }
 
+    /**
+     * @return bool
+     */
     private function isViewingPatch(HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
-        if (strpos($request_uri, "view=patch") !== false) {
-            return true;
-        }
+        return strpos($request_uri, "view=patch") !== false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCheckoutingFile(HTTPRequest $request)
+    {
+        $request_uri = $request->getFromServer('REQUEST_URI');
+        return strpos($request_uri, "view=co") !== false;
     }
 
     private function buildQueryString(HTTPRequest $request)
@@ -234,7 +244,12 @@ class EPELViewVCProxy implements ViewVCProxy
         } else {
             if ($this->isViewingPatch($request)) {
                 header('Content-Type: text/plain');
+            } else {
+                header('Content-Type: application/octet-stream');
             }
+            header('X-Content-Type-Options: nosniff');
+            header('Content-Disposition: attachment');
+
             echo $body;
             exit();
         }

@@ -1,3 +1,6 @@
+Version 1.152 - Tuleap 8.20
+    * request #9530 More button in navbar shouldn't be displayed if there is nothing more
+
 Version 1.151 - Tuleap 8.19
     * Use viewvc-theme-tuleap in core SVN
 

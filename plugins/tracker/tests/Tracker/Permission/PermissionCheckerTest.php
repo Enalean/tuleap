@@ -406,8 +406,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
         stub($this->maintainer)->isMemberOfUgroup($this->ugroup_id_maintainers, 222)->returns(true);
 
         $this->tracker_admin = mock('PFUser');
-        stub($this->tracker_admin)->getId()->returns(252);
-        stub($this->tracker_admin)->isMemberOfUgroup($this->ugroup_id_admin, 222)->returns(true);
+        stub($this->tracker)->userIsAdmin($this->tracker_admin)->returns(true);
 
         $this->project_admin = mock('PFUser');
         stub($this->project_admin)->getId()->returns(253);

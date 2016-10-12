@@ -1,3 +1,33 @@
+Version 5.1026 - Tuleap 8.20
+    * Link to folder is not copied
+
+Version 5.1025 - Tuleap 8.20
+    * Display current folder of an artifact
+
+Version 5.1024 - Tuleap 8.20
+    * Refactoring: do not talk about is_folder in tracker
+
+Version 5.1023 - Tuleap 8.20
+    * story #9468: Take _in_folder into account during import
+
+Version 5.1022 - Tuleap 8.20
+    * request #9539: XSS in the children view tab of an artifact
+
+Version 5.1021 - Tuleap 8.20
+    * story #9463 see cumulative flow diagram (Performance improvement for the kanban cumulative flow REST route)
+
+Version 5.1020 - Tuleap 8.20
+    * story #9468 import folders (Notices displayed with <natures>)
+
+Version 5.1019 - Tuleap 8.20
+    * story #9468: Don't display artifact link when nature is '_is_folder'
+
+Version 5.1018 - Tuleap 8.20
+    * XML import - handle new attribute 'is_folder' for tracker
+
+Version 5.1017 - Tuleap 8.20
+    * request #9528: In artifact linkproject public name encoding is not well displayed
+
 Version 5.1016 - Tuleap 8.20
     * story #9468: Do not display the tab if there is no Artifact in the folder
 

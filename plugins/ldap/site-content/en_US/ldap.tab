@@ -109,3 +109,5 @@ plugin_ldap	ldap_sync_mail_notification_subject	[LDAP Daily Synchronization] $1 
 plugin_ldap	ldap_sync_mail_notification_body	Dear project administrators,<br/> The user $1 <$2> has been suspended after LDAP daily synchronization Job.<br/>Please consider clean up your project data ($3) referencing this user (artifacts assignement, user groups, etc.).<br/>This cleanup will be automatically performed after $4 days; The user status will change from suspended to Deleted and he will be removed from all projects.
 plugin_ldap	ldap_sync_reminder_mail_notification_subject	[Reminder][LDAP Synch] The user $1 will be deleted tomorrow
 plugin_ldap	ldap_sync_reminder_mail_notification_body	Dear project administrators,<br/>The user $1 <$2> will be automatically removed from your project ($3) tomorrow. His status will change from suspended to Deleted .<br/>Please consider clean up your project data referencing this user.
+
+project_admin_utils	project_admins_daily_synchronization_user_not_removed	Project members daily synchronization: administrator not removed

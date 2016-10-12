@@ -21,8 +21,21 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\XML\PHPCast;
 
-class TrackerXmlImport {
+class TrackerXmlImport
+{
+
+    /**
+     * Add attributes to tracker
+     *
+     * Parameters:
+     *  - xml_element: input SimpleXMLElement
+     *  - tracker_id:  input int
+     *  - project:     input Project
+     *  - logger:      output Logger
+     */
+    const ADD_PROPERTY_TO_TRACKER = 'add_property_to_tracker';
 
     const XML_PARENT_ID_EMPTY = "0";
 
@@ -480,6 +493,7 @@ class TrackerXmlImport {
             //Testing consistency of the imported tracker before updating database
             if ($tracker->testImport()) {
                 if ($tracker_id = $this->tracker_factory->saveObject($tracker)) {
+                    $this->addTrackerProperties($tracker_id, $project, $xml_element);
                     $tracker->setId($tracker_id);
                 } else {
                     throw new TrackerFromXmlException($GLOBALS['Language']->getText('plugin_tracker_admin', 'error_during_creation'));
@@ -493,6 +507,19 @@ class TrackerXmlImport {
         $this->tracker_factory->clearCaches();
 
         return $tracker;
+    }
+
+    private function addTrackerProperties($tracker_id, Project $project, SimpleXMLElement $xml_element)
+    {
+        $this->event_manager->processEvent(
+            self::ADD_PROPERTY_TO_TRACKER,
+            array(
+                'xml_element' => $xml_element,
+                'tracker_id'  => $tracker_id,
+                'project'     => $project,
+                'logger'      => $this->logger
+            )
+        );
     }
 
     /**

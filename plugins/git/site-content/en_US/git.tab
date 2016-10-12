@@ -282,8 +282,8 @@ plugin_git	widget_user_pushes_details	Details
 plugin_git	widget_project_pushes_max_weeks	For chart readability considerations, the maximum weeks numbers is 25.
 plugin_git	widget_project_pushes_error	There is no logged pushes in the last $1 week(s)
 
-plugin_git	logsdaily_field	Repository name
-plugin_git	logsdaily_title	Git pushes
+plugin_git	logsdaily_field	Repository
+plugin_git	logsdaily_title	Git access
 
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
 plugin_git	delegated_to_gerrit_error	An error occured while migrating this repository on gerrit $1. <strong>Do not use gerrit repository</strong>, check <a href="$2">gerrit settings</a> and contact site administration.
@@ -495,3 +495,5 @@ plugin_git	fine_grained_bad_request	Bad request.
 plugin_git	fine_grained_delete_ok	Permission successfully deleted.
 plugin_git	fine_grained_delete_error	An error occured while deleting permission.
 plugin_git	fine_grained_bad_pattern	The pattern $1 is not well formed. Skipping.
+
+plugin_git	stats_read	Total number of git read access

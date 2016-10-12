@@ -34,32 +34,67 @@ class ArtifactPresenter
     public $project_label;
     public $status;
     public $title;
-    public $submitted_by_user;
+    public $submitter;
     public $last_modified_date;
     public $assignees;
+    public $folder_hierarchy;
 
-    public function build(PFUser $current_user, Tracker_Artifact $artifact)
+    public function build(PFUser $current_user, Tracker_Artifact $artifact, array $folder_hierarchy)
     {
-        $this->id                = $artifact->getId();
-        $this->html_url          = $artifact->getUri();
-        $this->xref              = $artifact->getXRef();
-        $this->tracker_label     = $artifact->getTracker()->getName();
-        $this->project_label     = $artifact->getTracker()->getProject()->getPublicName();
-        $this->status            = $artifact->getStatus();
-        $this->title             = $artifact->getTitle();
-        $this->submitted_by_user = $this->getDisplayName($artifact->getSubmittedByUser());
+        $this->id               = $artifact->getId();
+        $this->html_url         = $artifact->getUri();
+        $this->xref             = $artifact->getXRef();
+        $this->tracker_label    = $artifact->getTracker()->getName();
+        $this->project_label    = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
+        $this->status           = $artifact->getStatus();
+        $this->title            = $this->getTitle($artifact);
+        $this->submitter        = false;
+        $this->folder_hierarchy = $this->getFolderHierarchyPresenter($folder_hierarchy);
 
-        $date = new DateTime('@'. $artifact->getLastUpdateDate());
+        $submitter = $artifact->getSubmittedByUser();
+        if ($submitter) {
+            $this->submitter = $this->getUserPresenter($submitter);
+        }
+
+        $date                     = new DateTime('@' . $artifact->getLastUpdateDate());
         $this->last_modified_date = $date->format($GLOBALS['Language']->getText('system', 'datefmt'));
 
         $this->assignees = array();
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
-            $this->assignees[] = $this->getDisplayName($assignee);
+            $this->assignees[] = $this->getUserPresenter($assignee);
         }
 
         if (! $this->status) {
             $this->status = '';
         }
+    }
+
+    private function getFolderHierarchyPresenter(array $folder_hierarchy)
+    {
+        return array_map(
+            function (Tracker_Artifact $folder) {
+                $title = $folder->getTitle();
+                if (! $title) {
+                    $title = $folder->getXRef();
+                }
+
+                return array(
+                    'url'   => $folder->getUri(),
+                    'title' => $title
+                );
+            },
+            $folder_hierarchy
+        );
+    }
+
+    private function getUserPresenter(PFUser $user)
+    {
+        $user_helper = UserHelper::instance();
+
+        return array(
+            'url'          => $user_helper->getUserUrl($user),
+            'display_name' => $this->getDisplayName($user)
+        );
     }
 
     private function getDisplayName(PFUser $user)
@@ -69,5 +104,16 @@ class ArtifactPresenter
         }
 
         return UserHelper::instance()->getDisplayNameFromUser($user);
+    }
+
+    private function getTitle(Tracker_Artifact $artifact)
+    {
+        $title = $artifact->getTitle();
+
+        if (! $title) {
+            return "";
+        }
+
+        return $title;
     }
 }

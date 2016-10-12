@@ -2,9 +2,19 @@ angular
     .module('kanban')
     .config(KanbanConfig);
 
-KanbanConfig.$inject = ['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$animateProvider'];
+KanbanConfig.$inject = [
+    '$stateProvider',
+    '$urlRouterProvider',
+    'RestangularProvider',
+    '$animateProvider'
+];
 
-function KanbanConfig($stateProvider, $urlRouterProvider, RestangularProvider, $animateProvider) {
+function KanbanConfig(
+    $stateProvider,
+    $urlRouterProvider,
+    RestangularProvider,
+    $animateProvider
+) {
     $urlRouterProvider.otherwise('/kanban');
 
     $animateProvider.classNameFilter(/do-animate/);

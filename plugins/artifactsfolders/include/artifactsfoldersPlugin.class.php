@@ -19,20 +19,28 @@
  */
 
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
-use Tuleap\ArtifactsFolders\Folder\PresenterBuilder;
-use Tuleap\ArtifactsFolders\Nature\NatureIsFolderPresenter;
+use Tuleap\ArtifactsFolders\Folder\ArtifactLinkInformationPrepender;
+use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
+use Tuleap\ArtifactsFolders\Folder\DataFromRequestAugmentor;
+use Tuleap\ArtifactsFolders\Folder\FolderHierarchicalRepresentationCollectionBuilder;
+use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
+use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
+use Tuleap\ArtifactsFolders\Folder\Controller;
+use Tuleap\ArtifactsFolders\Folder\Router;
+use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\ArtifactView;
+use Tuleap\XML\PHPCast;
 
 require_once 'autoload.php';
 require_once 'constants.php';
 
 class ArtifactsFoldersPlugin extends Plugin
 {
-
     public function __construct($id)
     {
         parent::__construct($id);
@@ -45,7 +53,16 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(Event::JAVASCRIPT_FOOTER);
+            $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_NATURE_VALID);
             $this->addHook('cssfile');
+            $this->addHook(Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT);
+            $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
+            $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
+            $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
+            $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
+            $this->addHook(Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT);
         }
 
         return parent::getHooksAndCallbacks();
@@ -87,7 +104,7 @@ class ArtifactsFoldersPlugin extends Plugin
 
     public function event_get_artifactlink_natures($params)
     {
-        $params['natures'][] = new NatureIsFolderPresenter();
+        $params['natures'][] = new NatureInFolderPresenter();
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
@@ -105,7 +122,7 @@ class ArtifactsFoldersPlugin extends Plugin
 
         $dao = new NatureDao();
         if ($this->canAddOurView($dao, $artifact, $project, $user)) {
-            $view = new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder($dao));
+            $view = new ArtifactView($artifact, $request, $user, $this->getPresenterBuilder());
             $collection->add($view);
         }
     }
@@ -116,7 +133,34 @@ class ArtifactsFoldersPlugin extends Plugin
 
         return
             $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
-            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureIsFolderPresenter::NATURE_IS_FOLDER);
+            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureInFolderPresenter::NATURE_IN_FOLDER);
+    }
+
+    /** @see TrackerXmlImport::ADD_PROPERTY_TO_TRACKER */
+    public function add_property_to_tracker(array $params)
+    {
+        $xml_element = $params['xml_element'];
+        $is_folder   = isset($xml_element['is_folder']) ? PHPCast::toBoolean($xml_element['is_folder']) : false;
+
+        if ($is_folder) {
+            $this->setFolderProperty($params['project'], $params['tracker_id'], $params['logger']);
+        }
+    }
+
+    private function setFolderProperty(Project $project, $tracker_id, Logger $logger)
+    {
+        if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($project)) {
+            if (! $this->getDao()->create($tracker_id)) {
+                $logger->warn("Error while setting Folder flag for tracker $tracker_id.");
+            }
+        } else {
+            $logger->warn("Cannot set tracker $tracker_id as a Folder tracker because you already have one defined for this project");
+        }
+    }
+
+    private function getDao()
+    {
+        return new Dao();
     }
 
     /**
@@ -124,13 +168,141 @@ class ArtifactsFoldersPlugin extends Plugin
      */
     private function getFolderUsageRetriever()
     {
-        $dao = new Dao();
-
-        return new FolderUsageRetriever($dao, TrackerFactory::instance());
+        return new FolderUsageRetriever($this->getDao(), TrackerFactory::instance());
     }
 
-    private function getPresenterBuilder($dao)
+    private function getPresenterBuilder()
     {
-        return new PresenterBuilder($dao, Tracker_ArtifactFactory::instance());
+        return new ArtifactPresenterBuilder(
+            $this->getHierarchyOfFolderBuilder(),
+            new NatureDao(),
+            Tracker_ArtifactFactory::instance()
+        );
+    }
+
+    private function getHierarchyOfFolderBuilder()
+    {
+        return new HierarchyOfFolderBuilder(
+            new Dao(),
+            $this->getNatureIsChildLinkRetriever(),
+            Tracker_ArtifactFactory::instance()
+        );
+    }
+
+    private function getNatureIsChildLinkRetriever()
+    {
+        return new NatureIsChildLinkRetriever(
+            Tracker_ArtifactFactory::instance(),
+            new Tracker_FormElement_Field_Value_ArtifactLinkDao()
+        );
+    }
+
+    public function hide_artifact($params)
+    {
+        $params['hide_artifact'] = $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER;
+    }
+
+    public function event_get_nature_presenter($params)
+    {
+        if ($params['shortname'] === NatureInFolderPresenter::NATURE_IN_FOLDER) {
+            $params['presenter'] = new NatureInFolderPresenter();
+        }
+    }
+
+    public function process(HTTPRequest $request)
+    {
+        if (! defined('TRACKER_BASE_URL')) {
+            return;
+        }
+
+        $router = new Router(
+            Tracker_ArtifactFactory::instance(),
+            new Tracker_URLVerification(),
+            new Controller($this->getPresenterBuilder())
+        );
+
+        $router->route($request);
+    }
+
+    public function tracker_add_system_natures($params)
+    {
+        $params['natures'][] = NatureInFolderPresenter::NATURE_IN_FOLDER;
+    }
+
+    public function tracker_is_nature_valid($params)
+    {
+        if ($this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
+            && $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER
+        ) {
+            $params['error'] = "Link between " . $params['artifact']->getId() . " and " . $params['children_id'] . " is inconsistent because tracker " .
+                $params['tracker_id'] . " is not defined as a Folder. Artifact " . $params['artifact']->getId() . " added without nature.";
+        }
+    }
+
+    /** @see Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION */
+    public function prepend_artifactlink_information($params)
+    {
+        $prepender = new ArtifactLinkInformationPrepender(
+            $this->getHierarchyOfFolderBuilder(),
+            new FolderHierarchicalRepresentationCollectionBuilder(
+                Tracker_ArtifactFactory::instance(),
+                new Dao(),
+                $this->getNatureIsChildLinkRetriever()
+            )
+        );
+
+        $params['html'] .= $prepender->prependArtifactLinkInformation(
+            $params['artifact'],
+            $params['current_user'],
+            $params['reverse_artifact_links'],
+            $params['read_only']
+        );
+    }
+
+    /** @see Tracker_FormELement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE */
+    public function get_post_save_new_changeset_queue(array $params)
+    {
+        $params['queue']->add(
+            new PostSaveNewChangesetCommand($params['field'], HTTPRequest::instance(), $this->getDao())
+        );
+    }
+
+    /** @see Tracker_FormELement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST */
+    public function after_augment_data_from_request(array $params)
+    {
+        $augmentor = new DataFromRequestAugmentor(
+            HTTPRequest::instance(),
+            Tracker_ArtifactFactory::instance(),
+            $this->getHierarchyOfFolderBuilder()
+        );
+        $augmentor->augmentDataFromRequest($params['fields_data'][$params['field']->getId()]);
+    }
+
+    /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
+    public function display_copy_of_artifact($params)
+    {
+        $folder_hierarchy = $this->getHierarchyOfFolderBuilder()->getHierarchyOfFolderForArtifact(
+            $params['current_user'],
+            $params['artifact']
+        );
+        if (! $folder_hierarchy) {
+            return;
+        }
+
+        $folder   = end($folder_hierarchy);
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText(
+                'plugin_folders',
+                'no_copy',
+                array(
+                    $purifier->purify($folder->getUri()),
+                    $folder->getXRefAndTitle()
+                )
+            ),
+            CODENDI_PURIFIER_FULL
+        );
     }
 }

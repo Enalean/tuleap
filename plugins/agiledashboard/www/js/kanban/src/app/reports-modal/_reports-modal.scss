@@ -20,9 +20,75 @@
     }
 
     > .modal-body {
-        box-sizing: border-box;
-        padding: 25px 15px;
-        height: 50vmin;
-        max-height: 50vmin;
+        max-height: 100%;
+
+        > .chart {
+            box-sizing: border-box;
+            padding: 25px 15px;
+            height: 60vmin;
+            max-height: 60vmin;
+        }
+
+        > .loading {
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            background: url('loader-mini.gif') no-repeat center center;
+            min-height: 26px;
+        }
+
+        > .params {
+            float: left;
+            margin-left: 50px;
+
+            > label {
+                margin: 0;
+            }
+
+            #params-select {
+                margin: 0;
+                max-width: 132px;
+            }
+        }
+
+        .nvd3 line.nv-guideline {
+            stroke: #ffffff;
+        }
+
+        .nv-y, .nv-x {
+            fill: #9c9c9c;
+
+            .domain {
+                stroke: #9c9c9c;
+            }
+        }
+
+        > .nvd3-title {
+            font: 400 20px Arial;
+            margin: 20px 0;
+            text-align: center;
+            color: #9c9c9c;
+        }
+    }
+}
+
+.nvtooltip {
+    background-color: #303030;
+    color: #ffffff;
+
+    .legend-color-guide {
+        padding-left: 9px;
+    }
+
+    table tr.highlight > td.legend-color-guide {
+        padding-left: 9px;
+    }
+
+    .highlight {
+        background-color: #4d4d4d;
+
+        > td {
+            border-color: #4d4d4d !important;
+        }
     }
 }

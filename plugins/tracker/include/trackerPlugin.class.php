@@ -40,7 +40,6 @@ class trackerPlugin extends Plugin {
     const SERVICE_SHORTNAME                       = 'plugin_tracker';
     const TRUNCATED_SERVICE_NAME                  = 'Trackers';
 
-
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
@@ -809,16 +808,32 @@ class trackerPlugin extends Plugin {
             return true;
         }
 
-        $plateform_natures["nature"] = array();
+        if (! (array)$xml->natures) {
+            return true;
+        }
+
+        $plateform_natures["nature"] = array(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
         foreach($this->getNatureDao()->searchAll() as $nature) {
             $plateform_natures["nature"][] = $nature['shortname'];
         }
-        $plateform_natures["nature"][] = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
-        $xml_natures                   = (array)$xml->natures;
 
-        $not_in_plateform = array_diff($xml_natures['nature'], $plateform_natures['nature']);
+        $this->addCustomNatures($plateform_natures["nature"]);
 
-        return count($not_in_plateform) === 0;
+        foreach ($xml->natures->nature as $nature) {
+            if (! in_array((string)$nature, $plateform_natures['nature'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function addCustomNatures(array &$natures) {
+        $params['natures'] = &$natures;
+        EventManager::instance()->processEvent(
+            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES,
+            $params
+        );
     }
 
     private function getNatureDao()

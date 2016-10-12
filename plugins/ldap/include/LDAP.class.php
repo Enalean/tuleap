@@ -284,8 +284,10 @@ class LDAP {
      * 
      * @return LDAPResultIterator
      */
-    function search($baseDn, $filter, $scope=self::SCOPE_SUBTREE, $attributes=array(), $attrsOnly=0, $sizeLimit=0, $timeLimit=0, $deref=LDAP_DEREF_NEVER) {
-        if($this->_connectAndBind()) {
+    public function search($baseDn, $filter, $scope=self::SCOPE_SUBTREE, $attributes=array(), $attrsOnly=0, $sizeLimit=0, $timeLimit=0, $deref=LDAP_DEREF_NEVER) {
+        $this->trapErrors();
+
+        if ($this->_connectAndBind()) {
             $this->_initErrorHandler();
             switch ($scope) {
             case self::SCOPE_BASE:
@@ -315,6 +317,7 @@ class LDAP {
                 );
             }
         }
+
         return false;
     }
 

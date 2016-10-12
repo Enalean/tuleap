@@ -72,9 +72,10 @@ extends DataAccessObject
         $project_id      = $this->da->escapeInt($project_id);
         $ldap_dn         = $this->da->quoteSmart($ldap_dn);
         $synchronization = $this->da->quoteSmart($synchronization);
+        $bind            = $this->da->quoteSmart($bind);
 
-        $sql = "INSERT INTO plugin_ldap_project_group (group_id, ldap_group_dn, synchro_policy)
-                VALUES ($project_id, $ldap_dn, $synchronization)";
+        $sql = "INSERT INTO plugin_ldap_project_group (group_id, ldap_group_dn, synchro_policy, bind_option)
+                VALUES ($project_id, $ldap_dn, $synchronization, $bind)";
 
         return $this->update($sql);
     }
@@ -133,5 +134,30 @@ extends DataAccessObject
                 LIMIT 1";
 
         return count($this->retrieve($sql)) > 0;
+    }
+
+    public function doesProjectBindingKeepUsers($project_id)
+    {
+        $project_id       = $this->da->escapeInt($project_id);
+        $keep_users_value = $this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION);
+
+        $sql = "SELECT NULL
+                FROM plugin_ldap_project_group
+                WHERE group_id = $project_id
+                  AND bind_option = $keep_users_value
+                LIMIT 1";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
+    public function getSynchronizedProjects()
+    {
+        $auto_synchronized_value = $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+
+        $sql = "SELECT *
+                FROM plugin_ldap_project_group
+                WHERE synchro_policy = $auto_synchronized_value";
+
+        return $this->retrieve($sql);
     }
 }

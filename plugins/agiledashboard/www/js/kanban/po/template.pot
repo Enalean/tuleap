@@ -64,6 +64,10 @@ msgstr ""
 msgid "Confirm deletion of this Kanban"
 msgstr ""
 
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Cumulative flow chart"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Danger zone"
 msgstr ""
@@ -104,16 +108,41 @@ msgstr ""
 msgid "General configuration"
 msgstr ""
 
-#: src/app/app-kanban-controller.js
-msgid "Kanban {{ label }} successfuly deleted"
-msgstr ""
-
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr ""
 
 #: src/app/app-kanban-controller.js
+msgid "Kanban {{ label }} successfuly deleted"
+msgstr ""
+
+#: src/app/app-kanban-controller.js
 msgid "Kanban:"
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last 3 months"
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last 6 months"
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last 7 days"
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last month"
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "Last year"
+msgstr ""
+
+#. moment.js Date format
+#: src/app/reports-modal/reports-modal-controller.js
+msgid "MM/DD"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -128,16 +157,16 @@ msgstr ""
 msgid "Move to top"
 msgstr ""
 
-#: src/app/reports-modal/reports-modal.tpl.html
-msgid "My Kanban reports"
-msgstr ""
-
-#: src/app/error/error.tpl.html
-msgid "Oh snap!"
+#: src/app/reports-modal/reports-modal-controller.js
+msgid "Nb. of cards"
 msgstr ""
 
 #: src/app/error/error.tpl.html
 msgid "OK, reload the page"
+msgstr ""
+
+#: src/app/error/error.tpl.html
+msgid "Oh snap!"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -161,7 +190,7 @@ msgid "The deletion of a Kanban is irreversible. Please be certain before doing 
 msgstr ""
 
 #: src/app/reports-modal/reports-modal.tpl.html
-msgid "This view is under construction"
+msgid "Timeframe:"
 msgstr ""
 
 #: src/app/kanban.tpl.html
@@ -182,4 +211,8 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
+msgstr ""
+
+#: src/app/reports-modal/reports-modal.tpl.html
+msgid "{{ reports_modal.kanban_label }} reports"
 msgstr ""
