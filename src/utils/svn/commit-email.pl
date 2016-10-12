@@ -249,7 +249,6 @@ if ($sys_force_ssl) {
 } else {
   $codendi_srv="http://$sys_default_domain";
 }
-$codendi_http_srv="http://$sys_default_domain";
 
 my $mod_url = $codendi_srv."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h&pathrev=$rev";
 my $add_url  = $codendi_srv."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname&pathrev=$rev";
@@ -849,9 +848,8 @@ sub extract_xrefs {
     }
     $type="svn_revision";
     $text=join("\n",@log);
-        
-    # HTTPS is not supported by LWP on RHEL3 -> use HTTP
-    my $req = POST "$codendi_http_srv/api/reference/extractCross",
+
+    my $req = POST "$codendi_srv/api/reference/extractCross",
       [ group_id => "$group_id", text => "$text", rev_id=>"$rev", login=>"$author", type=>"$type" ];
   
 
