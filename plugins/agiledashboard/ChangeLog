@@ -1,40 +1,40 @@
-Version 1.429 - Tuleap 8.20
+Version 1.429 - Tuleap 9.0
     * story #9463 see cumulative flow diagram (Fancy cumulative)
 
-Version 1.428 - Tuleap 8.20
+Version 1.428 - Tuleap 9.0
     * story #9463 see cumulative flow diagram (Timeframe selector)
 
-Version 1.427 - Tuleap 8.20
+Version 1.427 - Tuleap 9.0
     * Update corresponding version of tuleap-realtime
 
-Version 1.426 - Tuleap 8.20
+Version 1.426 - Tuleap 9.0
     * story #9463: Cumulative flow diagram with params (Performance improvement for the kanban cumulative flow REST route)
 
-Version 1.425 - Tuleap 8.20
+Version 1.425 - Tuleap 9.0
     * request #9524: Do not try to take into account permissions to compute the total size of a Kanban column
 
-Version 1.424 - Tuleap 8.20
+Version 1.424 - Tuleap 9.0
     * story #9463: see cumulative flow diagram (Cumulative flow diagram)
 
-Version 1.423 - Tuleap 8.20
+Version 1.423 - Tuleap 9.0
     * story #9463 see cumulative flow diagram (Performance improvement for the kanban cumulative flow REST route)
 
-Version 1.422 - Tuleap 8.20
+Version 1.422 - Tuleap 9.0
     * story #9463 see cumulative flow diagram (REST route for kanban cumulative flow)
 
-Version 1.421 - Tuleap 8.20
+Version 1.421 - Tuleap 9.0
     * request #9524: Kanban column counts does not take into account permissions when the column is closed
 
-Version 1.420 - Tuleap 8.20
+Version 1.420 - Tuleap 9.0
     * story #9463: see cumulative flow diagram (Add reports modal)
 
-Version 1.419 - Tuleap 8.20
+Version 1.419 - Tuleap 9.0
     * request #9462: Fatal error in Tracker report when user cannot see Milestone trackers
 
-Version 1.418 - Tuleap 8.20
+Version 1.418 - Tuleap 9.0
     * request #9518: html entities displayed in kanban cards
 
-Version 1.417 - Tuleap 8.20
+Version 1.417 - Tuleap 9.0
     * request #9509: Fix angular/di errors
 
 Version 1.416 - Tuleap 8.19
