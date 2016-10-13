@@ -28,14 +28,17 @@ class Presenter
 {
     private $repository;
     private $bots;
-    public  $csrf_input;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     public function __construct(
-        CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerToken $csrf_token,
         GitRepository $repository,
         array $bots
     ) {
-        $this->csrf_input = $csrf->fetchHTMLInput();
+        $this->csrf_token = $csrf_token;
         $this->repository = $repository;
         $this->bots       = $bots;
     }

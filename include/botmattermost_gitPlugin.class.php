@@ -23,13 +23,15 @@ require_once 'constants.php';
 
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
+use Tuleap\BotMattermost\SenderServices\EncoderMessage;
+use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
 use Tuleap\BotMattermostGit\BotGit\BotGitDao;
 use Tuleap\BotMattermostGit\Controller;
 use Tuleap\BotMattermostGit\Plugin\PluginInfo;
-use Tuleap\BotMattermostGit\SenderServices\EncoderMessage;
-use Tuleap\BotMattermostGit\SenderServices\NotificationMaker;
-use Tuleap\BotMattermostGit\SenderServices\Sender;
+use Tuleap\BotMattermostGit\SenderServices\GitNotificationBuilder;
+use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
 
 
 class botmattermost_gitPlugin extends Plugin
@@ -77,18 +79,28 @@ class botmattermost_gitPlugin extends Plugin
 
     public function git_hook_post_receive_ref_update($params)
     {
-        if ($this->isAllowed($params['repository']->getProjectId())) {
-            $request = HTTPRequest::instance();
-            $this->getController($request)->sendNotification(
-                $params['repository'],
-                $params['user'],
-                $params['newrev'],
-                $params['refname']
+        $repository = $params['repository'];
+        if ($this->isAllowed($repository->getProjectId())) {
+            $git_notification_sender = new GitNotificationSender(
+                new Sender(
+                    new EncoderMessage(),
+                    new GitNotificationBuilder(
+                        new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git')),
+                        $params
+                    ),
+                    new ClientBotMattermost()
+                ),
+                new BotGitFactory(
+                    new BotGitDao(),
+                    new BotFactory(new BotDao())),
+                $repository
             );
+
+            $git_notification_sender->process();
         }
     }
 
-    public function cssfile($params)
+    public function cssfile()
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
@@ -116,10 +128,6 @@ class botmattermost_gitPlugin extends Plugin
                 ProjectManager::instance()
             ),
             new BotGitFactory(new BotGitDao(), $botFactory),
-            new Sender(
-                new EncoderMessage(),
-                new NotificationMaker(new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git')))
-            ),
             $botFactory
         );
     }

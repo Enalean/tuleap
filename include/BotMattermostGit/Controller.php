@@ -24,17 +24,14 @@ use HTTPRequest;
 use CSRFSynchronizerToken;
 use GitRepository;
 use GitRepositoryFactory;
+use Tuleap\BotMattermost\Exception\CannotCreateBotException;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
+use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
 use Valid_UInt;
 use TemplateRendererFactory;
 use Feedback;
-use Tuleap\BotMattermost\Exception\BotNotFoundException;
-use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
-use Tuleap\BotMattermostGit\SenderServices\Sender;
-use Tuleap\BotMattermost\Bot\BotFactory;
-use PFUser;
 use Exception;
-use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
-
 
 class Controller
 {
@@ -43,7 +40,6 @@ class Controller
     private $csrf;
     private $git_repository_factory;
     private $bot_git_factory;
-    private $sender;
     private $bot_factory;
 
     public function __construct(
@@ -51,14 +47,12 @@ class Controller
         CSRFSynchronizerToken $csrf,
         GitRepositoryFactory $git_repository_factory,
         BotGitFactory $bot_git_factory,
-        Sender $sender,
         BotFactory $bot_factory
     ) {
         $this->request                = $request;
         $this->csrf                   = $csrf;
         $this->git_repository_factory = $git_repository_factory;
         $this->bot_git_factory        = $bot_git_factory;
-        $this->sender                 = $sender;
         $this->bot_factory            = $bot_factory;
     }
 
@@ -98,26 +92,6 @@ class Controller
             );
         }
         $GLOBALS['Response']->redirect(GIT_BASE_URL."/?action=repo_management&group_id=".$repository->getProjectId()."&repo_id=$repository_id&pane=".Notification::ID);
-    }
-
-    public function sendNotification(
-        GitRepository $repository,
-        PFUser $user,
-        $newrev,
-        $refname
-    ) {
-        try {
-            $bots = $this->bot_git_factory->getBotsByRepositoryId($repository->getId());
-        } catch (BotNotFoundException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
-        }
-        $this->sender->pushGitNotifications(
-            $bots,
-            $repository,
-            $user,
-            $newrev,
-            $refname
-        );
     }
 
     private function saveInDao($repository_id, array $bots_ids)

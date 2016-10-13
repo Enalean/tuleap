@@ -1,7 +1,9 @@
 <form name="edit_git_botmattermost" method="post" action="/plugins/botmattermost_git/?group_id={{ project_id }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <fieldset>
         <legend>{{title}}</legend>
-        {{{ csrf_input }}}
         <input type="hidden" name="action" value="edit_notification" />
         <input type="hidden" name="repository_id" value="{{ repository_id }}" />
 

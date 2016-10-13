@@ -20,42 +20,38 @@
 
 namespace Tuleap\BotMattermostGit\SenderServices;
 
-use PFUser;
 use GitRepository;
 use Git_GitRepositoryUrlManager;
+use Tuleap\BotMattermost\SenderServices\NotificationBuilder;
 
-class NotificationMaker
+class GitNotificationBuilder implements NotificationBuilder
 {
 
     private $git_repository_url_manager;
+    private $params;
 
-    public function __construct(Git_GitRepositoryUrlManager $git_repository_url_manager)
-    {
+    public function __construct(
+        Git_GitRepositoryUrlManager $git_repository_url_manager,
+        array $params
+    ) {
         $this->git_repository_url_manager = $git_repository_url_manager;
+        $this->params                     = $params;
     }
 
-    public function makeGitNotificationText(
-        GitRepository $repository,
-        PFUser $user,
-        $newrev,
-        $refname
-    ) {
-        $repository_name = $repository->getName();
-        $link = $this->makeLinkReview($repository, $repository_name, $newrev);
+    public function buildNotificationText()
+    {
+        $repository = $this->params['repository'];
+        $link       = $this->makeLinkReview($repository, $this->params['newrev']);
 
-        return $user->getName()." ".$GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text')." : $link $refname";
+        return $this->params['user']->getName()." ".
+            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text').
+            " : $link ".$this->params['refname'];
     }
 
-    private function makeLinkReview(
-        GitRepository $repository,
-        $link_name,
-        $review
-    ) {
-        $url_review = $repository->getDiffLink(
-            $this->git_repository_url_manager,
-            $review
-        );
+    private function makeLinkReview(GitRepository $repository, $review)
+    {
+        $url_review = $repository->getDiffLink($this->git_repository_url_manager, $review);
 
-        return "[$link_name]($url_review)";
+        return '['.$repository->getName()."]($url_review)";
     }
 }
