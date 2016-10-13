@@ -27,7 +27,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuealp\Svn\ApacheConfGenerator;
+use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnAdmin;

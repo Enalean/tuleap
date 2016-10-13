@@ -21,7 +21,7 @@
 
 require_once('pre.php');
 
-use Tuealp\Svn\ApacheConfGenerator;
+use Tuleap\Svn\ApacheConfGenerator;
 
 $generator = new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
 $generator->generate();
