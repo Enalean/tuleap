@@ -35,7 +35,16 @@ describe("ReportsModalController -", function() {
         kanban_label = "Italy Kanban";
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
             id     : kanban_id,
-            label  : kanban_label
+            label  : kanban_label,
+            columns: [],
+            backlog: {
+                id    : 'backlog',
+                label : 'Backlog'
+            },
+            archive: {
+                id    : 'archive',
+                label : 'Archive'
+            }
         });
         spyOn(DiagramRestService, "getCumulativeFlowDiagram").and.returnValue($q(angular.noop));
 
@@ -64,8 +73,8 @@ describe("ReportsModalController -", function() {
                             }
                         ]
                     }, {
-                        id    : '431',
-                        label : 'Review',
+                        id    : 'archive',
+                        label : 'Archive',
                         values: [
                             {
                                 start_date        : '2012-12-07',
@@ -96,20 +105,17 @@ describe("ReportsModalController -", function() {
             );
 
             expect(ReportsModalController.kanban_label).toEqual(kanban_label);
-            expect(ReportsModalController.options).toBeDefined();
             expect(ReportsModalController.data).toEqual([
                 {
                     id      : 'backlog',
                     label   : 'Backlog',
-                    key     : 'Backlog',
                     values  : [
                         { start_date: '2012-12-07', kanban_items_count: 4 },
                         { start_date: jasmine.any(String), kanban_items_count: 5 }
                     ]
                 }, {
-                    id    : '431',
-                    label : 'Review',
-                    key   : 'Review',
+                    id    : 'archive',
+                    label : 'Archive',
                     values: [
                         { start_date: '2012-12-07', kanban_items_count: 3 },
                         { start_date: jasmine.any(String), kanban_items_count: 9 }
