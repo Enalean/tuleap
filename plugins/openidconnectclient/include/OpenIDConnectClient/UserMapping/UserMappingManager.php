@@ -36,7 +36,6 @@ class UserMappingManager {
     }
 
     /**
-     * @return UserMapping
      * @throws UserMappingDataAccessException
      */
     public function create($user_id, $provider_id, $identifier, $last_used) {
@@ -44,7 +43,23 @@ class UserMappingManager {
         if (! $is_saved) {
             throw new UserMappingDataAccessException();
         }
-        return new UserMapping($user_id, $provider_id, $identifier, $last_used);
+    }
+
+    /**
+     * @return UserMapping
+     * @throws UserMappingNotFoundException
+     */
+    public function getById($id)
+    {
+        $rows = $this->dao->searchById($id);
+        if ($rows === false) {
+            throw new UserMappingNotFoundException();
+        }
+        $row = $rows->getRow();
+        if ($row === false) {
+            throw new UserMappingNotFoundException();
+        }
+        return $this->instantiateUserMappingFromRow($row);
     }
 
     /**
@@ -80,8 +95,9 @@ class UserMappingManager {
     /**
      * @throws UserMappingDataAccessException
      */
-    public function removeByUserAndProvider(PFUser $user, Provider $provider) {
-        $is_deleted = $this->dao->deleteByUserIdAndProviderId($user->getId(), $provider->getId());
+    public function remove(UserMapping $user_mapping)
+    {
+        $is_deleted = $this->dao->deleteById($user_mapping->getId());
         if (! $is_deleted) {
             throw new UserMappingDataAccessException();
         }
@@ -90,10 +106,10 @@ class UserMappingManager {
     /**
      * @throws UserMappingDataAccessException
      */
-    public function updateLastUsed(UserMapping $user_mapping, $last_used) {
+    public function updateLastUsed(UserMapping $user_mapping, $last_used)
+    {
         $is_updated = $this->dao->updateLastUsed(
-            $user_mapping->getUserId(),
-            $user_mapping->getProviderId(),
+            $user_mapping->getId(),
             $last_used
         );
         if (! $is_updated) {
@@ -104,8 +120,10 @@ class UserMappingManager {
     /**
      * @return UserMapping
      */
-    private function instantiateUserMappingFromRow(array $row) {
+    private function instantiateUserMappingFromRow(array $row)
+    {
         return new UserMapping(
+            $row['id'],
             $row['user_id'],
             $row['provider_id'],
             $row['user_openidconnect_identifier'],
@@ -118,6 +136,7 @@ class UserMappingManager {
      */
     private function instantiateUserMappingUsageFromRow(array $row) {
         return new UserMappingUsage(
+            $row['user_mapping_id'],
             $row['provider_id'],
             $row['name'],
             $row['icon'],

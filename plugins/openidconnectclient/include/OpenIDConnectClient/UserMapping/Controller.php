@@ -21,6 +21,7 @@
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use CSRFSynchronizerToken;
+use Exception;
 use Feedback;
 use HTTPRequest;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -54,23 +55,30 @@ class Controller {
         $this->user_mapping_manager = $user_mapping_manager;
     }
 
-    public function removeMapping($provider_id) {
+    public function removeMapping($user_mapping_id)
+    {
         $csrf_token = new CSRFSynchronizerToken('openid-connect-user-preferences');
         $csrf_token->check('/account/');
 
         try {
-            $provider = $this->provider_manager->getById($provider_id);
-        } catch (ProviderNotFoundException $ex) {
+            $user_mapping = $this->user_mapping_manager->getById($user_mapping_id);
+        } catch (UserMappingNotFoundException $ex) {
             $this->redirectToAccountPage(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request'),
                 Feedback::ERROR
             );
         }
         try {
-            $this->user_mapping_manager->removeByUserAndProvider(
-                $this->user_manager->getCurrentUser(),
-                $provider
+            $provider = $this->provider_manager->getById($user_mapping->getProviderId());
+        } catch (ProviderNotFoundException $ex) {
+            $this->redirectToAccountPage(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request'),
+                Feedback::ERROR
             );
+        }
+
+        try {
+            $this->user_mapping_manager->remove($user_mapping);
             $this->redirectToAccountPage(
                 $GLOBALS['Language']->getText(
                     'plugin_openidconnectclient',

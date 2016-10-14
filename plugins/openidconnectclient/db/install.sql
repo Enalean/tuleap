@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_user_mapping (
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT(11) UNSIGNED NOT NULL,
     provider_id INT(11) UNSIGNED NOT NULL,
     user_openidconnect_identifier TEXT NOT NULL,
     last_used INT(11) UNSIGNED NOT NULL,
-    PRIMARY KEY(user_id, provider_id)
+    PRIMARY KEY(id),
+    INDEX idx_mapping_provider_user(provider_id, user_id)
 );
 
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider (

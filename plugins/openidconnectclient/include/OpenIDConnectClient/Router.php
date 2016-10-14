@@ -55,7 +55,7 @@ class Router {
         $action = $request->get('action');
 
         if ($action === 'remove-user-mapping') {
-            $this->user_mapping_controller->removeMapping($request->get('provider_id'));
+            $this->user_mapping_controller->removeMapping($request->get('user_mapping_id'));
             return;
         }
 
