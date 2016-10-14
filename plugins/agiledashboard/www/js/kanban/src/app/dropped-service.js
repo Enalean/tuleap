@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .service('DroppedService', DroppedService);
+export default DroppedService;
 
 DroppedService.$inject = [
     'KanbanService'
@@ -10,13 +8,12 @@ function DroppedService(
     KanbanService
 ) {
     var self = this;
-    _.extend(self, {
-        getComparedTo                   : getComparedTo,
-        getComparedToBeFirstItemOfColumn: getComparedToBeFirstItemOfColumn,
-        getComparedToBeLastItemOfColumn : getComparedToBeLastItemOfColumn,
-        moveToColumn                    : moveToColumn,
-        reorderColumn                   : reorderColumn
-    });
+
+    self.getComparedTo                    = getComparedTo;
+    self.getComparedToBeFirstItemOfColumn = getComparedToBeFirstItemOfColumn;
+    self.getComparedToBeLastItemOfColumn  = getComparedToBeLastItemOfColumn;
+    self.moveToColumn                     = moveToColumn;
+    self.reorderColumn                    = reorderColumn;
 
     function reorderColumn(
         kanban_id,

@@ -9,3 +9,4 @@ src/**/*.css
 test-results.xml
 coverage/
 .sass-cache/
+yarn-error.log

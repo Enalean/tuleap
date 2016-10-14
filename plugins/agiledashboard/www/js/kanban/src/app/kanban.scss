@@ -1,9 +1,9 @@
 @import '../../vendor/artifact-modal/dist/assets/tuleap-artifact-modal';
 @import '../../vendor/angular-bootstrap-datetimepicker/src/scss/datetimepicker';
 @import '../../vendor/angular-ui-select/dist/select';
-@import '../../vendor/ng-scrollbar/dist/ng-scrollbar';
-@import '../../vendor/dragular/dist/dragular';
-@import '../../vendor/animate.css/animate';
+@import '../../node_modules/ng-scrollbar/dist/ng-scrollbar';
+@import '../../node_modules/dragular/dist/dragular';
+@import '../../node_modules/animate.css/animate';
 @import '../../../../../../../src/www/themes/common/css/utils/colors';
 
 $kanban-column-header-height: 48px;

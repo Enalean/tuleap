@@ -1,6 +1,7 @@
-angular
-    .module('kanban')
-    .service('KanbanColumnService', KanbanColumnService);
+import '../in-properties-filter/in-properties-filter.js';
+import _ from 'lodash';
+
+export default KanbanColumnService;
 
 KanbanColumnService.$inject = [
     '$q',

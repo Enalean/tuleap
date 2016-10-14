@@ -1,6 +1,6 @@
-angular
-    .module('card-fields')
-    .directive('cardComputedField', cardComputedField);
+import './card-computed-field.tpl.html';
+
+export default cardComputedField;
 
 function cardComputedField() {
     return {
@@ -9,6 +9,6 @@ function cardComputedField() {
             card_field  : '=field',
             filter_terms: '=filterTerms'
         },
-        templateUrl: 'card-fields/card-computed-field/card-computed-field.tpl.html'
+        templateUrl: 'card-computed-field.tpl.html'
     };
 }

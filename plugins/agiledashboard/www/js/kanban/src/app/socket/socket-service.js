@@ -1,6 +1,6 @@
-angular
-    .module('socket')
-    .service('SocketService', SocketService);
+import _ from 'lodash';
+
+export default SocketService;
 
 SocketService.$inject = [
     '$timeout',

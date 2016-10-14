@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-var tuleap = tuleap || {};
-tuleap.charts = tuleap.charts || {};
-
-tuleap.charts.cumulativeFlowChart = function (chart) {
+export default function (chart) {
     var div_graph,
         width,
         height,

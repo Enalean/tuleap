@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .service('ColumnCollectionService', ColumnCollectionService);
+import _ from 'lodash';
+
+export default ColumnCollectionService;
 
 ColumnCollectionService.$inject = [
     'SharedPropertiesService'

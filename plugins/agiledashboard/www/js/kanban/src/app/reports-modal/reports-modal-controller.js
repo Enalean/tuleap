@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .controller('ReportsModalController', ReportsModalController);
+import _ from 'lodash';
+
+export default ReportsModalController;
 
 ReportsModalController.$inject = [
     '$modalInstance',

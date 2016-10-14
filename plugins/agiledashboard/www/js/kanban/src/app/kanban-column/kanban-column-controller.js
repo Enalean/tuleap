@@ -1,6 +1,6 @@
-angular
-    .module('kanban-column')
-    .controller('KanbanColumnController', KanbanColumnController);
+import _ from 'lodash';
+
+export default KanbanColumnController;
 
 KanbanColumnController.$inject = [
     '$rootScope',

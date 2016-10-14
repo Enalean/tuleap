@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .controller('EditKanbanCtrl', EditKanbanCtrl);
+import _ from 'lodash';
+
+export default EditKanbanCtrl;
 
 EditKanbanCtrl.$inject = [
     '$scope',

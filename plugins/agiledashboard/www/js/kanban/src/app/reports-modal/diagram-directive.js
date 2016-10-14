@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .directive('graph', Graph);
+import cumulativeFlowChartFactory from 'cumulative-chart-factory';
+
+export default Graph;
 
 Graph.$inject = [
     '$window',
@@ -47,7 +47,7 @@ function Graph(
                 localized_format: localized_format
             };
 
-            var cumulative_chart = tuleap.charts.cumulativeFlowChartFactory(options);
+            var cumulative_chart = cumulativeFlowChartFactory(options);
             cumulative_chart();
 
             function resize() {

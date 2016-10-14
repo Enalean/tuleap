@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .directive('escKey', EscKeyDirective);
+export default EscKeyDirective;
 
 EscKeyDirective.$inject = [];
 

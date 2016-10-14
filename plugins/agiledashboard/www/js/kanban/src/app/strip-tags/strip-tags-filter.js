@@ -1,11 +1,11 @@
-angular
-    .module('kanban')
-    .filter('tuleapStripTags', TuleapStripTagsFilter);
+import striptags from 'striptags';
 
-TuleapStripTagsFilter.$inject = ['$window'];
+export default TuleapStripTagsFilter;
 
-function TuleapStripTagsFilter($window) {
+TuleapStripTagsFilter.$inject = [];
+
+function TuleapStripTagsFilter() {
     return function(html) {
-        return $window.striptags(html);
+        return striptags(html);
     };
 }

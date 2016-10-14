@@ -1,3 +1,6 @@
-(function () {
-    angular.module('shared-properties', []);
-})();
+import SharedPropertiesService from './shared-properties-service.js';
+
+angular.module('shared-properties', [])
+    .service('SharedPropertiesService', SharedPropertiesService);
+
+export default 'shared-properties';

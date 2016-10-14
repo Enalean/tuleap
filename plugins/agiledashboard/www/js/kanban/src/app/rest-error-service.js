@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .service('RestErrorService', RestErrorService);
+import _ from 'lodash';
+
+export default RestErrorService;
 
 RestErrorService.$inject = [
     '$modal'

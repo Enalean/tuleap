@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .controller('AddInPlaceCtrl', AddInPlaceCtrl);
+import _ from 'lodash';
+
+export default AddInPlaceCtrl;
 
 AddInPlaceCtrl.$inject = [];
 

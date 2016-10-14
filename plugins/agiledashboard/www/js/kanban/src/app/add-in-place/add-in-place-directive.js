@@ -1,17 +1,18 @@
-angular
-    .module('kanban')
-    .directive('addInPlace', AddInPlace);
+import './add-in-place.tpl.html';
+import AddInPlaceController from './add-in-place-controller.js';
+
+export default AddInPlace;
 
 AddInPlace.$inject = ['$timeout'];
 
 function AddInPlace($timeout) {
     return {
-        restrict: 'E',
-        controller: 'AddInPlaceCtrl',
+        restrict    : 'E',
+        controller  : AddInPlaceController,
         controllerAs: 'addInPlace',
-        templateUrl: 'add-in-place/add-in-place.tpl.html',
-        scope: {
-            column: '=',
+        templateUrl : 'add-in-place.tpl.html',
+        scope       : {
+            column    : '=',
             createItem: '='
         },
         link: function (scope, element, attrs, addInPlaceCtrl) {

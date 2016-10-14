@@ -1,5 +1,3 @@
-angular
-    .module('kanban')
-    .value('KanbanFilterValue', {
-        terms: ''
-    });
+export default {
+    terms: ''
+};

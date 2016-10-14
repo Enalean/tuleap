@@ -1,6 +1,6 @@
-angular
-    .module('card-fields')
-    .directive('cardTextField', cardTextField);
+import './card-text-field.tpl.html';
+
+export default cardTextField;
 
 function cardTextField() {
     var TEXT_FORMAT = 'text';
@@ -12,7 +12,7 @@ function cardTextField() {
             card_field  : '=field',
             filter_terms: '=filterTerms'
         },
-        templateUrl: 'card-fields/card-text-field/card-text-field.tpl.html',
+        templateUrl: 'card-text-field.tpl.html',
         link       : link
     };
 

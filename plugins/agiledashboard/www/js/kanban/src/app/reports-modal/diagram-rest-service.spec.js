@@ -1,12 +1,16 @@
+import kanban_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("DiagramRestService -", function() {
     var DiagramRestService,
         SharedPropertiesService,
         $httpBackend;
 
     beforeEach(function() {
-        module('kanban');
+        angular.mock.module(kanban_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$httpBackend_,
             _SharedPropertiesService_,
             _DiagramRestService_

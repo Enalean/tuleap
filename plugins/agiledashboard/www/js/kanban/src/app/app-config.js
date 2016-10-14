@@ -1,6 +1,7 @@
-angular
-    .module('kanban')
-    .config(KanbanConfig);
+import './kanban.tpl.html';
+import KanbanCtrl from './app-kanban-controller.js';
+
+export default KanbanConfig;
 
 KanbanConfig.$inject = [
     '$stateProvider',
@@ -21,7 +22,7 @@ function KanbanConfig(
 
     $stateProvider.state('kanban', {
         url         : "/kanban",
-        controller  : 'KanbanCtrl',
+        controller  : KanbanCtrl,
         controllerAs: 'kanban',
         templateUrl : "kanban.tpl.html"
     });
