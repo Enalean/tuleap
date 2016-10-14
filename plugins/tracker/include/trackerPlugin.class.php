@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuealp\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
@@ -47,6 +48,10 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Tuleap\Admin\AdminSidebarPresenterBuilder;
+use Tuleap\Tracker\Legacy\Inheritor;
+use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Service\ServiceCreator;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -139,6 +144,8 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
 
         $this->addHook(Event::GET_GLYPH, 'getGlyph');
+        $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
+        $this->addHook(ProjectRegistrationActivateService::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -377,26 +384,46 @@ class trackerPlugin extends Plugin {
         return new Tracker_Artifact_Burndown_PaneInfo($milestone);
     }
 
+    private function isLegacyTrackerV3StillUsed($legacy)
+    {
+        return $legacy[Service::TRACKERV3];
+    }
+
    /**
     * Project creation hook
     *
     * @param Array $params
     */
-    function register_project_creation($params) {
+    public function register_project_creation($params) {
         if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
-            $tm = new TrackerManager();
-            $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+            $tracker_manager = new TrackerManager();
+            $tracker_manager->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
             $project_manager = $this->getProjectManager();
             $template        = $project_manager->getProject($params['template_id']);
             $project         = $project_manager->getProject($params['group_id']);
+            $legacy_services = $params['legacy_service_usage'];
 
             $config = new AllowedProjectsConfig(
                 $project_manager,
                 new AllowedProjectsDao()
             );
+
             if ($config->isProjectAllowedToUseNature($template)) {
                 $config->addProject($project);
+            }
+
+            if (
+                ! $this->isRestricted() &&
+                ! $this->isLegacyTrackerV3StillUsed($legacy_services)
+                && TrackerV3::instance()->available()
+            ) {
+                $inheritor = new Inheritor(
+                    new ArtifactTypeFactory($template),
+                    $this->getTrackerFactory()
+                );
+
+                $inheritor->inheritFromLegacy($this->getUserManager()->getCurrentUser(), $template, $project);
             }
         }
     }
@@ -764,6 +791,23 @@ class trackerPlugin extends Plugin {
                 }
             }
         }
+    }
+
+    public function project_creation_remove_legacy_services($params)
+    {
+        if (! $this->isRestricted()) {
+            $this->getServiceActivator()->unuseLegacyService($params);
+        }
+    }
+
+    public function project_registration_activate_service(ProjectRegistrationActivateService $event)
+    {
+        $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
+    }
+
+    private function getServiceActivator()
+    {
+        return new ServiceActivator(ServiceManager::instance(), TrackerV3::instance(), new ServiceCreator());
     }
 
     /**
