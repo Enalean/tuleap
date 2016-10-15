@@ -998,7 +998,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             if ($int_row_value !== null) {
                 $int_row_value = $int_row_value;
             }
-            $changeset_value = new ChangesetValueComputed($value_id, $this, $has_changed, $int_row_value);
+            $changeset_value = new ChangesetValueComputed($value_id, $changeset, $this, $has_changed, $int_row_value);
         }
         return $changeset_value;
     }

@@ -31,15 +31,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      */
     protected $list_values;
     
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_String $field       The field of the value
-     * @param boolean                          $has_changed If the changeset value has chnged from the previous one
-     * @param array                            $list_values The list of values
-     */
-    public function __construct($id, $field, $has_changed, array $list_values) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, array $list_values) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->list_values = $list_values;
     }
 
@@ -326,7 +319,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $changes;
     }
 
-    public function nodiff() {
+    public function nodiff($format = 'html') {
         $next = $this->getListValues();
         $added_arr = array();
         foreach ($next as $element) {

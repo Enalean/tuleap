@@ -31,15 +31,8 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     protected $perms;
     protected $used;
     
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_Date $field       The field of the value
-     * @param boolean                        $has_changed If the changeset value has chnged from the previous one
-     * @param array                          $perms   The permissions
-     */
-    public function __construct($id, $field, $has_changed, $used, $perms) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $used, $perms) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->perms = $perms;
         $this->used = $used;
     }
@@ -190,7 +183,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return $changes;
     }
     
-    public function nodiff() {
+    public function nodiff($format = 'html') {
         $next = $this->getPerms();
         $added_arr = array();
         foreach ($next as $element) {

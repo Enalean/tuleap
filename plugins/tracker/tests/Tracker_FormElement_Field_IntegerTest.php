@@ -79,7 +79,7 @@ class Tracker_FormElement_Field_IntegerTest extends UnitTestCase {
         $integer_field = new Tracker_FormElement_Field_IntegerTestVersion();
         $integer_field->setReturnReference('getValueDao', $value_dao);
 
-        $this->assertIsA($integer_field->getChangesetValue(null, 123, false), 'Tracker_Artifact_ChangesetValue_Integer');
+        $this->assertIsA($integer_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false), 'Tracker_Artifact_ChangesetValue_Integer');
     }
 
     function testGetChangesetValue_doesnt_exist() {

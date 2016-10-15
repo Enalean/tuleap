@@ -30,6 +30,10 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
     public function setUp() {
         parent::setUp();
         $this->user = mock('PFUser');
+
+        $this->artifact  = mock('Tracker_Artifact');
+        $this->changeset = stub('Tracker_Artifact_Changeset')->getArtifact()->returns($this->artifact);
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
     }
 
     public function testFiles() {
@@ -42,7 +46,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
 
         $field = new MockTracker_FormElement_Field_File();
         $info  = new Tracker_FileInfo($attachment_id, $field, $submitted_by, $description, $filename, $filesize, $filetype);
-        $value_file = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info));
+        $value_file = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
         $this->assertEqual(count($value_file), 1);
         $this->assertEqual($value_file[0], $info);
         $this->assertEqual(
@@ -67,8 +71,8 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $info   = new MockTracker_FileInfo();
         $info->setReturnValue('getFilename', 'Screenshot.png');
         $field  = new MockTracker_FormElement_Field_File();
-        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info));
-        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info));
+        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
+        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
         $this->assertFalse($file_1->diff($file_2));
         $this->assertFalse($file_2->diff($file_1));
     }
@@ -78,13 +82,15 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $info->setReturnValue('__toString', '#1 Screenshot.png');
         $info->setReturnValue('getFilename', 'Screenshot.png');
         $field  = new MockTracker_FormElement_Field_File();
-        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array());
-        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info));
+        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array());
+        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
+        stub($this->changeset)->getValue()->returns($file_2);
+
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
-        $this->assertEqual($file_1->diff($file_2), 'Screenshot.png removed');
-        $this->assertEqual($file_2->diff($file_1), 'Screenshot.png added');
+        $this->assertEqual($file_1->diff($file_2, 'text'), 'Screenshot.png removed');
+        $this->assertEqual($file_2->diff($file_1, 'text'), 'Screenshot.png added');
     }
 
     public function testDiff_with_lot_of_files() {
@@ -101,13 +107,15 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $info4->setReturnValue('__toString', '#4 Screenshot4.png');
         $info4->setReturnValue('getFilename', 'Screenshot4.png');
         $field  = new MockTracker_FormElement_Field_File();
-        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info1, $info3, $info4));
-        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info1, $info2));
+        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info1, $info3, $info4));
+        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info1, $info2));
+        stub($this->changeset)->getValue()->returns($file_2);
+
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
-        $this->assertEqual($file_1->diff($file_2), 'Screenshot2.png removed'. PHP_EOL .'Screenshot3.png, Screenshot4.png added');
-        $this->assertEqual($file_2->diff($file_1), 'Screenshot3.png, Screenshot4.png removed'. PHP_EOL .'Screenshot2.png added');
+        $this->assertEqual($file_1->diff($file_2, 'text'), 'Screenshot2.png removed'. PHP_EOL .'Screenshot3.png, Screenshot4.png added');
+        $this->assertEqual($file_2->diff($file_1, 'text'), 'Screenshot3.png, Screenshot4.png removed'. PHP_EOL .'Screenshot2.png added');
     }
 
     public function testSoapValue_with_lot_of_files() {
@@ -128,7 +136,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $info2  = new Tracker_FileInfo($attachment2_id, $field, $submitted_by, $description, $filename2, $filesize, $filetype);
         $info3  = new Tracker_FileInfo($attachment3_id, $field, $submitted_by, $description, $filename3, $filesize, $filetype);
 
-        $value_file = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info1, $info2, $info3));
+        $value_file = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info1, $info2, $info3));
         $this->assertEqual(
             $value_file->getSoapValue($this->user),
             array(

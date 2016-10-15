@@ -1138,7 +1138,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if (count($bindvalue_ids)) {
             $bind_values = $this->getBind()->getBindValues($bindvalue_ids);
         }
-        $changeset_value = new Tracker_Artifact_ChangesetValue_List($value_id, $this, $has_changed, $bind_values);
+        $changeset_value = new Tracker_Artifact_ChangesetValue_List($value_id, $changeset, $this, $has_changed, $bind_values);
         return $changeset_value;
     }
 

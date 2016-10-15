@@ -168,7 +168,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-        $changeset_value = new Tracker_Artifact_ChangesetValue_Date($value_id, $this, $has_changed, $changeset->getArtifact()->getSubmittedOn());
+        $changeset_value = new Tracker_Artifact_ChangesetValue_Date($value_id, $changeset, $this, $has_changed, $changeset->getArtifact()->getSubmittedOn());
         return $changeset_value;
     }
     
@@ -214,7 +214,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if (!$value) {
-            $value = new Tracker_Artifact_ChangesetValue_Date(null, $this, false, $artifact->getSubmittedOn());
+            $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
         $timestamp = $value->getTimestamp();
         $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
@@ -237,7 +237,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if (!$value) {
-            $value = new Tracker_Artifact_ChangesetValue_Date(null, $this, false, $artifact->getSubmittedOn());
+            $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
         $value = $value->getTimestamp();
         $value = $value ? DateHelper::timeAgoInWords($value) : '';
@@ -279,7 +279,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         if ( empty($value) ) {
-            $value = new Tracker_Artifact_ChangesetValue_Date(null, $this, false, $artifact->getSubmittedOn());
+            $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
         $output = '';
         switch ($format) {

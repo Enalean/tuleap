@@ -38,6 +38,8 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
 
         $this->field = stub('Tracker_FormElement_Field_Text')->getName()->returns('field_text');
         $this->user  = aUser()->withId(101)->build();
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
     public function tearDown() {
@@ -48,22 +50,22 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
 
     public function testTexts() {
         $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
-        $text  = new Tracker_Artifact_ChangesetValue_Text(111, $field, false, 'Problems during installation', 'text');
+        $text  = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $field, false, 'Problems during installation', 'text');
         $this->assertEqual($text->getText(), 'Problems during installation');
         $this->assertEqual($text->getSoapValue($this->user), array('value' => 'Problems during installation'));
         $this->assertEqual($text->getValue(), 'Problems during installation');
     }
     
     public function testNoDiff() {
-        $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->field, false, 'Problems during installation', 'text');
-        $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->field, false, 'Problems during installation', 'text');
+        $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during installation', 'text');
+        $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during installation', 'text');
         $this->assertFalse($text_1->diff($text_2));
         $this->assertFalse($text_2->diff($text_1));
     }
     
     public function testDiff() {
-        $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->field, false, 'Problems during <ins> installation', 'text');
-        $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->field, false, 'FullTextSearch does not work on Wiki pages', 'text');
+        $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during <ins> installation', 'text');
+        $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'FullTextSearch does not work on Wiki pages', 'text');
         $this->assertEqual($text_1->diff($text_2), '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>'.
                                                     '<div class="diff" style="display: none">'.
                                                     '<div class="block">'.
@@ -107,6 +109,7 @@ class Tracker_Artifact_ChangesetValue_Text_getContentAsTextTest extends TuleapTe
         $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
         $text = new Tracker_Artifact_ChangesetValue_Text(
             111,
+            mock('Tracker_Artifact_Changeset'),
             $field,
             false,
             'Problems with my code: <b>example</b>',
@@ -119,6 +122,7 @@ class Tracker_Artifact_ChangesetValue_Text_getContentAsTextTest extends TuleapTe
         $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
         $text = new Tracker_Artifact_ChangesetValue_Text(
             111,
+            mock('Tracker_Artifact_Changeset'),
             $field,
             false,
             'Problems with my code: <b>example</b>',
@@ -134,7 +138,7 @@ class Tracker_Artifact_ChangesetValue_Text_RESTTest extends TuleapTestCase {
         $field = stub('Tracker_FormElement_Field_Text')->getName()->returns('field_text');
         $user  = aUser()->withId(101)->build();
 
-        $changeset = new Tracker_Artifact_ChangesetValue_Text(111, $field, true, 'myxedemic enthymematic', 'html');
+        $changeset = new Tracker_Artifact_ChangesetValue_Text(111, mock('Tracker_Artifact_Changeset'), $field, true, 'myxedemic enthymematic', 'html');
         $representation = $changeset->getRESTValue($user, $changeset);
 
         $this->assertEqual($representation->value, 'myxedemic enthymematic');

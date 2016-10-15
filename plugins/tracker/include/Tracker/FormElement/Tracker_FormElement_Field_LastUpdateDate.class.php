@@ -155,7 +155,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-        $changeset_value = new Tracker_Artifact_ChangesetValue_Date($value_id, $this, $has_changed, $changeset->getSubmittedOn());
+        $changeset_value = new Tracker_Artifact_ChangesetValue_Date($value_id, $changeset, $this, $has_changed, $changeset->getSubmittedOn());
         return $changeset_value;
     }
     

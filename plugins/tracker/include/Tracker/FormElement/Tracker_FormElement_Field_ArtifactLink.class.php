@@ -1250,6 +1250,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         return new Tracker_Artifact_ChangesetValue_ArtifactLink(
             $value_id,
+            $changeset,
             $this,
             $has_changed,
             $artifact_links,

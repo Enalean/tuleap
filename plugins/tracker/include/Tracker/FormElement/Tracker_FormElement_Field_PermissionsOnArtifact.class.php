@@ -705,7 +705,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
            $ugroups[] = $v['ugroup_id'];
         }
 
-        $changeset_value = new Tracker_Artifact_ChangesetValue_PermissionsOnArtifact($value_id, $this, $has_changed, $changeset->getArtifact()->useArtifactPermissions(), $ugroups);
+        $changeset_value = new Tracker_Artifact_ChangesetValue_PermissionsOnArtifact($value_id, $changeset, $this, $has_changed, $changeset->getArtifact()->useArtifactPermissions(), $ugroups);
         return $changeset_value;
     }
 

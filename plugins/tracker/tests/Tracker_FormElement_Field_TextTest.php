@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $text_field = new Tracker_FormElement_Field_TextTestVersion();
         $text_field->setReturnReference('getValueDao', $value_dao);
 
-        $this->assertIsA($text_field->getChangesetValue(null, 123, false), 'Tracker_Artifact_ChangesetValue_Text');
+        $this->assertIsA($text_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false), 'Tracker_Artifact_ChangesetValue_Text');
     }
 
     public function testGetChangesetValue_doesnt_exist() {

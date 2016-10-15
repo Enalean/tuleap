@@ -279,8 +279,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $html;
     }
 
-    protected function fetchAllAttachment($artifact_id, $values, $submitter_needed, $submitted_values, $read_only = true) {
+    public function fetchAllAttachment($artifact_id, $values, $submitter_needed, $submitted_values, $read_only = true, $lytebox_id = null) {
         $html = '';
+        if ($lytebox_id === null) {
+            $lytebox_id = $this->getId();
+        }
         if (count($values)) {
             $hp = Codendi_HTMLPurifier::instance();
             $uh = UserHelper::instance();
@@ -290,7 +293,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
                
                 $link_show = '<a href="'. $query_link .'"'.
-                                 $this->getVisioningAttributeForLink($fileinfo, $read_only) .'
+                                 $this->getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id) .'
                                  title="'. $sanitized_description .'">';
 
                 $add = '<div class="tracker_artifact_attachment">';
@@ -379,16 +382,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         );
     }
 
-    private function getVisioningAttributeForLink($fileinfo, $read_only) {
+    private function getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id) {
         if (! $fileinfo->isImage()) {
             return '';
         }
 
         if ($read_only) {
-            return 'rel="lytebox['. $this->getId() .']"';
+            return 'rel="lytebox['. $lytebox_id .']"';
         }
 
-        return 'data-rel="lytebox['. $this->getId() .']"';
+        return 'data-rel="lytebox['. $lytebox_id .']"';
     }
 
     private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, $submitted_values) {
@@ -987,7 +990,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $files[] = $this->getFileInfo($fileinfo_row['id'], $fileinfo_row);
             }
         }
-        $changeset_value = new Tracker_Artifact_ChangesetValue_File($value_id, $this, $has_changed, $files);
+        $changeset_value = new Tracker_Artifact_ChangesetValue_File($value_id, $changeset, $this, $has_changed, $files);
         return $changeset_value;
     }
 

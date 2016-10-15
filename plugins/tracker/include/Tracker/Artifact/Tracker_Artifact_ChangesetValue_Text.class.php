@@ -41,16 +41,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /** @var string */
     private $format;
     
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_String $field       The field of the value
-     * @param boolean                          $has_changed If the changeset value has chnged from the previous one
-     * @param string                           $text        The string
-     * @param string                           $format      The format
-     */
-    public function __construct($id, $field, $has_changed, $text, $format) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $text, $format) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->text   = $text;
         $this->format = $format;
     }
@@ -193,7 +185,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff($format='html') {
+    public function nodiff($format = 'html') {
         $next = $this->getText();
         if ($next != '') {
             $previous = array('');

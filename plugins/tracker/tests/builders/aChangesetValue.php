@@ -51,7 +51,7 @@ class Test_Tracker_ChangesetValue_Builder {
      */
     public function build() {
         $klass  = $this->name;
-        $object = new $klass($this->id, $this->field, null);
+        $object = new $klass($this->id, mock('Tracker_Artifact_Changeset'), $this->field, null);
         return $object;
     }
 }
@@ -74,7 +74,7 @@ class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_Chan
      * @return Tracker_Artifact_ChangesetValue_ArtifactLink
      */
     public function build() {
-        $object = new Tracker_Artifact_ChangesetValue_ArtifactLink($this->id, $this->field, null, $this->artifact_links, $this->reverse_artifact_links);
+        $object = new Tracker_Artifact_ChangesetValue_ArtifactLink($this->id, mock('Tracker_Artifact_Changeset'), $this->field, null, $this->artifact_links, $this->reverse_artifact_links);
         return $object;
     }
 }
@@ -95,7 +95,7 @@ class Test_Tracker_ChangesetValue_List_Builder extends Test_Tracker_ChangesetVal
      * @return Tracker_Artifact_ChangesetValue_List
      */
     public function build() {
-        return new Tracker_Artifact_ChangesetValue_List($this->id, $this->field, null, $this->list_values);
+        return new Tracker_Artifact_ChangesetValue_List($this->id, mock('Tracker_Artifact_Changeset'), $this->field, null, $this->list_values);
     }
 }
 
