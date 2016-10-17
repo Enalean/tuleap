@@ -19,8 +19,6 @@
  */
 require_once 'builders/aSystemEvent.php';
 
-use Tuealp\Svn\ApacheConfGenerator;
-
 class SystemEventProcessor_RootTest extends TuleapTestCase {
     private $system_event_manager;
     private $system_event_dao;
@@ -50,7 +48,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
                 mock('BackendSVN'),
                 mock('BackendSystem'),
                 $this->site_cache,
-                mock('Tuealp\Svn\ApacheConfGenerator')
+                mock('Tuleap\Svn\ApacheConfGenerator')
             )
         );
         ForgeConfig::store();
