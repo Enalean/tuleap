@@ -1,3 +1,6 @@
+Version 0.99 - Tuleap 9.1
+    * request #9579 Do not use deprecated services in new projects (SVN core service is no more instanciated for new project)
+
 Version 0.98 - Tuleap 9.0
     * request #9562: Allow to checkout file when using EPEL's ViewVC
 
