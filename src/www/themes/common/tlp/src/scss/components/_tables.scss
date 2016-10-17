@@ -143,3 +143,11 @@ $tlp-table-row-background-empty: #fcfcfc;
     text-align: right;
     white-space: nowrap;
 }
+
+.tlp-table-sort {
+    display: block;
+}
+
+.tlp-table-sort-icon {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
