@@ -131,6 +131,11 @@ $tlp-form-element-select-small-background-size: 6px;
     }
 }
 
+.tlp-property-empty {
+    color: $tlp-ui-dimmed;
+    font-style: italic;
+}
+
 /**
  * Inputs
  */

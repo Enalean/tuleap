@@ -7,7 +7,7 @@ plugin_ldap	total_entries	Total number of entries
 plugin_ldap	entry_#	Entry #
 plugin_ldap	entry_dn	Entry dn
 plugin_ldap	attributes	attributes
-plugin_ldap	ldap_login	Enterprise Directory Login:
+plugin_ldap	ldap_login	Enterprise Directory Login
 plugin_ldap	not_found	Error - Not Found
 plugin_ldap	no_ldap_login_found	No Enterprise Directory login found
 plugin_ldap	login_pls_use_ldap	Please use your Enterprise Directory login (not the $1 one).

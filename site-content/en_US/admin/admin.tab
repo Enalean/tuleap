@@ -337,10 +337,9 @@ admin_usergroup	error_add_ug	Error adding User to group
 admin_usergroup	success_add_ug	Successfully added user to group
 admin_usergroup	error_member	User is already a member of group $1
 admin_usergroup	header	User/Group Management for user
-admin_usergroup	account_info	Unix Account Information
 admin_usergroup	shell	Shell
 admin_usergroup	email	Email
-admin_usergroup	expiry_date	Expiry Date
+admin_usergroup	expiry_date	Expiry date
 admin_usergroup	data_not_parsed	Sorry - Expiry Date entry could not be parsed. It must be in YYYY-MM-DD format.
 admin_usergroup	ldap_id	LDAP Identifier
 admin_usergroup	unix_details	Unix details:
@@ -355,16 +354,24 @@ admin_usergroup	current_groups	Current Groups
 admin_usergroup	remove_ug	Remove User from Group
 admin_usergroup	admin_flags	Administration Flags
 admin_usergroup	add_ug	Add User to Group (group id)
-admin_usergroup	change_passwd	Change User Password
+admin_usergroup	change_passwd	Change password
 admin_usergroup	was	Was:
 admin_usergroup	rename_user_msg	Propagation of user's login name update on system queued ($1 -> $2). It will be processed in a little while.
 admin_usergroup	rename_user_warn	Login name update will be effective only after system event processing.
 admin_usergroup	rename_user_already_queued	There is already an event scheduled to rename this user. Please check <a href="/admin/system_events/">System Event Monitor</a>.
-admin_usergroup	account_details	Account details:
+admin_usergroup	account_details	Account details
+admin_usergroup	access	Access
+admin_usergroup	current_projects	Current projects
+admin_usergroup	is_admin	Is project administrator
+admin_usergroup	no_project	Not a member of any projects
 admin_usergroup	last_pwd_update	Last password update
 admin_usergroup	last_access_date	Last access date
 admin_usergroup	cannot_change_status	Cannot change status before account validation
 admin_usergroup	user_public_profile	Public profile
+admin_usergroup	more_info	More information
+admin_usergroup	update_information	Update information
+admin_usergroup	purpose_label	Purpose
+admin_usergroup	empty_purpose	Empty
 #
 #-----------------------------------------------
 # Script: SF/www/admin/userlist.php

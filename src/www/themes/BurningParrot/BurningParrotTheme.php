@@ -45,6 +45,7 @@ class BurningParrotTheme extends BaseLayout
         $this->includeFooterJavascriptFile('/scripts/tuleap/listFilter.js');
         $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown.js');
         $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown-projects.js');
+        $this->includeFooterJavascriptFile('/themes/common/tlp/dist/tlp.'. $user->getLocale() .'.min.js');
     }
 
     public function includeCalendarScripts()

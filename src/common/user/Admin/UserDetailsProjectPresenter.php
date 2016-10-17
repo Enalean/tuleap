@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,35 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#siteadmin-homepage-container {
-    display: flex;
-    justify-content: space-between;
-}
+namespace Tuleap\User\Admin;
 
-.siteadmin-homepage-column {
-    flex: 1;
-    margin: 0 $tlp-spacing 0 0;
+use Project;
 
-    &:last-child {
-        margin: 0;
+class UserDetailsProjectPresenter
+{
+    public $id;
+    public $name;
+    public $is_admin;
+
+    public function __construct(Project $project, $is_admin)
+    {
+        $this->id       = $project->getId();
+        $this->name     = $project->getUnconvertedPublicName();
+        $this->is_admin = $is_admin;
     }
 }
-
-.siteadmin-trovecat-list-category {
-    width: 100%;
-}
-
-.siteadmin-trovecat-list-actions {
-    text-align: left;
-    white-space: nowrap;
-}
-
-.siteadmin-sidebar {
-    align-self: stretch;
-    min-width: 260px;
-    background: #293e45;
-    color: #d4d7e1;
-}
-
-@import 'siteadmin-user-list';
-@import 'siteadmin-user-details';
