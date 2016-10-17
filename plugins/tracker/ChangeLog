@@ -1,3 +1,6 @@
+Version 5.1027 - Tuleap 9.1
+    * request #9591: Show attachment directly in the changeset
+
 Version 5.1026 - Tuleap 9.0
     * Link to folder is not copied
 
