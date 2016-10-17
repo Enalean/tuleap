@@ -1242,4 +1242,13 @@ class Event {
      *
      */
     const IMPORT_XML_IS_PROJECT_VALID = 'import_xml_is_project_valid';
+
+    /**
+     * CSS stylesheets that will be added to the page's <head>
+     *
+     * Parameters:
+     *    - variant: ThemeVariantColor Theme variant color
+     *    - stylesheets: String[] css paths to be added
+     */
+    const BURNING_PARROT_GET_STYLESHEETS = 'burning_parrot_get_stylesheets';
 }

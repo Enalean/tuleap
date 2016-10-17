@@ -22,6 +22,8 @@ namespace Tuleap\Theme\BurningParrot;
 
 use HTTPRequest;
 use PFUser;
+use Event;
+use EventManager;
 use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\SidebarPresenter;
@@ -98,10 +100,20 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariantColor $color)
     {
-        return array(
+        $stylesheets = array(
             '/themes/common/tlp/dist/tlp-'. $color->getName() .'.min.css',
             '/themes/BurningParrot/css/burning-parrot-'. $color->getName() .'.css'
         );
+
+        EventManager::instance()->processEvent(
+            Event::BURNING_PARROT_GET_STYLESHEETS,
+            array(
+                'variant' => $this->getMainColor(),
+                'stylesheets' => &$stylesheets
+            )
+        );
+
+        return $stylesheets;
     }
 
     private function getMainColor()

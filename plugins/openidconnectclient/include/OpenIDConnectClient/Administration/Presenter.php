@@ -142,4 +142,18 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_update');
     }
 
+    public function there_are_providers()
+    {
+        return count(($this->providers_presenters) > 0);
+    }
+
+    public function empty_content()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'empty_content');
+    }
+
+    public function empty_providers_text()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'empty_providers_text');
+    }
 }
