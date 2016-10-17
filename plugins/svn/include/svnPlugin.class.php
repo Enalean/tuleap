@@ -114,6 +114,8 @@ class SvnPlugin extends Plugin {
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
+
+        $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
     }
 
     public function getPluginInfo() {
@@ -556,4 +558,39 @@ class SvnPlugin extends Plugin {
         $statistic_collector->collect($params['csv_exporter'], $params['start_date'], $params['end_date']);
     }
 
+    public function project_creation_remove_legacy_services($params)
+    {
+        $service_manager     = ServiceManager::instance();
+        $template            = $params['template'];
+        $data                = $params['project_creation_data'];
+
+        if (! $this->isRestricted()) {
+            $template_services   = $service_manager->getListOfAllowedServicesForProject($template);
+            $svn_core_service    = $this->getSVNCoreService($template_services);
+            $svn_plugin_service  = $this->getSVNPluginService($template_services);
+
+            if ($svn_core_service && $svn_plugin_service) {
+                $data->unsetProjectServiceUsage($svn_core_service->getId());
+                $data->forceServiceUsage($svn_plugin_service->getId());
+
+                $params['use_legacy_services'][Service::SVN] = false;
+            }
+        }
+    }
+
+    private function getSVNCoreService(array $template_services) {
+        foreach ($template_services as $service) {
+            if ($service->getShortName() === Service::SVN) {
+                return $service;
+            }
+        }
+    }
+
+    private function getSVNPluginService(array $template_services) {
+        foreach ($template_services as $service) {
+            if ($service->getShortName() === $this->getServiceShortname()) {
+                return $service;
+            }
+        }
+    }
 }
