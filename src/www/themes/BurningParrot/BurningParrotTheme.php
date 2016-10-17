@@ -47,11 +47,6 @@ class BurningParrotTheme extends BaseLayout
         $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown-projects.js');
     }
 
-    public function isLabFeature()
-    {
-        return true;
-    }
-
     public function includeCalendarScripts()
     {
     }

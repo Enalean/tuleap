@@ -97,10 +97,6 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return $array[$theme];
     }
 
-    public function isLabFeature() {
-        return false;
-    }
-
     public function header(array $params) {
         $title = $GLOBALS['sys_name'];
         if (!empty($params['title'])) {

@@ -694,11 +694,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
     }
 
-    public function isLabFeature()
-    {
-        return false;
-    }
-
     function iframe($url, $html_options = array()) {
         $html = '';
         $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';

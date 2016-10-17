@@ -45,22 +45,14 @@ function util_get_theme_list() {
             }
 
             $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php';
-            if (is_file($path)) {
-                $class = $file.'_Theme';
-            } else {
+            if (! is_file($path)) {
                 $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'Theme.php';
-                if (is_file($path)) {
-                    $class = 'Tuleap\\Theme\\'. $file .'\\'. $file .'Theme';
-                } else {
+                if (! is_file($path)) {
                     continue;
                 }
             }
 
-            require_once $path;
-            $theme = new $class(($GLOBALS['sys_is_theme_custom'] ? '/custom/' : '/themes/') . $file, $user);
-            if (! $theme->isLabFeature() || $user->useLabFeatures()) {
-                $theme_list[] = $file;
-            }
+            $theme_list[] = $file;
         }
         closedir($dir);
     }
