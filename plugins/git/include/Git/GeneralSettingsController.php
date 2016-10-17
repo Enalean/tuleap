@@ -76,7 +76,7 @@ class GeneralSettingsController
 
     private function isRegexpAuthorizedForPlateform()
     {
-        return $this->regexp_retriever->isRegexpEnabled();
+        return $this->regexp_retriever->areRegexpActivatedAtSiteLevel();
     }
 
     private function enableRegexp()

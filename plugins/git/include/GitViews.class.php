@@ -25,6 +25,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -70,6 +71,10 @@ class GitViews extends PluginViews {
      * @var FineGrainedRepresentationBuilder
      */
     private $fine_grained_builder;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
 
     public function __construct(
         $controller,
@@ -80,7 +85,8 @@ class GitViews extends PluginViews {
         FineGrainedRetriever $fine_grained_retriever,
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         FineGrainedRepresentationBuilder $fine_grained_builder,
-        GitPhpAccessLogger $access_loger
+        GitPhpAccessLogger $access_loger,
+        RegexpFineGrainedRetriever $regexp_retriever
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int)$this->request->get('group_id');
@@ -96,6 +102,7 @@ class GitViews extends PluginViews {
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_builder                    = $fine_grained_builder;
         $this->access_loger                            = $access_loger;
+        $this->regexp_retriever                        = $regexp_retriever;
     }
 
     public function header() {
@@ -240,7 +247,8 @@ class GitViews extends PluginViews {
             $this->fine_grained_retriever,
             $this->fine_grained_builder,
             $this->default_fine_grained_permission_factory,
-            $this->git_permissions_manager
+            $this->git_permissions_manager,
+            $this->regexp_retriever
         );
         $repo_management_view->display();
     }
@@ -560,7 +568,8 @@ class GitViews extends PluginViews {
                 $this->fine_grained_permission_factory,
                 $this->fine_grained_builder,
                 $this->default_fine_grained_permission_factory,
-                $this->git_permissions_manager
+                $this->git_permissions_manager,
+                $this->regexp_retriever
             );
 
             $userName = $this->user->getName();
@@ -737,12 +746,18 @@ class GitViews extends PluginViews {
             $tags_permissions_representation,
             $new_fine_grained_ugroups,
             $delete_url,
-            $csrf_delete
+            $csrf_delete,
+            $this->areRegexpActivatedAtSiteLevel()
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         echo $renderer->renderToString('admin', $presenter);
+    }
+
+    private function areRegexpActivatedAtSiteLevel()
+    {
+        return $this->regexp_retriever->areRegexpActivatedAtSiteLevel();
     }
 
     private function getMirrorPresentersForGitAdmin() {

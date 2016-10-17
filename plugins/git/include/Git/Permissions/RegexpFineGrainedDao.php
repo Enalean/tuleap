@@ -25,7 +25,7 @@ use DataAccessObject;
 
 class RegexpFineGrainedDao extends DataAccessObject
 {
-    public function isRegexpEnabled()
+    public function areRegexpActivatedAtSiteLevel()
     {
         $sql = "SELECT * FROM plugin_git_fine_grained_regexp_enabled";
 

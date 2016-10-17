@@ -113,9 +113,20 @@
         });
     }
 
+    function bindToggleEnableRegexp() {
+        $('#use-fine-grained-permissions').change(function () {
+            if($(this).is(":checked")) {
+                $('.regexp_permission_activated').show();
+            } else {
+                $('.regexp_permission_activated').hide();
+            }
+        });
+    }
+
     $(function() {
         bindAddPermission();
         bindToggleFineGrainedPermissions();
+        bindToggleEnableRegexp();
 
         confirmDeletionPopover();
 
