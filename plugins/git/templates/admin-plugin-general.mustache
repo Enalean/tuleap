@@ -1,0 +1,28 @@
+<h3>{{ access_control_title }}</h3>
+
+{{^ is_activated }}
+    <div class="alert alert-warning">{{ warning_is_activated }}</div>
+{{/ is_activated }}
+{{# is_activated }}
+    <div class="alert alert-warning">{{ warning_no_possible_go_back }}</div>
+{{/ is_activated }}
+
+<form method="POST"
+      action="?pane=general-settings&action=enable-regexp-usage"
+      class="admin_mirror_config form-horizontal"
+>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div class="control-group">
+        <input type="checkbox"
+            {{# is_activated }} disabled="disabled" checked="checked" {{/ is_activated }}
+        > {{ allow_regexp_info }}
+    </div>
+
+    <input value="{{ save_settings }}"
+           class="btn btn-primary"
+           type="submit"
+           {{# is_activated }} disabled="disabled" {{/ is_activated }}
+    >
+</form>

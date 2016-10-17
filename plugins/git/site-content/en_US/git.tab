@@ -362,8 +362,16 @@ plugin_git	admin_gerrit_v2_8plus	2.8+
 plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password:
 
+plugin_git	access_control_title	Access control settings
+plugin_git	allow_regexp_info	Allow usage of regexp in branches and tags during repository permission definition
+plugin_git	save_settings	Save settings
+plugin_git	no_go_back	Feature under development. Once regexp is activated for platform it wont be possible to disable it.
+plugin_git	warning_is_activated	Feature under development. You can't disable regexp functionality for now.
+plugin_git	update_error	An error occurred while activating regexp option for Git fine grained permission.
+
 plugin_git	gitolite_config_tab_name	Gitolite configuration
 plugin_git	gerrit_tab_name	Gerrit
+plugin_git	general_settings_tab_name	General settings
 plugin_git	mirror_tab_name	Mirrors
 plugin_git	admin_mirror_save_failed	Failed to add new mirror
 plugin_git	admin_mirror_fields_required	All fields are required

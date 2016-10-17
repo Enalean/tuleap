@@ -2,6 +2,9 @@
 
 <div class="tabbable">
     <ul class="nav nav-tabs">
+        <li  class="{{ general_settings_active }}">
+            <a href="?pane=general-settings">{{ general_settings_tab_name }}</a>
+        </li>
         <li  class="{{ gerrit_active }}">
             <a href="?pane=gerrit_servers_admin">{{ gerrit_tab_name }}</a>
         </li>
@@ -14,6 +17,11 @@
     </ul>
 
     <div class="tab-content">
+        {{# manage_general_settings }}
+            <div>
+                {{> admin-plugin-general }}
+            </div>
+        {{/ manage_general_settings }}
         {{# manage_gerrit }}
             <div>
                 {{> admin-plugin-gerrit-server }}
