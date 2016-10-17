@@ -29,15 +29,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      */
     protected $files;
     
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_File $field       The field of the value
-     * @param boolean                        $has_changed If the changeset value has chnged from the previous one
-     * @param array                          $files       array of Tracker_FileInfo
-     */
-    public function __construct($id, $field, $has_changed, $files) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $files) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->files = $files;
     }
 
@@ -232,16 +225,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
             if ($removed = implode(', ', $removed)) {
                 $result .= $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
             }
-            $added = array();
-            foreach (array_diff($this->files, $changeset_value->getFiles()) as $fi) {
-                $added[] = $fi->getFilename();
+
+            $added = $this->fetchAddedFiles(array_diff($this->files, $changeset_value->getFiles()), $format);
+            if ($added && $result) {
+                $result .= $format === 'html' ? '; ' : PHP_EOL;
             }
-            if ($added = implode(', ', $added)) {
-                if ($result) {
-                    $result .= PHP_EOL;
-                }
-                $result .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
-            }
+            $result .= $added;
+
             return $result;
         }
         return false;
@@ -252,20 +242,80 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff() {
-        if (!empty($this->files)) {
-            $result = '';
-            $added = array();
-            foreach($this->files as $file) {
+    public function nodiff($format = 'html')
+    {
+        if (empty($this->files)) {
+            return '';
+        }
+
+        return $this->fetchAddedFiles($this->files, $format);
+    }
+
+    private function fetchAddedFiles(array $files, $format)
+    {
+        $artifact = $this->changeset->getArtifact();
+
+        $still_existing_files_ids = array();
+        foreach ($artifact->getLastChangeset()->getValue($this->field)->getFiles() as $file) {
+            $still_existing_files_ids[$file->getId()] = true;
+        }
+
+        $added    = array();
+        $previews = array();
+        $this->extractAddedAndPreviewsFromFiles($files, $format, $still_existing_files_ids, $added, $previews);
+
+        $result   = '';
+        if ($added) {
+            $result .= implode(', ', $added) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+        }
+
+        if ($previews) {
+            $result .= '<div>'. $this->field->fetchAllAttachment(
+                $artifact->getId(),
+                $previews,
+                true,
+                array(),
+                true,
+                $this->changeset->getId()
+            ) . '</div>';
+        }
+
+        return $result;
+    }
+
+    private function extractAddedAndPreviewsFromFiles(
+        array $files,
+        $format,
+        $still_existing_files_ids,
+        &$added,
+        &$previews
+    ) {
+        /** @var Tracker_FileInfo $file */
+        foreach ($files as $file) {
+            if ($format === 'html') {
+                $this->addFileForHTMLFormat($still_existing_files_ids, $added, $previews, $file);
+            } else {
                 $added[] = $file->getFilename();
             }
-            if ($added = implode(', ', $added)) {
-                if ($result) {
-                    $result .= PHP_EOL;
-                }
-                $result .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+        }
+    }
+
+    private function addFileForHTMLFormat($still_existing_files_ids, &$added, &$previews, $file)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        if (isset($still_existing_files_ids[$file->getId()])) {
+            $added[] = '<a href="' . $purifier->purify($this->field->getFileHTMLUrl($file)) . '">' .
+                $purifier->purify($file->getFilename())
+                . '</a>';
+
+            if ($file->isImage()) {
+                $previews[] = $file;
             }
-            return $result;
+        } else {
+            $reason  = $GLOBALS['Language']->getText('plugin_tracker', 'file_has_been_removed_meantime');
+            $added[] = '<s title="' . $purifier->purify($reason) . '">' .
+                $purifier->purify($file->getFilename())
+                . '</s>';
         }
     }
 }

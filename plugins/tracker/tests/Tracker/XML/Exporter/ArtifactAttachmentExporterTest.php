@@ -58,9 +58,9 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
         stub($file_info)->getId()->returns(1);
 
         $files      = array($file_info);
-        $file_value = new Tracker_Artifact_ChangesetValue_File(1, $file_field, 1, $files);
-
-        $changeset = stub('Tracker_Artifact_Changeset')->getValue($file_field)->returns($file_value);
+        $changeset  = mock('Tracker_Artifact_Changeset');
+        $file_value = new Tracker_Artifact_ChangesetValue_File(1, $changeset, $file_field, 1, $files);
+        stub($changeset)->getValue($file_field)->returns($file_value);
 
         $artifact = stub('Tracker_Artifact')->getTracker()->returns($tracker);
         stub($artifact)->getLastChangeset()->returns($changeset);

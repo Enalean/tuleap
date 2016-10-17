@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_Selectbox__getSoapValueTest extends TuleapTestCa
             aFieldListStaticValue()->withId(100)->withLabel('None')->build(),
             aFieldListStaticValue()->withId(101)->withLabel('Bla')->build()
         );
-        $this->changeset_value = new Tracker_Artifact_ChangesetValue_List('whatever', $this->field, true, $this->list_values);
+        $this->changeset_value = new Tracker_Artifact_ChangesetValue_List('whatever', mock('Tracker_Artifact_Changeset'), $this->field, true, $this->list_values);
         $this->last_changeset  = mock('Tracker_Artifact_Changeset');
         stub($this->last_changeset)->getValue($this->field)->returns($this->changeset_value);
     }

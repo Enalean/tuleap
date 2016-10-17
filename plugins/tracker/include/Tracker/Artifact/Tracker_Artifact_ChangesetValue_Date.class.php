@@ -29,15 +29,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      */
     protected $timestamp;
     
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_Date $field       The field of the value
-     * @param boolean                        $has_changed If the changeset value has chnged from the previous one
-     * @param int                            $timestamp   The date
-     */
-    public function __construct($id, $field, $has_changed, $timestamp) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $timestamp) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->timestamp = $timestamp;
     }
 
@@ -144,9 +137,9 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff() {
-        if ($this->getTimestamp() !=0) {
-            $next_date     = $this->getDate();
+    public function nodiff($format = 'html') {
+        if ($this->getTimestamp() != 0) {
+            $next_date = $this->getDate();
             return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$next_date;
         }
     }

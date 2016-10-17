@@ -124,7 +124,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $date_field = new Tracker_FormElement_Field_DateTestVersion();
         $date_field->setReturnReference('getValueDao', $value_dao);
 
-        $this->assertIsA($date_field->getChangesetValue(null, 123, false), 'Tracker_Artifact_ChangesetValue_Date');
+        $this->assertIsA($date_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false), 'Tracker_Artifact_ChangesetValue_Date');
     }
 
     function testGetChangesetValue_doesnt_exist() {

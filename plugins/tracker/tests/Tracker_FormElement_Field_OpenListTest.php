@@ -117,8 +117,9 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $list_field->setReturnReference('getValueDao', $value_dao);
         $list_field->setReturnReference('getOpenValueDao', $open_value_dao);
         $list_field->setReturnReference('getBind', $bind);
-        
-        $changeset_value = $list_field->getChangesetValue(null, 123, false);
+
+
+        $changeset_value = $list_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, $this->cv_class);
         $this->assertTrue(is_array($changeset_value->getListValues()));
         $this->assertEqual(count($changeset_value->getListValues()), 5);
@@ -138,8 +139,8 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         
         $list_field = new $this->field_class();
         $list_field->setReturnReference('getValueDao', $value_dao);
-        
-        $changeset_value = $list_field->getChangesetValue(null, 123, false);
+
+        $changeset_value = $list_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, $this->cv_class);
         $this->assertTrue(is_array($changeset_value->getListValues()));
         $this->assertEqual(count($changeset_value->getListValues()), 0);

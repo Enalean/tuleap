@@ -49,8 +49,10 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends TuleapTestCase
         $this->visitor         = mock('Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor');
         $this->values_exporter = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($this->visitor);
 
-        $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', '*', '*', '*');
-        $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', '*', '*', '*');
+        $changeset = mock('Tracker_Artifact_Changeset');
+
+        $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', $changeset, '*', '*', '*');
+        $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', $changeset, '*', '*', '*');
         $this->values = array(
             $this->int_changeset_value,
             $this->float_changeset_value

@@ -76,6 +76,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+
+        $artifact = mock('Tracker_Artifact');
+        $this->changeset = stub('Tracker_Artifact_Changeset')->getArtifact()->returns($artifact);
     }
 
     public function tearDown() {
@@ -104,11 +107,12 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
                                                 'last_changeset_id' => '789'));
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
+        stub($value_dao)->searchReverseLinksById()->returnsEmptyDar();
         
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnReference('getValueDao', $value_dao);
         
-        $this->assertIsA($field->getChangesetValue(null, 123, false), 'Tracker_Artifact_ChangesetValue_ArtifactLink');
+        $this->assertIsA($field->getChangesetValue($this->changeset, 123, false), 'Tracker_Artifact_ChangesetValue_ArtifactLink');
     }
     
     function testGetChangesetValue_doesnt_exist() {
@@ -116,11 +120,12 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
+        stub($value_dao)->searchReverseLinksById()->returnsEmptyDar();
         
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnReference('getValueDao', $value_dao);
         
-        $this->assertNotNull($field->getChangesetValue(null, 123, false));
+        $this->assertNotNull($field->getChangesetValue($this->changeset, 123, false));
     }
     
     function testFetchRawValue() {

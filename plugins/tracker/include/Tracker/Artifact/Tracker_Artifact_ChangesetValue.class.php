@@ -23,13 +23,17 @@
  * Manage values in changeset for fields
  * @abstract
  */
-abstract class Tracker_Artifact_ChangesetValue {
-    
-    
+abstract class Tracker_Artifact_ChangesetValue
+{
     /**
      * @var int
      */
     protected $id;
+
+    /**
+     * @var Tracker_Artifact_Changeset
+     */
+    protected $changeset;
     
     /**
      * @var Tracker_FormElement_Field
@@ -41,17 +45,11 @@ abstract class Tracker_Artifact_ChangesetValue {
      */
     protected $has_changed;
     
-    /**
-     * Constructor
-     *
-     * @param int                       $id          The id of the changeset value
-     * @param Tracker_FormElement_Field $field       The field of the value
-     * @param boolean                   $has_changed If the changeset value has chnged from the previous one
-     */
-    public function __construct($id, $field, $has_changed) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed) {
         $this->id          = $id;
         $this->field       = $field;
         $this->has_changed = $has_changed;
+        $this->changeset   = $changeset;
     }
 
     /**
@@ -91,6 +89,8 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return string The difference between another $changeset_value, false if no differences
      */
     public abstract function diff($changeset_value, $format = 'html', PFUser $user = null);
+
+    public abstract function nodiff($format = 'html');
 
     /**
      * Returns a mail format diff between current changeset value and changeset value in param

@@ -619,7 +619,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $previous_changeset_value = $previous_changeset->getValue($field);
 
             if (! $previous_changeset_value) {//Case : field added later (ie : artifact already exists) => no value
-                $diff = $current_changeset_value->nodiff();
+                $diff = $current_changeset_value->nodiff($format);
             } elseif ($for_mail) {
                 $artifact_id  = $this->getArtifact()->getId();
                 $changeset_id = $this->getId();

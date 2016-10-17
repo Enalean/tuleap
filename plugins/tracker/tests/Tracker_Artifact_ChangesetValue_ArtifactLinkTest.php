@@ -127,7 +127,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         $value = partial_mock(
             'Tracker_Artifact_ChangesetValue_ArtifactLink',
             array('getNaturePresenterFactory'),
-            array(111, $field, false, $artifact_links, $reverse_artifact_links)
+            array(111, mock('Tracker_Artifact_Changeset'), $field, false, $artifact_links, $reverse_artifact_links)
         );
         stub($value)->getNaturePresenterFactory()->returns(
             mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory')

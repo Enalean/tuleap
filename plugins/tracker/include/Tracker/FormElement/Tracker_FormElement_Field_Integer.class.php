@@ -153,7 +153,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
             if ($int_row_value !== null) {
                 $int_row_value = (int)$int_row_value;
             }
-            $changeset_value = new Tracker_Artifact_ChangesetValue_Integer($value_id, $this, $has_changed, $int_row_value);
+            $changeset_value = new Tracker_Artifact_ChangesetValue_Integer($value_id, $changeset, $this, $has_changed, $int_row_value);
         }
         return $changeset_value;
     }
