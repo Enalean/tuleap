@@ -21,7 +21,11 @@
 require_once 'common/autoload.php';
 require_once __DIR__.'/DatabaseInitialization.php';
 
+use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\PatternValidator;
+use Tuleap\Git\Permissions\RegexpFineGrainedDao;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\REST\DatabaseInitialization;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -235,7 +239,15 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $default_mirror_dao
         );
 
-        $validator        = new PatternValidator(new FineGrainedPatternValidator());
+        $validator        = new PatternValidator(
+            new FineGrainedPatternValidator(),
+            new FineGrainedRegexpValidator(),
+            new RegexpFineGrainedRetriever(
+                new RegexpFineGrainedDao(),
+                new RegexpRepositoryDao()
+            )
+        );
+
         $sorter           = new FineGrainedPermissionSorter();
         $ugroup_manager   = new UGroupManager();
         $normalizer       = new PermissionsNormalizer();

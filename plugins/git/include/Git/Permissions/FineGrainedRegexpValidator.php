@@ -21,19 +21,16 @@
 
 namespace Tuleap\Git\Permissions;
 
-class FineGrainedPatternValidator
+class FineGrainedRegexpValidator
 {
-
     public function isPatternValid($pattern)
     {
-        return $this->hasOnlyAuthorizedCharacters($pattern) && ! $this->hasALineBreak($pattern);
+        return ! $this->hasALineBreak($pattern) && ! $this->isPatternEmpty($pattern);
     }
 
-    private function hasOnlyAuthorizedCharacters($pattern)
+    private function isPatternEmpty($pattern)
     {
-        $regex = '#^(?:\*|[a-zA-Z0-9_\-/\.]+(/\*)?)$#';
-
-        return preg_match($regex, $pattern) === 1;
+        return strlen($pattern) === 0;
     }
 
     private function hasALineBreak($pattern)

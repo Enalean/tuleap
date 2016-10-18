@@ -24,14 +24,14 @@
                 <input type="checkbox"
                        name="use-regexp"
                     {{# is_regexp_enabled }} checked="checked" disabled="disabled" {{/ is_regexp_enabled }}
-                    {{^ can_regexp_be_enabled }} disabled="disabled"{{/ can_regexp_be_enabled }}
+                    {{^ can_regexp_are_enabled }} disabled="disabled"{{/ can_regexp_are_enabled }}
                 />
                 <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
             </label>
             <p class="text-warning regexp_incoherence_label">
                 <i class="icon-warning-sign"> </i>
-                {{# can_regexp_be_enabled }} {{ regexp_incoherence_label }} {{/ can_regexp_be_enabled }}
-                {{^ can_regexp_be_enabled }} {{ regexp_under_construction }} {{/ can_regexp_be_enabled }}
+                {{# can_regexp_are_enabled }} {{ regexp_incoherence_label }} {{/ can_regexp_are_enabled }}
+                {{^ can_regexp_are_enabled }} {{ regexp_under_construction }} {{/ can_regexp_are_enabled }}
             </p>
         </div>
     </div>
@@ -103,7 +103,11 @@
             </tbody>
         </table>
         {{^ is_fork }}
-            <button class="btn add-fine-grained-permission" data-type="branch">{{ add_branch_permission }}</button>
+            <button class="btn add-fine-grained-permission"
+                    data-type="branch"
+                    data-regexp-enabled="{{ is_regexp_enabled }}">
+                {{ add_branch_permission }}
+            </button>
         {{/ is_fork }}
 
         <h4>{{ tags_title }}</h4>
@@ -167,7 +171,12 @@
             </tbody>
         </table>
         {{^ is_fork }}
-            <button class="btn add-fine-grained-permission" data-type="tag">{{ add_tag_permission }}</button>
+            <button
+                    class="btn add-fine-grained-permission"
+                    data-type="tag"
+                    data-regexp-enabled="{{ is_regexp_enabled }}">
+                {{ add_tag_permission }}
+            </button>
         {{/ is_fork }}
 
     {{/ are_fine_grained_permissions_defined }}

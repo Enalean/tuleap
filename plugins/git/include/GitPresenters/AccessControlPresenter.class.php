@@ -121,7 +121,7 @@ class GitPresenters_AccessControlPresenter
 
         $this->are_regexp_permission_activated = $are_regexp_permission_activated;
         $this->is_regexp_enabled               = $is_regexp_enabled;
-        $this->can_regexp_be_enabled           = true;
+        $this->can_regexp_are_enabled          = true;
         $this->regexp_permission_label         = $GLOBALS['Language']->getText(
             'plugin_git',
             'regexp_permission_label'
