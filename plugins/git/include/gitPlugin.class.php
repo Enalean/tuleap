@@ -26,6 +26,7 @@ use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -571,21 +572,37 @@ class GitPlugin extends Plugin {
             ProjectManager::instance(),
             $this->getManifestManager(),
             $this->getGitSystemEventManager(),
-            $this->getRegexpRetriever(),
-            new RegexpFineGrainedEnabler($this->getRegexpFineGrainedDao())
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getRegexpFineGrainedEnabler()
         );
         $admin->process($request);
         $admin->display($request);
     }
 
-    private function getRegexpRetriever()
+    private function getRegexpFineGrainedEnabler()
     {
-        return new RegexpFineGrainedRetriever($this->getRegexpFineGrainedDao());
+        return new RegexpFineGrainedEnabler(
+            $this->getRegexpFineGrainedDao(),
+            $this->getRegexpRepositoryDao()
+        );
+    }
+
+    private function getRegexpFineGrainedRetriever()
+    {
+        return new RegexpFineGrainedRetriever(
+            $this->getRegexpFineGrainedDao(),
+            $this->getRegexpRepositoryDao()
+        );
     }
 
     private function getRegexpFineGrainedDao()
     {
         return new RegexpFineGrainedDao();
+    }
+
+    private function getRegexpRepositoryDao()
+    {
+        return new RegexpRepositoryDao();
     }
 
     private function getMirrorDataMapper() {
@@ -1303,7 +1320,8 @@ class GitPlugin extends Plugin {
             $this->getDescriptionUpdater(),
             $this->getGitPhpAccessLogger(),
             new VersionDetector(),
-            $this->getRegexpRetriever()
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getRegexpFineGrainedEnabler()
         );
     }
 
@@ -1317,7 +1335,8 @@ class GitPlugin extends Plugin {
             $this->getDefaultFineGrainedPermissionFactory(),
             $this->getFineGrainedUpdater(),
             $this->getDefaultFineGrainedPermissionSaver(),
-            $this->getPermissionChangesDetector()
+            $this->getPermissionChangesDetector(),
+            $this->getRegexpFineGrainedEnabler()
         );
     }
 

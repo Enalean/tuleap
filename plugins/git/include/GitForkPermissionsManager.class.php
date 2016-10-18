@@ -228,7 +228,8 @@ class GitForkPermissionsManager {
             $delete_url,
             $csrf,
             $is_fork,
-            $this->areRegexpActivatedAtSiteLevel()
+            $this->areRegexpActivatedAtSiteLevel(),
+            false
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -300,10 +301,16 @@ class GitForkPermissionsManager {
             $delete_url,
             $csrf,
             $is_fork,
-            $this->areRegexpActivatedAtSiteLevel()
+            $this->areRegexpActivatedAtSiteLevel(),
+            $this->isRegexpActivatedForRepository()
         );
 
         return $renderer->renderToString('access-control', $presenter);
+    }
+
+    private function isRegexpActivatedForRepository()
+    {
+        return $this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
     }
 
     private function isRWPlusBlocked() {

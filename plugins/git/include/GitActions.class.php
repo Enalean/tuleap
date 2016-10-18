@@ -22,6 +22,7 @@
 require_once('common/layout/Layout.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -151,6 +152,10 @@ class GitActions extends PluginActions
      * @var FineGrainedPermissionReplicator
      */
     private $fine_grained_replicator;
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_enabler;
 
     public function __construct(
         Git                $controller,
@@ -179,7 +184,8 @@ class GitActions extends PluginActions
         FineGrainedPermissionReplicator $fine_grained_replicator,
         FineGrainedRetriever $fine_grained_retriever,
         HistoryValueFormatter $history_value_formatter,
-        PermissionChangesDetector $permission_changes_detector
+        PermissionChangesDetector $permission_changes_detector,
+        RegexpFineGrainedEnabler $regexp_enabler
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -208,6 +214,7 @@ class GitActions extends PluginActions
         $this->fine_grained_retriever        = $fine_grained_retriever;
         $this->history_value_formatter       = $history_value_formatter;
         $this->permission_changes_detector   = $permission_changes_detector;
+        $this->regexp_enabler                = $regexp_enabler;
     }
 
     protected function getText($key, $params = array()) {
@@ -859,7 +866,8 @@ class GitActions extends PluginActions
         $enable_fine_grained_permissions,
         array $added_branches_permissions,
         array $added_tags_permissions,
-        array $updated_permissions
+        array $updated_permissions,
+        $enable_regexp
     ) {
         $controller = $this->getController();
         if ( empty($repoId) ) {
@@ -913,6 +921,10 @@ class GitActions extends PluginActions
             $this->fine_grained_updater->enableRepository($repository);
         } else {
             $this->fine_grained_updater->disableRepository($repository);
+        }
+
+        if ($enable_regexp) {
+            $this->regexp_enabler->enableForRepository($repository);
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {
