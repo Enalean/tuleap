@@ -23,6 +23,7 @@
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -1397,7 +1398,7 @@ class GitPlugin extends Plugin {
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
-            $this->getFineGrainedPatternValidator(),
+            $this->getPatternValidator(),
             $this->getFineGrainedPermissionSorter()
         );
     }
@@ -1445,12 +1446,17 @@ class GitPlugin extends Plugin {
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
-            $this->getFineGrainedPatternValidator(),
+            $this->getPatternValidator(),
             $this->getFineGrainedPermissionSorter()
         );
     }
 
-    public function getFineGrainedPatternValidator()
+    private function getPatternValidator()
+    {
+        return new PatternValidator($this->getFineGrainedPatternValidator());
+    }
+
+    private function getFineGrainedPatternValidator()
     {
         return new FineGrainedPatternValidator();
     }
