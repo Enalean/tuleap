@@ -2,6 +2,7 @@
 
 var gulp    = require('gulp'),
     del     = require('del'),
+
     tuleap  = require('./tools/utils/tuleap-gulp-build'),
     fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
@@ -102,6 +103,10 @@ var gulp    = require('gulp'),
         'src/www/themes/FlamingParrot/js/keymaster-sequence/keymaster.sequence.min.js',
         'src/www/themes/FlamingParrot/js/keyboard-navigation.js'
     ],
+    theme_burningparrot_files = [
+        'src/www/themes/BurningParrot/js/navbar-dropdown.js',
+        'src/www/themes/BurningParrot/js/navbar-dropdown-projects.js'
+    ],
     common_scss = {
         files: [
             'src/www/themes/common/css/print.scss',
@@ -149,6 +154,9 @@ var gulp    = require('gulp'),
             'src/www/themes/BurningParrot/css/burning-parrot-purple.scss',
             'src/www/themes/BurningParrot/css/burning-parrot-red.scss',
         ],
+        watched_includes: [
+            'src/www/themes/BurningParrot/css/**/_*.scss'
+        ],
         'target_dir': 'src/www/themes/BurningParrot/css'
     },
     asset_dir = 'www/assets';
@@ -168,6 +176,7 @@ gulp.task('js-core', ['clean-js-core'], function() {
     tuleap.concat_core_js('tuleap_subset', subset_combined_files, asset_dir);
     tuleap.concat_core_js('tuleap_subset_flamingparrot', subset_combined_files.concat(subset_combined_flamingparrot_files), asset_dir);
     tuleap.concat_core_js('flamingparrot', flaming_parrot_files, asset_dir);
+    tuleap.concat_core_js('burningparrot', theme_burningparrot_files, asset_dir);
 });
 
 gulp.task('js', ['js-core', 'js-plugins']);
@@ -203,7 +212,7 @@ gulp.task('watch', function() {
             .concat(subset_combined_files)
             .concat(subset_combined_flamingparrot_files)
             .concat(flaming_parrot_files)
-            .concat(theme_burningparrot_scss),
+            .concat(theme_burningparrot_files)
         ['js-core']
     );
 
@@ -212,7 +221,8 @@ gulp.task('watch', function() {
             .concat(select2_scss.files)
             .concat(theme_tuleap_scss.files)
             .concat(theme_flamingparrot_scss.files)
-            .concat(theme_burningparrot_scss.files),
+            .concat(theme_burningparrot_scss.files)
+            .concat(theme_burningparrot_scss.watched_includes),
         ['sass-core']
     );
 
