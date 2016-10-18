@@ -23,6 +23,9 @@
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\Permissions\RegexpFineGrainedDao;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -567,10 +570,22 @@ class GitPlugin extends Plugin {
             ),
             ProjectManager::instance(),
             $this->getManifestManager(),
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            $this->getRegexpRetriever(),
+            new RegexpFineGrainedEnabler($this->getRegexpFineGrainedDao())
         );
         $admin->process($request);
         $admin->display($request);
+    }
+
+    private function getRegexpRetriever()
+    {
+        return new RegexpFineGrainedRetriever($this->getRegexpFineGrainedDao());
+    }
+
+    private function getRegexpFineGrainedDao()
+    {
+        return new RegexpFineGrainedDao();
     }
 
     private function getMirrorDataMapper() {
@@ -1287,7 +1302,8 @@ class GitPlugin extends Plugin {
             new ProjectHistoryDao(),
             $this->getDescriptionUpdater(),
             $this->getGitPhpAccessLogger(),
-            new VersionDetector()
+            new VersionDetector(),
+            $this->getRegexpRetriever()
         );
     }
 
