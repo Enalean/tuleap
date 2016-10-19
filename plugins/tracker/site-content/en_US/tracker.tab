@@ -7,7 +7,7 @@ plugin_tracker	cannot_delete_tracker	You can't delete this tracker because it is
 
 plugin_tracker	service_lbl_key	Trackers
 plugin_tracker	service_desc_key	Project Trackers
-plugin_tracker	admin_tracker_template	Configuration of predefined tracker templates
+plugin_tracker	admin_tracker_template	Predefined tracker templates
 
 plugin_tracker_homenav	list	Trackers List
 plugin_tracker_homenav	search	Cross Trackers Search

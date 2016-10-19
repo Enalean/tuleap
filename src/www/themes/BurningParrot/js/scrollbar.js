@@ -17,18 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'variables';
-
-// UI colors
-$tlp-ui-info         : #4db3d0;
-$tlp-ui-success      : #58b359;
-$tlp-ui-warning      : #e2c222;
-$tlp-ui-danger       : #da5353;
-
-$tlp-ui-border-light : #f3f3f3;
-$tlp-ui-border-normal: #e3e5ed;
-$tlp-ui-border-dark  : #d4d7e1;
-
-$tlp-theme-color                   : $tlp-theme-orange;
-$tlp-theme-background-color        : $tlp-theme-background-orange;
-$tlp-theme-sidebar-background-color: $tlp-theme-sidebar-background-orange;
+(function() {
+    Scrollbar.initAll({
+        damping            : 1,
+        continuousScrolling: false,
+        alwaysShowTracks   : true
+    });
+})();

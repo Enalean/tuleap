@@ -23,8 +23,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
-
 /**
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -89,11 +87,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     protected $stylesheets = array();
 
     /**
-     * @var IncludeAssets
-     */
-    protected $include_asset;
-
-    /**
      * Constuctor
      * @param string $root the root of the theme : '/themes/Tuleap/'
      */
@@ -120,8 +113,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->bgpri[9] = 'priori';
 
         $this->purifier = Codendi_HTMLPurifier::instance();
-
-        $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
     }
 
     function getChartColors() {

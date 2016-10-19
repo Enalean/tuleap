@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'siteadmin-sidebar';
+@import 'siteadmin-user-list';
+@import 'siteadmin-user-details';
+
 #siteadmin-homepage-container {
     display: flex;
     justify-content: space-between;
@@ -39,13 +43,3 @@
     text-align: left;
     white-space: nowrap;
 }
-
-.siteadmin-sidebar {
-    align-self: stretch;
-    min-width: 260px;
-    background: #293e45;
-    color: #d4d7e1;
-}
-
-@import 'siteadmin-user-list';
-@import 'siteadmin-user-details';

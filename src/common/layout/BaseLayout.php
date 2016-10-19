@@ -20,8 +20,10 @@
 
 namespace Tuleap\Layout;
 
+use Tuleap\Layout\IncludeAssets;
 use Widget_Static;
 use Response;
+use ForgeConfig;
 
 abstract class BaseLayout extends Response
 {
@@ -38,11 +40,16 @@ abstract class BaseLayout extends Response
     /** @var array */
     protected $javascript_in_footer = array();
 
+    /** @var IncludeAssets */
+    protected $include_asset;
+
     public function __construct($root)
     {
         parent::__construct();
-        $this->root     = $root;
-        $this->imgroot  = $root . '/images/';
+        $this->root    = $root;
+        $this->imgroot = $root . '/images/';
+
+        $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
     }
 
     abstract public function header(array $params);

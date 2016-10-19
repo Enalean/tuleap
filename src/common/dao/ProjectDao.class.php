@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -39,16 +40,16 @@ class ProjectDao extends DataAccessObject {
 
     public function searchByStatus($status) {
         $status = $this->da->quoteSmart($status);
-        $sql = "SELECT *
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM $this->table_name
                 WHERE status = $status
                 ORDER BY group_name";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByUnixGroupName($unixGroupName){
         $unixGroupName= $this->da->quoteSmart($unixGroupName);
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM $this->table_name
                 WHERE unix_group_name=$unixGroupName";
         return $this->retrieve($sql);
@@ -64,7 +65,7 @@ class ProjectDao extends DataAccessObject {
 
     /**
      * Look for active projects, based on their name (unix/public)
-     * 
+     *
      * This method returns only active projects. If no $userId provided, only
      * public project are returned.
      * If $userId is provided, both public and private projects the user is member
@@ -165,7 +166,7 @@ class ProjectDao extends DataAccessObject {
      */
     public function renameProject($project,$new_name){
         //Update 'groups' table
-        $sql = ' UPDATE groups SET unix_group_name= '.$this->da->quoteSmart($new_name).' , 
+        $sql = ' UPDATE groups SET unix_group_name= '.$this->da->quoteSmart($new_name).' ,
                  http_domain=REPLACE (http_domain,'.$this->da->quoteSmart($project->getUnixName(false)).','.$this->da->quoteSmart($new_name).')
                  WHERE group_id= '.$this->da->quoteSmart($project->getID());
         $res_groups = $this->update($sql);
@@ -198,7 +199,7 @@ class ProjectDao extends DataAccessObject {
 
         return $this->update($sql);
     }
-    
+
     /**
      * Return all projects matching given parameters
      *
@@ -234,7 +235,7 @@ class ProjectDao extends DataAccessObject {
 
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *
                 FROM groups '.$stm.'
-                ORDER BY group_name 
+                ORDER BY group_name
                 ASC '.$project_limit;
 
         return array('projects' => $this->retrieve($sql), 'numrows' => $this->foundRows());
@@ -329,7 +330,7 @@ class ProjectDao extends DataAccessObject {
                 AND status = 'A'";
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Filled the ugroups to be notified when admin action is needed
      *
@@ -345,7 +346,7 @@ class ProjectDao extends DataAccessObject {
         }
         foreach ($ugroups as $ugroupId) {
             $sql = ' INSERT INTO groups_notif_delegation (group_id, ugroup_id)
-                 VALUE ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($ugroupId).') 
+                 VALUE ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($ugroupId).')
                  ON DUPLICATE KEY UPDATE ugroup_id = '.$this->da->quoteSmart($ugroupId);
             if (!$this->update($sql)) {
                 return false;
@@ -356,9 +357,9 @@ class ProjectDao extends DataAccessObject {
 
      /**
      * Returns the ugroup to be notified when admin action is needed for given project
-     * 
+     *
      * @param Integer $groupId
-     * 
+     *
      * @return DataAccessResult
      */
     public function getMembershipRequestNotificationUGroup($groupId){
@@ -395,11 +396,11 @@ class ProjectDao extends DataAccessObject {
 
     /**
      * Returns the message to be displayed to requester asking access for a given project
-     *  
+     *
      * @param Integer $groupId
-     * 
+     *
      * @return DataAccessResult
-     */  
+     */
     public function getMessageToRequesterForAccessProject($groupId) {
         $sql = 'SELECT msg_to_requester FROM groups_notif_delegation_message WHERE group_id='.$this->da->quoteSmart($groupId);
         return $this->retrieve($sql);
@@ -407,10 +408,10 @@ class ProjectDao extends DataAccessObject {
 
     /**
      * Updates the message to be displayed to requester asking access for a given project
-     *  
+     *
      * @param Integer $groupId
      * @param String  $message
-     */  
+     */
     public function setMessageToRequesterForAccessProject($groupId, $message) {
         $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($message).')'.
                 ' ON DUPLICATE KEY UPDATE msg_to_requester='.$this->da->quoteSmart($message);

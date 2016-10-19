@@ -6,7 +6,7 @@ plugin_tracker	cannot_delete_tracker	Ce tracker ne peut pas être supprimé car 
 
 plugin_tracker	service_lbl_key	Suivi
 plugin_tracker	service_desc_key	Outils de suivi du projet
-plugin_tracker	admin_tracker_template	Configuration des modèles d'outils de suivi
+plugin_tracker	admin_tracker_template	Modèles d'outils de suivi
 
 plugin_tracker_homenav	list	Liste des outils de suivi
 plugin_tracker_homenav	search	Recherche

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -48,7 +48,7 @@ class UserDao extends DataAccessObject {
         if (is_array($status)) {
             $where_status=$this->da->quoteSmartImplode(" OR status = ",$status);
         } else { $where_status = $this->da->quoteSmart($status); }
-        $sql = "SELECT * FROM user WHERE status = $where_status";
+        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE status = $where_status";
         return $this->retrieve($sql);
     }
 

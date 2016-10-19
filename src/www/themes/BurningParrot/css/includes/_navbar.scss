@@ -18,6 +18,17 @@
  */
 
 @mixin nav-link($max-width) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    transition: color 100ms linear;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+
     > .nav-link-icon {
         display: none;
         font-size: initial;
@@ -25,6 +36,10 @@
         @media screen and (max-width: $max-width) {
             display: inline;
         }
+    }
+
+    > .nav-link-icon-dropdown {
+        margin: 0 0 0 5px;
     }
 
     > .nav-link-text {
@@ -60,25 +75,6 @@ header {
 .nav-link {
     @include nav-link(900px);
 
-    display: flex;
-    padding: 0 $tlp-spacing / 2;
-    transition: color 100ms linear;
-    color: $tlp-ui-dimmed;
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
-    align-items: center;
-
-    &:first-child {
-        padding: 0 $tlp-spacing / 2 0 $tlp-spacing;
-    }
-
-    &:last-child {
-        padding: 0 $tlp-spacing 0 $tlp-spacing / 2;
-    }
-
     &.go-to-admin {
         color: $tlp-ui-danger;
     }
@@ -89,19 +85,11 @@ header {
     }
 }
 
+// scss-lint:disable VendorPrefix
 .nav-dropdown {
     display: flex;
     position: relative;
-    padding: 0 $tlp-spacing / 2;
-    transition: color 100ms linear;
-    color: $tlp-ui-dimmed;
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
     cursor: pointer;
-    align-items: center;
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
@@ -131,6 +119,7 @@ header {
 
 #global-nav {
     display: flex;
+    margin: 0 0 0 $tlp-spacing / 2;
     font-weight: 600;
 }
 
@@ -152,7 +141,7 @@ header {
     white-space: nowrap;
 
     > .nav-link:first-child {
-        padding: 0 $tlp-spacing / 2;
+        padding: 0 $tlp-spacing 0 $tlp-spacing / 2;
     }
 
     > .user-block {
@@ -173,12 +162,12 @@ header {
             > .user-nav-display-name {
                 margin: 0 0 3px;
                 color: $tlp-theme-color;
-                font-size: 13px;
+                font-size: 14px;
                 font-weight: 600;
             }
 
             > .user-nav-username {
-                font-size: 11px;
+                font-size: 12px;
                 font-weight: 600;
             }
         }

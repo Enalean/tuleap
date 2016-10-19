@@ -42,13 +42,15 @@ class BurningParrotTheme extends BaseLayout
         $this->user     = $user;
         $this->request  = HTTPRequest::instance();
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->includeFooterJavascriptFile('/scripts/tuleap/listFilter.js');
-        $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown.js');
-        $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown-projects.js');
         $this->includeFooterJavascriptFile('/themes/common/tlp/dist/tlp.'. $user->getLocale() .'.min.js');
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burningparrot.js'));
     }
 
     public function includeCalendarScripts()
+    {
+    }
+
+    public function getDatePicker()
     {
     }
 

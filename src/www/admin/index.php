@@ -1,7 +1,7 @@
 <?php
 /**
   * Copyright 1999-2000 (c) The SourceForge Crew
-  * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -235,7 +235,7 @@ if (count($additional_tracker_entries) > 0) {
     $tracker_links = '<li>'.$Language->getText('admin_main', 'header_tracker').':
         <ul>
             <li><a href="/tracker/admin/restore.php">'.$Language->getText('admin_main', 'tracker_remove').'</a></li>
-            '. implode('', $additional_tracker_entries) .'
+            <li>'. implode('</li><li>', $additional_tracker_entries) .'</li>
         </ul>
     </li>';
 }
@@ -267,11 +267,6 @@ $wConf->setContent('
 </ul>');
 
 // Site utils
-ob_start();
-$em->processEvent('site_admin_external_tool_hook', null);
-$pluginsContent = ob_get_contents();
-ob_end_clean();
-
 $wUtils = new Widget_Static($Language->getText('admin_main', 'header_utils'));
 $wUtils->setContent('
 <ul>
@@ -287,7 +282,6 @@ $wUtils->setContent('
       <li><a href="/munin/">munin</a></li>
       <li><a href="/info.php">PHP info</a></li>
       <li><a href="/admin/apc.php">APC - PHP Cache</a></li>
-      '.$pluginsContent.'
     </ul>
   </li>
 </ul>');
@@ -303,10 +297,11 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 
 // Start output
-site_admin_header(array('title'=>$Language->getText('admin_main', 'title'), 'main_classes' => array('tlp-framed')));
+$siteadmin = new \Tuleap\Admin\AdminPageRenderer();
+$siteadmin->header($Language->getText('admin_main', 'title'));
 
-$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
-echo '<h1>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).' ('.$version.')'.'</h1>';
+global $feedback;
+echo html_feedback_top($feedback);
 
 echo site_admin_warnings();
 
@@ -331,4 +326,4 @@ echo '</div>';
 
 echo '</div>';
 
-site_admin_footer(array());
+$GLOBALS['HTML']->footer(array());

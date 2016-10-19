@@ -17,5 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'vendor/smooth-scrollbar.min';
+
+@import 'includes/smooth-scrollbar-overrides';
 @import 'includes/structure';
 @import 'includes/siteadmin';

@@ -46,15 +46,23 @@ class AdminPageRenderer
 
     private function renderSideBar()
     {
-        $sidebar_presenter = array(/* later */);
+        $admin_sidebar_presenter = $this->getAdminSidebarPresenter();
 
         $renderer = $this->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/');
 
-        return $renderer->renderToString('sidebar', $sidebar_presenter);
+        return $renderer->renderToString('sidebar', $admin_sidebar_presenter);
     }
 
     private function getRenderer($template_path)
     {
         return TemplateRendererFactory::build()->getRenderer($template_path);
+    }
+
+    private function getAdminSidebarPresenter()
+    {
+        $builder   = new AdminSidebarPresenterBuilder();
+        $presenter = $builder->build();
+
+        return $presenter;
     }
 }

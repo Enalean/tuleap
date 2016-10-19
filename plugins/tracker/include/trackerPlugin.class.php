@@ -1064,7 +1064,7 @@ class trackerPlugin extends Plugin {
     public function site_admin_configuration_tracker($params) {
         $label = $GLOBALS['Language']->getText('plugin_tracker', 'admin_tracker_template');
 
-        $params['additional_entries'][] = '<li><a href="/plugins/tracker/?group_id=100">'. $label .'</a></li>';
+        $params['additional_entries'][] = '<a href="/plugins/tracker/?group_id=100" class="admin-sidebar-section-nav-item">'. $label .'</a>';
     }
 
     public function fulltextsearch_event_does_tracker_service_use_ugroup($params) {

@@ -19,12 +19,13 @@
 
 $navbar-height: 45px;
 $sidebar-width: 50px;
+$sidebar-expanded-width: 250px;
 
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: $navbar-height 0 0;
+    padding: $navbar-height 0 0 $sidebar-expanded-width;
     background: $tlp-theme-background-color;
 }
 

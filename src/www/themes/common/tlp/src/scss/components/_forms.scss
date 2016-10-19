@@ -153,7 +153,10 @@ $tlp-form-element-select-small-background-size: 6px;
     font-size: $tlp-form-element-font-size;
 
     // scss-lint:disable VendorPrefix
-    &::-webkit-input-placeholder,
+    &::-webkit-input-placeholder {
+        color: $tlp-form-element-placeholder-color;
+    }
+
     &::-moz-placeholder {
         color: $tlp-form-element-placeholder-color;
     }
