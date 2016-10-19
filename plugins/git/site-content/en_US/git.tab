@@ -88,6 +88,8 @@ plugin_git	gerrit_migrate_access_right	Migrate to Gerrit the access rights defin
 plugin_git	gerrit_template	Please choose a permission's configuration template for the migration,<br />they will be applied to the migrated repository on Gerrit:
 plugin_git	default_gerrit_template	Permissions defined in Git
 plugin_git	none_gerrit_template	No pre-set permissions
+plugin_git	gerrit_add_server	Add gerrit server
+plugin_git	gerrit_no_servers	There is nothing here,<br> start by adding a gerrit server.
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 

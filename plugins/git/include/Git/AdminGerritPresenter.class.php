@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,12 +26,23 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $list_of_servers;
 
+    public $add_gerrit_server;
+
+    public $list_of_servers_empty_message;
+
     public $btn_submit;
 
     public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_gerrits) {
         parent::__construct($title, $csrf);
 
-        $this->list_of_servers    = $list_of_gerrits;
-        $this->btn_submit         = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->list_of_servers               = $list_of_gerrits;
+        $this->btn_submit                    = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->add_gerrit_server             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_add_server');
+        $this->list_of_servers_empty_message = $GLOBALS['Language']->getText('plugin_git', 'gerrit_no_servers');
+    }
+
+    public function list_of_servers_is_empty()
+    {
+        return $this->list_of_servers[0]->id === 0;
     }
 }

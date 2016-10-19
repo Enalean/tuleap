@@ -159,6 +159,8 @@ plugin_git	gerrit_migrate_access_right	Migrer sur Gerrit les permissions défini
 plugin_git	gerrit_template	Choisissez un modèle de permissions pour la migration,<br /> elles seront appliquées au dépôt migré sur Gerrit:
 plugin_git	default_gerrit_template	Permissions définies dans Git
 plugin_git	none_gerrit_template	Pas de permissions prédéfinies
+plugin_git	gerrit_add_server	Ajouter un server gerrit
+plugin_git	gerrit_no_servers	Il n'y a rien ici,<br> commencez par ajouter un serveur gerrit.
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification

@@ -1,142 +1,153 @@
-<form method="POST" action="?pane=gerrit_servers_admin&action=gerrit-servers">
-    {{{ csrf_input }}}
-    <h2>Admin gerrit servers</h2>
-    <dl>
-        {{# list_of_servers }}
-            <dt>
-                <h3>
-                    {{# id }}{{ host }}{{/ id }}
-                    {{^ id }}Add new gerrit server{{/ id }}
-                </h3>
-            </dt>
-            <dd>
-                <table>
-                    <tbody>
-                        <tr valign="top">
-                            <td>Host:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][host]"
-                                       value="{{ host }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>HTTP Port:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][http_port]"
-                                       value="{{ http_port }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>SSH Port:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][ssh_port]"
-                                       value="{{ ssh_port }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>Login:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][login]"
-                                       value="{{ login }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>Identity File:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][identity_file]"
-                                       value="{{ identity_file }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
-                            <td>
-                                <textarea
-                                    type="checkbox"
-                                    name="gerrit_servers[{{ id }}][replication_key]"
-                                    cols="30"
-                                    rows="5">{{ replication_key }}</textarea>
-                            </td>
-                        </tr><tr>
-                            <td><label>Use SSL</label></td>
-                            <td><input type="checkbox" name="gerrit_servers[{{ id }}][use_ssl]" {{# use_ssl }}checked="checked"{{/ use_ssl }} /></td>
-                        </tr><tr>
-                            <td> <label> Gerrit server version: </label> </td>
-                            <td>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][gerrit_version]"
-                                           id="gerritVersion25"
-                                           value="2.5"
-                                           {{# use_gerrit_2_5 }}checked="checked"{{/ use_gerrit_2_5 }}
-                                    />
-                                    2.5
-                                </label>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][gerrit_version]"
-                                           id="gerritVersion28"
-                                           value="2.8+"
-                                           {{^ use_gerrit_2_5 }}checked="checked"{{/ use_gerrit_2_5 }}
-                                    />
-                                    2.8+
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> <label> HTTP password: </label> </td>
-                            <td>
-                                <input type="password"
-                                       name="gerrit_servers[{{ id }}][http_password]"
-                                       value="{{ http_password }}"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> <label> Replication password: </label> </td>
-                            <td>
-                                <input type="password"
-                                       name="gerrit_servers[{{ id }}][replication_password]"
-                                       value="{{ replication_password }}"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> Authentication type </td>
-                            <td>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][auth_type]"
-                                           value="Digest"
-                                    {{# is_digest }}checked{{/ is_digest }}>Digest (default)
-                                </label>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][auth_type]"
-                                           value="Basic"
-                                    {{# is_basic }}checked{{/ is_basic }}>Basic
-                                </label>
-                            </td>
-                        </tr>
+{{# list_of_servers_is_empty }}
+    <div class="empty-page">
+        <span class="empty-page-text">{{{ list_of_servers_empty_message }}}</span>
+        <button type="button" class="tlp-button-primary tlp-button-large">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_gerrit_server }}
+        </button>
+    </div>
+{{/ list_of_servers_is_empty }}
 
-                        {{# id }}
-                        <tr>
-                            {{# is_used }}
-                            <td><em>This server is already used by some repositories, cannot delete it.</em></td>
-                            {{/ is_used }}
-                            {{^ is_used }}
-                            <td><label>Delete?<br /><input type="checkbox" name="gerrit_servers[{{ id }}][delete]" value="1" /></label></td>
-                            {{/ is_used }}
-                        </tr>
-                        {{/ id }}
-                    </tbody>
-                </table>
-            </dd>
-        {{/ list_of_servers }}
-    </dl>
-    <p><input type="submit" value="{{ btn_submit }}" /></p>
-</form>
+{{^ list_of_servers_is_empty }}
+    <form method="POST" action="?pane=gerrit_servers_admin&action=gerrit-servers">
+        {{{ csrf_input }}}
+        <h2>Admin gerrit servers</h2>
+        <dl>
+            {{# list_of_servers }}
+                <dt>
+                    <h3>
+                        {{# id }}{{ host }}{{/ id }}
+                        {{^ id }}Add new gerrit server{{/ id }}
+                    </h3>
+                </dt>
+                <dd>
+                    <table>
+                        <tbody>
+                            <tr valign="top">
+                                <td>Host:</td>
+                                <td>
+                                    <input type="text"
+                                           name="gerrit_servers[{{ id }}][host]"
+                                           value="{{ host }}"
+                                    />
+                                </td>
+                            </tr><tr valign="top">
+                                <td>HTTP Port:</td>
+                                <td>
+                                    <input type="text"
+                                           name="gerrit_servers[{{ id }}][http_port]"
+                                           value="{{ http_port }}"
+                                    />
+                                </td>
+                            </tr><tr valign="top">
+                                <td>SSH Port:</td>
+                                <td>
+                                    <input type="text"
+                                           name="gerrit_servers[{{ id }}][ssh_port]"
+                                           value="{{ ssh_port }}"
+                                    />
+                                </td>
+                            </tr><tr valign="top">
+                                <td>Login:</td>
+                                <td>
+                                    <input type="text"
+                                           name="gerrit_servers[{{ id }}][login]"
+                                           value="{{ login }}"
+                                    />
+                                </td>
+                            </tr><tr valign="top">
+                                <td>Identity File:</td>
+                                <td>
+                                    <input type="text"
+                                           name="gerrit_servers[{{ id }}][identity_file]"
+                                           value="{{ identity_file }}"
+                                    />
+                                </td>
+                            </tr><tr valign="top">
+                                <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
+                                <td>
+                                    <textarea
+                                        type="checkbox"
+                                        name="gerrit_servers[{{ id }}][replication_key]"
+                                        cols="30"
+                                        rows="5">{{ replication_key }}</textarea>
+                                </td>
+                            </tr><tr>
+                                <td><label>Use SSL</label></td>
+                                <td><input type="checkbox" name="gerrit_servers[{{ id }}][use_ssl]" {{# use_ssl }}checked="checked"{{/ use_ssl }} /></td>
+                            </tr><tr>
+                                <td> <label> Gerrit server version: </label> </td>
+                                <td>
+                                    <label class="radio">
+                                        <input type="radio"
+                                               name="gerrit_servers[{{ id }}][gerrit_version]"
+                                               id="gerritVersion25"
+                                               value="2.5"
+                                               {{# use_gerrit_2_5 }}checked="checked"{{/ use_gerrit_2_5 }}
+                                        />
+                                        2.5
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio"
+                                               name="gerrit_servers[{{ id }}][gerrit_version]"
+                                               id="gerritVersion28"
+                                               value="2.8+"
+                                               {{^ use_gerrit_2_5 }}checked="checked"{{/ use_gerrit_2_5 }}
+                                        />
+                                        2.8+
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> <label> HTTP password: </label> </td>
+                                <td>
+                                    <input type="password"
+                                           name="gerrit_servers[{{ id }}][http_password]"
+                                           value="{{ http_password }}"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> <label> Replication password: </label> </td>
+                                <td>
+                                    <input type="password"
+                                           name="gerrit_servers[{{ id }}][replication_password]"
+                                           value="{{ replication_password }}"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Authentication type </td>
+                                <td>
+                                    <label class="radio">
+                                        <input type="radio"
+                                               name="gerrit_servers[{{ id }}][auth_type]"
+                                               value="Digest"
+                                        {{# is_digest }}checked{{/ is_digest }}>Digest (default)
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio"
+                                               name="gerrit_servers[{{ id }}][auth_type]"
+                                               value="Basic"
+                                        {{# is_basic }}checked{{/ is_basic }}>Basic
+                                    </label>
+                                </td>
+                            </tr>
+
+                            {{# id }}
+                            <tr>
+                                {{# is_used }}
+                                <td><em>This server is already used by some repositories, cannot delete it.</em></td>
+                                {{/ is_used }}
+                                {{^ is_used }}
+                                <td><label>Delete?<br /><input type="checkbox" name="gerrit_servers[{{ id }}][delete]" value="1" /></label></td>
+                                {{/ is_used }}
+                            </tr>
+                            {{/ id }}
+                        </tbody>
+                    </table>
+                </dd>
+            {{/ list_of_servers }}
+        </dl>
+        <p><input type="submit" value="{{ btn_submit }}" /></p>
+    </form>
+{{/ list_of_servers_is_empty }}
