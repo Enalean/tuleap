@@ -24,6 +24,7 @@ use GitRepository;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use GitForkPermissionsManager;
 use PermissionsManager;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use UserGroupDao;
 use Codendi_Request;
 use User_ForgeUserGroupFactory;
@@ -61,6 +62,10 @@ class AccessControl extends Pane
      * @var FineGrainedPermissionFactory
      */
     private $fine_grained_permission_factory;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
 
     public function __construct(
         GitRepository $repository,
@@ -69,7 +74,8 @@ class AccessControl extends Pane
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedRepresentationBuilder $fine_grained_builder,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
-        GitPermissionsManager $git_permission_manager
+        GitPermissionsManager $git_permission_manager,
+        RegexpFineGrainedRetriever $regexp_retriever
     ){
         parent::__construct($repository, $request);
 
@@ -78,6 +84,7 @@ class AccessControl extends Pane
         $this->fine_grained_builder            = $fine_grained_builder;
         $this->default_fine_grained_factory    = $default_fine_grained_factory;
         $this->git_permission_manager          = $git_permission_manager;
+        $this->regexp_retriever                = $regexp_retriever;
     }
 
     /**
@@ -160,7 +167,8 @@ class AccessControl extends Pane
             $this->fine_grained_permission_factory,
             $this->fine_grained_builder,
             $this->default_fine_grained_factory,
-            $this->git_permission_manager
+            $this->git_permission_manager,
+            $this->regexp_retriever
         );
 
         return $forkPermissionsManager->displayAccessControl();

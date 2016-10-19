@@ -24,6 +24,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
 /**
  * GitForkPermissionsManager
@@ -62,6 +63,10 @@ class GitForkPermissionsManager {
 
     /** @var GitRepository */
     private $repository;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
 
     public function __construct(
         GitRepository $repository,
@@ -70,7 +75,8 @@ class GitForkPermissionsManager {
         FineGrainedPermissionFactory $fine_grained_factory,
         FineGrainedRepresentationBuilder $fine_grained_builder,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
-        GitPermissionsManager $git_permission_manager
+        GitPermissionsManager $git_permission_manager,
+        RegexpFineGrainedRetriever $regexp_retriever
     ) {
         $this->repository                   = $repository;
         $this->builder                      = $builder;
@@ -79,6 +85,7 @@ class GitForkPermissionsManager {
         $this->fine_grained_builder         = $fine_grained_builder;
         $this->default_fine_grained_factory = $default_fine_grained_factory;
         $this->git_permission_manager       = $git_permission_manager;
+        $this->regexp_retriever             = $regexp_retriever;
     }
 
     /**
@@ -220,7 +227,8 @@ class GitForkPermissionsManager {
             $new_fine_grained_ugroups,
             $delete_url,
             $csrf,
-            $is_fork
+            $is_fork,
+            $this->areRegexpActivatedAtSiteLevel()
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -291,7 +299,8 @@ class GitForkPermissionsManager {
             $this->getAllOptions($project),
             $delete_url,
             $csrf,
-            $is_fork
+            $is_fork,
+            $this->areRegexpActivatedAtSiteLevel()
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -317,5 +326,10 @@ class GitForkPermissionsManager {
     private function getAllOptions(Project $project)
     {
         return $this->builder->getAllOptions($project);
+    }
+
+    private function areRegexpActivatedAtSiteLevel()
+    {
+        return $this->regexp_retriever->areRegexpActivatedAtSiteLevel();
     }
 }

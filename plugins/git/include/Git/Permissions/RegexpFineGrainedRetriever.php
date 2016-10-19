@@ -33,8 +33,8 @@ class RegexpFineGrainedRetriever
         $this->regexp_dao = $regexp_dao;
     }
 
-    public function isRegexpEnabled()
+    public function areRegexpActivatedAtSiteLevel()
     {
-        return $this->regexp_dao->isRegexpEnabled();
+        return $this->regexp_dao->areRegexpActivatedAtSiteLevel();
     }
 }

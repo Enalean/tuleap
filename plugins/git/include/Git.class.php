@@ -24,6 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -78,6 +79,10 @@ class Git extends PluginController {
      * @var VersionDetector
      */
     private $detector;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
 
     /**
      * Lists all git-related permission types.
@@ -284,7 +289,8 @@ class Git extends PluginController {
         ProjectHistoryDao $history_dao,
         DescriptionUpdater $description_updater,
         GitPhpAccessLogger $access_loger,
-        VersionDetector $detector
+        VersionDetector $detector,
+        RegexpFineGrainedRetriever $regexp_retriever
     ) {
         parent::__construct($user_manager, $request);
 
@@ -362,6 +368,7 @@ class Git extends PluginController {
         $this->default_permission_updater              = $default_permission_updater;
         $this->history_dao                             = $history_dao;
         $this->description_updater                     = $description_updater;
+        $this->regexp_retriever                        = $regexp_retriever;
     }
 
     protected function instantiateView() {
@@ -374,7 +381,8 @@ class Git extends PluginController {
             $this->fine_grained_retriever,
             $this->default_fine_grained_permission_factory,
             $this->fine_grained_builder,
-            $this->access_loger
+            $this->access_loger,
+            $this->regexp_retriever
         );
     }
 

@@ -56,6 +56,8 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
      */
     public $branches_permissions;
 
+    public $are_regexp_permission_activated;
+
     public function __construct(
         $project_id,
         $are_mirrors_defined,
@@ -72,7 +74,8 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         array $tags_permissions_representation,
         array $new_fine_grained_ugroups,
         $delete_url,
-        CSRFSynchronizerToken $csrf_delete
+        CSRFSynchronizerToken $csrf_delete,
+        $are_regexp_permission_activated
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
@@ -87,6 +90,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
         $this->cannot_define_per_repo_permissions   = $are_fine_grained_permissions_defined;
+        $this->are_regexp_permission_activated      = $are_regexp_permission_activated;
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
@@ -153,6 +157,15 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->remove_fine_grained_permission_confirm = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_remove_confirm'
+        );
+
+        $this->regexp_permission_label  = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_permission_label'
+        );
+        $this->regexp_incoherence_label = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_incoherence_label'
         );
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');

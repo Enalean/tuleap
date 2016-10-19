@@ -186,7 +186,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('ProjectHistoryDao'),
                 mock('Tuleap\Git\Repository\DescriptionUpdater'),
                 mock('Tuleap\Git\History\GitPhpAccessLogger'),
-                mock('Tuleap\Git\Gitolite\VersionDetector')
+                mock('Tuleap\Git\Gitolite\VersionDetector'),
+                mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
             )
         );
         $git->setRequest($request);

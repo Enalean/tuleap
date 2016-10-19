@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2015 - 2016. All rights reserved
  *
@@ -17,9 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
-class GitPresenters_AccessControlPresenter {
-
+class GitPresenters_AccessControlPresenter
+{
     /**
      * @var array
      */
@@ -69,6 +69,9 @@ class GitPresenters_AccessControlPresenter {
     public $btn_cancel;
     public $remove_form_action;
     public $disabled;
+    public $are_regexp_permission_activated;
+    public $regexp_permission_label;
+    public $regexp_incoherence_label;
 
     public function __construct(
         $is_control_limited,
@@ -85,7 +88,8 @@ class GitPresenters_AccessControlPresenter {
         array $new_fine_grained_ugroups,
         $delete_url,
         CSRFSynchronizerToken $csrf,
-        $is_fork
+        $is_fork,
+        $are_regexp_permission_activated
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -110,6 +114,16 @@ class GitPresenters_AccessControlPresenter {
         $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_permissions_checkbox_label'
+        );
+
+        $this->are_regexp_permission_activated = $are_regexp_permission_activated;
+        $this->regexp_permission_label         = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_permission_label'
+        );
+        $this->regexp_incoherence_label        = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_incoherence_label'
         );
 
         $this->fine_grained_permissions_fork_warning .= $GLOBALS['Language']->getText(

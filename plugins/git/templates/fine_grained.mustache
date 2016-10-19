@@ -1,14 +1,38 @@
 <div class="git-per-tags-branches-permissions">
     <h3>{{ fine_grained_permissions_title }}</h3>
 
-    <label class="checkbox">
-        <input type="checkbox"
-               name="use-fine-grained-permissions"
-               class="toggle-fine-grained-permissions"
-               {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
-               {{ disabled }}
-        /> {{ fine_grained_permissions_checkbox_label }}
-    </label>
+    <div class="fine-grained-permissions">
+        <label class="checkbox">
+            <input type="checkbox"
+                   name="use-fine-grained-permissions"
+                   class="toggle-fine-grained-permissions"
+                   id="use-fine-grained-permissions"
+                    {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
+                    {{ disabled }}
+            /> {{ fine_grained_permissions_checkbox_label }}
+
+        </label>
+
+        <div
+            {{# are_fine_grained_permissions_defined }}
+                class="regexp_permission_activated"
+            {{/ are_fine_grained_permissions_defined }}
+            {{^ are_fine_grained_permissions_defined }}
+                class="regexp_permission_activated regexp_permission_activated_hidden"
+            {{/ are_fine_grained_permissions_defined }}>
+            <span class="use-regexp-label-arrow">&#8627;</span>
+            <label class="checkbox use-regexp-label">
+                <input type="checkbox"
+                       name="use-regexp"
+                       disabled="disabled"
+                />
+                <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
+            </label>
+            <p class="text-warning regexp_incoherence_label">
+                <i class="icon-warning-sign"> </i>{{ regexp_incoherence_label }}
+            </p>
+        </div>
+    </div>
 
     {{# are_fine_grained_permissions_defined }}
         {{# is_fork }}
@@ -18,26 +42,26 @@
         <h4>{{ branches_title }}</h4>
         <table class="table table-bordered git-permission-table git-fine-grained-permissions-branch">
             <thead>
-                <tr>
-                    <th>{{ pattern_column }}</th>
-                    <th class="git-permission-table-selector">{{ label_write }}</th>
-                    <th class="git-permission-table-selector">{{ label_rw }}</th>
-                    {{^ is_fork }}
+            <tr>
+                <th>{{ pattern_column }}</th>
+                <th class="git-permission-table-selector">{{ label_write }}</th>
+                <th class="git-permission-table-selector">{{ label_rw }}</th>
+                {{^ is_fork }}
                     <th>{{ actions_column }}</th>
-                    {{/ is_fork }}
-                </tr>
+                {{/ is_fork }}
+            </tr>
             </thead>
             <tbody>
-                {{^ has_branches_permissions }}
-                    <tr class="empty-table">
-                        <td {{^ is_fork }}colspan="4"{{/ is_fork }}
-                            {{# is_fork }}colspan="3"{{/ is_fork }}
-                        >{{ empty }}</td>
-                    </tr>
-                {{/ has_branches_permissions }}
+            {{^ has_branches_permissions }}
+                <tr class="empty-table">
+                    <td {{^ is_fork }}colspan="4"{{/ is_fork }}
+                        {{# is_fork }}colspan="3"{{/ is_fork }}
+                    >{{ empty }}</td>
+                </tr>
+            {{/ has_branches_permissions }}
 
-                {{# has_branches_permissions }}
-                    {{# branches_permissions }}
+            {{# has_branches_permissions }}
+                {{# branches_permissions }}
                     <tr>
                         <td class="permission-pattern">{{ pattern }}</td>
                         <td class="permission-write">
@@ -57,13 +81,13 @@
                         {{^ is_fork }}
                             <td class="permission-delete">
                                 <a href="javascript:;"
-                                    class="remove-fine-grained-permission"
-                                    data-toggle="popover"
-                                    data-trigger="click"
-                                    data-placement="left"
-                                    data-html="true"
-                                    data-popover-id="remove-{{ id }}-popover"
-                                    data-form-action="{{ remove_form_action }}"
+                                   class="remove-fine-grained-permission"
+                                   data-toggle="popover"
+                                   data-trigger="click"
+                                   data-placement="left"
+                                   data-html="true"
+                                   data-popover-id="remove-{{ id }}-popover"
+                                   data-form-action="{{ remove_form_action }}"
                                 >
                                     <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}
 
@@ -72,37 +96,37 @@
                             </td>
                         {{/ is_fork }}
                     </tr>
-                    {{/ branches_permissions }}
-                {{/ has_branches_permissions }}
+                {{/ branches_permissions }}
+            {{/ has_branches_permissions }}
             </tbody>
         </table>
         {{^ is_fork }}
-        <button class="btn add-fine-grained-permission" data-type="branch">{{ add_branch_permission }}</button>
+            <button class="btn add-fine-grained-permission" data-type="branch">{{ add_branch_permission }}</button>
         {{/ is_fork }}
 
         <h4>{{ tags_title }}</h4>
         <table class="table table-bordered git-permission-table git-fine-grained-permissions-tag">
             <thead>
-                <tr>
-                    <th>{{ pattern_column }}</th>
-                    <th class="git-permission-table-selector">{{ label_write }}</th>
-                    <th class="git-permission-table-selector">{{ label_rw }}</th>
-                    {{^ is_fork }}
+            <tr>
+                <th>{{ pattern_column }}</th>
+                <th class="git-permission-table-selector">{{ label_write }}</th>
+                <th class="git-permission-table-selector">{{ label_rw }}</th>
+                {{^ is_fork }}
                     <th>{{ actions_column }}</th>
-                    {{/ is_fork }}
-                </tr>
+                {{/ is_fork }}
+            </tr>
             </thead>
             <tbody>
-                {{^ has_tags_permissions }}
-                    <tr class="empty-table">
-                        <td {{^ is_fork }}colspan="4"{{/ is_fork }}
-                            {{# is_fork }}colspan="3"{{/ is_fork }}
-                        >{{ empty }}</td>
-                    </tr>
-                {{/ has_tags_permissions }}
+            {{^ has_tags_permissions }}
+                <tr class="empty-table">
+                    <td {{^ is_fork }}colspan="4"{{/ is_fork }}
+                        {{# is_fork }}colspan="3"{{/ is_fork }}
+                    >{{ empty }}</td>
+                </tr>
+            {{/ has_tags_permissions }}
 
-                {{# has_tags_permissions }}
-                    {{# tags_permissions }}
+            {{# has_tags_permissions }}
+                {{# tags_permissions }}
                     <tr>
                         <td class="permission-pattern">{{ pattern }}</td>
                         <td class="permission-write">
@@ -120,28 +144,28 @@
                             </select>
                         </td>
                         {{^ is_fork }}
-                        <td class="permission-delete">
-                            <a href="javascript:;"
-                                class="remove-fine-grained-permission"
-                                data-toggle="popover"
-                                data-trigger="click"
-                                data-placement="left"
-                                data-html="true"
-                                data-popover-id="remove-{{ id }}-popover"
-                                data-form-action="{{ remove_form_action }}"
-                            >
-                                <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}
-                            </a>
-                            {{> settings/popover-remove-fine-grained-permission }}
-                        </td>
+                            <td class="permission-delete">
+                                <a href="javascript:;"
+                                   class="remove-fine-grained-permission"
+                                   data-toggle="popover"
+                                   data-trigger="click"
+                                   data-placement="left"
+                                   data-html="true"
+                                   data-popover-id="remove-{{ id }}-popover"
+                                   data-form-action="{{ remove_form_action }}"
+                                >
+                                    <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}
+                                </a>
+                                {{> settings/popover-remove-fine-grained-permission }}
+                            </td>
                         {{/ is_fork }}
                     </tr>
-                    {{/ tags_permissions }}
-                {{/ has_tags_permissions }}
+                {{/ tags_permissions }}
+            {{/ has_tags_permissions }}
             </tbody>
         </table>
         {{^ is_fork }}
-        <button class="btn add-fine-grained-permission" data-type="tag">{{ add_tag_permission }}</button>
+            <button class="btn add-fine-grained-permission" data-type="tag">{{ add_tag_permission }}</button>
         {{/ is_fork }}
 
     {{/ are_fine_grained_permissions_defined }}
@@ -149,6 +173,6 @@
 
 <select id="add-fine-grained-permission-template" class="plugin_git_permissions_select" multiple="multiple" size="6">
     {{# new_fine_grained_ugroups }}
-    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+        <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
     {{/ new_fine_grained_ugroups }}
 </select>
