@@ -11,12 +11,14 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-rev": "^7.1.0",
-    "gulp-sass": "^2.3.2"
+    "gulp-sass": "^2.3.2",
+    "gulp-scss-lint": "^0.4.0"
   },
   "scripts": {
     "build": "node_modules/.bin/gulp build",
-    "js":    "node_modules/.bin/gulp js",
-    "sass":  "node_modules/.bin/gulp sass",
-    "watch": "node_modules/.bin/gulp watch"
+    "js": "node_modules/.bin/gulp js",
+    "sass": "node_modules/.bin/gulp sass",
+    "watch": "node_modules/.bin/gulp watch",
+    "scss-lint": "node_modules/.bin/gulp scss-lint"
   }
 }

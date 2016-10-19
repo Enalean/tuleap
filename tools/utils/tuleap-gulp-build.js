@@ -1,12 +1,13 @@
 'use strict';
 
-var gulp    = require('gulp'),
-    concat  = require('gulp-concat'),
-    rev     = require('gulp-rev'),
-    del     = require('del'),
-    fs      = require('fs'),
-    path    = require('path'),
-    sass    = require('gulp-sass');
+var gulp      = require('gulp'),
+    concat    = require('gulp-concat'),
+    rev       = require('gulp-rev'),
+    del       = require('del'),
+    fs        = require('fs'),
+    path      = require('path'),
+    scss_lint = require('gulp-scss-lint'),
+    sass      = require('gulp-sass');
 
 function get_all_plugins_from_manifests() {
     var plugins_path = './plugins';
@@ -42,6 +43,7 @@ function declare_plugin_tasks(asset_dir) {
     var javascript_tasks = [],
         clean_tasks      = [],
         sass_tasks       = [],
+        scss_lint_tasks  = [],
         plugins_tasks    = [];
 
     get_all_plugins_from_manifests().forEach(function (plugin) {
@@ -66,23 +68,33 @@ function declare_plugin_tasks(asset_dir) {
             clean_tasks.push('clean-' + task_name);
         }
 
-        if ('themes' in plugin) {
+        if ('themes' in plugin) {
             var task_name = 'sass-' + name;
 
+            gulp.task('scss-lint-' + name, function() {
+                Object.keys(plugin['themes']).forEach(function (theme) {
+                    return gulp.src(plugin['themes'][theme]['files'], { cwd: base_dir })
+                        .pipe(scss_lint({
+                            config : '.scss-lint.yml'
+                        }));
+                });
+            });
+
             gulp.task('clean-' + task_name, function () {
-                Object.keys(plugin['themes']).forEach(function (theme) {
+                Object.keys(plugin['themes']).forEach(function (theme) {
                     sass_clean(base_dir, plugin['themes'][theme]['files']);
                 });
             });
 
             gulp.task(task_name, ['clean-' + task_name], function () {
-                Object.keys(plugin['themes']).forEach(function (theme) {
+                Object.keys(plugin['themes']).forEach(function (theme) {
                     sass_build(base_dir, plugin['themes'][theme]);
                 });
             });
 
             plugin_tasks.push(task_name);
             sass_tasks.push(task_name);
+            scss_lint_tasks.push('scss-lint-' + name);
             clean_tasks.push('clean-' + task_name);
         }
 
@@ -93,6 +105,7 @@ function declare_plugin_tasks(asset_dir) {
 
     gulp.task('js-plugins', javascript_tasks);
     gulp.task('sass-plugins', sass_tasks);
+    gulp.task('scss-lint-plugins', scss_lint_tasks);
     gulp.task('clean-plugins', clean_tasks);
     gulp.task('plugins', plugins_tasks);
 }
