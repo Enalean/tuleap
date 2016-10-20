@@ -328,7 +328,6 @@ admin_usergroup	error_add_ug	Erreur lors de l'ajout d'un utilisateur au groupe
 admin_usergroup	success_add_ug	Utilisateur ajouté au groupe avec succès
 admin_usergroup	error_member	L'utilisateur est déjà membre du groupe $1
 admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur
-admin_usergroup	account_info	Information sur le compte Unix
 admin_usergroup	shell	Shell
 admin_usergroup	email	E-mail
 admin_usergroup	expiry_date	Date d'expiration
@@ -346,16 +345,24 @@ admin_usergroup	current_groups	Groupes actuels
 admin_usergroup	remove_ug	Enlever l'utilisateur de ce groupe
 admin_usergroup	admin_flags	Drapeaux d'administration
 admin_usergroup	add_ug	Ajouter l'utilisateur au groupe (ID du groupe)
-admin_usergroup	change_passwd	Changer le mot de passe de l'utilisateur
+admin_usergroup	change_passwd	Changer le mot de passe
 admin_usergroup	was	Intialement :
 admin_usergroup	rename_user_msg	Le changement de Login utilisateur sur le système va être traité dans quelques instants ($1 -> $2).
 admin_usergroup	rename_user_warn	La mise à jour du Login ne sera effective qu'après le traitement de l'événement système correspondant.
 admin_usergroup	rename_user_already_queued	Il y a déjà une opération de renommage prévue pour cet utilisteur. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
-admin_usergroup	account_details	Détails du compte:
+admin_usergroup	account_details	Détails du compte
+admin_usergroup	access	Accès
+admin_usergroup	current_projects	Projets
+admin_usergroup	is_admin	Est administrateur du projet
+admin_usergroup	no_project	Membre d'aucun projet
 admin_usergroup	last_pwd_update	Dernière mise à jour du mot de passe
 admin_usergroup	last_access_date	Dernier accès
 admin_usergroup	cannot_change_status	Impossible de changer le statut avant la validation du compte
 admin_usergroup	user_public_profile	Profil public
+admin_usergroup	more_info	Plus d'information
+admin_usergroup	update_information	Sauvegarder les informations
+admin_usergroup	purpose_label	Motif
+admin_usergroup	empty_purpose	Vide
 #
 #-----------------------------------------------
 # Script: SF/www/admin/userlist.php

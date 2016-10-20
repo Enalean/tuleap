@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2008
@@ -156,11 +156,12 @@ class StatisticsPlugin extends Plugin {
      *
      * @return void
      */
-    function usergroup_data($params) {
-        $userId = $params['user_id'];
-        if ($userId && UserManager::instance()->getCurrentUser()->isSuperUser()) {
-            echo '<tr><td colspan="2"><A HREF="'.$this->getPluginPath().'/disk_usage.php?func=show_one_user&user_id='.$userId.'">['.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').']</A></td></tr>';
-        }
+    function usergroup_data($params)
+    {
+        $params['links'][] = array(
+            'href'  => $this->getPluginPath() . '/disk_usage.php?func=show_one_user&user_id='.$params['user']->getId(),
+            'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
+        );
     }
 
     /**
@@ -204,34 +205,34 @@ class StatisticsPlugin extends Plugin {
             $params['codendi_widgets'][] = 'plugin_statistics_projectstatistics';
         }
     }
-    
+
     function cssFile($params) {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
-    
+
     public function processSOAP(Codendi_Request $request) {
         $uri           = $this->getSoapUri();
         $service_class = 'Statistics_SOAPServer';
         require_once $service_class .'.class.php';
-        
+
         if ($request->exist('wsdl')) {
             $this->dumpWSDL($uri, $service_class);
         } else {
             $this->instantiateSOAPServer($uri, $service_class);
         }
     }
-    
+
     private function dumpWSDL($uri, $service_class) {
         require_once 'common/soap/SOAP_NusoapWSDL.class.php';
         $wsdlGen = new SOAP_NusoapWSDL($service_class, 'TuleapStatisticsAPI', $uri);
         $wsdlGen->dumpWSDL();
     }
-    
+
     private function instantiateSOAPServer($uri, $service_class) {
         require_once 'common/soap/SOAP_RequestValidator.class.php';
         require_once 'Statistics_DiskUsageManager.class.php';
@@ -240,23 +241,23 @@ class StatisticsPlugin extends Plugin {
         $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
         $disk_usage_manager     = new Statistics_DiskUsageManager();
         $project_quota_manager  = new ProjectQuotaManager();
-        
+
         $server = new TuleapSOAPServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
         $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
         $server->handle();
     }
-    
+
     private function getSoapUri() {
         return HTTPRequest::instance()->getServerUrl().'/plugins/statistics/soap';
     }
-    
+
     public function renderWSDL() {
         require_once 'common/soap/SOAP_WSDLRenderer.class.php';
         $uri = $this->getSoapUri();
         $wsdl_renderer = new SOAP_WSDLRenderer();
         $wsdl_renderer->render($uri .'/?wsdl');
     }
-    
+
     public function wsdl_doc2soap_types($params) {
         $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
             'arrayofstatistics' => 'tns:ArrayOfStatistics',

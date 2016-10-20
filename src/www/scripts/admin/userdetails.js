@@ -1,7 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean SAS - 2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,35 +15,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#siteadmin-homepage-container {
-    display: flex;
-    justify-content: space-between;
-}
+document.addEventListener('DOMContentLoaded', function() {
+    var expiry_element = document.querySelector('#expiry');
 
-.siteadmin-homepage-column {
-    flex: 1;
-    margin: 0 $tlp-spacing 0 0;
-
-    &:last-child {
-        margin: 0;
+    if (expiry_element) {
+        tlp.datePicker(expiry_element);
     }
-}
-
-.siteadmin-trovecat-list-category {
-    width: 100%;
-}
-
-.siteadmin-trovecat-list-actions {
-    text-align: left;
-    white-space: nowrap;
-}
-
-.siteadmin-sidebar {
-    align-self: stretch;
-    min-width: 260px;
-    background: #293e45;
-    color: #d4d7e1;
-}
-
-@import 'siteadmin-user-list';
-@import 'siteadmin-user-details';
+});

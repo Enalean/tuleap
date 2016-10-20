@@ -26,6 +26,7 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\LDAP\NonUniqueUidRetriever;
+use Tuleap\User\Admin\UserDetailsPresenter;
 
 class LdapPlugin extends Plugin {
     /**
@@ -132,6 +133,7 @@ class LdapPlugin extends Plugin {
             $this->addHook(GIT_EVENT_PLATFORM_CAN_USE_GERRIT);
         }
 
+        $this->addHook(UserDetailsPresenter::ADDITIONAL_DETAILS);
         $this->addHook('root_daily_start');
         $this->addHook('ugroup_duplication');
 
@@ -468,20 +470,53 @@ class LdapPlugin extends Plugin {
      *  OUT $params['entry_label']
      *  OUT $params['entry_value']
      */
-    function personalInformationEntry($params) {
-        if($this->isLdapAuthType()) {
+    public function personalInformationEntry($params)
+    {
+        if ($this->isLdapAuthType()) {
             $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
-            $ldapUm = $this->getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
-            if($lr) {
-                $link = $this->buildLinkToDirectory($lr, $lr->getLogin());
-                $params['entry_value'][$this->getId()] = $link;
+
+            $login_info = $this->getLdapLoginInfo($params['user_id']);
+            if (! $login_info) {
+                $login_info = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
             }
-            else {
-                $params['entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
-            }
+            $params['entry_value'][$this->getId()] = $login_info;
         }
-    }     
+    }
+
+    /** @see UserDetailsPresenter::ADDITIONAL_DETAILS */
+    public function additional_details($params)
+    {
+        if ($this->isLdapAuthType()) {
+            $user = $params['user'];
+
+            $ldap_id_label = $GLOBALS['Language']->getText('admin_usergroup', 'ldap_id');
+            $ldap_id       = $user->getLdapId();
+
+            $login_label    = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+            $login_info     = $this->getLdapLoginInfo($user->getId());
+            $has_login_info = true;
+            if (! $login_info) {
+                $has_login_info = false;
+                $login_info     = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+            }
+
+            $params['additional_details'][] = array(
+                'login_label'    => $login_label,
+                'login_info'     => $login_info,
+                'ldap_id_label'  => $ldap_id_label,
+                'ldap_id'        => $ldap_id,
+                'has_login_info' => $has_login_info
+            );
+        }
+    }
+
+    private function getLdapLoginInfo($user_id)
+    {
+        $ldap_result = $this->getLdapUserManager()->getLdapFromUserId($user_id);
+        if ($ldap_result) {
+            return $this->buildLinkToDirectory($ldap_result, $ldap_result->getLogin());
+        }
+    }
 
     /**
      * Hook
