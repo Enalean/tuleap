@@ -109,13 +109,14 @@ div.flatpickr-calendar {
         align-items: center;
         padding: 10px;
 
-        > .flatpickr-day {
+        > .disabled {
             width: 30px;
             height: 30px;
             margin: 0;
             border: 0;
             color: $tlp-theme-color;
             line-height: 28px;
+            text-align: center;
         }
     }
 
@@ -140,8 +141,10 @@ div.flatpickr-calendar {
                 background: $flatpickr-day-hover;
             }
 
-            &.disabled,
-            &.disabled:hover {
+            &.prevMonthDay,
+            &.nextMonthDay,
+            &.prevMonthDay:hover,
+            &.nextMonthDay:hover {
                 border: 0;
                 background: 0;
                 color: $flatpickr-day-dimmed;

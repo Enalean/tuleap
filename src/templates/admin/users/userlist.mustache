@@ -10,7 +10,7 @@
         <div class="tlp-pane-container">
             {{# search_fields }}
                 <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title"><i class="fa fa-search tlp-button-icon"></i> {{ title }}</h1>
+                    <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ title }}</h1>
                 </div>
                 <section class="tlp-pane-section">
                     <form name="usersrch" action="userlist.php" method="get">
@@ -41,7 +41,7 @@
             {{# results }}
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="fa fa-users"></i>
+                        <i class="tlp-pane-title-icon fa fa-users"></i>
                         {{ title }}
                         <span class="tlp-badge-secondary tlp-badge-outline siteadmin-userlist-result-nb">{{ nb_matching_users }}</span>
                     </h1>

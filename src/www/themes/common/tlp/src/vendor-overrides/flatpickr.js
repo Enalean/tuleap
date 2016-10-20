@@ -30,5 +30,11 @@ tlp.datePicker = function(element, options) {
     options.timeFormat  = 'H:i';
     options.time_24hr   = true;
 
+    var placeholder = 'yyyy-mm-dd';
+    if (element.hasAttribute('data-enabletime')) {
+        placeholder += ' HH:mm';
+    }
+    element.setAttribute('placeholder', placeholder);
+
     return flatpickr(element, options);
 }

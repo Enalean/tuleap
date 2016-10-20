@@ -110,6 +110,8 @@ $tlp-form-element-select-small-background-size: 6px;
     cursor: pointer;
 
     > .fa-asterisk {
+        position: absolute;
+        margin: 0 0 0 3px;
         color: $tlp-ui-danger;
         font-size: 10px;
         vertical-align: text-top;
