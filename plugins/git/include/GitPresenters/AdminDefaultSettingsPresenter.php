@@ -93,7 +93,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
         $this->cannot_define_per_repo_permissions   = $are_fine_grained_permissions_defined;
         $this->are_regexp_permission_activated      = false;
-        $this->is_regexp_enabled                    = true;
+        $this->is_regexp_enabled                    = false;
         $this->can_regexp_be_enabled                = false;
 
         $this->branches_permissions = $branches_permissions_representation;
