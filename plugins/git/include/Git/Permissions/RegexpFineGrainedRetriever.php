@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\Permissions;
 
+use GitRepository;
+
 class RegexpFineGrainedRetriever
 {
     /**
@@ -28,13 +30,26 @@ class RegexpFineGrainedRetriever
      */
     private $regexp_dao;
 
-    public function __construct(RegexpFineGrainedDao $regexp_dao)
-    {
-        $this->regexp_dao = $regexp_dao;
+    /**
+     * @var RegexpRepositoryDao
+     */
+    private $regexp_repository_dao;
+
+    public function __construct(
+        RegexpFineGrainedDao $regexp_dao,
+        RegexpRepositoryDao $regexp_repository_dao
+    ) {
+        $this->regexp_dao            = $regexp_dao;
+        $this->regexp_repository_dao = $regexp_repository_dao;
     }
 
     public function areRegexpActivatedAtSiteLevel()
     {
         return $this->regexp_dao->areRegexpActivatedAtSiteLevel();
+    }
+
+    public function areRegexpActivatedForRepository(GitRepository $repository)
+    {
+        return $this->regexp_repository_dao->areRegexpActivatedForRepository($repository->getId());
     }
 }

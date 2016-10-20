@@ -82,7 +82,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
                 mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-                mock('Tuleap\Git\Permissions\PermissionChangesDetector')
+                mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
+                mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler')
             )
         );
     }
@@ -502,7 +503,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-            mock('Tuleap\Git\Permissions\PermissionChangesDetector')
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler')
         );
     }
 
@@ -570,7 +572,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-            mock('Tuleap\Git\Permissions\PermissionChangesDetector')
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler')
         );
     }
 
@@ -727,7 +730,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-            mock('Tuleap\Git\Permissions\PermissionChangesDetector')
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler')
         );
 
     }

@@ -10,7 +10,6 @@
                     {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
                     {{ disabled }}
             /> {{ fine_grained_permissions_checkbox_label }}
-
         </label>
 
         <div
@@ -24,12 +23,15 @@
             <label class="checkbox use-regexp-label">
                 <input type="checkbox"
                        name="use-regexp"
-                       disabled="disabled"
+                    {{# is_regexp_enabled }} checked="checked" disabled="disabled" {{/ is_regexp_enabled }}
+                    {{^ can_regexp_be_enabled }} disabled="disabled"{{/ can_regexp_be_enabled }}
                 />
                 <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
             </label>
             <p class="text-warning regexp_incoherence_label">
-                <i class="icon-warning-sign"> </i>{{ regexp_incoherence_label }}
+                <i class="icon-warning-sign"> </i>
+                {{# can_regexp_be_enabled }} {{ regexp_incoherence_label }} {{/ can_regexp_be_enabled }}
+                {{^ can_regexp_be_enabled }} {{ regexp_under_construction }} {{/ can_regexp_be_enabled }}
             </p>
         </div>
     </div>

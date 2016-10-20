@@ -21,35 +21,27 @@
 
 namespace Tuleap\Git\Permissions;
 
-use GitRepository;
+use DataAccessObject;
 
-class RegexpFineGrainedEnabler
+class RegexpRepositoryDao extends DataAccessObject
 {
-    /**
-     * @var RegexpFineGrainedDao
-     */
-    private $regexp_dao;
+    public function areRegexpActivatedForRepository($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
 
-    /**
-     * @var RegexpRepositoryDao
-     */
-    private $regexp_repository_dao;
+        $sql = "SELECT * FROM plugin_git_repository_fine_grained_regexp_enabled
+                  WHERE repository_id = $repository_id";
 
-    public function __construct(
-        RegexpFineGrainedDao $regexp_dao,
-        RegexpRepositoryDao $regexp_repository_dao
-    ) {
-        $this->regexp_dao            = $regexp_dao;
-        $this->regexp_repository_dao = $regexp_repository_dao;
+        return $this->retrieve($sql)->count() > 0;
     }
 
-    public function enable()
+    public function enable($repository_id)
     {
-        return $this->regexp_dao->enable();
-    }
+        $repository_id = $this->da->escapeInt($repository_id);
 
-    public function enableForRepository(GitRepository $repository)
-    {
-        $this->regexp_repository_dao->enable($repository->getId());
+        $sql = "INSERT INTO plugin_git_repository_fine_grained_regexp_enabled (repository_id)
+                  VALUES ($repository_id)";
+
+        return $this->update($sql);
     }
 }
