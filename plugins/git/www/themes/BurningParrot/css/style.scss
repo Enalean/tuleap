@@ -1,0 +1,17 @@
+@import 'variables/margins';
+
+.form-element-group {
+    display: flex;
+
+    > .form-element-item:not(:last-child) {
+        margin-right: $tlp-spacing * 2;
+    }
+
+    > .form-element-item:not(:first-child) {
+        flex: 0;
+    }
+
+    > .form-element-item:first-child {
+        flex: 1 1 auto;
+    }
+}

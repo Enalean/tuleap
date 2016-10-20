@@ -103,6 +103,7 @@ $tlp-form-element-select-small-background-size: 6px;
  */
 .tlp-label {
     display: block;
+    position: relative;
     margin: 0 0 8px;
     color: $tlp-label-color;
     font-size: 14px;

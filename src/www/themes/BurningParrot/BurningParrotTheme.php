@@ -18,6 +18,8 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use Event;
+use EventManager;
 use Tuleap\Layout\BaseLayout;
 use Widget_Static;
 use TemplateRendererFactory;
@@ -76,6 +78,18 @@ class BurningParrotTheme extends BaseLayout
 
     public function footer(array $params)
     {
+        $javascript_files = array();
+        EventManager::instance()->processEvent(
+            Event::BURNING_PARROT_GET_JAVASCRIPT_FILES,
+            array(
+                'javascript_files' => &$javascript_files
+            )
+        );
+
+        foreach ($javascript_files as $javascript_file) {
+            $this->includeFooterJavascriptFile($javascript_file);
+        }
+
         $footer = new FooterPresenter($this->javascript_in_footer);
         $this->renderer->renderToPage('footer', $footer);
     }

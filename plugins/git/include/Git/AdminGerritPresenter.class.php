@@ -26,19 +26,53 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $list_of_servers;
 
-    public $add_gerrit_server;
+    public $add_server;
 
     public $list_of_servers_empty_message;
 
-    public $btn_submit;
+    public $gerrit_add_server;
 
-    public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_gerrits) {
-        parent::__construct($title, $csrf);
+    public $gerrit_label_host;
+
+    public $gerrit_label_http_port;
+
+    public $gerrit_label_ssh_port;
+
+    public $gerrit_label_replication_key;
+
+    public $gerrit_label_use_ssl;
+
+    public $gerrit_label_login;
+
+    public $gerrit_label_identity_file;
+
+    public $gerrit_label_gerrit_version;
+
+    public $gerrit_label_http_password;
+
+    public $gerrit_label_replication_password;
+
+    public $gerrit_label_auth_type;
+
+    public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits) {
+        parent::__construct($title, $csrf_token);
 
         $this->list_of_servers               = $list_of_gerrits;
-        $this->btn_submit                    = $GLOBALS['Language']->getText('global', 'btn_submit');
-        $this->add_gerrit_server             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_add_server');
+        $this->add_server                    = $GLOBALS['Language']->getText('plugin_git', 'add_server');
+        $this->gerrit_add_server             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_add_server');
         $this->list_of_servers_empty_message = $GLOBALS['Language']->getText('plugin_git', 'gerrit_no_servers');
+
+        $this->gerrit_label_host                 = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_host');
+        $this->gerrit_label_http_port            = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_port');
+        $this->gerrit_label_ssh_port             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_ssh_port');
+        $this->gerrit_label_replication_key      = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_key');
+        $this->gerrit_label_use_ssl              = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_use_ssl');
+        $this->gerrit_label_login                = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_login');
+        $this->gerrit_label_identity_file        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_identity_file');
+        $this->gerrit_label_gerrit_version       = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_gerrit_version');
+        $this->gerrit_label_http_password        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_password');
+        $this->gerrit_label_replication_password = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_password');
+        $this->gerrit_label_auth_type            = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_auth_type');
     }
 
     public function list_of_servers_is_empty()

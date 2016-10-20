@@ -77,7 +77,9 @@
     <h2>{{ dump_mirrored_repositories_label }}</h2>
     <div class="alert alert-warning"> {{ dump_mirrored_repositories_text }}</div>
     <form method="POST" action="?pane=mirrors_admin&action=dump-gitolite-conf" class="form-horizontal">
-        {{{ csrf_input }}}
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="submit" value="{{ dump_mirrored_repositories_label }}" class="btn btn-danger"/>
     </form>
 {{/ see_all }}

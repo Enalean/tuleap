@@ -38,8 +38,18 @@ class Git_AdminGerritController {
 
     public function process(Codendi_Request $request) {
        if ($request->get('action') == 'gerrit-servers') {
-            $this->updateGerritServers($request);
+           $this->updateGerritServers($request);
+       } else if ($request->get('action') == 'add-gerrit-server') {
+            $this->addGerritServer($request);
         }
+    }
+
+    private function addGerritServer(Codendi_Request $request)
+    {
+        $request_gerrit_server = $request->params;
+        $this->csrf->check();
+        $this->addServer($request_gerrit_server);
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
     }
 
     private function updateGerritServers(Codendi_Request $request) {
@@ -86,6 +96,41 @@ class Git_AdminGerritController {
         }
 
         return $list_of_presenters;
+    }
+
+    private function addServer($request_gerrit_server)
+    {
+        $host                 = $request_gerrit_server['host'];
+        $ssh_port             = $request_gerrit_server['ssh_port'];
+        $http_port            = $request_gerrit_server['http_port'];
+        $login                = $request_gerrit_server['login'];
+        $identity_file        = $request_gerrit_server['identity_file'];
+        $replication_ssh_key  = $request_gerrit_server['replication_key'];
+        $use_ssl              = isset($request_gerrit_server['use_ssl'])  ? $request_gerrit_server['use_ssl'] : false;
+        $gerrit_version       = $request_gerrit_server['gerrit_version'];
+        $http_password        = $request_gerrit_server['http_password'];
+        $replication_password = $request_gerrit_server['replication_password'];
+        $auth_type            = $request_gerrit_server['auth_type'];
+
+        $server = new Git_RemoteServer_GerritServer(
+            0,
+            $host,
+            $ssh_port,
+            $http_port,
+            $login,
+            $identity_file,
+            $replication_ssh_key,
+            $use_ssl,
+            $gerrit_version,
+            $http_password,
+            '',
+            $auth_type
+        );
+
+        $this->gerrit_server_factory->save($server);
+        $this->servers[$server->getId()] = $server;
+
+        $this->updateReplicationPassword($server, $replication_password);
     }
 
     private function updateServers(array $request_gerrit_servers)
@@ -150,8 +195,8 @@ class Git_AdminGerritController {
     {
         if (! hash_equals($server->getReplicationPassword(), $replication_password)) {
             $server->setReplicationPassword($replication_password);
-
             $this->gerrit_server_factory->updateReplicationPassword($server);
+
             $this->servers[$server->getId()] = $server;
         }
     }

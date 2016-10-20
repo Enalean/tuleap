@@ -89,7 +89,19 @@ plugin_git	gerrit_template	Please choose a permission's configuration template f
 plugin_git	default_gerrit_template	Permissions defined in Git
 plugin_git	none_gerrit_template	No pre-set permissions
 plugin_git	gerrit_add_server	Add gerrit server
+plugin_git	add_server	Add server
 plugin_git	gerrit_no_servers	There is nothing here,<br> start by adding a gerrit server.
+plugin_git	gerrit_label_host	Host
+plugin_git	gerrit_label_http_port	HTTP port
+plugin_git	gerrit_label_ssh_port	SSH port
+plugin_git	gerrit_label_replication_key	Replication SSH Key (SSH key of the user who runs gerrit server)
+plugin_git	gerrit_label_use_ssl	Use SSL?
+plugin_git	gerrit_label_login	Login
+plugin_git	gerrit_label_identity_file	Identity file
+plugin_git	gerrit_label_gerrit_version	Gerrit server version
+plugin_git	gerrit_label_http_password	HTTP password
+plugin_git	gerrit_label_replication_password	Replication password
+plugin_git	gerrit_label_auth_type	Authentication type
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 

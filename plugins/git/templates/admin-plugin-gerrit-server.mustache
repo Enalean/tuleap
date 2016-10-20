@@ -1,15 +1,20 @@
 {{# list_of_servers_is_empty }}
     <div class="empty-page">
         <span class="empty-page-text">{{{ list_of_servers_empty_message }}}</span>
-        <button type="button" class="tlp-button-primary tlp-button-large">
-            <i class="fa fa-plus tlp-button-icon"></i> {{ add_gerrit_server }}
+        <button id="button-modal-add-gerrit-server" type="button" class="tlp-button-primary tlp-button-large">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ gerrit_add_server }}
         </button>
     </div>
 {{/ list_of_servers_is_empty }}
 
 {{^ list_of_servers_is_empty }}
+    <button id="button-modal-add-gerrit-server" type="button" class="tlp-button-primary">
+        <i class="fa fa-plus tlp-button-icon"></i> {{ gerrit_add_server }}
+    </button>
     <form method="POST" action="?pane=gerrit_servers_admin&action=gerrit-servers">
-        {{{ csrf_input }}}
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <h2>Admin gerrit servers</h2>
         <dl>
             {{# list_of_servers }}
@@ -148,6 +153,8 @@
                 </dd>
             {{/ list_of_servers }}
         </dl>
-        <p><input type="submit" value="{{ btn_submit }}" /></p>
+        <p><input type="submit" value="{{ add_server }}" /></p>
     </form>
 {{/ list_of_servers_is_empty }}
+
+{{> admin-plugin-gerrit-server-modal }}

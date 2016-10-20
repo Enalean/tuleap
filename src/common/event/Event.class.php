@@ -1251,4 +1251,12 @@ class Event {
      *    - stylesheets: String[] css paths to be added
      */
     const BURNING_PARROT_GET_STYLESHEETS = 'burning_parrot_get_stylesheets';
+
+    /**
+     * JavaScript files that will be added to the page's <footer>
+     *
+     * Parameters:
+     *    - javascript_files: String[] js paths to be added
+     */
+    const BURNING_PARROT_GET_JAVASCRIPT_FILES = 'burning_parrot_get_javascript_files';
 }

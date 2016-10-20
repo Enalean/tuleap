@@ -15,6 +15,19 @@
                 "../../src/www/themes/FlamingParrot/css/utils"
             ],
             "target_dir": "www/themes/FlamingParrot/css"
+        },
+        "BurningParrot": {
+            "files": [
+                "www/themes/BurningParrot/css/style.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/BurningParrot/css/includes",
+                "../../src/www/themes/common/tlp/src/scss"
+            ],
+            "target_dir": "www/themes/BurningParrot/css"
         }
-    }
+    },
+    "javascript": [
+        "www/themes/BurningParrot/js/modal-add-gerrit-server.js"
+    ]
 }

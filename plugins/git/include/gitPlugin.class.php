@@ -179,6 +179,9 @@ class GitPlugin extends Plugin {
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
         $this->addHook('root_daily_start');
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function getHooksAndCallbacks()
@@ -261,7 +264,14 @@ class GitPlugin extends Plugin {
         }
     }
 
-    public function jsFile() {
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0) {
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style.css';
+        }
+    }
+
+    public function jsFile($params) {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/git.js"></script>';
@@ -271,6 +281,13 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/permissions.js"></script>';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0) {
+            $params['javascript_files'][] = $this->getThemePath() .'/js/modal-add-gerrit-server.js';
         }
     }
 

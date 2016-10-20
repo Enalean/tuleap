@@ -151,3 +151,11 @@ $tlp-modal-transition: 150ms ease-out;
         opacity: .5;
     }
 }
+
+.tlp-modal-separator {
+    height: 1px;
+    margin: 0 -20px 20px;
+    border: 0;
+    background-color: $tlp-ui-border-light;
+    color: $tlp-ui-border-light;
+}

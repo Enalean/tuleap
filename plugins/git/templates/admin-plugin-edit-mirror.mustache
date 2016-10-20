@@ -1,7 +1,9 @@
 <h3>{{ update_button }}</h3>
 
 <form method="POST" action="?pane=mirrors_admin&action=modify-mirror" class="admin_mirror_config form-horizontal">
-    {{{ csrf_input }}}
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <div class="">
         <br>
         <div class="control-group">
