@@ -1,3 +1,6 @@
+Version 4.274 - Tuleap 9.1
+    * request #9595 Gitolite3Parser does not deal with deleted repositories
+
 Version 4.273 - Tuleap 9.1
     * story #9525: in admin section regexp checkbox shouldn't be checked
 
