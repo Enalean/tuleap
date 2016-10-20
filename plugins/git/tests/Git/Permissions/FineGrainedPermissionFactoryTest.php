@@ -40,7 +40,7 @@ class FineGrainedPermissionFactoryTest extends TuleapTestCase
             $this->ugroup_manager,
             $this->normalizer,
             mock('PermissionsManager'),
-            new FineGrainedPatternValidator(),
+            new PatternValidator(new FineGrainedPatternValidator()),
             new FineGrainedPermissionSorter()
         );
 

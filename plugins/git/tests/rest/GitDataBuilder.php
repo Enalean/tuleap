@@ -21,6 +21,7 @@
 require_once 'common/autoload.php';
 require_once __DIR__.'/DatabaseInitialization.php';
 
+use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\REST\DatabaseInitialization;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -234,7 +235,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $default_mirror_dao
         );
 
-        $validator        = new FineGrainedPatternValidator();
+        $validator        = new PatternValidator(new FineGrainedPatternValidator());
         $sorter           = new FineGrainedPermissionSorter();
         $ugroup_manager   = new UGroupManager();
         $normalizer       = new PermissionsNormalizer();

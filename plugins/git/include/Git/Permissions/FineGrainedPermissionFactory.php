@@ -40,7 +40,7 @@ class FineGrainedPermissionFactory
     private $sorter;
 
     /**
-     * @var FineGrainedPatternValidator
+     * @var PatternValidator
      */
     private $validator;
 
@@ -74,7 +74,7 @@ class FineGrainedPermissionFactory
         UGroupManager $ugroup_manager,
         PermissionsNormalizer $normalizer,
         PermissionsManager $permissions_manager,
-        FineGrainedPatternValidator $validator,
+        PatternValidator $validator,
         FineGrainedPermissionSorter $sorter
     ) {
         $this->dao                 = $dao;
@@ -304,7 +304,7 @@ class FineGrainedPermissionFactory
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {
-                if (! $this->validator->isPatternValid($pattern)) {
+                if (! $this->validator->isValid($pattern)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::WARN,
                         $GLOBALS['Language']->getText(
