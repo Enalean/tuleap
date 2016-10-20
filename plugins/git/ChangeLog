@@ -1,3 +1,6 @@
+Version 4.275 - Tuleap 9.1
+    * story #9525: Refactoring for regexp - introducing new object pattern validator
+
 Version 4.274 - Tuleap 9.1
     * request #9595 Gitolite3Parser does not deal with deleted repositories
 
