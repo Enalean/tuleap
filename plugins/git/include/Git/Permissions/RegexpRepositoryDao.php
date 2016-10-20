@@ -44,4 +44,14 @@ class RegexpRepositoryDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function disable($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "DELETE FROM plugin_git_repository_fine_grained_regexp_enabled
+                  WHERE repository_id = $repository_id";
+
+        return $this->update($sql);
+    }
 }

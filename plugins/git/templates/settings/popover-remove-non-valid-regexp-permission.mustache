@@ -1,0 +1,22 @@
+<div class="remove-regexp-permission-popover">
+    <h3 class="popover-title"><i class="icon-warning-sign"> </i>{{ title_warning_regexp_uncheck }}</h3>
+    <div class="modal-body">
+        <p>{{ warning_regexp_uncheck }} </p>
+    </div>
+
+    <div class="modal-footer">
+        <button
+                type="button"
+                class="btn btn-small btn-default dismiss-popover"
+                data-dismiss="modal"
+        > {{ btn_cancel }}
+        </button>
+        <button
+                type="submit"
+                class="btn btn-small btn-danger"
+                name="save"
+                value="{{ save_permissions }}">
+            {{ save_permissions }}
+        </button>
+    </div>
+</div>

@@ -1095,3 +1095,17 @@ h1, h2, h3 {
 .fine-grained-permissions {
     margin: 0 0 60px;
 }
+
+.modal-regexp-delete {
+    display: none;
+}
+
+.modal {
+    .remove-regexp-permission-popover {
+        .popover-title {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+    }
+}

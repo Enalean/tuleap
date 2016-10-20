@@ -23,7 +23,8 @@
             <label class="checkbox use-regexp-label">
                 <input type="checkbox"
                        name="use-regexp"
-                    {{# is_regexp_enabled }} checked="checked" disabled="disabled" {{/ is_regexp_enabled }}
+                       class="use-regexp"
+                    {{# is_regexp_enabled }} checked="checked" {{/ is_regexp_enabled }}
                     {{^ can_regexp_are_enabled }} disabled="disabled"{{/ can_regexp_are_enabled }}
                 />
                 <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
@@ -187,3 +188,7 @@
         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
     {{/ new_fine_grained_ugroups }}
 </select>
+
+<div id="modal-regexp-delete" class="modal modal-regexp-delete fade in">
+    {{> settings/popover-remove-non-valid-regexp-permission }}
+</div>

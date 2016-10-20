@@ -20,6 +20,11 @@
 
 class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
 {
+    public $title_warning_regexp_uncheck;
+    public $warning_regexp_uncheck;
+    public $save_permissions;
+    public $regexp_incoherence_label;
+    public $regexp_permission_label;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -176,9 +181,19 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'regexp_incoherence_label'
         );
 
-        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->is_fork    = false;
-        $this->disabled   = '';
+        $this->title_warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'title_warning_regexp_uncheck'
+        );
+        $this->warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'warning_regexp_uncheck'
+        );
+
+        $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
+        $this->is_fork          = false;
+        $this->disabled         = '';
     }
 
     public function is_control_limited()
