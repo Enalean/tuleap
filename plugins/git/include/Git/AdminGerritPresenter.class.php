@@ -30,6 +30,14 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $list_of_servers_empty_message;
 
+    public $btn_edit;
+
+    public $btn_delete;
+
+    public $empty_content;
+
+    public $not_specified_host;
+
     public $gerrit_add_server;
 
     public $gerrit_label_host;
@@ -39,6 +47,8 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
     public $gerrit_label_ssh_port;
 
     public $gerrit_label_replication_key;
+
+    public $gerrit_label_replication_key_infos;
 
     public $gerrit_label_use_ssl;
 
@@ -54,6 +64,12 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $gerrit_label_auth_type;
 
+    public $btn_delete_title;
+
+    public $digest;
+
+    public $basic;
+
     public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits) {
         parent::__construct($title, $csrf_token);
 
@@ -61,11 +77,18 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         $this->add_server                    = $GLOBALS['Language']->getText('plugin_git', 'add_server');
         $this->gerrit_add_server             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_add_server');
         $this->list_of_servers_empty_message = $GLOBALS['Language']->getText('plugin_git', 'gerrit_no_servers');
+        $this->btn_edit                      = $GLOBALS['Language']->getText('global', 'btn_edit');
+        $this->btn_delete                    = $GLOBALS['Language']->getText('global', 'btn_delete');
+        $this->btn_delete_title              = $GLOBALS['Language']->getText('plugin_git', 'btn_delete_title');
+        $this->empty_content                 = $GLOBALS['Language']->getText('plugin_git', 'empty_content');
+        $this->not_specified_host            = $GLOBALS['Language']->getText('plugin_git', 'not_specified_host');
 
-        $this->gerrit_label_host                 = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_host');
-        $this->gerrit_label_http_port            = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_port');
-        $this->gerrit_label_ssh_port             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_ssh_port');
-        $this->gerrit_label_replication_key      = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_key');
+        $this->gerrit_label_host                    = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_host');
+        $this->gerrit_label_http_port               = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_port');
+        $this->gerrit_label_ssh_port                = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_ssh_port');
+        $this->gerrit_label_replication_key         = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_key');
+        $this->gerrit_label_replication_key_infos   = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_key_infos');
+
         $this->gerrit_label_use_ssl              = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_use_ssl');
         $this->gerrit_label_login                = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_login');
         $this->gerrit_label_identity_file        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_identity_file');
@@ -73,6 +96,13 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         $this->gerrit_label_http_password        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_password');
         $this->gerrit_label_replication_password = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_password');
         $this->gerrit_label_auth_type            = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_auth_type');
+
+        $this->yes            = $GLOBALS['Language']->getText('plugin_git', 'yes');
+        $this->no             = $GLOBALS['Language']->getText('plugin_git', 'no');
+
+        $this->basic          = $GLOBALS['Language']->getText('plugin_git', 'basic');
+        $this->digest         = $GLOBALS['Language']->getText('plugin_git', 'digest');
+
     }
 
     public function list_of_servers_is_empty()

@@ -165,7 +165,8 @@ plugin_git	gerrit_no_servers	Il n'y a rien ici,<br> commencez par ajouter un ser
 plugin_git	gerrit_label_host	Host
 plugin_git	gerrit_label_http_port	Port HTTP
 plugin_git	gerrit_label_ssh_port	Port SSH
-plugin_git	gerrit_label_replication_key	Réplication de la clé SSH (la clé SSH de l'utilisateur qui démarre le serveur gerrit)
+plugin_git	gerrit_label_replication_key_infos	Réplication de la clé SSH (la clé SSH de l'utilisateur qui démarre le serveur gerrit)
+plugin_git	gerrit_label_replication_key	Réplication de la clé SSH
 plugin_git	gerrit_label_use_ssl	Utilisation de SSL ?
 plugin_git	gerrit_label_login	Identifiant
 plugin_git	gerrit_label_identity_file	Fichier d'identité
@@ -526,3 +527,8 @@ plugin_git	fine_grained_bad_pattern	L'expression $1 n'est pas bien formée. Elle
 
 plugin_git	stats_read	Nombre total des accès en lecture git
 plugin_git	empty_content	Vide
+plugin_git	not_specified_host	Hôte non renseigné
+plugin_git	btn_delete_title	Ce serveur est déjà utilisé par des dépôts.
+
+plugin_git	digest	"Digest"
+plugin_git	basic	Basique

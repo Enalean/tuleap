@@ -1,4 +1,3 @@
-
 plugin_git	descriptor_description	Plugin which provides Git support for Tuleap
 plugin_git	descriptor_name	Git Plugin
 plugin_git	please_choose	Please choose
@@ -9,6 +8,7 @@ plugin_git	view	view
 plugin_git	title	Git Plugin
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
+
 plugin_git	help_reference_title	Initialize a repository
 plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (for example)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;repository_url&gt; master</li>
 plugin_git	help_init_reference_msg	The current repository has not been initialized yet, this is required to allow users to clone it
@@ -94,7 +94,8 @@ plugin_git	gerrit_no_servers	There is nothing here,<br> start by adding a gerrit
 plugin_git	gerrit_label_host	Host
 plugin_git	gerrit_label_http_port	HTTP port
 plugin_git	gerrit_label_ssh_port	SSH port
-plugin_git	gerrit_label_replication_key	Replication SSH Key (SSH key of the user who runs gerrit server)
+plugin_git	gerrit_label_replication_key	Replication SSH Key
+plugin_git	gerrit_label_replication_key_infos	Replication SSH Key (SSH key of the user who runs gerrit server)
 plugin_git	gerrit_label_use_ssl	Use SSL?
 plugin_git	gerrit_label_login	Login
 plugin_git	gerrit_label_identity_file	Identity file
@@ -151,8 +152,8 @@ plugin_git	actions_mirror_ids_not_valid	This request is not valid (invalid mirro
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup of '$1' will be available in the backup directory
-plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
-plugin_git	actions_missing_permission	     Please define both Write and Rewind permissions.
+plugin_git	actions_name_not_available		 A file already exists with this name under gitroot
+plugin_git	actions_missing_permission		 Please define both Write and Rewind permissions.
 
 
 plugin_git	view_repo_description	Description
@@ -411,6 +412,7 @@ plugin_git	pwd_label	Owner's Password
 plugin_git	mirrored_repo_label	Repositories on this mirror
 plugin_git	manage_allowed_projects_label	Manage allowed projects
 plugin_git	repositories_label	Repositories on this mirror
+plugin_git	manage_allowed_projects	Manage allowed projects
 plugin_git	admin_update_button	Update
 plugin_git	admin_delete_button	Delete
 plugin_git	change_pwd	click here to change
@@ -530,3 +532,8 @@ plugin_git	fine_grained_bad_pattern	The pattern $1 is not well formed. Skipping.
 
 plugin_git	stats_read	Total number of git read access
 plugin_git	empty_content	Empty
+plugin_git	not_specified_host	Not specified host
+plugin_git	btn_delete_title	This server is already used by some repositories.
+
+plugin_git	digest	Digest
+plugin_git	basic	Basic
