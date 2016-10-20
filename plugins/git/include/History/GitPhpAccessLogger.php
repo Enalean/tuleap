@@ -32,7 +32,7 @@ class GitPhpAccessLogger
 
     public function logAccess(GitRepository $repository, PFUser $user)
     {
-        return $this->dao->insertGitPhpView(
+        return $this->dao->insertGitReadAccess(
             $repository->getId(),
             $user->getId(),
             $_SERVER['REQUEST_TIME']
