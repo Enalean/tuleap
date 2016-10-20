@@ -135,9 +135,19 @@ function permission_get_object_name($permission_type,$object_id) {
     if ($permission_type=='NEWS_READ') {   
         return get_news_name_from_forum_id($object_id);
     } else if ($permission_type=='PACKAGE_READ') {
-        return file_get_package_name_from_id($object_id);
+        $package_factory = new FRSPackageFactory();
+        $package         = $package_factory->getFRSPackageFromDb($object_id);
+
+        if ($package) {
+            return $package->getName();
+        }
     } else if ($permission_type=='RELEASE_READ') {
-        return file_get_release_name_from_id($object_id);
+        $release_factory = new FRSReleaseFactory();
+        $release         = $release_factory->getFRSReleaseFromDb($object_id);
+
+        if ($release) {
+            return $release->getName();
+        }
     } else if ($permission_type=='DOCUMENT_READ') {
         return util_unconvert_htmlspecialchars(doc_get_title_from_id($object_id));
     } else if ($permission_type=='DOCGROUP_READ') {
