@@ -24,7 +24,7 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public function insertGitPhpView($repository_id, $user_id, $timestamp)
+    public function insertGitReadAccess($repository_id, $user_id, $timestamp)
     {
         $repository_id = $this->da->escapeInt($repository_id);
         $user_id       = $this->da->escapeInt($user_id);
