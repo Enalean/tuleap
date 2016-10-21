@@ -2,6 +2,9 @@ Version 9.1 (Not Released Yet)
 
 	== Enhancement ==
 	* request #9592: Lint new .scss files using scss-lint
+	* request #9392: Deleted users can be switched to suspended automatically
+
+	== Big Fix ==
 	* request #9583: SVN core package miss a dependancy to perl-CGI
 
 	== Plugins ==
