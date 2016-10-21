@@ -9,7 +9,7 @@ describe('KanbanCtrl - ', function() {
         KanbanColumnService,
         KanbanItemRestService,
         NewTuleapArtifactModalService,
-        SocketFactory,
+        SocketService,
         DroppedService,
         ColumnCollectionService,
         KanbanFilterValue,
@@ -31,7 +31,7 @@ describe('KanbanCtrl - ', function() {
             _NewTuleapArtifactModalService_,
             _SharedPropertiesService_,
             _KanbanColumnService_,
-            _SocketFactory_,
+            _SocketService_,
             _DroppedService_,
             _ColumnCollectionService_,
             _KanbanFilterValue_
@@ -44,7 +44,7 @@ describe('KanbanCtrl - ', function() {
             KanbanService                 = _KanbanService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             SharedPropertiesService       = _SharedPropertiesService_;
-            SocketFactory                 = _SocketFactory_;
+            SocketService                 = _SocketService_;
             DroppedService                = _DroppedService_;
             ColumnCollectionService       = _ColumnCollectionService_;
             KanbanFilterValue             = _KanbanFilterValue_;
@@ -93,7 +93,7 @@ describe('KanbanCtrl - ', function() {
             KanbanItemRestService        : KanbanItemRestService,
             NewTuleapArtifactModalService: NewTuleapArtifactModalService,
             KanbanColumnService          : KanbanColumnService,
-            SocketFactory                : SocketFactory,
+            SocketService                : SocketService,
             ColumnCollectionService      : ColumnCollectionService
         });
 
@@ -653,7 +653,8 @@ describe('KanbanCtrl - ', function() {
                 KanbanCtrl.showEditModal(fake_event, {
                     id: 108,
                     color: 'nainsel',
-                    in_column: 252
+                    in_column: 252,
+                    timeinfo: {}
                 });
                 get_request.resolve(fake_updated_item);
                 $scope.$apply();
@@ -673,7 +674,8 @@ describe('KanbanCtrl - ', function() {
                 KanbanCtrl.showEditModal(fake_event, {
                     id: 108,
                     color: 'unpracticably',
-                    in_column: 'archive'
+                    in_column: 'archive',
+                    timeinfo: {}
                 });
                 get_request.resolve(fake_updated_item);
                 $scope.$apply();
@@ -707,7 +709,7 @@ describe('KanbanCtrl - ', function() {
             });
             DroppedService.getComparedToBeLastItemOfColumn.and.returnValue(null);
 
-            var promise = KanbanCtrl.moveItemAtTheEnd(item, destination_column.id);
+            var promise = KanbanCtrl.moveItemAtTheEnd(item, destination_column.id, item.in_column);
 
             expect(item.updating).toBeTruthy();
 
@@ -719,7 +721,8 @@ describe('KanbanCtrl - ', function() {
                 kanban.id,
                 6,
                 item.id,
-                null
+                null,
+                3
             );
             expect(promise).toBeResolved();
         });

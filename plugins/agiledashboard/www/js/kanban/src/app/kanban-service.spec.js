@@ -198,7 +198,8 @@ describe("KanbanService -", function() {
         var kanban_id,
             column_id,
             kanban_item_id,
-            compared_to;
+            compared_to,
+            from_column;
 
         beforeEach(function() {
             kanban_id      = 1;
@@ -208,6 +209,7 @@ describe("KanbanService -", function() {
                 direction: 'before',
                 item_id  : 537
             };
+            from_column    = 912;
         });
 
         it("Given a kanban id, a column id, a kanban item id and a compared_to object, when I move the kanban item to the column, then a PATCH request will be made and a resolved promise will be returned", function() {
@@ -219,14 +221,16 @@ describe("KanbanService -", function() {
                     ids        : [kanban_item_id],
                     direction  : 'before',
                     compared_to: 537
-                }
+                },
+                from_column: 912
             }).respond(200);
 
             var promise = KanbanService.moveInColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
             $httpBackend.flush();
 
@@ -237,14 +241,16 @@ describe("KanbanService -", function() {
             $httpBackend.expectPATCH('/api/v1/kanban/' + kanban_id + '/items?column_id=' + column_id, {
                 add: {
                     ids: [kanban_item_id]
-                }
+                },
+                from_column: 912
             }).respond(200);
 
             var promise = KanbanService.moveInColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                null
+                null,
+                from_column
             );
             $httpBackend.flush();
 
@@ -260,7 +266,8 @@ describe("KanbanService -", function() {
                 kanban_id,
                 column_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
             $httpBackend.flush();
 
@@ -277,7 +284,8 @@ describe("KanbanService -", function() {
     describe("moveInBacklog() -", function() {
         var kanban_id,
             kanban_item_id,
-            compared_to;
+            compared_to,
+            from_column;
 
         beforeEach(function() {
             kanban_id      = 9;
@@ -286,6 +294,7 @@ describe("KanbanService -", function() {
                 direction: 'after',
                 item_id  : 968
             };
+            from_column    = 912;
         });
 
         it("Given a kanban id, a kanban item id and a compared_to object, when I move the kanban item to the backlog, then a PATCH request will be made and a resolved promise will be returned", function() {
@@ -297,13 +306,15 @@ describe("KanbanService -", function() {
                     ids        : [kanban_item_id],
                     direction  : 'after',
                     compared_to: 968
-                }
+                },
+                from_column: 912
             }).respond(200);
 
             var promise = KanbanService.moveInBacklog(
                 kanban_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
             $httpBackend.flush();
 
@@ -314,13 +325,15 @@ describe("KanbanService -", function() {
             $httpBackend.expectPATCH('/api/v1/kanban/' + kanban_id + '/backlog', {
                 add: {
                     ids: [kanban_item_id]
-                }
+                },
+                from_column: 912
             }).respond(200);
 
             var promise = KanbanService.moveInBacklog(
                 kanban_id,
                 kanban_item_id,
-                null
+                null,
+                from_column
             );
             $httpBackend.flush();
 
@@ -335,7 +348,8 @@ describe("KanbanService -", function() {
             var promise = KanbanService.moveInBacklog(
                 kanban_id,
                 kanban_item_id,
-                compared_to
+                compared_to,
+                from_column
             );
             $httpBackend.flush();
 

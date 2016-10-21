@@ -96,7 +96,8 @@ module.exports = {
             'vendor/dragular/dist/dragular.js',
             'vendor/d3/d3.js',
             'vendor/nvd3/build/nv.d3.js',
-            'vendor/angular-nvd3/dist/angular-nvd3.js'
+            'vendor/angular-nvd3/dist/angular-nvd3.js',
+            'vendor/angular-jwt/dist/angular-jwt.min.js'
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',

@@ -115,7 +115,8 @@ function KanbanColumnController(
                 current_kanban.id,
                 target_column_id,
                 dropped_item.id,
-                compared_to
+                compared_to,
+                dropped_item.in_column
             );
         }
 

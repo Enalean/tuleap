@@ -1,31 +1,36 @@
-(function () {
-    angular
-        .module('jwt')
-        .service('JWTService', JWTService);
+angular
+    .module('jwt')
+    .service('JWTService', JWTService);
 
-    JWTService.$inject = ['Restangular', '$q'];
+JWTService.$inject = [
+    'Restangular',
+    'jwtHelper'
+];
 
-    function JWTService(Restangular, $q) {
-        var rest = Restangular.withConfig(function(RestangularConfigurer) {
-            RestangularConfigurer.setFullResponse(true);
-            RestangularConfigurer.setBaseUrl('/api/v1');
-        });
+function JWTService(
+    Restangular,
+    jwtHelper
+) {
+    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setFullResponse(true);
+        RestangularConfigurer.setBaseUrl('/api/v1');
+    });
 
-        return {
-            getJWT: getJWT
-        };
+    return {
+        getJWT             : getJWT,
+        getTokenExpiredDate: getTokenExpiredDate
+    };
 
-        function getJWT() {
-            var data = $q.defer();
-
-            rest
-                .one('jwt')
-                .get()
-                .then(function (response) {
-                    data.resolve(response.data);
-                });
-
-            return data.promise;
-        }
+    function getJWT() {
+        return rest
+            .one('jwt')
+            .get()
+            .then(function (response) {
+                return response.data;
+            });
     }
-})();
+
+    function getTokenExpiredDate(token) {
+        return jwtHelper.getTokenExpirationDate(token);
+    }
+}

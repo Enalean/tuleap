@@ -192,7 +192,8 @@ describe("KanbanColumnController -", function() {
                 current_kanban.id,
                 target_column.id,
                 dropped_item.id,
-                compared_to
+                compared_to,
+                dropped_item.in_column
             );
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
                 dropped_item,
