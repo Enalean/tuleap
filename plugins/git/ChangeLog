@@ -1,3 +1,6 @@
+Version 4.276 - Tuleap 9.1
+    * story #9525: Take regexp into account
+
 Version 4.275 - Tuleap 9.1
     * story #9525: Refactoring for regexp - introducing new object pattern validator
 
