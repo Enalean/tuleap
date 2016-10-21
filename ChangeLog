@@ -2,13 +2,14 @@ Version 9.1 (Not Released Yet)
 
 	== Enhancement ==
 	* request #9592: Lint new .scss files using scss-lint
+	* request #9583: SVN core package miss a dependancy to perl-CGI
 
 	== Plugins ==
 	* svn: 0.100
 	* tracker: 5.1027
 	* git: 4.276
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.154
 
 Version 9.0 (Wednesday, October 12th 2016)
