@@ -16,6 +16,9 @@ Version 9.1 (Not Released Yet)
 	== Themes ==
 	* FlamingParrot: 1.154
 
+	== Development ==
+	* request #9263 Do not use underscore in Tuleap dev hostname
+
 Version 9.0 (Wednesday, October 12th 2016)
 	== Plugins ==
 	* cardwall: 1.70
