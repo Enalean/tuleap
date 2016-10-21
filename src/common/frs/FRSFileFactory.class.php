@@ -375,13 +375,15 @@ class FRSFileFactory {
         $upload_sub_dir = $this->getUploadSubDirectory($release);
         $fileName = $file->getFileName();
         $filePath = $this->getResolvedFileName($file->getFileName());
-        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.escapeshellarg($filePath))) {
-            $fileName = escapeshellarg($fileName);
-            $cmdFilePath = escapeshellarg($filePath);
-            $ret_val   = null;
-            $exec_res  = null;
-            $src_dir   = $this->getSrcDir($project);
-            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$cmdFilePath . " $src_dir 2>&1";
+        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
+            $fileName    = escapeshellarg($fileName);
+            $cmdFilePath = escapeshellarg($unixName . '/' . $upload_sub_dir . '/' . $filePath);
+            $ret_val     = null;
+            $exec_res    = null;
+            $src_dir     = escapeshellarg($this->getSrcDir($project));
+            $dst_dir     = escapeshellarg(ForgeConfig::get('ftp_frs_dir_prefix'));
+            $cmd         = $this->fileforge . " $fileName $cmdFilePath $src_dir $dst_dir 2>&1";
+
             exec($cmd, $exec_res, $ret_val);
             // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
             // So "convert" the unix "success" value to the php one (basically 0 => true).
