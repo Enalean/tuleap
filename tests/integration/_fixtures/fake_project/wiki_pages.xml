@@ -1,7 +1,7 @@
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.7/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.7/ http://www.mediawiki.org/xml/export-0.7.xsd" version="0.7" xml:lang="fr">
   <siteinfo>
     <sitename>Toto 123 Wiki</sitename>
-    <base>https://tuleap_web_1.tuleap-aio-dev.docker/plugins/mediawiki/wiki/toto12/index.php/Accueil</base>
+    <base>https://tuleap-web.tuleap-aio-dev.docker/plugins/mediawiki/wiki/toto12/index.php/Accueil</base>
     <generator>MediaWiki 1.20.3</generator>
     <case>first-letter</case>
     <namespaces>

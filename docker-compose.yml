@@ -6,6 +6,7 @@ rp:
    - tuleap_reverseproxy_data
 
 web:
+  container_name: tuleap-web
   image: enalean/tuleap-aio-dev:nodb
   links:
    - ldap:ldap
@@ -32,6 +33,7 @@ es:
   command: -Des.script.disable_dynamic=false
 
 gerrit:
+  container_name: tuleap-gerrit
   image: enalean/gerrit-tuleap:2.8
   volumes_from:
    - tuleap_gerrit_data
