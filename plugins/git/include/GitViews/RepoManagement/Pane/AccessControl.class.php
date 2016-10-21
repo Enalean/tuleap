@@ -108,19 +108,24 @@ class AccessControl extends Pane
      */
     public function getContent()
     {
-        $html  = '';
-        $html .= '<h2>'. $this->getTitle() .'</h2>';
-        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+        $html = '';
+        $html .= '<h2>' . $this->getTitle() . '</h2>';
+        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' .
+            $this->repository->getProjectId() . '">';
         $html .= '<input type="hidden" id="action" name="action" value="edit" />';
-        $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+        $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
+        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
         if ($this->repository->getBackend() instanceof Git_Backend_Gitolite) {
             $html .= $this->accessControlGitolite();
         } else {
             $html .= $this->accessControl();
         }
-        $html .= '<p><input type="submit" name="save" class="btn btn-primary" value="'. $GLOBALS['Language']->getText('plugin_git', 'save_access_control') .'" /></p>';
+        $are_regexp_enabled = (bool)$this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
+        $html .= '<p><input type="submit" name="save" data-are-regexp-enabled="' . $are_regexp_enabled . '"
+                class="btn btn-primary save-permissions-with-regexp" value="' .
+                $GLOBALS['Language']->getText('plugin_git', 'save_access_control') . '" /></p>';
         $html .= '</form>';
+
         return $html;
     }
 

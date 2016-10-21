@@ -26,8 +26,10 @@ use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
@@ -1323,8 +1325,24 @@ class GitPlugin extends Plugin {
             $this->getGitPhpAccessLogger(),
             new VersionDetector(),
             $this->getRegexpFineGrainedRetriever(),
-            $this->getRegexpFineGrainedEnabler()
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedDisabler(),
+            $this->getRegexpPermissionFilter()
         );
+    }
+
+    private function getRegexpPermissionFilter()
+    {
+        return new RegexpPermissionFilter(
+            $this->getFineGrainedFactory(),
+            $this->getPatternValidator(),
+            $this->getFineGrainedPermissionDestructor()
+        );
+    }
+
+    private function getRegexpFineGrainedDisabler()
+    {
+        return new RegexpFineGrainedDisabler(new RegexpRepositoryDao());
     }
 
     private function getDefaultPermissionsUpdater()

@@ -207,8 +207,18 @@ class GitPresenters_AccessControlPresenter
             'fine_grained_remove_confirm'
         );
 
-        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->disabled   = '';
+        $this->title_warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'title_warning_regexp_uncheck'
+        );
+        $this->warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'warning_regexp_uncheck'
+        );
+
+        $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
+        $this->disabled         = '';
         if ($is_fork) {
             $this->disabled = 'disabled="disabled"';
         }

@@ -130,10 +130,37 @@
         });
     }
 
+    function bindToogleModalWarningDisableRegexp() {
+        var already_check_modal = false;
+
+        $('.save-permissions-with-regexp').click(function(event) {
+            if (already_check_modal === true) {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (! $('.use-regexp').is(":checked") &&
+                $('.save-permissions-with-regexp').attr('data-are-regexp-enabled') == 1
+            ) {
+                $('#modal-regexp-delete').modal('toggle');
+            } else {
+                already_check_modal = true;
+                $(this).trigger('click', 'submit');
+            }
+        });
+
+        $('.dismiss-popover').click(function () {
+            $('#modal-regexp-delete').modal('toggle');
+        });
+    }
+
     $(function() {
         bindAddPermission();
         bindToggleFineGrainedPermissions();
         bindToggleEnableRegexp();
+
+        bindToogleModalWarningDisableRegexp();
 
         confirmDeletionPopover();
 

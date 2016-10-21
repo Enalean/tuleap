@@ -24,8 +24,10 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -89,6 +91,14 @@ class Git extends PluginController {
      * @var RegexpFineGrainedEnabler
      */
     private $regexp_enabler;
+    /**
+     * @var RegexpFineGrainedDisabler
+     */
+    private $regexp_disabler;
+    /**
+     * @var RegexpPermissionFilter
+     */
+    private $regexp_filter;
 
     /**
      * Lists all git-related permission types.
@@ -297,7 +307,9 @@ class Git extends PluginController {
         GitPhpAccessLogger $access_loger,
         VersionDetector $detector,
         RegexpFineGrainedRetriever $regexp_retriever,
-        RegexpFineGrainedEnabler $regexp_enabler
+        RegexpFineGrainedEnabler $regexp_enabler,
+        RegexpFineGrainedDisabler $regexp_disabler,
+        RegexpPermissionFilter $regexp_filter
     ) {
         parent::__construct($user_manager, $request);
 
@@ -377,6 +389,8 @@ class Git extends PluginController {
         $this->description_updater                     = $description_updater;
         $this->regexp_retriever                        = $regexp_retriever;
         $this->regexp_enabler                          = $regexp_enabler;
+        $this->regexp_disabler                         = $regexp_disabler;
+        $this->regexp_filter                           = $regexp_filter;
     }
 
     protected function instantiateView() {
@@ -1457,7 +1471,10 @@ class Git extends PluginController {
             $this->fine_grained_retriever,
             $this->history_value_formatter,
             $this->permission_changes_detector,
-            $this->regexp_enabler
+            $this->regexp_enabler,
+            $this->regexp_disabler,
+            $this->regexp_filter,
+            $this->regexp_retriever
         );
     }
 
