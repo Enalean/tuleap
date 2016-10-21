@@ -1,3 +1,8 @@
+Vesrion 9.0-2 (Friday, October 21st 2016)
+	== Bug Fix ==
+	* request #9595: Gitolite3Parser does not deal with deleted repositories
+	* request #9515: Fatal error while listing permissions of a user group
+
 Version 9.0 (Wednesday, October 12th 2016)
 	== Plugins ==
 	* cardwall: 1.70
