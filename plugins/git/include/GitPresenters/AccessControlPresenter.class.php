@@ -73,7 +73,6 @@ class GitPresenters_AccessControlPresenter
     public $regexp_permission_label;
     public $regexp_incoherence_label;
     public $is_regexp_enabled;
-    public $regexp_under_construction;
 
     public function __construct(
         $is_control_limited,
@@ -129,10 +128,6 @@ class GitPresenters_AccessControlPresenter
         $this->regexp_incoherence_label        = $GLOBALS['Language']->getText(
             'plugin_git',
             'regexp_incoherence_label'
-        );
-        $this->regexp_under_construction        = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'regexp_under_construction'
         );
 
         $this->fine_grained_permissions_fork_warning .= $GLOBALS['Language']->getText(

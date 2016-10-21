@@ -492,10 +492,9 @@ plugin_git	add_tag_permission	Add permission on a new tag
 plugin_git	add_permission_duplicate_pattern	Pattern $1 is already existing.
 
 plugin_git	regexp_permission_label	Enable regexp in branches and tags pattern
-plugin_git	regexp_under_construction	Cannot enable this feature at this level for now.
-plugin_git	regexp_incoherence_label	Enabling this option might end up in non working state. Invalid regexp will be ignored without errors.
 plugin_git	title_warning_regexp_uncheck	Some rules may be deleted
 plugin_git	warning_regexp_uncheck	All rules containing a regexp will be deleted. Please confirm the desactivation of regexp.
+plugin_git	regexp_incoherence_label	For now, once the feature is enabled, it wont be possible to disable it. Enabling this option might end up in non working state. Invalid regexp will be ignored without errors.
 
 
 plugin_git	view_repo_ci_token	CI Token
