@@ -52,4 +52,9 @@ class RegexpFineGrainedRetriever
     {
         return $this->regexp_repository_dao->areRegexpActivatedForRepository($repository->getId());
     }
+
+    public function areRegexpRepositoryConflitingWithPlateform(GitRepository $repository)
+    {
+        return ($this->areRegexpActivatedAtSiteLevel()  === false && $this->areRegexpActivatedForRepository($repository));
+    }
 }

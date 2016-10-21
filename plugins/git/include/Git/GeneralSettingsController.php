@@ -23,6 +23,7 @@ namespace Tuleap\Git;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use TemplateRendererFactory;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 
@@ -32,29 +33,42 @@ class GeneralSettingsController
      * @var CSRFSynchronizerToken
      */
     private $csrf;
+
     /**
      * @var RegexpFineGrainedRetriever
      */
     private $regexp_retriever;
+
     /**
      * @var RegexpFineGrainedEnabler
      */
     private $regexp_enabler;
 
+    /**
+     * @var RegexpFineGrainedDisabler
+     */
+    private $regexp_disabler;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         RegexpFineGrainedRetriever $regexp_retriever,
-        RegexpFineGrainedEnabler $regexp_enabler
+        RegexpFineGrainedEnabler $regexp_enabler,
+        RegexpFineGrainedDisabler $regexp_disabler
     ) {
         $this->csrf             = $csrf;
         $this->regexp_retriever = $regexp_retriever;
         $this->regexp_enabler   = $regexp_enabler;
+        $this->regexp_disabler  = $regexp_disabler;
     }
 
     public function process(Codendi_Request $request)
     {
         if ($request->get('action') === 'enable-regexp-usage') {
-            $this->enableRegexp();
+            if ($request->get('activate-regexp')) {
+                $this->enableRegexp();
+            } else {
+                $this->disableRegexp();
+            }
         }
     }
 
@@ -82,6 +96,13 @@ class GeneralSettingsController
     private function enableRegexp()
     {
         if (! $this->regexp_enabler->enable()) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'update_error'));
+        }
+    }
+
+    private function disableRegexp()
+    {
+        if (! $this->regexp_disabler->disableAtSiteLevel()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'update_error'));
         }
     }

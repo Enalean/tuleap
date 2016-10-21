@@ -120,10 +120,16 @@ class AccessControl extends Pane
         } else {
             $html .= $this->accessControl();
         }
-        $are_regexp_enabled = (bool)$this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
+
+        $are_regexp_enabled     = (bool) $this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
+        $are_regexp_conflicting = (bool) $this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform(
+            $this->repository
+        );
+
         $html .= '<p><input type="submit" name="save" data-are-regexp-enabled="' . $are_regexp_enabled . '"
+                data-are-regexp-confliting="' . $are_regexp_conflicting . '"
                 class="btn btn-primary save-permissions-with-regexp" value="' .
-                $GLOBALS['Language']->getText('plugin_git', 'save_access_control') . '" /></p>';
+            $GLOBALS['Language']->getText('plugin_git', 'save_access_control') . '" /></p>';
         $html .= '</form>';
 
         return $html;
