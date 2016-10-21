@@ -6,6 +6,7 @@ Version 9.1 (Not Released Yet)
 
 	== Big Fix ==
 	* request #9583: SVN core package miss a dependancy to perl-CGI
+	* request #9547: Can't upload file releases
 
 	== Plugins ==
 	* svn: 0.100
