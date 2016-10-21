@@ -20,6 +20,8 @@
  */
 namespace Tuleap\Git\Permissions;
 
+use GitRepository;
+
 class PatternValidator
 {
     /**
@@ -27,9 +29,33 @@ class PatternValidator
      */
     private $validator;
 
-    public function __construct(FineGrainedPatternValidator $validator)
+    /**
+     * @var FineGrainedRegexpValidator
+     */
+    private $regexp_validator;
+
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+
+    public function __construct(
+        FineGrainedPatternValidator $validator,
+        FineGrainedRegexpValidator $regexp_validator,
+        RegexpFineGrainedRetriever $regexp_retriever
+    ) {
+        $this->validator        = $validator;
+        $this->regexp_validator = $regexp_validator;
+        $this->regexp_retriever = $regexp_retriever;
+    }
+
+    public function isValidForRepository(GitRepository $repository, $pattern)
     {
-        $this->validator = $validator;
+        if ($this->regexp_retriever->areRegexpActivatedForRepository($repository)) {
+            return $this->regexp_validator->isPatternValid($pattern);
+        }
+
+        return $this->validator->isPatternValid($pattern);
     }
 
     public function isValid($pattern)

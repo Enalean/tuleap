@@ -304,7 +304,7 @@ class FineGrainedPermissionFactory
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {
-                if (! $this->validator->isValid($pattern)) {
+                if (! $this->validator->isValidForRepository($repository, $pattern)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::WARN,
                         $GLOBALS['Language']->getText(
