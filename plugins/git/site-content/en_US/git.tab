@@ -398,7 +398,7 @@ plugin_git	admin_mirror_updated	Mirror updated!
 plugin_git	admin_mirror_cannot_delete	Failed to delete mirror
 plugin_git	admin_mirror_defalut_cannot_delete	An error occured whiled deleting the mirror in the default mirrors for projects.
 plugin_git	admin_mirror_deleted	Mirror deleted!
-plugin_git	add_mirror	Add a new mirror
+plugin_git	add_mirror	Add mirror
 plugin_git	dump_mirrored_repositories_label	Dump mirrored repositories configuration
 plugin_git	dump_mirrored_repositories_text	If you click this button, a system event will be queued to dump the mirrored repositories configuration. This dump will rewrite the gitolite configuration according to the hostnames of each mirror and the hostname define for this server in the .gitolite.rc file.
 plugin_git	dump_gitolite_conf_queued	A system event has been queued. The gitolite configuration will be dumped at the time of its execution.<a href="$1"> Git queue can be found here</a>.
@@ -440,6 +440,8 @@ plugin_git	mirror_allowed_project_revoke_title	Warning
 plugin_git	mirror_allowed_project_revoke_description	You are about to revoke the access to this mirror to one or several projects. This implies the unmirroring of all repositories of the selected projects. Are you sure you want to do this?
 plugin_git	mirror_allowed_project_revoke_yes	Yes, revoke access
 plugin_git	mirror_allowed_project_revoke_no	No
+plugin_git	mirror_no_mirrors_part_one	There is nothing here,
+plugin_git	mirror_no_mirrors_part_two	start by adding a mirror.
 
 plugin_git	system_event_queue	Git Queue
 plugin_git	mirror_system_event_queue	Grok Mirror Queue

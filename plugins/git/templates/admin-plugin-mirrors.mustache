@@ -1,86 +1,95 @@
-<h2>{{ mirror_section_title }}</h2>
+{{# list_of_mirrors_is_empty }}
+    <div class="empty-page">
+        <span class="empty-page-text">{{ list_of_mirrors_empty_message_part_one }}<br> {{ list_of_mirrors_empty_message_part_two }}</span>
+        <button type="button" class="tlp-button-primary tlp-button-large">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}
+        </button>
+    </div>
+{{/ list_of_mirrors_is_empty }}
 
-{{# add_a_mirror }}
-    {{> admin-plugin-add-mirror}}
-{{/ add_a_mirror }}
-{{# modify_a_mirror }}
-    {{> admin-plugin-edit-mirror}}
-{{/ modify_a_mirror }}
-{{# see_all }}
-    <form method="POST" action="?pane=mirrors_admin&action=show-add-mirror" class="form-horizontal">
-        <input type="submit" value="{{ add_mirror }}" class="btn btn-primary"/>
-    </form>
-    {{# list_of_mirrors_not_empty }}
+{{^ list_of_mirrors_is_empty }}
+    <h2>{{ mirror_section_title }}</h2>
 
-        <table class="table table-hover table-bordered table-striped git_admin_mirror_table" id="git_mirror_list">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>{{ identifier }}</th>
-                    <th>{{ url_label }}</th>
-                    <th>{{ hostname_label }}</th>
-                    <th>{{ owner_label }}</th>
-                    <th>{{ ssh_key_label }}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {{# list_of_mirrors }}
-                <tr>
-                    <td>
-                        <a href="?pane=mirrors_admin&action=show-edit-mirror&mirror_id={{ id }}">
-                            <i class="icon-edit"></i>
-                        </a>
-                    </td>
-                    <td class="git_admin_mirror_url">
-                        <span name="mirror_url">
-                            {{ name }}
-                        </span>
-                    </td>
-                    <td class="git_admin_mirror_url">
-                        <span name="mirror_url">
-                            {{ url }}
-                        </span>
-                    </td>
-                    <td class="git_admin_mirror_url">
-                        <span name="mirror_url">
-                            {{ hostname }}
-                        </span>
-                    </td>
-                    <td>
-                        <a href="/admin/usergroup.php?user_id={{ owner_id }}">
-                            <span name="mirror_owner">
-                                {{ owner_name }}
+    {{# add_a_mirror }}
+        {{> admin-plugin-add-mirror}}
+    {{/ add_a_mirror }}
+    {{# modify_a_mirror }}
+        {{> admin-plugin-edit-mirror}}
+    {{/ modify_a_mirror }}
+    {{# see_all }}
+        <form method="POST" action="?pane=mirrors_admin&action=show-add-mirror" class="form-horizontal">
+            <input type="submit" value="{{ add_mirror }}" class="btn btn-primary"/>
+        </form>
+        {{^ list_of_mirrors_is_empty }}
+            <table class="table table-hover table-bordered table-striped git_admin_mirror_table" id="git_mirror_list">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{ identifier }}</th>
+                        <th>{{ url_label }}</th>
+                        <th>{{ hostname_label }}</th>
+                        <th>{{ owner_label }}</th>
+                        <th>{{ ssh_key_label }}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{# list_of_mirrors }}
+                    <tr>
+                        <td>
+                            <a href="?pane=mirrors_admin&action=show-edit-mirror&mirror_id={{ id }}">
+                                <i class="icon-edit"></i>
+                            </a>
+                        </td>
+                        <td class="git_admin_mirror_url">
+                            <span name="mirror_url">
+                                {{ name }}
                             </span>
-                        </a>
-                    </td>
-                    <td>
-                        <span name="mirror_key" class="git_admin_mirror_big_span" data-ssh_key_value="{{ ssh_key_value }}">{{ ssh_key_ellipsis_value }}</span>
-                    </td>
-                    <td>
-                        <a href="?pane=mirrors_admin&action=list-repositories&mirror_id={{ id }}">
-                            {{ mirrored_repo_label }}
-                        <a>
-                    </td>
-                    <td>
-                        <a href="?pane=mirrors_admin&action=manage-allowed-projects&mirror_id={{ id }}">
-                            {{ manage_allowed_projects_label }}
-                        <a>
-                    </td>
-                </tr>
-            {{/ list_of_mirrors }}
-            </tbody>
-        </table>
-    {{/ list_of_mirrors_not_empty }}
+                        </td>
+                        <td class="git_admin_mirror_url">
+                            <span name="mirror_url">
+                                {{ url }}
+                            </span>
+                        </td>
+                        <td class="git_admin_mirror_url">
+                            <span name="mirror_url">
+                                {{ hostname }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/admin/usergroup.php?user_id={{ owner_id }}">
+                                <span name="mirror_owner">
+                                    {{ owner_name }}
+                                </span>
+                            </a>
+                        </td>
+                        <td>
+                            <span name="mirror_key" class="git_admin_mirror_big_span" data-ssh_key_value="{{ ssh_key_value }}">{{ ssh_key_ellipsis_value }}</span>
+                        </td>
+                        <td>
+                            <a href="?pane=mirrors_admin&action=list-repositories&mirror_id={{ id }}">
+                                {{ mirrored_repo_label }}
+                            <a>
+                        </td>
+                        <td>
+                            <a href="?pane=mirrors_admin&action=manage-allowed-projects&mirror_id={{ id }}">
+                                {{ manage_allowed_projects_label }}
+                            <a>
+                        </td>
+                    </tr>
+                {{/ list_of_mirrors }}
+                </tbody>
+            </table>
+        {{/ list_of_mirrors_is_empty }}
 
-    <h2>{{ dump_mirrored_repositories_label }}</h2>
-    <div class="alert alert-warning"> {{ dump_mirrored_repositories_text }}</div>
-    <form method="POST" action="?pane=mirrors_admin&action=dump-gitolite-conf" class="form-horizontal">
-        {{# csrf_token }}
-            {{> csrf_token_input }}
-        {{/ csrf_token }}
-        <input type="submit" value="{{ dump_mirrored_repositories_label }}" class="btn btn-danger"/>
-    </form>
-{{/ see_all }}
-
+        <h2>{{ dump_mirrored_repositories_label }}</h2>
+        <div class="alert alert-warning"> {{ dump_mirrored_repositories_text }}</div>
+        <form method="POST" action="?pane=mirrors_admin&action=dump-gitolite-conf" class="form-horizontal">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <input type="submit" value="{{ dump_mirrored_repositories_label }}" class="btn btn-danger"/>
+        </form>
+    {{/ see_all }}
+{{/ list_of_mirrors_is_empty }}
