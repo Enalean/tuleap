@@ -38,14 +38,15 @@ var tlp = tlp || { };
     tlp.modal = (element, options) => new Modal(element, options);
 
     class Modal {
-        constructor(element, { keyboard = true }) {
-            this.body_element    = document.body;
-            this.element         = element;
-            this.is_shown        = false;
-            this.keyboard        = keyboard;
-            this.shown_event     = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {detail: { target: this.element}});
-            this.hidden_event    = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {detail: { target: this.element}});
-            this.event_listeners = [];
+        constructor(element, options = { keyboard: true }) {
+            let { keyboard = true } = options;
+            this.body_element       = document.body;
+            this.element            = element;
+            this.is_shown           = false;
+            this.keyboard           = keyboard;
+            this.shown_event        = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {detail: { target: this.element}});
+            this.hidden_event       = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {detail: { target: this.element}});
+            this.event_listeners    = [];
             this.listenCloseEvents();
         }
 
