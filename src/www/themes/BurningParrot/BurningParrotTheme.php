@@ -25,6 +25,7 @@ use Widget_Static;
 use TemplateRendererFactory;
 use HTTPRequest;
 use PFUser;
+use ForgeConfig;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 
 class BurningParrotTheme extends BaseLayout
@@ -92,6 +93,10 @@ class BurningParrotTheme extends BaseLayout
 
         $footer = new FooterPresenter($this->javascript_in_footer);
         $this->renderer->renderToPage('footer', $footer);
+
+        if ($this->isInDebugMode()) {
+            $this->showDebugInfo();
+        }
     }
 
     public function displayStaticWidget(Widget_Static $widget)
@@ -102,5 +107,10 @@ class BurningParrotTheme extends BaseLayout
     private function getTemplateDir()
     {
         return __DIR__ . '/templates/';
+    }
+
+    private function isInDebugMode()
+    {
+        return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 }

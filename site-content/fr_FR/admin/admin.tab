@@ -328,18 +328,20 @@ admin_show_license	title	Termes et conditions de la licence
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php
 #
-admin_user_changepw	error_userid	Erreur interne&nbsp;: pas d'ID utilisateur
+admin_user_changepw	error_userid	Pas d'ID utilisateur
 admin_user_changepw	error_nopasswd	Vous devez fournir un mot de passe.
 admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
-admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu être mis à jour.
+admin_user_changepw	error_update	Le mot de passe n'a pu être mis à jour.
 admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe
 admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié.
 admin_user_changepw	title	Changement de mot de passe
-admin_user_changepw	ldap_warning	ATTENTION&nbsp;: Changer le mot de passe ici ne changera pas le mot de passe LDAP !
+admin_user_changepw	ldap_warning	Changer le mot de passe ici ne changera pas le mot de passe LDAP.
 admin_user_changepw	header	Changement du mot de passe
-admin_user_changepw	new_passwd	Nouveau mot de passe
-admin_user_changepw	new_passwd2	Nouveau mot de passe (confirmez)
+admin_user_changepw	save	Mettre à jour
+admin_user_changepw	cancel	Annuler
+admin_user_changepw	password_field_label	Mot de passe
+admin_user_changepw	confirm_password_field_label	Mot de passe (confirmation)
 #
 #-----------------------------------------------
 # Script: SF/www/admin/usergroup.php

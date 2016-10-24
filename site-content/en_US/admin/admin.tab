@@ -337,18 +337,20 @@ admin_show_license	title	License Terms and Conditions
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php
 #
-admin_user_changepw	error_userid	Internal error: no user ID
+admin_user_changepw	error_userid	No user ID
 admin_user_changepw	error_nopasswd	You must supply a password.
 admin_user_changepw	error_passwd	Passwords do not match.
-admin_user_changepw	error_update	Internal error: Could not update password.
+admin_user_changepw	error_update	Could not update password.
 admin_user_changepw	title_changed	Successfully Changed Password
 admin_user_changepw	header_changed	Password Change Confirmation
 admin_user_changepw	msg_changed	The user's password has been changed.
 admin_user_changepw	title	Change Password
-admin_user_changepw	ldap_warning	WARNING: Changing the password here won't change the LDAP password!
-admin_user_changepw	header	Password Change
-admin_user_changepw	new_passwd	New Password
-admin_user_changepw	new_passwd2	New Password (repeat)
+admin_user_changepw	ldap_warning	Changing the password here won't change the LDAP password
+admin_user_changepw	header	Change password
+admin_user_changepw	save	Update password
+admin_user_changepw	cancel	Cancel
+admin_user_changepw	password_field_label	Password
+admin_user_changepw	confirm_password_field_label	Password (confirm)
 #
 #-----------------------------------------------
 # Script: SF/www/admin/usergroup.php

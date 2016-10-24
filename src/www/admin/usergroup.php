@@ -25,6 +25,8 @@
 use Tuealp\user\Admin\UserDetailsFormatter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
 use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\User\Admin\UserChangePasswordPresenter;
+use Tuleap\User\Password\PasswordValidatorPresenter;
 
 require_once('pre.php');
 require_once('account.php');
@@ -32,12 +34,14 @@ require_once('common/event/EventManager.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/userdetails.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $request = HTTPRequest::instance();
 $um      = UserManager::instance();
 $em      = EventManager::instance();
+$purifier  = Codendi_HTMLPurifier::instance();
 $siteadmin = new \Tuleap\Admin\AdminPageRenderer();
 
 $user_id = null;
@@ -55,13 +59,15 @@ if (!$user_id || !$user) {
 }
 
 // Validate action
-$vAction = new Valid_Whitelist('action', array('update_user'));
+$vAction = new Valid_Whitelist('action', array('update_user', 'update_password'));
 $vAction->required();
 if ($request->valid($vAction)) {
     $action = $request->get('action');
 } else {
     $action = '';
 }
+
+$password_csrf = new CSRFSynchronizerToken('/admin/usergroup.php?user_id='.$user->getId());
 
 if ($request->isPost()) {
     if ($action == 'update_user') {
@@ -203,6 +209,47 @@ if ($request->isPost()) {
 
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
+
+    } elseif ($action == 'update_password') {
+        if (! $request->existAndNonEmpty('user_id')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_userid'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+        if (! $request->existAndNonEmpty('form_pw')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_nopasswd'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+        if ($request->get('form_pw') != $request->get('form_pw2')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_passwd'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+
+        $errors = array();
+        if (! account_pwvalid($request->get('form_pw'), $errors)) {
+            foreach($errors as $e) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e);
+                $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+            }
+        }
+
+        $password_csrf->check();
+
+        $user = $user_manager->getUserById($request->get('user_id'));
+
+        if ($user === null) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_userid'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+
+        $user->setPassword($request->get('form_pw'));
+
+        if (! $user_manager->updateDb($user)) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_user_changepw', 'msg_changed'));
+        }
+
+        $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
     }
 }
 
@@ -222,6 +269,25 @@ EventManager::instance()->processEvent(
 
 $details_formatter = new UserDetailsFormatter();
 
+$additional_password_messages = array();
+EventManager::instance()->processEvent(
+    'before_admin_change_pw',
+    array(
+        'additional_password_messages' => &$additional_password_messages
+    )
+);
+
+$password_strategy = new PasswordStrategy();
+include($GLOBALS['Language']->getContent('account/password_strategy'));
+$passwords_validators = array();
+foreach ($password_strategy->validators as $key => $v) {
+    $passwords_validators[] = new PasswordValidatorPresenter(
+        'password_validator_msg_'. $purifier->purify($key),
+        $purifier->purify($key, CODENDI_PURIFIER_JS_QUOTE),
+        $purifier->purify($v->description())
+    );
+}
+
 $siteadmin->renderAPresenter(
     $Language->getText('admin_usergroup', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
@@ -230,6 +296,12 @@ $siteadmin->renderAPresenter(
         $user,
         $projects,
         new UserDetailsAccessPresenter($user, $um->getUserAccessInfo($user)),
+        new UserChangePasswordPresenter(
+            $user,
+            $password_csrf,
+            $additional_password_messages,
+            $passwords_validators
+        ),
         $additional_details,
         $details_formatter->getMore($user),
         $details_formatter->getShells($user),

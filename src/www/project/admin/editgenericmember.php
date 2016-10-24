@@ -90,7 +90,7 @@ echo '<input type="hidden" name="group_id" value="'. (int)$group_id .'" />
             $hp->purify($generic_user->getEmail(), CODENDI_PURIFIER_CONVERT_HTML) .'" />
      </p>
      <p>
-        <label for="generic_user_password"><b>'. $Language->getText('admin_user_changepw', 'new_passwd') .'</b>:</label><br />
+        <label for="generic_user_password"><b>'. $Language->getText('admin_user_changepw', 'password_field_label') .'</b>:</label><br />
         <input type="password" name="password" id="generic_user_password" value="" autocomplete="off" /><br />
         <span class="help">'. $Language->getText('project_admin', 'generic_member_leave_blank') .'</span>
      </p>

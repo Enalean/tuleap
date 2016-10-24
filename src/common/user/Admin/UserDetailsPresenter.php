@@ -36,6 +36,7 @@ class UserDetailsPresenter
     public $purpose;
     public $display_purpose;
     public $access;
+    public $change_password;
     public $access_title;
     public $account_details;
     public $current_projects;
@@ -63,6 +64,7 @@ class UserDetailsPresenter
         PFUser $user,
         array $projects,
         UserDetailsAccessPresenter $access,
+        UserChangePasswordPresenter $change_password,
         array $additional_details,
         array $more,
         array $shells,
@@ -75,6 +77,7 @@ class UserDetailsPresenter
         $this->email = $user->getEmail();
 
         $this->access             = $access;
+        $this->change_password    = $change_password;
         $this->additional_details = $additional_details;
         $this->shells             = $shells;
         $this->unix_status        = $unix_status;

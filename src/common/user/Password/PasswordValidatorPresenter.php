@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,30 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'siteadmin-sidebar';
-@import 'siteadmin-user-list';
-@import 'siteadmin-user-details';
-@import 'siteadmin-user-password';
+namespace Tuleap\User\Password;
 
-#siteadmin-homepage-container {
-    display: flex;
-    justify-content: space-between;
-}
+class PasswordValidatorPresenter
+{
+    public $key;
+    public $regexp;
+    public $description;
 
-.siteadmin-homepage-column {
-    flex: 1;
-    margin: 0 $tlp-spacing 0 0;
-
-    &:last-child {
-        margin: 0;
+    public function __construct($key, $regexp, $description)
+    {
+        $this->key         = $key;
+        $this->regexp      = $regexp;
+        $this->description = $description;
     }
-}
-
-.siteadmin-trovecat-list-category {
-    width: 100%;
-}
-
-.siteadmin-trovecat-list-actions {
-    text-align: left;
-    white-space: nowrap;
 }

@@ -7,6 +7,8 @@
     </span>
 </h1>
 
+{{> user-change-password }}
+
 <div id="siteadmin-user">
     <div id="siteadmin-user-details">
         <form action="" method="POST" class="tlp-pane" >
@@ -65,9 +67,9 @@
 
                     <div class="tlp-property">
                         <label class="tlp-label">{{ password_label }}</label>
-                        <a href="/admin/user_changepw.php?user_id={{ id }}" class="tlp-button-primary tlp-button-outline" id="siteadmin-user-details-change-password">
+                        <button type="button" class="tlp-button-primary tlp-button-outline" id="siteadmin-user-details-change-password" data-target="user-change-password-modal">
                             <i class="fa fa-lock tlp-button-icon"></i> {{ change_passwd }}
-                        </a>
+                        </button>
                     </div>
                 </section>
 

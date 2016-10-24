@@ -16,9 +16,21 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    var expiry_element = document.querySelector('#expiry');
 
+    var expiry_element = document.querySelector('#expiry');
     if (expiry_element) {
         tlp.datePicker(expiry_element);
+    }
+
+
+    var dom_user_change_password_modal = document.getElementById('user-change-password-modal');
+    var tlp_user_change_password_modal = tlp.modal(dom_user_change_password_modal, {});
+    document.getElementById('siteadmin-user-details-change-password').addEventListener('click', function () {
+        tlp_user_change_password_modal.toggle();
+    });
+
+    var url_params = location.search;
+    if (url_params.indexOf("show-change-user-password-modal") !== -1) {
+        tlp_user_change_password_modal.toggle();
     }
 });
