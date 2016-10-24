@@ -141,7 +141,7 @@ msgid "Last year"
 msgstr ""
 
 #. moment.js Date format
-#: src/app/reports-modal/reports-modal-controller.js
+#: src/app/reports-modal/diagram-directive.js
 msgid "MM/DD"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Move to top"
 msgstr ""
 
-#: src/app/reports-modal/reports-modal-controller.js
+#: src/app/reports-modal/diagram-directive.js
 msgid "Nb. of cards"
 msgstr ""
 

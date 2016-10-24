@@ -17,6 +17,5 @@ angular.module('kanban', [
     'ui.router',
     'ui.tree',
     'user-preferences',
-    'uuid-generator',
-    'nvd3'
+    'uuid-generator'
 ]);
