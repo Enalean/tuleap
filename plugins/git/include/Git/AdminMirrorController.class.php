@@ -131,9 +131,19 @@ class Git_AdminMirrorController {
                 'owner_name'             => $mirror->owner_name,
                 'ssh_key_value'          => $mirror->ssh_key,
                 'ssh_key_ellipsis_value' => substr($mirror->ssh_key, 0, 40).'...'.substr($mirror->ssh_key, -40),
+                'number_of_repositories' => $GLOBALS['Language']->getText(
+                    'plugin_git',
+                    'mirror_number_of_repositories',
+                    array($this->getNumberOfRepositories($mirror->id))
+                )
             );
         }
         return $mirror_presenters;
+    }
+
+    private function getNumberOfRepositories($mirror_id)
+    {
+        return $this->git_mirror_mapper->getNumberOfRepositories($mirror_id);
     }
 
     private function getListRepositoriesPresenter(Codendi_Request $request) {

@@ -399,7 +399,7 @@ plugin_git	admin_mirror_cannot_delete	Failed to delete mirror
 plugin_git	admin_mirror_defalut_cannot_delete	An error occured whiled deleting the mirror in the default mirrors for projects.
 plugin_git	admin_mirror_deleted	Mirror deleted!
 plugin_git	add_mirror	Add mirror
-plugin_git	dump_mirrored_repositories_label	Dump mirrored repositories configuration
+plugin_git	dump_mirrored_repositories_label	Rewrite mirrored repositories configuration
 plugin_git	dump_mirrored_repositories_text	If you click this button, a system event will be queued to dump the mirrored repositories configuration. This dump will rewrite the gitolite configuration according to the hostnames of each mirror and the hostname define for this server in the .gitolite.rc file.
 plugin_git	dump_gitolite_conf_queued	A system event has been queued. The gitolite configuration will be dumped at the time of its execution.<a href="$1"> Git queue can be found here</a>.
 plugin_git	mirror_section_title	Git mirror administration
@@ -410,6 +410,7 @@ plugin_git	ssh_key_label	Owner's SSH Key
 plugin_git	pwd_label	Owner's Password
 plugin_git	mirrored_repo_label	Repositories on this mirror
 plugin_git	manage_allowed_projects_label	Manage allowed projects
+plugin_git	repositories_label	Repositories on this mirror
 plugin_git	admin_update_button	Update
 plugin_git	admin_delete_button	Delete
 plugin_git	change_pwd	click here to change
@@ -442,6 +443,7 @@ plugin_git	mirror_allowed_project_revoke_yes	Yes, revoke access
 plugin_git	mirror_allowed_project_revoke_no	No
 plugin_git	mirror_no_mirrors_part_one	There is nothing here,
 plugin_git	mirror_no_mirrors_part_two	start by adding a mirror.
+plugin_git	mirror_number_of_repositories	$1 repository(ies)
 
 plugin_git	system_event_queue	Git Queue
 plugin_git	mirror_system_event_queue	Grok Mirror Queue
@@ -527,3 +529,4 @@ plugin_git	fine_grained_delete_error	An error occured while deleting permission.
 plugin_git	fine_grained_bad_pattern	The pattern $1 is not well formed. Skipping.
 
 plugin_git	stats_read	Total number of git read access
+plugin_git	empty_content	Empty
