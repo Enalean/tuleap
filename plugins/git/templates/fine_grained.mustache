@@ -7,34 +7,30 @@
                    name="use-fine-grained-permissions"
                    class="toggle-fine-grained-permissions"
                    id="use-fine-grained-permissions"
-                    {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
-                    {{ disabled }}
+                {{# are_fine_grained_permissions_defined }}
+                   checked="checked" {{/ are_fine_grained_permissions_defined }}
+                {{ disabled }}
             /> {{ fine_grained_permissions_checkbox_label }}
         </label>
 
-        <div
-            {{# are_fine_grained_permissions_defined }}
-                class="regexp_permission_activated"
-            {{/ are_fine_grained_permissions_defined }}
-            {{^ are_fine_grained_permissions_defined }}
-                class="regexp_permission_activated regexp_permission_activated_hidden"
-            {{/ are_fine_grained_permissions_defined }}>
-            <span class="use-regexp-label-arrow">&#8627;</span>
-            <label class="checkbox use-regexp-label">
-                <input type="checkbox"
-                       name="use-regexp"
-                       class="use-regexp"
-                    {{# is_regexp_enabled }} checked="checked" {{/ is_regexp_enabled }}
-                    {{^ can_regexp_are_enabled }} disabled="disabled"{{/ can_regexp_are_enabled }}
-                />
-                <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
-            </label>
-            <p class="text-warning regexp_incoherence_label">
-                <i class="icon-warning-sign"> </i>
-                {{# can_regexp_are_enabled }} {{ regexp_incoherence_label }} {{/ can_regexp_are_enabled }}
-                {{^ can_regexp_are_enabled }} {{ regexp_under_construction }} {{/ can_regexp_are_enabled }}
-            </p>
-        </div>
+        {{# are_regexp_permission_activated }}
+            <div class="regexp_permission_activated">
+                <span class="use-regexp-label-arrow">&#8627;</span>
+                <label class="checkbox use-regexp-label">
+                    <input type="checkbox"
+                           name="use-regexp"
+                           class="use-regexp"
+                        {{# is_regexp_enabled }} checked="checked" {{/ is_regexp_enabled }}
+                        {{^ can_regexp_are_enabled }} disabled="disabled"{{/ can_regexp_are_enabled }}
+                    />
+                    <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
+                </label>
+                <p class="text-warning regexp_incoherence_label">
+                    <i class="icon-warning-sign"> </i>
+                    {{# can_regexp_are_enabled }} {{ regexp_incoherence_label }} {{/ can_regexp_are_enabled }}
+                </p>
+            </div>
+        {{/ are_regexp_permission_activated }}
     </div>
 
     {{# are_fine_grained_permissions_defined }}

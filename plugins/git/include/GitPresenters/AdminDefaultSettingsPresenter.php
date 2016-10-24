@@ -64,7 +64,6 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $are_regexp_permission_activated;
 
     public $is_regexp_enabled;
-    public $regexp_under_construction;
 
     public function __construct(
         $project_id,
@@ -112,10 +111,6 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->fine_grained_permissions_title = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_permissions_title'
-        );
-        $this->regexp_under_construction        = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'regexp_under_construction'
         );
 
         $this->branches_title = $GLOBALS['Language']->getText(
