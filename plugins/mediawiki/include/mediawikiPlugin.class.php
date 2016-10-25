@@ -96,6 +96,8 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::SITE_ACCESS_CHANGE);
 
             $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
             /**
              * HACK
@@ -111,6 +113,21 @@ class MediaWikiPlugin extends Plugin {
 
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e812';
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
+            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+        }
     }
 
     /**

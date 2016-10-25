@@ -55,9 +55,12 @@ class phpwikiPlugin extends Plugin {
 
         $this->addHook(Event::REST_PROJECT_GET_PHPWIKI);
         $this->addHook(Event::REST_PROJECT_OPTIONS_PHPWIKI);
-        $this->addHook(EVENT::REST_RESOURCES);
-        $this->addHook(EVENT::REST_PROJECT_RESOURCES);
+        $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::IS_IN_SITEADMIN);
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
     }
 
@@ -74,6 +77,21 @@ class phpwikiPlugin extends Plugin {
 
     public function getServiceShortname() {
         return 'plugin_phpwiki';
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/phpwiki') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/phpwiki') === 0) {
+            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+        }
     }
 
     public function service_icon($params) {

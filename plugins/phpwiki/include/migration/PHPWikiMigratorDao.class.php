@@ -67,7 +67,7 @@ class PHPWikiMigratorDao extends DataAccessObject {
             $this->update($sql_wiki_nonempty);
         }
 
-        $dar_wiki_links = "SELECT linkfrom, linkto FROM wiki_link JOIN wiki_page ON (linkfrom = id OR linkto = id) WHERE group_id = $project_id";
+        $dar_wiki_links = $this->retrieve("SELECT linkfrom, linkto FROM wiki_link JOIN wiki_page ON (linkfrom = id OR linkto = id) WHERE group_id = $project_id");
         if ($dar_wiki_links) {
             foreach ($dar_wiki_links as $row) {
                 $link_from_new = $map_wiki_pages_id[$row['linkfrom']];
@@ -118,7 +118,7 @@ class PHPWikiMigratorDao extends DataAccessObject {
                                                             WHERE group_id = $project_id");
         if ($dar_wiki_attachments_rev) {
             foreach ($dar_wiki_attachments_rev as $row) {
-                $old_id        = $this->getDa()->escapeInt($row['wiki_attachment_revision.id']);
+                $old_id        = $this->getDa()->escapeInt($row['id']);
                 $attachment_id = $this->getDa()->escapeInt($row['attachment_id']);
                 $user_id       = $this->getDa()->escapeInt($row['user_id']);
                 $date          = $this->getDa()->escapeInt($row['date']);

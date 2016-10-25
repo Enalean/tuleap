@@ -7,13 +7,14 @@ plugin_phpwiki	reference_phpwikiversion_desc_key	Version Wiki
 
 # Migration
 plugin_phpwiki	allowed_project_back_link_title	Retour à l'administration site
-plugin_phpwiki	allowed_project_title	Migration vers le plugin PHPWiki
-plugin_phpwiki	allowed_project_information	La migration vers le plugin PHPWiki est <strong>irréversible</strong>.<br />Cette procédure de migration progressive à été conçue pour limiter les risques d'un problème de mise à jour.<br /><strong>Merci de demander aux projects migrés si l'upgrade n'a rien cassé et de le reporter le cas échéant.</strong>
+plugin_phpwiki	allowed_project_title	PHPWiki
+plugin_phpwiki	allowed_project_subtitle	Projets qui utilisent le plugin
+plugin_phpwiki	allowed_project_information	La migration vers le plugin PHPWiki est irréversible. Cette procédure de migration progressive à été conçue pour limiter les risques d'un problème de mise à jour. Merci de demander aux projects migrés si l'upgrade n'a rien cassé et de le reporter le cas échéant.
 plugin_phpwiki	allowed_project_list	Liste des projets utilisant déjà le plugin
 plugin_phpwiki	allowed_project_list_allow_placeholder	Nom du projet
 plugin_phpwiki	allowed_project_list_allow_project	Migrer
-plugin_phpwiki	allowed_project_list_filter_placeholder	Filtrer sur l'ID d'un projet ou le nom
-plugin_phpwiki	allowed_project_list_id	ID
+plugin_phpwiki	allowed_project_list_filter_placeholder	Id ou nom du projet
+plugin_phpwiki	allowed_project_list_id	Id
 plugin_phpwiki	allowed_project_list_name	Nom
 plugin_phpwiki	allowed_project_list_empty	Aucun projet n'utilise le plugin PHPWiki.
 plugin_phpwiki	allowed_project_allow_project	Les projets soumis seront migrés vers le plugin PHPWiki dans un instant (consultez les Evénements Système)
