@@ -134,6 +134,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
 
         $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -144,6 +145,14 @@ class fulltextsearchPlugin extends Plugin {
 
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/fulltextsearch') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
     }
 
     public function layout_search_entry($params) {
