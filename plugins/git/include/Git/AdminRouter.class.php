@@ -60,8 +60,7 @@ class Git_AdminRouter {
     private $regexp_enabler;
 
     /** @var AdminPageRenderer */
- private $admin_page_renderer;
-
+    private $admin_page_renderer;
 
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -116,7 +115,8 @@ class Git_AdminRouter {
                 $this->git_mirror_resource_restrictor,
                 $this->project_manager,
                 $this->git_mirror_manifest_manager,
-                $this->git_system_event_manager
+                $this->git_system_event_manager,
+                $this->admin_page_renderer
             );
         } else {
             return new GeneralSettingsController(

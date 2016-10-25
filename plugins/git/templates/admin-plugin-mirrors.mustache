@@ -10,8 +10,12 @@
 {{^ list_of_mirrors_is_empty }}
     {{# see_all }}
         <div class="mirror-global-action-container">
-            <button type="button" id="button-modal-add-mirror" class="tlp-button-primary tlp-table-actions-element"><i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}</button>
-            <button type="button" class="tlp-button-warning tlp-table-actions-element"><i class="tlp-button-icon fa fa-repeat"></i> {{ dump_mirrored_repositories_label }}</button>
+            <button type="button" id="button-modal-add-mirror" class="tlp-button-primary tlp-table-actions-element">
+                <i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}
+            </button>
+            <button type="button" id="button-modal-mirror-configuration" class="tlp-button-warning tlp-table-actions-element">
+                <i class="tlp-button-icon fa fa-repeat"></i> {{ dump_mirrored_repositories_label }}
+            </button>
         </div>
 
         {{# list_of_mirrors }}
@@ -23,7 +27,7 @@
                                 {{ name }}
                             {{/ name }}
                             {{^ name }}
-                                {{ empty_content }}
+                                {{ no_specified_mirror_name }}
                             {{/ name }}
                         </h1>
                     </div>
@@ -90,15 +94,15 @@
                     <section class="tlp-pane-section mirror-action">
                         <button type="button" class="tlp-button-primary tlp-button-outline action-item">
                             <i class="fa fa-pencil tlp-button-icon"></i>
-                            Edit
+                            {{ btn_edit }}
                         </button>
                         <button type="button" class="tlp-button-primary tlp-button-outline action-item mirror-action-restrict-button">
                             <i class="fa fa-lock tlp-button-icon"></i>
-                            Restrict
+                            {{ btn_restrict }}
                         </button>
                         <button type="button" class="tlp-button-danger tlp-button-outline action-item mirror-action-delete-button">
                             <i class="fa fa-trash tlp-button-icon"></i>
-                            Delete
+                            {{ btn_delete }}
                         </button>
                     </section>
                 </div>
@@ -108,3 +112,4 @@
 {{/ list_of_mirrors_is_empty }}
 
 {{> admin-plugin-mirror-modal }}
+{{> admin-plugin-mirror-configuration-modal }}

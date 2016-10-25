@@ -70,6 +70,8 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $basic;
 
+    public $btn_cancel;
+
     public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits) {
         parent::__construct($title, $csrf_token);
 
@@ -103,6 +105,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         $this->basic          = $GLOBALS['Language']->getText('plugin_git', 'basic');
         $this->digest         = $GLOBALS['Language']->getText('plugin_git', 'digest');
 
+        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
     public function list_of_servers_is_empty()
