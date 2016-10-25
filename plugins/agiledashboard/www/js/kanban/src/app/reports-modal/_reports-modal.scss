@@ -23,72 +23,44 @@
         max-height: 100%;
 
         > .chart {
+            height: 50vmin;
+            max-height: 50vmin;
             box-sizing: border-box;
-            padding: 25px 15px;
-            height: 60vmin;
-            max-height: 60vmin;
+
+            > .chart-content {
+                display: flex;
+            }
         }
 
         > .loading {
             position: absolute;
             left: 50%;
             width: 20px;
-            background: url('loader-mini.gif') no-repeat center center;
             min-height: 26px;
+            background: url('loader-mini.gif') no-repeat center center;
         }
 
         > .params {
-            float: left;
-            margin-left: 50px;
+            display: flex;
+            flex-direction: row-reverse;
+            margin: 0 15px 0 0;
 
-            > label {
+            > form > label {
+                max-width: 135px;
                 margin: 0;
             }
 
             #params-select {
+                max-width: 135px;
                 margin: 0;
-                max-width: 132px;
             }
         }
 
-        .nvd3 line.nv-guideline {
-            stroke: #ffffff;
-        }
-
-        .nv-y, .nv-x {
-            fill: #9c9c9c;
-
-            .domain {
-                stroke: #9c9c9c;
-            }
-        }
-
-        > .nvd3-title {
-            font: 400 20px Arial;
-            margin: 20px 0;
-            text-align: center;
+        > .chart-title {
+            margin-top: 20px;
             color: #9c9c9c;
-        }
-    }
-}
-
-.nvtooltip {
-    background-color: #303030;
-    color: #ffffff;
-
-    .legend-color-guide {
-        padding-left: 9px;
-    }
-
-    table tr.highlight > td.legend-color-guide {
-        padding-left: 9px;
-    }
-
-    .highlight {
-        background-color: #4d4d4d;
-
-        > td {
-            border-color: #4d4d4d !important;
+            font: 400 20px Arial;
+            text-align: center;
         }
     }
 }

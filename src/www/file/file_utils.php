@@ -64,30 +64,6 @@ function file_utils_footer($params) {
     site_project_footer($params);
 }
 
-
-
-function file_get_package_name_from_id($package_id) {
-	$package_factory = new FRSPackageFactory();
-	$res   = $package_factory->getFRSPackageFromDb($package_id);
-
-    return $res->getName();
-}
-
-
-function file_get_release_name_from_id($release_id) {
-	$release_factory = new FRSReleaseFactory();
-	$res = $release_factory->getFRSReleaseFromDb($release_id);
-
-    return $res->getName();
-}
-
-
-function file_get_package_id_from_release_id($release_id) {
-    $release_factory = new FRSReleaseFactory();
-    $res = $release_factory->getFRSReleaseFromDb($release_id);
-    return $res->getPackageID();
-}
-
 /*
 
  The following functions are for the FRS (File Release System)

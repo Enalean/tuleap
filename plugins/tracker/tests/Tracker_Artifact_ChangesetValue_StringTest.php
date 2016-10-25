@@ -24,7 +24,7 @@ class Tracker_Artifact_ChangesetValue_String_RESTTest extends TuleapTestCase {
         $field = stub('Tracker_FormElement_Field_String')->getName()->returns('field_string');
         $user  = aUser()->withId(101)->build();
 
-        $changeset = new Tracker_Artifact_ChangesetValue_String(111, $field, true, 'myxedemic enthymematic', 'text');
+        $changeset = new Tracker_Artifact_ChangesetValue_String(111, mock('Tracker_Artifact_Changeset'), $field, true, 'myxedemic enthymematic', 'text');
         $representation = $changeset->getRESTValue($user, $changeset);
 
         $this->assertEqual($representation->value, 'myxedemic enthymematic');

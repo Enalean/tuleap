@@ -242,7 +242,7 @@ tr.boxitemalt > td {
     background-image: url('../images/widget-preview-project_pushes.png');
 }
 
-#git_repomanagement label {
+.git_repomanagement label {
     display: block;
     margin-bottom: 5px;
 }
@@ -981,11 +981,13 @@ h1, h2, h3 {
 }
 
 .git-per-tags-branches-permissions {
-    margin: 0 0 60px;
-
     .alert {
         display: inline-block;
         margin: 20px 0;
+    }
+
+    .regexp_incoherence_label {
+        padding: 0 0 0 55px;
     }
 
     h4 {
@@ -1072,4 +1074,38 @@ h1, h2, h3 {
 
 .remove-fine-grained-permission-popover {
     display: none;
+}
+
+.regexp_permission_activated_hidden {
+    display: none;
+}
+
+.use-regexp-label-arrow {
+    margin: 0 0 0 20px;
+}
+
+.use-regexp-label {
+    display: inline-block !important;
+}
+
+.regexp_permission_label {
+    margin: 0;
+}
+
+.fine-grained-permissions {
+    margin: 0 0 60px;
+}
+
+.modal-regexp-delete {
+    display: none;
+}
+
+.modal {
+    .remove-regexp-permission-popover {
+        .popover-title {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+    }
 }

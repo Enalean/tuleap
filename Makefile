@@ -244,7 +244,7 @@ deploy-githooks:
 	@echo "MYSQL_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" > .env
 	@echo "LDAP_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
-	@echo VIRTUAL_HOST=tuleap_web_1.tuleap-aio-dev.docker >> .env
+	@echo VIRTUAL_HOST=tuleap-web.tuleap-aio-dev.docker >> .env
 
 dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should only be run once)
 	@echo "Create all data containers"
@@ -259,10 +259,10 @@ show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
 
 dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
-	@$(DOCKER) exec tuleap_web_1 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
+	@$(DOCKER) exec tuleap-web /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
 
 dev-clear-cache: ## Clear caches in Docker Compose environment
-	@$(DOCKER) exec tuleap_web_1 /usr/share/tuleap/src/utils/tuleap --clear-caches
+	@$(DOCKER) exec tuleap-web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
 start-dns: ## Start dnsdock to be able to reach Docker Compose environment without having to touch /etc/hosts file
 	@$(DOCKER) stop dnsdock || true
@@ -284,7 +284,7 @@ start-es:
 	@$(DOCKER_COMPOSE) up -d es
 
 env-gerrit: .env
-	@grep --quiet GERRIT_SERVER_NAME .env || echo 'GERRIT_SERVER_NAME=tuleap_gerrit_1.gerrit-tuleap.docker' >> .env
+	@grep --quiet GERRIT_SERVER_NAME .env || echo 'GERRIT_SERVER_NAME=tuleap-gerrit.gerrit-tuleap.docker' >> .env
 
 start-gerrit: env-gerrit
 	@docker-compose up -d gerrit

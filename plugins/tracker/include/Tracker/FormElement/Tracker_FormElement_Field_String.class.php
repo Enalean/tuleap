@@ -58,6 +58,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
             $changeset_value = new Tracker_Artifact_ChangesetValue_String(
                 $value_id,
+                $changeset,
                 $this,
                 $has_changed,
                 $row['value'],

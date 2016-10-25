@@ -1,37 +1,64 @@
-Version 4.269 - Tuleap 8.20
+Version 4.278 - Tuleap 9.1
+    * story #9525: You can choose to activate regexp even when admin doesn't allow it
+
+Version 4.277 - Tuleap 9.1
+    * story #9525: Uncheck repository regexp
+
+Version 4.276 - Tuleap 9.1
+    * story #9525: Take regexp into account
+
+Version 4.275 - Tuleap 9.1
+    * story #9525: Refactoring for regexp - introducing new object pattern validator
+
+Version 4.274 - Tuleap 9.1
+    * request #9595 Gitolite3Parser does not deal with deleted repositories
+
+Version 4.273 - Tuleap 9.1
+    * story #9525: in admin section regexp checkbox shouldn't be checked
+
+Version 4.272 - Tuleap 9.1
+    * story #9525: Checkbox can be checked
+
+Version 4.271 - Tuleap 9.1
+    * story #9525: Add checkbox in permission form
+
+Version 4.270 - Tuleap 9.1
+    * story #9525: Site admin option for regexp
+
+Version 4.269 - Tuleap 9.0
     * story #9436: Add log when parsing logs
 
-Version 4.268 - Tuleap 8.20
+Version 4.268 - Tuleap 9.0
     * story #9436: Store access in DB
 
-Version 4.267 - Tuleap 8.20
+Version 4.267 - Tuleap 9.0
     * story #9436: Fix HTTP clone fatal error
 
-Version 4.266 - Tuleap 8.20
+Version 4.266 - Tuleap 9.0
     * request #9557: Gerrit remote server can not be saved anymore
 
-Version 4.265 - Tuleap 8.20
+Version 4.265 - Tuleap 9.0
     * Display data in project access log
 
-Version 4.264 - Tuleap 8.20
+Version 4.264 - Tuleap 9.0
     * story #9436: Parse gitolite3 log file
 
-Version 4.263 - Tuleap 8.20
+Version 4.263 - Tuleap 9.0
     * story #9436: Export data in SCM usage
 
-Version 4.262 - Tuleap 8.20
+Version 4.262 - Tuleap 9.0
     * story #9436: Display git read access in frequency graph
 
-Version 4.261 - Tuleap 8.20
+Version 4.261 - Tuleap 9.0
     * Create new object to detect gitolite detector
 
-Version 4.260 - Tuleap 8.20
+Version 4.260 - Tuleap 9.0
     * Log when user see the repository content through GitPhp
 
-Version 4.259 - Tuleap 8.20
+Version 4.259 - Tuleap 9.0
     * story #9463 see cumulative flow diagram (REST route for kanban cumulative flow)
 
-Version 4.258 - Tuleap 8.20
+Version 4.258 - Tuleap 9.0
     * request #9526: Git mail notification should not be computed if nobody wants a notification
 
 Version 4.257 - Tuleap 8.19

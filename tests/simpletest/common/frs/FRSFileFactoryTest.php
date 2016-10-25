@@ -37,26 +37,16 @@ class FRSFileFactoryTest extends TuleapTestCase
         $GLOBALS['Language']           = new MockBaseLanguage($this);
         $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__).'/_fixtures';
         $GLOBALS['ftp_incoming_dir']   = dirname(__FILE__).'/_fixtures';
-
-
-        $conf  = '<?php'.PHP_EOL;
-        $conf .= '$ftp_frs_dir_prefix = "'.$GLOBALS['ftp_frs_dir_prefix'].'"'. PHP_EOL;
-        $conf .= '$ftp_incoming_dir = "'.$GLOBALS['ftp_incoming_dir'].'"'. PHP_EOL;
-        $conf .= '?>'.PHP_EOL;
-
-        $this->fakeconf = $GLOBALS['ftp_frs_dir_prefix'].'/local.conf';
-        file_put_contents($this->fakeconf, $conf);
-
-        $this->beforeTest['CODENDI_LOCAL_INC'] = getenv('CODENDI_LOCAL_INC');
-        putenv('CODENDI_LOCAL_INC='.$this->fakeconf);
+        ForgeConfig::store();
+        ForgeConfig::set('ftp_frs_dir_prefix', $GLOBALS['ftp_frs_dir_prefix']);
+        ForgeConfig::set('ftp_incoming_dir', $GLOBALS['ftp_incoming_dir']);
     }
 
     function tearDown() {
         unset($GLOBALS['Language']);
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_incoming_dir']);
-        unlink($this->fakeconf);
-        putenv('CODENDI_LOCAL_INC='.$this->beforeTest['CODENDI_LOCAL_INC']);
+        ForgeConfig::restore();
     }
 
     function testgetUploadSubDirectory() {

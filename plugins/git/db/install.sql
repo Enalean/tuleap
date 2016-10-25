@@ -244,4 +244,12 @@ CREATE TABLE plugin_git_file_logs_parse (
   file_name VARCHAR(255) NOT NULL,
   end_line INT(11),
   PRIMARY KEY (file_name)
-)
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_fine_grained_regexp_enabled (
+    enabled tinyint(1) UNSIGNED
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_regexp_enabled (
+    repository_id int(10) unsigned NOT NULL PRIMARY KEY
+);

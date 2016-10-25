@@ -40,16 +40,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     /** @var UserManager */
     private $user_manager;
 
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_ArtifactLink $field        The field of the value
-     * @param boolean                                $has_changed  If the changeset value has chnged from the previous one
-     * @param array                                  $artifact_links array of artifact_id => Tracker_ArtifactLinkInfo
-     * @param array                                  $reverse_artifact_links array of artifact_id => Tracker_ArtifactLinkInfo
-     */
-    public function __construct($id, $field, $has_changed, $artifact_links, $reverse_artifact_links) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $artifact_links, $reverse_artifact_links) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->artifact_links         = $artifact_links;
         $this->reverse_artifact_links = $reverse_artifact_links;
         $this->user_manager           = UserManager::instance();
@@ -145,7 +137,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff() {
+    public function nodiff($format = 'html') {
         $next = $this->getValue();
         if (!empty($next)) {
             $result = '';

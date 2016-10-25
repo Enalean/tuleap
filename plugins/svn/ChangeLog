@@ -1,16 +1,22 @@
-Version 0.98 - Tuleap 8.20
+Version 0.100 - Tuleap 9.1
+    * request #9581: Tuleap code should only be under Tuleap namespace
+
+Version 0.99 - Tuleap 9.1
+    * request #9579 Do not use deprecated services in new projects (SVN core service is no more instanciated for new project)
+
+Version 0.98 - Tuleap 9.0
     * request #9562: Allow to checkout file when using EPEL's ViewVC
 
-Version 0.97 - Tuleap 8.20
+Version 0.97 - Tuleap 9.0
     * request #9561 SVN import can use --bypass-prop-validation
 
-Version 0.96 - Tuleap 8.20
+Version 0.96 - Tuleap 9.0
     * request #9553 SVN multirepository access error when projects are restriced
 
-Version 0.95 - Tuleap 8.20
+Version 0.95 - Tuleap 9.0
     * request #8925: SVN plugin doesn't handle properly LDAP login vs Tuleap login
 
-Version 0.94 - Tuleap 8.20
+Version 0.94 - Tuleap 9.0
     * request #9508: Site admin can't access SVN tree with viewvc integration
 
 Version 0.93 - Tuleap 8.19

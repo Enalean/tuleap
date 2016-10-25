@@ -42,20 +42,22 @@ function DroppedService(
         kanban_id,
         column_id,
         dropped_item_id,
-        compared_to
+        compared_to,
+        from_column
     ) {
         if (column_id === 'archive') {
-            return KanbanService.moveInArchive(kanban_id, dropped_item_id, compared_to);
+            return KanbanService.moveInArchive(kanban_id, dropped_item_id, compared_to, from_column);
         }
         if (column_id === 'backlog') {
-            return KanbanService.moveInBacklog(kanban_id, dropped_item_id, compared_to);
+            return KanbanService.moveInBacklog(kanban_id, dropped_item_id, compared_to, from_column);
         }
 
         return KanbanService.moveInColumn(
             kanban_id,
             column_id,
             dropped_item_id,
-            compared_to
+            compared_to,
+            from_column
         );
     }
 

@@ -1749,3 +1749,5 @@ plugin_tracker	no_pending	No Tracker pending for Deletion
 plugin_tracker	info_tracker_restored	The tracker '$1' has been properly restored
 plugin_tracker	tracker_action_restore	Restore
 plugin_tracker	tracker_restore_warning	The following trackers cannot be displayed (data seems missing in database):
+
+plugin_tracker	file_has_been_removed_meantime	This file has been removed meantime.

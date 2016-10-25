@@ -142,7 +142,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $file_field->setReturnReference('getFileInfo', $f2, array(102, $row2));
         $file_field->setReturnReference('getFileInfo', $f3, array(103, $row3));
         
-        $changeset_value = $file_field->getChangesetValue(null, 123, false);
+        $changeset_value = $file_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');
         $this->assertEqual(count($changeset_value->getFiles()), 3);
     }
@@ -156,7 +156,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $file_field = new Tracker_FormElement_Field_FileTestVersion();
         $file_field->setReturnReference('getValueDao', $value_dao);
         
-        $changeset_value = $file_field->getChangesetValue(null, 123, false);
+        $changeset_value = $file_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');
         $this->assertEqual(count($changeset_value->getFiles()), 0);
     }

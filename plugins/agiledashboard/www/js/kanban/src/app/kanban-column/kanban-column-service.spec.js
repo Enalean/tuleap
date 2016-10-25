@@ -1,5 +1,8 @@
 describe("KanbanColumnService -", function() {
     var $filter,
+        $q,
+        $rootScope,
+        KanbanItemRestService,
         KanbanColumnService,
         KanbanFilterValue;
 
@@ -16,18 +19,31 @@ describe("KanbanColumnService -", function() {
                     terms: ''
                 };
             });
+
+            $provide.decorator('KanbanItemRestService', function($delegate) {
+                spyOn($delegate, "getItem");
+
+                return $delegate;
+            });
         });
 
         inject(function(
             _$filter_,
+            _$q_,
+            _$rootScope_,
             _KanbanColumnService_,
-            _KanbanFilterValue_
+            _KanbanFilterValue_,
+            _KanbanItemRestService_
         ) {
-            $filter             = _$filter_;
-            KanbanColumnService = _KanbanColumnService_;
-            KanbanFilterValue   = _KanbanFilterValue_;
+            $filter               = _$filter_;
+            $q                    = _$q_;
+            $rootScope            = _$rootScope_;
+            KanbanColumnService   = _KanbanColumnService_;
+            KanbanFilterValue     = _KanbanFilterValue_;
+            KanbanItemRestService = _KanbanItemRestService_;
         });
     });
+
     describe("moveItem() -", function() {
         describe("Given an item to move, a source column object, a destination column object and a compared_to object", function() {
             var item, source_column, destination_column;
@@ -451,6 +467,60 @@ describe("KanbanColumnService -", function() {
                 { id: 46 },
                 { id: 62 }
             ]);
+        });
+    });
+
+    describe("findAndMoveItem()", function() {
+        it("Given an item id, a source column and a destination column, when I move an item from an column not loaded, then the item is recovered and moved", function() {
+            var item = {
+                id: 50
+            };
+            KanbanItemRestService.getItem.and.returnValue($q.when(item));
+
+            var source_column = {
+                content: []
+            };
+            var destination_column = {
+                content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
+                ]
+            };
+            spyOn(KanbanColumnService, "moveItem");
+            spyOn(KanbanColumnService, "filterItems");
+
+            KanbanColumnService.findAndMoveItem(50, source_column, destination_column, null);
+            $rootScope.$apply();
+
+            expect(KanbanItemRestService.getItem).toHaveBeenCalledWith(50);
+            expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(item, source_column, destination_column, null);
+            expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(destination_column);
+        });
+
+        it("Given an item id, a source column and a destination column, when I move an item from an column loaded, then the item is moved", function() {
+            var item = {
+                id: 50
+            };
+            var source_column = {
+                content: [item]
+            };
+            var destination_column = {
+                content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
+                ]
+            };
+            spyOn(KanbanColumnService, "moveItem");
+            spyOn(KanbanColumnService, "filterItems");
+
+            KanbanColumnService.findAndMoveItem(50, source_column, destination_column, null);
+            $rootScope.$apply();
+
+            expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(item, source_column, destination_column, null);
+            expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(destination_column);
+            expect(KanbanItemRestService.getItem).not.toHaveBeenCalled();
         });
     });
 });

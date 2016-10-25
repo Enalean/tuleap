@@ -55,12 +55,13 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
         $this->field               = stub($this->field)->getName()->returns('capacity');
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_value_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
+        $this->changeset           = mock('Tracker_Artifact_Changeset');
     }
 
     public function itCreatesAComputedNode()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->field, true, 1);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -72,7 +73,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itExportsAFieldInAutocomputeMode()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->field, true, null);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, null);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -84,7 +85,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itExportsFieldWithAManualValue()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->field, true, 1.5);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 1.5);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 
@@ -96,7 +97,7 @@ class ChangesetValueComputedXMLExporterTest extends \TuleapTestCase
     public function itExportsFieldWithAManualValueSetTo0()
     {
         $exporter        = new ChangesetValueComputedXMLExporter();
-        $changeset_value = new ChangesetValueComputed(1, $this->field, true, 0);
+        $changeset_value = new ChangesetValueComputed(1, $this->changeset, $this->field, true, 0);
 
         $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
 

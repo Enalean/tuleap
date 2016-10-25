@@ -41,6 +41,8 @@ class ChangesetValueComputedTest extends TuleapTestCase
 
         $this->field = stub('Tracker_FormElement_Field_Computed')->getName()->returns('field_computed');
         $this->user  = aUser()->withId(101)->build();
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
     public function tearDown()
@@ -52,42 +54,42 @@ class ChangesetValueComputedTest extends TuleapTestCase
 
     public function testNoDiff()
     {
-        $float_1 = new ChangesetValueComputed(111, $this->field, false, 456.789);
-        $float_2 = new ChangesetValueComputed(111, $this->field, false, 456.789);
+        $float_1 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 456.789);
+        $float_2 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 456.789);
         $this->assertFalse($float_1->diff($float_2));
         $this->assertFalse($float_2->diff($float_1));
 
-        $float_1 = new ChangesetValueComputed(111, $this->field, false, 0);
-        $float_2 = new ChangesetValueComputed(111, $this->field, false, 0);
+        $float_1 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 0);
+        $float_2 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 0);
         $this->assertFalse($float_1->diff($float_2));
         $this->assertFalse($float_2->diff($float_1));
 
-        $float_1 = new ChangesetValueComputed(111, $this->field, false, null);
-        $float_2 = new ChangesetValueComputed(111, $this->field, false, null);
+        $float_1 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, null);
+        $float_2 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, null);
         $this->assertFalse($float_1->diff($float_2));
         $this->assertFalse($float_2->diff($float_1));
     }
 
     public function testDiff()
     {
-        $float_1 = new ChangesetValueComputed(111, $this->field, false, 987.321);
-        $float_2 = new ChangesetValueComputed(111, $this->field, false, 987);
+        $float_1 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 987.321);
+        $float_2 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 987);
 
         $this->assertEqual($float_1->diff($float_2), 'changed from 987 to 987.321');
         $this->assertEqual($float_2->diff($float_1), 'changed from 987.321 to 987');
 
-        $float_5 = new ChangesetValueComputed(111, $this->field, false, 987.4321);
-        $float_6 = new ChangesetValueComputed(111, $this->field, false, 987.4329);
+        $float_5 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 987.4321);
+        $float_6 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 987.4329);
         $this->assertEqual($float_5->diff($float_6), 'changed from 987.4329 to 987.4321');
         $this->assertEqual($float_6->diff($float_5), 'changed from 987.4321 to 987.4329');
 
-        $float_7 = new ChangesetValueComputed(111, $this->field, false, 0);
-        $float_8 = new ChangesetValueComputed(111, $this->field, false, 1233);
+        $float_7 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 0);
+        $float_8 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 1233);
         $this->assertEqual($float_7->diff($float_8), 'changed from 1233 to 0');
         $this->assertEqual($float_8->diff($float_7), 'changed from 0 to 1233');
 
-        $float_9  = new ChangesetValueComputed(111, $this->field, false, null);
-        $float_10 = new ChangesetValueComputed(111, $this->field, false, 1233);
+        $float_9  = new ChangesetValueComputed(111, $this->changeset, $this->field, false, null);
+        $float_10 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 1233);
         $this->assertEqual($float_9->diff($float_10), 'changed from 1233 to autocomputed');
         $this->assertEqual($float_10->diff($float_9), 'changed from autocomputed to 1233');
     }

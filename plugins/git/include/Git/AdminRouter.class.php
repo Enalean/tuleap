@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Git\GeneralSettingsController;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 
 /**
  * This routes site admin part of Git
@@ -44,6 +48,16 @@ class Git_AdminRouter {
     /** @var Git_SystemEventManager */
     private $git_system_event_manager;
 
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_enabler;
+
 
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -52,7 +66,9 @@ class Git_AdminRouter {
         Git_MirrorResourceRestrictor         $git_mirror_resource_restrictor,
         ProjectManager                       $project_manager,
         Git_Mirror_ManifestManager           $git_mirror_manifest_manager,
-        Git_SystemEventManager               $git_system_event_manager
+        Git_SystemEventManager               $git_system_event_manager,
+        RegexpFineGrainedRetriever           $regexp_retriever,
+        RegexpFineGrainedEnabler             $regexp_enabler
     ) {
         $this->gerrit_server_factory          = $gerrit_server_factory;
         $this->csrf                           = $csrf;
@@ -61,6 +77,8 @@ class Git_AdminRouter {
         $this->project_manager                = $project_manager;
         $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
         $this->git_system_event_manager       = $git_system_event_manager;
+        $this->regexp_retriever               = $regexp_retriever;
+        $this->regexp_enabler                 = $regexp_enabler;
     }
 
     public function process(Codendi_Request $request) {
@@ -80,7 +98,7 @@ class Git_AdminRouter {
             return new Git_AdminGerritController($this->csrf, $this->gerrit_server_factory);
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig($this->csrf, $this->project_manager, $this->git_system_event_manager);
-        } else {
+        } elseif ($request->get('pane') === 'mirrors_admin'){
             return new Git_AdminMirrorController(
                 $this->csrf,
                 $this->git_mirror_mapper,
@@ -88,6 +106,12 @@ class Git_AdminRouter {
                 $this->project_manager,
                 $this->git_mirror_manifest_manager,
                 $this->git_system_event_manager
+            );
+        } else {
+            return new GeneralSettingsController(
+                $this->csrf,
+                $this->regexp_retriever,
+                $this->regexp_enabler
             );
         }
     }

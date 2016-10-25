@@ -36,6 +36,8 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
 
         $this->field = stub('Tracker_FormElement_Field_Float')->getName()->returns('field_float');
         $this->user  = aUser()->withId(101)->build();
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
     public function tearDown() {
@@ -45,19 +47,19 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
     }
 
     public function testFloats() {
-        $float = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 1.1234);
+        $float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 1.1234);
         $this->assertEqual($float->getFloat(), 1.1234);
         $this->assertNotIdentical($float->getFloat(), '1.1234');
         $this->assertEqual($float->getSoapValue($this->user), array('value' => '1.1234'));
         $this->assertIdentical($float->getValue(), '1.1234');
 
-        $long_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 9.54321);
+        $long_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 9.54321);
         $this->assertEqual($long_float->getFloat(), 9.54321);
         $this->assertNotIdentical($long_float->getFloat(), '9.54321');
         $this->assertEqual($long_float->getSoapValue($this->user), array('value' => '9.54321'));
         $this->assertEqual($long_float->getValue(), '9.5432');
 
-        $int_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 42);
+        $int_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 42);
         $this->assertEqual($int_float->getFloat(), 42);
         $this->assertEqual($int_float->getFloat(), 42.000);
         $this->assertIdentical($int_float->getFloat(), 42.000);
@@ -65,7 +67,7 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $this->assertEqual($int_float->getSoapValue($this->user), array('value' => '42'));
         $this->assertEqual($int_float->getValue(), '42.0000');
 
-        $string_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, '123.456');
+        $string_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, '123.456');
         $this->assertEqual($string_float->getFloat(), 123.456);
         $this->assertNotEqual($string_float->getFloat(), 123.457);
         $this->assertEqual($string_float->getFloat(), '123.456');
@@ -73,7 +75,7 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $this->assertEqual($string_float->getSoapValue($this->user), array('value' => '123.456'));
         $this->assertEqual($string_float->getValue(), '123.456');
 
-        $null_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, null);
+        $null_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_float->getFloat());
         $this->assertEqual($null_float->getSoapValue($this->user), array('value' => ''));
         $this->assertIdentical($null_float->getSoapValue($this->user), array('value' => ''));
@@ -81,26 +83,26 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
     }
 
     public function testNoDiff() {
-        $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 456.789);
-        $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 456.789);
+        $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.789);
+        $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.789);
         $this->assertFalse($float_1->diff($float_2));
         $this->assertFalse($float_2->diff($float_1));
     }
 
     public function testDiff() {
-        $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 987.321);
-        $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 987);
+        $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.321);
+        $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987);
 
         $this->assertEqual($float_1->diff($float_2), 'changed from 987.0000 to 987.3210');
         $this->assertEqual($float_2->diff($float_1), 'changed from 987.3210 to 987.0000');
 
-        $float_3 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 456.54321);
-        $float_4 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 456.54322);
+        $float_3 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.54321);
+        $float_4 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.54322);
         $this->assertFalse($float_3->diff($float_4));
         $this->assertFalse($float_4->diff($float_3));
 
-        $float_5 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 987.4321);
-        $float_6 = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, false, 987.4329);
+        $float_5 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.4321);
+        $float_6 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.4329);
         $this->assertEqual($float_5->diff($float_6), 'changed from 987.4329 to 987.4321');
         $this->assertEqual($float_6->diff($float_5), 'changed from 987.4321 to 987.4329');
     }
@@ -112,7 +114,7 @@ class Tracker_Artifact_ChangesetValue_Float_RESTTest extends TuleapTestCase {
         $field = stub('Tracker_FormElement_Field_Float')->getName()->returns('field_float');
         $user  = aUser()->withId(101)->build();
 
-        $changeset = new Tracker_Artifact_ChangesetValue_Float(111, $field, true, 45.1046);
+        $changeset = new Tracker_Artifact_ChangesetValue_Float(111, mock('Tracker_Artifact_Changeset'), $field, true, 45.1046);
         $representation = $changeset->getRESTValue($user, $changeset);
 
         $this->assertEqual($representation->value, 45.1046);

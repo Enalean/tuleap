@@ -26,6 +26,7 @@
             $(this).blur();
 
             var type                 = $(this).attr('data-type'),
+                regexp               = $(this).attr('data-regexp-enabled'),
                 table                = $('.git-fine-grained-permissions-' + type),
                 tbody                = table.children('tbody'),
                 permission_template  = $('#add-fine-grained-permission-template'),
@@ -33,6 +34,7 @@
 
                 new_row              = '',
                 input_tag            = '<input type="text" name="add-' + type + '-name['+index+']" placeholder="' + codendi.getText('git', 'add_' + type + '_permission_placeholder') + '">',
+                label_regexp_enabled = '<p class="text-info">' + codendi.getText('git', 'regexp_permission_enabled_info') + '</p>'
                 write_permission_tag = permission_template
                     .clone()
                     .removeAttr('id')
@@ -45,7 +47,12 @@
                     [0].outerHTML;
 
             new_row += '<tr>';
-            new_row += '<td>' + input_tag + '</td>';
+
+            new_row += '<td>' + input_tag;
+            if (regexp) {
+                new_row += label_regexp_enabled
+            }
+            '</td>';
             new_row += '<td>' + write_permission_tag + '</td>';
             new_row += '<td>' + rewind_permission_tag + '</td>';
             new_row += '<td/>';
@@ -113,9 +120,47 @@
         });
     }
 
+    function bindToggleEnableRegexp() {
+        $('#use-fine-grained-permissions').change(function () {
+            if($(this).is(":checked")) {
+                $('.regexp_permission_activated').show();
+            } else {
+                $('.regexp_permission_activated').hide();
+            }
+        });
+    }
+
+    function bindToogleModalWarningDisableRegexp() {
+        var already_check_modal = false;
+
+        $('.save-permissions-with-regexp').click(function(event) {
+            if (already_check_modal === true) {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (! $('.use-regexp').is(":checked") &&
+                $('.save-permissions-with-regexp').attr('data-are-regexp-enabled') == 1
+            ) {
+                $('#modal-regexp-delete').modal('toggle');
+            } else {
+                already_check_modal = true;
+                $(this).trigger('click', 'submit');
+            }
+        });
+
+        $('.dismiss-popover').click(function () {
+            $('#modal-regexp-delete').modal('toggle');
+        });
+    }
+
     $(function() {
         bindAddPermission();
         bindToggleFineGrainedPermissions();
+        bindToggleEnableRegexp();
+
+        bindToogleModalWarningDisableRegexp();
 
         confirmDeletionPopover();
 

@@ -76,6 +76,11 @@ class Plugin implements PFO_Plugin {
         return $this->allowedForProject[$group_id];
     }
 
+    public function isRestricted()
+    {
+        return PluginManager::instance()->isProjectPluginRestricted($this);
+    }
+
     /**
      * Hook call for @see Event::SERVICES_ALLOWED_FOR_PROJECT
      *

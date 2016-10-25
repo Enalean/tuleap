@@ -112,7 +112,7 @@ msgstr ""
 msgid "Kanban label:"
 msgstr ""
 
-#: src/app/app-kanban-controller.js
+#: src/app/kanban-service.js
 msgid "Kanban {{ label }} successfuly deleted"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgid "Last year"
 msgstr ""
 
 #. moment.js Date format
-#: src/app/reports-modal/reports-modal-controller.js
+#: src/app/reports-modal/diagram-directive.js
 msgid "MM/DD"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Move to top"
 msgstr ""
 
-#: src/app/reports-modal/reports-modal-controller.js
+#: src/app/reports-modal/diagram-directive.js
 msgid "Nb. of cards"
 msgstr ""
 
@@ -203,6 +203,10 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
+msgstr ""
+
+#: src/app/socket/socket-disconnect.tpl.html
+msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html

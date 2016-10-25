@@ -1,16 +1,16 @@
-Version 3.114 - Tuleap 8.20
+Version 3.114 - Tuleap 9.0
     * story #9396 have project members automatically synchronized with LDAP (Deal with deleted LDAP group)
 
-Version 3.113 - Tuleap 8.20
+Version 3.113 - Tuleap 9.0
     * story #9396: Warn that project admins are not removed during daily synchronization
 
-Version 3.112 - Tuleap 8.20
+Version 3.112 - Tuleap 9.0
     * story #9396: have project members automatically synchronized with LDAP (Add new projet members during daily synchonization)
 
-Version 3.111 - Tuleap 8.20
+Version 3.111 - Tuleap 9.0
     * story #9396 have project members automatically synchronized with LDAP (Add synchronize checkbox)
 
-Version 3.110 - Tuleap 8.20
+Version 3.110 - Tuleap 9.0
     * request #9523: Ldap user confirmation login date can be reset
 
 Version 3.109 - Tuleap 8.19

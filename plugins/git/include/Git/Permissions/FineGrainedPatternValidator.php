@@ -26,8 +26,18 @@ class FineGrainedPatternValidator
 
     public function isPatternValid($pattern)
     {
+        return $this->hasOnlyAuthorizedCharacters($pattern) && ! $this->hasALineBreak($pattern);
+    }
+
+    private function hasOnlyAuthorizedCharacters($pattern)
+    {
         $regex = '#^(?:\*|[a-zA-Z0-9_\-/\.]+(/\*)?)$#';
 
-        return preg_match($regex, $pattern);
+        return preg_match($regex, $pattern) === 1;
+    }
+
+    private function hasALineBreak($pattern)
+    {
+        return preg_match('/[\s\v]/', $pattern);
     }
 }

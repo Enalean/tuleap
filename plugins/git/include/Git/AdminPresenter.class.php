@@ -27,10 +27,12 @@ class Git_AdminPresenter {
     public $manage_gerrit           = false;
     public $manage_mirrors          = false;
     public $manage_gitolite_config  = false;
+    public $manage_general_settings = false;
 
-    public $mirrors_active         = '';
-    public $gerrit_active          = '';
-    public $gitolite_config_active = '';
+    public $mirrors_active          = '';
+    public $general_settings_active = '';
+    public $gerrit_active           = '';
+    public $gitolite_config_active  = '';
 
     public function __construct($title, CSRFSynchronizerToken $csrf_token) {
         $this->title      = $title;
@@ -39,6 +41,10 @@ class Git_AdminPresenter {
 
     public function gerrit_tab_name() {
         return $GLOBALS['Language']->getText('plugin_git','gerrit_tab_name');
+    }
+
+    public function general_settings_tab_name() {
+        return $GLOBALS['Language']->getText('plugin_git','general_settings_tab_name');
     }
 
     public function mirror_tab_name() {

@@ -234,5 +234,19 @@ class ProjectCreationData {
             }
         }
     }
+
+    public function unsetProjectServiceUsage($service_id)
+    {
+        if (isset($this->data_services[$service_id])) {
+            $this->data_services[$service_id]['is_used'] = '0';
+        }
+    }
+
+    public function forceServiceUsage($service_id)
+    {
+        if (isset($this->data_services[$service_id])) {
+            $this->data_services[$service_id]['is_used'] = '1';
+        }
+    }
 }
 

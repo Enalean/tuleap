@@ -22,6 +22,10 @@
 require_once('common/layout/Layout.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -152,8 +156,28 @@ class GitActions extends PluginActions
      */
     private $fine_grained_replicator;
 
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_enabler;
+
+    /**
+     * @var RegexpFineGrainedDisabler
+     */
+    private $regexp_disabler;
+
+    /**
+     * @var \Tuleap\Git\Permissions\RegexpPermissionFilter
+     */
+    private $permission_filter;
+
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+
     public function __construct(
-        Git                $controller,
+        Git $controller,
         Git_SystemEventManager $system_event_manager,
         GitRepositoryFactory $factory,
         GitRepositoryManager $manager,
@@ -179,7 +203,11 @@ class GitActions extends PluginActions
         FineGrainedPermissionReplicator $fine_grained_replicator,
         FineGrainedRetriever $fine_grained_retriever,
         HistoryValueFormatter $history_value_formatter,
-        PermissionChangesDetector $permission_changes_detector
+        PermissionChangesDetector $permission_changes_detector,
+        RegexpFineGrainedEnabler $regexp_enabler,
+        RegexpFineGrainedDisabler $regexp_disabler,
+        RegexpPermissionFilter $permission_filter,
+        RegexpFineGrainedRetriever $regexp_retriever
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -208,6 +236,10 @@ class GitActions extends PluginActions
         $this->fine_grained_retriever        = $fine_grained_retriever;
         $this->history_value_formatter       = $history_value_formatter;
         $this->permission_changes_detector   = $permission_changes_detector;
+        $this->regexp_enabler                = $regexp_enabler;
+        $this->regexp_disabler               = $regexp_disabler;
+        $this->permission_filter             = $permission_filter;
+        $this->regexp_retriever              = $regexp_retriever;
     }
 
     protected function getText($key, $params = array()) {
@@ -859,7 +891,8 @@ class GitActions extends PluginActions
         $enable_fine_grained_permissions,
         array $added_branches_permissions,
         array $added_tags_permissions,
-        array $updated_permissions
+        array $updated_permissions,
+        $enable_regexp
     ) {
         $controller = $this->getController();
         if ( empty($repoId) ) {
@@ -913,6 +946,13 @@ class GitActions extends PluginActions
             $this->fine_grained_updater->enableRepository($repository);
         } else {
             $this->fine_grained_updater->disableRepository($repository);
+        }
+
+        if ($enable_regexp && $this->regexp_retriever->areRegexpActivatedForRepository($repository) === false) {
+            $this->regexp_enabler->enableForRepository($repository);
+        } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForRepository($repository) === true) {
+            $this->regexp_disabler->disableForRepository($repository);
+            $this->permission_filter->filterNonRegexpPermissions($repository);
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {

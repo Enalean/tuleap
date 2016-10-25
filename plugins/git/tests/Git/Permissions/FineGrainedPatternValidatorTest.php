@@ -42,6 +42,14 @@ class FineGrainedPatternValidatorTest extends TuleapTestCase
         $pattern_12 = 'master dev';
         $pattern_13 = 'master?dev';
 
+        $pattern_14 = "master\n";
+        $pattern_15 = "master\r";
+        $pattern_16 = "master\n\r";
+        $pattern_17 = "master\ndev";
+        $pattern_18 = "\n";
+        $pattern_19 = "\v";
+        $pattern_20 = "\f";
+
         $validator = new FineGrainedPatternValidator();
 
         $this->assertTrue($validator->isPatternValid($pattern_01));
@@ -57,5 +65,13 @@ class FineGrainedPatternValidatorTest extends TuleapTestCase
         $this->assertFalse($validator->isPatternValid($pattern_11));
         $this->assertFalse($validator->isPatternValid($pattern_12));
         $this->assertFalse($validator->isPatternValid($pattern_13));
+
+        $this->assertFalse($validator->isPatternValid($pattern_14));
+        $this->assertFalse($validator->isPatternValid($pattern_15));
+        $this->assertFalse($validator->isPatternValid($pattern_16));
+        $this->assertFalse($validator->isPatternValid($pattern_17));
+        $this->assertFalse($validator->isPatternValid($pattern_18));
+        $this->assertFalse($validator->isPatternValid($pattern_19));
+        $this->assertFalse($validator->isPatternValid($pattern_20));
     }
 }

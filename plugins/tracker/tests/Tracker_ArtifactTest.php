@@ -1308,8 +1308,8 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         $text_field_01 = stub('Tracker_FormElement_Field_Text')->getName()->returns('text_01');
         stub($text_field_01)->getTracker()->returns($tracker);
 
-        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, $text_field_01, true, 'value_01', 'text');
-        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, $text_field_01, true, 'value_02', 'text');
+        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, mock('Tracker_Artifact_Changeset'), $text_field_01, true, 'value_01', 'text');
+        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, mock('Tracker_Artifact_Changeset'), $text_field_01, true, 'value_02', 'text');
 
         stub($changeset_01)->getArtifact()->returns($artifact);
         stub($changeset_01)->getValues()->returns(array($value_01));

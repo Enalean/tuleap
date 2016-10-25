@@ -95,8 +95,7 @@ module.exports = {
             'vendor/angular-locker/dist/angular-locker.min.js',
             'vendor/dragular/dist/dragular.js',
             'vendor/d3/d3.js',
-            'vendor/nvd3/build/nv.d3.js',
-            'vendor/angular-nvd3/dist/angular-nvd3.js'
+            'vendor/angular-jwt/dist/angular-jwt.min.js'
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
@@ -104,8 +103,7 @@ module.exports = {
             'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
             'vendor/angular-ui-select/dist/select.css',
             'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css',
-            'vendor/dragular/dist/dragular.css',
-            'vendor/nvd3/build/nv.d3.css'
+            'vendor/dragular/dist/dragular.css'
         ],
         assets: [
             'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',

@@ -1,12 +1,18 @@
 <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
 <nav class="tlp-tabs">
+    <a class="tlp-tab {{ general_settings_active }}" href="?pane=general-settings">{{ general_settings_tab_name }}</a>
     <a class="tlp-tab {{ gerrit_active }}" href="?pane=gerrit_servers_admin">{{ gerrit_tab_name }}</a>
     <a class="tlp-tab {{ mirrors_active }}" href="?pane=mirrors_admin">{{ mirror_tab_name }}</a>
     <a class="tlp-tab {{ gitolite_config_active }}" href="?pane=gitolite_config">{{ gitolite_config_tab_name }}</a>
 </nav>
 
 <div class="tlp-framed-horizontally">
+    {{# manage_general_settings }}
+        <div>
+            {{> admin-plugin-general }}
+        </div>
+    {{/ manage_general_settings }}
     {{# manage_gerrit }}
         {{> admin-plugin-gerrit-server }}
     {{/ manage_gerrit }}

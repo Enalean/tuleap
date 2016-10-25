@@ -31,31 +31,66 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
      */
     private $permissions_manager;
 
+    /**
+     * @var FRSReleaseFactory
+     */
+    private $release_factory;
+
     public function __construct(ProjectUGroup $ugroup) {
         parent::__construct($ugroup);
+
         $this->permissions_manager = PermissionsManager::instance();
-        $this->event_manager = EventManager::instance();
-        $this->html_purifier = Codendi_HTMLPurifier::instance();
+        $this->event_manager       = EventManager::instance();
+        $this->html_purifier       = Codendi_HTMLPurifier::instance();
+        $this->release_factory     = new FRSReleaseFactory();
     }
 
     public function getContent() {
         $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','permissions_title') .'</h2>';
-        $this->permissions_manager = PermissionsManager::instance();
-        $dar = $this->permissions_manager->searchByUgroupId($this->ugroup->getId());
-        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
+        $data    = $this->getFormattedData();
+
+        if ($data) {
             $content .= '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'ug_perms').'<p>';
 
             $title_arr = array();
             $title_arr[] = $GLOBALS['Language']->getText('project_admin_editugroup', 'permission');
             $title_arr[] = $GLOBALS['Language']->getText('project_admin_editugroup', 'resource_name');
-            $content .= '<table class="admin_permissions table table-bordered table-striped">';
+            $content .= '<table class="admin-permissions table table-bordered table-striped">';
             $content .= '<thead><tr>';
             $content .= '<th>'. $GLOBALS['Language']->getText('project_admin_editugroup', 'permission') .'</th>';
             $content .= '<th>'. $GLOBALS['Language']->getText('project_admin_editugroup', 'resource_name') .'</th>';
             $content .= '</tr></thead>';
             $content .= '<tbody>';
-            $row_num = 0;
 
+
+            foreach ($data as $group_permission_data) {
+                $content .= '<tr>';
+                $content .= '<td>';
+                $content .= $group_permission_data['permission_name'];
+                $content .= '</td>';
+                $content .= '<td>';
+                $content .= $group_permission_data['content'];
+                $content .= '</td>';
+                $content .= '</td>';
+            }
+
+            $content .= '</tbody></table><p>';
+        } else {
+            $content .= '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'no_perms').'.</p>';
+        }
+        return $content;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFormattedData()
+    {
+        $data      = array();
+        $dar       = $this->permissions_manager->searchByUgroupId($this->ugroup->getId());
+        $row_count = 0;
+
+        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
             foreach ($dar as $row) {
                 if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
                     $atid = permission_extract_atid($row['object_id']);
@@ -66,79 +101,82 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
                 } else {
                     $objname = permission_get_object_name($row['permission_type'], $row['object_id']);
                 }
-                $content .= '<TR>';
-                $content .= '<TD>'.permission_get_name($row['permission_type']).'</TD>';
+
+                if (!$objname) {
+                    continue;
+                }
+
                 if ($row['permission_type'] == 'PACKAGE_READ') {
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'package')
-                        .' <a href="/file/admin/editpackagepermissions.php?package_id='
-                        .$row['object_id'].'&group_id='.$this->ugroup->getProjectId().'">'
-                        .$objname.'</a></TD>';
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'package')
+                        . ' <a href="/file/admin/editpackagepermissions.php?package_id='
+                        . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
+                        . $objname . '</a>';
                 } else if ($row['permission_type'] == 'RELEASE_READ') {
-                    $package_id=file_get_package_id_from_release_id($row['object_id']);
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'release')
-                        .' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$this->ugroup->getProjectId().'&package_id='.$package_id.'">'
-                        .file_get_release_name_from_id($row['object_id']).'</a> ('
-                        .$GLOBALS['Language']->getText('project_admin_editugroup', 'from_package')
-                        .' <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$this->ugroup->getProjectId().'">'
-                        .$objname.'</a></TD>';
+                    $release         = $this->release_factory->getFRSReleaseFromDb($row['object_id']);
+                    $package_name    = $release->getPackage()->getName();
+                    $package_id      = $release->getPackageID();
+
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'release')
+                        . ' <a href="/file/admin/editreleasepermissions.php?release_id=' . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '&package_id=' . urlencode($package_id) . '">'
+                        . $objname . '</a> ('
+                        . $GLOBALS['Language']->getText('project_admin_editugroup', 'from_package')
+                        . ' <a href="/file/admin/editreleases.php?package_id=' . urlencode($package_id) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
+                        . $package_name . '</a> )';
                 } else if ($row['permission_type'] == 'DOCUMENT_READ') {
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'document')
-                        .' <a href="/docman/admin/editdocpermissions.php?docid='.$row['object_id'].'&group_id='.$this->ugroup->getProjectId().'">'
-                        .$objname.'</a></TD>';
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'document')
+                        . ' <a href="/docman/admin/editdocpermissions.php?docid=' . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
+                        . $objname . '</a>';
                 } else if ($row['permission_type'] == 'DOCGROUP_READ') {
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'document_group')
-                        .' <a href="/docman/admin/editdocgrouppermissions.php?doc_group='.$row['object_id'].'&group_id='.$this->ugroup->getProjectId().'">'
-                        .$objname.'</a></TD>';
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'document_group')
+                        . ' <a href="/docman/admin/editdocgrouppermissions.php?doc_group=' . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
+                        . $objname . '</a>';
                 } else if ($row['permission_type'] == 'WIKI_READ') {
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'wiki')
-                        .' <a href="/wiki/admin/index.php?view=wikiPerms&group_id='.$this->ugroup->getProjectId().'">'
-                        .$objname.'</a></TD>';
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'wiki')
+                        . ' <a href="/wiki/admin/index.php?view=wikiPerms&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
+                        . $objname . '</a>';
                 } else if ($row['permission_type'] == 'WIKIPAGE_READ') {
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'wiki_page')
-                        .' <a href="/wiki/admin/index.php?group_id='.$this->ugroup->getProjectId().'&view=pagePerms&id='.$row['object_id'].'">'
-                        .$objname.'</a></TD>';
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'wiki_page')
+                        . ' <a href="/wiki/admin/index.php?group_id=' . urlencode($this->ugroup->getProjectId()) . '&view=pagePerms&id=' . urlencode($row['object_id']) . '">'
+                        . $objname . '</a>';
                 } else if (strpos($row['permission_type'], 'TRACKER_ACCESS') === 0) {
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'tracker')
-                        .' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id='.$this->ugroup->getProjectId().'&atid='.$row['object_id'].'">'
-                        .$objname.'</a></TD>';
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'tracker')
+                        . ' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id=' . urlencode($this->ugroup->getProjectId()) . '&atid=' . urlencode($row['object_id']) . '">'
+                        . $objname . '</a>';
                 } else if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
-                    $tracker_field_displayed[$atid]=1;
-                    $atid =permission_extract_atid($row['object_id']);
-                    $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'tracker_field')
-                        .' <a href="/tracker/admin/?group_id='.$this->ugroup->getProjectId().'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$this->ugroup->getId().'">'
-                        .$objname.'</a></TD>';
+                    $tracker_field_displayed[$atid] = 1;
+                    $atid                           = permission_extract_atid($row['object_id']);
+                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'tracker_field')
+                        . ' <a href="/tracker/admin/?group_id=' . urlencode($this->ugroup->getProjectId()) . '&atid=' . urlencode($atid) . '&func=permissions&perm_type=fields&group_first=1&selected_id=' . urlencode($this->ugroup->getId()) . '">'
+                        . $objname . '</a>';
                 } else if ($row['permission_type'] == 'TRACKER_ARTIFACT_ACCESS') {
-                    $content .= '<td>'. $this->html_purifier->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+                    $content = $this->html_purifier->purify($objname, CODENDI_PURIFIER_BASIC);
                 } else {
                     $results = false;
                     $this->event_manager->processEvent('permissions_for_ugroup', array(
                         'permission_type' => $row['permission_type'],
-                        'object_id'       => $row['object_id'],
-                        'objname'         => $objname,
-                        'group_id'        => $this->ugroup->getProjectId(),
-                        'ugroup_id'       => $this->ugroup->getId(),
-                        'results'         => &$results
+                        'object_id' => $row['object_id'],
+                        'objname' => $objname,
+                        'group_id' => $this->ugroup->getProjectId(),
+                        'ugroup_id' => $this->ugroup->getId(),
+                        'results' => &$results
                     ));
                     if ($results) {
-                        $content .= '<TD>'.$results.'</TD>';
+                        $content = $results;
                     } else {
-                        $content .= '<TD>'.$row['object_id'].'</TD>';
+                        $content = $row['object_id'];
                     }
                 }
 
-                $content .= '</TR>';
-                $row_num++;
+                $data[$row_count]['permission_name'] = permission_get_name($row['permission_type']);
+                $data[$row_count]['content']         = $content;
+                $row_count++;
             }
-            $content .= '</tbody></table><p>';
-        } else {
-            $content .= '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'no_perms').'.</p>';
+
+            return $data;
         }
-        return $content;
     }
 
     public function getIdentifier() {
         return self::IDENTIFIER;
     }
 }
-
-?>

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Webhook\WebhookFactory;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
@@ -86,6 +87,10 @@ class GitViews_RepoManagement {
      * @var GerritCanMigrateChecker
      */
     private $gerrit_can_migrate_checker;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
 
     public function __construct(
         GitRepository $repository,
@@ -99,7 +104,8 @@ class GitViews_RepoManagement {
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedRepresentationBuilder $fine_grained_builder,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
-        GitPermissionsManager $git_permission_manager
+        GitPermissionsManager $git_permission_manager,
+        RegexpFineGrainedRetriever $regexp_retriever
     ) {
         $this->repository                      = $repository;
         $this->request                         = $request;
@@ -113,6 +119,7 @@ class GitViews_RepoManagement {
         $this->fine_grained_builder            = $fine_grained_builder;
         $this->default_fine_grained_factory    = $default_fine_grained_factory;
         $this->git_permission_manager          = $git_permission_manager;
+        $this->regexp_retriever                = $regexp_retriever;
         $this->panes                           = $this->buildPanes($repository);
         $this->current_pane                    = 'settings';
 
@@ -144,7 +151,8 @@ class GitViews_RepoManagement {
             $this->fine_grained_retriever,
             $this->fine_grained_builder,
             $this->default_fine_grained_factory,
-            $this->git_permission_manager
+            $this->git_permission_manager,
+            $this->regexp_retriever
         );
         $panes[] = new GitViewsRepoManagementPaneCIToken($repository, $this->request);
 
@@ -180,7 +188,7 @@ class GitViews_RepoManagement {
             $this->displayTab($pane);
         }
         echo '</ul>';
-        echo '<div id="git_repomanagement" class="tab-content">';
+        echo '<div id="git_repomanagement" class="tab-content git_repomanagement">';
         echo '<div class="tab-pane active">';
         echo $this->panes[$this->current_pane]->getContent();
         echo '</div>';

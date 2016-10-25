@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $float_field = new Tracker_FormElement_Field_FloatTestVersion();
         $float_field->setReturnReference('getValueDao', $value_dao);
 
-        $this->assertIsA($float_field->getChangesetValue(null, 123, false), 'Tracker_Artifact_ChangesetValue_Float');
+        $this->assertIsA($float_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false), 'Tracker_Artifact_ChangesetValue_Float');
     }
 
     function testGetChangesetValue_doesnt_exist() {

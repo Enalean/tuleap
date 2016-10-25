@@ -1,73 +1,76 @@
-Version 5.1026 - Tuleap 8.20
+Version 5.1027 - Tuleap 9.1
+    * request #9591: Show attachment directly in the changeset
+
+Version 5.1026 - Tuleap 9.0
     * Link to folder is not copied
 
-Version 5.1025 - Tuleap 8.20
+Version 5.1025 - Tuleap 9.0
     * Display current folder of an artifact
 
-Version 5.1024 - Tuleap 8.20
+Version 5.1024 - Tuleap 9.0
     * Refactoring: do not talk about is_folder in tracker
 
-Version 5.1023 - Tuleap 8.20
+Version 5.1023 - Tuleap 9.0
     * story #9468: Take _in_folder into account during import
 
-Version 5.1022 - Tuleap 8.20
+Version 5.1022 - Tuleap 9.0
     * request #9539: XSS in the children view tab of an artifact
 
-Version 5.1021 - Tuleap 8.20
+Version 5.1021 - Tuleap 9.0
     * story #9463 see cumulative flow diagram (Performance improvement for the kanban cumulative flow REST route)
 
-Version 5.1020 - Tuleap 8.20
+Version 5.1020 - Tuleap 9.0
     * story #9468 import folders (Notices displayed with <natures>)
 
-Version 5.1019 - Tuleap 8.20
+Version 5.1019 - Tuleap 9.0
     * story #9468: Don't display artifact link when nature is '_is_folder'
 
-Version 5.1018 - Tuleap 8.20
+Version 5.1018 - Tuleap 9.0
     * XML import - handle new attribute 'is_folder' for tracker
 
-Version 5.1017 - Tuleap 8.20
+Version 5.1017 - Tuleap 9.0
     * request #9528: In artifact linkproject public name encoding is not well displayed
 
-Version 5.1016 - Tuleap 8.20
+Version 5.1016 - Tuleap 9.0
     * story #9468: Do not display the tab if there is no Artifact in the folder
 
-Version 5.1015 - Tuleap 8.20
+Version 5.1015 - Tuleap 9.0
     * request #9010: Import/Export of artifactlinks
 
-Version 5.1014 - Tuleap 8.20
+Version 5.1014 - Tuleap 9.0
     * story #9468: Display empty table in Folder tab
 
-Version 5.1013 - Tuleap 8.20
+Version 5.1013 - Tuleap 9.0
     * request #9520: Prevent creation of rogue artifacts
 
-Version 5.1012 - Tuleap 8.20
+Version 5.1012 - Tuleap 9.0
     * request #9520: Rogue artifacts created when global rules are violated
 
-Version 5.1011 - Tuleap 8.20
+Version 5.1011 - Tuleap 9.0
     * request #9462: Fatal error in Tracker report when user cannot see Milestone trackers
 
-Version 5.1010 - Tuleap 8.20
+Version 5.1010 - Tuleap 9.0
     * request #9518: html entities displayed in kanban cards
 
-Version 5.1009 - Tuleap 8.20
+Version 5.1009 - Tuleap 9.0
     * request #9520: Refactoring: remove dead code
 
-Version 5.1008 - Tuleap 8.20
+Version 5.1008 - Tuleap 9.0
     * Display folder tab
 
-Version 5.1007 - Tuleap 8.20
+Version 5.1007 - Tuleap 9.0
     * story #9468 import folders (Hide _in_folder type in ArtifactLinkField)
 
-Version 5.1006 - Tuleap 8.20
+Version 5.1006 - Tuleap 9.0
     * story #9468 import folders (Provide _in_folder link type (immutable))
 
-Version 5.1005 - Tuleap 8.20
+Version 5.1005 - Tuleap 9.0
     * request #9511: Unable to add an artifact link via REST
 
-Version 5.1004 - Tuleap 8.20
+Version 5.1004 - Tuleap 9.0
     * request #9510: No tooltip for artifacts in my personal page TV5 widget
 
-Version 5.1003 - Tuleap 8.20
+Version 5.1003 - Tuleap 9.0
     * request #9465: Persistent XSS through the name of a field used to sort a renderer
 
 Version 5.1002 - Tuleap 8.19

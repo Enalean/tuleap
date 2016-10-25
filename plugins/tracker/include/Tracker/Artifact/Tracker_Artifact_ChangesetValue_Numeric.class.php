@@ -29,15 +29,8 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      */
     protected $numeric;
     
-    /**
-     * Constructor
-     *
-     * @param Tracker_FormElement_Field_Numeric $field       The field of the value
-     * @param boolean                           $has_changed If the changeset value has chnged from the previous one
-     * @param numeric                           $numeric     The numeric
-     */
-    public function __construct($id, $field, $has_changed, $numeric) {
-        parent::__construct($id, $field, $has_changed);
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $numeric) {
+        parent::__construct($id, $changeset, $field, $has_changed);
         $this->numeric = $numeric;
     }
     
@@ -86,7 +79,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff() {
+    public function nodiff($format = 'html') {
         if ($this->getNumeric() != 0) {
             return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$this->getValue();
         }

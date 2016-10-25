@@ -54,6 +54,16 @@ use Tuleap\FRS\FRSPermissionCreator;
 class ProjectCreator {
 
     /**
+     * When a project is created, ask plugins if they replace the usage of legacy core services
+     *
+     * Parameters:
+     *  - template              => (input) Project
+     *  - project_creation_data => (output) array
+     *  - use_legacy_services   => (output) array
+     */
+    const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
+
+    /**
      * @var UgroupDuplicator
      */
     private $ugroup_duplicator;
@@ -217,11 +227,25 @@ class ProjectCreator {
           exit_no_group();
         }
 
-        $this->activateServicesFromTemplate($group_id, $template_group, $data);
+        $em     = EventManager::instance();
+        $legacy = array(
+            Service::SVN => true
+        );
+
+        $em->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, array(
+            'template'              => $template_group,
+            'project_creation_data' => &$data,
+            'use_legacy_services'   => &$legacy
+        ));
+
+        $this->activateServicesFromTemplate($group_id, $template_group, $data, $legacy);
         $this->setMessageToRequesterFromTemplate($group_id, $template_id);
         $this->initForumModuleFromTemplate($group_id, $template_id);
         $this->initCVSModuleFromTemplate($group_id, $template_id);
-        $this->initSVNModuleFromTemplate($group_id, $template_id);
+
+        if ($legacy[Service::SVN] === true) {
+            $this->initSVNModuleFromTemplate($group_id, $template_id);
+        }
 
         // Activate other system references not associated with any service
         $this->reference_manager->addSystemReferencesWithoutService($template_id, $group_id);
@@ -250,7 +274,6 @@ class ProjectCreator {
         $this->copyEmailOptionsFromTemplate($group_id, $template_id);
 
         // Raise an event for plugin configuration
-        $em = EventManager::instance();
         $em->processEvent(Event::REGISTER_PROJECT_CREATION, array(
             'reportMapping'         => $report_mapping, // Trackers v3
             'trackerMapping'        => $tracker_mapping, // Trackers v3
@@ -373,13 +396,29 @@ class ProjectCreator {
         $user->clearGroupData();
     }
 
+    private function getServiceInfoQueryForNewProject(array $legacy, $template_id)
+    {
+        $template_id      = db_ei($template_id);
+        $additional_where = '';
+
+        foreach ($legacy as $service_shortname => $legacy_service_usage) {
+            if (! $legacy_service_usage) {
+                $service_shortname = db_es($service_shortname);
+                $additional_where .= " AND short_name <> '$service_shortname'";
+            }
+        }
+
+        return "SELECT * FROM service WHERE group_id=$template_id AND is_active=1 $additional_where";
+    }
+
     // Activate the same services on $group_id than those activated on
     // $template_group
-    private function activateServicesFromTemplate($group_id, Group $template_group, $data) {
+    private function activateServicesFromTemplate($group_id, Group $template_group, ProjectCreationData $data, array $legacy)
+    {
         $template_id = $template_group->getID();
+        $sql         = $this->getServiceInfoQueryForNewProject($legacy, $template_id);
+        $result      = db_query($sql);
 
-        $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
-        $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $service_info = $data->getServiceInfo($arr['service_id']);
             if (isset($service_info['is_used'])) {

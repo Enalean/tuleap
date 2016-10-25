@@ -147,11 +147,19 @@ class Gitolite3LogParser
                 self::REPOSITORY_PATH . $line[3] . '.git'
             );
 
+            if (! $repository) {
+                $this->logger->warn(
+                    "Git repository $line[3] seems deleted. Skipping."
+                );
+
+                return;
+            }
+
             $user = $this->user_manager->getUserByUserName($line[4]);
             $day  = DateTime::createFromFormat('Y-m-d.H:i:s', $line[0]);
 
             $user->getId();
-            $this->history_dao->insertGitPhpView($repository->getId(), $user->getId(), $day->getTimestamp());
+            $this->history_dao->insertGitReadAccess($repository->getId(), $user->getId(), $day->getTimestamp());
         }
     }
 

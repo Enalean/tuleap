@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2015 - 2016. All rights reserved
  *
@@ -17,9 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
-class GitPresenters_AccessControlPresenter {
-
+class GitPresenters_AccessControlPresenter
+{
     /**
      * @var array
      */
@@ -69,6 +69,10 @@ class GitPresenters_AccessControlPresenter {
     public $btn_cancel;
     public $remove_form_action;
     public $disabled;
+    public $are_regexp_permission_activated;
+    public $regexp_permission_label;
+    public $regexp_incoherence_label;
+    public $is_regexp_enabled;
 
     public function __construct(
         $is_control_limited,
@@ -85,7 +89,9 @@ class GitPresenters_AccessControlPresenter {
         array $new_fine_grained_ugroups,
         $delete_url,
         CSRFSynchronizerToken $csrf,
-        $is_fork
+        $is_fork,
+        $are_regexp_permission_activated,
+        $is_regexp_enabled
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -110,6 +116,18 @@ class GitPresenters_AccessControlPresenter {
         $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_permissions_checkbox_label'
+        );
+
+        $this->are_regexp_permission_activated = $are_regexp_permission_activated;
+        $this->is_regexp_enabled               = $is_regexp_enabled;
+        $this->can_regexp_are_enabled          = true;
+        $this->regexp_permission_label         = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_permission_label'
+        );
+        $this->regexp_incoherence_label        = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_incoherence_label'
         );
 
         $this->fine_grained_permissions_fork_warning .= $GLOBALS['Language']->getText(
@@ -184,8 +202,18 @@ class GitPresenters_AccessControlPresenter {
             'fine_grained_remove_confirm'
         );
 
-        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->disabled   = '';
+        $this->title_warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'title_warning_regexp_uncheck'
+        );
+        $this->warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'warning_regexp_uncheck'
+        );
+
+        $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
+        $this->disabled         = '';
         if ($is_fork) {
             $this->disabled = 'disabled="disabled"';
         }

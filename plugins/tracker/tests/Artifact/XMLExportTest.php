@@ -64,13 +64,6 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         $text_field_02 = stub('Tracker_FormElement_Field_Text')->getName()->returns('text_02');
         stub($text_field_02)->getTracker()->returns($tracker);
 
-        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, $text_field_01, true, 'value_01', 'text');
-        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, $text_field_01, true, 'value_02', 'text');
-        $value_03 = new Tracker_Artifact_ChangesetValue_Text(3, $text_field_01, true, 'value_03', 'text');
-        $value_04 = new Tracker_Artifact_ChangesetValue_Text(4, $text_field_01, true, 'value_04', 'text');
-        $value_05 = new Tracker_Artifact_ChangesetValue_Text(5, $text_field_02, true, 'value_05', 'text');
-        $value_06 = new Tracker_Artifact_ChangesetValue_Text(6, $text_field_02, true, 'value_06', 'text');
-        $value_07 = new Tracker_Artifact_ChangesetValue_Text(7, $text_field_02, true, 'value_07', 'text');
 
         $changeset_01 = partial_mock(
             'Tracker_Artifact_Changeset',
@@ -123,6 +116,14 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
                 'getValueDao'
             )
         );
+
+        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, $changeset_01, $text_field_01, true, 'value_01', 'text');
+        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, $changeset_01, $text_field_01, true, 'value_02', 'text');
+        $value_03 = new Tracker_Artifact_ChangesetValue_Text(3, $changeset_02, $text_field_01, true, 'value_03', 'text');
+        $value_04 = new Tracker_Artifact_ChangesetValue_Text(4, $changeset_02, $text_field_01, true, 'value_04', 'text');
+        $value_05 = new Tracker_Artifact_ChangesetValue_Text(5, $changeset_03, $text_field_02, true, 'value_05', 'text');
+        $value_06 = new Tracker_Artifact_ChangesetValue_Text(6, $changeset_03, $text_field_02, true, 'value_06', 'text');
+        $value_07 = new Tracker_Artifact_ChangesetValue_Text(7, $changeset_04, $text_field_02, true, 'value_07', 'text');
 
         $value_dao = mock("Tracker_Artifact_Changeset_ValueDao");
         stub($value_dao)->searchById()->returns(array());

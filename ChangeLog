@@ -1,4 +1,27 @@
-Version 8.20 (Not Released Yet)
+Version 9.1 (Not Released Yet)
+
+	== Enhancement ==
+	* request #9592: Lint new .scss files using scss-lint
+	* request #9392: Deleted users can be switched to suspended automatically
+	* request #9505: FRS_Admin user group description is not user friendly
+
+	== Big Fix ==
+	* request #9583: SVN core package miss a dependancy to perl-CGI
+	* request #9547: Can't upload file releases
+
+	== Plugins ==
+	* svn: 0.100
+	* tracker: 5.1027
+	* git: 4.278
+	* agiledashboard: 1.431
+
+	== Themes ==
+	* FlamingParrot: 1.154
+
+	== Development ==
+	* request #9263 Do not use underscore in Tuleap dev hostname
+
+Version 9.0 (Wednesday, October 12th 2016)
 	== Plugins ==
 	* cardwall: 1.70
 	* tracker: 5.1026

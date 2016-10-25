@@ -1,0 +1,90 @@
+#!/bin/bash
+# scss-lint pre-commit hook for git
+readonly COMMIT_INTRODUCING_SCSS_LINT='52932af06d42759ce16f98d2bc363a3afd0a8b37'
+readonly TMP_STAGING_DIR=$(mktemp -d)
+
+cleanup_temporary_directory() {
+    rm -rf "${TMP_STAGING_DIR}"
+}
+trap cleanup_temporary_directory EXIT
+
+check_scss_lint_presence() {
+    hash scss-lint 2>/dev/null || {
+        echo "scss-lint not found or executable"
+        echo "See https://github.com/brigade/scss-lint for scss-lint setup instructions"
+        exit 1
+    };
+}
+
+get_list_of_files() {
+    git diff --cached --name-only --diff-filter=ACMRTUXB | grep \.scss$
+}
+
+get_initial_commit() {
+    local file=$1
+    git log --diff-filter=A --format=format:%H "${file}"
+}
+
+get_reference_source_file() {
+    local file=$1
+    git diff-index --cached HEAD ${file} | cut -d ' ' -f4
+}
+
+copy_staged_file_to_temporary_directory() {
+    local file=$1
+    local reference=$2
+    mkdir -p "$TMP_STAGING_DIR/$(dirname ${file})"
+    git cat-file blob ${reference} > "${TMP_STAGING_DIR}/${file}"
+    echo "${TMP_STAGING_DIR}/${file}"
+}
+
+is_file_more_recent_than_scss_coding_rule() {
+    local file=$1
+    local initial_file_commit
+    initial_file_commit=$(get_initial_commit "${file}")
+    if [ -z "${initial_file_commit}" ]
+    then
+        echo 1
+    else
+        git merge-base --is-ancestor "${initial_file_commit}" ${COMMIT_INTRODUCING_SCSS_LINT}
+        echo $?
+    fi
+}
+
+get_list_of_mandatory_scss_files() {
+    local files=$1
+    local file
+
+    for file in ${files}
+    do
+        if [ "$(is_file_more_recent_than_scss_coding_rule "${file}")" -ne 0 ]
+        then
+            local reference_file=$(get_reference_source_file "${file}")
+            copy_staged_file_to_temporary_directory ${file} ${reference_file}
+        fi
+    done
+}
+
+main() {
+    check_scss_lint_presence
+
+    local files_list
+    files_list=$(get_list_of_files)
+    local files_scss_mandatory
+    files_scss_mandatory=$(get_list_of_mandatory_scss_files "${files_list}")
+    echo ${files_scss_mandatory}
+    if [[ -n ${files_scss_mandatory} ]]
+    then
+        local scss_lint_output
+        scss_lint_output=$(scss-lint ${files_scss_mandatory})
+        local status=$?
+        if [ ${status} -ne 0 ]
+        then
+            echo "$scss_lint_output" | less
+        fi
+
+        cleanup_temporary_directory
+        exit ${status}
+    fi
+}
+main

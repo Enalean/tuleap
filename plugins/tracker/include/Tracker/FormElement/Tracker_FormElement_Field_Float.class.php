@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
             if ($float_row_value !== null) {
                 $float_row_value = (float)$float_row_value;
             }
-            $changeset_value = new Tracker_Artifact_ChangesetValue_Float($value_id, $this, $has_changed, $float_row_value);
+            $changeset_value = new Tracker_Artifact_ChangesetValue_Float($value_id, $changeset, $this, $has_changed, $float_row_value);
         }
         return $changeset_value;
     }

@@ -14,5 +14,6 @@ codendi.locales['git'] = {
     not_top_branch : 'Vous ne pouvez pas éditer un fichier qui n\'est pas en haut d\'une branche',
     remove_webhook_title: 'Attendez une minute…',
     add_branch_permission_placeholder: 'Nom de la branche (master, ma_fonctionnalite…)',
-    add_tag_permission_placeholder: 'Nom du tag (v1, alpha…)'
+    add_tag_permission_placeholder: 'Nom du tag (v1, alpha…)',
+    regexp_permission_enabled_info: 'Les expressions régulières sont activées, seul \\n ne peut pas être utilisé'
 };

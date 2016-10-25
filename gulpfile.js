@@ -1,10 +1,10 @@
 'use strict';
 
-var gulp    = require('gulp'),
-    del     = require('del'),
-    rename  = require('gulp-rename'),
-
-    tuleap  = require('./tools/utils/tuleap-gulp-build'),
+var gulp               = require('gulp'),
+    del                = require('del'),
+    rename             = require('gulp-rename'),
+    scss_lint          = require('gulp-scss-lint'),
+    tuleap             = require('./tools/utils/tuleap-gulp-build'),
     fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
         'src/www/scripts/polyphills/storage.js',
@@ -191,6 +191,19 @@ gulp.task('js', ['js-core', 'js-plugins']);
 /**
  * Sass
  */
+gulp.task('scss-lint-core', function() {
+    return gulp.src([].concat(
+        common_scss.files,
+        select2_scss.files,
+        theme_tuleap_scss.files,
+        theme_flamingparrot_scss.files
+    ))
+        .pipe(scss_lint({
+            config: '.scss-lint.yml'
+        }));
+});
+
+gulp.task('scss-lint', ['scss-lint-core', 'scss-lint-plugins']);
 
 gulp.task('clean-sass-core', function() {
     tuleap.sass_clean('.', common_scss.files);

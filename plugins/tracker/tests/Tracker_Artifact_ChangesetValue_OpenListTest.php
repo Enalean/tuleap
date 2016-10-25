@@ -41,6 +41,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
 
         $this->field = stub('Tracker_FormElement_Field_OpenList')->getName()->returns('field_openlist');
         $this->user  = mock('PFUser');
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
     public function tearDown() {
@@ -54,7 +56,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $bind_value->setReturnValue('getSoapValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
         $bind_value->setReturnValue('getJsonId', 'b106');
-        $value_list = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value));
+        $value_list = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value));
         $this->assertEqual(count($value_list), 1);
         $this->assertEqual($value_list[0], $bind_value);
         $this->assertEqual($value_list->getSoapValue($this->user), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
@@ -68,8 +70,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $open_value_2));
-        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array());
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1, $open_value_2));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array());
         $this->assertEqual($list_1->diff($list_2), ' set to Sandra, Manon');
     }
     
@@ -80,8 +82,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1));
-        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($open_value_2));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($open_value_2));
         $this->assertEqual($list_1->diff($list_2), ' changed from Manon to Sandra');
         $this->assertEqual($list_2->diff($list_1), ' changed from Sandra to Manon');
     }
@@ -93,8 +95,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $open_value_2));
-        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1, $open_value_2));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1));
         $this->assertEqual($list_1->diff($list_2), 'Manon added');
     }
     
@@ -105,8 +107,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1));
-        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $open_value_2));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1, $open_value_2));
         $this->assertEqual($list_1->diff($list_2), 'Manon removed');
     }
     
@@ -123,8 +125,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $open_value_4 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_4->setReturnValue('__toString', 'Nicolas');
         $open_value_4->setReturnValue('getLabel', 'Nicolas');
-        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($open_value_3, $open_value_4));
-        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $bind_value_2));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($open_value_3, $open_value_4));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->changeset, $this->field, false, array($bind_value_1, $bind_value_2));
         $this->assertPattern('/Sandra, Manon removed/', $list_1->diff($list_2));
         $this->assertPattern('/Marc, Nicolas added/', $list_1->diff($list_2));
     }

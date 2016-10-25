@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuealp\Svn;
+namespace Tuleap\Svn;
 
 use System_Command;
 use Backend;

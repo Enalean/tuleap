@@ -37,6 +37,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
 
         $this->field = stub('Tracker_FormElement_Field_Date')->getName()->returns('field_date');
         $this->user  = aUser()->withId(101)->build();
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
     public function tearDown() {
@@ -47,27 +49,27 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
 
     public function testDates() {
         stub($this->field)->formatDateForDisplay(1221221466)->returns("12/09/2008");
-        $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, 1221221466);
+        $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $this->assertEqual($date->getTimestamp(), 1221221466);
         $this->assertEqual($date->getDate(), "12/09/2008");
 
         stub($this->field)->formatDateForDisplay(1221221467)->returns("2008-09-12");
-        $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, 1221221467);
+        $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221467);
         $this->assertEqual($date->getTimestamp(), 1221221467);
         $this->assertEqual($date->getDate(), "2008-09-12");
 
         $this->assertEqual($date->getSoapValue($this->user), array('value' => 1221221467));
         $this->assertEqual($date->getValue(), "2008-09-12");
         
-        $null_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, null);
+        $null_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_date->getTimestamp());
         $this->assertEqual($null_date->getDate(), '');
         $this->assertEqual($null_date->getSoapValue($this->user), array('value' => ''));
     }
     
     public function testNoDiff() {
-        $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, 1221221466);
-        $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, 1221221466);
+        $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
+        $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $this->assertFalse($date_1->diff($date_2));
         $this->assertFalse($date_2->diff($date_1));
     }
@@ -80,8 +82,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         stub($this->field)->formatDateForDisplay(1221221466)->returns("2008-09-12");
         stub($this->field)->formatDateForDisplay(1234567890)->returns("2009-02-14");
 
-        $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, 1221221466);
-        $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, false, 1234567890);
+        $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
+        $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $this->assertEqual($date_1->diff($date_2), 'changed from 2009-02-14 to 2008-09-12');
         $this->assertEqual($date_2->diff($date_1), 'changed from 2008-09-12 to 2009-02-14');
         

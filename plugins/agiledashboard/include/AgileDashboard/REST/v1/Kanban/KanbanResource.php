@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use DateTime;
+use AgileDashboard_KanbanItemManager;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
 use Tuleap\REST\Header;
@@ -112,6 +113,9 @@ class KanbanResource extends AuthenticatedResource {
     /** @var AgileDashboard_KanbanColumnManager */
     private $kanban_column_manager;
 
+    /** @var AgileDashboard_KanbanItemManager */
+    private $kanban_item_manager;
+
     /** @var AgileDashboard_KanbanActionsChecker */
     private $kanban_actions_checker;
 
@@ -123,6 +127,7 @@ class KanbanResource extends AuthenticatedResource {
 
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
+        $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($this->kanban_item_dao);
         $this->tracker_factory = TrackerFactory::instance();
 
         $this->kanban_dao     = new AgileDashboard_KanbanDao();
@@ -414,13 +419,20 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @url PATCH {id}/backlog
      *
-     * @param int                                                    $id    Id of the Kanban
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
-     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
+     * @param int                                                            $id    Id of the Kanban
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation             $order Order of the children {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation  $add   Ids to add to Kanban backlog {@from body}
+     * @param string                                                         $from_column   Id of the column the item is coming from (when moving an item) {@from body}
      *
+     * @throws 400
      * @throws 403
      */
-    protected function patchBacklog($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
+    protected function patchBacklog(
+        $id,
+        OrderRepresentation $order = null,
+        KanbanAddRepresentation $add = null,
+        $from_column = null
+    ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
 
@@ -468,7 +480,19 @@ class KanbanResource extends AuthenticatedResource {
             );
             $in_column = 'backlog';
 
-            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column);
+            if (! is_null($from_column)) {
+                if ($from_column !== 'backlog' && $from_column !== 'archive') {
+                    $from_column = intval($from_column);
+
+                    if ($from_column === 0 || ! $this->columnIsInTracker($kanban, $current_user, $from_column)) {
+                        throw new RestException(400, 'Invalid from_column');
+                    }
+                }
+            } else {
+                $from_column = $in_column;
+            }
+
+            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column, $from_column);
         }
     }
 
@@ -605,13 +629,20 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @url PATCH {id}/archive
      *
-     * @param int                                                    $id    Id of the Kanban
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
-     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
+     * @param int                                                            $id    Id of the Kanban
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation             $order Order of the children {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation  $add   Ids to add to Kanban backlog {@from body}
+     * @param string                                                         $from_column   Id of the column the item is coming from (when moving an item) {@from body}
      *
+     * @throws 400
      * @throws 403
      */
-    protected function patchArchive($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
+    protected function patchArchive(
+        $id,
+        OrderRepresentation $order = null,
+        KanbanAddRepresentation $add = null,
+        $from_column = null
+    ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
 
@@ -660,7 +691,20 @@ class KanbanResource extends AuthenticatedResource {
             );
 
             $in_column = 'archive';
-            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column);
+
+            if (! is_null($from_column)) {
+                if ($from_column !== 'backlog' && $from_column !== 'archive') {
+                    $from_column = intval($from_column);
+
+                    if ($from_column === 0 || ! $this->columnIsInTracker($kanban, $current_user, $from_column)) {
+                        throw new RestException(400, 'Invalid from_column');
+                    }
+                }
+            } else {
+                $from_column = $in_column;
+            }
+
+            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column, $from_column);
         }
     }
 
@@ -743,18 +787,21 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @url PATCH {id}/items
      *
-     * @param int                                                    $id    Id of the Kanban
-     * @param int                                                    $column_id Id of the column the item belongs to {@from query}
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the items {@from body}
-     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to the column {@from body}
+     * @param int                                                            $id    Id of the Kanban
+     * @param int                                                            $column_id Id of the column the item belongs to {@from query}
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation             $order Order of the items {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation  $add   Ids to add to the column {@from body}
+     * @param string                                                         $from_column   Id of the column the item is coming from (when moving an item) {@from body}
      *
+     * @throws 400
      * @throws 403
      */
     protected function patchItems(
         $id,
         $column_id,
         OrderRepresentation $order = null,
-        KanbanAddRepresentation $add = null
+        KanbanAddRepresentation $add = null,
+        $from_column = null
     ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
@@ -809,7 +856,20 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
-            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $column_id);
+
+            if (! is_null($from_column)) {
+                if ($from_column !== 'backlog' && $from_column !== 'archive') {
+                    $from_column = intval($from_column);
+
+                    if ($from_column === 0 || ! $this->columnIsInTracker($kanban, $current_user, $from_column)) {
+                        throw new RestException(400, 'Invalid from_column');
+                    }
+                }
+            } else {
+                $from_column = $column_id;
+            }
+
+            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $column_id, $from_column);
         }
     }
 
@@ -1161,12 +1221,20 @@ class KanbanResource extends AuthenticatedResource {
         return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
     }
 
-    private function sendMessageForDroppingItem(PFUser $current_user, AgileDashboard_Kanban $kanban, $order, $add, $in_column) {
+    private function sendMessageForDroppingItem(
+        PFUser $current_user,
+        AgileDashboard_Kanban $kanban,
+        $order,
+        $add,
+        $in_column,
+        $from_column
+    ) {
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $data_to_send = array(
-                'add'       => $add,
-                'order'     => $order,
-                'in_column' => $in_column
+                'add'         => $add,
+                'order'       => $order,
+                'in_column'   => $in_column,
+                'from_column' => $from_column
             );
             if($add) {
                 $this->sendMessageForEachArtifact($current_user, $kanban, $add->ids, $data_to_send);

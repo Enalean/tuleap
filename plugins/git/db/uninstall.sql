@@ -16,6 +16,8 @@ DROP TABLE IF EXISTS plugin_git_webhook_log;
 DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions_enabled;
 DROP TABLE IF EXISTS plugin_git_full_history;
 DROP TABLE IF EXISTS plugin_git_file_logs_parse;
+DROP TABLE IF EXISTS plugin_git_fine_grained_regexp_enabled;
+DROP TABLE IF EXISTS plugin_git_repository_fine_grained_regexp_enabled;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

@@ -20,6 +20,11 @@
 
 class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
 {
+    public $title_warning_regexp_uncheck;
+    public $warning_regexp_uncheck;
+    public $save_permissions;
+    public $regexp_incoherence_label;
+    public $regexp_permission_label;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -56,6 +61,10 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
      */
     public $branches_permissions;
 
+    public $are_regexp_permission_activated;
+
+    public $is_regexp_enabled;
+
     public function __construct(
         $project_id,
         $are_mirrors_defined,
@@ -87,6 +96,9 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
         $this->cannot_define_per_repo_permissions   = $are_fine_grained_permissions_defined;
+        $this->are_regexp_permission_activated      = false;
+        $this->is_regexp_enabled                    = false;
+        $this->can_regexp_are_enabled               = false;
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
@@ -155,9 +167,28 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'fine_grained_remove_confirm'
         );
 
-        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->is_fork    = false;
-        $this->disabled   = '';
+        $this->regexp_permission_label  = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_permission_label'
+        );
+        $this->regexp_incoherence_label = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'regexp_incoherence_label'
+        );
+
+        $this->title_warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'title_warning_regexp_uncheck'
+        );
+        $this->warning_regexp_uncheck = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'warning_regexp_uncheck'
+        );
+
+        $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
+        $this->is_fork          = false;
+        $this->disabled         = '';
     }
 
     public function is_control_limited()

@@ -370,8 +370,16 @@ plugin_git	admin_gerrit_v2_8plus	2.8+
 plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password :
 
+plugin_git	access_control_title	Accès à la configuration générale
+plugin_git	allow_regexp_info	Autoriser l'utilisation des expressions régulières dans les branches et les étiquettes lors de la création d'un dépôt Git
+plugin_git	save_settings	Sauvegarder la configuration
+plugin_git	no_go_back	Fonctionnalité en cours de developpement. Une fois que les expressions régulières seront authorisées niveau plateforme, il ne sera pas possible de désactiver la fonctionnalité.
+plugin_git	warning_is_activated	Fonctionnalité en cours de developpement. Vous ne pouvez pas désactiver la fonctionnalité pour l'instant.
+plugin_git	update_error	Une erreur est survenue, impossible d'activer les expressions régulières pour les permissions fines Git.
+
 plugin_git	gitolite_config_tab_name	Configuration Gitolite
 plugin_git	gerrit_tab_name	Gerrit
+plugin_git	general_settings_tab_name	Configuration générale
 plugin_git	mirror_tab_name	Miroirs
 plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le mirroir
 plugin_git	admin_mirror_fields_required	Tous les champs sont requis
@@ -493,6 +501,11 @@ plugin_git	fine_grained_permissions_empty	Aucune permission n'a été configuré
 plugin_git	add_branch_permission	Ajouter une permission sur une nouvelle branche
 plugin_git	add_tag_permission	Ajouter une permission sur une nouvelle étiquette
 plugin_git	add_permission_duplicate_pattern	L'expression $1 est déjà existante.
+
+plugin_git	regexp_permission_label	Activer les expressions régulières dans les branches et les étiquettes.
+plugin_git	title_warning_regexp_uncheck	Certaines règles peuvent être supprimées
+plugin_git	warning_regexp_uncheck	L'ensemble des règles contenant des expressions régulières vont être supprimées. Merci de confirmer la désactivation de cette option.
+plugin_git	regexp_incoherence_label	Pour l'instant il n'est pas possible de désactiver la fonctionnalité une fois qu'elle a été activée. Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
 
 plugin_git	view_repo_ci_token	Jeton pour les outils d'intégration continues
 plugin_git	regenerate_ci_token	Regénérer le jeton

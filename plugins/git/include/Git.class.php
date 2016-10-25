@@ -24,6 +24,10 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -78,6 +82,23 @@ class Git extends PluginController {
      * @var VersionDetector
      */
     private $detector;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_enabler;
+    /**
+     * @var RegexpFineGrainedDisabler
+     */
+    private $regexp_disabler;
+    /**
+     * @var RegexpPermissionFilter
+     */
+    private $regexp_filter;
 
     /**
      * Lists all git-related permission types.
@@ -284,7 +305,11 @@ class Git extends PluginController {
         ProjectHistoryDao $history_dao,
         DescriptionUpdater $description_updater,
         GitPhpAccessLogger $access_loger,
-        VersionDetector $detector
+        VersionDetector $detector,
+        RegexpFineGrainedRetriever $regexp_retriever,
+        RegexpFineGrainedEnabler $regexp_enabler,
+        RegexpFineGrainedDisabler $regexp_disabler,
+        RegexpPermissionFilter $regexp_filter
     ) {
         parent::__construct($user_manager, $request);
 
@@ -323,28 +348,28 @@ class Git extends PluginController {
 
         $valid = new Valid_GroupId('group_id');
         $valid->required();
-        if($this->request->valid($valid)) {
-            $this->groupId = (int)$this->request->get('group_id');
+        if ($this->request->valid($valid)) {
+            $this->groupId = (int) $this->request->get('group_id');
         }
         $valid = new Valid_String('action');
         $valid->required();
-        if($this->request->valid($valid)) {
+        if ($this->request->valid($valid)) {
             $this->action = $this->request->get('action');
         }
 
-        if (  empty($this->action) ) {
+        if (empty($this->action)) {
             $this->action = 'index';
         }
-        if ( empty($this->groupId) ) {
+        if (empty($this->groupId)) {
             $this->addError('Bad request');
             $this->redirect('/');
         }
 
         $this->project     = $this->projectManager->getProject($this->groupId);
         $this->projectName = $this->project->getUnixName();
-        if ( !$this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
-            $this->addError( $this->getText('project_service_not_available') );
-            $this->redirect('/projects/'.$this->projectName.'/');
+        if (! $this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId)) {
+            $this->addError($this->getText('project_service_not_available'));
+            $this->redirect('/projects/' . $this->projectName . '/');
         }
 
         $this->permittedActions                = array();
@@ -362,6 +387,10 @@ class Git extends PluginController {
         $this->default_permission_updater              = $default_permission_updater;
         $this->history_dao                             = $history_dao;
         $this->description_updater                     = $description_updater;
+        $this->regexp_retriever                        = $regexp_retriever;
+        $this->regexp_enabler                          = $regexp_enabler;
+        $this->regexp_disabler                         = $regexp_disabler;
+        $this->regexp_filter                           = $regexp_filter;
     }
 
     protected function instantiateView() {
@@ -374,7 +403,9 @@ class Git extends PluginController {
             $this->fine_grained_retriever,
             $this->default_fine_grained_permission_factory,
             $this->fine_grained_builder,
-            $this->access_loger
+            $this->access_loger,
+            $this->regexp_retriever,
+            $this->regexp_enabler
         );
     }
 
@@ -724,6 +755,8 @@ class Git extends PluginController {
                     $current_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsForRepository($repository)
                         + $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsForRepository($repository);
 
+                    $use_regexp = $this->request->exist('use-regexp');
+
                     $updated_permissions        = array();
                     $added_tags_permissions     = array();
                     $added_branches_permissions = array();
@@ -760,7 +793,8 @@ class Git extends PluginController {
                             $enable_fine_grained_permissions,
                             $added_branches_permissions,
                             $added_tags_permissions,
-                            $updated_permissions
+                            $updated_permissions,
+                            $use_regexp
                         )
                     );
                     $this->addView('view');
@@ -1436,7 +1470,11 @@ class Git extends PluginController {
             $this->fine_grained_replicator,
             $this->fine_grained_retriever,
             $this->history_value_formatter,
-            $this->permission_changes_detector
+            $this->permission_changes_detector,
+            $this->regexp_enabler,
+            $this->regexp_disabler,
+            $this->regexp_filter,
+            $this->regexp_retriever
         );
     }
 

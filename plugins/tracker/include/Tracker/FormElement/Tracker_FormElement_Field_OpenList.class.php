@@ -334,7 +334,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 }
             }
         }
-        $changeset_value = new Tracker_Artifact_ChangesetValue_OpenList($value_id, $this, $has_changed, $list_values);
+        $changeset_value = new Tracker_Artifact_ChangesetValue_OpenList($value_id, $changeset, $this, $has_changed, $list_values);
         return $changeset_value;
     }
 
