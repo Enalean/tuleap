@@ -37,6 +37,11 @@ class AdminPageRenderer
         );
     }
 
+    public function footer()
+    {
+        $GLOBALS['HTML']->footer(array());
+    }
+
     public function renderAPresenter($title, $template_path, $template_name, $presenter)
     {
         $this->header($title);

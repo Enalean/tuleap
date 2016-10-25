@@ -46,14 +46,19 @@ main[role=main] {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 100px auto 0;
 }
 
 .empty-page-text {
-    margin: 100px auto 60px;
+    margin: 0 0 60px;
     color: transparentize($tlp-theme-color, .7);
     font-size: 30px;
     line-height: 44px;
     text-align: center;
+}
+
+.empty-page-icon {
+    margin: 0 0 30px;
 }
 
 @import 'navbar';
