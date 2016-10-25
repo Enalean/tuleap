@@ -1,0 +1,63 @@
+@import 'variables/margins';
+
+.form-element-group {
+    display: flex;
+
+    > .form-element-item:not(:last-child) {
+        margin-right: $tlp-spacing * 2;
+    }
+
+    > .form-element-item:not(:first-child) {
+        flex: 0;
+    }
+
+    > .form-element-item:first-child {
+        flex: 1 1 auto;
+    }
+}
+
+.mirror-global-action-container {
+    margin: 0 0 ($tlp-spacing * 2);
+}
+
+.mirror-info {
+    display: flex;
+}
+
+.mirror-info-two {
+    margin: 0 0 0 ($tlp-spacing * 2);
+}
+
+.mirror-info-two-ssh-key {
+    word-break: break-word;
+}
+
+.mirror-action-container {
+    display: flex;
+    flex: 0 1 auto;
+}
+
+.mirror-action {
+    display: flex;
+    align-items: center;
+}
+
+.mirror-action-delete-button,
+.mirror-action-restrict-button {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+@media screen and (max-width: 1300px) {
+    .tlp-pane {
+        flex-direction: column;
+    }
+
+    .tlp-pane-container:last-child {
+        border-right: 1px solid $tlp-ui-border-light;
+    }
+
+    .mirror-action-container {
+        justify-content: flex-end;
+        border: 1px solid $tlp-ui-border-light;
+    }
+}

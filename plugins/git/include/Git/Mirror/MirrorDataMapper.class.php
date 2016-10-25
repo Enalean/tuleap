@@ -398,4 +398,12 @@ class Git_Mirror_MirrorDataMapper {
     public function duplicate($template_project_id, $new_project_id) {
         return $this->default_dao->duplicate($template_project_id, $new_project_id);
     }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfRepositories($mirror_id)
+    {
+        return $this->dao->getNumberOfRepositories($mirror_id);
+    }
 }

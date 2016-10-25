@@ -30,21 +30,20 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
     public $list_of_mirrors_empty_message_part_two;
 
+    public $empty_content;
+
     public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_mirrors) {
         parent::__construct($title, $csrf);
 
         $this->list_of_mirrors                        = $list_of_mirrors;
         $this->list_of_mirrors_empty_message_part_one = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_mirrors_part_one');
         $this->list_of_mirrors_empty_message_part_two = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_mirrors_part_two');
+        $this->empty_content                          = $GLOBALS['Language']->getText('plugin_git', 'empty_content');
         $this->btn_submit                             = $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 
     public function getTemplate() {
         return self::TEMPLATE;
-    }
-
-    public function add_mirror() {
-        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
     }
 
     public function mirror_section_title() {
@@ -89,5 +88,10 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
     public function dump_mirrored_repositories_text() {
         return $GLOBALS['Language']->getText('plugin_git', 'dump_mirrored_repositories_text');
+    }
+
+    public function repositories_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_git','repositories_label');
     }
 }
