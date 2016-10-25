@@ -59,6 +59,7 @@ class UserDetailsPresenter
     public $more_title;
     public $has_additional_details;
     public $additional_details;
+    public $expiry;
 
     public function __construct(
         PFUser $user,
@@ -71,10 +72,11 @@ class UserDetailsPresenter
         array $status,
         array $unix_status
     ) {
-        $this->id    = $user->getId();
-        $this->name  = $user->getRealName();
-        $this->login = $user->getUnixName();
-        $this->email = $user->getEmail();
+        $this->id     = $user->getId();
+        $this->name   = $user->getRealName();
+        $this->login  = $user->getUnixName();
+        $this->email  = $user->getEmail();
+        $this->expiry = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getExpiryDate());
 
         $this->access             = $access;
         $this->change_password    = $change_password;

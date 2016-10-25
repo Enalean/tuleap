@@ -195,35 +195,40 @@ admin_approve_pending	distributed_services	Servers for distributed services
 # Script: SF/www/admin/approve-pending_users.php
 #
 admin_approve_pending_users	title	Users waiting for validation
+admin_approve_pending_users	title_validated	Validated users needing activation
 admin_approve_pending_users	go_back	Go back
 admin_approve_pending_users	take_break	Take a break,
 admin_approve_pending_users	no_pending	there is no users to approve.
 admin_approve_pending_users	no_pending_validated	there is no users to validate.
 admin_approve_pending_users	no_validated	there is no validated users to approve.
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
-admin_approve_pending_users	user_edit	Edit User/Group Settings
+admin_approve_pending_users	user_edit	See user details
 admin_approve_pending_users	activate	Activate
+admin_approve_pending_users	activate_all	Activate all users
 admin_approve_pending_users	validate_notice	Validate : An email is sent to the user for confirmation. If he/she follows the link inside the email, the account is activated.
 admin_approve_pending_users	activate_notice	Activate : The account is instantly active.
 admin_approve_pending_users	delete	Delete
 admin_approve_pending_users	purpose	Purpose
 admin_approve_pending_users	other_info	Other Information
 admin_approve_pending_users	name	User Name
-admin_approve_pending_users	id	User ID
-admin_approve_pending_users	email	User Email
-admin_approve_pending_users	reg_date	Registration Date
+admin_approve_pending_users	id	Id
+admin_approve_pending_users	email	Email
+admin_approve_pending_users	reg_date	Registration date
+admin_approve_pending_users	empty	Empty
 admin_approve_pending_users	validate	Validate
+admin_approve_pending_users	validate_all	Validate all users
 admin_approve_pending_users	account	account
 admin_approve_pending_users	ok	Ok
 admin_approve_pending_users	all_accounts	all accounts
 admin_approve_pending_users	status	with status
-admin_approve_pending_users	status_restricted	restricted
+admin_approve_pending_users	status_restricted	Restricted user
+admin_approve_pending_users	status_all_restricted	Restricted users
 admin_approve_pending_users	status_standard	standard
 admin_approve_pending_users	email_title	Welcome to $1!
 admin_approve_pending_users	data_not_parsed	Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.
-admin_approve_pending_users	expiry_date	Expiration Date
-admin_approve_pending_users	expiry_date_directions	<em><strong>Remark:</strong> The account will be suspended when this date is reached. Leave blank if you don't want an expiration date.</em>
-admin_approve_pending_users	resend	Resend
+admin_approve_pending_users	expiry_date	Expiration date
+admin_approve_pending_users	expiry_date_directions	The account will be suspended when this date is reached.<br>Leave blank if you don't want an expiration date.
+admin_approve_pending_users	resend	Resend email
 admin_approve_pending_users	resend_notice	Resend the account registration email
 
 #

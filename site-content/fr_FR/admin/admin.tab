@@ -186,36 +186,41 @@ admin_approve_pending	distributed_services	Serveurs pour les services distribué
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
 #
-admin_approve_pending_users	title	Utilisateur en attente d'approbation
+admin_approve_pending_users	title	Utilisateurs en attente de validation
+admin_approve_pending_users	title_validated	Utilisateurs validés à activer
 admin_approve_pending_users	take_break	Faites une pause,
 admin_approve_pending_users	go_back	Retour à la page d'administration
 admin_approve_pending_users	no_pending	il n'y a aucun utilisateur en attente d'approbation.
 admin_approve_pending_users	no_pending_validated	il n'y a aucun utilisateur en attente de validation.
 admin_approve_pending_users	no_validated	il n'y a aucun utilisateur validé en attente d'approbation.
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
-admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
+admin_approve_pending_users	user_edit	Voir les détails de l'utilisateur
 admin_approve_pending_users	activate	Activer
+admin_approve_pending_users	activate_all	Activer tous les utilisateurs
 admin_approve_pending_users	validate_notice	Valider : Un email est envoyé à l'utilisateur pour confirmation. Si ce dernier suit le lien contenu dans l'email, le compte est activé.
 admin_approve_pending_users	activate_notice	Activer : Le compte est immédiatement actif.
 admin_approve_pending_users	delete	Détruire
 admin_approve_pending_users	purpose	Motif
 admin_approve_pending_users	other_info	Autre information
 admin_approve_pending_users	name	Nom de l'utilisateur
-admin_approve_pending_users	id	ID utilisateur
-admin_approve_pending_users	email	E-mail utilisateur
+admin_approve_pending_users	id	Id
+admin_approve_pending_users	email	E-mail
 admin_approve_pending_users	reg_date	Date d'enregistrement
+admin_approve_pending_users	empty	Pas de motif
 admin_approve_pending_users	validate	Valider
+admin_approve_pending_users	validate_all	Valider tous les utilisateurs
 admin_approve_pending_users	account	le compte
 admin_approve_pending_users	ok	Ok
 admin_approve_pending_users	all_accounts	tous les comptes
 admin_approve_pending_users	status	avec le statut
-admin_approve_pending_users	status_restricted	restreint
+admin_approve_pending_users	status_restricted	Utilisateur restreint
+admin_approve_pending_users	status_all_restricted	Utilisateurs restreints
 admin_approve_pending_users	status_standard	standard
 admin_approve_pending_users	email_title	Bienvenue sur $1 !
 admin_approve_pending_users	data_not_parsed	Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_approve_pending_users	expiry_date	Date d'expiration
-admin_approve_pending_users	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.</em>
-admin_approve_pending_users	resend	Renvoyer
+admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.
+admin_approve_pending_users	resend	Renvoyer l'email
 admin_approve_pending_users	resend_notice	Renvoyer l'email d'activation du compte
 #
 #-----------------------------------------------
