@@ -591,7 +591,7 @@ class GitPlugin extends Plugin {
         );
     }
 
-    private function getRegexpFineGrainedRetriever()
+    public function getRegexpFineGrainedRetriever()
     {
         return new RegexpFineGrainedRetriever(
             $this->getRegexpFineGrainedDao(),

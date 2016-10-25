@@ -98,7 +98,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+
         );
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
