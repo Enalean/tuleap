@@ -39,20 +39,24 @@ admin_sidebar	links_nav_doc	Doc
 admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
 admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
-admin_main	header_user	Administration des utilisateurs
+admin_main	header_user	Utilisateurs en attente
 admin_main	display_user	Afficher les utilisateurs commençant par :
 admin_main	search_user	Utilisateur
 admin_main	search	Chercher
 admin_main	export_csv	Export CSV
+admin_main	review_pending_users	Valider les utilisateurs
+admin_main	review_pending_users_empty	Aucun utilisateur à valider
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
 admin_main	validated_user	Utilisateurs validés en <a href="$1"> attente d'activation par e-mail</a>
 admin_main	need_approval	approbation requise
 admin_main	need_validation	validation requise
-admin_main	header_group	Administration des projets
+admin_main	header_group	Projets en attente
 admin_main	display_group	Afficher les projets commençant par :
-admin_main	search_group	Chercher (Id projet, nom unix, nom complet) :
+admin_main	search_group	Chercher (Id projet, nom unix, nom complet) :
 admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
 admin_main	all_groups	Tous les <a href="$1">projets</a>
+admin_main	review_pending_projects	Valider les projets
+admin_main	review_pending_projects_empty	Aucun projet à valider
 admin_main	incomplete_group	Projets en statut <a href="$1"><B>I</B> (incomplet)</A>
 admin_main	pending_group	Projets en statut <a href="$1"><B>P</B> (en attente)</A>
 admin_main	deleted_group	Projets en statut <a href="$1"><B>D</B> (détruit)</A>
@@ -67,17 +71,18 @@ admin_main	tracker_remove	Nettoyage des outils de suivi en attente
 admin_main	tracker_template	Configuration des modèles d'outils de suivi v3
 admin_main	header_stat	Statistiques
 admin_main	stat_login	Afficher les connections les plus récentes
-admin_main	stat_spu	Générer les statistiques site/projets/utilisateurs
+admin_main	stat_spu	Voir les statistiques site, projets et utilisateurs
 admin_main	header_utils	Utilitaires site
 admin_main	mail_engine	Envoi d'e-mails en masse
-admin_main	header_sstat	Statistiques site
+admin_main	header_sstat	Statistiques
 admin_main	header_plugins	Plugins
+admin_main	manage_all_plugins	Gérer tous les plugins
 admin_main	servers	Serveurs
 admin_main	servers_admin	Administration des serveurs
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
-admin_main	sstat_reg_g	Projets enregistrés
-admin_main	sstat_reg_act_g	Projets enregistrés actifs
-admin_main	sstat_pend_g	Projets en attente
+admin_main	sstat_reg_g	enregistrés
+admin_main	sstat_reg_act_g	enregistrés actifs
+admin_main	sstat_pend_g	en attente
 admin_main	sstat_pend_u	Utilisateurs en attente
 admin_main	site_news	Annonces site
 admin_main	site_news_approval	Approbation annonces site
@@ -87,14 +92,16 @@ admin_main	trove_cat_add	Ajout des catégories
 admin_main	new_user	Nouvel utilisateur
 admin_main	permission_delegation	Délégation de permission
 admin_main	active_users	Utilisateurs actifs
-admin_main	lastday_users	Les dernières 24 heures
-admin_main	lastweek_users	La semaine dernière
-admin_main	lastmonth_users	Le mois dernier
-admin_main	last3months_users	Les 3 derniers mois
-admin_main	mode_lab_users	Utilisateurs actifs ou restreints avec le mode lab activé
-admin_main	stat_projects	Statistiques des projets
-admin_main	stat_users	Statistiques des utilisateurs
-admin_main	status_user	Par status
+admin_main	lastday_users	actifs les dernières 24 heures
+admin_main	lastweek_users	actifs la semaine dernière
+admin_main	lastmonth_users	actifs le mois dernier
+admin_main	last3months_users	actifs les 3 derniers mois
+admin_main	mode_lab_users	Utilisateurs actifs ou restreints utilisant le mode lab
+admin_main	mode_lab_users_nb_users	utilisateurs
+admin_main	stat_projects	Projets
+admin_main	status_project	Par statut
+admin_main	stat_users	Utilisateurs
+admin_main	status_user	Par statut
 admin_main	statusactif_user	actif(s)
 admin_main	statusrestricted_user	restreint(s)
 admin_main	statushold_user	suspendu(s)

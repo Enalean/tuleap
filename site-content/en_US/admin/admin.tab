@@ -15,7 +15,7 @@ admin_sidebar	users_section_title	Users
 admin_sidebar	users_search_placeholder	Email, username…
 admin_sidebar	users_nav_all_users	All users
 admin_sidebar	users_nav_new_user	 New user
-admin_sidebar	users_nav_pending_users	Users pending status
+admin_sidebar	users_nav_pending_users	Pending users
 admin_sidebar	users_nav_validated_users	Users pending email activation
 admin_sidebar	users_nav_permission_delegation	Permission delegation
 admin_sidebar	projects_section_title	Projects
@@ -47,20 +47,24 @@ admin_sidebar	links_nav_doc	Doc
 admin_main	title		Site administration
 admin_main	header		Administrative functions
 admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
-admin_main	header_user	User administration
+admin_main	header_user	Pending users
 admin_main	display_user	Display users beginning with :
 admin_main	search_user	User
 admin_main	search	Search
 admin_main	export_csv	Export CSV
+admin_main	review_pending_users	Review pending users
+admin_main	review_pending_users_empty	No users to validate
 admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) status</a>
 admin_main	validated_user	Validated users <a href="$1"><B>pending email activation</B></a>
 admin_main	need_approval	approval needed
 admin_main	need_validation	validation needed
-admin_main	header_group	Project administration
+admin_main	header_group	Pending projects
 admin_main	display_group	Display projects neginning with :
 admin_main	search_group	Search (group id, unix name, real name) :
 admin_main	all_users	All <a href="$1">users</a>
 admin_main	all_groups	All <a href="$1">projects</a>
+admin_main	review_pending_projects	Review pending projects
+admin_main	review_pending_projects_empty	No projects to validate
 admin_main	incomplete_group	Projects in <a href="$1"><B>I</B> (incomplete) status</A>
 admin_main	pending_group	Projects in <a href="$1"><B>P</B> (pending) status</A>
 admin_main	deleted_group	Projects in <a href="$1"><B>D</B> (deleted) status</A>
@@ -75,17 +79,18 @@ admin_main	tracker_remove	Pending trackers removal
 admin_main	tracker_template	Configuration of predefined tracker v3 templates
 admin_main	header_stat	Statistics
 admin_main	stat_login	View most recent logins
-admin_main	stat_spu	Generate Site/Projects/Users statistics
+admin_main	stat_spu	See site, projects and users statistics
 admin_main	header_utils	Site utilities
 admin_main	mail_engine	Mass mail engine
-admin_main	header_sstat	Site statistics
+admin_main	header_sstat	Statistics
 admin_main	header_plugins	Plugins
+admin_main	manage_all_plugins	Manage all plugins
 admin_main	servers	Servers
 admin_main	servers_admin	Servers administration
 admin_main	sstat_reg_u	Registered active or restricted site users
-admin_main	sstat_reg_g	Registered projects
-admin_main	sstat_reg_act_g	Registered active projects
-admin_main	sstat_pend_g	Pending projects
+admin_main	sstat_reg_g	registered
+admin_main	sstat_reg_act_g	registered active
+admin_main	sstat_pend_g	pending
 admin_main	sstat_pend_u	Pending users
 admin_main	site_news	Site news
 admin_main	site_news_approval	Site news approval
@@ -95,13 +100,15 @@ admin_main	trove_cat_add	Add one
 admin_main	new_user	New user
 admin_main	permission_delegation	Permission delegation
 admin_main	active_users	Per activities
-admin_main	lastday_users	Last 24 hours
-admin_main	lastweek_users	Last week
-admin_main	lastmonth_users	Last month
-admin_main	last3months_users	Last 3 months
-admin_main	mode_lab_users	Active or restricted users with mode lab enabled
-admin_main	stat_projects	Projects statistics
-admin_main	stat_users	Users statistics
+admin_main	lastday_users	active last 24 hours
+admin_main	lastweek_users	active last week
+admin_main	lastmonth_users	active last month
+admin_main	last3months_users	active last 3 months
+admin_main	mode_lab_users	Active or restricted users using mode lab
+admin_main	mode_lab_users_nb_users	users
+admin_main	stat_projects	Projects
+admin_main	status_project	Per status
+admin_main	stat_users	Users
 admin_main	status_user	Per status
 admin_main	statusactif_user	active
 admin_main	statusrestricted_user	restricted
