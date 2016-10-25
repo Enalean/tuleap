@@ -71,10 +71,11 @@ class StandUpNotificationBuilder
             $title = $GLOBALS['Language']->getText(
                 'plugin_botmattermost_agiledashboard', 'notification_builder_title_stand_up_summary'
             ).' '.$last_planning->getPlanningTracker()->getName();
-            $text = $this->markdown_formatter->addTitleOfLevel($title, 4);
+            $text  = $this->markdown_formatter->addTitleOfLevel($title, 4);
 
             foreach ($milestones as $milestone) {
                 $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
+
                 $text .= $this->markdown_formatter->addSeparationLine();
                 $text .= $this->markdown_formatter->addLineOfText(
                     $this->buildMilestoneNotificationText($milestone, $user)
@@ -82,7 +83,9 @@ class StandUpNotificationBuilder
             }
         } else {
             $text = $GLOBALS['Language']->getText(
-                'plugin_botmattermost_agiledashboard', 'notification_builder_no_current_milestone'
+                'plugin_botmattermost_agiledashboard',
+                'notification_builder_no_current_milestones',
+                array($last_planning->getBacklogTitle())
             );
         }
 
@@ -94,12 +97,17 @@ class StandUpNotificationBuilder
         $milestone_table = $this->markdown_formatter->createSimpleTableText(
             $this->getMilestoneInformation($milestone, $user)
         );
+        $links           = $this->getPlanningAdditionalLinks($milestone, $user);
 
         $text = $this->markdown_formatter->addTitleOfLevel(
             $milestone->getArtifactTitle().' '.$this->buildMilestoneDatesInfo($milestone), 4
         );
         $text .= $this->markdown_formatter->addLineOfText($milestone_table);
         $text .= $this->buildLinkedArtifactsNotificationTextByMilestone($milestone, $user);
+        $text .= $this->markdown_formatter->addLineOfText(
+            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_quick_access').
+            ' : '.implode(", ", $links)
+        );
 
         return $text;
     }
@@ -107,7 +115,7 @@ class StandUpNotificationBuilder
     private function buildLinkedArtifactsNotificationTextByMilestone(Planning_Milestone $milestone, PFUser $user)
     {
         $linked_artifacts = $this->getLinkedArtifactsWithRecentModification($milestone, $user);
-        $text = '';
+        $text             = '';
 
         if (! empty($linked_artifacts)) {
             $artifacts_table = $this->buildLinkedArtifactTable($linked_artifacts);
@@ -134,6 +142,17 @@ class StandUpNotificationBuilder
         }
 
         return $artifacts;
+    }
+
+    private function getPlanningAdditionalLinks(Planning_Milestone $milestone, $user)
+    {
+        $GLOBALS['Language']->getText('plugin_cardwall', 'title');
+        $links[] = $this->buildMilestoneLinkForPane($milestone, "cardwall", "Card Wall");
+        if ($milestone->hasBurdownField($user)) {
+            $links[] = $this->buildMilestoneLinkForPane($milestone, "burndown", "Burndown");
+        }
+
+        return $links;
     }
 
     private function checkModificationOnArtifact(Tracker_Artifact $artifact)
@@ -182,10 +201,34 @@ class StandUpNotificationBuilder
 
     private function buildArtifactLink(Tracker_Artifact $tracker_Artifact)
     {
-        $url_artifact = ForgeConfig::get('sys_https_host').$tracker_Artifact->getUri();
+        $url_artifact = $this->getPrefixUrl().$tracker_Artifact->getUri();
         $link_name    = $tracker_Artifact->getTracker()->getDescription().' #'.$tracker_Artifact->getId();
 
-        return "[$link_name]($url_artifact)";
+        return $this->markdown_formatter->createLink($link_name, $url_artifact);
+    }
+
+    private function buildMilestoneLinkForPane(Planning_Milestone $milestone, $pane_name, $link_name)
+    {
+        $url = $this->getPrefixUrl().AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
+            'group_id'    => $milestone->getGroupId(),
+            'planning_id' => $milestone->getPlanningId(),
+            'action'      => 'show',
+            'aid'         => $milestone->getArtifactId(),
+            'pane'        => $pane_name
+        ));
+
+        return $this->markdown_formatter->createLink($link_name, $url);
+    }
+
+    private function getPrefixUrl()
+    {
+        if (ForgeConfig::get('sys_force_ssl')) {
+            $prefix_url = 'https://'.ForgeConfig::get('sys_https_host');
+        } else {
+            $prefix_url = 'http://'.ForgeConfig::get('sys_default_domain');
+        }
+
+        return $prefix_url;
     }
 
     private function buildMilestoneDatesInfo(Planning_Milestone $milestone)
@@ -195,6 +238,7 @@ class StandUpNotificationBuilder
 
     private function buildLinkedArtifactTable(array $tracker_artifacts)
     {
+        $table_body   = array();
         $table_header = array(
             $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id'),
             $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_title'),
@@ -205,7 +249,7 @@ class StandUpNotificationBuilder
                 'plugin_botmattermost_agiledashboard', 'notification_builder_artifact_last_modification'
             )
         );
-        $table_body   = array();
+
         foreach ($tracker_artifacts as $tracker_artifact) {
             $table_body[] = $this->getTrackerArtifactInfo($tracker_artifact);
         }

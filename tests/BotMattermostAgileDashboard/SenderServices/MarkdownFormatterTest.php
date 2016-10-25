@@ -97,4 +97,14 @@ class MarkdownFormatterTest extends TuleapTestCase
 
         $this->assertEqual($result, '***'.PHP_EOL);
     }
+
+    public function itVerifiesThatCreateMarkdownLink()
+    {
+        $link_name = 'link name';
+        $url       = 'https://my-url.com';
+
+        $result = $this->markdown_formatter->createLink($link_name, $url);
+
+        $this->assertEqual($result, '[link name](https://my-url.com)');
+    }
 }

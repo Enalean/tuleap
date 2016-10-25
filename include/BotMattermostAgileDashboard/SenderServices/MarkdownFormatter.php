@@ -81,14 +81,19 @@ class MarkdownFormatter
         return $table;
     }
 
+    public function addSeparationLine()
+    {
+        return $this->addLineOfText("***");
+    }
+
+    public function createLink($link_name, $url)
+    {
+        return "[$link_name]($url)";
+    }
+
     private function addOneRowOfTable($new_row)
     {
         $end_of_line  = '|'.PHP_EOL;
         return $new_row.$end_of_line;
-    }
-
-    public function addSeparationLine()
-    {
-        return $this->addLineOfText("***");
     }
 }
