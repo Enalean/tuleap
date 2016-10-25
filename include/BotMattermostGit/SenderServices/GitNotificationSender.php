@@ -43,7 +43,9 @@ class GitNotificationSender
     {
         try {
             $bots = $this->bot_git_factory->getBotsByRepositoryId($this->repository->getId());
-            $this->sender->pushNotifications($bots);
+            if (! empty($bots)) {
+                $this->sender->pushNotifications($bots);
+            }
         } catch (BotNotFoundException $e) {
             // Nothing to do
         }
