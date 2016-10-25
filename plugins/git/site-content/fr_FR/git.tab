@@ -378,7 +378,7 @@ plugin_git	no_go_back	Fonctionnalité en cours de developpement. Une fois que le
 plugin_git	warning_is_activated	Fonctionnalité en cours de developpement. Vous ne pouvez pas désactiver la fonctionnalité pour l'instant.
 plugin_git	update_error	Une erreur est survenue, impossible d'activer les expressions régulières pour les permissions fines Git.
 
-plugin_git	gitolite_config_tab_name	Configuration Gitolite
+plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	general_settings_tab_name	Configuration générale
 plugin_git	mirror_tab_name	Miroirs
@@ -483,7 +483,7 @@ plugin_git	regenerate_config_bad_request	La requête n'est pas valide.
 plugin_git	regenerate_config_project_not_exist	Le projet n'existe pas.
 plugin_git	regenerate_config_waiting	La regénération de la configuration Gitolite pour le projet $1 est en attente. Merci de patienter quelques minutes.
 
-plugin_git	admin_gitolite_config_title	Administration de la configuration Gitolite
+plugin_git	admin_gitolite_config_title	Configuration Gitolite
 plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
 plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "polling". Merci de consulter <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git</a>
 
@@ -529,3 +529,5 @@ plugin_git	btn_delete_title	Ce serveur est déjà utilisé par des dépôts.
 
 plugin_git	digest	"Digest"
 plugin_git	basic	Basique
+
+plugin_git	regenerate_gitolite_configuration	Régénérer la configuration

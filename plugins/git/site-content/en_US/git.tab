@@ -384,7 +384,7 @@ plugin_git	no_go_back	Feature under development. Once regexp is activated for pl
 plugin_git	warning_is_activated	Feature under development. You can't disable regexp functionality for now.
 plugin_git	update_error	An error occurred while activating regexp option for Git fine grained permission.
 
-plugin_git	gitolite_config_tab_name	Gitolite configuration
+plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	general_settings_tab_name	General settings
 plugin_git	mirror_tab_name	Mirrors
@@ -487,7 +487,7 @@ plugin_git	regenerate_config_bad_request	Bad request.
 plugin_git	regenerate_config_project_not_exist	Project does not exist.
 plugin_git	regenerate_config_waiting	Regenerating Gitolite config for project $1. Please wait few minutes.
 
-plugin_git	admin_gitolite_config_title	Administration of Gitolite configuration
+plugin_git	admin_gitolite_config_title	Gitolite configuration
 plugin_git	admin_gitolite_config_description	This section allows you to regenerate the Gitolite configuration file of a selected project.
 plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git Plugin</a>.
 
@@ -534,3 +534,5 @@ plugin_git	btn_delete_title	This server is already used by some repositories.
 
 plugin_git	digest	Digest
 plugin_git	basic	Basic
+
+plugin_git	regenerate_gitolite_configuration	Regenerate configuration

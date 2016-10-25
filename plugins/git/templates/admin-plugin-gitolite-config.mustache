@@ -2,15 +2,26 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
-    <h2>{{ gitolite_config_title }}</h2>
-
-    <p class="description">{{ gitolite_config_description }}</p>
-    <div class="control-group">
-        <label class="control-label" for="group_id">Project</label>
-        <div class="controls">
-            <input type="text" name="gitolite_config_project" size ="40" id="gitolite_config_project">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{ gitolite_config_title }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-property">
+                    <p>{{ gitolite_config_description }}</p>
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="group_id">Project</label>
+                    <input type="text" class="tlp-input" id="gitolite_config_project" name="gitolite_config_project" placeholder="Project name" size="40">
+                </div>
+                <button type="submit" class="tlp-button-primary">
+                    <i class="fa fa-repeat tlp-button-icon"></i> {{ regenerate_gitolite_configuration }}
+                    </input>
+                </button>
+            </section>
         </div>
-    </div>
-
-    <input type="submit" class="btn btn-primary" value="{{ submit }}">
+    </section>
 </form>
