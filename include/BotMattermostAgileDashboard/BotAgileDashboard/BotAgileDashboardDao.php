@@ -25,12 +25,12 @@ use DataAccessObject;
 class BotAgileDashboardDao extends DataAccessObject
 {
 
-    public function searchTimeAndDuration($bot_id, $project_id)
+    public function searchTime($bot_id, $project_id)
     {
         $bot_id     = $this->da->escapeInt($bot_id);
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "SELECT start_time, duration
+        $sql = "SELECT send_time
                 FROM plugin_botmattermost_agiledashboard
                 WHERE bot_id = $bot_id
                     AND project_id = $project_id";
@@ -38,27 +38,20 @@ class BotAgileDashboardDao extends DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
-    public function updateBotsAgileDashboard(
-        array $bots_ids,
-        $project_id,
-        $start_time,
-        $duration
-    ) {
+    public function updateBotsAgileDashboard(array $bots_ids, $project_id, $send_time)
+    {
         $this->getDa()->startTransaction();
 
-        if (! $this->deleteBotsForProject($project_id)) {
+        if (!$this->deleteBotsForProject($project_id)) {
             $this->getDa()->rollback();
+
             return false;
         }
 
         if (count($bots_ids) > 0) {
-            if (! $this->addBotsAgileDashboard(
-                $bots_ids,
-                $project_id,
-                $start_time,
-                $duration
-            )) {
+            if (!$this->addBotsAgileDashboard($bots_ids, $project_id, $send_time)) {
                 $this->getDa()->rollback();
+
                 return false;
             }
         }
@@ -69,27 +62,25 @@ class BotAgileDashboardDao extends DataAccessObject
     private function addBotsAgileDashboard(
         array $bots_ids,
         $project_id,
-        $start_time,
-        $duration
+        $send_time
     ) {
-        $sql = "INSERT INTO plugin_botmattermost_agiledashboard(bot_id, project_id, start_time, duration)
+        $sql = "INSERT INTO plugin_botmattermost_agiledashboard(bot_id, project_id, send_time)
                 VALUES ";
 
-        foreach($bots_ids as $bot_id) {
-            $sql .= $this->addBotAgileDashboardSql($bot_id, $project_id, $start_time, $duration).',';
+        foreach ($bots_ids as $bot_id) {
+            $sql .= $this->addBotAgileDashboardSql($bot_id, $project_id, $send_time).',';
         }
 
         return $this->update(trim($sql, ','));
     }
 
-    private function addBotAgileDashboardSql($bot_id, $project_id, $start_time, $duration)
+    private function addBotAgileDashboardSql($bot_id, $project_id, $send_time)
     {
         $bot_id     = $this->da->escapeInt($bot_id);
         $project_id = $this->da->escapeInt($project_id);
-        $start_time = $this->da->quoteSmart($start_time);
-        $duration   = $this->da->quoteSmart($duration);
+        $send_time  = $this->da->quoteSmart($send_time);
 
-        return "($bot_id, $project_id, $start_time, $duration)";
+        return "($bot_id, $project_id, $send_time)";
     }
 
     public function deleteBotsForProject($project_id)

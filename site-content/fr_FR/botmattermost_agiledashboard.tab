@@ -6,8 +6,7 @@ plugin_botmattermost_agiledashboard	alert_success_update	Changement(s) effectué
 plugin_botmattermost_agiledashboard	alert_invalid_post	Erreur dans la requête : les informations renseignées sont invalides
 
 plugin_botmattermost_agiledashboard	admin_notification_title	Notification dans Mattermost
-plugin_botmattermost_agiledashboard	admin_notification_label_start_time	Heure de début du stand-up
-plugin_botmattermost_agiledashboard	admin_notification_label_duration	Durée du stand-up
 plugin_botmattermost_agiledashboard	admin_notification_description	Choix de robot(s) afin d'envoyer le résumé du stand-up dans Mattermost.
+plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Heure d'envoie du rapport
 
 plugin_botmattermost_agiledashboard	admin_notification_table_col_channels	Salons de discussion

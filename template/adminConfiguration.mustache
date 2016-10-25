@@ -4,17 +4,17 @@
     {{/ csrf_token }}
     <legend>{{ title }}</legend>
     <fieldset>
-        <label for="bot-mattermost-agiledashboard-start-time">{{ label_start_time }}</label>
+        <label for="bot-mattermost-agiledashboard-start-time">{{ label_send_time }}</label>
         <div id="bot-mattermost-agiledashboard-start-time" class="input-append">
             <span class="bot-mattermost-agiledashboard-field-time">
                 <input required
-                    name="start_time"
+                    name="send_time"
                     class="input-small"
                     data-format="hh:mm"
                     type="text"
-                    {{# has_start_time_and_duration }}
-                       value="{{ start_time }}"
-                    {{/ has_start_time_and_duration }}
+                    {{# has_send_time }}
+                       value="{{ send_time }}"
+                    {{/ has_send_time }}
                     >
                 </input>
                 <span class="add-on">
@@ -22,29 +22,6 @@
                 </span>
             </span>
         </div>
-
-        <label for="bot-mattermost-agiledashboard-duration">{{ label_duration }}</label>
-        <div id="bot-mattermost-agiledashboard-duration" class="input-append">
-            <span class="bot-mattermost-agiledashboard-field-time">
-                <input required
-                    name="duration"
-                    class="input-small"
-                    data-format="hh:mm"
-                    type="text"
-                    {{# has_start_time_and_duration }}
-                        value="{{ duration }}"
-                    {{/ has_start_time_and_duration }}
-                    {{^ has_start_time_and_duration }}
-                       value="{{ default_duration }}"
-                    {{/ has_start_time_and_duration }}
-                    >
-                </input>
-                <span class="add-on">
-                    <i class="icon-time"></i>
-                 </span>
-            </span>
-        </div>
-
         <span class="help-block">{{ description }}</span>
         <table class="table table-bordered table-striped" id="bot_list">
             <thead>

@@ -26,19 +26,16 @@ class BotAgileDashboard
 {
     private $bot;
     private $project_id;
-    private $start_time;
-    private $duration;
+    private $send_time;
 
     public function __construct(
         Bot $bot,
         $project_id,
-        $start_time,
-        $duration
+        $send_time
     ) {
         $this->bot        = $bot;
         $this->project_id = $project_id;
-        $this->start_time = $start_time;
-        $this->duration   = $duration;
+        $this->send_time  = $send_time;
     }
 
     public function getBot()
@@ -48,7 +45,7 @@ class BotAgileDashboard
 
     private function isAssigned()
     {
-        return $this->start_time && $this->duration;
+        return isset($this->send_time);
     }
 
     public function toArray()
@@ -60,19 +57,13 @@ class BotAgileDashboard
             'avatar'         => $this->bot->getAvatarUrl(),
             'channels_names' => $this->bot->getChannelsNamesInOneRow(),
             'project_id'     => $this->project_id,
-            'start_time'     => $this->start_time,
-            'duration'       => $this->duration,
+            'send_time'      => $this->send_time,
             'is_assigned'    => $this->isAssigned()
         );
     }
 
-    public function getStartTime()
+    public function getSendTime()
     {
-        return $this->start_time;
-    }
-
-    public function getDuration()
-    {
-        return $this->duration;
+        return $this->send_time;
     }
 }

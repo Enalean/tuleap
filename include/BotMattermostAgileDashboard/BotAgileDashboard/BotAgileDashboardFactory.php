@@ -43,15 +43,9 @@ class BotAgileDashboardFactory
     public function saveBotsAgileDashboard(
         array $bots_ids,
         $project_id,
-        $start_time,
-        $duration
+        $send_time
     ) {
-        if (! $this->dao->updateBotsAgileDashboard(
-            $bots_ids,
-            $project_id,
-            $start_time,
-            $duration
-        )) {
+        if (! $this->dao->updateBotsAgileDashboard($bots_ids, $project_id, $send_time)) {
             throw new CannotCreateBotException();
         }
     }
@@ -65,12 +59,11 @@ class BotAgileDashboardFactory
 
         $bots = $this->bot_factory->getBots();
         foreach ($bots as $bot) {
-            $row = $this->dao->searchTimeAndDuration($bot->getId(), $project_id);
+            $row = $this->dao->searchTime($bot->getId(), $project_id);
             $bots_agiledashboard[] = new BotAgileDashboard(
                 $bot,
                 $project_id,
-                $row['start_time'],
-                $row['duration']
+                $row['send_time']
             );
         }
 

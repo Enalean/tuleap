@@ -56,20 +56,18 @@ class Controller
         $renderer       = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR.'/template');
         $presenter_bots = array();
         $project_id     = $this->request->getProject()->getID();
-        $start_time     = null;
-        $duration       = null;
+        $send_time     = null;
 
         foreach ($this->bot_agiledashboard_factory->getBotsForTimePeriod($project_id) as $bot) {
-            if ($bot->getStartTime() && $bot->getDuration()) {
-                $start_time = $this->getHoursMinutesFromDate($bot->getStartTime());
-                $duration   = $this->getHoursMinutesFromDate($bot->getDuration());
+            if ($bot->getSendTime()) {
+                $send_time = $this->getHoursMinutesFromDate($bot->getSendTime());
             }
             $presenter_bots[] = $bot->toArray($project_id);
         }
 
         return $renderer->renderToString(
             'adminConfiguration',
-            new AdminNotificationPresenter($this->csrf, $presenter_bots, $project_id, $start_time, $duration)
+            new AdminNotificationPresenter($this->csrf, $presenter_bots, $project_id, $send_time)
         );
     }
 
@@ -80,16 +78,18 @@ class Controller
 
         if ($this->isValidPostValues()) {
             $bots_ids   = $this->request->get('bots_ids') ? $this->request->get('bots_ids') : array();
-            $start_time = $this->request->get('start_time');
-            $duration   = $this->request->get('duration');
-            $this->saveInDao($bots_ids, $project_id, $start_time, $duration);
+            $send_time = $this->request->get('send_time');
+            $this->saveInDao($bots_ids, $project_id, $send_time);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'alert_success_update')
+            );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'alert_invalid_post')
             );
         }
-
         $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
             'group_id'  => $project_id,
             'action'    => 'admin',
@@ -97,14 +97,10 @@ class Controller
         )));
     }
 
-    private function saveInDao(array $bots_ids, $project_id, $start_time, $duration)
+    private function saveInDao(array $bots_ids, $project_id, $send_time)
     {
         try {
-            $this->bot_agiledashboard_factory->saveBotsAgileDashboard($bots_ids, $project_id, $start_time, $duration);
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard','alert_success_update')
-            );
+            $this->bot_agiledashboard_factory->saveBotsAgileDashboard($bots_ids, $project_id, $send_time);
         } catch (CannotCreateBotException $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -115,10 +111,7 @@ class Controller
 
     private function isValidPostValues()
     {
-        if (
-            $this->request->existAndNonEmpty('start_time') &&
-            $this->request->existAndNonEmpty('duration')
-        ) {
+        if ($this->request->existAndNonEmpty('send_time')) {
             if ($this->request->get('bots_ids')) {
                 $bots_ids = $this->request->get('bots_ids');
                 return $this->validBotsIds($bots_ids);

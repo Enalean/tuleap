@@ -21,28 +21,24 @@
 namespace Tuleap\BotMattermostAgileDashboard\Presenter;
 
 use CSRFSynchronizerToken;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactoryTest;
 
 class AdminNotificationPresenter
 {
 
-    const DEFAULT_DURATION = '00:30';
     /**
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
     public $bots;
     public $project_id;
-    public $start_time;
-    public $duration;
+    public $send_time;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, array $bots, $project_id, $start_time, $duration)
+    public function __construct(CSRFSynchronizerToken $csrf_token, array $bots, $project_id, $send_time)
     {
         $this->csrf_token = $csrf_token;
         $this->bots       = $bots;
         $this->project_id = $project_id;
-        $this->start_time = $start_time;
-        $this->duration   = $duration;
+        $this->send_time  = $send_time;
     }
 
     public function title()
@@ -50,14 +46,9 @@ class AdminNotificationPresenter
         return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
     }
 
-    public function label_start_time()
+    public function label_send_time()
     {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_start_time');
-    }
-
-    public function label_duration()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_duration');
+        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_send_time');
     }
 
     public function botListIsEmpty()
@@ -92,13 +83,8 @@ class AdminNotificationPresenter
         return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
     }
 
-    public function has_start_time_and_duration()
+    public function has_send_time()
     {
-        return (isset($this->start_time) && isset($this->duration));
-    }
-
-    public function default_duration()
-    {
-        return self::DEFAULT_DURATION;
+        return isset($this->send_time);
     }
 }
