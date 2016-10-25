@@ -140,8 +140,19 @@ if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING){
 }
 
 if (db_numrows($res) < 1) {
-    site_admin_header(array('title'=>$msg, 'main_classes' => array('tlp-framed')));
-    echo $msg;
+    $title     = $GLOBALS['Language']->getText('admin_approve_pending_users', 'title');
+    $siteadmin = new Tuleap\Admin\AdminPageRenderer();
+    $siteadmin->renderAPresenter(
+        $title,
+        ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+        'no-pending',
+        array(
+            'title'      => $title,
+            'msg'        => $msg,
+            'go_back'    => $GLOBALS['Language']->getText('admin_approve_pending_users', 'go_back'),
+            'take_break' => $GLOBALS['Language']->getText('admin_approve_pending_users', 'take_break')
+        )
+    );
 } else {
 
     site_admin_header(array('title'=>$Language->getText('admin_approve_pending_users','title'), 'main_classes' => array('tlp-framed')));
@@ -373,7 +384,5 @@ if (db_numrows($res) < 1) {
             </TABLE>
         </CENTER>
         ';
+        site_admin_footer(array());
 }
-site_admin_footer(array());
-
-?>

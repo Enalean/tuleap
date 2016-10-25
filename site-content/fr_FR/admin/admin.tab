@@ -179,10 +179,12 @@ admin_approve_pending	distributed_services	Serveurs pour les services distribué
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
 #
-admin_approve_pending_users	title	Approbation des comptes utilisateur en attente
-admin_approve_pending_users	no_pending	Aucun compte utilisateur en attente d'approbation
-admin_approve_pending_users	no_pending_validated	Aucun compte utilisateur en attente de validation
-admin_approve_pending_users	no_validated	Aucun compte utilisateur en attente d'approbation
+admin_approve_pending_users	title	Utilisateur en attente d'approbation
+admin_approve_pending_users	take_break	Faites une pause,
+admin_approve_pending_users	go_back	Retour à la page d'administration
+admin_approve_pending_users	no_pending	il n'y a aucun utilisateur en attente d'approbation.
+admin_approve_pending_users	no_pending_validated	il n'y a aucun utilisateur en attente de validation.
+admin_approve_pending_users	no_validated	il n'y a aucun utilisateur validé en attente d'approbation.
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
 admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
 admin_approve_pending_users	activate	Activer

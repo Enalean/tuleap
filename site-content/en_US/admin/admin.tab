@@ -187,10 +187,12 @@ admin_approve_pending	distributed_services	Servers for distributed services
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
 #
-admin_approve_pending_users	title	Approving Pending User Registration
-admin_approve_pending_users	no_pending	No Pending User Registration to Approve
-admin_approve_pending_users	no_pending_validated	No Pending User Registration to Validate
-admin_approve_pending_users	no_validated	No Validated User Registration to Approve
+admin_approve_pending_users	title	Users waiting for validation
+admin_approve_pending_users	go_back	Go back
+admin_approve_pending_users	take_break	Take a break,
+admin_approve_pending_users	no_pending	there is no users to approve.
+admin_approve_pending_users	no_pending_validated	there is no users to validate.
+admin_approve_pending_users	no_validated	there is no validated users to approve.
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	Edit User/Group Settings
 admin_approve_pending_users	activate	Activate
