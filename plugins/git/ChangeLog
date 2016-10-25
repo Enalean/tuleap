@@ -1,3 +1,6 @@
+Version 4.280 - Tuleap 9.1
+    * story #9525: Pattern must end with $
+
 Version 4.279 - Tuleap 9.1
     * story #9525: Log in project history regexp activation at repository level
 
