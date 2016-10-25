@@ -254,6 +254,7 @@ plugin_git	tree_view_commits	Commits
 plugin_git	tree_view_by	$1 by $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
+project_admin_utils	regexp_activated_for_git_repository	Regexp usage changed for git repository $1
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1
 project_admin_utils	default_git_perms_granted_for_project	Default git permissions granted for project $1
 
@@ -495,7 +496,9 @@ plugin_git	regexp_permission_label	Enable regexp in branches and tags pattern
 plugin_git	title_warning_regexp_uncheck	Some rules may be deleted
 plugin_git	warning_regexp_uncheck	All rules containing a regexp will be deleted. Please confirm the desactivation of regexp.
 plugin_git	regexp_incoherence_label	For now, once the feature is enabled, it wont be possible to disable it. Enabling this option might end up in non working state. Invalid regexp will be ignored without errors.
-
+plugin_git	history_regexp	Regexp $1 for repository $2.
+plugin_git	enabled	enabled
+plugin_git	disabled	disabled
 
 plugin_git	view_repo_ci_token	CI Token
 plugin_git	regenerate_ci_token	Reset token
