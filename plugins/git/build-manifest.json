@@ -35,6 +35,7 @@
         }
     },
     "javascript": [
-        "www/themes/BurningParrot/js/modal-add-gerrit-server.js"
+        "www/themes/BurningParrot/js/modal-add-gerrit-server.js",
+        "www/themes/BurningParrot/js/modal-add-mirror.js"
     ]
 }

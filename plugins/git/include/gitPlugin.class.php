@@ -297,6 +297,7 @@ class GitPlugin extends Plugin {
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0) {
             $params['javascript_files'][] = $this->getThemePath() .'/js/modal-add-gerrit-server.js';
+            $params['javascript_files'][] = $this->getThemePath() .'/js/modal-add-mirror.js';
         }
     }
 

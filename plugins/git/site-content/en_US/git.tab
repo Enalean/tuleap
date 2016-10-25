@@ -463,9 +463,6 @@ project_admin_utils	git_admin_groups	Git admin groups
 project_admin_utils	git_fork_repositories	Git fork repositories
 
 plugin_git	identifier	Identifier
-plugin_git	identifier_placeholder	e.g. location, ...
-plugin_git	url_placeholder	e.g. tuleap.net
-plugin_git	hostname_placeholder	e.g. sfo-mirror
 
 plugin_git	how_to_use_text	How to use a Git repository:
 plugin_git	clone_text	Clone the repository in order to get your working copy:

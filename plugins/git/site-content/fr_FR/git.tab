@@ -459,9 +459,6 @@ project_admin_utils	git_admin_groups	Groupes administrateurs Git
 project_admin_utils	git_fork_repositories	Fork de dépôts Git
 
 plugin_git	identifier	Identifiant
-plugin_git	identifier_placeholder	e.g. location, ...
-plugin_git	url_placeholder	e.g. tuleap.net
-plugin_git	hostname_placeholder	e.g. sfo-mirror
 
 plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
 plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
