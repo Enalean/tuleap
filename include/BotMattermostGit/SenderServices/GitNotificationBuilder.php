@@ -22,30 +22,25 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
 use Git_GitRepositoryUrlManager;
-use Tuleap\BotMattermost\SenderServices\NotificationBuilder;
 
-class GitNotificationBuilder implements NotificationBuilder
+class GitNotificationBuilder
 {
 
     private $git_repository_url_manager;
-    private $params;
 
-    public function __construct(
-        Git_GitRepositoryUrlManager $git_repository_url_manager,
-        array $params
-    ) {
+    public function __construct(Git_GitRepositoryUrlManager $git_repository_url_manager)
+    {
         $this->git_repository_url_manager = $git_repository_url_manager;
-        $this->params                     = $params;
     }
 
-    public function buildNotificationText()
+    public function buildNotificationText(array $params)
     {
-        $repository = $this->params['repository'];
-        $link       = $this->makeLinkReview($repository, $this->params['newrev']);
+        $repository = $params['repository'];
+        $link       = $this->makeLinkReview($repository, $params['newrev']);
 
-        return $this->params['user']->getName()." ".
-            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text').
-            " : $link ".$this->params['refname'];
+        return $params['user']->getName()." ".
+        $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text').
+        " : $link ".$params['refname'];
     }
 
     private function makeLinkReview(GitRepository $repository, $review)

@@ -31,20 +31,27 @@ class GitNotificationSender
     private $sender;
     private $bot_git_factory;
     private $repository;
+    private $notification_builder;
 
-    public function __construct(Sender $sender, BotGitFactory $bot_git_factory, GitRepository $repository)
-    {
-        $this->sender          = $sender;
-        $this->bot_git_factory = $bot_git_factory;
-        $this->repository      = $repository;
+    public function __construct(
+        Sender $sender,
+        BotGitFactory $bot_git_factory,
+        GitRepository $repository,
+        GitNotificationBuilder $notification_builder
+    ) {
+        $this->sender               = $sender;
+        $this->bot_git_factory      = $bot_git_factory;
+        $this->repository           = $repository;
+        $this->notification_builder = $notification_builder;
     }
 
-    public function process()
+    public function process(array $params)
     {
         try {
             $bots = $this->bot_git_factory->getBotsByRepositoryId($this->repository->getId());
+            $text = $this->notification_builder->buildNotificationText($params);
             if (! empty($bots)) {
-                $this->sender->pushNotifications($bots);
+                $this->sender->pushNotifications($bots, $text);
             }
         } catch (BotNotFoundException $e) {
             // Nothing to do

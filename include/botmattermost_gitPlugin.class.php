@@ -77,26 +77,26 @@ class botmattermost_gitPlugin extends Plugin
         }
     }
 
-    public function git_hook_post_receive_ref_update($params)
+    public function git_hook_post_receive_ref_update(array $params)
     {
         $repository = $params['repository'];
         if ($this->isAllowed($repository->getProjectId())) {
             $git_notification_sender = new GitNotificationSender(
                 new Sender(
                     new EncoderMessage(),
-                    new GitNotificationBuilder(
-                        new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git')),
-                        $params
-                    ),
                     new ClientBotMattermost()
                 ),
                 new BotGitFactory(
                     new BotGitDao(),
-                    new BotFactory(new BotDao())),
-                $repository
+                    new BotFactory(new BotDao())
+                ),
+                $repository,
+                new GitNotificationBuilder(
+                    new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'))
+                )
             );
 
-            $git_notification_sender->process();
+            $git_notification_sender->process($params);
         }
     }
 
@@ -116,7 +116,7 @@ class botmattermost_gitPlugin extends Plugin
         }
     }
 
-    private function getController(Codendi_Request $request)
+    private function getController(HTTPRequest $request)
     {
         $botFactory = new BotFactory(new BotDao());
 
