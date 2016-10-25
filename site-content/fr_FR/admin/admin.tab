@@ -582,7 +582,7 @@ admin_permission_delegation	page_description	Ici vous pouvez assigner des permis
 admin_permission_delegation	group_action_add	Ajouter un groupe
 admin_permission_delegation	group_action_edit	Editer
 admin_permission_delegation	group_action_delete	Supprimer
-admin_permission_delegation	no_group	Il n'y a pas encore de groupe. Vous pouvez commencer par en ajouter un :
+admin_permission_delegation	no_group	Il n'y a rien ici,<br>commencez par ajouter un groupe.
 admin_permission_delegation	permissions_title	Permissions
 admin_permission_delegation	no_permission	Il n'y a aucune permission associée à ce groupe
 admin_permission_delegation	users_title	Utilisateurs
@@ -597,12 +597,12 @@ admin_permission_delegation	group_title_create	Ajouter un nouveau groupe
 admin_permission_delegation	group_title_edit	Editer le groupe "$1"
 admin_permission_delegation	group_name	Nom
 admin_permission_delegation	group_description	Description
-admin_permission_delegation	group_submit_create	Créer
+admin_permission_delegation	group_submit_create	Créer le groupe
 admin_permission_delegation	group_submit_edit	Sauvegarder
 admin_permission_delegation	group_cancel	Annuler
 admin_permission_delegation	group_title_delete	Supprimer le groupe "$1"
-admin_permission_delegation	group_delete_confirmation	Vous êtes sur le point de supprimer le groupe "<b>$1</b>". Cette action est irréversible. Confirmez-vous la suppression ?
-admin_permission_delegation	group_submit_delete	Oui, supprimer
+admin_permission_delegation	group_delete_confirmation	Vous êtes sur le point de supprimer le groupe <b>$1</b>. Cette action est irréversible. Confirmez-vous la suppression ?
+admin_permission_delegation	group_submit_delete	Supprimer le groupe
 admin_permission_delegation	group_cancel_delete	Annuler
 admin_permission_delegation	user_group_already_exists	Le nom du groupe d'utilisateurs est invalide (vide ou déjà existant)
 admin_permission_delegation	ugroup_not_found	Ce groupe d'utilisateurs n'existe pas

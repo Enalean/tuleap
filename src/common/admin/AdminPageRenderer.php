@@ -26,12 +26,12 @@ use Tuleap\Layout\SidebarPresenter;
 
 class AdminPageRenderer
 {
-    public function header($title)
+    public function header($title, $is_framed = true)
     {
         $GLOBALS['HTML']->header(
             array(
                 'title'        => $title,
-                'main_classes' => array('tlp-framed'),
+                'main_classes' => $is_framed ? array('tlp-framed') : array(),
                 'sidebar'      => new SidebarPresenter('siteadmin-sidebar', $this->renderSideBar())
             )
         );
@@ -45,6 +45,13 @@ class AdminPageRenderer
     public function renderAPresenter($title, $template_path, $template_name, $presenter)
     {
         $this->header($title);
+        $this->getRenderer($template_path)->renderToPage($template_name, $presenter);
+        $GLOBALS['HTML']->footer(array());
+    }
+
+    public function renderANoFramedPresenter($title, $template_path, $template_name, $presenter)
+    {
+        $this->header($title, false);
         $this->getRenderer($template_path)->renderToPage($template_name, $presenter);
         $GLOBALS['HTML']->footer(array());
     }

@@ -593,7 +593,7 @@ admin_permission_delegation	page_description	Here you can assign plateform roles
 admin_permission_delegation	group_action_add	Add group
 admin_permission_delegation	group_action_edit	Edit
 admin_permission_delegation	group_action_delete	Delete
-admin_permission_delegation	no_group	There is no group yet. You can start by adding one:
+admin_permission_delegation	no_group	There is nothing here,<br>start by adding a group.
 admin_permission_delegation	permissions_title	Permissions
 admin_permission_delegation	no_permission	There is no permission associated to this group
 admin_permission_delegation	users_title	Users
@@ -608,12 +608,12 @@ admin_permission_delegation	group_title_create	Create a new group
 admin_permission_delegation	group_title_edit	Edit the group "$1"
 admin_permission_delegation	group_name	Name
 admin_permission_delegation	group_description	Description
-admin_permission_delegation	group_submit_create	Create
+admin_permission_delegation	group_submit_create	Create group
 admin_permission_delegation	group_submit_edit	Save changes
 admin_permission_delegation	group_cancel	Cancel
 admin_permission_delegation	group_title_delete	Delete the group "$1"
-admin_permission_delegation	group_delete_confirmation	You are about to delete the group "<b>$1</b>". This action is action is irreversible. Do you confirm this deletion?
-admin_permission_delegation	group_submit_delete	Yes, delete it
+admin_permission_delegation	group_delete_confirmation	You are about to delete the group <b>$1</b>. This action is action is irreversible. Do you confirm this deletion?
+admin_permission_delegation	group_submit_delete	Delete group
 admin_permission_delegation	group_cancel_delete	Cancel
 admin_permission_delegation	user_group_already_exists	The user group name is invalid (empty or already exists)
 admin_permission_delegation	ugroup_not_found	User group does not exist

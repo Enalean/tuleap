@@ -50,8 +50,11 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_title', array($this->name));
     }
 
-    public function permissions_modal_description() {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_description', array($this->name));
+    public function purified_permissions_modal_description() {
+        return Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_description', $this->name),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 
     public function has_permissions() {
