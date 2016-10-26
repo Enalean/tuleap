@@ -15,7 +15,6 @@ class PluginsAdministrationPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('site_admin_option_hook', 'siteAdminHooks', true);
         $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::IS_IN_SITEADMIN);
     }
@@ -34,13 +33,6 @@ class PluginsAdministrationPlugin extends Plugin
             $this->pluginInfo = new PluginsAdministrationPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    function siteAdminHooks($hook, $params)
-    {
-        $site_url  = $this->getPluginPath() . '/';
-        $site_name = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'descriptor_name');
-        echo '<li><a href="', $site_url, '">', $site_name, '</a></li>';
     }
 
     function cssFile($params) {

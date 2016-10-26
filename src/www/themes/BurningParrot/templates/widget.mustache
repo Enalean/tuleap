@@ -1,8 +1,8 @@
-<section class="tlp-pane">
-    <div class="tlp-pane-header">
-        <h1 class="tlp-pane-title">{{ getTitle }}</h1>
-    </div>
-    <section class="tlp-pane-section ">
+<section class="tlp-pane {{ getAdditionalClass }}">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa {{ getIcon }}"></i> {{ getTitle }}</h1>
+        </div>
         {{{ getContent }}}
-    </section>
+    </div>
 </section>
