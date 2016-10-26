@@ -671,11 +671,14 @@ class FRSFileFactory {
         $prefix  = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
         $status  = true;
         $error   = array();
-        $params  = array('status'         => &$status,
-                         'source_path'    => $this->getStagingPath($file),
-                         'archive_prefix' => $prefix,
-                         'error'          => &$error
-                );
+        $params  = array(
+            'status'          => &$status,
+            'source_path'     => $this->getStagingPath($file),
+            'archive_prefix'  => $prefix,
+            'error'           => &$error,
+            'skip_duplicated' => true
+        );
+
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
         if ($params['status']) {
             return true;

@@ -56,15 +56,22 @@ class FileCopierTest extends \TuleapTestCase
     public function itDoesNotCopyIfSourceDoesNotExist()
     {
         $file_copier        = new FileCopier($this->logger);
-        $is_copy_successful = $file_copier->copy('/file-do-not-exist', $this->temporary_destination_file);
+        $is_copy_successful = $file_copier->copy('/file-do-not-exist', $this->temporary_destination_file, false);
         $this->assertFalse($is_copy_successful);
     }
 
     public function itDoesNotCopyIfDestinationFileExist()
     {
         $file_copier        = new FileCopier($this->logger);
-        $is_copy_successful = $file_copier->copy($this->temporary_source_file, $this->temporary_destination_file);
+        $is_copy_successful = $file_copier->copy($this->temporary_source_file, $this->temporary_destination_file, false);
         $this->assertFalse($is_copy_successful);
+    }
+
+    public function itReturnsTrueIfDestinationFileExistAnsWeAreSkippingDuplicates()
+    {
+        $file_copier        = new FileCopier($this->logger);
+        $is_copy_successful = $file_copier->copy($this->temporary_source_file, $this->temporary_destination_file, true);
+        $this->assertTrue($is_copy_successful);
     }
 
     public function itCopiesAFile()
@@ -74,7 +81,7 @@ class FileCopierTest extends \TuleapTestCase
         unlink($this->temporary_destination_file);
 
         $file_copier        = new FileCopier($this->logger);
-        $is_copy_successful = $file_copier->copy($this->temporary_source_file, $this->temporary_destination_file);
+        $is_copy_successful = $file_copier->copy($this->temporary_source_file, $this->temporary_destination_file, false);
         $this->assertTrue($is_copy_successful);
         $this->assertEqual($content, file_get_contents($this->temporary_source_file));
         $this->assertEqual($content, file_get_contents($this->temporary_destination_file));

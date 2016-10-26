@@ -378,10 +378,11 @@ class RepositoryManager
             $status      = true;
             $error       = null;
             $params      = array(
-                'source_path'    => $source_path,
-                'archive_prefix' => self::PREFIX,
-                'status'         => &$status,
-                'error'          => &$error
+                'source_path'     => $source_path,
+                'archive_prefix'  => self::PREFIX,
+                'status'          => &$status,
+                'error'           => &$error,
+                'skip_duplicated' => false
             );
 
             $this->event_manager->processEvent('archive_deleted_item', $params);

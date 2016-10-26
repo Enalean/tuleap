@@ -169,13 +169,16 @@ class Docman_VersionFactory {
     {
         $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
         $prefix  = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
-        $status = true;
-        $error  = null;
-        $params  = array('source_path'    => $version->getPath(),
-                         'archive_prefix' => $prefix,
-                         'status'         => &$status,
-                         'error'          => &$error
+        $status  = true;
+        $error   = null;
+        $params  = array(
+            'source_path'     => $version->getPath(),
+            'archive_prefix'  => $prefix,
+            'status'          => &$status,
+            'error'           => &$error,
+            'skip_duplicated' => false
         );
+
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
 
         return $params['status'];

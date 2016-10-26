@@ -35,7 +35,7 @@ class FileCopier
     /**
      * @return bool
      */
-    public function copy($source_file, $destination_file)
+    public function copy($source_file, $destination_file, $skip_duplicated)
     {
         if (! file_exists($source_file)) {
             $this->logger->error("Source file $source_file already exist");
@@ -45,8 +45,13 @@ class FileCopier
         $this->logger->debug("Owner of source: " . $this->getGroupNameForFile($source_file));
 
         if (file_exists($destination_file)) {
-            $this->logger->error("Destination file $destination_file already exist");
-            return false;
+            if ($skip_duplicated) {
+                $this->logger->warn("Destination file $destination_file already exists. Skipping");
+                return true;
+            } else {
+                $this->logger->error("Destination file $destination_file already exists");
+                return false;
+            }
         }
 
         if (! touch($destination_file)) {

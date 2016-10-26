@@ -86,26 +86,26 @@ class ArchivedeleteditemsPlugin extends Plugin
             $source_path = $params['source_path'];
         } else {
             $params['error'] = 'Missing argument source path';
-            return false;
+            return;
         }
 
         $archive_path = $this->getWellFormattedArchivePath();
 
-        if (!empty($archive_path)) {
+        if (! empty($archive_path)) {
             if (!is_dir($archive_path)) {
                 $params['error'] = 'Non-existing archive path';
-                return false;
+                return;
             }
         } else {
             $params['error'] = 'Missing argument archive path';
-            return false;
+            return;
         }
 
-        if (!empty($params['archive_prefix'])) {
+        if (! empty($params['archive_prefix'])) {
             $archive_prefix = $params['archive_prefix'];
         } else {
             $params['error'] = 'Missing argument archive prefix';
-            return false;
+            return;
         }
 
         $destination_path = $archive_path.$archive_prefix.'_'.basename($source_path);
@@ -113,17 +113,20 @@ class ArchivedeleteditemsPlugin extends Plugin
         if (! file_exists($source_path)) {
             $params['error'] = 'Skipping file "'.$source_path.'": not found in file system.';
             $logger->error($params['error']);
-            return false;
+            return;
         }
 
+        $skip_duplicated    = $params['skip_duplicated'];
         $file_copier        = new FileCopier($logger);
-        $is_copy_successful = $file_copier->copy($source_path, $destination_path);
+        $is_copy_successful = $file_copier->copy($source_path, $destination_path, $skip_duplicated);
+
         if ($is_copy_successful) {
             $logger->info('Archiving OK');
         } else {
             $params['error'] = 'Archiving of "' . $source_path . '" in "' . $destination_path . '" failed';
         }
-        return $is_copy_successful;
+
+        $params['status'] = $is_copy_successful;
     }
 
     private function getWellFormattedArchivePath() {
