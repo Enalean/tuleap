@@ -1,16 +1,15 @@
-<div id="modal-add-mirror" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label">
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="modal-big-content-label"><i class="fa fa-plus"></i> {{ add_mirror }}</h1>
-        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
-            &times;
+<form method="POST" action="?pane=mirrors_admin&action=add-mirror">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div id="modal-add-mirror" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="modal-big-content-label"><i class="fa fa-plus"></i> {{ add_mirror }}</h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
         </div>
-    </div>
-    <div class="tlp-modal-body">
-        <form id="mirrorServer" method="POST" action="?pane=mirrors_admin&action=add-mirror">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-
+        <div class="tlp-modal-body">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="name-required">{{ identifier }} <i class="fa fa-asterisk"></i></label>
                 <input id="name-required" class="tlp-input" name="new_mirror_name" type="text" placeholder="location" size="25" required/>
@@ -32,11 +31,10 @@
                 <label class="tlp-label" for="password-required">{{ pwd_label }} <i class="fa fa-asterisk"></i></label>
                 <input id="password-required" class="tlp-input" name="new_mirror_pwd" type="password" placeholder="************" size="40" required/>
             </div>
-
-        </form>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_cancel }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action"><i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}</button>
+        </div>
     </div>
-    <div class="tlp-modal-footer">
-        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_cancel }}</button>
-        <button type="submit" form="mirrorServer" class="tlp-button-primary tlp-modal-action"><i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}</button>
-    </div>
-</div>
+</form>

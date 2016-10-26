@@ -8,7 +8,7 @@
     }
 
     > .form-element-item:not(:first-child) {
-        flex: 0;
+        flex: 0 0 auto;
     }
 
     > .form-element-item:first-child {

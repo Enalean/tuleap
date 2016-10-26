@@ -1,16 +1,15 @@
-<div id="modal-add-gerrit-server" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label">
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="modal-big-content-label"><i class="fa fa-plus"></i> {{ gerrit_add_server }}</h1>
-        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
-            &times;
+<form method="POST" action="?pane=gerrit_servers_admin&action=add-gerrit-server">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div id="modal-add-gerrit-server" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="modal-big-content-label"><i class="fa fa-plus"></i> {{ gerrit_add_server }}</h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
         </div>
-    </div>
-    <div class="tlp-modal-body">
-        <form id="gerritAddServer" method="POST" action="?pane=gerrit_servers_admin&action=add-gerrit-server">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-
+        <div class="tlp-modal-body">
             <div class="form-element-group">
                 <div class="tlp-form-element form-element-item">
                     <label class="tlp-label" for="host-required">{{ gerrit_label_host }} <i class="fa fa-asterisk"></i></label>
@@ -80,22 +79,15 @@
                     <input type="radio" name="auth_type" value="Basic"> {{ basic }}
                 </label>
             </div>
-        </form>
+        </div>
+
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{ btn_cancel }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ add_server }}
+            </button>
+        </div>
     </div>
-    <div class="tlp-modal-footer">
-        <button
-                type="button"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
-        >
-            {{ btn_cancel }}
-        </button>
-        <button
-                type="submit"
-                form="gerritAddServer"
-                class="tlp-button-primary tlp-modal-action"
-        >
-            <i class="fa fa-plus tlp-button-icon"></i> {{ add_server }}
-        </button>
-    </div>
-</div>
+</form>
