@@ -52,12 +52,12 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="replication-ssh-key-required">{{ gerrit_label_replication_key }} <i class="fa fa-asterisk"></i></label>
-                <textarea type="text" class="tlp-textarea" id="replication-ssh-key-required" name="replication_key" placeholder="Key..."></textarea>
+                <textarea class="tlp-textarea" id="replication-ssh-key-required" name="replication_key" placeholder="Key..."></textarea>
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" name="use_ssl" value="0"> {{ gerrit_label_use_ssl }}
+                    <input type="checkbox" name="use_ssl" value="1"> {{ gerrit_label_use_ssl }}
                 </label>
             </div>
 
@@ -74,16 +74,28 @@
             <div class="tlp-form-element">
                 <label class="tlp-label">{{ gerrit_label_auth_type }}</label>
                 <label class="tlp-label tlp-radio">
-                    <input type="radio" name="auth_type" value="Digest" checked> Digest (default)
+                    <input type="radio" name="auth_type" value="Digest" checked> {{ digest }}
                 </label>
                 <label class="tlp-label tlp-radio">
-                    <input type="radio" name="auth_type" value="Basic"> Basic
+                    <input type="radio" name="auth_type" value="Basic"> {{ basic }}
                 </label>
             </div>
         </form>
     </div>
     <div class="tlp-modal-footer">
-        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_cancel }}</button>
-        <button type="submit" form="gerritAddServer" class="tlp-button-primary tlp-modal-action"><i class="fa fa-plus tlp-button-icon"></i> {{ add_server }}</button>
+        <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+        >
+            {{ btn_cancel }}
+        </button>
+        <button
+                type="submit"
+                form="gerritAddServer"
+                class="tlp-button-primary tlp-modal-action"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_server }}
+        </button>
     </div>
 </div>

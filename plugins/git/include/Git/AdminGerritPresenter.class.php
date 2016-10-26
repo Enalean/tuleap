@@ -19,7 +19,6 @@
  */
 
 class Git_AdminGerritPresenter extends Git_AdminPresenter {
-
     public $manage_gerrit = true;
 
     public $gerrit_active = 'tlp-tab-active';
@@ -33,6 +32,8 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
     public $btn_edit;
 
     public $btn_delete;
+
+    public $btn_cancel;
 
     public $empty_content;
 
@@ -70,8 +71,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $basic;
 
-    public $btn_cancel;
-
     public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits) {
         parent::__construct($title, $csrf_token);
 
@@ -81,6 +80,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         $this->list_of_servers_empty_message = $GLOBALS['Language']->getText('plugin_git', 'gerrit_no_servers');
         $this->btn_edit                      = $GLOBALS['Language']->getText('global', 'btn_edit');
         $this->btn_delete                    = $GLOBALS['Language']->getText('global', 'btn_delete');
+        $this->btn_cancel                    = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->btn_delete_title              = $GLOBALS['Language']->getText('plugin_git', 'btn_delete_title');
         $this->empty_content                 = $GLOBALS['Language']->getText('plugin_git', 'empty_content');
         $this->not_specified_host            = $GLOBALS['Language']->getText('plugin_git', 'not_specified_host');
@@ -104,8 +104,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
         $this->basic          = $GLOBALS['Language']->getText('plugin_git', 'basic');
         $this->digest         = $GLOBALS['Language']->getText('plugin_git', 'digest');
-
-        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
     public function list_of_servers_is_empty()
