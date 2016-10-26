@@ -34,7 +34,7 @@ class SectionsPresenter
     {
         $this->emailgateway       = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
         $this->natures            = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
-        $this->deprecation_panel = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title');
+        $this->deprecation_panel = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'deprecation_panel');
 
         $this->emailgateway_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
             'action'   => 'emailgateway'
