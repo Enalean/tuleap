@@ -31,10 +31,10 @@
                         <p>{{ getTokenEndpoint }}</p>
                     </div>
                     <div class="tlp-property">
-                        {{# getUserInfoEndpoint }}
                         <label class="tlp-label">
                             {{ userinfo_endpoint }}
                         </label>
+                        {{# getUserInfoEndpoint }}
                         <p>{{ getUserInfoEndpoint }}</p>
                         {{/ getUserInfoEndpoint }}
                         {{^ getUserInfoEndpoint }}
@@ -70,7 +70,11 @@
         </div>
         <div class="tlp-pane-container provider-action-container">
             <section class="tlp-pane-section provider-action">
-                <button type="button" class="tlp-button-primary tlp-button-outline">
+                <button
+                    type="button"
+                    class="tlp-button-primary tlp-button-outline provider-action-edit-button"
+                    data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
+                >
                     <i class="fa fa-pencil tlp-button-icon"></i>
                     {{ btn_edit }}
                 </button>
@@ -85,6 +89,8 @@
                 </form>
             </section>
         </div>
+
+        {{> administration-providers-modal-update }}
     </section>
     {{/ providers_presenters }}
     {{^ there_are_providers }}
