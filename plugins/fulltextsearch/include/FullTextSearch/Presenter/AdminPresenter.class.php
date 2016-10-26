@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,26 +18,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+class FullTextSearch_Presenter_AdminPresenter
+{
 
-class FullTextSearch_Presenter_AdminPresenter {
-
-    public function title() {
+    public function title()
+    {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title');
     }
 
-    public function reindex_title() {
-        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'reindex_title');
+    public function subtitle()
+    {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_subtitle');
     }
 
-    public function reindex_project_label() {
+    public function reindex_project_label()
+    {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'reindex_project_label');
     }
 
-    public function reindex_help() {
+    public function reindex_help()
+    {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'reindex_help');
     }
 
-    public function submit_project_label() {
+    public function submit_project_label()
+    {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'submit_project_label');
+    }
+
+    public function label_placeholder_project()
+    {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'label_placeholder_project');
     }
 }
