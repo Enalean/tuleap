@@ -20,10 +20,10 @@
 (function () {
     'use strict';
 
-    var modal_gerrit_add_server         = document.getElementById('modal-add-gerrit-server');
-    var modal_gerrit_add_server_content = tlp.modal(modal_gerrit_add_server, {});
+    var modal_mirror_configuration_element = document.getElementById('modal-mirror-configuration');
+    var modal_mirror_configuration         = tlp.modal(modal_mirror_configuration_element, {});
 
-    document.getElementById('button-modal-add-gerrit-server').addEventListener('click', function () {
-        modal_gerrit_add_server_content.toggle();
+    document.getElementById('button-modal-mirror-configuration').addEventListener('click', function () {
+        modal_mirror_configuration.toggle();
     });
 } ());

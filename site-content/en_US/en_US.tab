@@ -49,12 +49,13 @@ global	btn_preview	Preview
 global	btn_close	Close
 global	btn_reset	Reset
 global	btn_edit	Edit
+global	btn_restrict	Restrict
 global	save_change	Save your change
 global	reset	reset
 global	delete	Delete
 global	add	Add
 global	total	Total
-global	warning!	Warning!
+global	warning	Warning!
 global	yes	Yes
 global	no	No
 global	on	On

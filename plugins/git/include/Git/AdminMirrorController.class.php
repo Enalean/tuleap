@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Admin\AdminPageRenderer;
 
 class Git_AdminMirrorController {
 
@@ -38,13 +41,17 @@ class Git_AdminMirrorController {
     /** @var Git_SystemEventManager */
     private $git_system_event_manager;
 
+    /** @var AdminPageRenderer */
+    private $admin_page_renderer;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Git_Mirror_MirrorDataMapper $git_mirror_mapper,
         Git_MirrorResourceRestrictor $git_mirror_resource_restrictor,
         ProjectManager $project_manager,
         Git_Mirror_ManifestManager $git_mirror_manifest_manager,
-        Git_SystemEventManager $git_system_event_manager
+        Git_SystemEventManager $git_system_event_manager,
+        AdminPageRenderer $admin_page_renderer
     ) {
         $this->csrf                           = $csrf;
         $this->git_mirror_mapper              = $git_mirror_mapper;
@@ -52,6 +59,7 @@ class Git_AdminMirrorController {
         $this->project_manager                = $project_manager;
         $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
         $this->git_system_event_manager       = $git_system_event_manager;
+        $this->admin_page_renderer            = $admin_page_renderer;
     }
 
     public function process(Codendi_Request $request) {
@@ -75,8 +83,8 @@ class Git_AdminMirrorController {
     }
 
     public function display(Codendi_Request $request) {
-        $title     = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $title         = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $template_path = dirname(GIT_BASE_DIR).'/templates';
         $presenter = null;
 
         switch ($request->get('action')) {
@@ -85,10 +93,11 @@ class Git_AdminMirrorController {
                 break;
             case 'manage-allowed-projects':
             case 'set-mirror-restriction':
-            case 'update-allowed-project-list':
-                $presenter = $this->getManageAllowedProjectsPresenter($request);
-                $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
+            case 'update-allowed-project-list': {
+                $presenter     = $this->getManageAllowedProjectsPresenter($request);
+                $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
                 break;
+            }
             case 'show-edit-mirror':
             case 'show-add-mirror':
                 break;
@@ -102,9 +111,12 @@ class Git_AdminMirrorController {
             return;
         }
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed-vertically')));
-        $renderer->renderToPage($presenter->getTemplate(), $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->admin_page_renderer->renderANoFramedPresenter(
+            $title,
+            $template_path,
+            $presenter->getTemplate(),
+            $presenter
+        );
     }
 
     private function getAllMirrorsPresenter($title) {

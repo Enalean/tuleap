@@ -395,8 +395,8 @@ plugin_git	admin_mirror_defalut_cannot_delete	Une erreur est apparue lors de la 
 plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un miroir
 plugin_git	dump_mirrored_repositories_label	Réécrire la configuration des dépôts mirroirs
-plugin_git	dump_mirrored_repositories_text	Si vous cliquez sur ce bouton, un évènement système sera généré pour reconstruire la configuration des dépôts mirroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque mirroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc.
-plugin_git	dump_gitolite_conf_queued	Un évènement système a été généré. La configuration de gitolite sera reconstruite au moment de son éxécution.<a href="$1"> La queue Git se trouve ici</a>.
+plugin_git	dump_mirrored_repositories_text	Un évènement système sera généré pour reconstruire la configuration des dépôts mirroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque mirroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc. Voulez-vous continuer ?
+plugin_git	dump_gitolite_conf_queued	Un évènement système a été généré. La configuration de gitolite sera reconstruite au moment de son éxécution. <a href="$1">La queue Git se trouve ici</a>.
 plugin_git	mirror_section_title	Administration des mirroirs
 plugin_git	url_label	Hôte SSH
 plugin_git	hostname_label	Hôte
@@ -442,6 +442,7 @@ plugin_git	default_mirros_update_error	Une erreur est survenue lors de la mise �
 plugin_git	mirror_no_mirrors_part_one	Il n'y a rien ici,
 plugin_git	mirror_no_mirrors_part_two	commencez par ajouter un miroir.
 plugin_git	mirror_number_of_repositories	$1 dépôt(s)
+plugin_git	no_specified_mirror_name	Nom de miroir non renseigné
 
 plugin_git	system_event_queue	File d'attente Git
 plugin_git	mirror_system_event_queue	File d'attente Grok Mirror

@@ -49,6 +49,10 @@
     margin: 0 0 0 ($tlp-spacing / 2);
 }
 
+.mirror-configuration {
+    line-height: 30px;
+}
+
 /* -------------------- GERRIT ---------------------- */
 
 .add-gerrit-server-button {
@@ -107,17 +111,13 @@
         flex-direction: column;
     }
 
-    .tlp-pane-container:last-child {
-        border-right: 1px solid $tlp-ui-border-light;
-    }
-
     .mirror-action-container {
         justify-content: flex-end;
-        border: 1px solid $tlp-ui-border-light;
+        border-top: 1px solid $tlp-ui-border-light;
     }
 
     .gerrit-server-action-container {
         justify-content: flex-end;
-        border: 1px solid $tlp-ui-border-light;
+        border-top: 1px solid $tlp-ui-border-light;
     }
 }

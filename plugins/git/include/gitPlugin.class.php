@@ -297,8 +297,12 @@ class GitPlugin extends Plugin {
     public function burning_parrot_get_javascript_files(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0) {
-            $params['javascript_files'][] = $this->getThemePath() .'/js/modal-add-gerrit-server.js';
-            $params['javascript_files'][] = $this->getThemePath() .'/js/modal-add-mirror.js';
+            if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_admin')) {
+                $params['javascript_files'][] = $this->getThemePath() . '/js/modal-add-gerrit-server.js';
+            } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_admin')) {
+                $params['javascript_files'][] = $this->getThemePath() . '/js/modal-add-mirror.js';
+                $params['javascript_files'][] = $this->getThemePath() . '/js/modal-mirror-configuration.js';
+            }
         }
     }
 
