@@ -100,6 +100,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook('site_admin_option_hook');
         $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 
     public function getHooksAndCallbacks() {
@@ -200,6 +201,21 @@ class trackerPlugin extends Plugin {
             if (file_exists($this->getThemePath().'/css/ieStyle.css')) {
                 echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
             }
+        }
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        $include_tracker_css_file = false;
+        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
+
+        if ($include_tracker_css_file ||
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
         }
     }
 
