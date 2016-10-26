@@ -30,13 +30,24 @@ class RegexpFineGrainedDisabler
      */
     private $regexp_repository_dao;
 
-    public function __construct(RegexpRepositoryDao $regexp_repository_dao)
+    /**
+     * @var RegexpFineGrainedDao
+     */
+    private $regexp_dao;
+
+    public function __construct(RegexpRepositoryDao $regexp_repository_dao, RegexpFineGrainedDao $regexp_dao)
     {
         $this->regexp_repository_dao = $regexp_repository_dao;
+        $this->regexp_dao            = $regexp_dao;
     }
 
     public function disableForRepository(GitRepository $repository)
     {
         $this->regexp_repository_dao->disable($repository->getId());
+    }
+
+    public function disableAtSiteLevel()
+    {
+        return $this->regexp_dao->disable();
     }
 }

@@ -30,8 +30,6 @@ class GeneralSettingsPresenter extends Git_AdminPresenter
     public $access_control_title;
     public $allow_regexp_info;
     public $save_settings;
-    public $warning_no_possible_go_back;
-    public $warning_is_activated;
     public $is_activated;
     public $csrf_token;
 
@@ -45,7 +43,5 @@ class GeneralSettingsPresenter extends Git_AdminPresenter
         $this->access_control_title        = $GLOBALS['Language']->getText('plugin_git', 'access_control_title');
         $this->allow_regexp_info           = $GLOBALS['Language']->getText('plugin_git', 'allow_regexp_info');
         $this->save_settings               = $GLOBALS['Language']->getText('plugin_git', 'save_settings');
-        $this->warning_no_possible_go_back = $GLOBALS['Language']->getText('plugin_git', 'no_go_back');
-        $this->warning_is_activated        = $GLOBALS['Language']->getText('plugin_git', 'warning_is_activated');
     }
 }

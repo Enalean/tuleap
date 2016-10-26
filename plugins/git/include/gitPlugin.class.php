@@ -577,7 +577,8 @@ class GitPlugin extends Plugin {
             $this->getManifestManager(),
             $this->getGitSystemEventManager(),
             $this->getRegexpFineGrainedRetriever(),
-            $this->getRegexpFineGrainedEnabler()
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedDisabler()
         );
         $admin->process($request);
         $admin->display($request);
@@ -1342,7 +1343,7 @@ class GitPlugin extends Plugin {
 
     private function getRegexpFineGrainedDisabler()
     {
-        return new RegexpFineGrainedDisabler(new RegexpRepositoryDao());
+        return new RegexpFineGrainedDisabler(new RegexpRepositoryDao(), new RegexpFineGrainedDao());
     }
 
     private function getDefaultPermissionsUpdater()
