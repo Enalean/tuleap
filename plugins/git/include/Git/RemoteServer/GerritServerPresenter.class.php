@@ -25,7 +25,7 @@ class Git_RemoteServer_GerritServerPresenter
     {
         $this->id                             = $server->getId();
         $this->host                           = $server->getHost();
-        $this->http_port                      = $server->getHTTPPort();
+        $this->http_port                      = $server->getHTTPPort() ? $server->getHTTPPort() : '';
         $this->ssh_port                       = $server->getSSHPort();
         $this->replication_key                = $server->getReplicationKey();
         $this->use_ssl                        = $server->usesSSL();
