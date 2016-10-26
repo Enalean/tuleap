@@ -1647,12 +1647,15 @@ plugin_tracker	field_not_stored_exception	Le champs "$1" n'a pas pu être sauveg
 plugin_tracker	comment_not_stored_exception	Le commentaire n'a pas pu être sauvegardé.
 plugin_tracker	changeset_not_stored_exception	Le changeset n'a pas pu être sauvegardé.
 
-plugin_tracker_deprecation_panel	title	Suivi des éléments en voie d'obsolescence.
+plugin_tracker_deprecation_panel	title	Outils de suivi
+plugin_tracker_deprecation_panel	deprecation_panel	Suivi des éléments en voie d'obsolescence
+plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Suivi des champs calculés en voie d'obsolescence
 plugin_tracker_deprecation_panel	warning_deprecation	L'ancien mode de fonctionnement des champs calculés sera indisponible à partir du 31 décembre 2016.
 plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	Cet outil de suivi est basé sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir du 31 décembre 2016).
 plugin_tracker_deprecation_panel	title_project	Nom du projet
 plugin_tracker_deprecation_panel	title_tracker	Nom de l'outil de suivi
 plugin_tracker_deprecation_panel	title_field	Champs incriminé
+plugin_tracker_deprecation_panel	no_deprecated_fields	Il n'y a aucun champs en voie d'obsolescence
 plugin_tracker_deprecation_panel	adapt_message	Ce projet utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir du 31 décembre 2016). Merci de mettre à jour la configuration des champs :
 
 plugin_tracker_deprecation_field	title_autocompute	Calcul automatique
@@ -1661,8 +1664,9 @@ plugin_tracker_deprecation_field	warning_permissions	Il ne vous sera pas possibl
 
 plugin_tracker	autocomputed_field	valeur calculée
 
-plugin_tracker_config	title	Configuration générale des outils de suivi
+plugin_tracker_config	title	Outils de suivi
 plugin_tracker_config	email_gateway	Passerelle Courriel
+plugin_tracker_config	email_gateway_pane_title	Configuration de la passerelle courriel
 plugin_tracker_config	email_gateway_desc	Autoriser les utilisateurs à intéragir avec les outils de suivi par courriel.
 plugin_tracker_config	disable	Désactiver la passerelle
 plugin_tracker_config	disable_desc	La fonctionnalité est désactivée, personne ne peut intéragir avec les outils de suivi par courriel.
@@ -1692,7 +1696,7 @@ plugin_tracker_emailgateway	semantic_ko	La sémantique titre et/ou description n
 plugin_tracker_emailgateway	required_ko	Les champs autres que titre ou description ne peuvent pas être requis
 
 plugin_tracker_artifact_links_natures	column_label	Nature
-plugin_tracker_artifact_links_natures	title	Nature de liens entre artefacts
+plugin_tracker_artifact_links_natures	title	Natures de liens entre artefacts
 plugin_tracker_artifact_links_natures	available_natures	Nature disponibles
 plugin_tracker_artifact_links_natures	desc	Les liens entre artefacts peuvent être typés en spécifiant pour chaque lien sa nature. La liste des natures possibles est définie ci-dessous :
 plugin_tracker_artifact_links_natures	shortname	Nom court

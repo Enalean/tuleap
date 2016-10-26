@@ -8,58 +8,65 @@
     </nav>
 {{/ sections }}
 
-<form  class="tlp-framed-horizontally" method="POST" action="" id="siteadmin-config">
-    <input type="hidden" name="action" value="update-emailgateway" />
-    {{{ csrf_token }}}
 
+<div class="tlp-framed-horizontally">
     {{# is_localinc_obsolete }}
-    <div class="alert alert-error">
+    <div class="tlp-alert-danger">
         {{{ localinc_obsolete_message }}}
     </div>
     {{/ is_localinc_obsolete }}
 
-    <p>{{ email_gateway_desc }}</p>
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{ email_gateway_pane_title }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>{{ email_gateway_desc }}</p>
 
-    <label class="radio">
-        <input
-            type="radio"
-            name="emailgateway_mode"
-            value="disabled"
-            {{# is_emailgateway_disabled }}checked{{/ is_emailgateway_disabled }}
-            />
-        {{ disable }}
-    </label>
-    <p class="help">
-        {{ disable_desc }}
-    </p>
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="update-emailgateway" />
+                    {{{ csrf_token }}}
 
-    <label class="radio">
-        <input
-            type="radio"
-            name="emailgateway_mode"
-            value="token"
-            {{# is_token_based_emailgateway_enabled }}checked{{/ is_token_based_emailgateway_enabled }}
-            />
-        {{ token }}
-    </label>
-    <p class="help">
-        {{{ token_desc }}}
-    </p>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-radio">
+                            <input type="radio"
+                                name="emailgateway_mode"
+                                value="disabled"
+                                {{# is_emailgateway_disabled }}checked{{/ is_emailgateway_disabled }}
+                            >
+                            {{ disable }}
+                        </label>
+                        <p class="tlp-text-info">{{ disable_desc }}</p>
+                    </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-radio">
+                            <input type="radio"
+                                name="emailgateway_mode"
+                                value="token"
+                                {{# is_token_based_emailgateway_enabled }}checked{{/ is_token_based_emailgateway_enabled }}
+                            >
+                            {{ token }}
+                        </label>
+                        <p class="tlp-text-info">{{{ token_desc }}}</p>
+                    </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-radio">
+                            <input type="radio"
+                                name="emailgateway_mode"
+                                value="insecure"
+                                {{# is_insecure_emailgateway_enabled }}checked{{/ is_insecure_emailgateway_enabled }}
+                            >
+                            {{ insecure }}
+                        </label>
+                        <p class="tlp-text-info">{{{ insecure_desc }}}</p>
+                    </div>
 
-    <label class="radio">
-        <input
-            type="radio"
-            name="emailgateway_mode"
-            value="insecure"
-            {{# is_insecure_emailgateway_enabled }}checked{{/ is_insecure_emailgateway_enabled }}
-            />
-        {{ insecure }}
-    </label>
-    <p class="help">
-        {{{ insecure_desc }}}
-    </p>
-
-    <div id="submit-panel">
-        <button type="submit" class="btn btn-primary"><i class="icon-save"></i> {{ save_conf }}</button>
-    </div>
-</form>
+                    <div class="tracker-emailgateway-submit">
+                        <button type="submit" class="tlp-button-primary"><i class="fa fa-save tlp-button-icon"></i> {{ save_conf }}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+</div>
