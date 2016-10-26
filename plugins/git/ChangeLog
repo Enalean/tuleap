@@ -1,3 +1,6 @@
+Version 4.281 - Tuleap 9.1
+    * story #9525: Uncheck regexp in admin view
+
 Version 4.280 - Tuleap 9.1
     * story #9525: Pattern must end with $
 
