@@ -35,6 +35,7 @@ plugin_openidconnectclient_admin	icon	Icon
 plugin_openidconnectclient_admin	color	Color
 plugin_openidconnectclient_admin	preview	Preview of the login page button
 plugin_openidconnectclient_admin	btn_create	Create the provider
+plugin_openidconnectclient_admin	btn_cancel	Cancel
 plugin_openidconnectclient_admin	btn_delete	Delete
 plugin_openidconnectclient_admin	btn_update	Update the provider
 plugin_openidconnectclient_admin	add_new_provider	Add provider
@@ -47,4 +48,6 @@ plugin_openidconnectclient_admin	remove_provider_error	An error occured while re
 plugin_openidconnectclient_admin	remove_provider_success	The provider $1 have been removed.
 plugin_openidconnectclient_admin	malformed_data_error	Les données que vous avez fournies ne sont pas valides.
 plugin_openidconnectclient_admin	empty_content	Empty
-plugin_openidconnectclient_admin	empty_providers_text	There is nothing here,<br> start by adding a provider.
+plugin_openidconnectclient_admin	empty_providers_text_start	There is nothing here,
+plugin_openidconnectclient_admin	empty_providers_text_end	start by adding a provider.
+plugin_openidconnectclient_admin	btn_preview	Preview
