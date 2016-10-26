@@ -128,9 +128,10 @@ if ($request->isPost()) {
 }
 
 
-$delegation_guilder = new AdminDelegationBuilder($user_delegation_manager, UserManager::instance());
-$users              = $delegation_guilder->build();
-$presenter          = new AdminDelegationPresenter($users);
+$delegation_builder = new AdminDelegationBuilder($user_delegation_manager, UserManager::instance());
+$users              = $delegation_builder->buildUsers();
+$services           = $delegation_builder->buildServices();
+$presenter          = new AdminDelegationPresenter($users, $services);
 $site_admin         = new AdminPageRenderer();
 $site_admin->renderAPresenter(
     $GLOBALS['Language']->getText('plugin_admindelegation', 'permissions_page_title'),

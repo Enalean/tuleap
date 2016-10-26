@@ -49,6 +49,7 @@ class AdminDelegationPlugin extends Plugin {
         $this->_addHook('widgets',                'widgets',                false);
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function getPluginInfo() {
@@ -58,6 +59,14 @@ class AdminDelegationPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
+            $params['javascript_files'][] = $this->getThemePath() .'/js/admindelegation.js';
+        }
+    }
+
 
     public function burning_parrot_get_stylesheets($params)
     {

@@ -41,7 +41,7 @@ class AdminDelegationBuilder
         $this->user_manager            = $user_manager;
     }
 
-    public function build()
+    public function buildUsers()
     {
         $permissisons = $this->retrievePermissionsByUsers();
         $user_list    = $this->enhancePermissionsWithUserInformations($permissisons);
@@ -78,5 +78,20 @@ class AdminDelegationBuilder
         }
 
         return $user_list;
+    }
+
+    public function buildServices()
+    {
+        $service_list = array();
+
+        foreach (AdminDelegation_Service::getAllServices() as $service) {
+            $built_service = array(
+                'id' => $service,
+                'label' => AdminDelegation_Service::getLabel($service),
+            );
+            $service_list[] = $built_service;
+        }
+
+        return $service_list;
     }
 }

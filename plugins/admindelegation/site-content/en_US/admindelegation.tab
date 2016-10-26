@@ -21,7 +21,10 @@ plugin_admindelegation	permissions_granted_users_service_title	Granted users per
 plugin_admindelegation	no_permissions_granted	There is nothing here,
 plugin_admindelegation	no_permissions_granted_next_part	start by granting a permission to somebody.
 plugin_admindelegation	add_grant_permission	Grant permission
+plugin_admindelegation	cancel_grant_permission	Cancel
 plugin_admindelegation	delegation_table_title	Granted users
+plugin_admindelegation	label_grant_permission	Grant permissions
+plugin_admindelegation	label_username	To user
 
 # All widgets
 plugin_admindelegation	widget_btn_search	Search

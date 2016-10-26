@@ -1,0 +1,37 @@
+<div
+    id="siteadmin-add-permission-modal"
+    class="tlp-modal"
+    role="dialog"
+    aria-labelledby="siteadmin-config-providers-modal-create-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-plus"></i> {{ add_grant_permission }}
+        </h1>
+        <div
+            class="tlp-modal-close"
+            data-dismiss="modal"
+            aria-label="Close"
+        >&times;</div>
+    </div>
+    <form method="post" action="?func=grant_user_service">
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="service">{{ label_grant_permission }} <i class="fa fa-asterisk"></i></label>
+                <select class="tlp-select" id="service" name="service">
+                    {{# services }}
+                        <option value="{{ id }}">{{ label }}</option>
+                    {{/ services }}
+                </select>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="user_to_grant">{{ label_username }} <i class="fa fa-asterisk"></i></label>
+                <input type="text" class="tlp-input" id="user_to_grant" name="user_to_grant" placeholder="paul@example.com">
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_grant_permission }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action"><i class="fa fa-plus tlp-button-icon"></i> {{ add_grant_permission }}</button>
+        </div>
+    </form>
+</div>
