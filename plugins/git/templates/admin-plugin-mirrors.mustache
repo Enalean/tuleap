@@ -10,7 +10,7 @@
 {{^ list_of_mirrors_is_empty }}
     {{# see_all }}
         <div class="mirror-global-action-container">
-            <button type="button" class="tlp-button-primary tlp-table-actions-element"><i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}</button>
+            <button type="button" id="button-modal-add-mirror" class="tlp-button-primary tlp-table-actions-element"><i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}</button>
             <button type="button" class="tlp-button-warning tlp-table-actions-element"><i class="tlp-button-icon fa fa-repeat"></i> {{ dump_mirrored_repositories_label }}</button>
         </div>
 
@@ -106,3 +106,5 @@
         {{/list_of_mirrors}}
     {{/ see_all }}
 {{/ list_of_mirrors_is_empty }}
+
+{{> admin-plugin-mirror-modal }}
