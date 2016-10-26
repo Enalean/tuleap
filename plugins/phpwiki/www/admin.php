@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'pre.php';
 
-$controller = new PHPWikiAdminController();
+$controller = new PHPWikiAdminController(new AdminPageRenderer());
 $action     = $request->get('action');
 switch ($action) {
     case 'index':

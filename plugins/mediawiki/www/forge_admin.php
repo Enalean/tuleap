@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'pre.php';
 require_once dirname(__FILE__) .'/../include/MediawikiAdminController.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiSiteAdminController.class.php';
@@ -43,7 +45,7 @@ switch ($action) {
         break;
     case 'site_index':
     case 'site_update_allowed_project_list':
-        $controller = new MediawikiSiteAdminController();
+        $controller = new MediawikiSiteAdminController(new AdminPageRenderer());
         $controller->$action($request);
         break;
 }
