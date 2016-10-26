@@ -11,22 +11,22 @@
     </form>
 
     <nav class="admin-sidebar-section-nav">
-        <a href="userlist.php" class="admin-sidebar-section-nav-item">{{ users_nav_all_users }}</a>
-        <a href="register_admin.php?page=admin_creation" class="admin-sidebar-section-nav-item">{{ users_nav_new_user }}</a>
+        <a href="/admin/userlist.php" class="admin-sidebar-section-nav-item">{{ users_nav_all_users }}</a>
+        <a href="/admin/register_admin.php?page=admin_creation" class="admin-sidebar-section-nav-item">{{ users_nav_new_user }}</a>
         {{# users_need_approval}}
-            <a href="approve_pending_users.php?page=pending" class="admin-sidebar-section-nav-item {{# isTherePendingUsers }}tlp-text-warning{{/ isTherePendingUsers }}">
+            <a href="/admin/approve_pending_users.php?page=pending" class="admin-sidebar-section-nav-item {{# isTherePendingUsers }}tlp-text-warning{{/ isTherePendingUsers }}">
                 {{ users_nav_pending_users }}
                 {{# isTherePendingUsers }}
                     <span class="tlp-badge-warning tlp-badge-outline">{{ pending_users_count }}</span>
                 {{/ isTherePendingUsers }}
             </a>
-            <a href="approve_pending_users.php?page=validated" class="admin-sidebar-section-nav-item {{# isThereValidatedUsers }}tlp-text-warning{{/ isThereValidatedUsers }}">
+            <a href="/admin/approve_pending_users.php?page=validated" class="admin-sidebar-section-nav-item {{# isThereValidatedUsers }}tlp-text-warning{{/ isThereValidatedUsers }}">
                 {{ users_nav_validated_users }}
                 {{# isThereValidatedUsers }}
                     <span class="tlp-badge-warning tlp-badge-outline">{{ validated_users_count }}</span>
                 {{/ isThereValidatedUsers }}
             </a>
         {{/ users_need_approval}}
-        <a href="permission_delegation.php" class="admin-sidebar-section-nav-item">{{ users_nav_permission_delegation }}</a>
+        <a href="/admin/permission_delegation.php" class="admin-sidebar-section-nav-item">{{ users_nav_permission_delegation }}</a>
     </nav>
 </section>

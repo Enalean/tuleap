@@ -11,14 +11,14 @@
     </form>
 
     <nav class="admin-sidebar-section-nav">
-        <a href="grouplist.php" class="admin-sidebar-section-nav-item">{{ projects_nav_all_projects }}</a>
-        <a href="approve-pending.php"  class="admin-sidebar-section-nav-item {{# isTherePendingProjects }}tlp-text-warning{{/ isTherePendingProjects }}">
+        <a href="/admin/grouplist.php" class="admin-sidebar-section-nav-item">{{ projects_nav_all_projects }}</a>
+        <a href="/admin/approve-pending.php"  class="admin-sidebar-section-nav-item {{# isTherePendingProjects }}tlp-text-warning{{/ isTherePendingProjects }}">
             {{ projects_nav_pending_projects }}
             {{# isTherePendingProjects }}
                 <span class="tlp-badge-warning tlp-badge-outline">{{ pending_projects_count }}</span>
             {{/ isTherePendingProjects }}
         </a>
-        <a href="grouplist.php?status=I" class="admin-sidebar-section-nav-item">{{ projects_nav_incomplete_projects }}</a>
-        <a href="grouplist.php?status=D" class="admin-sidebar-section-nav-item">{{ projects_nav_deleted_projects }}</a>
+        <a href="/admin/grouplist.php?status=I" class="admin-sidebar-section-nav-item">{{ projects_nav_incomplete_projects }}</a>
+        <a href="/admin/grouplist.php?status=D" class="admin-sidebar-section-nav-item">{{ projects_nav_deleted_projects }}</a>
     </nav>
 </section>
