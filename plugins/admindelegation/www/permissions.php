@@ -41,7 +41,7 @@ if (! $user_manager->getCurrentUser()->isSuperUser()) {
 $user_delegation_manager = new AdminDelegation_UserServiceManager();
 
 if ($request->isPost()) {
-    $vFunc = new Valid_WhiteList('func', array('grant_user_service', 'revoke_user', 'revoke_user_service'));
+    $vFunc = new Valid_WhiteList('func', array('grant_user_service', 'revoke_user'));
     $vFunc->required();
     if ($request->valid($vFunc)) {
         $func = $request->get('func');
@@ -86,31 +86,6 @@ if ($request->isPost()) {
                     $user = $user_manager->getUserById($userId);
                     if ($user) {
                         $user_delegation_manager->removeUser($user);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', 'Bad user');
-                    }
-                }
-            } else {
-                $GLOBALS['Response']->addFeedback('error', 'Bad user');
-            }
-            break;
-
-        case 'revoke_user_service':
-            $vService = new Valid_WhiteList(
-                'plugin_admindelegation_service',
-                AdminDelegation_Service::getAllServices()
-            );
-            $vService->required();
-            if ($request->valid($vService)) {
-                $serviceId = $request->get('plugin_admindelegation_service');
-            }
-            $vUser = new Valid_UInt('users_to_revoke');
-            $vUser->required();
-            if ($request->validArray($vUser)) {
-                foreach ($request->get('users_to_revoke') as $userId) {
-                    $user = $user_manager->getUserById($userId);
-                    if ($user) {
-                        $user_delegation_manager->removeUserService($user, $serviceId);
                     } else {
                         $GLOBALS['Response']->addFeedback('error', 'Bad user');
                     }

@@ -45,7 +45,7 @@ class AdminDelegationPresenter
 
         $this->admindelegation_title = $GLOBALS['Language']->getText(
             'plugin_admindelegation',
-            'permissions_granted_users_title'
+            'permissions_page_title'
         );
 
         $this->admindelegation_user       = $GLOBALS['Language']->getText(
@@ -95,6 +95,16 @@ class AdminDelegationPresenter
         $this->label_username = $GLOBALS['Language']->getText(
             'plugin_admindelegation',
             'label_username'
+        );
+
+        $this->revoke_permissions = $GLOBALS['Language']->getText(
+            'plugin_admindelegation',
+            'revoke_permissions'
+        );
+
+        $this->modal_revoke_warning = $GLOBALS['Language']->getText(
+            'plugin_admindelegation',
+            'modal_revoke_warning'
         );
     }
 }

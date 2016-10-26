@@ -7,7 +7,7 @@ plugin_admindelegation	service_SHOW_PROJECT_ADMINS	Lister les administrateurs de
 plugin_admindelegation	service_SHOW_PROJECTS	Lister tous les projets
 
 # Permissions
-plugin_admindelegation	permissions_page_title	Délégation des droits d'admin / permissions
+plugin_admindelegation	permissions_page_title	Délégation des droits d'admin
 plugin_admindelegation	permissions_grant_user_title	Autoriser 
 plugin_admindelegation	permissions_grant	Donner le droit de 
 plugin_admindelegation	permissions_to_user	à
@@ -24,6 +24,8 @@ plugin_admindelegation	cancel_grant_permission	Annuler
 plugin_admindelegation	delegation_table_title	Permissions utilisateurs
 plugin_admindelegation	label_grant_permission	Déléguer les permissions
 plugin_admindelegation	label_username	A l'utilisateur
+plugin_admindelegation	revoke_permissions	Supprimer les permissions
+plugin_admindelegation	modal_revoke_warning	Hé, une petite minute. Vous allez supprimer des permissions. Merci de confirmer votre action.
 
 # All widgets
 plugin_admindelegation	widget_btn_search	Rechercher

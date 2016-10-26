@@ -1,7 +1,11 @@
 <div class="admindelegation-button-add-permissions">
     <h1 class="admin-delegation-title-grant-users">{{ admindelegation_title }}</h1>
     {{# has_users }}
-        <button type="button" class="tlp-button-primary button-grant-permission" id="button-grant-permission">
+        <button
+                type="button"
+                class="tlp-button-primary button-grant-permission"
+                id="button-grant-permission"
+        >
             <i class="fa fa-plus tlp-button-icon"></i> {{ add_grant_permission }}
         </button>
     {{/has_users}}
@@ -22,8 +26,19 @@
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title"><i class="fa fa-users tlp-pane-title-icon"></i> {{ delegation_table_title }}</h1>
             </div>
-            <form method="post" action="?">
+            <form method="POST" action="?func=revoke_user">
                 <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <button
+                                type="button"
+                                class="tlp-button-danger tlp-button-outline tlp-table-actions-element"
+                                id="button-revoke-permission"
+                                disabled
+                        >
+                            <i class="fa fa-minus-circle tlp-button-icon"></i> {{ revoke_permissions }}
+                        </button>
+                        {{> modal-revoke-permission }}
+                    </div>
                     <table class="tlp-table">
                         <thead>
                             <tr>
