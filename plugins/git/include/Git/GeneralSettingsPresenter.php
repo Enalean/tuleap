@@ -25,7 +25,7 @@ use Git_AdminPresenter;
 
 class GeneralSettingsPresenter extends Git_AdminPresenter
 {
-    public $general_settings_active = 'active';
+    public $general_settings_active = 'tlp-tab-active';
     public $manage_general_settings = true;
     public $access_control_title;
     public $allow_regexp_info;
