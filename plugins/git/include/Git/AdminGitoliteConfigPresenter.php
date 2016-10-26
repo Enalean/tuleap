@@ -18,17 +18,19 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 class Git_AdminGitoliteConfigPresenter  extends Git_AdminPresenter {
 
     public $manage_gitolite_config = true;
     public $gitolite_config_active = 'tlp-tab-active';
     public $regenerate_gitolite_configuration;
 
+
+
     public function __construct($title, CSRFSynchronizerToken $csrf_token) {
         parent::__construct($title, $csrf_token);
 
         $this->regenerate_gitolite_configuration = $GLOBALS['Language']->getText('plugin_git', 'regenerate_gitolite_configuration');
-
     }
 
     public function gitolite_config_title() {

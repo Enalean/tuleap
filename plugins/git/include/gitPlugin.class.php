@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
@@ -606,7 +607,8 @@ class GitPlugin extends Plugin {
             $this->getManifestManager(),
             $this->getGitSystemEventManager(),
             $this->getRegexpFineGrainedRetriever(),
-            $this->getRegexpFineGrainedEnabler()
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getAdminPageRenderer()
         );
         $admin->process($request);
         $admin->display($request);
@@ -651,6 +653,11 @@ class GitPlugin extends Plugin {
             new Git_Gitolite_GitoliteRCReader(),
             new DefaultProjectMirrorDao()
         );
+    }
+
+    private function getAdminPageRenderer()
+    {
+        return new AdminPageRenderer();
     }
 
     /**
