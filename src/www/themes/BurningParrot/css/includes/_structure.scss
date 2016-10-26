@@ -42,6 +42,10 @@ main[role=main] {
     margin: 0 0 $tlp-spacing;
 }
 
+main[role=main]:not(.tlp-framed) > #feedback {
+    margin: $tlp-spacing $tlp-spacing 0;
+}
+
 .empty-page {
     display: flex;
     flex-direction: column;

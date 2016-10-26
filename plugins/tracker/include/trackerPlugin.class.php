@@ -101,6 +101,7 @@ class trackerPlugin extends Plugin {
         $this->addHook('site_admin_option_hook');
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function getHooksAndCallbacks() {
@@ -225,6 +226,13 @@ class trackerPlugin extends Plugin {
         }
         if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
         }
     }
 
