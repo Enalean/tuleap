@@ -6,6 +6,7 @@ Version 9.1 (Not Released Yet)
 	* request #9505: FRS_Admin user group description is not user friendly
 
 	== Big Fix ==
+	* request #9599: Misleading warning message when using IE11 with compatibility
 	* request #9583: SVN core package miss a dependancy to perl-CGI
 	* request #9547: Can't upload file releases
 
