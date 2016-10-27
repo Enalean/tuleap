@@ -44,10 +44,12 @@ class Git_AdminGerritController {
     }
 
     public function process(Codendi_Request $request) {
-       if ($request->get('action') == 'gerrit-servers') {
-           $this->updateGerritServers($request);
-       } else if ($request->get('action') == 'add-gerrit-server') {
+        if ($request->get('action') == 'gerrit-servers') {
+            $this->updateGerritServers($request);
+        } else if ($request->get('action') == 'add-gerrit-server') {
             $this->addGerritServer($request);
+        } else if ($request->get('action') == 'delete-gerrit-server') {
+            $this->deleteGerritServer($request);
         }
     }
 
@@ -56,6 +58,14 @@ class Git_AdminGerritController {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
         $this->addServer($request_gerrit_server);
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
+    }
+
+    private function deleteGerritServer($request)
+    {
+        $request_gerrit_server = $request->params;
+        $this->csrf->check();
+        $this->deleteServer($request_gerrit_server);
         $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
     }
 
@@ -139,6 +149,15 @@ class Git_AdminGerritController {
             $this->servers[$server->getId()] = $server;
 
             $this->updateReplicationPassword($server, $replication_password);
+        }
+    }
+
+    private function deleteServer($request_gerrit_server)
+    {
+        $server_id = $request_gerrit_server['gerrit_server_id'];
+        if (isset($server_id)) {
+            $server = $this->gerrit_server_factory->getServerById($server_id);
+            $this->gerrit_server_factory->delete($server);
         }
     }
 

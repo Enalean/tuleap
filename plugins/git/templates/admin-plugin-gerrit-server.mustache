@@ -134,23 +134,24 @@
                                 {{ btn_edit }}
                         </button>
 
-                        <form class="action-item" method="post">
-                            <input type="hidden" name="action" value="delete-provider">
-                            <input type="hidden" name="host" value="{{ host }}">
-                            {{# is_used }}
-                                <button type="submit" class="tlp-button-danger tlp-button-outline"
-                                title="{{ btn_delete_title }}" disabled>
-                                    <i class="fa fa-trash-o tlp-button-icon"></i>
-                                    {{ btn_delete }}
-                                </button>
-                            {{/ is_used }}
-                            {{^ is_used }}
-                                <button type="submit" class="tlp-button-danger tlp-button-outline">
-                                    <i class="fa fa-trash-o tlp-button-icon"></i>
-                                    {{ btn_delete }}
-                                </button>
-                            {{/ is_used }}
-                        </form>
+                        {{# is_used }}
+                            <button type="submit" class="tlp-button-danger tlp-button-outline"
+                                    title="{{ btn_delete_title }}" disabled>
+                                <i class="fa fa-trash-o tlp-button-icon"></i>
+                                {{ btn_delete }}
+                            </button>
+                        {{/ is_used }}
+                        {{^ is_used }}
+                            <button
+                                    type="submit"
+                                    class="tlp-button-danger tlp-button-outline gerrit-action-delete-button"
+                                    data-modal-id="gerrit-delete-modal-{{ id }}"
+                            >
+                                <i class="fa fa-trash-o tlp-button-icon"></i>
+                                {{ btn_delete }}
+                            </button>
+                            {{> admin-plugin-gerrit-modal-delete }}
+                        {{/ is_used }}
                     </section>
                 </div>
                 </section>
