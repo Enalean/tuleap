@@ -126,7 +126,8 @@ class Git_AdminRouter {
             return new GeneralSettingsController(
                 $this->csrf,
                 $this->regexp_retriever,
-                $this->regexp_enabler
+                $this->regexp_enabler,
+                $this->admin_page_renderer
             );
         }
     }

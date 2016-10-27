@@ -1,28 +1,38 @@
-<h3>{{ access_control_title }}</h3>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ access_control_title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            {{^ is_activated }}
+                <div class="tlp-alert-warning">{{ warning_is_activated }}</div>
+            {{/ is_activated }}
+            {{# is_activated }}
+                <div class="tlp-alert-warning">{{ warning_no_possible_go_back }}</div>
+            {{/ is_activated }}
 
-{{^ is_activated }}
-    <div class="alert alert-warning">{{ warning_is_activated }}</div>
-{{/ is_activated }}
-{{# is_activated }}
-    <div class="alert alert-warning">{{ warning_no_possible_go_back }}</div>
-{{/ is_activated }}
+            <form method="POST"
+                  action="?pane=general-settings&action=enable-regexp-usage"
+            >
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
 
-<form method="POST"
-      action="?pane=general-settings&action=enable-regexp-usage"
-      class="admin_mirror_config form-horizontal"
->
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <div class="control-group">
-        <input type="checkbox"
-            {{# is_activated }} disabled="disabled" checked="checked" {{/ is_activated }}
-        > {{ allow_regexp_info }}
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox"
+                            {{# is_activated }} disabled="disabled" checked="checked" {{/ is_activated }}
+                        > {{ allow_regexp_info }}
+                    </label>
+                </div>
+
+                <button type="submit" value=""
+                       class="tlp-button-primary"
+                    {{# is_activated }} disabled="disabled" {{/ is_activated }}
+                >
+                    <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
+                </button>
+            </form>
+        </section>
     </div>
-
-    <input value="{{ save_settings }}"
-           class="btn btn-primary"
-           type="submit"
-           {{# is_activated }} disabled="disabled" {{/ is_activated }}
-    >
-</form>
+</section>
