@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean - 2015. All rights reserved
+ * Copyright (c) Enalean - 2015 - 2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,17 +23,31 @@
         bindFilterEvent();
         bindCheckboxesEvent();
         bindDeleteEvent();
-        projectAutocompleter();
     });
 
     function bindFilterEvent() {
-        $('#allowed-projects-list-actions').on('keyup', '#filter-projects', function(event) {
+        $('#projects-allowed-form').on('keyup', '#filter-projects', function(event) {
             if (event.keyCode == ESC_KEYCODE) {
                 $(this).val('');
             }
 
-            $('#allowed-projects-list table').find('td:not(:caseInsensitiveContains(' +  $(this).val() + '))').parent().hide();
-            $('#allowed-projects-list table').find('td:caseInsensitiveContains(' +  $(this).val() + ')').parent().show();
+            search =  $(this).val();
+            table  = document.getElementById("table-project-list");
+            tr     = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td_id   = tr[i].getElementsByTagName("td")[0];
+                td_name = tr[i].getElementsByTagName("td")[1];
+                if (td_id && td_name) {
+                    if (td_id.innerHTML.toUpperCase().indexOf(search) > -1 ||
+                        td_name.innerHTML.toUpperCase().indexOf(search.toUpperCase()) > -1
+                    ) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         });
     }
 
@@ -90,11 +104,6 @@
             $('#projects-allowed-form').submit();
         });
 
-    }
-
-    function projectAutocompleter() {
-        var autocompleter = new ProjectAutoCompleter('project-to-allow', codendi.imgroot, false);
-        autocompleter.registerOnLoad();
     }
 
 })(window.jQuery);
