@@ -43,6 +43,7 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
 use Tuleap\OpenIDConnectClient\UserMapping;
 use Tuleap\OpenIDConnectClient\Administration;
 use Zend\Loader\AutoloaderFactory;
+use Tuleap\Admin\AdminPageRenderer;
 
 require_once('constants.php');
 
@@ -303,11 +304,18 @@ class openidconnectclientPlugin extends Plugin {
         $router->route($request);
     }
 
-    public function processAdmin(HTTPRequest $request) {
+    public function processAdmin(HTTPRequest $request)
+    {
         $provider_manager        = new ProviderManager(new ProviderDao());
         $icon_presenter_factory  = new IconPresenterFactory();
         $color_presenter_factory = new ColorPresenterFactory();
-        $controller              = new Administration\Controller($provider_manager, $icon_presenter_factory, $color_presenter_factory);
+        $admin_page_renderer     = new AdminPageRenderer();
+        $controller              = new Administration\Controller(
+            $provider_manager,
+            $icon_presenter_factory,
+            $color_presenter_factory,
+            $admin_page_renderer
+        );
         $csrf_token              = new CSRFSynchronizerToken(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
 
         $router = new AdminRouter($controller, $csrf_token);
