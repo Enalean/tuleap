@@ -33,7 +33,7 @@ class PluginsAdministrationActions extends Actions {
         $this->plugin_manager = PluginManager::instance();
         $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
     }
-    
+
     // {{{ Actions
     function available() {
         $plugin_data = $this->_getPluginFromRequest();
@@ -54,8 +54,9 @@ class PluginsAdministrationActions extends Actions {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_available', array($plugin_data['name'])));
             }
         }
+        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
     }
-    
+
     function install() {
         $request =& HTTPRequest::instance();
         $name = $request->get('name');
@@ -63,7 +64,7 @@ class PluginsAdministrationActions extends Actions {
             $this->plugin_manager->installPlugin($name);
         }
     }
-    
+
     function unavailable() {
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
@@ -83,8 +84,9 @@ class PluginsAdministrationActions extends Actions {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_unavailable', array($plugin_data['name'])));
             }
         }
+        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
     }
-    
+
     function uninstall() {
         $plugin = $this->_getPluginFromRequest();
         if ($plugin) {
@@ -98,7 +100,7 @@ class PluginsAdministrationActions extends Actions {
         }
     }
 
-    // Secure args: force each value to be an integer.    
+    // Secure args: force each value to be an integer.
     function _validateProjectList($usList) {
         $sPrjList = null;
         $usList = trim(rtrim($usList));
@@ -172,8 +174,8 @@ class PluginsAdministrationActions extends Actions {
         }
     }
     // }}}
-    
-    
+
+
     function _getPluginFromRequest() {
         $return = false;
         $request =& HTTPRequest::instance();

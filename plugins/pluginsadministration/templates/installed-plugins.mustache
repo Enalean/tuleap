@@ -1,55 +1,82 @@
-<fieldset class="pluginsadministration">
-    <legend>{{ plugins_legend }}&nbsp;{{{ help }}}</legend>
-    <form>
-        <table class="tlp-table">
-            <thead>
-            <tr>
-                <th>{{ plugin_table_head }}</th>
-                <th>{{ available_table_head }}</th>
-                <th>{{ scope_table_head }}</th>
-                <th>{{ action_table_head }}</th>
-            </tr>
-            </thead>
-            <tbody>
-                {{# plugins }}
-                <tr class="{{ color }}">
-                    <td class="pluginsadministration_plugin_descriptor {{ available }}">
-                        <span class="pluginsadministration_name_of_plugin">{{ name }}</span>
-                        <span class="pluginsadministration_version_of_plugin">{{ version }}</span>
-                        <br/>
-                        <span class="pluginsadministration_description_of_plugin">{{ description }}</span>
-                    </td>
-                    <td>
-                        {{{ flags }}}
-                    </td>
-                    <td>
-                        {{ scope }}
-                    </td>
-                    <td>
-                        <a class="pluginsadministration_action"
-                           href="?view=properties&plugin_id={{ plugin_id }}"
-                           title="{{ property_title }}"
-                        >
-                            <i class="icon-edit"></i> {{ icon_label }}
-                        </a>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
-                        {{^ dont_touch }}
-                        <a class="pluginsadministration_action" href="?action=uninstall&plugin_id={{ plugin_id }}"
-                           title="{{ uninstall_title }}">
-                            <i class="icon-trash"></i> {{ uninstall_icon_label }}
-                        </a>
-                        {{/ dont_touch }}
+    <nav class="tlp-tabs">
+        <a href="?view=installed" class="tlp-tab tlp-tab-active">{{ installed_tab_label }}</a>
+        <a href="?view=available" class="tlp-tab">{{ not_installed_tab_label }}</a>
+    </nav>
 
-                        {{^ dont_restrict }}
-                        <a class="pluginsadministration_action" href="?view=restrict&plugin_id={{ plugin_id }}"
-                           title="{{ restrict_title }}">
-                            <i class="icon-lock"></i> {{ restrict_icon_label }}
-                        </a>
-                        {{/ dont_restrict }}
-                    </td>
-                </tr>
-                {{/ plugins }}
-            </tbody>
-        </table>
-    </form>
-</fieldset>
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="fa fa-cubes tlp-pane-title-icon"></i> {{ installed_pane_label }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                        <tr>
+                            <th>{{ plugin_table_head }}</th>
+                            <th>{{ version_table_head }}</th>
+                            <th>{{ description_table_head }}</th>
+                            <th>{{ available_table_head }}</th>
+                            <th>{{ scope_table_head }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {{# plugins }}
+                            <tr>
+                                <td class="pluginsadministration-list-name-cell">{{ name }}</td>
+                                <td>{{ version }}</td>
+                                <td>
+                                    <span class="pluginsadministration-list-full-description">{{ description }}</span>
+                                    <span class="pluginsadministration-list-tooltip-description tlp-tooltip tlp-tooltip-top"
+                                        data-tlp-tooltip="{{ description }}"
+                                    >
+                                        <i class="fa fa-ellipsis-h"></i>
+                                    </span>
+                                </td>
+                                <td>{{{ flags }}}</td>
+                                <td>{{ scope }}</td>
+                                <td class="tlp-table-cell-actions pluginsadministration-list-actions-cell">
+                                    <a href="?view=properties&plugin_id={{ plugin_id }}"
+                                        class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                    >
+                                        <i class="fa fa-pencil tlp-button-icon"></i> {{ icon_label }}
+                                    </a>
+
+                                    {{# dont_restrict }}
+                                        <button class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left"
+                                            data-tlp-tooltip="{{ cant_restrict }}"
+                                            disabled
+                                        >
+                                            <i class="fa fa-lock tlp-button-icon"></i> {{ restrict_icon_label }}
+                                        </button>
+                                    {{/ dont_restrict }}
+                                    {{^ dont_restrict }}
+                                        <a href="?view=restrict&plugin_id={{ plugin_id }}"
+                                            class="tlp-button-primary tlp-button-outline tlp-button-small">
+                                            <i class="fa fa-lock tlp-button-icon"></i> {{ restrict_icon_label }}
+                                        </a>
+                                    {{/ dont_restrict }}
+
+                                    {{^ dont_touch }}
+                                        <a href="?action=uninstall&plugin_id={{ plugin_id }}"
+                                            class="tlp-button-danger tlp-button-outline tlp-button-small"
+                                        >
+                                            <i class="fa fa-trash-o tlp-button-icon"></i> {{ uninstall_icon_label }}
+                                        </a>
+                                    {{/ dont_touch }}
+                                </td>
+                            </tr>
+                            {{/ plugins }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

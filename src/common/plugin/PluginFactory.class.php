@@ -138,6 +138,7 @@ class PluginFactory {
         return $this->retrieved_plugins['by_id'][$id];
     }
 
+    /** @return Plugin */
     public function instantiatePlugin($id, $name) {
         $plugin_class_info = $this->_getClassNameForPluginName($name);
         $plugin_class      = $plugin_class_info['class'];
@@ -152,7 +153,7 @@ class PluginFactory {
         return $plugin;
     }
 
-    function _getClassNameForPluginName($name) {
+    public function _getClassNameForPluginName($name) {
         $class_name = $name."Plugin";
         $custom     = false;
         $class_path = '';
@@ -302,7 +303,7 @@ class PluginFactory {
         }
     }
 
-    function getNotYetInstalledPlugins() {
+    public function getNotYetInstalledPlugins() {
         $col     = array();
         $paths   = $this->getOfficialPluginPaths();
         $exclude = array('.', '..', 'CVS', '.svn');
@@ -311,7 +312,16 @@ class PluginFactory {
             while ($file = readDir($dir)) {
                 if (!in_array($file, $exclude) && is_dir($path.'/'.$file)) {
                     if (!$this->isPluginInstalled($file) && !in_array($file, $col)) {
-                        $col[] = $file;
+                        $plugin     = $this->instantiatePlugin(null, $file);
+                        if ($plugin) {
+                            $descriptor = $plugin->getPluginInfo()->getPluginDescriptor();
+                            $col[] = array(
+                                'name'        => $file,
+                                'full_name'   => $descriptor->getFullName(),
+                                'description' => $descriptor->getDescription(),
+                                'version'     => $descriptor->getVersion()
+                            );
+                        }
                     }
                 }
             }
