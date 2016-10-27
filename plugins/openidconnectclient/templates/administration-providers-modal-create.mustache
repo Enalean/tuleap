@@ -1,8 +1,10 @@
 <div
     id="siteadmin-config-providers-modal-create"
-    class="tlp-modal"
+    class="tlp-modal siteadmin-config-providers-update-modal"
+    tabindex="-1"
     role="dialog"
     aria-labelledby="siteadmin-config-providers-modal-create-title"
+    aria-hidden="true"
 >
     <div class="tlp-modal-header">
         <h1
@@ -21,8 +23,8 @@
         {{{ csrf_token }}}
         <input type="hidden" name="action" value="create-provider">
         <div class="tlp-modal-body">
-            <div id="provider-add-modal-name-container">
-                <div class="tlp-form-element" id="provider-add-modal-name">
+            <div id="provider-admin-modal-name-container">
+                <div class="tlp-form-element" id="provider-admin-modal-name">
                     <label class="tlp-label" for="name">{{ name }} <i class="fa fa-asterisk"></i></label>
                     <input
                         type="text"
@@ -33,7 +35,7 @@
                         required
                     >
                 </div>
-                <div class="tlp-form-element" id="provider-add-modal-icon">
+                <div class="tlp-form-element" id="provider-admin-modal-icon">
                     <label class="tlp-label" for="icon">{{ icon }}</label>
                     <select
                         class="tlp-select provider-icon-selector"
@@ -46,7 +48,7 @@
                         {{/ icons_presenters }}
                     </select>
                 </div>
-                <div class="tlp-form-element" id="provider-add-modal-color">
+                <div class="tlp-form-element" id="provider-admin-modal-color">
                     <label class="tlp-label" for="color">{{ color }}</label>
                     <select
                         class="tlp-select provider-color-selector"
@@ -91,7 +93,7 @@
                 >
             </div>
 
-            <div class="tlp-form-element" id="provider-add-modal-userinfo-endpoint-container">
+            <div class="tlp-form-element" id="provider-admin-modal-userinfo-endpoint-container">
                 <label class="tlp-label" for="userinfo_endpoint">
                     {{ userinfo_endpoint }}
                 </label>
@@ -114,7 +116,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="client_id">
-                    {{ client_id }}<i class="fa fa-asterisk"></i>
+                    {{ client_id }} <i class="fa fa-asterisk"></i>
                 </label>
                 <input
                     type="text"
@@ -127,7 +129,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="client_secret">
-                    {{ client_secret }}<i class="fa fa-asterisk"></i>
+                    {{ client_secret }} <i class="fa fa-asterisk"></i>
                 </label>
                 <input
                     type="text"
@@ -139,12 +141,12 @@
             </div>
 
             <div class="tlp-form-element">
-                <p class="tlp-label" id="provider-add-modal-preview-label">{{ preview }}</p>
-                <div id="provider-add-modal-provider-button-preview">
+                <p class="tlp-label" id="provider-admin-modal-preview-label">{{ preview }}</p>
+                <div id="provider-admin-modal-provider-button-preview">
                     <button
                         type="button"
                         class="tlp-button-primary tlp-button-large"
-                        id="provider-add-modal-provider-button"
+                        id="provider-admin-modal-provider-button"
                     >
                         <i class="tlp-button-icon"></i>
                         <span>{{ btn_preview }}</span>
