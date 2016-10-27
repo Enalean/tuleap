@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -688,14 +690,21 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_Controller_SearchError($this->getRequest());
     }
 
-    private function getAdminController() {
+    private function getAdminController()
+    {
         return new FullTextSearch_Controller_Admin(
             $this->getRequest(),
             $this->getSearchAdminClient(),
             $this->getDocmanSystemEventManager(),
             $this->getWikiSystemEventManager(),
-            $this->getTrackerSystemEventManager()
+            $this->getTrackerSystemEventManager(),
+            $this->getAdminPageRenderer()
         );
+    }
+
+    private function getAdminPageRenderer()
+    {
+        return new AdminPageRenderer();
     }
 
     private function getProjectManager() {
