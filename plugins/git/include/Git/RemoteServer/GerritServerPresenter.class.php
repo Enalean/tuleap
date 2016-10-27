@@ -40,5 +40,11 @@ class Git_RemoteServer_GerritServerPresenter
         $this->is_basic                       = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_BASIC;
         $this->replication_key_ellipsis_value = substr($this->replication_key, 0, 40).'...'.substr($this->replication_key, -40);
 
+
+        $this->delete_title         = $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_title', $server->getHost());
+        $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_desc', $server->getHost()),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 }
