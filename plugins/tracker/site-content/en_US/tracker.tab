@@ -1697,16 +1697,18 @@ plugin_tracker_emailgateway	required_ko	Other fields than title or description c
 plugin_tracker_artifact_links_natures	column_label	Type
 plugin_tracker_artifact_links_natures	title	Artifact Links Types
 plugin_tracker_artifact_links_natures	available_natures	Available types
-plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform:
+plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform.
 plugin_tracker_artifact_links_natures	shortname	Shortname
 plugin_tracker_artifact_links_natures	forward_label	Forward label
 plugin_tracker_artifact_links_natures	reverse_label	Reverse label
 plugin_tracker_artifact_links_natures	_is_child_forward	Child
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
 plugin_tracker_artifact_links_natures	no_nature	No type
-plugin_tracker_artifact_links_natures	create_new_nature	Create new type
+plugin_tracker_artifact_links_natures	there_is_no_nature	There no artifact links types
+plugin_tracker_artifact_links_natures	create_new_nature	Add type
 plugin_tracker_artifact_links_natures	edit_nature	Edit type
 plugin_tracker_artifact_links_natures	edit_icon_label	Edit
+plugin_tracker_artifact_links_natures	update_button	Update type
 plugin_tracker_artifact_links_natures	edit_system_nature_title	Editing system types is disallowed.
 plugin_tracker_artifact_links_natures	missing_shortname	missing shortname
 plugin_tracker_artifact_links_natures	missing_forward_label	missing forward label
@@ -1714,13 +1716,15 @@ plugin_tracker_artifact_links_natures	missing_reverse_label	missing reverse labe
 plugin_tracker_artifact_links_natures	shortname_help	Only letters and underscore are allowed for shortname (must start with a letter though).
 plugin_tracker_artifact_links_natures	create_error	Unable to create the requested type: $1
 plugin_tracker_artifact_links_natures	edit_error	Unable to edit the requested type: $1
+plugin_tracker_artifact_links_natures	create_success	The type $1 has been successfully created.
+plugin_tracker_artifact_links_natures	edit_success	The type $1 has been successfully updated.
 plugin_tracker_artifact_links_natures	db_error	error while playing with the database.  Help us improve your experience by sending an error report.
 plugin_tracker_artifact_links_natures	create_same_name_error	a type with $1 as shortname already exists.
 plugin_tracker_artifact_links_natures	forward_label_help	E.g. for the fixed_in type, a bug will be fixed in a release so the forward label will be "Fixed in".
 plugin_tracker_artifact_links_natures	reverse_label_help	E.g. for the fixed_in type, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).
-plugin_tracker_artifact_links_natures	shortname_placeholder	E.g. fixed_in
-plugin_tracker_artifact_links_natures	forward_label_placeholder	E.g. Fixed in
-plugin_tracker_artifact_links_natures	reverse_label_placeholder	E.g. Fixed
+plugin_tracker_artifact_links_natures	shortname_placeholder	fixed_in
+plugin_tracker_artifact_links_natures	forward_label_placeholder	Fixed in
+plugin_tracker_artifact_links_natures	reverse_label_placeholder	Fixed
 plugin_tracker_artifact_links_natures	list_of_allowed_projects	List of projects which can use artifact links types
 plugin_tracker_artifact_links_natures	list_of_allowed_projects_desc	As the artifact links types feature is still under heavy development, we recommend to activate it only for a chosen set of projects. Those projects won't be able to use the tracker hierarchy nor the agile dashboard.
 plugin_tracker_artifact_links_natures	allowed_project_list_id	ID
@@ -1739,6 +1743,9 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted p
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Something went wrong during the update. Help us improve your experience by sending an error report.
 plugin_tracker_artifact_links_natures	error_multiple_parents	The artifact has more than one parent. Cannot display rest of hierarchy.
 plugin_tracker_artifact_links_natures	delete_icon_label	Delete
+plugin_tracker_artifact_links_natures	delete_modal_title	Delete type
+plugin_tracker_artifact_links_natures	delete_modal_submit	Delete
+plugin_tracker_artifact_links_natures	delete_modal_content	You are about to delete a type. This action is action is irreversible. Do you confirm this deletion?
 plugin_tracker_artifact_links_natures	cannot_delete	type can't be deleted because it is or has been already used.
 plugin_tracker_artifact_links_natures	cannot_delete_title	This type can't be deleted because it is or has been already used.
 plugin_tracker_artifact_links_natures	delete_success	The type has been successfuly deleted.

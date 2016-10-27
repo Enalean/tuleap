@@ -32,7 +32,7 @@ class NatureConfigPresenter {
     public $shortname_label;
     public $forward_label_label;
     public $reverse_label_label;
-    public $btn_create;
+    public $btn_submit;
     public $btn_close;
     public $shortname_help;
     public $forward_label_help;
@@ -44,12 +44,16 @@ class NatureConfigPresenter {
     public $edit_nature;
     public $shortname_pattern;
     public $natures;
+    public $has_natures;
     public $sections;
     public $available_natures;
     public $allowed_projects;
     public $allowed_projects_title;
     public $edit_icon_label;
     public $edit_system_nature_title;
+    public $delete_modal_title;
+    public $delete_modal_submit;
+    public $delete_modal_content;
 
     public function __construct($title, array $natures, CSRFSynchronizerToken $csrf, $allowed_projects) {
         $this->desc                = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
@@ -57,8 +61,7 @@ class NatureConfigPresenter {
         $this->shortname_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
         $this->forward_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
         $this->reverse_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
-        $this->btn_create          = $GLOBALS['Language']->getText('global', 'btn_create');
-        $this->btn_submit          = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->btn_submit          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'update_button');
         $this->btn_close           = $GLOBALS['Language']->getText('global', 'btn_close');
 
         $this->shortname_help     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_help');
@@ -77,12 +80,17 @@ class NatureConfigPresenter {
         $this->edit_system_nature_title = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_system_nature_title');
         $this->delete_icon_label        = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_icon_label');
         $this->cannot_delete_title      = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_delete_title');
+        $this->delete_modal_title       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_title');
+        $this->delete_modal_submit      = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_submit');
+        $this->delete_modal_content     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_content');
         $this->shortname_pattern        = NatureValidator::SHORTNAME_PATTERN;
 
         $this->sections = new SectionsPresenter();
 
         $this->title            = $title;
         $this->natures          = $natures;
+        $this->has_natures      = count($this->natures) > 0;
+        $this->no_natures       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'there_is_no_nature');
         $this->csrf_token       = $csrf->fetchHTMLInput();
         $this->allowed_projects = $allowed_projects;
     }

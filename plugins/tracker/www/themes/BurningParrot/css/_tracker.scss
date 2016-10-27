@@ -21,3 +21,12 @@
     margin: ($tlp-spacing * 2) 0 0;
     text-align: center;
 }
+
+.tracker-table-nature-action-cell {
+    display: flex;
+    justify-content: flex-end;
+
+    > .tlp-button-outline:first-child {
+        margin-right: $tlp-spacing / 2;
+    }
+}
