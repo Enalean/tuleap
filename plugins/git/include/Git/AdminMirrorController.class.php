@@ -65,11 +65,7 @@ class Git_AdminMirrorController {
     public function process(Codendi_Request $request) {
         if ($request->get('action') == 'add-mirror') {
             $this->createMirror($request);
-        } elseif ($request->get('action') == 'show-add-mirror') {
-            $this->showAddMirror();
-        } elseif ($request->get('action') == 'show-edit-mirror') {
-            $this->showEditMirror($request);
-        } elseif ($request->get('action') == 'modify-mirror' && $request->get('update_mirror')) {
+        } elseif ($request->get('action') == 'modify-mirror') {
             $this->modifyMirror($request);
         } elseif ($request->get('action') == 'delete-mirror') {
             $this->deleteMirror($request);
@@ -98,9 +94,6 @@ class Git_AdminMirrorController {
                 $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
                 break;
             }
-            case 'show-edit-mirror':
-            case 'show-add-mirror':
-                break;
             default:
                 $presenter = $this->getAllMirrorsPresenter($title);
                 break;
@@ -134,7 +127,10 @@ class Git_AdminMirrorController {
     private function getMirrorPresenters(array $mirrors) {
         $mirror_presenters = array();
         foreach($mirrors as $mirror) {
-            $mirror_presenters[] = new MirrorPresenter($mirror, $this->getNumberOfRepositories($mirror->id));
+            $mirror_presenters[] = new MirrorPresenter(
+                $mirror,
+                $this->getNumberOfRepositories($mirror->id)
+            );
         }
         return $mirror_presenters;
     }
@@ -275,42 +271,6 @@ class Git_AdminMirrorController {
     private function redirectToCreateWithError($message) {
         $GLOBALS['Response']->addFeedback('error', $message);
         $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-add-mirror");
-    }
-
-    private function showAddMirror() {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-        $admin_presenter = new Git_AdminMirrorAddPresenter(
-            $title,
-            $this->csrf
-        );
-
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed-vertically')));
-        $renderer->renderToPage('admin-plugin', $admin_presenter);
-        $GLOBALS['HTML']->footer(array());
-    }
-
-    private function showEditMirror(Codendi_Request $request) {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-        try {
-            $mirror = $this->git_mirror_mapper->fetch($request->get('mirror_id'));
-        } catch (Git_Mirror_MirrorNotFoundException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_update'));
-            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');
-        }
-
-        $admin_presenter = new Git_AdminMirrorEditPresenter(
-            $title,
-            $this->csrf,
-            $mirror
-        );
-
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed-vertically')));
-        $renderer->renderToPage('admin-plugin', $admin_presenter);
-        $GLOBALS['HTML']->footer(array());
     }
 
     private function modifyMirror(Codendi_Request $request) {

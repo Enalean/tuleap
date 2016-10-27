@@ -57,6 +57,7 @@ class MirrorPresenter
             $nb_repositories
         );
 
+        $this->edit_title           = $GLOBALS['Language']->getText('plugin_git', 'edit_mirror_title', $mirror->name);
         $this->delete_title         = $GLOBALS['Language']->getText('plugin_git', 'delete_mirror_title', $mirror->name);
         $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('plugin_git', 'delete_mirror_desc', $mirror->name),
