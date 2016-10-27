@@ -27,16 +27,20 @@
         modal_mirror_configuration.toggle();
     });
 
-    var modal_mirror_delete_buttons = document.querySelectorAll('.mirror-action-delete-button');
-    [].forEach.call(modal_mirror_delete_buttons, function (button) {
-        var modal_element = document.getElementById(button.dataset.modalId);
+    initModalForMirrors('.mirror-action-delete-button, .mirror-action-edit-button');
 
-        if (modal_element) {
-            var modal = tlp.modal(modal_element);
+    function initModalForMirrors(button_selector) {
+        var matching_buttons = document.querySelectorAll(button_selector);
+        [].forEach.call(matching_buttons, function (button) {
+            var modal_element = document.getElementById(button.dataset.modalId);
 
-            button.addEventListener('click', function () {
-                modal.toggle();
-            });
-        }
-    });
+            if (modal_element) {
+                var modal = tlp.modal(modal_element);
+
+                button.addEventListener('click', function () {
+                    modal.toggle();
+                });
+            }
+        });
+    }
 } ());
