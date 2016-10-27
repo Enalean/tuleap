@@ -71,7 +71,7 @@ class PatternValidatorTest extends TuleapTestCase
     public function itValidPatternWithRegexpModeWhenRegexpAreActivated()
     {
         stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(true);
-        $this->pattern_validator->isValidForRepository($this->repository, 'master');
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
 
         $this->regexp_validator->expectOnce('isPatternValid');
         $this->validator->expectNever('isPatternValid');
@@ -80,9 +80,18 @@ class PatternValidatorTest extends TuleapTestCase
     public function itValidPatternWithStandardModeWhenRegexpAreNotAvailable()
     {
         stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(false);
-        $this->pattern_validator->isValidForRepository($this->repository, 'master');
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', false);
 
         $this->regexp_validator->expectNever('isPatternValid');
         $this->validator->expectOnce('isPatternValid');
+    }
+
+    public function itValidsPatternWithRegexpModeWhenRegexpAreCurrentlyActivated()
+    {
+        stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(false);
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
+
+        $this->regexp_validator->expectOnce('isPatternValid');
+        $this->validator->expectNever('isPatternValid');
     }
 }

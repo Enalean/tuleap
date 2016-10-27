@@ -299,12 +299,13 @@ class FineGrainedPermissionFactory
 
     private function buildRepresentationFromRequest(Codendi_Request $request, GitRepository $repository, $prefix)
     {
-        $permissions = array();
-        $patterns    = $request->get("$prefix-name");
+        $permissions              = array();
+        $patterns                 = $request->get("$prefix-name");
+        $are_we_activating_regexp = $request->get("use-regexp");
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {
-                if (! $this->validator->isValidForRepository($repository, $pattern)) {
+                if (! $this->validator->isValidForRepository($repository, $pattern, $are_we_activating_regexp)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::WARN,
                         $GLOBALS['Language']->getText(
