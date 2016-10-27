@@ -181,6 +181,7 @@ plugin_git	gerrit_label_replication_password	Réplication du mot de passe
 plugin_git	gerrit_label_auth_type	Type d'identification
 plugin_git	delete_gerrit_title	Supprimer $1
 plugin_git	delete_gerrit_desc	Hop hop hop, attendez une minute… Vous êtes sur le point de supprimer le serveur <b>$1</b> ! Merci de confirmer votre action.
+plugin_git	edit_gerrit_title	Éditer $1
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification

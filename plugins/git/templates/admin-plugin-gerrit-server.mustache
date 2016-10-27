@@ -129,10 +129,14 @@
                 </div>
                 <div class="tlp-pane-container gerrit-server-action-container">
                     <section class="tlp-pane-section gerrit-server-action">
-                        <button type="button" class="tlp-button-primary tlp-button-outline action-item">
+                        <button type="button"
+                                class="tlp-button-primary tlp-button-outline action-item gerrit-action-edit-button"
+                                data-modal-id="gerrit-edit-modal-{{ id }}"
+                        >
                             <i class="fa fa-pencil tlp-button-icon"></i>
                                 {{ btn_edit }}
                         </button>
+                        {{> admin-plugin-gerrit-modal-edit }}
 
                         {{# is_used }}
                             <button type="submit" class="tlp-button-danger tlp-button-outline"

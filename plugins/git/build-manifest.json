@@ -37,6 +37,7 @@
     "javascript": [
         "www/themes/BurningParrot/js/modal-add-gerrit-server.js",
         "www/themes/BurningParrot/js/modal-delete-gerrit-server.js",
+        "www/themes/BurningParrot/js/modal-edit-gerrit-server.js",
         "www/themes/BurningParrot/js/modal-add-mirror.js",
         "www/themes/BurningParrot/js/modal-mirror-configuration.js"
     ]

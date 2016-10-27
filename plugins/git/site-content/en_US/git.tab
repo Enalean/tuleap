@@ -110,6 +110,7 @@ plugin_git	gerrit_label_replication_password	Replication password
 plugin_git	gerrit_label_auth_type	Authentication type
 plugin_git	delete_gerrit_title	Delete $1
 plugin_git	delete_gerrit_desc	Wow, wait a minute. You are about to delete the <b>$1</b> server. Please confirm your action.
+plugin_git	edit_gerrit_title	Edit $1
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 

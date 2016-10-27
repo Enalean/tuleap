@@ -13,17 +13,17 @@
             <div class="form-element-group">
                 <div class="tlp-form-element form-element-item">
                     <label class="tlp-label" for="host-required">{{ gerrit_label_host }} <i class="fa fa-asterisk"></i></label>
-                    <input type="text" class="tlp-input" id="host-required" name="host" placeholder="gerrit.server.com" required>
+                    <input type="text" class="tlp-input" id="host-required" name="host" placeholder="gerrit.server.com" required />
                 </div>
 
                 <div class="tlp-form-element form-element-item">
                     <label class="tlp-label" for="http-port-required">{{ gerrit_label_http_port }} <i class="fa fa-asterisk"></i></label>
-                    <input type="text" class="tlp-input" id="http-port-required" name="http_port" placeholder="80" maxlength="5" size="6" required>
+                    <input type="text" class="tlp-input" id="http-port-required" name="http_port" placeholder="80" maxlength="5" size="6" required />
                 </div>
 
                 <div class="tlp-form-element form-element-item">
                     <label class="tlp-label" for="ssh-port-required">{{ gerrit_label_ssh_port }} <i class="fa fa-asterisk"></i></label>
-                    <input type="text" class="tlp-input" id="ssh-port-required" name="ssh_port" placeholder="22" maxlength="5" size="6" required>
+                    <input type="text" class="tlp-input" id="ssh-port-required" name="ssh_port" placeholder="22" maxlength="5" size="6" required />
                 </div>
             </div>
 
@@ -32,26 +32,26 @@
             <div class="tlp-form-element">
                 <label class="tlp-label">{{ gerrit_label_gerrit_version }}</label>
                 <label class="tlp-label tlp-radio">
-                    <input type="radio" name="gerrit_version" value="2.5"> 2.5
+                    <input type="radio" name="gerrit_version" value="2.5" /> 2.5
                 </label>
                 <label class="tlp-label tlp-radio">
-                    <input type="radio" name="gerrit_version" value="2.8+" checked> 2.8+
+                    <input type="radio" name="gerrit_version" value="2.8+" checked /> 2.8+
                 </label>
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="login-required">{{ gerrit_label_login }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="login-required" name="login" placeholder="gerrit"  size="25" required>
+                <input type="text" class="tlp-input" id="login-required" name="login" placeholder="gerrit"  size="25" required />
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="identity-file-required">{{ gerrit_label_identity_file }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="identity-file-required" name="identity_file" placeholder="/etc/..." required>
+                <input type="text" class="tlp-input" id="identity-file-required" name="identity_file" placeholder="/etc/..." required />
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="replication-ssh-key-required">{{ gerrit_label_replication_key }} <i class="fa fa-asterisk"></i></label>
-                <textarea class="tlp-textarea" id="replication-ssh-key-required" name="replication_key" placeholder="Key..."></textarea>
+                <textarea class="tlp-textarea" id="replication-ssh-key-required" name="replication_key" placeholder="Key..." required></textarea>
             </div>
 
             <div class="tlp-form-element">
@@ -62,21 +62,21 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="http-password-required">{{ gerrit_label_http_password }} <i class="fa fa-asterisk"></i></label>
-                <input type="password" class="tlp-input" id="http-password-required" name="http_password" placeholder="************" size="40">
+                <input type="password" class="tlp-input" id="http-password-required" name="http_password" placeholder="************" size="40" required />
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="replication-password-required">{{ gerrit_label_replication_password }} <i class="fa fa-asterisk"></i></label>
-                <input type="password" class="tlp-input" id="replication-password-required" name="replication_password" placeholder="************" size="40">
+                <input type="password" class="tlp-input" id="replication-password-required" name="replication_password" placeholder="************" size="40" required />
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label">{{ gerrit_label_auth_type }}</label>
                 <label class="tlp-label tlp-radio">
-                    <input type="radio" name="auth_type" value="Digest" checked> {{ digest }}
+                    <input type="radio" name="auth_type" value="Digest" checked /> {{ digest }}
                 </label>
                 <label class="tlp-label tlp-radio">
-                    <input type="radio" name="auth_type" value="Basic"> {{ basic }}
+                    <input type="radio" name="auth_type" value="Basic" /> {{ basic }}
                 </label>
             </div>
         </div>

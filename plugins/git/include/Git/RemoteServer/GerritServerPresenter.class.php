@@ -41,10 +41,36 @@ class Git_RemoteServer_GerritServerPresenter
         $this->replication_key_ellipsis_value = substr($this->replication_key, 0, 40).'...'.substr($this->replication_key, -40);
 
 
+        $this->edit_title           = $GLOBALS['Language']->getText('plugin_git', 'edit_gerrit_title', $server->getHost());
         $this->delete_title         = $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_title', $server->getHost());
         $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_desc', $server->getHost()),
             CODENDI_PURIFIER_LIGHT
         );
+    }
+
+    public function gerrit_version_2_5_checked()
+    {
+        return $this->use_gerrit_2_5 ? 'checked' : '';
+    }
+
+    public function gerrit_version_2_8_checked()
+    {
+        return $this->use_gerrit_2_8 ? 'checked' : '';
+    }
+
+    public function auth_type_digest_checked()
+    {
+        return $this->is_digest ? 'checked' : '';
+    }
+
+    public function auth_type_basic_checked()
+    {
+        return $this->is_basic ? 'checked' : '';
+    }
+
+    public function use_ssl_checked()
+    {
+        return $this->use_ssl ? 'checked' : '';
     }
 }

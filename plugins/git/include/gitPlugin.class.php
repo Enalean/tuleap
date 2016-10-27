@@ -300,6 +300,7 @@ class GitPlugin extends Plugin {
             if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_admin')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-gerrit-server.js';
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-delete-gerrit-server.js';
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-edit-gerrit-server.js';
             } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_admin')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-mirror.js';
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-mirror-configuration.js';
