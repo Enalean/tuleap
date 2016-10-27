@@ -20,27 +20,21 @@
 (function () {
     'use strict';
 
-    var modal_mirror_configuration_element = document.getElementById('modal-mirror-configuration');
-    var modal_mirror_configuration         = tlp.modal(modal_mirror_configuration_element);
+    var button_selectors = '#button-modal-mirror-configuration, \
+            .mirror-show-repositories, \
+            .mirror-action-delete-button, \
+            .mirror-action-edit-button',
+        matching_buttons = document.querySelectorAll(button_selectors);
 
-    document.getElementById('button-modal-mirror-configuration').addEventListener('click', function () {
-        modal_mirror_configuration.toggle();
+    [].forEach.call(matching_buttons, function (button) {
+        var modal_element = document.getElementById(button.dataset.modalId);
+
+        if (modal_element) {
+            var modal = tlp.modal(modal_element);
+
+            button.addEventListener('click', function () {
+                modal.toggle();
+            });
+        }
     });
-
-    initModalForMirrors('.mirror-action-delete-button, .mirror-action-edit-button');
-
-    function initModalForMirrors(button_selector) {
-        var matching_buttons = document.querySelectorAll(button_selector);
-        [].forEach.call(matching_buttons, function (button) {
-            var modal_element = document.getElementById(button.dataset.modalId);
-
-            if (modal_element) {
-                var modal = tlp.modal(modal_element);
-
-                button.addEventListener('click', function () {
-                    modal.toggle();
-                });
-            }
-        });
-    }
 } ());

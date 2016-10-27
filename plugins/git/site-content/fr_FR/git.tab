@@ -67,8 +67,10 @@ plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué da
 plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques minutes.
 plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
 
-plugin_git	edit_mirror_title	Éditer $1
-plugin_git	delete_mirror_title	Supprimer $1
+plugin_git	mirror_no_repositories	Aucun
+plugin_git	repos_mirror_title	Dépôts sur le miroir $1
+plugin_git	edit_mirror_title	Éditer le miroir $1
+plugin_git	delete_mirror_title	Supprimer le miroir $1
 plugin_git	delete_mirror_desc	Hop hop hop, attendez une minute… Vous êtes sur le point de supprimer le miroir <b>$1</b> ! Merci de confirmer votre action.
 plugin_git	mirror_already_used	Le miroir est utilisé par des dépôts, vous ne pouvez pas le supprimer.
 
@@ -449,7 +451,7 @@ plugin_git	default_mirros_update_success	Mirroirs par défaut mis à jour.
 plugin_git	default_mirros_update_error	Une erreur est survenue lors de la mise à jour des mirroirs par défaut.
 plugin_git	mirror_no_mirrors_part_one	Il n'y a rien ici,
 plugin_git	mirror_no_mirrors_part_two	commencez par ajouter un miroir.
-plugin_git	mirror_number_of_repositories	$1 dépôt(s)
+plugin_git	mirror_number_of_repositories	$1 dépôts
 plugin_git	no_specified_mirror_name	Nom de miroir non renseigné
 
 plugin_git	system_event_queue	File d'attente Git

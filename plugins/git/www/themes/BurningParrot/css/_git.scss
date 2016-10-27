@@ -53,6 +53,14 @@
     line-height: 30px;
 }
 
+.mirror-repo-list-for-project:not(:last-child) {
+    margin: 0 0 $tlp-spacing;
+}
+
+.mirror-repo-list-for-project-reponame {
+    width: 100%;
+}
+
 /* -------------------- GERRIT ---------------------- */
 
 .add-gerrit-server-button {

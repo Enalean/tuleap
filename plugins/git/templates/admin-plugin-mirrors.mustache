@@ -1,7 +1,11 @@
 {{# list_of_mirrors_is_empty }}
     <div class="empty-page">
         <span class="empty-page-text">{{ list_of_mirrors_empty_message_part_one }}<br> {{ list_of_mirrors_empty_message_part_two }}</span>
-        <button type="button" id="button-modal-add-mirror" class="tlp-button-primary tlp-button-large">
+        <button type="button"
+                id="button-modal-add-mirror"
+                class="tlp-button-primary tlp-button-large"
+                data-modal-id="modal-add-mirror"
+        >
             <i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}
         </button>
     </div>
@@ -10,10 +14,17 @@
 {{^ list_of_mirrors_is_empty }}
     {{# see_all }}
         <div class="mirror-global-action-container">
-            <button type="button" id="button-modal-add-mirror" class="tlp-button-primary tlp-table-actions-element">
+            <button type="button"
+                    id="button-modal-add-mirror"
+                    class="tlp-button-primary tlp-table-actions-element"
+                    data-modal-id="modal-add-mirror"
+            >
                 <i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}
             </button>
-            <button type="button" id="button-modal-mirror-configuration" class="tlp-button-warning tlp-table-actions-element">
+            <button type="button"
+                    id="button-modal-mirror-configuration"
+                    class="tlp-button-warning tlp-table-actions-element"
+            >
                 <i class="tlp-button-icon fa fa-repeat"></i> {{ dump_mirrored_repositories_label }}
             </button>
         </div>
@@ -41,7 +52,7 @@
                                     {{ url }}
                                 {{/ url }}
                                 {{^ url }}
-                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
                                 {{/ url }}
                             </div>
                             <div class="tlp-property">
@@ -52,16 +63,26 @@
                                     <a href="/admin/usergroup.php?user_id={{ owner_id }}">{{ owner_name }}</a>
                                 {{/ owner_name }}
                                 {{^ owner_name }}
-                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
                                 {{/ owner_name }}
                             </div>
                             <div class="tlp-property">
                                 <label class="tlp-label">
                                     {{ repositories_label }}
                                 </label>
-                                {{# number_of_repositories }}
-                                    {{ number_of_repositories }}
-                                {{/ number_of_repositories }}
+                                {{# has_repositories }}
+                                    <a href="javascript:;"
+                                       class="mirror-show-repositories"
+                                       data-modal-id="modal-show-repositories-{{ id }}"
+                                    >
+                                        {{ number_of_repositories }}
+                                    </a>
+
+                                    {{> admin-plugin-list-repositories }}
+                                {{/ has_repositories }}
+                                {{^ has_repositories }}
+                                    <span class="tlp-property-empty">{{ no_repositories }}</span>
+                                {{/ has_repositories }}
                             </div>
                         </div>
                         <div class="mirror-info-two">
@@ -73,7 +94,7 @@
                                     {{ hostname }}
                                 {{/ hostname }}
                                 {{^ hostname }}
-                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
                                 {{/ hostname }}
                             </div>
                             <div class="tlp-property mirror-info-two-ssh-key">
@@ -84,7 +105,7 @@
                                     <i class="fa fa-key"></i>  {{ ssh_key_ellipsis_value }}
                                 {{/ ssh_key_value }}
                                 {{^ ssh_key_value }}
-                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
                                 {{/ ssh_key_value }}
                             </div>
                         </div>

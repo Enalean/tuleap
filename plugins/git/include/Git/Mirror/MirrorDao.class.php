@@ -249,20 +249,4 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
 
         return $this->update($sql);
     }
-
-    /**
-     * @return int
-     */
-    public function getNumberOfRepositories($id) {
-        $id = $this->da->escapeInt($id);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
-                FROM plugin_git_repository_mirrors, plugin_git_mirrors
-                WHERE plugin_git_repository_mirrors.mirror_id = $id
-                  AND plugin_git_mirrors.id = $id";
-
-        $this->retrieve($sql);
-
-        return (int) $this->foundRows();
-    }
 }

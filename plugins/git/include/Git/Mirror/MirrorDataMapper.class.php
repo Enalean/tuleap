@@ -213,8 +213,11 @@ class Git_Mirror_MirrorDataMapper {
         $previous_group_id = -1;
         foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
             if ($previous_group_id !== $row['group_id']) {
-                $project_presenter = new Git_AdminRepositoryListForProjectPresenter($row['group_id'], $row['group_name']);
-                $presenters[]      = $project_presenter;
+                $project_presenter = new Git_AdminRepositoryListForProjectPresenter(
+                    $row['group_id'],
+                    util_unconvert_htmlspecialchars($row['group_name'])
+                );
+                $presenters[] = $project_presenter;
             }
 
             $project_presenter->repositories[] = array(
@@ -397,13 +400,5 @@ class Git_Mirror_MirrorDataMapper {
      */
     public function duplicate($template_project_id, $new_project_id) {
         return $this->default_dao->duplicate($template_project_id, $new_project_id);
-    }
-
-    /**
-     * @return int
-     */
-    public function getNumberOfRepositories($mirror_id)
-    {
-        return $this->dao->getNumberOfRepositories($mirror_id);
     }
 }
