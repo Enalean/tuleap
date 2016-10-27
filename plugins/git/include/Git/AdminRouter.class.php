@@ -100,7 +100,11 @@ class Git_AdminRouter {
 
     private function getControllerFromRequest(Codendi_Request $request) {
         if ($request->get('pane') == 'gerrit_servers_admin') {
-            return new Git_AdminGerritController($this->csrf, $this->gerrit_server_factory);
+            return new Git_AdminGerritController(
+                $this->csrf,
+                $this->gerrit_server_factory,
+                $this->admin_page_renderer
+            );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(
                 $this->csrf,
