@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -22,7 +23,9 @@
  *
  */
 
-require_once 'autoload.php';
+use Tuleap\Admin\AdminPageRenderer;
+
+require_once 'constants.php';
 
 class userlogPlugin extends Plugin {
 
@@ -33,6 +36,16 @@ class userlogPlugin extends Plugin {
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('logger_after_log_hook', 'logUser', false);
         $this->addHook(Event::IS_IN_SITEADMIN);
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
     }
 
     function &getPluginInfo() {
@@ -83,7 +96,7 @@ class userlogPlugin extends Plugin {
 
             $cookie_manager = new CookieManager();
 
-            $userLogManager = new UserLogManager();
+            $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
             $userLogManager->logAccess($params['time'],
                                        $params['groupId'],
                                        $uid,
@@ -119,7 +132,7 @@ class userlogPlugin extends Plugin {
             $day = date('Y-n-j');
         }
 
-        $userLogManager = new UserLogManager();
+        $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
         $userLogManager->displayLogs($offset, $day);
     }
 

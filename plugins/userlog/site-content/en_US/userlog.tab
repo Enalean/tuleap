@@ -1,2 +1,13 @@
 plugin_userlog	descriptor_description	Advanced user activity logging. To answer to question "Who did what, and when"
 plugin_userlog	descriptor_name	User Logging
+
+plugin_userlog	title_user_logging	User Logging
+plugin_userlog	subtitle_user_logging	Logs
+plugin_userlog	label_time	Time
+plugin_userlog	label_project	Project
+plugin_userlog	label_user	User
+plugin_userlog	label_method	Method
+plugin_userlog	label_uri	URI
+plugin_userlog	label_adress	Adress
+plugin_userlog	label_referrer	Referrer
+plugin_userlog	label_between	between $1 and $2 hour
