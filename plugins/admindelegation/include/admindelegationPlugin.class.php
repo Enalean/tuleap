@@ -48,6 +48,7 @@ class AdminDelegationPlugin extends Plugin {
         $this->_addHook('widget_instance',        'widget_instance',        false);
         $this->_addHook('widgets',                'widgets',                false);
         $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 
     public function getPluginInfo() {
@@ -56,6 +57,14 @@ class AdminDelegationPlugin extends Plugin {
             $this->pluginInfo = new AdminDelegationPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
     }
 
     /**
