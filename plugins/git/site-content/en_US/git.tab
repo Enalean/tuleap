@@ -70,6 +70,10 @@ plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the re
 plugin_git	default_mirros_update_success	Default mirrors updated.
 plugin_git	default_mirros_update_error	An error occured while updating default mirrors.
 
+plugin_git	delete_mirror_title	Delete $1
+plugin_git	delete_mirror_desc	Wow, wait a minute. You are about to delete the <b>$1</b> mirror. Please confirm your action.
+plugin_git	mirror_already_used	This mirror is used by repositories, you shall not delete it.
+
 plugin_git	admin_settings	General settings
 plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration to Gerrit

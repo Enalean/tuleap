@@ -1,7 +1,7 @@
 <form action="permission_delegation.php?action=delete-group"
       method="post"
       id="siteadmin-permission-delegation-delete-group-modal"
-      class="tlp-modal"
+      class="tlp-modal tlp-modal-danger"
       role="dialog"
 >
     <div class="tlp-modal-header">
@@ -18,10 +18,10 @@
         <input type="hidden" name="id" value="{{ id }}" />
     </div>
     <div class="tlp-modal-footer">
-        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{ group_cancel_delete }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
             <i class="fa fa-trash tlp-button-icon"></i> {{ group_submit_delete }}
         </button>
     </div>

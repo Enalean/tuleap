@@ -67,6 +67,10 @@ plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué da
 plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques minutes.
 plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
 
+plugin_git	delete_mirror_title	Supprimer $1
+plugin_git	delete_mirror_desc	Hop hop hop, attendez une minute… Vous êtes sur le point de supprimer le miroir <b>$1</b> ! Merci de confirmer votre action.
+plugin_git	mirror_already_used	Le miroir est utilisé par des dépôts, vous ne pouvez pas le supprimer.
+
 plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
 
 plugin_git	dao_delete_error	Impossible de supprimer le dépôt de la base de données

@@ -21,9 +21,22 @@
     'use strict';
 
     var modal_mirror_configuration_element = document.getElementById('modal-mirror-configuration');
-    var modal_mirror_configuration         = tlp.modal(modal_mirror_configuration_element, {});
+    var modal_mirror_configuration         = tlp.modal(modal_mirror_configuration_element);
 
     document.getElementById('button-modal-mirror-configuration').addEventListener('click', function () {
         modal_mirror_configuration.toggle();
+    });
+
+    var modal_mirror_delete_buttons = document.querySelectorAll('.mirror-action-delete-button');
+    [].forEach.call(modal_mirror_delete_buttons, function (button) {
+        var modal_element = document.getElementById(button.dataset.modalId);
+
+        if (modal_element) {
+            var modal = tlp.modal(modal_element);
+
+            button.addEventListener('click', function () {
+                modal.toggle();
+            });
+        }
     });
 } ());

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
@@ -20,6 +19,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\Mirror\MirrorPresenter;
 
 class Git_AdminMirrorController {
 
@@ -71,7 +71,7 @@ class Git_AdminMirrorController {
             $this->showEditMirror($request);
         } elseif ($request->get('action') == 'modify-mirror' && $request->get('update_mirror')) {
             $this->modifyMirror($request);
-        } elseif ($request->get('action') == 'modify-mirror' && $request->get('delete_mirror')) {
+        } elseif ($request->get('action') == 'delete-mirror') {
             $this->deleteMirror($request);
         } elseif ($request->get('action') == 'set-mirror-restriction') {
             $this->setMirrorRestriction($request);
@@ -134,21 +134,7 @@ class Git_AdminMirrorController {
     private function getMirrorPresenters(array $mirrors) {
         $mirror_presenters = array();
         foreach($mirrors as $mirror) {
-            $mirror_presenters[] = array(
-                'id'                     => $mirror->id,
-                'url'                    => $mirror->url,
-                'hostname'               => $mirror->hostname,
-                'name'                   => $mirror->name,
-                'owner_id'               => $mirror->owner_id,
-                'owner_name'             => $mirror->owner_name,
-                'ssh_key_value'          => $mirror->ssh_key,
-                'ssh_key_ellipsis_value' => substr($mirror->ssh_key, 0, 40).'...'.substr($mirror->ssh_key, -40),
-                'number_of_repositories' => $GLOBALS['Language']->getText(
-                    'plugin_git',
-                    'mirror_number_of_repositories',
-                    array($this->getNumberOfRepositories($mirror->id))
-                )
-            );
+            $mirror_presenters[] = new MirrorPresenter($mirror, $this->getNumberOfRepositories($mirror->id));
         }
         return $mirror_presenters;
     }
