@@ -394,13 +394,16 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
         if (dirname($backup)) {
             $sourcePath = $backup.'/'.$repository->getBackupPath().'.tar.gz';
-            $status = true;
-            $error  = null;
-            $params  = array('source_path'    => $sourcePath,
-                             'archive_prefix' => self::PREFIX,
-                             'status'         => &$status,
-                             'error'          => &$error
-                            );
+            $status     = true;
+            $error      = null;
+            $params     = array(
+                'source_path'     => $sourcePath,
+                'archive_prefix'  => self::PREFIX,
+                'status'          => &$status,
+                'error'           => &$error,
+                'skip_duplicated' => false
+            );
+
             $this->getEventManager()->processEvent('archive_deleted_item', $params);
 
             if ($params['status']) {
