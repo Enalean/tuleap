@@ -1,0 +1,172 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ public_name }}</h1>
+
+    <nav class="tlp-tabs">
+        <a href="/admin/groupedit.php?group_id={{ id }}" class="tlp-tab tlp-tab-active">{{ information_label }}</a>
+        <a href="/admin/projecthistory.php?group_id={{ id }}" class="tlp-tab">{{ history_label }}</a>
+        <a href="/admin/show_pending_documents.php?group_id={{ id }}" class="tlp-tab">{{ pending_label }}</a>
+    </nav>
+
+    <section class="tlp-framed-horizontally" id="siteadmin-project-information">
+        <div id="siteadmin-project-information-details">
+            <section class="tlp-pane">
+                <form action="?" method="POST" class="tlp-pane-container">
+                    <input type="hidden" name="group_id" value="{{ id }}">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="fa fa-list tlp-pane-title-icon"></i> {{ project_details_label }}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <div class="siteadmin-project-information-details-row">
+                            <div class="siteadmin-project-information-details-row-cell">
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label" for="public-name">
+                                        {{ unix_name_label }} <i class="fa fa-asterisk"></i>
+                                    </label>
+                                    <input type="text"
+                                           class="tlp-input"
+                                           id="public-name"
+                                           name="new_name"
+                                           value="{{ unix_name }}"
+                                           size="30">
+                                </div>
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label" for="project-type">
+                                        {{ type_label }} <i class="fa fa-asterisk"></i>
+                                    </label>
+                                    <select class="tlp-select" id="project-type" name="group_type">
+                                        {{# types }}
+                                            <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                                {{ type }}
+                                            </option>
+                                        {{/ types }}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="siteadmin-project-information-details-row-cell">
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label" for="status">
+                                        {{ status_label }} <i class="fa fa-asterisk"></i>
+                                    </label>
+                                    <select class="tlp-select"
+                                            id="status"
+                                            name="form_status"
+                                            {{# can_change_status }}disabled{{/ can_change_status }}
+                                    >
+                                        {{# status }}
+                                            <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                                {{ status }}
+                                            </option>
+                                        {{/ status }}
+                                    </select>
+                                </div>
+                                <div class="tlp-property">
+                                    <label class="tlp-label">
+                                        {{ built_from_label }}
+                                    </label>
+                                    <p>
+                                        {{# built_from }}
+                                            <a href="{{ href }}">{{ name }}</a>
+                                        {{/ built_from }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tlp-property">
+                            <label class="tlp-label">{{ description_label }}</label>
+                            <p>{{ description }}</p>
+                        </div>
+                    </section>
+
+                    {{# has_custom_fields }}
+                        <section class="tlp-pane-section">
+                            {{# custom_fields }}
+                                <div class="tlp-property">
+                                    <label class="tlp-label">{{ label }}</label>
+                                    <p {{# is_empty }}class="tlp-property-empty"{{/ is_empty }}>
+                                        {{ value }}
+                                    </p>
+                                </div>
+                            {{/ custom_fields }}
+                        </section>
+                    {{/ has_custom_fields }}
+
+                    <section class="tlp-pane-section" id="siteadmin-project-save">
+                        <button type="submit" class="tlp-button-primary" name="update">
+                            <i class="fa fa-save tlp-button-icon"></i> {{ save_label }}
+                        </button>
+                    </section>
+                </form>
+            </section>
+        </div>
+
+        <div id="siteadmin-project-information-additional-info">
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-info-circle"></i> {{ more_label }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <ul>
+                            <li><a href="/project/admin/?group_id={{ id }}">{{ admin_label }}</a></li>
+                            <li><a href="/admin/userlist.php?group_id={{ id }}">{{ members_label }}</a></li>
+                            {{# links }}
+                                <li><a href="{{ href }}">{{ label }}</a></li>
+                            {{/ links }}
+                        </ul>
+                    </section>
+                </div>
+            </section>
+
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="fa fa-lock tlp-pane-title-icon"></i> {{ access_label }}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section" id="siteadmin-project-information-additional-info-access">
+                        <p id="siteadmin-project-information-additional-info-access-level">
+                            <i id="siteadmin-project-information-additional-info-access-level-icon"
+                               class="fa
+                                {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
+                                {{# is_open }}fa-unlock-alt{{/ is_open }}
+                                {{# is_closed }}fa-lock{{/ is_closed }}
+                            "></i> {{ access }}
+                        </p>
+                        {{# is_public_incl_restricted }}
+                            <span class="tlp-badge-warning"
+                                  id="siteadmin-project-information-additional-info-access-level-badge"
+                            >
+                                {{ incl_restricted_label }}
+                            </span>
+                        {{/ is_public_incl_restricted }}
+                        <a href="/project/admin/editgroupinfo.php?group_id={{ id }}"
+                           class="tlp-button-primary tlp-button-outline tlp-button-wide"
+                           id="siteadmin-project-information-additional-info-access-button"
+                        >
+                            {{ manage_access_label }}
+                        </a>
+                    </section>
+                </div>
+            </section>
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <div class="tlp-pane-header">
+                            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-envelope-o"></i> {{ instructions_label }}</h1>
+                        </div>
+                        <section class="tlp-pane-section">
+                            <p>{{ instructions_desc }}</p>
+                            <a href="/admin/newprojectmail.php?group_id={{ id }}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-wide"
+                            >
+                                <i class="tlp-button-icon fa fa-paper-plane-o"></i> {{ send_email_label }}
+                            </a>
+                        </section>
+                    </div>
+                </section>
+        </div>
+    </section>
+</div>

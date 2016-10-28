@@ -197,7 +197,7 @@ $title   = $Language->getText('admin_userlist','user_list');
 $context = $Language->getText('admin_userlist','all_groups');
 if ($group_id) {
     $pm      = ProjectManager::instance();
-    $context = $Language->getText('admin_userlist', 'group', array($pm->getProject($group_id)->getPublicName()));
+    $context = $Language->getText('admin_userlist', 'group', $pm->getProject($group_id)->getUnconvertedPublicName());
 }
 
 $search_fields_presenter = new Tuleap\User\Admin\UserListSearchFieldsPresenter($user_name_search, $status_values);

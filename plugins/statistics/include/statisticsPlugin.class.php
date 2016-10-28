@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\Admin\ProjectDetailsPresenter;
+
 require_once 'autoload.php';
 require_once 'constants.php';
 
@@ -45,6 +47,7 @@ class StatisticsPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
         $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(ProjectDetailsPresenter::GET_MORE_INFO_LINKS);
 
         $this->addHook('aggregate_statistics');
         $this->addHook('get_statistics_aggregation');
@@ -152,18 +155,16 @@ class StatisticsPlugin extends Plugin {
         );
     }
 
-    /**
-     * Display link to project disk usage for site admin
-     *
-     * @param $params
-     *
-     * @return void
-     */
-    function groupedit_data($params) {
-        $groupId = $params['group_id'];
-        if ($groupId && UserManager::instance()->getCurrentUser()->isSuperUser()) {
-            echo '<A href="'.$this->getPluginPath().'/disk_usage.php?func=show_one_project&group_id='.$groupId.'"><B><BIG>['.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').']</BIG></B></A><BR/>';
+    /** @see ProjectDetailsPresenter::GET_MORE_INFO_LINKS */
+    function get_more_info_links($params) {
+        if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
+            return;
         }
+
+        $params['links'][] = array(
+            'href'  => $this->getPluginPath().'/disk_usage.php?func=show_one_project&group_id='.$params['project']->getID(),
+            'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
+        );
     }
 
     /**
