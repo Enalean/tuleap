@@ -55,7 +55,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
             '80',
             'login',
             '/path/to/file',
-            '',
+            'replication_key',
             0,
             '2.5',
             'azerty',
@@ -64,23 +64,25 @@ class Git_Admin_process_Test extends TuleapTestCase {
         );
 
         $this->an_existing_server = new Git_RemoteServer_GerritServer(
-            0,
+            1,
             'g.example.com',
             '1234',
             '80',
             'login',
             '/path/to/file',
-            '',
+            'replication_key',
             0,
             '2.5',
             'azerty',
-            '',
-            ''
+            'azerty',
+            'Digest'
         );
 
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server
         ));
+
+        stub($this->factory)->getServerById()->returns($this->an_existing_server);
 
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
         $this->request->set('action', 'add-gerrit-server');
@@ -185,19 +187,26 @@ class Git_Admin_process_Test extends TuleapTestCase {
     }
 
     public function itUpdatesExistingGerritServer() {
-        $this->request->set('action', 'gerrit-servers');
-        $this->request->set('gerrit_servers', array(1 => $this->request_update_existing_server));
-        $expected = clone $this->an_existing_server;
-        $expected->setLogin('new_login');
-        expect($this->factory)->save($expected)->once();
+        $this->request->set('action', 'edit-gerrit-server');
+        $this->request->set('gerrit_server_id', 1);
+        $this->request->set('host', 'g.example.com');
+        $this->request->set('ssh_port', '1234');
+        $this->request->set('http_port', '80');
+        $this->request->set('login', 'new_login');
+        $this->request->set('identity_file', '/path/to/file');
+        $this->request->set('replication_key', 'replication_key');
+        $this->request->set('use_ssl', 1);
+        $this->request->set('gerrit_version', '2.5');
+        $this->request->set('http_password', 'azerty');
+        $this->request->set('replication_password', 'azerty');
+        $this->request->set('auth_type', 'Digest');
+        expect($this->factory)->save($this->an_existing_server)->once();
         $this->admin->process($this->request);
     }
 
     public function itDeletesGerritServer() {
-        $request_gerrit_servers = array(1 => $this->request_update_existing_server);
-        $request_gerrit_servers[1]['delete'] = 1;
-        $this->request->set('action', 'gerrit-servers');
-        $this->request->set('gerrit_servers', $request_gerrit_servers);
+        $this->request->set('action', 'delete-gerrit-server');
+        $this->request->set('gerrit_server_id', 1);
         expect($this->factory)->delete($this->an_existing_server)->once();
         expect($this->factory)->save($this->an_existing_server)->never();
         $this->admin->process($this->request);
