@@ -63,7 +63,7 @@ class AdminDelegationPlugin extends Plugin {
     public function burning_parrot_get_javascript_files($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
-            $params['javascript_files'][] = $this->getThemePath() .'/js/admindelegation.js';
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admindelegation.js';
         }
     }
 

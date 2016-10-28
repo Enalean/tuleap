@@ -1,0 +1,19 @@
+<div id="siteadmin-revoke-permission-modal" class="tlp-modal tlp-modal-danger" role="dialog">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-minus-circle"></i> {{ revoke_permissions }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        {{ modal_revoke_warning }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel_grant_permission }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-minus-circle tlp-button-icon"></i> {{ revoke_permissions }}
+        </button>
+    </div>
+</div>
