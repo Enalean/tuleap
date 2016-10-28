@@ -1,0 +1,42 @@
+<h1> {{ title_user_logging }} </h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ subtitle_user_logging }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{ label_time }}</th>
+                        <th>{{ label_project }}</th>
+                        <th>{{ label_user }}</th>
+                        <th>{{ label_method }}</th>
+                        <th>{{ label_uri }}</th>
+                        <th>{{ label_remote_adress }}</th>
+                        <th>{{ label_referrer }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# logs }}
+                        <tr>
+                            <td class="tlp-table-cell-section" colspan="7">{{ hour }}</td>
+                        </tr>
+                        {{# timelogs }}
+                            <tr>
+                                <td>{{ hour }}</td>
+                                <td>{{ group_id }}</td>
+                                <td>{{ user_id }}</td>
+                                <td>{{ http_request_method }}</td>
+                                <td class="userlog-table-uri-column">{{ http_request_uri }}</td>
+                                <td>{{ http_remote_addr }}</td>
+                                <td class="userlog-table-referrer-column">{{ http_referrer }}</td>
+                            </tr>
+                        {{/ timelogs }}
+                    {{/ logs}}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
