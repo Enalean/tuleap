@@ -31,7 +31,7 @@
 }
 
 .mirror-info-two-ssh-key {
-    word-break: break-word;
+    word-break: break-all;
 }
 
 .mirror-action-container {
@@ -95,7 +95,7 @@
 }
 
 .git-info-two-ssh-key {
-    word-break: break-word;
+    word-break: break-all;
 }
 
 .gerrit-server-action-container {
@@ -114,7 +114,7 @@
 
 /* -------------------- MEDIA QUERIES ---------------------- */
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1300px) {
     .tlp-pane {
         flex-direction: column;
     }
