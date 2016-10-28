@@ -1,3 +1,6 @@
+Version 4.283 - Tuleap 9.1
+    * request #9600: Archive deleted items must deal with duplicate content
+
 Version 4.282 - Tuleap 9.1
     * story #9525: Activating and add regexp in same time should be allowed
 

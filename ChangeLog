@@ -5,16 +5,20 @@ Version 9.1 (Not Released Yet)
 	* request #9392: Deleted users can be switched to suspended automatically
 	* request #9505: FRS_Admin user group description is not user friendly
 
-	== Big Fix ==
+	== Bug Fix ==
 	* request #9599: Misleading warning message when using IE11 with compatibility
 	* request #9583: SVN core package miss a dependancy to perl-CGI
 	* request #9547: Can't upload file releases
+	* request #9600: Archive deleted items must deal with duplicate
+	content
 
 	== Plugins ==
-	* svn: 0.100
+	* svn: 0.101
 	* tracker: 5.1027
-	* git: 4.282
+	* git: 4.283
 	* agiledashboard: 1.431
+	* archivedeleteditems: 0.10
+	* docman: 2.26.122
 
 	== Themes ==
 	* FlamingParrot: 1.154
