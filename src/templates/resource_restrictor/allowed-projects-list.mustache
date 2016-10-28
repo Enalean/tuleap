@@ -1,66 +1,79 @@
-<div id="allowed-projects-list">
-    {{# resource_allowed_project_list }}
-        <h2>{{ resource_allowed_project_list }}</h2>
-    {{/ resource_allowed_project_list }}
+{{# resource_allowed_project_list }}
+    <h2 class="tlp-pane-subtitle">{{ resource_allowed_project_list }}</h2>
+{{/ resource_allowed_project_list }}
 
-    <form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
-        <div id="allowed-projects-list-actions">
-            {{{ update_allowed_projects_action_csrf }}}
+<form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
+    <div class="tlp-table-actions" id="allowed-projects-list-actions">
+        {{{ update_allowed_projects_action_csrf }}}
 
-            <div id="project-to-allow-autocompleter" class="input-append">
-                <input id="project-to-allow" name="project-to-allow" type="text" placeholder="{{ resource_allowed_project_list_allow_placeholder }}">
-                <button type="submit" name="allow-project" class="btn btn-primary" value="1">
-                    <i class="icon-ok-sign icon-white"></i> {{ resource_allowed_project_list_allow_project }}
-                </button>
-            </div>
-
-            <button id="revoke-project" class="btn btn-danger" disabled>
-                <i class="icon-minus-sign icon-white"></i> {{ resource_allowed_project_list_revoke_projects }}
+        <div id="project-to-allow-autocompleter" class="tlp-form-element-append tlp-table-actions-element">
+            <input id="project-to-allow" name="project-to-allow" type="text" class="tlp-input" size="30" placeholder="{{ resource_allowed_project_list_allow_placeholder }}">
+            <button type="submit" name="allow-project" class="tlp-append tlp-button-primary" value="1">
+                <i class="fa fa-check-circle tlp-button-icon"></i> {{ resource_allowed_project_list_allow_project }}
             </button>
-
-            <div class="input-prepend filter">
-                <span class="add-on">&#xf002;</span>
-                <input type="text" id="filter-projects" placeholder="{{ resource_allowed_project_list_filter_placeholder }}" {{# there_is_no_project }}disabled{{/ there_is_no_project }}>
-            </div>
         </div>
-
-        <table class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th class="checkbox-cell"><input type="checkbox" id="check-all"></th>
-                    <th class="id-cell">{{ resource_allowed_project_list_id }}</th>
-                    <th>{{ resource_allowed_project_list_name }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# there_is_no_project }}
-                <tr>
-                    <td colspan="3" id="empty-project-list">{{ resource_allowed_project_list_empty }}</td>
-                </tr>
-                {{/ there_is_no_project }}
-                {{^ there_is_no_project }}
-                    {{# allowed_projects }}
-                    <tr>
-                        <td><input type="checkbox" name="project-ids-to-revoke[]" value="{{ getId }}"></td>
-                        <td>{{ getId }}</td>
-                        <td><a href="/projects/{{ getUnixNameMixedCase }}">{{ getUnconvertedPublicName }}</a></td>
-                    </tr>
-                    {{/ allowed_projects }}
-                {{/ there_is_no_project }}
-            </tbody>
-        </table>
-    </form>
-</div>
-
-<div id="revoke-modal" class="modal hide fade">
-    <div class="modal-header">
-        <h3>{{ resource_allowed_project_revoke_title }}</h3>
+        <button type="button" id="revoke-project" class="tlp-button-danger tlp-table-actions-element" disabled>
+            <i class="fa fa-minus-circle tlp-button-icon"></i> {{ resource_allowed_project_list_revoke_projects }}
+        </button>
+        <div class="tlp-table-actions-spacer"></div>
+        <div class="tlp-form-element {{# there_is_no_project }}tlp-form-element-disabled{{/ there_is_no_project }}">
+            <input type="search"
+                id="filter-projects"
+                class="tlp-search"
+                size="28"
+                placeholder="{{ resource_allowed_project_list_filter_placeholder }}"
+                {{# there_is_no_project }}disabled{{/ there_is_no_project }}
+            >
+        </div>
     </div>
-    <div class="modal-body">
+
+    <table id="allowed-projects-list" class="tlp-table">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="check-all">
+                </th>
+                <th class="tlp-table-cell-numeric">{{ resource_allowed_project_list_id }}</th>
+                <th class="resource-restrictor-cell-project-name">{{ resource_allowed_project_list_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# there_is_no_project }}
+            <tr>
+                <td colspan="3" class="tlp-table-cell-empty">{{ resource_allowed_project_list_empty }}</td>
+            </tr>
+            {{/ there_is_no_project }}
+            {{^ there_is_no_project }}
+                {{# allowed_projects }}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="project-ids-to-revoke[]" value="{{ getId }}">
+                    </td>
+                    <td class="resource-restrictor-cell-project-id tlp-table-cell-numeric">{{ getId }}</td>
+                    <td class="resource-restrictor-cell-project-name"><a href="/projects/{{ getUnixNameMixedCase }}">{{ getUnconvertedPublicName }}</a></td>
+                </tr>
+                {{/ allowed_projects }}
+            {{/ there_is_no_project }}
+        </tbody>
+    </table>
+</form>
+
+<div id="revoke-modal" class="tlp-modal tlp-modal-danger">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title"><i class="fa fa-trash-o"></i> {{ resource_allowed_project_revoke_title }}</h1>
+        <div class="tlp-modal-close" data-dismiss="modal">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
         <p>{{ resource_allowed_project_revoke_description }}</p>
     </div>
-    <div class="modal-footer">
-        <button id="revoke-confirm" class="btn btn-danger">{{ resource_allowed_project_revoke_yes }}</button>
-        <button data-dismiss="modal" class="btn">{{ resource_allowed_project_revoke_no }}</button>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ resource_allowed_project_revoke_no }}
+        </button>
+        <button id="revoke-confirm" type="button" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{ resource_allowed_project_revoke_yes }}
+        </button>
     </div>
 </div>

@@ -233,6 +233,7 @@ class trackerPlugin extends Plugin {
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
+            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
     }
 
