@@ -2,19 +2,19 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title"><i
-                    class="fa fa-archive tlp-pane-title-icon"></i> {{ resource_allowed_project_subtitle }}</h1>
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-archive tlp-pane-title-icon"></i> {{ resource_allowed_project_subtitle }}
+            </h1>
         </div>
         <section class="tlp-pane-section">
             <p class="tlp-alert-warning">{{ information }}</p>
 
             <div id="allowed-projects-list">
-
                 <form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
                     <div class="tlp-table-actions" id="allowed-projects-list-actions">
                         {{{ update_allowed_projects_action_csrf }}}
 
-                        <div id="project-to-allow-autocompleter" class="tlp-form-element tlp-form-element-append">
+                        <div id="project-to-allow-autocompleter" class="tlp-form-element-append tlp-table-actions-element">
                             <input id="project-to-allow" name="project-to-allow" type="text" class="tlp-input" size="30"
                                    placeholder="{{ resource_allowed_project_list_allow_placeholder }}"
                             >
@@ -23,39 +23,41 @@
                                 <i class="fa fa-arrow-circle-o-right tlp-button-icon"></i> {{ resource_allowed_project_list_allow_project }}
                             </button>
                         </div>
-                        <div class="tlp-form-element" id="search-project-to-migrate">
-                            <input type="search" class="tlp-search" id="filter-projects" size="28"
-                                   placeholder="{{ resource_allowed_project_list_filter_placeholder }}"
-                                   {{# there_is_no_project }}disabled{{/ there_is_no_project }}>
+                        <div class="tlp-table-actions-spacer"></div>
+                        <div class="tlp-form-element {{# there_is_no_project }}tlp-form-element-disabled{{/ there_is_no_project }}">
+                            <input type="search"
+                                id="filter-projects"
+                                class="tlp-search"
+                                size="28"
+                                placeholder="{{ resource_allowed_project_list_filter_placeholder }}"
+                                {{# there_is_no_project }}disabled{{/ there_is_no_project }}
+                            >
                         </div>
                     </div>
 
-                    <table class="tlp-table" id="table-project-list">
+                    <table class="tlp-table" id="allowed-projects-list">
                         <thead>
                             <tr>
                                 <th class="tlp-table-cell-numeric">{{ resource_allowed_project_list_id }}</th>
-                                <th class="project-already-migrated">{{ resource_allowed_project_list_name }}</th>
+                                <th class="resource-restrictor-cell-project-name">{{ resource_allowed_project_list_name }}</th>
                             </tr>
                         </thead>
                         <tbody>
-
                         {{# there_is_no_project }}
                             <tr>
-                                <td colspan="2"
-                                    class="tlp-table-cell-empty">{{ resource_allowed_project_list_empty }}</td>
+                                <td colspan="2" class="tlp-table-cell-empty">{{ resource_allowed_project_list_empty }}</td>
                             </tr>
                         {{/ there_is_no_project }}
                         {{^ there_is_no_project }}
                             {{# allowed_projects }}
                                 <tr>
-                                    <td class="tlp-table-cell-numeric">
-                                        <a href="{{ url_project }}?group_id={{ getGroupId }}">{{ getId }}</a>
+                                    <td class="resource-restrictor-cell-project-id tlp-table-cell-numeric">{{ getId }}</td>
+                                    <td class="resource-restrictor-cell-project-name">
+                                        <a href="{{ url_project }}?group_id={{ getGroupId }}">{{ getUnconvertedPublicName }}</a>
                                     </td>
-                                    <td>{{ getUnconvertedPublicName }}</td>
                                 </tr>
                             {{/ allowed_projects }}
                         {{/ there_is_no_project }}
-
                         </tbody>
                     </table>
                 </form>

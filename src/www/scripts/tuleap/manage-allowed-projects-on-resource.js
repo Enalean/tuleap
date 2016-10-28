@@ -32,21 +32,24 @@
             }
 
             search =  $(this).val();
-            table  = document.getElementById("table-project-list");
+            table  = document.getElementById("allowed-projects-list");
             tr     = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
-                td_id   = tr[i].getElementsByTagName("td")[0];
-                td_name = tr[i].getElementsByTagName("td")[1];
-                if (td_id && td_name) {
-                    if (td_id.innerHTML.toUpperCase().indexOf(search) > -1 ||
-                        td_name.innerHTML.toUpperCase().indexOf(search.toUpperCase()) > -1
-                    ) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
+                var tds = tr[i].getElementsByTagName("td");
+
+                for (j = 0; j < tds.length; j++) {
+                    var tr_display = "";
+
+                    if (tds[j].classList.contains('resource-restrictor-cell-project-id') || tds[j].classList.contains('resource-restrictor-cell-project-name')) {
+                        if (tds[j].textContent.toUpperCase().indexOf(search.toUpperCase()) === -1) {
+                            tr_display = "none";
+                        } else {
+                            break;
+                        }
                     }
                 }
+                tr[i].style.display = tr_display;
             }
         });
     }
@@ -89,9 +92,11 @@
     }
 
     function bindDeleteEvent() {
-        $('#revoke-project').on('click', function(event) {
-            event.preventDefault();
-            $('#revoke-modal').modal('show');
+        var dom_natures_modal_create = document.getElementById('revoke-modal');
+        var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
+
+        $('#revoke-project').on('click', function () {
+            tlp_natures_modal_create.toggle();
         });
 
         $('#revoke-confirm').click(function() {
@@ -103,7 +108,6 @@
 
             $('#projects-allowed-form').submit();
         });
-
     }
 
 })(window.jQuery);

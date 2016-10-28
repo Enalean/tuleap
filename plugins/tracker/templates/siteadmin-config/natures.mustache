@@ -93,10 +93,17 @@
             </div>
         </section>
 
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-archive tlp-pane-title-icon"></i> {{ allowed_projects_title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>{{ allowed_projects_desc }}</p>
 
-        <legend class="allowed-projects-for-nature-title">{{ allowed_projects_title }}</legend>
-        <p>{{ allowed_projects_desc }}</p>
-
-        {{{ allowed_projects }}}
+                    {{{ allowed_projects }}}
+                </section>
+            </div>
+        </section>
     </div>
 </div>
