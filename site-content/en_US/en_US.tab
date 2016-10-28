@@ -50,6 +50,7 @@ global	btn_close	Close
 global	btn_reset	Reset
 global	btn_edit	Edit
 global	btn_restrict	Restrict
+global	search_title	Search
 global	save_change	Save your change
 global	reset	reset
 global	delete	Delete

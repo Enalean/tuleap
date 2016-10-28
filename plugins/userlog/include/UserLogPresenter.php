@@ -24,6 +24,10 @@ use Tuleap\Layout\PaginationPresenter;
 
 class UserLogPresenter
 {
+    public $search_title;
+    public $pick_date;
+    public $btn_search;
+
     public $title_user_logging;
     public $subtitle_user_logging;
     public $label_time;
@@ -38,10 +42,16 @@ class UserLogPresenter
      * @var array
      */
     public $logs;
+    public $selected_day;
 
-    public function __construct(array $logs, $limit, $offset, $nb_logs)
+    public function __construct(array $logs, $selected_day, $limit, $offset, $nb_logs)
     {
         $this->logs = $logs;
+        $this->selected_day = $selected_day;
+
+        $this->search_title  = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->pick_date     = $GLOBALS['Language']->getText('global', 'pick_date');
+        $this->btn_search    = $GLOBALS['Language']->getText('global', 'btn_search');
 
         $this->title_user_logging    = $GLOBALS['Language']->getText('plugin_userlog', 'title_user_logging');
         $this->subtitle_user_logging = $GLOBALS['Language']->getText('plugin_userlog', 'subtitle_user_logging');
@@ -60,7 +70,7 @@ class UserLogPresenter
             $nb_displayed,
             $nb_logs,
             '/plugins/userlog/',
-            array()
+            array('day' => $selected_day)
         );
     }
 }

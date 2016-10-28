@@ -1,45 +1,71 @@
 <h1> {{ title_user_logging }} </h1>
 
-<section class="tlp-pane">
-    <div class="tlp-pane-container">
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ subtitle_user_logging }}</h1>
+<div id="user-logging-list">
+    <section class="tlp-pane user-logging-filter-container">
+        <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ search_title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <form name="user-logging_search_form" action="?" method="GET">
+                        <div class="tlp-form-element">
+                            <label for="user-logging-date-picker" class="tlp-label">{{ pick_date }}</label>
+                            <div class="tlp-form-element tlp-form-element-prepend">
+                                <input type="text" name="day" id="user-logging-date-picker" class="tlp-input tlp-input-date" size="11" value="{{ selected_day }}">
+                                <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="tlp-form-element" id="siteadmin-userlist-filter-button">
+                            <button type="submit" class="tlp-button-primary tlp-button-wide">
+                                <i class="fa fa-search tlp-button-icon"></i> {{ btn_search }}
+                            </button>
+                        </div>
+                    </form>
+                </section>
         </div>
-        <section class="tlp-pane-section">
-            <table class="tlp-table" id="siteadmin-userlog-table">
-                <thead>
-                    <tr>
-                        <th>{{ label_time }}</th>
-                        <th>{{ label_project }}</th>
-                        <th>{{ label_user }}</th>
-                        <th>{{ label_method }}</th>
-                        <th>{{ label_uri }}</th>
-                        <th>{{ label_remote_adress }}</th>
-                        <th>{{ label_referrer }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{# logs }}
+    </section>
+
+    <section class="tlp-pane user-logging-table-container">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ subtitle_user_logging }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <table class="tlp-table" id="siteadmin-userlog-table">
+                    <thead>
                         <tr>
-                            <td class="tlp-table-cell-section" colspan="7">{{ hour }}</td>
+                            <th>{{ label_time }}</th>
+                            <th>{{ label_project }}</th>
+                            <th>{{ label_user }}</th>
+                            <th>{{ label_method }}</th>
+                            <th>{{ label_uri }}</th>
+                            <th>{{ label_remote_adress }}</th>
+                            <th>{{ label_referrer }}</th>
                         </tr>
-                        {{# timelogs }}
+                    </thead>
+                    <tbody>
+                        {{# logs }}
                             <tr>
-                                <td>{{ hour }}</td>
-                                <td>{{ group_id }}</td>
-                                <td>{{ user_id }}</td>
-                                <td>{{ http_request_method }}</td>
-                                <td class="userlog-table-uri-column">{{ http_request_uri }}</td>
-                                <td>{{ http_remote_addr }}</td>
-                                <td class="userlog-table-referrer-column">{{ http_referrer }}</td>
+                                <td class="tlp-table-cell-section" colspan="7">{{ hour }}</td>
                             </tr>
-                        {{/ timelogs }}
-                    {{/ logs}}
-                </tbody>
-            </table>
-            {{# pagination }}
-                {{> pagination }}
-            {{/ pagination }}
-        </section>
-    </div>
-</section>
+                            {{# timelogs }}
+                                <tr>
+                                    <td>{{ hour }}</td>
+                                    <td>{{ group_id }}</td>
+                                    <td>{{ user_id }}</td>
+                                    <td>{{ http_request_method }}</td>
+                                    <td class="userlog-table-uri-column">{{ http_request_uri }}</td>
+                                    <td>{{ http_remote_addr }}</td>
+                                    <td class="userlog-table-referrer-column">{{ http_referrer }}</td>
+                                </tr>
+                            {{/ timelogs }}
+                        {{/ logs}}
+                    </tbody>
+                </table>
+                {{# pagination }}
+                    {{> pagination }}
+                {{/ pagination }}
+                </section>
+            </div>
+    </section>
+</div>

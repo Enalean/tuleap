@@ -8,6 +8,6 @@ plugin_userlog	label_project	Project
 plugin_userlog	label_user	User
 plugin_userlog	label_method	Method
 plugin_userlog	label_uri	URI
-plugin_userlog	label_adress	Adress
+plugin_userlog	label_adress	Address
 plugin_userlog	label_referrer	Referrer
 plugin_userlog	label_between	between $1 and $2 hour

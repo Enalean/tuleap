@@ -11,3 +11,33 @@
 #siteadmin-userlog-table {
     margin: 0 0 $tlp-spacing;
 }
+
+#user-logging-list {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.user-logging-filter-container {
+    width: 300px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.user-logging-table-container {
+    width: 100%;
+}
+
+@media screen and (max-width: 1200px) {
+    #user-logging-list {
+        flex-direction: column;
+    }
+
+    .user-logging-filter {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+
+    .user-logging-table {
+        width: 100%;
+    }
+}
