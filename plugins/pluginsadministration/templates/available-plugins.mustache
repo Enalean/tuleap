@@ -27,15 +27,17 @@
                         <tbody>
                         {{# plugins }}
                             <tr>
-                                <td>{{ full_name }}</td>
+                                <td class="pluginsadministration-available-list-name-cell">{{ full_name }}</td>
                                 <td>{{ version }}</td>
-                                <td>{{ description }}</td>
-                                <td class="tlp-table-cell-actions">
-                                    <a href="?action=install&name={{ name }}"
-                                       class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                <td class="pluginsadministration-available-list-description-cell">{{ description }}</td>
+                                <td>
+                                    <button class="tlp-button-primary tlp-button-outline tlp-button-small install-plugin-button"
+                                        data-modal-id="install-plugin-{{ name }}"
                                     >
                                         <i class="fa fa-download tlp-button-icon"></i> {{ install_label }}
-                                    </a>
+                                    </button>
+
+                                    {{> install-plugin-modal }}
                                 </td>
                             </tr>
                         {{/ plugins }}

@@ -44,5 +44,10 @@ class AvailablePluginsPresenter
         $this->version_table_head       = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'version_table_head');
         $this->description_table_head   = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'description_table_head');
         $this->install_label            = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_label');
+        $this->install_modal_title      = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_title');
+        $this->install_modal_content    = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_content');
+        $this->error_install_dependency = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_install_dependency');
+        $this->install_modal_submit     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_submit');
+        $this->install_modal_cancel     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_cancel');
     }
 }

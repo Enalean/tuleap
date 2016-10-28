@@ -44,13 +44,8 @@ class PluginsAdministration extends Controler {
                     $this->action = 'unavailable';
                     break;
                 case 'install':
-                    if ($request->exist('confirm')) { //The user confirm installation
+                    if ($request->exist('confirm')) {
                         $this->action = 'install';
-                        $this->view   = 'postInstall';
-                    } else {
-                        if (!$request->exist('cancel')) { //The user has not see warning yet
-                            $this->view   = 'confirmInstall';
-                        }
                     }
                     break;
                 case 'uninstall':
