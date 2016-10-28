@@ -1,7 +1,7 @@
 <div class="admindelegation-button-add-permissions">
     <h1 class="admin-delegation-title-grant-users">{{ admindelegation_title }}</h1>
     {{# has_users }}
-        <button type="button" class="tlp-button-primary button-grant-permission">
+        <button type="button" class="tlp-button-primary button-grant-permission" id="button-grant-permission">
             <i class="fa fa-plus tlp-button-icon"></i> {{ add_grant_permission }}
         </button>
     {{/has_users}}
@@ -55,3 +55,5 @@
         </div>
     </section>
 {{/ has_users }}
+
+{{> modal-add-permission }}

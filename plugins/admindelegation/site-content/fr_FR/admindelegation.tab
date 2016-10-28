@@ -20,7 +20,10 @@ plugin_admindelegation	permissions_granted_users_service_title	Utilisateurs auto
 plugin_admindelegation	no_permissions_granted	Il n'y a rien ici,
 plugin_admindelegation	no_permissions_granted_next_part	commencez par donner une permission à quelqu'un.
 plugin_admindelegation	add_grant_permission	Donner une permission
+plugin_admindelegation	cancel_grant_permission	Annuler
 plugin_admindelegation	delegation_table_title	Permissions utilisateurs
+plugin_admindelegation	label_grant_permission	Déléguer les permissions
+plugin_admindelegation	label_username	A l'utilisateur
 
 # All widgets
 plugin_admindelegation	widget_btn_search	Rechercher

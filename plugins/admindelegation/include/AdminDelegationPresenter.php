@@ -32,11 +32,16 @@ class AdminDelegationPresenter
     public $add_grant_permission;
     public $delegation_table_title;
     public $admindelegation_avatar;
+    public $cancel_grant_permission;
+    public $label_grant_permission;
+    public $label_username;
+    public $services;
 
-    public function __construct($users)
+    public function __construct(array $users, array $services)
     {
         $this->has_users = count($users) > 0;
         $this->users     = $users;
+        $this->services  = $services;
 
         $this->admindelegation_title = $GLOBALS['Language']->getText(
             'plugin_admindelegation',
@@ -75,6 +80,21 @@ class AdminDelegationPresenter
         $this->admindelegation_avatar = $GLOBALS['Language']->getText(
             'plugin_admindelegation',
             'admindelegation_avatar'
+        );
+
+        $this->cancel_grant_permission = $GLOBALS['Language']->getText(
+            'plugin_admindelegation',
+            'cancel_grant_permission'
+        );
+
+        $this->label_grant_permission = $GLOBALS['Language']->getText(
+            'plugin_admindelegation',
+            'label_grant_permission'
+        );
+
+        $this->label_username = $GLOBALS['Language']->getText(
+            'plugin_admindelegation',
+            'label_username'
         );
     }
 }
