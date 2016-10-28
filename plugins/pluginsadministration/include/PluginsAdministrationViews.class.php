@@ -23,6 +23,9 @@
  * PluginsAdministrationViews
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
+
 require_once('bootstrap.php');
 
 class PluginsAdministrationViews extends Views {
@@ -54,23 +57,47 @@ class PluginsAdministrationViews extends Views {
         $GLOBALS['HTML']->footer(array());
     }
 
-    function display($view='') {
+    public function display($view='') {
+        $renderer = new AdminPageRenderer();
+
         switch ($view) {
         case 'ajax_projects':
+        case 'properties':
+        case 'restrict':
+        case 'confirmInstall':
+        case 'confirmUninstall':
+            $this->header();
             $this->$view();
+            $this->footer();
             break;
 
-        case 'browse':
+        case 'available':
             $this->_searchPlugins();
-        default:
-            parent::display($view);
+            $renderer->renderANoFramedPresenter(
+                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                PLUGINSADMINISTRATION_TEMPLATE_DIR,
+                'available-plugins',
+                $this->getAvailablePluginsPresenter()
+            );
+            break;
+
+        case 'installed':
+            $this->_searchPlugins();
+            $renderer = new AdminPageRenderer();
+            $renderer->renderANoFramedPresenter(
+                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                PLUGINSADMINISTRATION_TEMPLATE_DIR,
+                'installed-plugins',
+                $this->getInstalledPluginsPresenter()
+            );
         }
     }
+
     // {{{ Views
     function browse() {
         $output = '';
-        $output .= $this->_installedPlugins();
-        $output .= $this->_notYetInstalledPlugins();
+        $output .= $this->getInstalledPluginsPresenter();
+        $output .= $this->getAvailablePluginsPresenter();
         echo $output;
     }
 
@@ -348,13 +375,6 @@ class PluginsAdministrationViews extends Views {
         return $name;
     }
 
-    function _getHelp($section = '') {
-        if (trim($section) !== '' && $section{0} !== '#') {
-            $section = '#'.$section;
-        }
-        return '<a href="javascript:help_window(\''.get_server_url().'/plugins/pluginsadministration/documentation/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$section.'\');">[?]</a>';
-    }
-
     function _searchPlugins() {
         if (!$this->_plugins) {
             $this->_plugins    = array();
@@ -406,7 +426,8 @@ class PluginsAdministrationViews extends Views {
         }
     }
 
-    function _installedPlugins() {
+    private function getInstalledPluginsPresenter()
+    {
         usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
 
         $i       = 0;
@@ -431,61 +452,42 @@ class PluginsAdministrationViews extends Views {
             $i++;
         }
 
-        $presenter = new PluginsAdministration_Presenter_InstalledPluginsPresenter(
-            $this->_getHelp('manage'),
-            $plugins
-        );
-
-        return $this->renderer->renderToString(
-            'installed-plugins',
-            $presenter
-        );
+        return new PluginsAdministration_Presenter_InstalledPluginsPresenter($plugins);
     }
 
     private function getPluginAvailableFlags(array $plugin_data) {
-        $unavailable_flag = $this->getFlag($plugin_data['plugin_id'], 'unavailable', ! $plugin_data['available'], $plugin_data['dont_touch']);
-        $available_flag   = $this->getFlag($plugin_data['plugin_id'], 'available', $plugin_data['available'], $plugin_data['dont_touch']);
-
-        return $unavailable_flag .' '. $available_flag;
+        return $this->getFlag($plugin_data['plugin_id'], $plugin_data['available'], $plugin_data['dont_touch']);
     }
 
-    private function getFlag($plugin_id, $state, $is_active, $dont_touch) {
-        $style  = '';
-        $badge  = '';
-        $output = '';
-        $content = $GLOBALS['Language']->getText('plugin_pluginsadministration', $state);
+    private function getFlag($plugin_id, $is_active, $dont_touch)
+    {
+        $output  = '';
+        $checked = '';
+        $state   = 'unavailable';
+        $action  = 'available';
+
         if ($is_active) {
-            $badge = 'badge badge-'. ($state == 'available' ? 'success' : 'important');
-        } else if ($dont_touch) {
-            $style = 'style="visibility:hidden;"';
-        } else {
-            $title   = $GLOBALS['Language']->getText('plugin_pluginsadministration','change_to_'. $state);
-            $content = '<a href="?action='. $state .'&plugin_id='. $plugin_id .'" title="'.$title.'">'. $content .'</a>';
+            $checked = 'checked';
+            $state   = 'available';
+            $action  = 'unavailable';
         }
-        $output .= '<span class="'. $badge .'" '. $style .'>'. $content .'</span>';
+
+        $title = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'change_to_'.$state);
+
+        if (! $dont_touch) {
+            $output = '
+            <form id="plugin-switch-form-'.$plugin_id.'" action="?action='. $action .'&plugin_id='. $plugin_id .'" method="POST">
+                <div class="tlp-switch">
+                    <input type="checkbox" data-form-id="plugin-switch-form-'.$plugin_id.'" id="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-checkbox" '.$checked.'>
+                    <label for="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-button">'.$title.'</label>
+                </div>
+            </form>';
+        }
+
         return $output;
     }
 
-    function _notYetInstalledPlugins() {
-        $plugin_manager = $this->plugin_manager;
-        $Language       =& $GLOBALS['Language'];
-        $output = '';
-        $not_yet_installed =& $plugin_manager->getNotYetInstalledPlugins();
-        if ($not_yet_installed && count($not_yet_installed) > 0) {
-            $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'&nbsp;'.$this->_getHelp('install').'</legend>';
-            $output .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','select_install').'</div>';
-            $prefixe = '<a href="?action=install&name=';
-            $middle  = '" title="'.$Language->getText('plugin_pluginsadministration','install_plugin').'">';
-            $suffixe = '</a>';
-            sort($not_yet_installed);
-            reset($not_yet_installed);
-            list($key,$value) = each($not_yet_installed);
-            $output .= $prefixe.urlencode($value).$middle.$value.$suffixe;
-            while(list($key,$value) = each($not_yet_installed)) {
-                $output .= ', '.$prefixe.$value.$middle.$value.$suffixe;
-            }
-            $output .= '</fieldset>';
-        }
-        return $output;
+    private function getAvailablePluginsPresenter() {
+        return new AvailablePluginsPresenter($this->plugin_manager->getNotYetInstalledPlugins());
     }
 }

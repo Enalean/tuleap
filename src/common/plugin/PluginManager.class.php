@@ -349,7 +349,7 @@ class PluginManager {
         return $db_corrupted;
     }
 
-    function getNotYetInstalledPlugins() {
+    public function getNotYetInstalledPlugins() {
         return $this->plugin_factory->getNotYetInstalledPlugins();
     }
 

@@ -7,7 +7,10 @@ plugin_pluginsadministration	descriptor_name	Plugins Administration
 #
 #
 #
-plugin_pluginsadministration	Actions	Actions
+plugin_pluginsadministration	installed_tab_label	Installed plugins
+plugin_pluginsadministration	not_installed_tab_label	Available plugins
+plugin_pluginsadministration	installed_pane_label	Plugins
+plugin_pluginsadministration	not_installed_pane_label	Plugins
 plugin_pluginsadministration	change_to_unavailable	Do not avail this plugin
 plugin_pluginsadministration	change_to_available	Avail this plugin
 plugin_pluginsadministration	Description	Description
@@ -20,24 +23,25 @@ plugin_pluginsadministration	Hook:	Hook:
 plugin_pluginsadministration	hook_asterisk	* : hooks listened to by several plugins are followed by an asterisk.
 plugin_pluginsadministration	install_plugin	Install this Plugin
 plugin_pluginsadministration	install	Install a Plugin
+plugin_pluginsadministration	install_label	Install
 plugin_pluginsadministration	menu	Plugins
 plugin_pluginsadministration	not_yet_installed	Not Yet Installed Plugins
-plugin_pluginsadministration	Plugin	Plugin
+plugin_pluginsadministration	plugin_table_head	Name
+plugin_pluginsadministration	version_table_head	Version
+plugin_pluginsadministration	description_table_head	Description
 plugin_pluginsadministration	Plugins	Plugins
 plugin_pluginsadministration	plugins	Installed Plugins
 plugin_pluginsadministration	plugin_uninstalled	Plugin "$1" have been uninstalled.
 plugin_pluginsadministration	plugin_not_uninstalled	Plugin "$1" have not been uninstalled.
 plugin_pluginsadministration	priorities	Priorities between plugins
 plugin_pluginsadministration	Priority	Priority
-plugin_pluginsadministration	properties	Display properties of plugin
-plugin_pluginsadministration	properties_icon_label	Properties
+plugin_pluginsadministration	properties_icon_label	Editer
 plugin_pluginsadministration	select_hook	Select hook:
 plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
-plugin_pluginsadministration	Available?	Available?
-plugin_pluginsadministration	title	Plugins Administration
+plugin_pluginsadministration	Available?	Enabled?
+plugin_pluginsadministration	title	Plugins
 plugin_pluginsadministration	there_is_no_plugin	<em>There is no plugin installed yet.</em>
 plugin_pluginsadministration	uninstall	Uninstall
-plugin_pluginsadministration	uninstall_plugin	Uninstall this Plugin
 plugin_pluginsadministration	uninstall_plugin_icon_label	Uninstall
 plugin_pluginsadministration	upload	Upload Archive
 plugin_pluginsadministration	update_priorities	Update Priorities
@@ -51,7 +55,7 @@ plugin_pluginsadministration	error_unavail_dependency	Unable to avail $1. Please
 plugin_pluginsadministration	error_install_dependency	There are unmet dependencies that prevent you from installing this plugin:
 plugin_pluginsadministration	error_uninstall_dependency	You cannot uninstall <em>$1</em> since at least another plugin depends on it:
 plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restrict
-plugin_pluginsadministration	manage_restriction_by_project	Manage restriction by projects
+plugin_pluginsadministration	cant_restrict	Can't restrict this plugin because of its system scope
 
 plugin_pluginsadministration	plugin_allowed_project_back_link_title	Back to plugins list
 plugin_pluginsadministration	plugin_allowed_project_title	Manage projects allowed to use $1

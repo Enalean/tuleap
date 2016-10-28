@@ -17,6 +17,8 @@ class PluginsAdministrationPlugin extends Plugin
         parent::__construct($id);
         $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     /** @see Event::IS_IN_SITEADMIN */
@@ -40,6 +42,21 @@ class PluginsAdministrationPlugin extends Plugin
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/pluginsadministration.js';
         }
     }
 

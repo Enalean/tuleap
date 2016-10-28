@@ -37,8 +37,9 @@ class PluginInfo {
     function setPluginDescriptor($descriptor) {
         $this->pluginDescriptor = $descriptor;
     }
-    
-    function getPluginDescriptor() {
+
+    /** @return PluginDescriptor */
+    public function getPluginDescriptor() {
         if (!is_a($this->pluginDescriptor, 'PluginDescriptor')) {
             $this->setPluginDescriptor(new PluginDescriptor('', '', ''));
         }
