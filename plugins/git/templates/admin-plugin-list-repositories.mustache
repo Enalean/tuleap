@@ -1,38 +1,36 @@
-<a href="{{ base_url }}/admin/?pane=mirrors_admin"><i class="icon-long-arrow-left"></i> {{ mirror_back }}</a>
-
-<h1>{{ mirror_title }}</h1>
-
-{{# has_repositories }}
-
-    {{# repository_list_for_projects }}
-
-    <h2> {{{ project_name }}} </h2>
-
-        <table class="table table-hover table-bordered table-striped git_admin_mirror_details">
-
-            <thead>
+<div class="tlp-modal" role="dialog" id="modal-show-repositories-{{ id }}">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">{{ repos_title }}</h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# repository_list_for_projects }}
+            <h2 class="tlp-modal-subtitle">{{ project_name }}</h2>
+            <table class="tlp-table mirror-repo-list-for-project">
+                <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>{{ mirror_repo }}</th>
+                    <th class="tlp-table-cell-numeric">Id</th>
+                    <th class="mirror-repo-list-for-project-reponame">{{ mirror_repo }}</th>
                 </tr>
-            </thead>
-
-            <tbody>
-            {{# repositories }}
-
-                <tr>
-                    <td>{{ repository_id }}</td>
-                    <td><a href="{{ base_url }}/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=repo_management&pane=mirroring">{{ repository_path }}</a></td>
-                </tr>
-
-            {{/ repositories }}
-            </tbody>
-
-        </table>
-
-    {{/ repository_list_for_projects }}
-
-{{/ has_repositories }}
-{{^ has_repositories }}
-    <p>{{ no_repositories }}</p>
-{{/ has_repositories }}
+                </thead>
+                <tbody>
+                {{# repositories }}
+                    <tr>
+                        <td class="tlp-table-cell-numeric">{{ repository_id }}</td>
+                        <td>
+                            <a href="{{ base_url }}/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=repo_management&pane=mirroring">
+                                {{ repository_path }}
+                            </a>
+                        </td>
+                    </tr>
+                {{/ repositories }}
+                </tbody>
+            </table>
+        {{/ repository_list_for_projects }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
+    </div>
+</div>

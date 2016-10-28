@@ -23,14 +23,15 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
     const TEMPLATE = 'admin-plugin';
 
     public $see_all = true;
-
     public $list_of_mirrors;
-
     public $list_of_mirrors_empty_message_part_one;
-
     public $list_of_mirrors_empty_message_part_two;
-
     public $empty_content;
+    public $no_repositories;
+    public $btn_submit;
+    public $mirror_repo;
+    public $btn_close;
+    public $base_url;
 
     public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_mirrors) {
         parent::__construct($title, $csrf);
@@ -39,7 +40,11 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
         $this->list_of_mirrors_empty_message_part_one = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_mirrors_part_one');
         $this->list_of_mirrors_empty_message_part_two = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_mirrors_part_two');
         $this->empty_content                          = $GLOBALS['Language']->getText('plugin_git', 'empty_content');
+        $this->no_repositories                        = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_repositories');
         $this->btn_submit                             = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->btn_close                              = $GLOBALS['Language']->getText('global', 'btn_close');
+        $this->mirror_repo                            = $GLOBALS['Language']->getText('plugin_git', 'mirror_repo');
+        $this->base_url                               = GIT_BASE_URL;
     }
 
     public function getTemplate() {

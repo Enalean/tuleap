@@ -84,9 +84,6 @@ class Git_AdminMirrorController {
         $presenter = null;
 
         switch ($request->get('action')) {
-            case 'list-repositories':
-                $presenter = $this->getListRepositoriesPresenter($request);
-                break;
             case 'manage-allowed-projects':
             case 'set-mirror-restriction':
             case 'update-allowed-project-list': {
@@ -129,25 +126,10 @@ class Git_AdminMirrorController {
         foreach($mirrors as $mirror) {
             $mirror_presenters[] = new MirrorPresenter(
                 $mirror,
-                $this->getNumberOfRepositories($mirror->id)
+                $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
             );
         }
         return $mirror_presenters;
-    }
-
-    private function getNumberOfRepositories($mirror_id)
-    {
-        return $this->git_mirror_mapper->getNumberOfRepositories($mirror_id);
-    }
-
-    private function getListRepositoriesPresenter(Codendi_Request $request) {
-        $mirror_id = $request->get('mirror_id');
-        $mirror    = $this->git_mirror_mapper->fetch($mirror_id);
-
-        return new Git_AdminMRepositoryListPresenter(
-            $mirror->url,
-            $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
-        );
     }
 
     private function getManageAllowedProjectsPresenter(Codendi_Request $request) {

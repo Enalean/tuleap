@@ -94,6 +94,12 @@ $tlp-modal-transition: 150ms ease-out;
     font-size: 24px;
 }
 
+.tlp-modal-subtitle {
+    color: $tlp-ui-dimmed;
+    font-size: 20px;
+    font-weight: 600;
+}
+
 .tlp-modal-body {
     height: 100%;
     max-height: 70vh;
