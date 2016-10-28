@@ -20,6 +20,8 @@
 
 namespace Tuleap\Userlog;
 
+use Tuleap\Layout\PaginationPresenter;
+
 class UserLogPresenter
 {
     public $title_user_logging;
@@ -31,12 +33,13 @@ class UserLogPresenter
     public $label_uri;
     public $label_remote_adress;
     public $label_referrer;
+
     /**
      * @var array
      */
     public $logs;
 
-    public function __construct(array $logs)
+    public function __construct(array $logs, $limit, $offset, $nb_logs)
     {
         $this->logs = $logs;
 
@@ -49,5 +52,15 @@ class UserLogPresenter
         $this->label_uri             = $GLOBALS['Language']->getText('plugin_userlog', 'label_uri');
         $this->label_remote_adress   = $GLOBALS['Language']->getText('plugin_userlog', 'label_adress');
         $this->label_referrer        = $GLOBALS['Language']->getText('plugin_userlog', 'label_referrer');
+
+        $nb_displayed = $offset + $limit > $nb_logs ? $nb_logs - $offset : $limit;
+        $this->pagination = new PaginationPresenter(
+            $limit,
+            $offset,
+            $nb_displayed,
+            $nb_logs,
+            '/plugins/userlog/',
+            array()
+        );
     }
 }
