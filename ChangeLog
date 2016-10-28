@@ -1,4 +1,8 @@
-Vesrion 9.0-2 (Friday, October 21st 2016)
+Version 9.0-3 (Friday, October 28th 2016)
+	== Bug Fix ==
+	* request #9600: Archive deleted items must deal with duplicate content
+
+Version 9.0-2 (Friday, October 21st 2016)
 	== Bug Fix ==
 	* request #9595: Gitolite3Parser does not deal with deleted repositories
 	* request #9515: Fatal error while listing permissions of a user group
