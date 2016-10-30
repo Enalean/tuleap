@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Project\Admin\ProjectHistoryPresenter;
+use Tuleap\Project\Admin\ProjectHistoryResultsPresenter;
+use Tuleap\Project\Admin\ProjectHistorySearchPresenter;
+
 require_once('pre.php');
 require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_history.php');
@@ -38,4 +43,22 @@ if ($request->exist('export')) {
     exit;
 }
 
-echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
+$dao            = new ProjectHistoryDao();
+$history_filter = build_grouphistory_filter($event, $subEvents, $value, $startDate, $endDate, $by);
+$results        = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
+
+$renderer = new AdminPageRenderer();
+$renderer->renderANoFramedPresenter(
+    $Language->getText('admin_groupedit', 'title'),
+    ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+    'project-history',
+    new ProjectHistoryPresenter(
+        $project,
+        new ProjectHistoryResultsPresenter($results),
+        $limit,
+        $offset,
+        new ProjectHistorySearchPresenter(
+            $event
+        )
+    )
+);

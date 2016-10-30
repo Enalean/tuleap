@@ -643,3 +643,7 @@ admin_project	status_label	Status
 admin_project	instructions_label	Instructions
 admin_project	instructions_desc	An email is sent to project administrators when the project is activated. The email serves as a notification and contains basic instructions about the new project. You can manually resend this email.
 admin_project	send_email_label	Send new project instructions
+admin_project	filter_label	Filter
+admin_project	search_label	Search
+admin_project	change_label	Change history
+admin_project	history_empty_state	There isn't any change history yet.
