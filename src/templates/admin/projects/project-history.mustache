@@ -9,7 +9,7 @@
 
     <div class="tlp-framed-horizontally" id="siteadmin-project-history">
         <section class="tlp-pane" id="siteadmin-project-history-filter">
-            <form action="?" method="POST" class="tlp-pane-container">
+            <form action="?" method="GET" class="tlp-pane-container" id="siteadmin-project-history-filter-form">
                 <input type="hidden" name="group_id" value="{{ id }}">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
@@ -19,14 +19,40 @@
                 <section class="tlp-pane-section">
                     {{# search }}
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="events_box">{{ event_label }}</label>
-                            <select class="tlp-select" name="events_box" id="events_box">
+                            <label class="tlp-label" for="events">{{ event_label }}</label>
+                            <select class="tlp-select"
+                                    name="events_box"
+                                    id="events"
+                            >
                                 {{# events }}
-                                    <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                    <option value="{{ key }}"
+                                            {{# is_current }}selected{{/ is_current }}
+                                            data-target="subevents-{{ key }}"
+                                    >
                                         {{ label }}
                                     </option>
                                 {{/ events }}
                             </select>
+                            {{# grouped_events }}
+                                <div class="siteadmin-project-history-filter-form-subevents" id="subevents-{{ group }}">
+                                    <select class="tlp-select"
+                                            name="sub_events_box[]"
+                                            style="width: 100%"
+                                            multiple
+                                            disabled
+                                            data-placeholder="{{ event_placeholder }}"
+                                    >
+                                        {{# events }}
+                                            <option value="{{ key }}"
+                                                    {{# is_current }}selected{{/ is_current }}
+                                                    data-target="subevents-{{ key }}"
+                                            >
+                                                {{ label }}
+                                            </option>
+                                        {{/ events }}
+                                    </select>
+                                </div>
+                            {{/ grouped_events }}
                         </div>
                     {{/ search }}
                     <button type="submit" class="tlp-button-primary tlp-button-wide">

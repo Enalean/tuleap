@@ -43,8 +43,13 @@ class ProjectHistoryPresenter
     public $user_label;
     public $search;
 
-    public function __construct(Project $project, ProjectHistoryResultsPresenter $results, $limit, $offset, ProjectHistorySearchPresenter $search)
-    {
+    public function __construct(
+        Project $project,
+        ProjectHistoryResultsPresenter $results,
+        $limit,
+        $offset,
+        ProjectHistorySearchPresenter $search
+    ) {
         $this->id          = $project->getID();
         $this->public_name = $project->getUnconvertedPublicName();
         $this->search      = $search;
@@ -65,21 +70,39 @@ class ProjectHistoryPresenter
         $this->history = $results->history;
 
         if (count($this->history) > 0) {
-            $base_url       = '/admin/projecthistory.php';
-            $default_params = array(
-                'group_id' => $project->getId(),
-            );
-
-            $this->pagination = new PaginationPresenter(
-                $limit,
-                $offset,
-                count($this->history),
-                $results->total_rows,
-                $base_url,
-                $default_params
-            );
+            $this->pagination = $this->getPagination($project, $search, $results, $limit, $offset);
         } else {
             $this->pagination = false;
         }
+    }
+
+    public function getPagination(
+        Project $project,
+        ProjectHistorySearchPresenter $search,
+        ProjectHistoryResultsPresenter $results,
+        $limit,
+        $offset
+    ) {
+        $base_url       = '/admin/projecthistory.php';
+        $default_params = array(
+            'group_id' => $project->getId()
+        );
+
+        if ($search->selected_event) {
+            $default_params['events_box'] = $search->selected_event;
+        }
+
+        if ($search->selected_subevents) {
+            $default_params['sub_events_box'] = array_keys($search->selected_subevents);
+        }
+
+        return new PaginationPresenter(
+            $limit,
+            $offset,
+            count($this->history),
+            $results->total_rows,
+            $base_url,
+            $default_params
+        );
     }
 }
