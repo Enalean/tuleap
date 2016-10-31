@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
+use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
 require_once('bootstrap.php');
 
@@ -62,11 +63,37 @@ class PluginsAdministrationViews extends Views {
 
         switch ($view) {
             case 'ajax_projects':
-            case 'properties':
             case 'restrict':
                 $this->header();
                 $this->$view();
                 $this->footer();
+                break;
+
+            case 'properties':
+                $request        = HTTPRequest::instance();
+                $plugin_factory = PluginFactory::instance();
+
+                if ($request->exist('plugin_id')) {
+                    $plugin = $plugin_factory->getPluginById($request->get('plugin_id'));
+
+                    if(! $plugin) {
+                        $GLOBALS['HTML']->redirect('/plugins/pluginsadministration/');
+                        return;
+
+                    } else {
+                        $presenter = $this->getPluginPropertiesPresenter(
+                            $plugin
+                        );
+
+                        $renderer->renderAPresenter(
+                            $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                            PLUGINSADMINISTRATION_TEMPLATE_DIR,
+                            'plugin-properties',
+                            $presenter
+                        );
+                    }
+                }
+
                 break;
 
             case 'available':
@@ -134,114 +161,86 @@ class PluginsAdministrationViews extends Views {
             }
         }
     }
-    function properties() {
-        $pm = ProjectManager::instance();
-        $link_to_plugins = dirname($_SERVER['REQUEST_URI']).'/';
-        $request =& HTTPRequest::instance();
-        if ($request->exist('plugin_id')) {
-            $plugin_manager = $this->plugin_manager;
-            $plugin_factory =& PluginFactory::instance();
-            $plugin =& $plugin_factory->getPluginById($request->get('plugin_id'));
-            if(!$plugin) {
-                $GLOBALS['HTML']->redirect('/plugins/pluginsadministration/');
-            } else {
-                $plug_info  =& $plugin->getPluginInfo();
-                $descriptor =& $plug_info->getPluginDescriptor();
 
-                $available = $plugin_manager->isPluginAvailable($plugin);
-                $name = $descriptor->getFullName();
-                if (strlen(trim($name)) === 0) {
-                    $name = get_class($plugin);
-                }
+    private function getPluginPropertiesPresenter(Plugin $plugin)
+    {
+        $plugin_info = $plugin->getPluginInfo();
+        $descriptor  = $plugin_info->getPluginDescriptor();
 
-                $col_hooks =& $plugin->getHooks();
-                $hooks =& $col_hooks->iterator();
-                $the_hooks = array();
-                while($hooks->valid()) {
-                    $hook =& $hooks->current();
-                    $the_hooks[] = $hook;
-                    $hooks->next();
-                }
-                natcasesort($the_hooks);
-                $link_to_hooks = implode(', ', $the_hooks);
-
-                //PropertyDescriptor
-                $descs = $plug_info->getPropertyDescriptors();
-                $keys  = $descs->getKeys();
-                $iter  = $keys->iterator();
-                $props = '';
-                while($iter->valid()) {
-                    $key   = $iter->current();
-                    $desc  = $descs->get($key);
-                    $prop_name = $desc->getName();
-                    $props .= '<tr><td class="pluginsadministration_label">'. $prop_name .'</td><td>';
-                    if (is_bool($desc->getValue())) {
-                        $props .= '<input type="hidden"   name="properties['. $prop_name .']" value="0" />';
-                        $props .= '<input type="checkbox" name="properties['. $prop_name .']" value="1" '. ($desc->getValue() ? 'checked="checked"' : '') .'/>';
-                    } else {
-                        $props .= sprintf('<input type="text" size="%d" name="properties[%s]" value="%s" />', strlen($desc->getValue()), $prop_name, $desc->getValue());
-                    }
-                    $props .= '</td></tr>';
-                    $iter->next();
-                }
-
-                $output  = '<h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_plugin', array($name)).'</h3>';
-                $output .= '<form action="'. $_SERVER['REQUEST_URI'] .'" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
-                $output .= '<table class="pluginsadministration_plugin_properties tlp-table">';
-                $output .= '<tbody>';
-                $output .=   '<tr>';
-                $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_name:').' </td>';
-                $output .=     '<td>'.$descriptor->getFullName().'</td>';
-                $output .=   '</tr>';
-                $output .=   '<tr>';
-                $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_version:').' </td>';
-                $output .=     '<td>'.$descriptor->getVersion().'</td>';
-                $output .=   '</tr>';
-                $output .=   '<tr>';
-                $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_description:').' </td>';
-                $output .=     '<td>'.$descriptor->getDescription().'</td>';
-                $output .=   '</tr>';
-                $output .=   '<tr>';
-                $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_scope:').' </td>';
-                $output .=     '<td>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'scope_'.$plugin->getScope()).'</td>';
-                $output .=   '</tr>';
-
-                $dependencies = implode(', ', $plugin->getDependencies());
-                if (! $dependencies) {
-                    $dependencies = '–';
-                }
-                $output .=   '<tr>';
-                $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_dependencies:').' </td>';
-                $output .=     '<td>'. $dependencies .'</td>';
-                $output .=   '</tr>';
-
-                $output .=   '<tr>';
-                $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_hooks:').' </td>';
-                $output .=     '<td>'.$link_to_hooks.'</td>';
-                $output .=   '</tr>';
-                if ($props !== '') {
-                    $output .=   $props;
-                }
-                if(($props !== '') || ($plugin->getScope() == Plugin::SCOPE_PROJECT)) {
-                    $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" class="btn btn-primary" value="Change Properties" /></td></tr>';
-                }
-                $output .= '</tbody>';
-                $output .= '</table>';
-                $output .= '</form>';
-
-                $output .= $plugin->getAdministrationOptions();
-
-                $readme = $this->getFormattedReadme($plugin->getName());
-                if ($readme) {
-                    $output .= $readme;
-                }
-
-                $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';
-                echo $output;
-            }
+        $name = $descriptor->getFullName();
+        if (strlen(trim($name)) === 0) {
+            $name = get_class($plugin);
         }
+
+        $readme          = $this->getFormattedReadme($plugin->getName());
+        $is_there_readme = ! empty($readme);
+
+        $dependencies           = implode(', ', $plugin->getDependencies());
+        $are_there_dependencies = ! empty($dependencies);
+
+        $col_hooks = $plugin->getHooks();
+        $hooks     = $col_hooks->iterator();
+        $the_hooks = array();
+        while($hooks->valid()) {
+            $hook        = $hooks->current();
+            $the_hooks[] = $hook;
+            $hooks->next();
+        }
+        natcasesort($the_hooks);
+
+        $hooks           = implode(', ', $the_hooks);
+        $are_there_hooks = ! empty($hooks);
+
+        $descs                = $plugin_info->getPropertyDescriptors();
+        $keys                 = $descs->getKeys();
+        $iter                 = $keys->iterator();
+        $properties           = array();
+        while($iter->valid()) {
+            $key       = $iter->current();
+            $desc      = $descs->get($key);
+            $prop_name = $desc->getName();
+
+            $properties[] = array(
+                'name'    => $prop_name,
+                'is_bool' => is_bool($desc->getValue()),
+                'value'   => $desc->getValue()
+            );
+
+            $iter->next();
+        }
+        $are_there_properties = ! empty($properties);
+
+        $additional_options           = $plugin->getAdministrationOptions();
+        $are_there_additional_options = ! empty($additional_options);
+
+        $enable_switch = $this->getFlag(
+            $plugin->getId(),
+            $this->plugin_manager->isPluginAvailable($plugin),
+            (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0),
+            'properties'
+        );
+        $is_there_enable_switch = ! empty($enable_switch);
+
+        return new PluginPropertiesPresenter(
+            $plugin->getId(),
+            $name,
+            $descriptor->getVersion(),
+            $descriptor->getDescription(),
+            $plugin->getScope(),
+            $is_there_enable_switch,
+            $enable_switch,
+            $are_there_dependencies,
+            $dependencies,
+            $is_there_readme,
+            $readme,
+            $are_there_hooks,
+            $hooks,
+            $are_there_properties,
+            $properties,
+            $are_there_additional_options,
+            $additional_options
+        );
     }
-    // }}}
 
     public function restrict() {
         $request                    = HTTPRequest::instance();
@@ -351,7 +350,7 @@ class PluginsAdministrationViews extends Views {
                 'name'                        => $plugin['name'],
                 'version'                     => $plugin['version'],
                 'description'                 => $plugin['description'],
-                'flags'                       => $this->getPluginAvailableFlags($plugin),
+                'flags'                       => $this->getFlag($plugin['plugin_id'], $plugin['available'], $plugin['dont_touch'], 'installed'),
                 'scope'                       => $GLOBALS['Language']->getText('plugin_pluginsadministration', 'scope_'.$plugin['scope']),
                 'plugin_id'                   => $plugin['plugin_id'],
                 'dont_touch'                  => $plugin['dont_touch'],
@@ -366,11 +365,7 @@ class PluginsAdministrationViews extends Views {
         return new PluginsAdministration_Presenter_InstalledPluginsPresenter($plugins);
     }
 
-    private function getPluginAvailableFlags(array $plugin_data) {
-        return $this->getFlag($plugin_data['plugin_id'], $plugin_data['available'], $plugin_data['dont_touch']);
-    }
-
-    private function getFlag($plugin_id, $is_active, $dont_touch)
+    private function getFlag($plugin_id, $is_active, $dont_touch, $view)
     {
         $output  = '';
         $checked = '';
@@ -387,7 +382,7 @@ class PluginsAdministrationViews extends Views {
 
         if (! $dont_touch) {
             $output = '
-            <form id="plugin-switch-form-'.$plugin_id.'" action="?action='. $action .'&plugin_id='. $plugin_id .'" method="POST">
+            <form id="plugin-switch-form-'.$plugin_id.'" action="?action='. $action .'&plugin_id='. $plugin_id .'&view='.$view.'" method="POST">
                 <div class="tlp-switch">
                     <input type="checkbox" data-form-id="plugin-switch-form-'.$plugin_id.'" id="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-checkbox" '.$checked.'>
                     <label for="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-button">'.$title.'</label>

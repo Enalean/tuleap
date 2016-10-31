@@ -69,6 +69,20 @@ plugin_pluginsadministration	uninstall_modal_list_sql	le script <code>db/uninsta
 plugin_pluginsadministration	uninstall_modal_list_directory	le répertoire de ce plugin ne sera pas supprimé
 plugin_pluginsadministration	uninstall_modal_list_web_space	l'espace web et les scripts cgi de ce plugin resteront accessible tant que vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants
 
+plugin_pluginsadministration	properties_updated	Les propriétés du plugin ont été mises à jour avec succès
+plugin_pluginsadministration	properties_pane_title	Propriétés
+plugin_pluginsadministration	properties_pane_name	Nom
+plugin_pluginsadministration	properties_pane_version	Version
+plugin_pluginsadministration	properties_pane_description	Description
+plugin_pluginsadministration	properties_pane_scope	Portée
+plugin_pluginsadministration	properties_pane_hooks	Hooks écoutés
+plugin_pluginsadministration	properties_pane_dependencies	Dépendances
+plugin_pluginsadministration	properties_pane_enabled	Activé ?
+plugin_pluginsadministration	properties_pane_update_label	Mettre à jour les propriétés
+plugin_pluginsadministration	properties_pane_empty_hooks	Aucun hook
+plugin_pluginsadministration	properties_pane_empty_dependencies	Aucune dépendance
+plugin_pluginsadministration	properties_pane_readme_title	Readme
+
 plugin_pluginsadministration	plugin_allowed_project_back_link_title	Retour à la liste des plugins
 plugin_pluginsadministration	plugin_allowed_project_title	Gérer les projets autorisés à utiliser $1
 plugin_pluginsadministration	plugin_allowed_project_allow_all	Autoriser <b>tous les projets</b> a utiliser ce plugin.
