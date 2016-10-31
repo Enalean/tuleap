@@ -632,3 +632,7 @@ admin_project	status_label	Status
 admin_project	instructions_label	Instructions
 admin_project	instructions_desc	Un e-mail est envoyé aux administrateurs du projet lors de l'activation de ce dernier. L'e-mail sert de notification et contient des instructions basiques à propos du projet. Vous pouvez renvoyer manuellement cet e-mail.
 admin_project	send_email_label	Envoyer les instructions
+admin_project	filter_label	Filtrer
+admin_project	search_label	Rechercher
+admin_project	change_label	Historique des changements
+admin_project	history_empty_state	Il n'y a pas encore eu de changement.

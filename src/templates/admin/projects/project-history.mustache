@@ -1,0 +1,93 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ public_name }}</h1>
+
+    <nav class="tlp-tabs">
+        <a href="/admin/groupedit.php?group_id={{ id }}" class="tlp-tab">{{ information_label }}</a>
+        <a href="/admin/projecthistory.php?group_id={{ id }}" class="tlp-tab tlp-tab-active">{{ history_label }}</a>
+        <a href="/admin/show_pending_documents.php?group_id={{ id }}" class="tlp-tab">{{ pending_label }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally" id="siteadmin-project-history">
+        <section class="tlp-pane" id="siteadmin-project-history-filter">
+            <form action="?" method="POST" class="tlp-pane-container">
+                <input type="hidden" name="group_id" value="{{ id }}">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="fa fa-search tlp-pane-title-icon"></i> {{ filter_label }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    {{# search }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="events_box">{{ event_label }}</label>
+                            <select class="tlp-select" name="events_box" id="events_box">
+                                {{# events }}
+                                    <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                        {{ label }}
+                                    </option>
+                                {{/ events }}
+                            </select>
+                        </div>
+                    {{/ search }}
+                    <button type="submit" class="tlp-button-primary tlp-button-wide">
+                        <i class="fa fa-search tlp-button-icon"></i> {{ search_label }}
+                    </button>
+                </section>
+            </form>
+        </section>
+
+        <section class="tlp-pane" id="siteadmin-project-history-results">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        {{ change_label }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table" id="siteadmin-project-history-results-table">
+                        <thead>
+                            <tr>
+                                <th class="siteadmin-project-history-results-event">{{ event_label }}</th>
+                                <th class="siteadmin-project-history-results-value">{{ value_label }}</th>
+                                <th class="siteadmin-project-history-results-date">{{ date_label }}</th>
+                                <th class="siteadmin-project-history-results-user">{{ user_label }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{# history }}
+                                <tr>
+                                    <td class="siteadmin-project-history-results-event">{{ event }}</td>
+                                    <td class="siteadmin-project-history-results-value">{{ value }}</td>
+                                    <td class="siteadmin-project-history-results-date">{{ date }}</td>
+                                    <td class="siteadmin-project-history-results-user">
+                                        {{# user }}
+                                            {{# is_none }}
+                                                {{ display_name }}
+                                            {{/ is_none }}
+                                            {{^ is_none }}
+                                            <a href="/admin/usergroup.php?user_id={{ id }}">
+                                                {{ display_name }}
+                                            </a>
+                                            {{/ is_none }}
+                                        {{/ user }}
+                                    </td>
+                                </tr>
+                            {{/ history }}
+                            {{^ history }}
+                                <tr>
+                                    <td colspan="4" class="tlp-table-cell-empty">
+                                        {{ empty_state }}
+                                    </td>
+                                </tr>
+                            {{/ history }}
+                        </tbody>
+                    </table>
+
+                    {{# pagination }}
+                        {{> pagination }}
+                    {{/ pagination }}
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

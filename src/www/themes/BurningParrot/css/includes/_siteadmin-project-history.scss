@@ -17,21 +17,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'siteadmin-homepage';
-@import 'siteadmin-sidebar';
-@import 'siteadmin-user-list';
-@import 'siteadmin-user-details';
-@import 'siteadmin-user-password';
-@import 'siteadmin-pending-users';
-@import 'siteadmin-permission-delegation';
-@import 'siteadmin-project';
-@import 'siteadmin-project-history';
+#siteadmin-project-history {
+    display: flex;
+    align-items: flex-start;
+}
 
-.siteadmin-trovecat-list-category {
+#siteadmin-project-history-filter {
+    width: 300px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-project-history-results {
     width: 100%;
 }
 
-.siteadmin-trovecat-list-actions {
-    text-align: left;
+#siteadmin-project-history-results-table {
+    margin: 0 0 $tlp-spacing;
+}
+
+.siteadmin-project-history-results-event,
+.siteadmin-project-history-results-value {
+    width: 50%;
+}
+
+.siteadmin-project-history-results-date,
+.siteadmin-project-history-results-user {
     white-space: nowrap;
+}
+
+@media screen and (max-width: 1300px) {
+    #siteadmin-project-history {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+    }
+
+    #siteadmin-project-history-filter {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
 }
