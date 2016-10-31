@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pluginsadministration-list-name-cell {
-    @media screen and (max-width: 1600px) {
-        width: 100%;
-    }
-}
-
 .pluginsadministration-list-tooltip-description {
     display: none;
 }
 
 @media screen and (max-width: 1600px) {
+    .pluginsadministration-list-name-cell {
+        width: 100%;
+    }
+
     .pluginsadministration-list-full-description {
         display: none;
     }
@@ -38,6 +36,7 @@
 }
 
 .pluginsadministration-list-actions-cell {
+    width: 1px;
     text-align: left;
     white-space: nowrap;
 
@@ -47,6 +46,10 @@
         &:last-child {
             margin-right: 0;
         }
+    }
+
+    .tlp-modal-body {
+        white-space: normal;
     }
 
 

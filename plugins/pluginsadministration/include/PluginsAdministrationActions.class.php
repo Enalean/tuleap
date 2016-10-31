@@ -106,9 +106,9 @@ class PluginsAdministrationActions extends Actions {
             $plugin_manager = $this->plugin_manager;
             $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
             if (!$uninstalled) {
-                 $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])).'</div>';
+                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])));
             } else {
-                 $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($plugin['name'])).'</div>';
+                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($plugin['name'])));
             }
         }
     }

@@ -1,5 +1,11 @@
-<form action="?action=install" method="POST">
-    <div id="install-plugin-{{ name }}" class="tlp-modal {{# is_there_unmet_dependencies }}tlp-modal-danger{{/ is_there_unmet_dependencies }} install-plugin-modal" role="dialog" aria-labelledby="install-plugin-{{ name }}-label">
+<form action="?" method="POST">
+    <div id="install-plugin-{{ name }}" class="
+        tlp-modal
+        {{# is_there_unmet_dependencies }}tlp-modal-danger{{/ is_there_unmet_dependencies }}
+        {{# is_there_readme }}install-plugin-modal{{/ is_there_readme }}"
+        role="dialog"
+        aria-labelledby="install-plugin-{{ name }}-label"
+    >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="install-plugin-{{ name }}-label">
                 <i class="fa fa-download"></i> {{ install_modal_title }} {{ full_name }}
@@ -24,9 +30,12 @@
             {{/ is_there_unmet_dependencies }}
             {{^ is_there_unmet_dependencies }}
                 {{ install_modal_content }}
-                <div class="install-plugin-modal-readme">
-                    {{{ readme }}}
-                </div>
+
+                {{# is_there_readme }}
+                    <div class="install-plugin-modal-readme">
+                        {{{ readme }}}
+                    </div>
+                {{/ is_there_readme }}
             {{/ is_there_unmet_dependencies }}
         </div>
         <div class="tlp-modal-footer">

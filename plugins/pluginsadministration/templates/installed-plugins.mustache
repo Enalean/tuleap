@@ -64,11 +64,13 @@
                                     {{/ dont_restrict }}
 
                                     {{^ dont_touch }}
-                                        <a href="?action=uninstall&plugin_id={{ plugin_id }}"
-                                            class="tlp-button-danger tlp-button-outline tlp-button-small"
+                                        <button class="tlp-button-danger tlp-button-outline tlp-button-small uninstall-plugin-button"
+                                            data-modal-id="uninstall-plugin-{{ plugin_id }}"
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{ uninstall_icon_label }}
-                                        </a>
+                                        </button>
+
+                                        {{> uninstall-plugin-modal }}
                                     {{/ dont_touch }}
                                 </td>
                             </tr>

@@ -49,12 +49,8 @@ class PluginsAdministration extends Controler {
                     }
                     break;
                 case 'uninstall':
-                    if ($request->exist('confirm')) { //The user confirm uninstallation
+                    if ($request->exist('confirm')) {
                         $this->action = 'uninstall';
-                    } else {
-                        if (!$request->exist('cancel')) { //The user has not see warning yet
-                            $this->view   = 'confirmUninstall';
-                        }
                     }
                     break;
 
