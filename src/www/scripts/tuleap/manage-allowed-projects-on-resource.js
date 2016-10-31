@@ -93,21 +93,24 @@
 
     function bindDeleteEvent() {
         var dom_natures_modal_create = document.getElementById('revoke-modal');
-        var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
 
-        $('#revoke-project').on('click', function () {
-            tlp_natures_modal_create.toggle();
-        });
+        if (dom_natures_modal_create) {
+            var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
 
-        $('#revoke-confirm').click(function() {
-            $('<input>')
-                .attr('type', 'hidden')
-                .attr('name', 'revoke-project')
-                .attr('value', '1')
-                .appendTo('#projects-allowed-form');
+            $('#revoke-project').on('click', function () {
+                tlp_natures_modal_create.toggle();
+            });
 
-            $('#projects-allowed-form').submit();
-        });
+            $('#revoke-confirm').click(function() {
+                $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'revoke-project')
+                    .attr('value', '1')
+                    .appendTo('#projects-allowed-form');
+
+                $('#projects-allowed-form').submit();
+            });
+        }
     }
 
 })(window.jQuery);

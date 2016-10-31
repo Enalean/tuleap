@@ -76,7 +76,6 @@ var gulp               = require('gulp'),
         'src/www/scripts/tuleap/tuleap-mention.js',
         'src/www/scripts/tuleap/project-privacy-tooltip.js',
         'src/www/scripts/tuleap/massmail_project_members.js',
-        'src/www/scripts/tuleap/manage-allowed-projects-on-resource.js',
         'src/www/scripts/tuleap/textarea_rte.js',
         'src/www/scripts/admin/system_events.js',
         'src/www/scripts/d3/d3.min.js'
