@@ -64,7 +64,6 @@ class PluginsAdministrationViews extends Views {
         case 'ajax_projects':
         case 'properties':
         case 'restrict':
-        case 'confirmInstall':
         case 'confirmUninstall':
             $this->header();
             $this->$view();
@@ -101,45 +100,6 @@ class PluginsAdministrationViews extends Views {
         echo $output;
     }
 
-    function postInstall() {
-        $request =& HTTPRequest::instance();
-        $name = $request->get('name');
-        if ($name) {
-            $plugin_manager = $this->plugin_manager;
-            $p =& $plugin_manager->getPluginByName($name);
-            if ($p) {
-                echo '<h2>Congratulations!</h2>';
-                echo '<p>You\'ve just installed '.$name.'</p>';
-                $pi = $plugin_manager->getPostInstall($name);
-                if ($pi) {
-                    echo '<p>Please read the following:</p>';
-                    echo '<pre style="border:1px solid black;">'. $pi .'</pre>';
-                }
-                echo '<a href="?">&lt;&lt; Go back to Plugins Administration</a>';
-            }
-        }
-    }
-
-    function confirmInstall() {
-        $name = HTTPRequest::instance()->get('name');
-        if ($this->isPluginAlreadyInstalled($name)) {
-            $this->browse();
-            return;
-        }
-
-        $dependencies = $this->dependency_solver->getUnmetInstalledDependencies($name);
-        if ($dependencies) {
-            $error_msg = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_install_dependency');
-            $this->displayDependencyError($dependencies, $error_msg);
-            $this->displayInstallReadme($name);
-            return;
-        }
-
-        echo '<p>You\'re about to install '. $name .'.</p>';
-        $this->displayInstallReadme($name);
-        $this->displayConfirmationInstallForm($name);
-    }
-
     private function isPluginAlreadyInstalled($name) {
         if ($this->plugin_manager->getPluginByName($name)) {
             return true;
@@ -158,15 +118,6 @@ class PluginsAdministrationViews extends Views {
         $readme_file    = $this->plugin_manager->getInstallReadme($name);
         $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
         return $readme_content;
-    }
-
-    private function displayConfirmationInstallForm($name) {
-        echo '<form action="?" method="GET">';
-        echo '<input type="hidden" name="action" value="install" />';
-        echo '<input type="hidden" name="name" value="'. $name .'" />';
-        echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
-        echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
-        echo '</form>';
     }
 
     private function displayDependencyError($dependencies, $error_message) {
@@ -487,7 +438,21 @@ class PluginsAdministrationViews extends Views {
         return $output;
     }
 
-    private function getAvailablePluginsPresenter() {
-        return new AvailablePluginsPresenter($this->plugin_manager->getNotYetInstalledPlugins());
+    private function getAvailablePluginsPresenter()
+    {
+        $plugins = $this->plugin_manager->getNotYetInstalledPlugins();
+
+        foreach ($plugins as $key => $plugin) {
+            $plugins[$key]['readme']                      = $this->getFormattedReadme($plugin['name']);
+            $plugins[$key]['is_there_unmet_dependencies'] = false;
+            $dependencies                                 = $this->dependency_solver->getUnmetInstalledDependencies($plugin['name']);
+
+            if (! empty($dependencies)) {
+                $plugins[$key]['is_there_unmet_dependencies'] = true;
+                $plugins[$key]['unmet_dependencies'] = $dependencies;
+            }
+        }
+
+        return new AvailablePluginsPresenter($plugins);
     }
 }

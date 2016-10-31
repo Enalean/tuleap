@@ -17,6 +17,7 @@ plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Annuler les modifications ?
 plugin_pluginsadministration	unavailable	non
 plugin_pluginsadministration	available	oui
+plugin_pluginsadministration	feedback_installed	Le plugin a été installé avec succès
 plugin_pluginsadministration	feedback_available	$1 est maintenant disponible.
 plugin_pluginsadministration	feedback_unavailable	$1 est maintenant indisponible. L'espace web et les scripts cgi sont toujours accessibles !
 plugin_pluginsadministration	Hook:	Hook :
@@ -35,7 +36,7 @@ plugin_pluginsadministration	plugin_uninstalled	Le plugin "$1" a été désinsta
 plugin_pluginsadministration	plugin_not_uninstalled	Le plugin "$1" n'a pas été désinstallé.
 plugin_pluginsadministration	priorities	Priorités entre plugins
 plugin_pluginsadministration	Priority	Priorité
-plugin_pluginsadministration	properties_icon_label	Edit
+plugin_pluginsadministration	properties_icon_label	Détails
 plugin_pluginsadministration	select_hook	Sélectionnez un hook :
 plugin_pluginsadministration	select_install	Sélectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associé au plugin avant de continuer.
 plugin_pluginsadministration	Available?	Activé ?
@@ -56,6 +57,10 @@ plugin_pluginsadministration	error_install_dependency	Impossible d'installer ce 
 plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller <em>$1</em> tant que ces plugins seront installés :
 plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restreindre
 plugin_pluginsadministration	cant_restrict	Impossible de restreindre ce plugin car il a une portée système
+plugin_pluginsadministration	install_modal_title	Installer le plugin
+plugin_pluginsadministration	install_modal_content	Vous êtes sur le point d'installer un plugin. Veuillez confirmer votre action.
+plugin_pluginsadministration	install_modal_cancel	Annuler
+plugin_pluginsadministration	install_modal_submit	Installer
 
 plugin_pluginsadministration	plugin_allowed_project_back_link_title	Retour à la liste des plugins
 plugin_pluginsadministration	plugin_allowed_project_title	Gérer les projets autorisés à utiliser $1

@@ -59,3 +59,27 @@
         }
     }
 }
+
+.pluginsadministration-available-list-name-cell {
+    white-space: nowrap;
+}
+
+.pluginsadministration-available-list-description-cell {
+    width: 100%;
+}
+
+.install-plugin-modal:not(.tlp-modal-danger) {
+    width: 70vw;
+}
+
+.install-plugin-modal-readme {
+    margin: $tlp-spacing 0 0;
+    padding: $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: #fcfcfc;
+
+    pre {
+        overflow: auto;
+    }
+}

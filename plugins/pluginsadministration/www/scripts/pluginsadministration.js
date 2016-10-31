@@ -26,5 +26,15 @@
          switch_button.addEventListener('change', function() {
              document.getElementById(switch_button.dataset.formId).submit();
          });
-     })
+     });
+
+     var install_plugin_buttons = document.querySelectorAll('.install-plugin-button');
+     [].forEach.call(install_plugin_buttons, function(install_plugin_button) {
+         var dom_install_plugin_modal = document.getElementById(install_plugin_button.dataset.modalId);
+         var tlp_install_plugin_modal = tlp.modal(dom_install_plugin_modal);
+
+         install_plugin_button.addEventListener('click', function () {
+             tlp_install_plugin_modal.toggle();
+         });
+     });
  } ());
