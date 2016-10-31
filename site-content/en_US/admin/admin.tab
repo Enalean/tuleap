@@ -433,7 +433,7 @@ admin_userlist	error_uid	Error - Can't find user with ID $1
 admin_userlist	error_noadd	Error - Can't add user to group
 admin_userlist	user_list	Users
 admin_userlist	all_groups	All Projects
-admin_userlist	group	Project $1
+admin_userlist	group	in $1
 admin_userlist	uid_toadd	User ID to add
 admin_userlist	active	Active
 admin_userlist	validated	Validated
@@ -623,3 +623,23 @@ admin_permission_delegation	permissions_modal_submit	Add permissions
 admin_permission_delegation	permissions_modal_cancel	Cancel
 admin_permission_delegation	no_permission_to_add	This group already has all available permissions.
 admin_permission_delegation	permission_not_found	Permission does not exist
+
+admin_project	information_label	Information
+admin_project	history_label	Change history
+admin_project	project_details_label	Project details
+admin_project	access_label	Project access
+admin_project	description_label	Description
+admin_project	more_label	More information
+admin_project	admin_label	Project administration
+admin_project	members_label	Project members
+admin_project	pending_label	Pending deleted docs
+admin_project	manage_access_label	Manage access
+admin_project	incl_restricted_label	incl. restricted users
+admin_project	public_label	Public
+admin_project	private_label	Private
+admin_project	unix_name_label	Unix group name
+admin_project	save_label	Update information
+admin_project	status_label	Status
+admin_project	instructions_label	Instructions
+admin_project	instructions_desc	An email is sent to project administrators when the project is activated. The email serves as a notification and contains basic instructions about the new project. You can manually resend this email.
+admin_project	send_email_label	Send new project instructions

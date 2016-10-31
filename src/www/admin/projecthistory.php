@@ -20,21 +20,22 @@
  */
 
 require_once('pre.php');
-require_once('proj_email.php');
+require_once('www/project/export/project_export_utils.php');
+require_once('www/project/admin/project_history.php');
 
 session_require(array('group' => '1', 'admin_flags' => 'A'));
 
-$project_id = $request->getValidated('group_id', 'uint', 0);
-$project    = ProjectManager::instance()->getProject($project_id);
+$project = ProjectManager::instance()->getProject($group_id);
 
-if ($project && is_object($project) && !$project->isError()) {
-    if (send_new_project_email($project)) {
-        $msg = $GLOBALS['Language']->getText('admin_newprojectmail','success');
-        $GLOBALS['Response']->addFeedback(Feedback::INFO, $msg);
-    } else {
-        $msg = $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin'));
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $msg);
-    }
+if (! $project || $project->isError()) {
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit', 'error_group'));
+    $GLOBALS['Response']->redirect('/admin');
 }
 
-$GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. (int) $project_id);
+
+if ($request->exist('export')) {
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by);
+    exit;
+}
+
+echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);

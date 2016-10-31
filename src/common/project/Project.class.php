@@ -414,8 +414,9 @@ class Project extends Group implements PFO_Project {
         return $subprojects;
     }
     
-    function getProjectsDescFieldsValue(){
-    	$sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id='.$this->getGroupId() ;
+    public function getProjectsDescFieldsValue()
+    {
+        $sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id=' . db_ei($this->getGroupId());
         
         $descfieldsvalue = array();
         if ($res = db_query($sql)) {
