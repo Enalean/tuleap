@@ -31,6 +31,18 @@ class ProjectDao extends DataAccessObject {
         $this->table_name = 'groups';
     }
 
+    public function getFoundRows()
+    {
+        $sql = 'SELECT FOUND_ROWS() as nb';
+        $dar = $this->retrieve($sql);
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            return $row['nb'];
+        } else {
+            return -1;
+        }
+    }
+
     public function searchById($id) {
         $sql = "SELECT *".
                " FROM ".$this->table_name.
@@ -248,6 +260,48 @@ class ProjectDao extends DataAccessObject {
                 ASC '.$project_limit;
 
         return array('projects' => $this->retrieve($sql), 'numrows' => $this->foundRows());
+    }
+
+    public function searchProjectsWithNumberOfMembers(
+        $offset,
+        $limit,
+        $status = false,
+        $project_name = false
+    ) {
+        $conditions = array();
+        $offset     = $this->da->escapeInt($offset);
+        $limit      = $this->da->escapeInt($limit);
+
+        if (is_array($status)) {
+            if (! empty($status)) {
+                $conditions[] = 'status IN ('.$this->da->quoteSmartImplode(',', $status).')';
+            }
+        } else if ($status != false) {
+            $conditions[] = 'status = '.$this->da->quoteSmart($status);
+        }
+
+        if ($project_name != false) {
+            $pattern      = $this->da->quoteSmart('%'.$project_name.'%');
+            $conditions[] = "(project.group_name LIKE $pattern OR project.group_id LIKE $pattern OR project.unix_group_name LIKE $pattern)";
+        }
+
+        if (count($conditions) > 0) {
+            $where_condition = 'WHERE ' . implode(' AND ', $conditions);
+        } else {
+            $where_condition = '';
+        }
+
+        $sql = "
+            SELECT SQL_CALC_FOUND_ROWS project.*, count(user_group.user_id) as nb_members
+            FROM groups project
+            LEFT JOIN user_group USING (group_id)
+            $where_condition
+            GROUP BY project.group_id
+            ORDER BY project.group_name ASC
+            LIMIT $offset, $limit
+        ";
+
+        return $this->retrieve($sql);
     }
 
     public function getMyAndPublicProjectsForREST(PFUser $user, $offset, $limit) {

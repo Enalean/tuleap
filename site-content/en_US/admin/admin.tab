@@ -649,3 +649,31 @@ admin_project	search_label	Search
 admin_project	change_label	Change history
 admin_project	history_empty_state	There isn't any change history yet.
 admin_project	history_empty_results	Nothing in the change history is matching your request.
+#
+#-----------------------------------------------
+# Script: SF/www/admin/grouplist.php
+#
+admin_projectlist	title	Administration - Project List
+admin_projectlist	project_list	Projects
+admin_projectlist	new_project	Add project
+admin_projectlist	filter_name	Project Name
+admin_projectlist	status	Status
+admin_projectlist	filter	Filter
+admin_projectlist	any	Any
+admin_projectlist	active	Active
+admin_projectlist	system	System
+admin_projectlist	pending	Pending
+admin_projectlist	incomplete	Incomplete
+admin_projectlist	holding	Holding
+admin_projectlist	deleted	Deleted
+admin_projectlist	matching_projects	Matching projects
+admin_projectlist	no_matching_projects	No matching projects
+admin_projectlist	export_csv	CSV export
+admin_projectlist	project_name	Project Name
+admin_projectlist	unix_group_name	Unix group Name
+admin_projectlist	type	Project Type
+admin_projectlist	members	Members
+admin_projectlist	visibility	Visibility
+admin_projectlist	private	Private
+admin_projectlist	public_unrestricted	Public Unrestricted
+admin_projectlist	public	Public

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'siteadmin-homepage';
-@import 'siteadmin-sidebar';
-@import 'siteadmin-user-list';
-@import 'siteadmin-user-details';
-@import 'siteadmin-user-password';
-@import 'siteadmin-pending-users';
-@import 'siteadmin-permission-delegation';
-@import 'siteadmin-project';
-@import 'siteadmin-project-history';
-@import 'siteadmin-project-list';
+namespace Tuleap\Project\Admin;
 
-.siteadmin-trovecat-list-category {
-    width: 100%;
-}
+class ProjectListPresenter
+{
+    public $title;
+    public $search_fields;
+    public $results;
+    public $new_project;
 
-.siteadmin-trovecat-list-actions {
-    text-align: left;
-    white-space: nowrap;
+    public function __construct(
+        $title,
+        ProjectListSearchFieldsPresenter $search_fields,
+        ProjectListResultsPresenter $results
+    ) {
+        $this->title                      = $title;
+        $this->search_fields              = $search_fields;
+        $this->results                    = $results;
+        $this->new_project                = $GLOBALS['Language']->getText('admin_projectlist', 'new_project');
+    }
 }
