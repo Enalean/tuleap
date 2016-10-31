@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuealp\user\Admin\UserDetailsFormatter;
+use Tuleap\user\Admin\UserDetailsFormatter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
