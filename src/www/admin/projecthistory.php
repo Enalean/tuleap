@@ -61,7 +61,9 @@ $renderer->renderANoFramedPresenter(
         new ProjectHistorySearchPresenter(
             get_history_entries(),
             $event,
-            $subEvents
+            $subEvents,
+            $startDate,
+            $endDate
         )
     )
 );

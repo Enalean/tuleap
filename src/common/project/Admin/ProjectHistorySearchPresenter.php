@@ -28,8 +28,32 @@ class ProjectHistorySearchPresenter
     public $grouped_events;
     public $selected_event;
     public $selected_subevents;
+    public $selected_from;
+    public $selected_to;
+    public $from_label;
+    public $to_label;
 
-    public function __construct(array $possible_events, $selected_event, $selected_subevents)
+    public function __construct(
+        array $possible_events,
+        $selected_event,
+        $selected_subevents,
+        $selected_from,
+        $selected_to
+    ) {
+        $this->buildDatesBox($selected_from, $selected_to);
+        $this->buildEventsBox($possible_events, $selected_event, $selected_subevents);
+    }
+
+    private function buildDatesBox($selected_from, $selected_to)
+    {
+        $this->selected_from = $selected_from ? $selected_from : '';
+        $this->selected_to   = $selected_to ? $selected_to : '';
+
+        $this->from_label = $GLOBALS['Language']->getText('project_admin_utils', 'from');
+        $this->to_label   = $GLOBALS['Language']->getText('project_admin_utils', 'to');
+    }
+
+    private function buildEventsBox(array $possible_events, $selected_event, $selected_subevents)
     {
         $this->event_label        = $GLOBALS['Language']->getText('project_admin_utils', 'event');
         $this->event_placeholder  = $GLOBALS['Language']->getText('project_admin_utils', 'event_placeholder');
