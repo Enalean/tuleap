@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
+
 require_once('pre.php');
 require_once('vars.php');
 require_once('www/admin/admin_utils.php');
@@ -93,8 +95,9 @@ if ($request->exist('update')) {
     $GLOBALS['Response']->redirect('/admin/groupedit?group_id='.$group_id);
 }
 
-$fields_factory    = new Tuleap\Project\DescriptionFieldsFactory(new Tuleap\Project\DescriptionFieldsDao());
-$all_custom_fields = $fields_factory->getAllDescriptionFields();
+$fields_factory            = new Tuleap\Project\DescriptionFieldsFactory(new Tuleap\Project\DescriptionFieldsDao());
+$description_field_builder = new ProjectDescriptionFieldBuilder($fields_factory);
+$all_custom_fields         = $description_field_builder->build($group);
 
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(

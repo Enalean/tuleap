@@ -220,7 +220,7 @@ class ProjectManager {
     public function getAllPendingProjects()
     {
         $pending_projects = array();
-        foreach ($this->_getDao()->searchPendingProjects() as $row) {
+        foreach ($this->_getDao()->searchByStatus(Project::STATUS_PENDING) as $row) {
             $pending_projects[] = $this->createProjectInstance($row);
         }
 

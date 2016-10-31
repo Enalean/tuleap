@@ -190,6 +190,17 @@ admin_approve_pending	approve_all	Approve All On This Page
 admin_approve_pending	creator_and_creation_date	Created: $3 by <a href="/admin/usergroup.php?user_id=$1">$2</a>
 admin_approve_pending	distributed_services	Servers for distributed services
 admin_approve_pending	error_update	Error on project update
+admin_approve_pending	description	Description
+admin_approve_pending	see_project_details	See project details
+admin_approve_pending	description_label	Description
+admin_approve_pending	submitted_by_label	Submitted By
+admin_approve_pending	creation_date_label	Creation date
+admin_approve_pending	delete_label	Delete
+admin_approve_pending	validate_label	Validate
+admin_approve_pending	validate_all_label	Validate all projects
+admin_approve_pending	activate_all_label	Activate all projects
+admin_approve_pending	label_project_visibility	Visibility
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
