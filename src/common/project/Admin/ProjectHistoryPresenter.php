@@ -104,6 +104,10 @@ class ProjectHistoryPresenter
             $default_params['end'] = $search->selected_to;
         }
 
+        if ($search->selected_by) {
+            $default_params['by'] = $search->selected_by;
+        }
+
         return new PaginationPresenter(
             $limit,
             $offset,

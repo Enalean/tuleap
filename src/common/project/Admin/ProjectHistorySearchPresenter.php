@@ -32,16 +32,27 @@ class ProjectHistorySearchPresenter
     public $selected_to;
     public $from_label;
     public $to_label;
+    public $selected_by;
+    public $by_label;
 
     public function __construct(
         array $possible_events,
         $selected_event,
         $selected_subevents,
         $selected_from,
-        $selected_to
+        $selected_to,
+        $selected_by
     ) {
         $this->buildDatesBox($selected_from, $selected_to);
         $this->buildEventsBox($possible_events, $selected_event, $selected_subevents);
+        $this->buildUserBox($selected_by);
+    }
+
+    private function buildUserBox($selected_by)
+    {
+        $this->selected_by = $selected_by;
+
+        $this->by_label = $GLOBALS['Language']->getText('global', 'by');
     }
 
     private function buildDatesBox($selected_from, $selected_to)
