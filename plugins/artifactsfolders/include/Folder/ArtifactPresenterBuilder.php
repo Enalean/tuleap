@@ -64,9 +64,40 @@ class ArtifactPresenterBuilder
             0
         );
 
+        $children_ids = array();
+        foreach ($linked_artifacts_ids as $artifact_id) {
+            $children_ids = array_merge($children_ids, $this->collectChildrenIds($artifact_id, $linked_artifacts_ids));
+        }
+
+        $linked_artifacts_ids = array_filter($linked_artifacts_ids, function ($linked_artifact_id) use ($children_ids) {
+            return ! in_array($linked_artifact_id, $children_ids);
+        });
+
         $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolder($folder);
 
         return $this->getListOfArtifactRepresentation($user, $linked_artifacts_ids, $folder_hierarchy);
+    }
+
+    /**
+     * @return array
+     */
+    private function collectChildrenIds($artifact_id, array $already_visited)
+    {
+        $children_ids_for_current_artifact = $this->nature_dao->getForwardLinkedArtifactIds(
+            $artifact_id,
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            PHP_INT_MAX,
+            0
+        );
+        $already_visited[] = $artifact_id;
+        $children_ids      = $children_ids_for_current_artifact;
+        foreach ($children_ids_for_current_artifact as $child_id) {
+            if (! in_array($child_id, $already_visited)) {
+                $children_ids = array_merge($children_ids, $this->collectChildrenIds($child_id, $already_visited));
+            }
+        }
+
+        return $children_ids;
     }
 
     /** @return ArtifactPresenter[] */
