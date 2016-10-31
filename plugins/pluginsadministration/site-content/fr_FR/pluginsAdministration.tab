@@ -54,13 +54,20 @@ plugin_pluginsadministration	scope_2	Utilisateurs
 plugin_pluginsadministration	error_avail_dependency	Impossible de désactiver $1. Veuillez désactiver les plugins suivants : $2
 plugin_pluginsadministration	error_unavail_dependency	Impossible d'activer $1. Veuillez activer les plugins suivants : $2
 plugin_pluginsadministration	error_install_dependency	Impossible d'installer ce plugin sans avoir installé au préalable :
-plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller <em>$1</em> tant que ces plugins seront installés :
+plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller ce plugin tant que ces plugins seront installés :
 plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restreindre
 plugin_pluginsadministration	cant_restrict	Impossible de restreindre ce plugin car il a une portée système
 plugin_pluginsadministration	install_modal_title	Installer le plugin
 plugin_pluginsadministration	install_modal_content	Vous êtes sur le point d'installer un plugin. Veuillez confirmer votre action.
 plugin_pluginsadministration	install_modal_cancel	Annuler
 plugin_pluginsadministration	install_modal_submit	Installer
+plugin_pluginsadministration	uninstall_modal_title	Désinstaller le plugin
+plugin_pluginsadministration	uninstall_modal_content	Vous êtes sur le point de désinstaller un plugin. Veuillez noter les points suivants et confirmer votre action.
+plugin_pluginsadministration	uninstall_modal_cancel	Annuler
+plugin_pluginsadministration	uninstall_modal_submit	Désinstaller
+plugin_pluginsadministration	uninstall_modal_list_sql	le script <code>db/uninstall.sql</code> de ce plugin sera executé
+plugin_pluginsadministration	uninstall_modal_list_directory	le répertoire de ce plugin ne sera pas supprimé
+plugin_pluginsadministration	uninstall_modal_list_web_space	l'espace web et les scripts cgi de ce plugin resteront accessible tant que vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants
 
 plugin_pluginsadministration	plugin_allowed_project_back_link_title	Retour à la liste des plugins
 plugin_pluginsadministration	plugin_allowed_project_title	Gérer les projets autorisés à utiliser $1

@@ -92,4 +92,44 @@ class PluginsAdministration_Presenter_InstalledPluginsPresenter {
     {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'cant_restrict');
     }
+
+    public function uninstall_modal_title()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_title');
+    }
+
+    public function uninstall_modal_content()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_content');
+    }
+
+    public function uninstall_modal_cancel()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_cancel');
+    }
+
+    public function uninstall_modal_submit()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_submit');
+    }
+
+    public function error_uninstall_dependency()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_uninstall_dependency');
+    }
+
+    public function uninstall_modal_list_sql()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_sql');
+    }
+
+    public function uninstall_modal_list_directory()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_directory');
+    }
+
+    public function uninstall_modal_list_web_space()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_web_space');
+    }
 }

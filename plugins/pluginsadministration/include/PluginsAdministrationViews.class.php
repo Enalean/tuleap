@@ -61,34 +61,33 @@ class PluginsAdministrationViews extends Views {
         $renderer = new AdminPageRenderer();
 
         switch ($view) {
-        case 'ajax_projects':
-        case 'properties':
-        case 'restrict':
-        case 'confirmUninstall':
-            $this->header();
-            $this->$view();
-            $this->footer();
-            break;
+            case 'ajax_projects':
+            case 'properties':
+            case 'restrict':
+                $this->header();
+                $this->$view();
+                $this->footer();
+                break;
 
-        case 'available':
-            $this->_searchPlugins();
-            $renderer->renderANoFramedPresenter(
-                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
-                PLUGINSADMINISTRATION_TEMPLATE_DIR,
-                'available-plugins',
-                $this->getAvailablePluginsPresenter()
-            );
-            break;
+            case 'available':
+                $this->_searchPlugins();
+                $renderer->renderANoFramedPresenter(
+                    $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                    PLUGINSADMINISTRATION_TEMPLATE_DIR,
+                    'available-plugins',
+                    $this->getAvailablePluginsPresenter()
+                );
+                break;
 
-        case 'installed':
-            $this->_searchPlugins();
-            $renderer = new AdminPageRenderer();
-            $renderer->renderANoFramedPresenter(
-                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
-                PLUGINSADMINISTRATION_TEMPLATE_DIR,
-                'installed-plugins',
-                $this->getInstalledPluginsPresenter()
-            );
+            case 'installed':
+                $this->_searchPlugins();
+                $renderer = new AdminPageRenderer();
+                $renderer->renderANoFramedPresenter(
+                    $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                    PLUGINSADMINISTRATION_TEMPLATE_DIR,
+                    'installed-plugins',
+                    $this->getInstalledPluginsPresenter()
+                );
         }
     }
 
@@ -118,51 +117,6 @@ class PluginsAdministrationViews extends Views {
         $readme_file    = $this->plugin_manager->getInstallReadme($name);
         $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
         return $readme_content;
-    }
-
-    private function displayDependencyError($dependencies, $error_message) {
-        $dependencies = implode('</em>, <em>', $dependencies);
-        $return_msg   = $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return');
-
-        echo '<p class="feedback_error">'. $error_message .' <em>'. $dependencies .'</em></p>';
-        echo '<p><a href="/plugins/pluginsadministration/">'. $return_msg .'</a></p>';
-    }
-
-    function confirmUninstall() {
-        $request =& HTTPRequest::instance();
-        if (! $request->exist('plugin_id')) {
-            $this->browse();
-            return;
-        }
-
-        $plugin_manager = $this->plugin_manager;
-        $plugin = $plugin_manager->getPluginById((int)$request->get('plugin_id'));
-        if (! $plugin) {
-            $this->browse();
-            return;
-        }
-
-        $dependencies = $this->dependency_solver->getInstalledDependencies($plugin);
-        if ($dependencies) {
-            $error_msg = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_uninstall_dependency', $plugin->getName());
-            $this->displayDependencyError($dependencies, $error_msg);
-            return;
-        }
-
-        $this->displayUninstallationConfirmScreen($plugin);
-    }
-
-    private function displayUninstallationConfirmScreen(Plugin $plugin) {
-        $plug_info  =& $plugin->getPluginInfo();
-        $descriptor =& $plug_info->getPluginDescriptor();
-        $name = $descriptor->getFullName();
-        if (strlen(trim($name)) === 0) {
-            $name = get_class($plugin);
-        }
-        $output = sprintf(file_get_contents($GLOBALS['Language']->getContent('confirm_uninstall', null, 'pluginsadministration')),
-                                        $name,
-                                        $plugin->getId());
-        echo $output;
     }
 
     function ajax_projects() {
@@ -384,20 +338,26 @@ class PluginsAdministrationViews extends Views {
         $i       = 0;
         $plugins = array();
         foreach ($this->_plugins as $plugin) {
+            $is_there_unmet_dependencies = false;
+            $unmet_dependencies          = $this->dependency_solver->getInstalledDependencies(
+                $this->plugin_manager->getPluginById($plugin['plugin_id'])
+            );
+
+            if ($unmet_dependencies) {
+                $is_there_unmet_dependencies = true;
+            }
             $plugins[] = array(
-                'color'         => util_get_alt_row_color($i),
-                'available'     => $plugin['available']? '': 'pluginsadministration_unavailable',
-                'name'          => $plugin['name'],
-                'version'       => $plugin['version'],
-                'description'   => $plugin['description'],
-                'flags'         => $this->getPluginAvailableFlags($plugin),
-                'scope'         => $GLOBALS['Language']->getText(
-                    'plugin_pluginsadministration',
-                    'scope_'.$plugin['scope']
-                ),
-                'plugin_id'     => $plugin['plugin_id'],
-                'dont_touch'    => $plugin['dont_touch'],
-                'dont_restrict' => $plugin['dont_restrict'],
+                'available'                   => $plugin['available']? '': 'pluginsadministration_unavailable',
+                'name'                        => $plugin['name'],
+                'version'                     => $plugin['version'],
+                'description'                 => $plugin['description'],
+                'flags'                       => $this->getPluginAvailableFlags($plugin),
+                'scope'                       => $GLOBALS['Language']->getText('plugin_pluginsadministration', 'scope_'.$plugin['scope']),
+                'plugin_id'                   => $plugin['plugin_id'],
+                'dont_touch'                  => $plugin['dont_touch'],
+                'dont_restrict'               => $plugin['dont_restrict'],
+                'is_there_unmet_dependencies' => $is_there_unmet_dependencies,
+                'unmet_dependencies'          => $unmet_dependencies,
             );
 
             $i++;
@@ -443,7 +403,14 @@ class PluginsAdministrationViews extends Views {
         $plugins = $this->plugin_manager->getNotYetInstalledPlugins();
 
         foreach ($plugins as $key => $plugin) {
-            $plugins[$key]['readme']                      = $this->getFormattedReadme($plugin['name']);
+            $plugins[$key]['is_there_readme'] = false;
+            $readme                           = $this->getFormattedReadme($plugin['name']);
+
+            if (! empty($readme)) {
+                $plugins[$key]['is_there_readme'] = true;
+                $plugins[$key]['readme']          = $readme;
+            }
+
             $plugins[$key]['is_there_unmet_dependencies'] = false;
             $dependencies                                 = $this->dependency_solver->getUnmetInstalledDependencies($plugin['name']);
 

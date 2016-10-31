@@ -37,4 +37,14 @@
              tlp_install_plugin_modal.toggle();
          });
      });
+
+     var uninstall_plugin_buttons = document.querySelectorAll('.uninstall-plugin-button');
+     [].forEach.call(uninstall_plugin_buttons, function(uninstall_plugin_button) {
+         var dom_uninstall_plugin_modal = document.getElementById(uninstall_plugin_button.dataset.modalId);
+         var tlp_uninstall_plugin_modal = tlp.modal(dom_uninstall_plugin_modal);
+
+         uninstall_plugin_button.addEventListener('click', function () {
+             tlp_uninstall_plugin_modal.toggle();
+         });
+     });
  } ());
