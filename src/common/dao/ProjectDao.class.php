@@ -131,6 +131,15 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchPendingProjects()
+    {
+        $project_status = $this->da->quoteSmart(Project::STATUS_PENDING);
+
+        $sql = "SELECT * FROM groups WHERE status=$project_status ORDER BY register_time";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchProjectsUserIsAdmin($user_id) {
         return $this->searchActiveProjectsByUserStatus($user_id, "AND user_group.admin_flags = 'A'");
     }
