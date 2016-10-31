@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\ProjectPendingPresenter;
+
+
 require_once('pre.php');
 require_once('vars.php');
 require_once('account.php');
@@ -26,6 +30,8 @@ require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/event/EventManager.class.php');
+
+
 
 $user                             = UserManager::instance()->getCurrentUser();
 $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
@@ -79,13 +85,15 @@ if ($action === 'activate') {
 // get current information
 $res_grp = $project_manager->getAllPendingProjects();
 if (count($res_grp) === 0) {
-    site_admin_header(
-        array(
-            'title' => $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending'),
-            'main_classes' => array('tlp-framed')
-        )
+    $siteadmin = new AdminPageRenderer();
+    $presenter = new ProjectPendingPresenter();
+
+    $siteadmin->renderAPresenter(
+        $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending'),
+        ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+        'project-pending',
+        $presenter
     );
-    echo $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending');
 } else {
     site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_approve_pending','title'), 'main_classes' => array('tlp-framed')));
 
