@@ -20,21 +20,39 @@
 
 namespace Tuleap\Project\Admin;
 
+use Codendi_HTMLPurifier;
+
 class ProjectListPresenter
 {
     public $title;
     public $search_fields;
     public $results;
     public $new_project;
+    public $purified_pending_projects_text;
+    public $are_there_pending_projects;
 
     public function __construct(
         $title,
         ProjectListSearchFieldsPresenter $search_fields,
-        ProjectListResultsPresenter $results
+        ProjectListResultsPresenter $results,
+        $pending_projects_count
     ) {
-        $this->title                      = $title;
-        $this->search_fields              = $search_fields;
-        $this->results                    = $results;
-        $this->new_project                = $GLOBALS['Language']->getText('admin_projectlist', 'new_project');
+        $this->title         = $title;
+        $this->search_fields = $search_fields;
+        $this->results       = $results;
+        $this->new_project   = $GLOBALS['Language']->getText('admin_projectlist', 'new_project');
+
+        $this->are_there_pending_projects     = $pending_projects_count > 0;
+        $this->purified_pending_projects_text = Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText(
+                'admin_projectlist',
+                'pending_projects_text',
+                array(
+                    '/admin/approve-pending.php',
+                    $pending_projects_count
+                )
+            ),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 }

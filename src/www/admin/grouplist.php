@@ -122,10 +122,13 @@ $results_presenter = $results_builder->build(
     $offset
 );
 
+$pending_projects_count = ProjectManager::instance()->countProjectsByStatus(Project::STATUS_PENDING);
+
 $project_list_presenter = new ProjectListPresenter(
     $title,
     $search_fields_presenter,
-    $results_presenter
+    $results_presenter,
+    $pending_projects_count
 );
 
 $admin_page = new AdminPageRenderer();
