@@ -79,11 +79,16 @@ class SkinTuleap123 extends SkinTemplate {
         $theme_manager = new ThemeManager();
         $user_theme    = $current_user->getTheme();
 
-        if ($user_theme === 'FlamingParrot') {
+        if ($this->hasVariant($user_theme)) {
             $bodyAttrs['class'] .= ' ' . $current_user->getPreference('theme_variant');
-        } elseif (! $theme_manager->isThemeValid($user_theme) && ForgeConfig::get('sys_themedefault') === 'FlamingParrot') {
+        } elseif (! $theme_manager->isThemeValid($user_theme) && $this->hasVariant(ForgeConfig::get('sys_themedefault'))) {
             $bodyAttrs['class'] .= ' ' . ForgeConfig::get('sys_default_theme_variant');
         }
+    }
+
+    private function hasVariant($theme)
+    {
+        return $theme === 'FlamingParrot' || $theme === 'BurningParrot';
     }
 }
 
