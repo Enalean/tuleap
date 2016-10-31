@@ -41,22 +41,23 @@ class UserLogManager {
     public function __construct(AdminPageRenderer $admin_page_renderer, UserManager $user_manager)
     {
         $this->admin_page_renderer = $admin_page_renderer;
-        $this->user_manager = $user_manager;
+        $this->user_manager        = $user_manager;
     }
 
-    function &getDao() {
-        $da =& CodendiDataAccess::instance();
+    function getDao()
+    {
+        $da  = CodendiDataAccess::instance();
         $dao = new UserLogDao($da);
+
         return $dao;
     }
 
     function logAccess($time, $gid, $uid, $sessionHash, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $dao->addRequest($time, $gid, $uid, $sessionHash, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer);
     }
 
     function displayNewOrIdem($key, $row, &$pval, $display = null) {
-        $dis = '';
         if($pval[$key] != $row[$key]) {
             if($display === null) {
                 $dis = $row[$key];
@@ -114,13 +115,11 @@ class UserLogManager {
         $end   = mktime(23, 59, 59, $month, $day, $year);
         $count = 100;
 
-        $dar       =
-        $foundRows = $this->getDao()->getFoundRows();
-
         $log_builder = new UserLogBuilder($this->getDao(), $this->user_manager);
         $logs        = $log_builder->build($start, $end, $offset, $count);
 
-        $presenter = new UserLogPresenter($logs);
+        $max_entry = $this->getDao()->getFoundRows();
+        $presenter = new UserLogPresenter($logs, $count, $offset, $max_entry);
 
         $this->admin_page_renderer->renderAPresenter(
             'userlog',
