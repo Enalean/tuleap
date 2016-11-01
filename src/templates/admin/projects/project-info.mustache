@@ -45,22 +45,24 @@
                                 </div>
                             </div>
                             <div class="siteadmin-project-information-details-row-cell">
-                                <div class="tlp-form-element">
-                                    <label class="tlp-label" for="status">
-                                        {{ status_label }} <i class="fa fa-asterisk"></i>
-                                    </label>
-                                    <select class="tlp-select"
-                                            id="status"
-                                            name="form_status"
-                                            {{# can_change_status }}disabled{{/ can_change_status }}
-                                    >
-                                        {{# status }}
-                                            <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
-                                                {{ status }}
-                                            </option>
-                                        {{/ status }}
-                                    </select>
-                                </div>
+                                {{^ is_system }}
+                                    <div class="tlp-form-element">
+                                        <label class="tlp-label" for="status">
+                                            {{ status_label }} <i class="fa fa-asterisk"></i>
+                                        </label>
+                                        <select class="tlp-select"
+                                                id="status"
+                                                name="form_status"
+                                                {{# can_change_status }}disabled{{/ can_change_status }}
+                                        >
+                                            {{# status }}
+                                                <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
+                                                    {{ status }}
+                                                </option>
+                                            {{/ status }}
+                                        </select>
+                                    </div>
+                                {{/ is_system }}
                                 <div class="tlp-property">
                                     <label class="tlp-label">
                                         {{ built_from_label }}
