@@ -96,6 +96,14 @@ class ProjectHistoryPresenter
             $default_params['sub_events_box'] = array_keys($search->selected_subevents);
         }
 
+        if ($search->selected_from) {
+            $default_params['start'] = $search->selected_from;
+        }
+
+        if ($search->selected_to) {
+            $default_params['end'] = $search->selected_to;
+        }
+
         return new PaginationPresenter(
             $limit,
             $offset,

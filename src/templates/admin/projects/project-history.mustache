@@ -54,6 +54,32 @@
                                 </div>
                             {{/ grouped_events }}
                         </div>
+                        <div class="tlp-form-element">
+                            <label for="date-picker-from" class="tlp-label">{{ from_label }}</label>
+                            <div class="tlp-form-element tlp-form-element-prepend">
+                                <input type="text"
+                                       id="date-picker-from"
+                                       class="tlp-input tlp-input-date"
+                                       size="11"
+                                       name="start"
+                                       value="{{ selected_from }}"
+                                >
+                                <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="tlp-form-element">
+                            <label for="date-picker-to" class="tlp-label">{{ to_label }}</label>
+                            <div class="tlp-form-element tlp-form-element-prepend">
+                                <input type="text"
+                                       id="date-picker-to"
+                                       class="tlp-input tlp-input-date"
+                                       size="11"
+                                       name="end"
+                                       value="{{ selected_to }}"
+                                >
+                                <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
                     {{/ search }}
                     <button type="submit" class="tlp-button-primary tlp-button-wide">
                         <i class="fa fa-search tlp-button-icon"></i> {{ search_label }}

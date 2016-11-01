@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    var datepickers = document.querySelectorAll('.tlp-input-date');
+    [].forEach.call(datepickers, function (element) {
+        tlp.datePicker(element);
+    });
+
     function displayCurrentSubEventsPanel() {
         var panel = document.getElementById(events.options[events.selectedIndex].dataset.target);
         if (! panel) {
