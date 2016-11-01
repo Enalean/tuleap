@@ -636,3 +636,4 @@ admin_project	filter_label	Filtrer
 admin_project	search_label	Rechercher
 admin_project	change_label	Historique des changements
 admin_project	history_empty_state	Il n'y a pas encore eu de changement.
+admin_project	history_empty_results	Rien dans l'historique ne correspond à votre recherche.
