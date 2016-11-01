@@ -240,10 +240,10 @@ class ProjectManager {
      *
      * @return Array of Project
      */
-    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false, $isPrivate = false) {
+    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false, $isPrivate = false, $offset = 0) {
         $projects = array();
         $dao = new ProjectDao(CodendiDataAccess::instance());
-        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin, $isPrivate);
+        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin, $isPrivate, $offset);
         $nbFound = $dao->foundRows();
         foreach($dar as $row) {
             $projects[] = $this->getAndCacheProject($row);

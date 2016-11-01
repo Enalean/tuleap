@@ -341,6 +341,7 @@ $tlp-form-element-select-small-background-size: 6px;
         .select2-selection__rendered {
             width: 100%;
             padding: 0;
+            line-height: normal;
 
             .select2-selection__placeholder {
                 color: $tlp-form-element-placeholder-color;
@@ -415,7 +416,7 @@ $tlp-form-element-select-small-background-size: 6px;
     .select2-selection__clear {
         float: right;
         font-size: 18px;
-        line-height: 14px;
+        line-height: 17px;
         cursor: pointer;
     }
 
@@ -434,6 +435,11 @@ $tlp-form-element-select-small-background-size: 6px;
                 padding: 0 4px;
                 font-size: $tlp-form-element-small-font-size;
             }
+        }
+
+        .select2-results__options {
+            max-height: 250px;
+            overflow-y: auto;
         }
 
         .select2-results__option {
@@ -498,7 +504,8 @@ $tlp-form-element-select-small-background-size: 6px;
                 cursor: not-allowed;
             }
 
-            &.select2-results__message {
+            &.select2-results__message,
+            &.loading-results {
                 padding: $tlp-form-element-padding-horizontal;
                 color: $tlp-ui-dimmed;
             }
@@ -558,7 +565,7 @@ span.select2-container--tlp-select2-large {
 
         .select2-selection__rendered .select2-selection__clear {
             font-size: 22px;
-            line-height: 17px;
+            line-height: 20px;
         }
     }
 
@@ -642,6 +649,20 @@ span.select2-container--tlp-select2-large {
         }
     }
 
+    > span.select2-container--tlp-select2 .select2-selection--single {
+        padding: 0 $tlp-form-element-padding-horizontal;
+        background: none;
+    }
+
+    > span.select2-container--tlp-select2-small .select2-selection--single {
+        padding: 0 $tlp-form-element-small-padding-horizontal;
+        background: none;
+    }
+
+    > span.select2-container--tlp-select2-large .select2-selection--single {
+        padding: 0 $tlp-form-element-large-padding-horizontal;
+        background: none;
+    }
 }
 
 .tlp-form-element-prepend {
@@ -665,6 +686,34 @@ span.select2-container--tlp-select2-large {
             z-index: 1;
         }
     }
+
+    > span.select2-container--tlp-select2,
+    > span.select2-container--tlp-select2-small,
+    > span.select2-container--tlp-select2-large {
+        order: 2;
+
+        .select2-selection--single,
+        .select2-selection--multiple {
+            border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
+        }
+
+        &.select2-container--open {
+            &.select2-container--above .select2-selection--single,
+            &.select2-container--above .select2-selection--multiple {
+                border-radius: 0 0 $tlp-form-element-border-radius;
+            }
+
+            &.select2-container--below .select2-selection--single,
+            &.select2-container--below .select2-selection--multiple {
+                border-radius: 0 $tlp-form-element-border-radius 0 0;
+            }
+        }
+
+        + .tlp-prepend[class*="tlp-button"] {
+            margin-right: -1px;
+            z-index: 1;
+        }
+    }
 }
 
 .tlp-form-element-append {
@@ -682,6 +731,32 @@ span.select2-container--tlp-select2-large {
     > .tlp-input {
         order: 1;
         border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
+
+        + .tlp-append[class*="tlp-button"] {
+            margin-left: -1px;
+            z-index: 1;
+        }
+    }
+
+    > span.select2-container--tlp-select2,
+    > span.select2-container--tlp-select2-small,
+    > span.select2-container--tlp-select2-large {
+        .select2-selection--single,
+        .select2-selection--multiple {
+            border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
+        }
+
+        &.select2-container--open {
+            &.select2-container--above .select2-selection--single,
+            &.select2-container--above .select2-selection--multiple {
+                border-radius: 0 0 0 $tlp-form-element-border-radius;
+            }
+
+            &.select2-container--below .select2-selection--single,
+            &.select2-container--below .select2-selection--multiple {
+                border-radius: $tlp-form-element-border-radius 0 0;
+            }
+        }
 
         + .tlp-append[class*="tlp-button"] {
             margin-left: -1px;
