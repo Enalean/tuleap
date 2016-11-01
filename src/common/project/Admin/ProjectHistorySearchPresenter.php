@@ -36,6 +36,7 @@ class ProjectHistorySearchPresenter
     public $by_label;
     public $selected_value;
     public $value_label;
+    public $user_has_searched_for_something;
 
     public function __construct(
         array $possible_events,
@@ -50,6 +51,14 @@ class ProjectHistorySearchPresenter
         $this->buildEventsBox($possible_events, $selected_event, $selected_subevents);
         $this->buildUserBox($selected_by);
         $this->buildValueBox($selected_value);
+
+        $this->user_has_searched_for_something = $selected_from
+            || $selected_to
+            || $selected_event
+            || $selected_subevents
+            || $selected_subevents
+            || $selected_by
+            || $selected_value;
     }
 
     private function buildValueBox($selected_value)

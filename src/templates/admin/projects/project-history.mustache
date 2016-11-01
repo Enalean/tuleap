@@ -149,7 +149,14 @@
                             {{^ history }}
                                 <tr>
                                     <td colspan="4" class="tlp-table-cell-empty">
-                                        {{ empty_state }}
+                                        {{# search }}
+                                            {{# user_has_searched_for_something }}
+                                                {{ empty_results }}
+                                            {{/ user_has_searched_for_something }}
+                                            {{^ user_has_searched_for_something }}
+                                                {{ empty_state }}
+                                            {{/ user_has_searched_for_something }}
+                                        {{/ search }}
                                     </td>
                                 </tr>
                             {{/ history }}

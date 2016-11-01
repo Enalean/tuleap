@@ -647,3 +647,4 @@ admin_project	filter_label	Filter
 admin_project	search_label	Search
 admin_project	change_label	Change history
 admin_project	history_empty_state	There isn't any change history yet.
+admin_project	history_empty_results	Nothing in the change history is matching your request.

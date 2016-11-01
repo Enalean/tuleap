@@ -61,6 +61,7 @@ class ProjectHistoryPresenter
         $this->search_label      = $GLOBALS['Language']->getText('admin_project', 'search_label');
         $this->change_label      = $GLOBALS['Language']->getText('admin_project', 'change_label');
         $this->empty_state       = $GLOBALS['Language']->getText('admin_project', 'history_empty_state');
+        $this->empty_results     = $GLOBALS['Language']->getText('admin_project', 'history_empty_results');
 
         $this->event_label = $GLOBALS['Language']->getText('project_admin_utils', 'event');
         $this->value_label = $GLOBALS['Language']->getText('project_admin_utils', 'val');
