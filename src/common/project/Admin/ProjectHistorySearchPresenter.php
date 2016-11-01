@@ -34,11 +34,14 @@ class ProjectHistorySearchPresenter
     public $to_label;
     public $selected_by;
     public $by_label;
+    public $selected_value;
+    public $value_label;
 
     public function __construct(
         array $possible_events,
         $selected_event,
         $selected_subevents,
+        $selected_value,
         $selected_from,
         $selected_to,
         $selected_by
@@ -46,6 +49,14 @@ class ProjectHistorySearchPresenter
         $this->buildDatesBox($selected_from, $selected_to);
         $this->buildEventsBox($possible_events, $selected_event, $selected_subevents);
         $this->buildUserBox($selected_by);
+        $this->buildValueBox($selected_value);
+    }
+
+    private function buildValueBox($selected_value)
+    {
+        $this->selected_value = $selected_value;
+
+        $this->value_label = $GLOBALS['Language']->getText('project_admin_utils', 'val');
     }
 
     private function buildUserBox($selected_by)

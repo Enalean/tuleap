@@ -108,6 +108,10 @@ class ProjectHistoryPresenter
             $default_params['by'] = $search->selected_by;
         }
 
+        if ($search->selected_value) {
+            $default_params['value'] = $search->selected_value;
+        }
+
         return new PaginationPresenter(
             $limit,
             $offset,
