@@ -63,7 +63,8 @@ $renderer->renderANoFramedPresenter(
             $event,
             $subEvents,
             $startDate,
-            $endDate
+            $endDate,
+            $by
         )
     )
 );

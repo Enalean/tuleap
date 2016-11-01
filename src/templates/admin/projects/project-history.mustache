@@ -80,6 +80,17 @@
                                 <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label">{{ by_label }}</label>
+                            <div class="tlp-form-element tlp-form-element-prepend">
+                                <input type="text"
+                                       class="tlp-input"
+                                       name="by"
+                                       value="{{ selected_by }}"
+                                       placeholder="paul">
+                                <span class="tlp-prepend"><i class="fa fa-user"></i></span>
+                            </div>
+                        </div>
                     {{/ search }}
                     <button type="submit" class="tlp-button-primary tlp-button-wide">
                         <i class="fa fa-search tlp-button-icon"></i> {{ search_label }}
