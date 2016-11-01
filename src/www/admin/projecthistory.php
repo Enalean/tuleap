@@ -62,6 +62,7 @@ $renderer->renderANoFramedPresenter(
             get_history_entries(),
             $event,
             $subEvents,
+            $value,
             $startDate,
             $endDate,
             $by

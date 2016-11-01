@@ -18,7 +18,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     var sub_events_panels = document.querySelectorAll('.siteadmin-project-history-filter-form-subevents'),
-        events = document.getElementById('events');
+        events = document.getElementById('siteadmin-project-history-events');
 
     if (events) {
         displayCurrentSubEventsPanel();

@@ -19,10 +19,10 @@
                 <section class="tlp-pane-section">
                     {{# search }}
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="events">{{ event_label }}</label>
+                            <label class="tlp-label" for="siteadmin-project-history-events">{{ event_label }}</label>
                             <select class="tlp-select"
                                     name="events_box"
-                                    id="events"
+                                    id="siteadmin-project-history-events"
                             >
                                 {{# events }}
                                     <option value="{{ key }}"
@@ -55,10 +55,19 @@
                             {{/ grouped_events }}
                         </div>
                         <div class="tlp-form-element">
-                            <label for="date-picker-from" class="tlp-label">{{ from_label }}</label>
+                            <label for="siteadmin-project-history-value" class="tlp-label">{{ value_label }}</label>
+                            <input type="text"
+                                   class="tlp-input"
+                                   id="siteadmin-project-history-value"
+                                   name="value"
+                                   value="{{ selected_value }}"
+                                   placeholder="{{ value_label }}">
+                        </div>
+                        <div class="tlp-form-element">
+                            <label for="siteadmin-project-history-date-picker-from" class="tlp-label">{{ from_label }}</label>
                             <div class="tlp-form-element tlp-form-element-prepend">
                                 <input type="text"
-                                       id="date-picker-from"
+                                       id="siteadmin-project-history-date-picker-from"
                                        class="tlp-input tlp-input-date"
                                        size="11"
                                        name="start"
@@ -68,10 +77,10 @@
                             </div>
                         </div>
                         <div class="tlp-form-element">
-                            <label for="date-picker-to" class="tlp-label">{{ to_label }}</label>
+                            <label for="siteadmin-project-history-date-picker-to" class="tlp-label">{{ to_label }}</label>
                             <div class="tlp-form-element tlp-form-element-prepend">
                                 <input type="text"
-                                       id="date-picker-to"
+                                       id="siteadmin-project-history-date-picker-to"
                                        class="tlp-input tlp-input-date"
                                        size="11"
                                        name="end"
@@ -81,10 +90,11 @@
                             </div>
                         </div>
                         <div class="tlp-form-element">
-                            <label class="tlp-label">{{ by_label }}</label>
+                            <label class="tlp-label" for="siteadmin-project-history-by">{{ by_label }}</label>
                             <div class="tlp-form-element tlp-form-element-prepend">
                                 <input type="text"
                                        class="tlp-input"
+                                       id="siteadmin-project-history-by"
                                        name="by"
                                        value="{{ selected_by }}"
                                        placeholder="paul">
