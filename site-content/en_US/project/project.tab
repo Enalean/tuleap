@@ -394,6 +394,7 @@ project_admin_utils	tracker_import	Tracker Import
 project_admin_utils	access_logs	Access Logs
 project_admin_utils	g_change_history	Project Change History
 project_admin_utils	event	Event
+project_admin_utils	event_placeholder	Choose an event…
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	access	Change Access

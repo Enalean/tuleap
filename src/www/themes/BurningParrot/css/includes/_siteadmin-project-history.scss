@@ -23,8 +23,12 @@
 }
 
 #siteadmin-project-history-filter {
-    width: 300px;
+    min-width: 400px;
     margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-project-history-filter-form {
+    width: 100%;
 }
 
 #siteadmin-project-history-results {
@@ -45,7 +49,15 @@
     white-space: nowrap;
 }
 
-@media screen and (max-width: 1300px) {
+.siteadmin-project-history-filter-form-subevents {
+    display: none;
+}
+
+#events {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+@media screen and (max-width: 1500px) {
     #siteadmin-project-history {
         display: flex;
         flex-direction: column;

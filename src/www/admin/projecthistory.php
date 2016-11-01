@@ -27,6 +27,7 @@ use Tuleap\Project\Admin\ProjectHistorySearchPresenter;
 require_once('pre.php');
 require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_history.php');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-history.js');
 
 session_require(array('group' => '1', 'admin_flags' => 'A'));
 
@@ -58,7 +59,9 @@ $renderer->renderANoFramedPresenter(
         $limit,
         $offset,
         new ProjectHistorySearchPresenter(
-            $event
+            get_history_entries(),
+            $event,
+            $subEvents
         )
     )
 );
