@@ -47,8 +47,12 @@ if($request->valid($vGroupId)) {
 }
 
 $project = $pm->getProject($group_id);
-if (!$project->isActive()) {
-    exit_error($GLOBALS['Language']->getText('include_exit','exit_error'), $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
+if (! $project->isActive()) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus())
+    );
+    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . (int) $group_id);
 }
 
 //if ($request->isPost()) {

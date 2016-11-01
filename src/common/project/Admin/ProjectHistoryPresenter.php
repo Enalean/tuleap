@@ -42,6 +42,7 @@ class ProjectHistoryPresenter
     public $date_label;
     public $user_label;
     public $search;
+    public $is_active;
 
     public function __construct(
         Project $project,
@@ -53,6 +54,7 @@ class ProjectHistoryPresenter
         $this->id          = $project->getID();
         $this->public_name = $project->getUnconvertedPublicName();
         $this->search      = $search;
+        $this->is_active   = $project->isActive();
 
         $this->information_label = $GLOBALS['Language']->getText('admin_project', 'information_label');
         $this->history_label     = $GLOBALS['Language']->getText('admin_project', 'history_label');

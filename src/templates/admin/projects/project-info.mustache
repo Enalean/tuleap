@@ -4,7 +4,9 @@
     <nav class="tlp-tabs">
         <a href="/admin/groupedit.php?group_id={{ id }}" class="tlp-tab tlp-tab-active">{{ information_label }}</a>
         <a href="/admin/projecthistory.php?group_id={{ id }}" class="tlp-tab">{{ history_label }}</a>
-        <a href="/admin/show_pending_documents.php?group_id={{ id }}" class="tlp-tab">{{ pending_label }}</a>
+        {{# is_active }}
+            <a href="/admin/show_pending_documents.php?group_id={{ id }}" class="tlp-tab">{{ pending_label }}</a>
+        {{/ is_active }}
     </nav>
 
     <section class="tlp-framed-horizontally" id="siteadmin-project-information">

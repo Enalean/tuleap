@@ -73,6 +73,7 @@ class ProjectDetailsPresenter
     public $has_custom_fields;
     public $instructions_desc;
     public $is_system;
+    public $is_active;
 
     public function __construct(Project $project, $all_custom_fields)
     {
@@ -81,6 +82,7 @@ class ProjectDetailsPresenter
         $this->unix_name   = $project->getUnixNameMixedCase();
         $this->description = $project->getDescription();
         $this->is_system   = $project->getStatus() === Project::STATUS_SYSTEM;
+        $this->is_active   = $project->isActive();
 
         $this->all_custom_fields = $all_custom_fields;
 
