@@ -26,21 +26,16 @@ class RestorePresenter
     public $repositories;
     public $restore_confirm;
     public $project_id;
-    public $url_icon;
+    public $title;
 
     public function __construct(
         array $repositories,
         $project_id
     ) {
+        $this->title             = $GLOBALS['Language']->getText('plugin_svn', 'archived_repositories');
         $this->repositories      = $repositories;
         $this->project_id        = $project_id;
-        $this->url_icon          = util_get_image_theme('ic/convert.png');
         $this->restore_not_found = $GLOBALS['Language']->getText('plugin_svn', 'restore_no_repo_found');
         $this->restore_confirm   = $GLOBALS['Language']->getText('plugin_svn', 'restore_confirmation');
-    }
-
-    public function hasRepositories()
-    {
-        return count($this->repositories) > 0;
     }
 }

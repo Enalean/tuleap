@@ -516,9 +516,6 @@ class SvnPlugin extends Plugin {
         $project               = ProjectManager::instance()->getProject($project_id);
         $archived_repositories = $this->getRepositoryManager()->getRestorableRepositoriesByProject($project);
 
-        $params['id'][]   = 'svn_repository';
-        $params['nom'][]  = $GLOBALS['Language']->getText('plugin_svn', 'archived_repositories');
-
         $restore_controller = new RestoreController($this->getRepositoryManager());
         $tab_content        = $restore_controller->displayRestorableRepositories($archived_repositories, $project_id);
         $params['html'][]   = $tab_content;

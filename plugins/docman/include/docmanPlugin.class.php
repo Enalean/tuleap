@@ -21,8 +21,10 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ *
  */
+
+use Tuleap\Layout\PaginationPresenter;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -35,14 +37,14 @@ class DocmanPlugin extends Plugin {
 
     /**
      * Store docman root items indexed by groupId
-     * 
+     *
      * @var Array;
      */
     private $rootItems = array();
 
     /**
      * Store controller instances
-     * 
+     *
      * @var Array
      */
     private $controller = array();
@@ -245,17 +247,17 @@ class DocmanPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin() ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
-    
+
     function javascript_file($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
@@ -268,7 +270,7 @@ class DocmanPlugin extends Plugin {
         $controler = $this->getHTTPController();
         $controler->logsDaily($params);
     }
-    
+
     function service_public_areas($params) {
         if ($params['project']->usesService($this->getServiceShortname())) {
             $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['project']->getId() .'">' .
@@ -281,7 +283,7 @@ class DocmanPlugin extends Plugin {
     function service_admin_pages($params) {
         if ($params['project']->usesService($this->getServiceShortname())) {
             $params['admin_pages'][] = '<a href="/plugins/docman/?action=admin&amp;group_id='. $params['project']->getId() .'">' .
-                $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '. 
+                $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '.
                 $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .
                 '</a>';
         }
@@ -358,11 +360,11 @@ class DocmanPlugin extends Plugin {
         $controler = $this->getHTTPController();
         $controler->process();
     }
-    
+
     public function processSOAP($request) {
         return $this->getSOAPController($request)->process();
     }
-     
+
     function wiki_page_updated($params) {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest(array('action' => 'wiki_page_updated',
@@ -371,28 +373,28 @@ class DocmanPlugin extends Plugin {
                                                 'group_id'  => $params['group_id'],
                                                 'user'      => $params['user'],
                                                 'version'   => $params['version']));
-        $this->getWikiController($request)->process(); 
+        $this->getWikiController($request)->process();
     }
 
     function wiki_before_content($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
         $request = new Docman_WikiRequest($params);
-        $this->getWikiController($request)->process(); 
+        $this->getWikiController($request)->process();
     }
-    
+
     function wiki_display_remove_button($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_display_remove_button';
         $request = new Docman_WikiRequest($params);
-        $this->getWikiController($request)->process(); 
+        $this->getWikiController($request)->process();
     }
 
     function isWikiPageReferenced($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
-        $this->getWikiController($request)->process(); 
+        $this->getWikiController($request)->process();
     }
 
     function isWikiPageEditable($params) {
@@ -405,14 +407,14 @@ class DocmanPlugin extends Plugin {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_user_can_access';
         $request = new Docman_WikiRequest($params);
-        $this->getWikiController($request)->process(); 
+        $this->getWikiController($request)->process();
     }
 
     function getPermsLabelForWiki($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
-        $this->getWikiController($request)->process(); 
+        $this->getWikiController($request)->process();
     }
 
     function ajax_reference_tooltip($params) {
@@ -479,7 +481,7 @@ class DocmanPlugin extends Plugin {
 
         return true;
     }
-    
+
     /**
      * Hook called before renaming project to check the name validity
      * @param Array $params
@@ -487,7 +489,7 @@ class DocmanPlugin extends Plugin {
     function file_exists_in_data_dir($params) {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
         $path = $docmanPath.$params['new_name'];
-        
+
         if (Backend::fileExists($path)) {
             $params['result']= false;
             $params['error'] = $GLOBALS['Language']->getText('plugin_docman','name_validity');
@@ -526,7 +528,7 @@ class DocmanPlugin extends Plugin {
 
     /**
      * Hook to list docman in the list of serices managed by disk stats
-     * 
+     *
      * @param array $params
      */
     function plugin_statistics_disk_usage_service_label($params) {
@@ -535,7 +537,7 @@ class DocmanPlugin extends Plugin {
 
     /**
      * Hook to choose the color of the plugin in the graph
-     * 
+     *
      * @param array $params
      */
     function plugin_statistics_color($params) {
@@ -558,23 +560,46 @@ class DocmanPlugin extends Plugin {
         if ( !$offsetVers || $offsetVers < 0 ) {
             $offsetVers = 0;
         }
-        
-        $linkToLogMsg = '<p>When an element is deleted, the action appears in <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.</p>';
-        
+
         require_once('Docman_VersionFactory.class.php');
         $version = new Docman_VersionFactory();
         $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
-        $params['id'][] = 'version';
-        $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
         $html = '';
-        $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
-        $html .= $linkToLogMsg;
+        $html .= '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .'</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_version') .'</h2>
+                    <p>When an element is deleted, the action appears in
+                     <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.
+                    </p>';
         if (isset($res) && $res) {
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
         } else {
-            $html .= 'No restorable versions found';
+            $html .= '<table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','label') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','number') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tlp-table-cell-empty" colspan="8">
+                            '. $GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions') .'
+                        </td>
+                    </tr>
+                </tbody>
+            </table>';
         }
-        $html .='</div>';
+        $html .= '</section>';
         $params['html'][]= $html;
 
         //return all pending items for given group id
@@ -585,17 +610,37 @@ class DocmanPlugin extends Plugin {
         require_once('Docman_ItemFactory.class.php');
         $item = new Docman_ItemFactory($params['group_id']);
         $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
-        $params['id'][] = 'item';
-        $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
         $html = '';
-        $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
-        $html .= $linkToLogMsg;
+        $html .= '<section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman','deleted_item') .'</h2>';
         if (isset($res) && $res) {
             $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
         } else {
-            $html .= 'No restorable items found';
+            $html .= '<table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','filters_item_type') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','location') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','owner') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tlp-table-cell-empty" colspan="8">
+                            No restorable items found
+                        </td>
+                    </tr>
+                </tbody>
+            </table>';
         }
-        $html .='</div>';
+        $html .= '</section>
+            </div>
+        </section>';
         $params['html'][]= $html;
     }
 
@@ -603,52 +648,73 @@ class DocmanPlugin extends Plugin {
         $hp = Codendi_HTMLPurifier::instance();
 
         $html ='';
-        $title =array();
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','purge_date');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_version');
+        $html .= '<table class="tlp-table">
+            <thead>
+                <tr>
+                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','label') .'</th>
+                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','number') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>';
 
         if ($nbVersions > 0) {
-
-            $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_version').'</H3><P>';
-            $html .= html_build_list_table_top ($title);
-            $i=1;
-
             foreach ($versions as $row) {
                 $historyUrl = $this->getPluginPath().'/index.php?group_id='.$groupId.'&id='.$row['item_id'].'&action=details&section=history';
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
-                $html .= '<tr class="'. html_get_alt_row_color($i++) .'">'.
-                '<td><a href="'.$historyUrl.'">'.$row['item_id'].'</a></td>'.
+                $html .= '<tr>'.
+                '<td class="tlp-table-cell-numeric"><a href="'.$historyUrl.'">'.$row['item_id'].'</a></td>'.
                 '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['label']).'</td>'.
-                '<td>'.$row['number'].'</td>'.
+                '<td class="tlp-table-cell-numeric">'.$row['number'].'</td>'.
                 '<td>'.html_time_ago($row['date']).'</td>'.
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
-                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
+                '<td class="tlp-table-cell-actions">
+                        <a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'"
+                            class="tlp-button-small tlp-button-outline tlp-button-primary"
+                            onClick="return confirm(\'Confirm restore of this version\')"
+                        >
+                            <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                        </a>
+                    </td>
+                </tr>';
             }
-            $html .= '</TABLE>'; 
+            $html .= '</tbody>
+                </table>';
 
+            if ($offset > 0 || ($offset + $limit) < $nbVersions) {
+                $pagination = new PaginationPresenter(
+                    $limit,
+                    $offset,
+                    count($versions),
+                    $nbVersions,
+                    "/admin/show_pending_documents.php",
+                    array(
+                        'group_id'   => $groupId,
+                        'offsetItem' => ($offset + $limit)
+                    )
+                );
 
-            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-
-            if ($offset > 0) {
-                $html .=  '<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
-                $html .= '&nbsp;';
+                $html .= '<div class="siteadmin-projects-pending-doc-pagination">';
+                $html .= TemplateRendererFactory::build()
+                    ->getRenderer(__DIR__)
+                    ->renderToString('pagination', $pagination);
+                $html .= '</div>';
             }
-            if (($offset + $limit) < $nbVersions) {
-                $html .= '&nbsp;';
-                $html .='<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
-            }
-            $html .='<br>'.($offset+$i-2).'/'.$nbVersions.'</br>';
-            $html .= '</div>';
-          
         } else {
-            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions'));
+            $html .= '<tr>
+                        <td class="tlp-table-cell-empty" colspan="8">
+                            '. $GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions') .'
+                        </td>
+                    </tr>
+                </tbody>
+            </table>';
         }
+
         return $html;
     }
 
@@ -658,52 +724,76 @@ class DocmanPlugin extends Plugin {
         $itemFactory = new Docman_ItemFactory($groupId);
         $uh = UserHelper::instance();
 
-        $html ='';
-        $title =array();
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','filters_item_type');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','purge_date');
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_item');
+        $html = '';
+        $html .= '<table class="tlp-table">
+            <thead>
+                <tr>
+                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','filters_item_type') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','location') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','owner') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>';
 
 
         if ($nbItems > 0) {
-            $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_item').'</H3><P>';
-            $html .= html_build_list_table_top ($title);
-            $i=1;
-            foreach ($res as $row ){
+            foreach ($res as $row ) {
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
-                $html .='<tr class="'. html_get_alt_row_color($i++) .'">'.
-                '<td>'.$row['id'].'</td>'.
+                $html .='<tr>'.
+                '<td class="tlp-table-cell-numeric">'.$row['id'].'</td>'.
                 '<td>'.$itemFactory->getItemTypeAsText($row['item_type']).'</td>'.
                 '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['location']).'</td>'.
                 '<td>'.$hp->purify($uh->getDisplayNameFromUserId($row['user'])).'</td>'.
                 '<td>'.html_time_ago($row['date']).'</td>'.
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
-                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
+                '<td class="tlp-table-cell-actions">
+                        <a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'"
+                            class="tlp-button-small tlp-button-outline tlp-button-primary"
+                            onClick="return confirm(\'Confirm restore of this item\')"
+                        >
+                            <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                        </a>
+                    </td>
+                </tr>';
             }
-            $html .= '</TABLE>'; 
+            $html .= '</tbody>
+                </table>';
 
-            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+            if ($offset > 0 || ($offset + $limit) < $nbItems) {
+                $pagination = new PaginationPresenter(
+                    $limit,
+                    $offset,
+                    count($res),
+                    $nbItems,
+                    "/admin/show_pending_documents.php",
+                    array(
+                        'group_id'   => $groupId,
+                        'offsetItem' => ($offset + $limit)
+                    )
+                );
 
-            if ($offset > 0) {
-                $html .=  '<a href="?group_id='.$groupId.'&focus=item&offsetItem='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
-                $html .= '&nbsp;';
+                $html .= '<div class="siteadmin-projects-pending-doc-pagination">';
+                $html .= TemplateRendererFactory::build()
+                    ->getRenderer(__DIR__)
+                    ->renderToString('pagination', $pagination);
+                $html .= '</div>';
             }
-            if (($offset + $limit) < $nbItems) {
-                $html .= '&nbsp;';
-                $html .= '<a href="?group_id='.$groupId.'&focus=item&offsetItem='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
-            }
-            $html .='<br>'.($offset +$i-2).'/'.$nbItems.'</br>';
-            $html .= '</div>';
-
         } else {
-            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_items'));
+            $html .= '<tr>
+                        <td class="tlp-table-cell-empty" colspan="8">
+                            '. $GLOBALS['Language']->getText('plugin_docman', 'no_pending_items') .'
+                        </td>
+                    </tr>
+                </tbody>
+            </table>';
         }
+
         return $html;
     }
 
@@ -742,7 +832,7 @@ class DocmanPlugin extends Plugin {
         }
 
     /**
-     * Function called when a user is removed from a project 
+     * Function called when a user is removed from a project
      * If a user is removed from a private project, the
      * documents monitored by that user should be monitored no more.
      *
@@ -837,11 +927,11 @@ class DocmanPlugin extends Plugin {
         }
         return $this->getController('Docman_HTTPController', $request);
     }
-    
+
     protected function getCoreController($request) {
         return $this->getController('Docman_CoreController', $request);
     }
-    
+
     protected function getSOAPController($request) {
         return $this->getController('Docman_SOAPController', $request);
     }

@@ -1896,26 +1896,54 @@ class GitPlugin extends Plugin {
     public function showArchivedRepositories($params) {
         $group_id              = $params['group_id'];
         $archived_repositories = $this->getRepositoryManager()->getRepositoriesForRestoreByProjectId($group_id);
-        $tab_content           = '<div class="contenu_onglet" id="contenu_onglet_git_repository">';
+        $tab_content           = '';
 
-        if (count($archived_repositories) == 0) {
-            $tab_content .= '<center>'.$GLOBALS['Language']->getText('plugin_git', 'restore_no_repo_found').'</center>';
-        } else {
-            $tab_content .= '<table>';
+        $tab_content .= '<section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('plugin_git', 'archived_repositories') .'</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>Repository name</th>
+                            <th>Creation date</th>
+                            <th>Creator</th>
+                            <th>Deleted date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+        if (count($archived_repositories)) {
             foreach($archived_repositories as $archived_repository) {
-                $tab_content .= '<tr class="boxitemgrey">';
+                $tab_content .= '<tr>';
                 $tab_content .= '<td>'.$archived_repository->getName().'</td>';
                 $tab_content .= '<td>'.$archived_repository->getCreationDate().'</td>';
                 $tab_content .= '<td>'.$archived_repository->getCreator()->getName().'</td>';
                 $tab_content .= '<td>'.$archived_repository->getDeletionDate().'</td>';
-                $tab_content .= '<td><a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')" border="0" height="16" width="16"></a></td>';
+                $tab_content .= '<td class="tlp-table-cell-actions">
+                    <a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"
+                        class="tlp-button-small tlp-button-outline tlp-button-primary"
+                        onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')"
+                    >
+                        <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                    </a>
+                </td>';
                 $tab_content .= '</tr>';
             }
-            $tab_content .= '</table>';
+        } else {
+            $tab_content .= '<tr>
+                <td class="tlp-table-cell-empty" colspan="5">
+                    '. $GLOBALS['Language']->getText('plugin_git', 'restore_no_repo_found') .'
+                </td>
+            </tr>';
         }
-        $tab_content     .= '</div>';
-        $params['id'][]  = 'git_repository';
-        $params['nom'][] = $GLOBALS['Language']->getText('plugin_git', 'archived_repositories');
+        $tab_content .= '</tbody>
+                    </table>
+                </section>
+            </div>
+        </section>';
         $params['html'][]= $tab_content;
     }
 
