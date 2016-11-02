@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -66,7 +66,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
         stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user)->once();
 
-        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+        $artifact->process(mock('TrackerManager'), $this->request, $this->user);
     }
 
     public function itCreatesANewChangesetWithANewAssociation() {
@@ -85,9 +85,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
         $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
         stub($artifact)->getUserManager()->returns($user_manager);
-
-        $tracker = aTracker()->withProjectId(200)->build();
-        stub($artifact)->getTracker()->returns($tracker);
+        stub($artifact)->getTracker()->returns(mock('Tracker'));
 
         $field = anArtifactLinkField()->withId(1002)->build();
         stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
@@ -97,7 +95,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
         $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user));
 
-        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+        $artifact->process(mock('TrackerManager'), $this->request, $this->user);
     }
 
     public function itReturnsAnErrorCodeWhenItHasNoArtifactLinkField() {
@@ -113,7 +111,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'The destination artifact must have a artifact link field.', array('plugin_tracker', 'must_have_artifact_link_field'));
         $this->expectFeedback('error', 'The destination artifact must have a artifact link field.');
 
-        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+        $artifact->process(mock('TrackerManager'), $this->request, $this->user);
     }
 
     private function GivenAnArtifact($tracker) {
@@ -126,5 +124,3 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
         return $artifact;
     }
 }
-
-?>
