@@ -176,6 +176,7 @@ class ArtifactsFoldersPlugin extends Plugin
         return new ArtifactPresenterBuilder(
             $this->getHierarchyOfFolderBuilder(),
             new NatureDao(),
+            $this->getNatureIsChildLinkRetriever(),
             Tracker_ArtifactFactory::instance()
         );
     }
