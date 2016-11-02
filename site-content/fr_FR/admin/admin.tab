@@ -174,8 +174,10 @@ admin_approve_license	error	Seuls les administrateurs du site ont accès à cett
 #-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
-admin_approve_pending	title	Approbation des projets en attente
-admin_approve_pending	no_pending	Aucun projet en attente à approuver
+admin_approve_pending	title	Projets en attente d'approbation
+admin_approve_pending	no_pending	Prenez une pause,
+admin_approve_pending	no_pending_next	aucun projet a valider.
+admin_approve_pending	go_back	Retour
 admin_approve_pending	approve	Approuver le projet
 admin_approve_pending	delete	Détruire le projet
 admin_approve_pending	remove_category	Enlever de la catégorie
