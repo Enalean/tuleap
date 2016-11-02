@@ -38,6 +38,7 @@ class userlogPlugin extends Plugin {
         $this->addHook(Event::IS_IN_SITEADMIN);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function burning_parrot_get_stylesheets($params)
@@ -45,6 +46,13 @@ class userlogPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/user-logging-date-picker.js';
         }
     }
 

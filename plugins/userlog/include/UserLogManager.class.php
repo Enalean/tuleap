@@ -92,14 +92,14 @@ class UserLogManager {
                       'http_referer' => -1);
     }
 
-    function displayLogs($offset, $selectedDay = null)
+    function displayLogs($offset, $selected_day = null)
     {
         $year  = null;
         $month = null;
         $day   = null;
 
-        if ($selectedDay !== null) {
-            if (preg_match('/^([0-9]+)-([0-9]{1,2})-([0-9]{1,2})$/', $selectedDay, $match)) {
+        if ($selected_day !== null) {
+            if (preg_match('/^([0-9]+)-([0-9]{1,2})-([0-9]{1,2})$/', $selected_day, $match)) {
                 $year  = $match[1];
                 $month = $match[2];
                 $day   = $match[3];
@@ -119,7 +119,7 @@ class UserLogManager {
         $logs        = $log_builder->build($start, $end, $offset, $count);
 
         $max_entry = $this->getDao()->getFoundRows();
-        $presenter = new UserLogPresenter($logs, $count, $offset, $max_entry);
+        $presenter = new UserLogPresenter($logs, $selected_day, $count, $offset, $max_entry);
 
         $this->admin_page_renderer->renderAPresenter(
             'userlog',

@@ -24,5 +24,8 @@
             ],
             "target_dir": "www/themes/BurningParrot/css"
         }
-    }
+    },
+    "javascript": [
+        "www/scripts/user-logging-date-picker.js"
+    ]
 }
