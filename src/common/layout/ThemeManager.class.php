@@ -41,6 +41,10 @@ class ThemeManager
 
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)
     {
+        if ($this->isInSiteAdmin($current_user)) {
+            return $this->getValidTheme($current_user, self::$BURNING_PARROT);
+        }
+
         foreach ($theme_names as $name) {
             $theme = $this->getValidTheme($current_user, $name);
             if ($theme !== false && $this->isAllowedTheme($current_user, $name)) {
@@ -54,14 +58,18 @@ class ThemeManager
     private function isAllowedTheme(PFUser $current_user, $name)
     {
         if ($name === self::$BURNING_PARROT) {
-            return $this->isBurningParrotAllowed($current_user);
+            return $this->isInSiteAdmin($current_user);
         }
 
         return true;
     }
 
-    private function isBurningParrotAllowed(PFUser $current_user)
+    private function isInSiteAdmin(PFUser $current_user)
     {
+        if (IS_SCRIPT) {
+            return false;
+        }
+
         $is_in_site_admin = false;
         EventManager::instance()->processEvent(
             Event::IS_IN_SITEADMIN,
