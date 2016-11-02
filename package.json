@@ -12,7 +12,9 @@
     "gulp-concat": "^2.6.0",
     "gulp-rev": "^7.1.0",
     "gulp-sass": "^2.3.2",
-    "gulp-scss-lint": "^0.4.0"
+    "gulp-scss-lint": "^0.4.0",
+    "lodash.map": "4.6.0",
+    "merge2": "1.0.2"
   },
   "scripts": {
     "build": "node_modules/.bin/gulp build",
