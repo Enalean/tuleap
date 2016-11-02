@@ -98,7 +98,8 @@ class StatisticsPlugin extends Plugin {
     public function is_in_siteadmin($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['is_in_siteadmin'] = true;
+            $did_we_switch_statistics_to_burning_parrot = false;
+            $params['is_in_siteadmin'] = $did_we_switch_statistics_to_burning_parrot;
         }
     }
 

@@ -90,7 +90,23 @@ class ThemeManager
                 $_SERVER['REQUEST_URI']
             ) && ! preg_match(
                 '`(
+                    ^/admin/forgeaccess.php
+                    |
                     ^/admin/register_admin.php
+                    |
+                    ^/admin/homepage.php
+                    |
+                    ^/admin/trove
+                    |
+                    ^/admin/descfields/desc_fields_edit.php
+                    |
+                    ^/tracker/admin/restore.php
+                    |
+                    ^/admin/massmail.php
+                    |
+                    ^/stats
+                    |
+                    ^/admin/lastlogins.php
                 )`x',
                 $_SERVER['REQUEST_URI']
             );
