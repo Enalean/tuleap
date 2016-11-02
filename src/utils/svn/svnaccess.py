@@ -1,14 +1,21 @@
 #
-# Codendi
+# Copyright (c) Enalean, 2016. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# http://www.codendi.com
 #
-# 
+# This file is a part of Tuleap.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Tuleap is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Tuleap is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 #
 # Purpose:
 #    This Python file fetches the SVN access file and determine whether
@@ -28,6 +35,7 @@ import user
 import group
 import MySQLdb
 import include
+import pkgutil
 
 global SVNACCESS, SVNGROUPS
 SVNACCESS = None
@@ -68,7 +76,7 @@ def fetch_access_file(svnrepo):
                     state = ST_GROUP
                 else:
                     state = ST_PATH
-                    
+
             if state == ST_GROUP:
                 m = group_pat.match(line)
                 if m is not None:
@@ -77,8 +85,8 @@ def fetch_access_file(svnrepo):
                     # Apply stripName lambda on each element of the list of
                     # user names
                     SVNGROUPS[group.lower()] = map(string.strip, string.split(users.lower(),","))
-                
-            elif state == ST_PATH: 
+
+            elif state == ST_PATH:
                 m = perm_pat.match(line)
                 if m is not None:
                     who = m.group(1)
@@ -90,15 +98,11 @@ def fetch_access_file(svnrepo):
                             for who in SVNGROUPS[this_group.lower()]:
                                 if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
                                 SVNACCESS[who][path] = string.strip(perm)
-                                #SVNACCESS[who][path] = perm
                     else:
                         if not SVNACCESS.has_key(who.lower()): SVNACCESS[who.lower()] = {}
                         SVNACCESS[who.lower()][path] = string.strip(perm)
-                        #SVNACCESS[who][path] = perm
 
         f.close()
-        #print SVNGROUPS
-        #print SVNACCESS
 
 # Check if ldap plugin is installed and available
 def ldap_plugin_is_enabled():
@@ -156,16 +160,9 @@ def get_group_from_svnrepo_path(svnrepo):
     return group_name
 
 def check_read_access(username, svnrepo, svnpath):
-    
-    global SVNACCESS, SVNGROUPS
-
     # make sure that usernames are lowercase
     username = get_name_for_svn_access(svnrepo, username)
 
-    #f = open('/tmp/viewvc.log', 'a');
-    #f.write(svnrepo+": "+username+"\n");
-    #f.close();
-    
     if user.user_is_super_user():
         return True
     if user.user_is_restricted():
@@ -174,6 +171,27 @@ def check_read_access(username, svnrepo, svnpath):
         if not user.user_is_member(group_id):
             return False
 
+    if __is_using_epel_viewvc():
+        return __check_read_access_with_epel_viewvc(username, svnrepo, svnpath)
+
+    return __check_read_with_tuleap_viewvc(username, svnrepo, svnpath)
+
+
+def __is_using_epel_viewvc():
+    loader = pkgutil.find_loader('vcauth.svnauthz')
+    return loader is not None
+
+
+def __check_read_access_with_epel_viewvc(username, svnrepo, svnpath):
+    from vcauth.svnauthz import ViewVCAuthorizer
+    root_lookup_func = lambda _: 'svn', svnrepo
+    authorizer = ViewVCAuthorizer(root_lookup_func, username, {'authzfile' : svnrepo + '/.SVNAccessFile'})
+    requested_path_parts = filter(None, svnpath.split('/'))
+    return authorizer.check_path_access(svnrepo, requested_path_parts, None)
+
+
+def __check_read_with_tuleap_viewvc(username, svnrepo, svnpath):
+    global SVNACCESS, SVNGROUPS
     if SVNACCESS is None:
         fetch_access_file(svnrepo)
 
@@ -182,11 +200,9 @@ def check_read_access(username, svnrepo, svnpath):
     while True:
         if SVNACCESS.has_key(username) and SVNACCESS[username].has_key(path):
             perm = SVNACCESS[username][path]
-            #print "match: SVNACCESS[",username,"][",path,"]",perm
             break
         elif SVNACCESS.has_key('*') and SVNACCESS['*'].has_key(path):
             perm = SVNACCESS['*'][path]
-            #print "match: SVNACCESS[*][",path,"]",perm
             break
         else:
             # see if it maches higher in the path
@@ -196,11 +212,8 @@ def check_read_access(username, svnrepo, svnpath):
                 path = '/'
             else:
                 path = path[:idx]
-    
+
     if perm == 'r' or perm == 'rw':
         return True
     else:
         return False
-
-#check_read_access('laurent','/svnroot/codendi/', '/codendi/trunk/SRC')
-#fetch_access_file('/svnroot/codendi')
