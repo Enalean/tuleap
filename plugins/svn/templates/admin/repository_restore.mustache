@@ -1,27 +1,41 @@
-<div class="contenu_onglet contenu_onglet_center" id="contenu_onglet_svn_repository">
-    {{^ hasRepositories }}
-        <span>{{ restore_not_found }}</span>
-    {{/ hasRepositories }}
-    {{# hasRepositories }}
-        <table class="contenu_onglet_table">
-            <tr class="boxtable">
-                <td class="boxtitle">Repository name</td>
-                <td class="boxtitle">Delete date</td>
-                <td class="boxtitle">Restore</td>
-            </tr>
-            {{# repositories }}
-                <tr class="boxitemgrey">
-                    <td>{{ getName }}</td>
-                    <td>{{ getDeletionDateHumanReadable }}</td>
-                    <td>
-                        <a href="/plugins/svn/?action=restore&group_id={{ project_id }}&repo_id={{ getId }}">
-                            <img src="{{ url_icon }}"
-                                 onClick="return confirm('{{ restore_confirm }} {{ getName }}.')" border="0"
-                            />
-                        </a>
-                    </td>
-                </tr>
-            {{/ repositories }}
-        </table>
-    {{/ hasRepositories }}
-</div>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>Repository name</th>
+                        <th>Deleted date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# repositories }}
+                        <tr>
+                            <td>{{ getName }}</td>
+                            <td>{{ getDeletionDateHumanReadable }}</td>
+                            <td class="tlp-table-cell-actions">
+                                <a href="/plugins/svn/?action=restore&group_id={{ project_id }}&repo_id={{ getId }}"
+                                    class="tlp-button-small tlp-button-outline tlp-button-primary"
+                                    onClick="return confirm('{{ restore_confirm }} {{ getName }}.')"
+                                >
+                                    <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                                </a>
+                            </td>
+                        </tr>
+                    {{/ repositories }}
+                    {{^ repositories }}
+                        <tr>
+                            <td class="tlp-table-cell-empty" colspan="3">
+                                {{ restore_not_found }}
+                            </td>
+                        </tr>
+                    {{/ repositories }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
