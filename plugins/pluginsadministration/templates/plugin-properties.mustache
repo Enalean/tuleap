@@ -1,0 +1,111 @@
+<h1>{{ name }}</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-list tlp-pane-title-icon"></i> {{ properties_pane_title }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section plugin-properties-row">
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_name }}</label>
+                <p>{{ name }}</p>
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_version }}</label>
+                <p>{{ version }}</p>
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_scope }}</label>
+                <p>{{ scope }}</p>
+            </div>
+            {{# is_there_enable_switch }}
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_enabled }}</label>
+                {{{ enable_switch }}}
+            </div>
+            {{/ is_there_enable_switch }}
+        </section>
+        <section class="tlp-pane-section">
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_description }}</label>
+                <p>{{ description }}</p>
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_hooks }}</label>
+                {{# are_there_hooks }}
+                    <p>{{ hooks }}</p>
+                {{/ are_there_hooks }}
+                {{^ are_there_hooks }}
+                    <p class="tlp-property-empty">{{ properties_pane_empty_hooks }}</p>
+                {{/ are_there_hooks }}
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{ properties_pane_dependencies }}</label>
+                {{# are_there_dependencies }}
+                    <p>{{ dependencies }}</p>
+                {{/ are_there_dependencies }}
+                {{^ are_there_dependencies }}
+                    <p class="tlp-property-empty">{{ properties_pane_empty_dependencies }}</p>
+                {{/ are_there_dependencies }}
+            </div>
+        </section>
+
+
+        <form action="?" method="POST">
+            <input type="hidden" name="plugin_id" value="{{ id }}">
+            <input type="hidden" name="action" value="change_plugin_properties">
+            {{# are_there_properties }}
+                <section class="tlp-pane-section">
+                    {{# properties }}
+                        <div class="tlp-form-element">
+                            {{# is_bool }}
+                                <label class="tlp-label tlp-checkbox">
+                                    <input type="hidden" name="properties[{{ name }}]" value="0">
+                                    <input type="checkbox" name="properties[{{ name }}]" value="1" {{# value }}checked{{/ value }}> {{ name }}
+                                </label>
+                            {{/ is_bool }}
+                            {{^ is_bool }}
+                                    <label class="tlp-label" for="properties-{{ name }}">{{ name }}</label>
+                                    <input type="text"
+                                        id="properties-{{ name }}"
+                                        class="tlp-input"
+                                        name="properties[{{ name }}]"
+                                        value="{{ value }}"
+                                    >
+                            {{/ is_bool }}
+                        </div>
+                    {{/ properties }}
+                </section>
+            {{/ are_there_properties }}
+            {{# are_there_additional_options }}
+                <section class="tlp-pane-section">
+                    {{{ additional_options }}}
+                </section>
+            {{/ are_there_additional_options }}
+            {{# can_submit }}
+                <section class="tlp-pane-section plugin-properties-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa fa-save tlp-button-icon"></i> {{ properties_pane_update_label }}
+                    </button>
+                </section>
+            {{/ can_submit }}
+        </form>
+    </div>
+</section>
+
+{{# is_there_readme }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container plugin-properties-readme-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-file-text-o tlp-pane-title-icon"></i> {{ properties_pane_readme_title }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                {{{ readme }}}
+            </section>
+        </div>
+    </section>
+{{/ is_there_readme }}

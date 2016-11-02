@@ -86,3 +86,23 @@
         overflow: auto;
     }
 }
+
+.plugin-properties-row {
+    display: flex;
+
+    > .tlp-property {
+        margin: 0 ($tlp-spacing * 2) 0 0;
+    }
+}
+
+.plugin-properties-submit {
+    text-align: center;
+}
+
+.plugin-properties-readme-container {
+    width: 100%;
+
+    pre {
+        overflow: auto;
+    }
+}
