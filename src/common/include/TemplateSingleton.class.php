@@ -22,14 +22,14 @@
 /**
  *  TemplateSingleton object for Project Templates
  */
-class TemplateSingleton {
-
+class TemplateSingleton
+{
   // simply containing the
   var $data_array = array();
 
-  var $PROJECT = 1;
-  var $TEMPLATE = 2;
-  var $TEST_PROJECT = 3;
+  const PROJECT      = 1;
+  const TEMPLATE     = 2;
+  const TEST_PROJECT = 3;
 
   function TemplateSingleton() {
     $this->update();
@@ -57,15 +57,15 @@ class TemplateSingleton {
   }
 
   function isTemplate($id) {
-    return ($id == $this->TEMPLATE);
+    return ($id == self::TEMPLATE);
   }
 
   function isProject($id) {
-    return ($id == $this->PROJECT);
+    return ($id == self::PROJECT);
   }
 
   function isTestProject($id) {
-    return ($id == $this->TEST_PROJECT);
+    return ($id == self::TEST_PROJECT);
   }
 
   function showTypeBox($name='group_type',$checked_val='xzxz') {

@@ -1,0 +1,124 @@
+<div id="siteadmin-projectlist-header">
+    <h1 id="siteadmin-projectlist-header-title">{{ title }}</h1>
+    <a href="/project/register.php" class="tlp-button-primary">
+        <i class="fa fa-plus tlp-button-icon"></i> {{ new_project }}
+    </a>
+</div>
+
+<div id="siteadmin-projectlist">
+    <section class="tlp-pane" id="siteadmin-projectlist-filter">
+        <div class="tlp-pane-container">
+            {{# search_fields }}
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <form name="groupsrch" action="grouplist.php" method="get">
+                        <div class="tlp-form-element">
+                            <label for="group-name-search" class="tlp-label">{{ name_label }}</label>
+                            <input
+                                type="text"
+                                class="tlp-input"
+                                id="group-name-search"
+                                name="group_name_search"
+                                placeholder="Design…"
+                                value="{{ name }}"
+                            >
+                        </div>
+                        <div class="tlp-form-element">
+                            <label for="status-values" class="tlp-label">{{ status_label }}</label>
+                            <select
+                                multiple
+                                id="status-values"
+                                name="status[]"
+                                size="8"
+                                class="tlp-select"
+                            >
+                                {{# status_values }}
+                                    <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>}
+                                    option
+                                {{/ status_values }}
+                            </select>
+                        </div>
+                        <div class="tlp-form-element" id="siteadmin-projectlist-filter-button">
+                            <button type="submit" class="tlp-button-primary tlp-button-wide">
+                                <i class="fa fa-search tlp-button-icon"></i> {{ search }}
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            {{/ search_fields }}
+        </div>
+    </section>
+    <section class="tlp-pane" id="siteadmin-projectlist-result">
+        <div class="tlp-pane-container">
+            {{# results }}
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-archive"></i>
+                        {{ title }}
+                        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-projectlist-result-nb">{{ nb_matching_projects }}</span>
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <form action="{{ export_url }}" method="post" class="tlp-table-actions-element">
+                            <button
+                                type="submit"
+                                class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                                name="exp-csv"
+                            >
+                                <i class="tlp-button-icon fa fa-download"></i> {{ export_csv }}
+                            </button>
+                        </form>
+                    </div>
+
+                    <table class="tlp-table" id="siteadmin-projectlist-result-table">
+                        <thead>
+                            <tr>
+                                <th class="siteadmin-projectlist-result-header">{{ project_name_header }}</th>
+                                <th class="siteadmin-projectlist-result-header">{{ unix_group_name_header }}</th>
+                                <th class="siteadmin-projectlist-result-header">{{ status_header }}</th>
+                                <th class="siteadmin-projectlist-result-header">{{ type_header }}</th>
+                                <th class="siteadmin-projectlist-result-header tlp-table-cell-numeric">{{ members_header }}</th>
+                                <th class="siteadmin-projectlist-result-header">{{ visibility_header }}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {{# matching_projects}}
+                                <tr>
+                                    <td class="siteadmin-projectlist-result-project-name">
+                                        <a href="groupedit.php?group_id={{ id }}">{{ name }}</a>
+                                    </td>
+                                    <td class="siteadmin-projectlist-result-unix-group-name">
+                                        {{ unix_group_name }}
+                                    </td>
+                                    <td>
+                                        <span class="{{ status_class }}">{{ status_label }}</span>
+                                    </td>
+                                    <td class="siteadmin-projectlist-result-type">
+                                        {{ type_label }}
+                                    </td>
+                                    <td class="tlp-table-cell-numeric">{{ nb_members }}</td>
+                                    <td>{{ visibility_label }}</td>
+                                </tr>
+                            {{/ matching_projects }}
+                            {{^ matching_projects }}
+                                <tr>
+                                    <td colspan="6" class="tlp-table-cell-empty">
+                                        {{ no_matching_projects }}
+                                    </td>
+                                </tr>
+                            {{/ matching_projects }}
+                        </tbody>
+                    </table>
+
+                    {{# pagination }}
+                        {{> pagination }}
+                    {{/ pagination }}
+                </section>
+            {{/ results }}
+        </div>
+    </section>
+</div>

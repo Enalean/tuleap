@@ -638,3 +638,31 @@ admin_project	search_label	Rechercher
 admin_project	change_label	Historique des changements
 admin_project	history_empty_state	Il n'y a pas encore eu de changement.
 admin_project	history_empty_results	Rien dans l'historique ne correspond à votre recherche.
+#
+#-----------------------------------------------
+# Script: SF/www/admin/grouplist.php
+#
+admin_projectlist	title	Administration - Liste des projets
+admin_projectlist	project_list	Projets
+admin_projectlist	new_project	Ajouter un projet
+admin_projectlist	filter_name	Nom du Projet
+admin_projectlist	status	Statut
+admin_projectlist	filter	Filtrer
+admin_projectlist	any	Tous
+admin_projectlist	active	Actif
+admin_projectlist	system	Système
+admin_projectlist	pending	En attente
+admin_projectlist	incomplete	Incomplet
+admin_projectlist	holding	En suspens
+admin_projectlist	deleted	Supprimés
+admin_projectlist	matching_projects	Projets correspondants
+admin_projectlist	no_matching_projects	Aucun projet correspondant
+admin_projectlist	export_csv	Export CSV
+admin_projectlist	project_name	Nom du Projet
+admin_projectlist	unix_group_name	Nom du groupe Unix
+admin_projectlist	type	Type de Projet
+admin_projectlist	members	Membres
+admin_projectlist	visibility	Visibilité
+admin_projectlist	private	Privé
+admin_projectlist	public_unrestricted	Public incluant les utilisateurs restreints
+admin_projectlist	public	Public
