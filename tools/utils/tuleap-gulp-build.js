@@ -1,6 +1,8 @@
 'use strict';
 
 var gulp      = require('gulp'),
+    merge     = require('merge2'),
+    map       = require('lodash.map'),
     concat    = require('gulp-concat'),
     rev       = require('gulp-rev'),
     del       = require('del'),
@@ -25,15 +27,23 @@ function get_all_plugins_from_manifests() {
         });
 }
 
-function concat_core_js(name, files, asset_dir) {
-    var target_dir = path.join('src', asset_dir);
-    gulp.src(files)
-        .pipe(concat(name+'.js'))
-        .pipe(rev())
+function concat_all_js_files(files_hash) {
+    var streams = map(files_hash, function(files_to_concat, dest_file_name) {
+        return gulp.src(files_to_concat)
+            .pipe(concat(dest_file_name + '.js'));
+    });
+
+    return merge(streams);
+}
+
+function concat_core_js(files_hash, target_dir) {
+    var merged_stream = concat_all_js_files(files_hash);
+
+    return merged_stream.pipe(rev())
         .pipe(gulp.dest(target_dir))
         .pipe(rev.manifest({
-            path: target_dir + '/manifest.json',
-            base: target_dir,
+            path : target_dir + '/manifest.json',
+            base : target_dir,
             merge: true
         }))
         .pipe(gulp.dest(target_dir));
@@ -51,9 +61,10 @@ function declare_plugin_tasks(asset_dir) {
             base_dir = path.join('plugins', name);
 
         var plugin_tasks = [];
+        var task_name = '';
 
         if ('javascript' in plugin) {
-            var task_name = 'js-' + name;
+            task_name = 'js-' + name;
 
             gulp.task('clean-' + task_name, function () {
                 return del(path.join(base_dir, asset_dir));
@@ -69,7 +80,7 @@ function declare_plugin_tasks(asset_dir) {
         }
 
         if ('themes' in plugin) {
-            var task_name = 'sass-' + name;
+            task_name = 'sass-' + name;
 
             gulp.task('scss-lint-' + name, function() {
                 Object.keys(plugin['themes']).forEach(function (theme) {
