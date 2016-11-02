@@ -23,6 +23,7 @@ Requires: @@PKG_NAME@@-plugin-tracker
 Requires: @@PKG_NAME@@-plugin-graphontrackers
 Requires: @@PKG_NAME@@-plugin-agiledashboard
 Requires: @@PKG_NAME@@-theme-flamingparrot
+Requires: @@PKG_NAME@@-theme-burningparrot
 Requires: @@PKG_NAME@@-customization-default
 
 Requires: vsftpd
