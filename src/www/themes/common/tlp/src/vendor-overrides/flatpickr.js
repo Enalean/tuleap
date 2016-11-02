@@ -24,6 +24,9 @@ flatpickr.init.prototype.l10n.firstDayOfWeek = 1;
 var tlp = tlp || { };
 
 tlp.datePicker = function(element, options) {
+    if (isNaN(Date.parse(element.value))) {
+        element.value = null;
+    }
     options = options || {};
 
     options.weekNumbers = true;
@@ -37,4 +40,4 @@ tlp.datePicker = function(element, options) {
     element.setAttribute('placeholder', placeholder);
 
     return flatpickr(element, options);
-}
+};
