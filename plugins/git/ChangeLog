@@ -1,3 +1,18 @@
+Version 4.283 - Tuleap 9.1
+    * request #9600: Archive deleted items must deal with duplicate content
+
+Version 4.282 - Tuleap 9.1
+    * story #9525: Activating and add regexp in same time should be allowed
+
+Version 4.281 - Tuleap 9.1
+    * story #9525: Uncheck regexp in admin view
+
+Version 4.280 - Tuleap 9.1
+    * story #9525: Pattern must end with $
+
+Version 4.279 - Tuleap 9.1
+    * story #9525: Log in project history regexp activation at repository level
+
 Version 4.278 - Tuleap 9.1
     * story #9525: You can choose to activate regexp even when admin doesn't allow it
 

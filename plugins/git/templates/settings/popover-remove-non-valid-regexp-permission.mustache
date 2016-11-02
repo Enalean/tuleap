@@ -1,7 +1,9 @@
 <div class="remove-regexp-permission-popover">
     <h3 class="popover-title"><i class="icon-warning-sign"> </i>{{ title_warning_regexp_uncheck }}</h3>
     <div class="modal-body">
-        <p>{{ warning_regexp_uncheck }} </p>
+        {{# warnings }}
+            <p>{{ message }} </p>
+        {{/ warnings }}
     </div>
 
     <div class="modal-footer">

@@ -73,6 +73,7 @@ class GitPresenters_AccessControlPresenter
     public $regexp_permission_label;
     public $regexp_incoherence_label;
     public $is_regexp_enabled;
+    public $warnings;
 
     public function __construct(
         $is_control_limited,
@@ -91,7 +92,8 @@ class GitPresenters_AccessControlPresenter
         CSRFSynchronizerToken $csrf,
         $is_fork,
         $are_regexp_permission_activated,
-        $is_regexp_enabled
+        $is_regexp_enabled,
+        $warnings
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -206,10 +208,7 @@ class GitPresenters_AccessControlPresenter
             'plugin_git',
             'title_warning_regexp_uncheck'
         );
-        $this->warning_regexp_uncheck = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'warning_regexp_uncheck'
-        );
+        $this->warnings = $warnings;
 
         $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');

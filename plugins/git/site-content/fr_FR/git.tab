@@ -274,6 +274,7 @@ plugin_git	tree_view_commits	Commits
 plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
+project_admin_utils	regexp_activated_for_git_repository	Modification dans l'utilisation des expressions régulières pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
 project_admin_utils	default_git_perms_granted_for_project	Permissions git par défaut définies pour le projet $1
 
@@ -384,9 +385,10 @@ plugin_git	admin_gerrit_http_password_label	HTTP password :
 plugin_git	access_control_title	Accès à la configuration générale
 plugin_git	allow_regexp_info	Autoriser l'utilisation des expressions régulières dans les branches et les étiquettes lors de la création d'un dépôt Git
 plugin_git	save_settings	Sauvegarder la configuration
-plugin_git	no_go_back	Fonctionnalité en cours de développement. Une fois que les expressions régulières seront autorisées niveau plateforme, il ne sera pas possible de désactiver la fonctionnalité.
-plugin_git	warning_is_activated	Fonctionnalité en cours de developpement. Vous ne pouvez pas désactiver la fonctionnalité pour l'instant.
 plugin_git	update_error	Une erreur est survenue, impossible d'activer les expressions régulières pour les permissions fines Git.
+plugin_git	warning_conflit_regexp_configuration	L'utilisation des expression régulières a été désactivée au niveau de la plateforme.
+plugin_git	warning_conflit_regexp_configuration_part_two	Toutes les règles contenant une expression régulière seront supprimées et vous ne serez plus capable d'activer l'utilisation des expressions régulières pour ce dépôt.
+plugin_git	warning_conflit_regexp_configuration_confirm	Si vous ne sauvegardez pas vos modifications, l'état courrant fonctionnera encore. Merci de confirmer votre choix.
 
 plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
@@ -519,6 +521,9 @@ plugin_git	regexp_permission_label	Activer les expressions régulières dans les
 plugin_git	title_warning_regexp_uncheck	Certaines règles peuvent être supprimées
 plugin_git	warning_regexp_uncheck	L'ensemble des règles contenant des expressions régulières vont être supprimées. Merci de confirmer la désactivation de cette option.
 plugin_git	regexp_incoherence_label	Pour l'instant il n'est pas possible de désactiver la fonctionnalité une fois qu'elle a été activée. Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
+plugin_git	history_regexp	Expression régulières $1 pour le dépôt $2.
+plugin_git	enabled	activées
+plugin_git	disabled	désactivées
 
 plugin_git	view_repo_ci_token	Jeton pour les outils d'intégration continues
 plugin_git	regenerate_ci_token	Regénérer le jeton

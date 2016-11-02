@@ -21,6 +21,7 @@
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermission;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
 class Git_Gitolite_ConfigPermissionsSerializer {
 
@@ -57,25 +58,31 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         Git::PERM_WRITE  => ' RW ',
         Git::PERM_WPLUS  => ' RW+'
     );
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
 
     public function __construct(
         Git_Mirror_MirrorDataMapper $data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status,
         $etc_templates_path,
         FineGrainedRetriever $fine_grained_retriever,
-        FineGrainedPermissionFactory $fine_grained_factory
+        FineGrainedPermissionFactory $fine_grained_factory,
+        RegexpFineGrainedRetriever $regexp_retriever
     ) {
         $this->data_mapper   = $data_mapper;
         $this->gerrit_status = $gerrit_status;
-        $template_dirs = array();
+        $template_dirs       = array();
         if (is_dir($etc_templates_path)) {
             $template_dirs[] = $etc_templates_path . '/' . self::TEMPLATES_PATH;
         }
-        $template_dirs[] = GIT_TEMPLATE_DIR . '/' . self::TEMPLATES_PATH;
+        $template_dirs[]         = GIT_TEMPLATE_DIR . '/' . self::TEMPLATES_PATH;
         $this->template_renderer = TemplateRendererFactory::build()->getRenderer($template_dirs);
 
         $this->fine_grained_retriever = $fine_grained_retriever;
         $this->fine_grained_factory   = $fine_grained_factory;
+        $this->regexp_retriever       = $regexp_retriever;
     }
 
     public function getGitoliteDotConf(array $project_names) {
@@ -149,17 +156,27 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         return $config;
     }
 
-    private function getPatternInGitoliteFormat(FineGrainedPermission $permission)
+    private function getPatternInGitoliteFormat(FineGrainedPermission $permission, GitRepository $repository)
     {
         $formatted_pattern = str_replace('*', '.*', $permission->getPattern());
+        $formatted_pattern = $this->addEndPatternCharacterWhenPermissionDoesntUseRegexp($repository, $formatted_pattern);
 
         return $formatted_pattern;
+    }
+
+    private function addEndPatternCharacterWhenPermissionDoesntUseRegexp(GitRepository $repository, $pattern)
+    {
+        if (! $this->regexp_retriever->areRegexpActivatedForRepository($repository)) {
+            $pattern .= '$';
+        }
+
+        return $pattern;
     }
 
     private function formatFineGrainedPermission(GitRepository $repository, FineGrainedPermission $permission)
     {
         $pattern_config       = '';
-        $pattern_for_gitolite = $this->getPatternInGitoliteFormat($permission);
+        $pattern_for_gitolite = $this->getPatternInGitoliteFormat($permission, $repository);
 
         $pattern_config .= $this->getPatternConfiguration(
             $repository,

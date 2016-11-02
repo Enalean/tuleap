@@ -57,7 +57,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
         );
 
         $this->a_gitolite_project_serializer = new Git_Gitolite_ProjectSerializer(

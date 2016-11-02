@@ -460,6 +460,6 @@ include_common_template	test_project	Projet de test
 common_mvc_view	warn	** WARNING !! ** Please confirm you want to $1
 #common_mvc_view	warn	** Attention !! ** Merci de confirmer que vous voulez $1
 
-include_browser	ie_deprecated	Vous utilisez une ancienne version de Internet Explorer. Ce navigateur <a href="http://doc-en.tuleap.net/en/latest/user-guide/troubleshooting.html#which-browser-should-i-use-to-browse-tuleap">n'est pas supporté</a>, merci de le mettre à jour à une version plus récente (IE11 minimum) ou utilisez une alternative (Firefox, Chrome, etc).
+include_browser	ie_deprecated	Veuillez enlever le mode compatibilité d'Internet Explorer, mettre à jour à une version plus récente (IE11 minimum) ou utiliser une alternative (Firefox, Chrome, etc).
 include_browser	ie_deprecated_button	Ok, j'ai compris. Me le rappeler plus tard.
 include_browser	ie_deprecated_warning_disabled	Nous vous importunerons plus tard à propos de la dépréciation de IE < 11.

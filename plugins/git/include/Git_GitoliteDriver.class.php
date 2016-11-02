@@ -151,7 +151,8 @@ class Git_GitoliteDriver {
                 ),
                 $git_plugin->getEtcTemplatesPath(),
                 $git_plugin->getFineGrainedRetriever(),
-                $git_plugin->getFineGrainedFactory()
+                $git_plugin->getFineGrainedFactory(),
+                $git_plugin->getRegexpFineGrainedRetriever()
             );
         } else {
             $this->permissions_serializer = $permissions_serializer;

@@ -1,3 +1,6 @@
+Version 2.26.122 - Tuleap 9.1
+    * request #9600: Archive deleted items must deal with duplicate content
+
 Version 2.26.121 - Tuleap 9.0
     * request #9504: Prevent spoofing of permission request message
 

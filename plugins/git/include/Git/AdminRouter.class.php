@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\GeneralSettingsController;
+use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Admin\AdminPageRenderer;
@@ -58,6 +59,10 @@ class Git_AdminRouter {
      * @var RegexpFineGrainedEnabler
      */
     private $regexp_enabler;
+    /**
+     * @var RegexpFineGrainedDisabler
+     */
+    private $regexp_disabler;
 
     /** @var AdminPageRenderer */
     private $admin_page_renderer;
@@ -72,7 +77,8 @@ class Git_AdminRouter {
         Git_SystemEventManager               $git_system_event_manager,
         RegexpFineGrainedRetriever           $regexp_retriever,
         RegexpFineGrainedEnabler             $regexp_enabler,
-        AdminPageRenderer                    $admin_page_renderer
+        AdminPageRenderer                    $admin_page_renderer,
+        RegexpFineGrainedDisabler            $regexp_disabler
     ) {
         $this->gerrit_server_factory          = $gerrit_server_factory;
         $this->csrf                           = $csrf;
@@ -84,6 +90,7 @@ class Git_AdminRouter {
         $this->regexp_retriever               = $regexp_retriever;
         $this->regexp_enabler                 = $regexp_enabler;
         $this->admin_page_renderer            = $admin_page_renderer;
+        $this->regexp_disabler                = $regexp_disabler;
     }
 
     public function process(Codendi_Request $request) {
@@ -127,7 +134,8 @@ class Git_AdminRouter {
                 $this->csrf,
                 $this->regexp_retriever,
                 $this->regexp_enabler,
-                $this->admin_page_renderer
+                $this->admin_page_renderer,
+                $this->regexp_disabler
             );
         }
     }

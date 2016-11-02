@@ -948,11 +948,20 @@ class GitActions extends PluginActions
             $this->fine_grained_updater->disableRepository($repository);
         }
 
+        $save_regexp_usage = false;
         if ($enable_regexp && $this->regexp_retriever->areRegexpActivatedForRepository($repository) === false) {
             $this->regexp_enabler->enableForRepository($repository);
+
+            $save_regexp_usage = true;
+            $action            = $GLOBALS['Language']->getText('plugin_git', 'enabled');
         } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForRepository($repository) === true) {
             $this->regexp_disabler->disableForRepository($repository);
-            $this->permission_filter->filterNonRegexpPermissions($repository);
+            if ($this->permission_filter->filterNonRegexpPermissions($repository)) {
+                $are_there_changes = true;
+            }
+
+            $save_regexp_usage = true;
+            $action            = $GLOBALS['Language']->getText('plugin_git', 'disabled');
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {
@@ -965,6 +974,15 @@ class GitActions extends PluginActions
 
         foreach ($updated_permissions as $permission) {
             $this->fine_grained_permission_saver->updateRepositoryPermission($permission);
+        }
+
+        if ($save_regexp_usage) {
+            $this->history_dao->groupAddHistory(
+                'regexp_activated_for_git_repository',
+                $GLOBALS['Language']->getText('plugin_git', 'history_regexp', array($action, $repository->getName())),
+                $projectId,
+                array($repository->getName())
+            );
         }
 
         if ($are_there_changes) {

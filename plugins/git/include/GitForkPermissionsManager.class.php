@@ -229,7 +229,8 @@ class GitForkPermissionsManager {
             $csrf,
             $is_fork,
             $this->areRegexpActivatedAtSiteLevel(),
-            false
+            false,
+            ""
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -302,7 +303,8 @@ class GitForkPermissionsManager {
             $csrf,
             $is_fork,
             $this->areRegexpActivatedAtSiteLevel(),
-            $this->isRegexpActivatedForRepository()
+            $this->isRegexpActivatedForRepository(),
+            $this->getWarningContentForRegexpDisableModal($this->repository)
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -338,5 +340,31 @@ class GitForkPermissionsManager {
     private function areRegexpActivatedAtSiteLevel()
     {
         return $this->regexp_retriever->areRegexpActivatedAtSiteLevel();
+    }
+
+    private function getWarningContentForRegexpDisableModal(GitRepository $repository)
+    {
+        if ($this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform($repository)) {
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_conflit_regexp_configuration'
+            );
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_conflit_regexp_configuration_part_two'
+            );
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_conflit_regexp_configuration_confirm'
+            );
+        } else {
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_regexp_uncheck'
+            );
+        }
+
+        return $warning;
+
     }
 }

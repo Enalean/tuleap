@@ -50,18 +50,23 @@ class RegexpPermissionFilter
 
     public function filterNonRegexpPermissions(GitRepository $repository)
     {
+        $removed = array();
+
         $branches_permissions = $this->permission_factory->getBranchesFineGrainedPermissionsForRepository($repository);
-        $this->removeRegexpPermissions($repository, $branches_permissions);
+        $this->removeRegexpPermissions($repository, $branches_permissions, $removed);
 
         $tags_permissions = $this->permission_factory->getTagsFineGrainedPermissionsForRepository($repository);
-        $this->removeRegexpPermissions($repository, $tags_permissions);
+        $this->removeRegexpPermissions($repository, $tags_permissions, $removed);
+
+        return count($removed) > 0;
     }
 
-    private function removeRegexpPermissions(GitRepository $repository, array $permissions)
+    private function removeRegexpPermissions(GitRepository $repository, array $permissions, array &$removed)
     {
         foreach ($permissions as $permission) {
             if (! $this->pattern_validator->isValid($permission->getPattern())) {
                 $this->permission_destructor->deleteRepositoryPermissions($repository, $permission->getId());
+                $removed[] = $permission->getId();
             }
         }
     }

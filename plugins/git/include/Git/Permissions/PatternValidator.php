@@ -49,9 +49,9 @@ class PatternValidator
         $this->regexp_retriever = $regexp_retriever;
     }
 
-    public function isValidForRepository(GitRepository $repository, $pattern)
+    public function isValidForRepository(GitRepository $repository, $pattern, $are_we_activating_regexp)
     {
-        if ($this->regexp_retriever->areRegexpActivatedForRepository($repository)) {
+        if ($this->regexp_retriever->areRegexpActivatedForRepository($repository) || $are_we_activating_regexp) {
             return $this->regexp_validator->isPatternValid($pattern);
         }
 

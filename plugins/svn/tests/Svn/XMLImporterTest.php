@@ -120,8 +120,8 @@ class XMLImporterTest extends TuleapTestCase {
         $event_manager               = EventManager::instance();
         $backend                     = Backend::instance(Backend::SVN);
         $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-        $system_event_manager        = SystemEventManager::instance();
-        $this->repomgr       = new RepositoryManager(
+        $this->sysevmgr              = SystemEventManager::testInstance($this->evdao, $this->evfdao);
+        $this->repomgr               = new RepositoryManager(
             $this->repodao,
             $this->pm,
             $svn_admin,
@@ -132,16 +132,15 @@ class XMLImporterTest extends TuleapTestCase {
             $event_manager,
             $backend,
             $access_file_history_factory,
-            $system_event_manager
+            $this->sysevmgr
         );
-        $this->sysevmgr      = SystemEventManager::testInstance($this->evdao, $this->evfdao);
-        $this->ugdao         = safe_mock('UGroupDao');
-        $this->ugudao        = safe_mock('UGroupUserDao');
-        $this->accessfiledao = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
-        $this->accessfilefac = new AccessFileHistoryFactory($this->accessfiledao);
-        $this->accessfilemgr = new AccessFileHistoryCreator($this->accessfiledao, $this->accessfilefac);
-        $this->notifdao      = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
-        $this->notifmgr      = new MailNotificationManager($this->notifdao);
+        $this->ugdao                 = safe_mock('UGroupDao');
+        $this->ugudao                = safe_mock('UGroupUserDao');
+        $this->accessfiledao         = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
+        $this->accessfilefac         = new AccessFileHistoryFactory($this->accessfiledao);
+        $this->accessfilemgr         = new AccessFileHistoryCreator($this->accessfiledao, $this->accessfilefac);
+        $this->notifdao              = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
+        $this->notifmgr              = new MailNotificationManager($this->notifdao);
 
         Backend::clearInstances();
         Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
@@ -182,7 +181,7 @@ class XMLImporterTest extends TuleapTestCase {
     }
 
     private function callImport(XMLImporter $importer, Project $project) {
-        return $importer->import(
+        $importer->import(
             new ImportConfig(),
             $this->logger,
             $project,

@@ -25,6 +25,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $save_permissions;
     public $regexp_incoherence_label;
     public $regexp_permission_label;
+    public $warnings;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -180,10 +181,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'plugin_git',
             'title_warning_regexp_uncheck'
         );
-        $this->warning_regexp_uncheck = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'warning_regexp_uncheck'
-        );
+        $this->warnings[]['message'] = "";
 
         $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');

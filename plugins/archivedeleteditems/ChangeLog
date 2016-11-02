@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 9.1
+    * request #9600: Archive deleted items must deal with duplicate content
+
 Version 0.9 - Tuleap 8.18
     * request #9367: Archived files can be accessed by all users with a shell access
 

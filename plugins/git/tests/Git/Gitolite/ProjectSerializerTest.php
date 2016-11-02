@@ -57,7 +57,8 @@ class ProjectSerializerTest extends TuleapTestCase {
             $this->gerrit_project_status,
             'whatever',
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
         );
 
         $this->logger = mock('Logger');

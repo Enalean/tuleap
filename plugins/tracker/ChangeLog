@@ -1,3 +1,6 @@
+Version 5.1028 - Tuleap 9.1
+    * Fix issues with the CI concerning database access
+
 Version 5.1027 - Tuleap 9.1
     * request #9591: Show attachment directly in the changeset
 

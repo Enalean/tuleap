@@ -38,4 +38,11 @@ class RegexpFineGrainedDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function disable()
+    {
+        $sql = "DELETE FROM plugin_git_fine_grained_regexp_enabled";
+
+        return $this->update($sql);
+    }
 }
