@@ -14,6 +14,9 @@
                 </div>
                 <section class="tlp-pane-section">
                     <form name="usersrch" action="userlist.php" method="get">
+                        {{# group_id }}
+                            <input type="hidden" name="group_id" value="{{ group_id }}">
+                        {{/group_id}}
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="user-name-search">{{ name_label }}</label>
                             <input type="text" class="tlp-input" id="user-name-search" name="user_name_search" placeholder="paul@example.com, …" value="{{ name }}">

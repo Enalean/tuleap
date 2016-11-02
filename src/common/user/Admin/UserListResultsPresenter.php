@@ -48,6 +48,7 @@ class UserListResultsPresenter
     public $profile_header;
 
     public function __construct(
+        $group_id,
         $result,
         $nb_matching_users,
         $user_name_search,
@@ -72,6 +73,10 @@ class UserListResultsPresenter
             'sort_order'           => $sort_order,
             'status_values'        => $user_status
         );
+
+        if ($group_id) {
+            $default_params['group_id'] = $group_id;
+        }
 
         $this->pagination = new PaginationPresenter(
             $limit,
