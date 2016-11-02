@@ -52,7 +52,7 @@ class Admin_UserListExporter {
                                   'status'     => $Language->getText('admin_userlist', 'status'));
         echo build_csv_header($this->col_list, $documents_title).$eol;
         $dao = new UserDao(CodendiDataAccess::instance());
-        $result = $dao->listAllUsers($user_name_search, 0, 0, $current_sort_header, $sort_order, $status_values);
+        $result = $dao->listAllUsers(0, $user_name_search, 0, 0, $current_sort_header, $sort_order, $status_values);
         $users  = $result['users'];
         echo $this->buildCsvBody($users);
     }

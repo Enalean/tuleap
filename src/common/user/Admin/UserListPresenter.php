@@ -28,13 +28,16 @@ class UserListPresenter
     public $search_fields;
     public $results;
     public $new_user;
+    public $group_id;
 
     public function __construct(
+        $group_id,
         $title,
         $context,
         UserListSearchFieldsPresenter $search_fields,
         UserListResultsPresenter $results
     ) {
+        $this->group_id      = $group_id;
         $this->title         = $title;
         $this->context       = $context;
         $this->search_fields = $search_fields;

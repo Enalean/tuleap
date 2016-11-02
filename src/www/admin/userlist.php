@@ -175,19 +175,18 @@ if ($request->exist('status_values')) {
     }
 }
 
-if (!$group_id) {
-    if (isset($user_name_search) && $user_name_search) {
-        $result = $dao->listAllUsers($user_name_search, $offset, $limit, $sort_params['sort_header'], $sort_params['order'], $status_values);
-        if ($result['numrows'] == 1) {
-            $row = $result['users']->getRow();
-            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$row['user_id']);
-        }
-    } else {
-        $user_name_search = "";
-        $result           = $dao->listAllUsers(0, $offset, $limit, $sort_params['sort_header'], $sort_params['order'], $status_values);
+if (! $group_id) {
+    $group_id = 0;
+}
+if (isset($user_name_search) && $user_name_search) {
+    $result = $dao->listAllUsers($group_id, $user_name_search, $offset, $limit, $sort_params['sort_header'],
+        $sort_params['order'], $status_values);
+    if ($result['numrows'] == 1) {
+        $row = $result['users']->getRow();
+        $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $row['user_id']);
     }
 } else {
-    $result = $dao->listAllUsersForGroup($group_id, $offset, $limit);
+    $result = $dao->listAllUsers($group_id, 0, $offset, $limit, $sort_params['sort_header'], $sort_params['order'], $status_values);
 }
 
 /*
@@ -210,6 +209,7 @@ if (! $group_id) {
     $display_nb_projects = true;
 }
 $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
+    $group_id,
     $result['users'],
     $result['numrows'],
     $user_name_search,
@@ -222,7 +222,13 @@ $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
     $offset
 );
 
-$user_list_presenter = new Tuleap\User\Admin\UserListPresenter($title,$context,$search_fields_presenter,$results_presenter);
+$user_list_presenter = new Tuleap\User\Admin\UserListPresenter(
+    $group_id,
+    $title,
+    $context,
+    $search_fields_presenter,
+    $results_presenter
+);
 
 $admin_page = new AdminPageRenderer();
 $admin_page->renderAPresenter(
