@@ -43,10 +43,10 @@ class UserLogBuilder
 
     public function build($start, $end, $offset, $count)
     {
-        $timelogs = $this->getLogsByHour($start, $end, $offset, $count);
+        list($timelogs, $total_count) = $this->getLogsByHour($start, $end, $offset, $count);
         $logs     = $this->groupLogsByTimestamp($timelogs);
 
-        return $logs;
+        return array($logs, $total_count);
     }
 
     private function groupLogsByTimestamp(array $timelogs)
@@ -78,7 +78,10 @@ class UserLogBuilder
         $timelogs = array();
         $last_uri = '';
 
-        foreach ($this->log_dao->search($start, $end, $offset, $count) as $log) {
+        $logs        = $this->log_dao->search($start, $end, $offset, $count);
+        $total_count = $this->log_dao->foundRows();
+
+        foreach ($logs as $log) {
             $hour = date('H', $log['time']);
             if ($last_uri === $log['http_request_uri']) {
                 $timelogs[$hour][] = $this->enhanceLogsWithShortValues($log);
@@ -88,7 +91,7 @@ class UserLogBuilder
             $last_uri = $log['http_request_uri'];
         }
 
-        return $timelogs;
+        return array($timelogs, $total_count);
     }
 
     private function enhanceLogsWithFullValues(array $log)

@@ -115,11 +115,10 @@ class UserLogManager {
         $end   = mktime(23, 59, 59, $month, $day, $year);
         $count = 100;
 
-        $log_builder = new UserLogBuilder($this->getDao(), $this->user_manager);
-        $logs        = $log_builder->build($start, $end, $offset, $count);
+        $log_builder              = new UserLogBuilder($this->getDao(), $this->user_manager);
+        list($logs, $total_count) = $log_builder->build($start, $end, $offset, $count);
 
-        $max_entry = $this->getDao()->getFoundRows();
-        $presenter = new UserLogPresenter($logs, $selected_day, $count, $offset, $max_entry);
+        $presenter = new UserLogPresenter($logs, $selected_day, $count, $offset, $total_count);
 
         $this->admin_page_renderer->renderAPresenter(
             'userlog',
