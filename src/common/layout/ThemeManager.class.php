@@ -107,6 +107,8 @@ class ThemeManager
                     ^/stats
                     |
                     ^/admin/lastlogins.php
+                    |
+                    ^/admin/system_events
                 )`x',
                 $_SERVER['REQUEST_URI']
             );

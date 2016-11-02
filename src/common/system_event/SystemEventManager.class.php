@@ -471,15 +471,21 @@ class SystemEventManager {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 
-        $html .= '<table class="tlp-table">';
+        $classname = 'table table-striped';
+        if ($full) {
+            $classname .= ' table-hover table-bordered';
+        } else {
+            $classname .= ' table-condensed';
+        }
+        $html .= '<table class="'. $classname .'">';
 
         if ($full) {
             $html .= '<thead><tr>';
-            $html .= '<th class="tlp-table-cell-numeric">'. 'id' .'</td>';
+            $html .= '<th>'. 'id' .'</td>';
             $html .= '<th>'. 'type' .'</td>';
             $html .= '<th>'. 'owner' .'</td>';
             $html .= '<th>'. 'status' .'</th>';
-            $html .= '<th class="tlp-table-cell-numeric">'. 'priority' .'</th>';
+            $html .= '<th>'. 'priority' .'</th>';
             $html .= '<th>'. 'parameters' .'</th>';
             $html .= '<th>'. 'create_date' .'</th>';
             $html .= '<th>'. 'process_date' .'</th>';
@@ -520,13 +526,12 @@ class SystemEventManager {
 
         $events = $this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type);
         list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
-        $nb_displayed = count($events);
         foreach($events as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
                 $html .= '<tr>';
 
                 //id
-                $html .= '<td class="tlp-table-cell-numeric">'. $sysevent->getId() .'</td>';
+                $html .= '<td>'. $sysevent->getId() .'</td>';
 
                 //name of the event
                 $html .= '<td>'. $sysevent->getType() .'</td>';
@@ -534,12 +539,12 @@ class SystemEventManager {
                 $html .= '<td>'. $sysevent->getOwner() .'</td>';
 
                 //status
-                $html .= '<td ';
+                $html .= '<td class="system_event_status_'. $row['status'] .'"';
                 if ($sysevent->getLog()) {
-                    $html .= 'title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+                    $html .= ' title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
                 }
                 $html .= '>';
-                $html .= $this->getBadge($sysevent->getStatus());
+                $html .= $sysevent->getStatus();
                 $html .= '</td>';
 
                 if ($full) {
@@ -553,7 +558,7 @@ class SystemEventManager {
                         $replay_link .= '</a>';
                     }
 
-                    $html .= '<td class="tlp-table-cell-numeric">'. $sysevent->getPriority() .'</td>';
+                    $html .= '<td style="text-align:center">'. $sysevent->getPriority() .'</td>';
                     $html .= '<td>'. $sysevent->verbalizeParameters(true) .'</td>';
                     $html .= '<td>'. $sysevent->getCreateDate().'</td>';
                     $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
@@ -568,43 +573,37 @@ class SystemEventManager {
         $html .= '</tbody></table>';
         if ($full) {
             //Pagination
-            $default_params = array(
-                'filter_status' => $filter_status,
-                'filter_type'   => $filter_type,
-                'queue'         => $queue
-            );
-            $pagination = new Tuleap\Layout\PaginationPresenter($limit, $offset, $nb_displayed, $num_total_rows, '/admin/system_events/', $default_params);
-            $renderer   = TemplateRendererFactory::build()->getRenderer($GLOBALS['tuleap_dir'] .'/src/templates/common');
-
-            $html .= $renderer->renderToString('pagination', $pagination);
+            $nb_of_pages = ceil($num_total_rows / $limit);
+            $current_page = round($offset / $limit);
+            $html .= '<div class="pagination"><ul>';
+            $width = 10;
+            for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
+                if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+                    $class = '';
+                    if ($i == $current_page) {
+                        $class = 'class="active"';
+                    }
+                    $html .= '<li '. $class .'>';
+                    $html .= '<a href="?'. http_build_query(array(
+                            'offset'        => (int)($i * $limit),
+                            'filter_status' => $filter_status,
+                            'filter_type'   => $filter_type,
+                            'queue'         => $queue
+                        )).
+                        '">';
+                    $html .= $i + 1;
+                    $html .= '</a>';
+                    $html .= '</li>';
+                } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+                    $html .= '<li class="disabled">';
+                    $html .= '<a href="#">...</a>';
+                    $html .= '<li>';
+                }
+            }
+            $html .= '</ul></div>';
 
         }
         return $html;
-    }
-
-    private function getBadge($status)
-    {
-        switch ($status) {
-            case SystemEvent::STATUS_RUNNING:
-                $classname = 'info';
-                break;
-            case SystemEvent::STATUS_DONE:
-                $classname = 'success';
-                break;
-            case SystemEvent::STATUS_WARNING:
-                $classname = 'warning';
-                break;
-            case SystemEvent::STATUS_ERROR:
-                $classname = 'danger';
-                break;
-            case SystemEvent::STATUS_NONE:
-            case SystemEvent::STATUS_NEW:
-            default:
-                $classname = 'secondary';
-                break;
-        }
-
-        return '<span class="tlp-badge-'. $classname .'">'. $status .'</span>';
     }
 
     /**
