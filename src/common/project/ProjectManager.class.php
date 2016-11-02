@@ -215,6 +215,19 @@ class ProjectManager {
     }
 
     /**
+     * @return array
+     */
+    public function getAllPendingProjects()
+    {
+        $pending_projects = array();
+        foreach ($this->_getDao()->searchPendingProjects() as $row) {
+            $pending_projects[] = $this->createProjectInstance($row);
+        }
+
+        return $pending_projects;
+    }
+
+    /**
      * Look for project with name like given one
      *
      * @param String  $name
@@ -340,6 +353,13 @@ class ProjectManager {
         }
 
         return false;
+    }
+
+    public function updateStatus(Project $project, $status)
+    {
+        if (! $this->_getDao()->updateStatus($project->getId(), $status)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_approve_pending', 'error_update'));
+        }
     }
 
     /**

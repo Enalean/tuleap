@@ -182,6 +182,7 @@ admin_approve_pending	remove_category	Enlever de la catégorie
 admin_approve_pending	approve_all	Tout approuver sur cette page
 admin_approve_pending	creator_and_creation_date	Créé le $3 par <a href="/admin/usergroup.php?user_id=$1">$2</a>
 admin_approve_pending	distributed_services	Serveurs pour les services distribués
+admin_approve_pending	error_update	Erreur lors de la mise à jour du projet
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
