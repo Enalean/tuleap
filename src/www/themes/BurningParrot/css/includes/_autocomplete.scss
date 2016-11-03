@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'vendor/smooth-scrollbar.min';
+.select2-result-user {
+    display: flex;
+    align-items: center;
+}
 
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
+// scss-lint:disable SelectorFormat
+.select2-result-user__avatar {
+    margin: 0 $tlp-half-spacing 0 0;
+}

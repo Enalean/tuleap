@@ -73,7 +73,10 @@ if(!$pluginAnswered) {
     $dar = $userDao->searchUserNameLike($userName, $limit);
     while($dar->valid()) {
         $row = $dar->current();
-        $userList[] = $row['realname']." (".$row['user_name'].")";
+        $userList[] = array(
+            'display_name' => $row['realname']." (".$row['user_name'].")",
+            'login'        => $row['user_name']
+        );
         $dar->next();
     }
     $has_more = $userDao->foundRows() > $limit;
@@ -84,10 +87,11 @@ if(!$pluginAnswered) {
 //
 if ($json_format) {
     $json_entries = array();
-    foreach ($userList as $username) {
+    foreach ($userList as $user) {
         $json_entries[] = array(
-            'id'   => $username,
-            'text' => $username
+            'id'    => $user['display_name'],
+            'text'  => $user['display_name'],
+            'login' => $user['login']
         );
     }
 
@@ -103,7 +107,7 @@ if ($json_format) {
     $purifier = Codendi_HTMLPurifier::instance();
     echo "<ul>\n";
     foreach ($userList as $user) {
-        echo '<li>' . $purifier->purify($user) . '</li>';
+        echo '<li>' . $purifier->purify($user['display_name']) . '</li>';
     }
     echo "</ul>\n";
 }
