@@ -436,8 +436,10 @@ plugin_git	mirror_repo	Repository
 plugin_git	mirror_title	List of repositories on mirror $1
 plugin_git	mirror_back	Back to mirror list
 plugin_git	mirror_allowed_project_back_link_title	Back to mirror list
-plugin_git	mirror_allowed_project_title	Manage projects allowed to use $1
-plugin_git	mirror_allowed_project_allow_all	Allow <b>all the projects</b> to use this mirror.
+plugin_git	mirror_allowed_project_title	$1 projects restriction
+plugin_git	mirror_allowed_project_pane_title	Projects allowed to use $1
+plugin_git	mirror_allowed_project_pane_information	This section allows to define which projects will be able to use $1.
+plugin_git	mirror_allowed_project_allow_all	Allow all the projects to use this mirror.
 plugin_git	mirror_allowed_project_allow_all_submit	Save
 plugin_git	mirror_allowed_project_list	List of allowed projects
 plugin_git	mirror_allowed_project_list_allow_placeholder	Project name

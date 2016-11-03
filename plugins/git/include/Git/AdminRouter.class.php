@@ -119,7 +119,7 @@ class Git_AdminRouter {
                 $this->git_system_event_manager,
                 $this->admin_page_renderer
             );
-        } elseif ($request->get('pane') === 'mirrors_admin'){
+        } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction'){
             return new Git_AdminMirrorController(
                 $this->csrf,
                 $this->git_mirror_mapper,

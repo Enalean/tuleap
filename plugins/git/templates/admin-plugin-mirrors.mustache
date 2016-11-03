@@ -122,12 +122,13 @@
                             {{ btn_edit }}
                         </button>
 
-                        <button type="button"
-                                class="tlp-button-primary tlp-button-outline mirror-action-restrict-button"
+                        <a type="button"
+                           href="?view=mirrors_restriction&action=manage-allowed-projects&mirror_id={{ id }}"
+                           class="tlp-button-primary tlp-button-outline mirror-action-restrict-button"
                         >
                             <i class="fa fa-lock tlp-button-icon"></i>
                             {{ btn_restrict }}
-                        </button>
+                        </a>
 
                         <button type="button"
                                 class="tlp-button-danger
