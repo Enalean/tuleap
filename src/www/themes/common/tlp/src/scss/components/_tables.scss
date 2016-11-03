@@ -85,6 +85,10 @@ $tlp-table-row-background-empty: #fcfcfc;
             background: $tlp-table-row-background-odd;
         }
 
+        > tr:hover > td {
+            background: transparentize($tlp-theme-color, .93);
+        }
+
         > tr > td {
             padding: $tlp-table-cell-padding;
             border-bottom: 1px solid $tlp-ui-border-normal;
