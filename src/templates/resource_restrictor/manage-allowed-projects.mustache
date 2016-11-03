@@ -1,19 +1,34 @@
-<a href="{{ resource_allowed_project_back_link }}"><i class="icon-long-arrow-left"></i> {{ resource_allowed_project_back_link_title }}</a>
-
 <h1>{{ resource_allowed_project_title }}</h1>
 
-{{# allow_all_enabled }}
-<form id="allowed-projects-all-form" action="{{ restricted_resource_action }}" method="POST">
-    {{{ restricted_resource_action_csrf }}}
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        {{# allow_all_enabled }}
+            <section class="tlp-pane-section">
+                <form id="allowed-projects-all-form" action="{{ restricted_resource_action }}" method="POST">
+                    {{{ restricted_resource_action_csrf }}}
 
-    <label for="allowed-projects-all-allowed" class="checkbox">
-        <input type="checkbox" id="allowed-projects-all-allowed" name="all-allowed" value="1" {{^ is_resource_restricted }}checked{{/ is_resource_restricted }}> {{{ resource_allowed_project_allow_all }}}
-    </label>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="allowed-projects-all-allowed">{{ resource_allowed_project_allow_all }}</label>
+                        <div class="tlp-switch">
+                            <input type="checkbox"
+                                id="allowed-projects-all-allowed"
+                                data-form-id="allowed-projects-all-form"
+                                class="tlp-switch-checkbox"
+                                name="all-allowed"
+                                value="1"
+                                {{^ is_resource_restricted }}checked{{/ is_resource_restricted }}
+                            >
+                            <label for="allowed-projects-all-allowed" class="tlp-switch-button" aria-hidden>{{ resource_allowed_project_allow_all }}</label>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        {{/ allow_all_enabled }}
 
-    <input type="submit" id="allowed-projects-all-allowed-state" class="btn btn-primary" value="{{ resource_allowed_project_allow_all_submit }}">
-</form>
-{{/ allow_all_enabled }}
-
-{{# is_resource_restricted }}
-    {{> allowed-projects-list }}
-{{/ is_resource_restricted }}
+        {{# is_resource_restricted }}
+            <section class="tlp-pane-section">
+                {{> allowed-projects-list }}
+            </section>
+        {{/ is_resource_restricted }}
+    </div>
+</section>
