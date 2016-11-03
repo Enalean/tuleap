@@ -20,6 +20,8 @@
  */
 
 use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
+use Tuleap\Project\Admin\ProjectAccessPresenter;
+use Tuleap\Project\Admin\ProjectDetailsPresenter;
 
 require_once('pre.php');
 require_once('vars.php');
@@ -104,5 +106,5 @@ $renderer->renderANoFramedPresenter(
     $Language->getText('admin_groupedit', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
     'project-info',
-    new \Tuleap\Project\Admin\ProjectDetailsPresenter($group, $all_custom_fields)
+    new ProjectDetailsPresenter($group, $all_custom_fields, new ProjectAccessPresenter($group->getAccess()))
 );

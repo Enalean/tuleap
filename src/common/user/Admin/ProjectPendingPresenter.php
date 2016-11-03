@@ -51,10 +51,7 @@ class ProjectPendingPresenter
         $this->validate_label           = $GLOBALS['Language']->getText('admin_approve_pending', 'validate_label');
         $this->validate_all_label       = $GLOBALS['Language']->getText('admin_approve_pending', 'validate_all_label');
         $this->activate_all_label       = $GLOBALS['Language']->getText('admin_approve_pending', 'activate_all_label');
-        $this->label_project_visibility = $GLOBALS['Language']->getText(
-            'admin_approve_pending',
-            'label_project_visibility'
-        );
+        $this->label_project_visibility = $GLOBALS['Language']->getText('admin_project', 'access_label');
 
         $this->pending_projects = $pending_projects;
         $this->has_project      = count($pending_projects['project_list']) !== 0;

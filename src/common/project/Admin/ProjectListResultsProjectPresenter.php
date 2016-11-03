@@ -30,7 +30,8 @@ class ProjectListResultsProjectPresenter
     public $type_label;
     public $nb_members;
     public $nb_members_title;
-    public $visibility_label;
+    public $access_presenter;
+    public $member_of_title;
 
     public function __construct(
         $id,
@@ -48,7 +49,7 @@ class ProjectListResultsProjectPresenter
         $this->status_label     = $status_label;
         $this->status_class     = $status_class;
         $this->type_label       = $type_label;
-        $this->visibility_label = $visibility_label;
+        $this->access_presenter = new ProjectAccessPresenter($visibility_label);
 
         $this->nb_members      = (int)$nb_members;
 
