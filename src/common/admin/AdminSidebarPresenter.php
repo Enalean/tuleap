@@ -29,7 +29,6 @@ class AdminSidebarPresenter
     public $all_projects_count;
     public $pending_projects_count;
     public $are_trove_categories_enabled;
-    public $are_tracker_v3_enabled;
     public $additional_tracker_entries;
     public $are_svn_tokens_enabled;
     public $tuleap_version;
@@ -68,7 +67,6 @@ class AdminSidebarPresenter
         $all_projects_count,
         $pending_projects_count,
         $are_trove_categories_enabled,
-        $are_tracker_v3_enabled,
         $additional_tracker_entries,
         $are_svn_tokens_enabled,
         $tuleap_version
@@ -80,7 +78,6 @@ class AdminSidebarPresenter
         $this->all_projects_count           = $all_projects_count;
         $this->pending_projects_count       = $pending_projects_count;
         $this->are_trove_categories_enabled = $are_trove_categories_enabled;
-        $this->are_tracker_v3_enabled       = $are_tracker_v3_enabled;
         $this->additional_tracker_entries   = $additional_tracker_entries;
         $this->are_svn_tokens_enabled       = $are_svn_tokens_enabled;
         $this->tuleap_version               = $tuleap_version;
@@ -97,8 +94,6 @@ class AdminSidebarPresenter
         $this->projects_search_placeholder             = $GLOBALS['Language']->getText('admin_sidebar', 'projects_search_placeholder');
         $this->projects_nav_all_projects               = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_all_projects');
         $this->projects_nav_pending_projects           = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_pending_projects');
-        $this->projects_nav_incomplete_projects        = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_incomplete_projects');
-        $this->projects_nav_deleted_projects           = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_deleted_projects');
 
         $this->configuration_section_title             = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_section_title');
         $this->configuration_nav_global_access_rights  = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_global_access_rights');
@@ -107,7 +102,6 @@ class AdminSidebarPresenter
         $this->configuration_nav_project_fields        = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_project_fields');
         $this->configuration_nav_predefined_services   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_services');
         $this->configuration_nav_predefined_references = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_references');
-        $this->configuration_nav_tracker_v3_template   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_tracker_v3_template');
         $this->configuration_nav_tracker_restore       = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_tracker_restore');
         $this->configuration_nav_svn_tokens            = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_svn_tokens');
 
