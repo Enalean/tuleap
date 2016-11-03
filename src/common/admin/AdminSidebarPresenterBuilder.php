@@ -58,7 +58,6 @@ class AdminSidebarPresenterBuilder
             $this->allProjectsCount(),
             $this->pendingProjectsCount(),
             $this->areTroveCategoriesEnabled(),
-            $this->areTrackerV3Enabled(),
             $this->getAdditionalTrackerEntries(),
             $this->areSvnTokensEnabled(),
             $this->getTuleapVersion()
@@ -103,11 +102,6 @@ class AdminSidebarPresenterBuilder
     private function pendingProjectsCount()
     {
         return $this->project_manager->countProjectsByStatus(Project::STATUS_PENDING);
-    }
-
-    private function areTrackerV3Enabled()
-    {
-        return TrackerV3::instance()->available();
     }
 
     private function getAdditionalTrackerEntries()
