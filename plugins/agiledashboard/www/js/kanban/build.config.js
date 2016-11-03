@@ -95,7 +95,8 @@ module.exports = {
             'vendor/angular-locker/dist/angular-locker.min.js',
             'vendor/dragular/dist/dragular.js',
             'vendor/d3/d3.js',
-            'vendor/angular-jwt/dist/angular-jwt.min.js'
+            'vendor/angular-jwt/dist/angular-jwt.min.js',
+            'vendor/striptagsjs/striptags.js'
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
