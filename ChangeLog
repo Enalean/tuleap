@@ -12,6 +12,7 @@ Version 9.1 (Not Released Yet)
 	* request #9600: Archive deleted items must deal with duplicate content
 	* request #9546: Tuleap subversion permission checker is not isofunctional with upstream
 	* request #9625: Gulp build concurrency failures
+	* request #9627: TV5: numeric values are truncated in a text field
 
 	== Plugins ==
 	* svn: 0.102
