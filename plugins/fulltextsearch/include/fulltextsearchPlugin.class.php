@@ -137,6 +137,7 @@ class fulltextsearchPlugin extends Plugin {
 
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -154,6 +155,13 @@ class fulltextsearchPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/fulltextsearch') === 0) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/fulltextsearch') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/admin-load-project-autocompleter.js';
         }
     }
 
