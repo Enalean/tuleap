@@ -177,14 +177,14 @@ svn_viewvc	bad_roottype	Invalid roottype
 
 svn_widget	svnstats	Svn Statistics
 
-svn_tokens	allowed_project_back_link_title	Back to the global administration
-svn_tokens	allowed_project_title	Tokens for SVN
-svn_tokens	allowed_project_information	This section allow to define which projects will be able to use the tokens for SVN authentication.
-svn_tokens	allowed_project_list	List of projects using SVN tokens:
+svn_tokens	allowed_project_title	SVN tokens
+svn_tokens	allowed_project_pane_title	Projects allowing SVN tokens usage
+svn_tokens	allowed_project_information	This section allows to define which projects will be able to use the tokens for SVN authentication.
+svn_tokens	allowed_project_list	List of allowed projects
 svn_tokens	allowed_project_list_allow_placeholder	Project name
 svn_tokens	allowed_project_list_allow_project	Authorize
 svn_tokens	allowed_project_list_filter_placeholder	Filter on project ID or name
-svn_tokens	allowed_project_list_id	ID
+svn_tokens	allowed_project_list_id	Id
 svn_tokens	allowed_project_list_name	Nom
 svn_tokens	allowed_project_list_empty	Currently, there are no projects that allows SVN tokens.
 svn_tokens	allowed_project_allow_project	Submitted projects will allow SVN tokens (check System Events).
@@ -195,7 +195,7 @@ svn_tokens	allowed_project_revoke_description	You are about to revoke SVN tokens
 svn_tokens	allowed_project_revoke_yes	Yes, revoke authorization
 svn_tokens	allowed_project_revoke_no	No
 svn_tokens	allowed_project_revoke_projects	Les projets soumis n'auront plus l'autorisation d'utiliser les jetons de connexion SVN
-svn_tokens	allowed_project_list_revoke_projects	Revoke authorization to selected
+svn_tokens	allowed_project_list_revoke_projects	Revoke authorization
 
 svn_intro	title	Subversion Access
 svn_intro	default_username	username

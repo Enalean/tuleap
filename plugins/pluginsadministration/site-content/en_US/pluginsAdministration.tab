@@ -84,6 +84,8 @@ plugin_pluginsadministration	properties_pane_empty_dependencies	No dependencies
 plugin_pluginsadministration	properties_pane_readme_title	Readme
 
 plugin_pluginsadministration	plugin_allowed_project_title	$1 projects restriction
+plugin_pluginsadministration	plugin_allowed_project_pane_title	Projects allowed to use $1
+plugin_pluginsadministration	plugin_allowed_project_pane_information	This section allows to define which projects will be able to use $1.
 plugin_pluginsadministration	plugin_allowed_project_allow_all	Allow all the projects to use this plugin
 plugin_pluginsadministration	plugin_allowed_project_list	List of allowed projects
 plugin_pluginsadministration	plugin_allowed_project_list_allow_placeholder	Project name
