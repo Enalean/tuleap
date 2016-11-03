@@ -25,8 +25,14 @@
                 </select>
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="user_to_grant">{{ label_username }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="user_to_grant" name="user_to_grant" placeholder="paul@example.com">
+                <label class="tlp-label" for="permission-delegation-add-user">{{ label_username }} <i class="fa fa-asterisk"></i></label>
+                <div class="tlp-form-element tlp-form-element-prepend">
+                    <select class="tlp-select"
+                            id="permission-delegation-add-user"
+                            name="user_to_grant"
+                            data-placeholder="Paul"></select>
+                    <span class="tlp-prepend"><i class="fa fa-user"></i></span>
+                </div>
             </div>
         </div>
         <div class="tlp-modal-footer">
