@@ -196,17 +196,24 @@ if ($GLOBALS['sys_project_approval'] == 1) {
 }
 
 // Plugins
-ob_start();
-$em->processEvent('site_admin_option_hook', null);
-$pluginsContent = ob_get_contents();
-ob_end_clean();
+$plugins = array();
+$em->processEvent('site_admin_option_hook', array(
+    'plugins' => &$plugins
+));
+$plugins_content = array_reduce(
+    $plugins,
+    function ($plugins_content, $plugin) {
+        return $plugins_content . '<li><a href="'. $plugin['href'] .'">'. $plugin['label'] .'</a></li>';
+    },
+    ''
+);
 
 $wPlugins = new Widget_Static($Language->getText('admin_main', 'header_plugins'));
 $wPlugins->setAdditionalClass('siteadmin-homepage-plugins');
 $wPlugins->setIcon('fa-cubes');
 $wPlugins->setContent('
     <section class="tlp-pane-section siteadmin-homepage-plugins-list">
-        <ul>'.$pluginsContent.'</ul>
+        <ul>'. $plugins_content .'</ul>
     </section>
     <section class="tlp-pane-section">
         <a href="/plugins/pluginsadministration/" class="tlp-button-primary tlp-button-outline tlp-button-wide">'.$Language->getText('admin_main', 'manage_all_plugins').'</a>

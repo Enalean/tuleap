@@ -913,8 +913,12 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook() {
-        echo '<li><a href="'.$this->getPluginPath().'/forge_admin?action=site_index'.'">Mediawiki</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => 'Mediawiki',
+            'href'  => $this->getPluginPath() . '/forge_admin?action=site_index'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

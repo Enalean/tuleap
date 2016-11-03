@@ -253,10 +253,12 @@ class openidconnectclientPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook() {
-        $url         = $this->getPluginPath().'/admin/';
-        $plugin_name = $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name');
-        echo '<li><a href="' . $url . '">' . $plugin_name . '</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/admin/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

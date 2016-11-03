@@ -585,8 +585,12 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @param array $params
      */
-    public function site_admin_option_hook($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => 'Full Text Search',
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

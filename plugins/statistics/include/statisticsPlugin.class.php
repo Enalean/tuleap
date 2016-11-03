@@ -90,8 +90,12 @@ class StatisticsPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    function site_admin_option_hook($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Statistics</a></li>';
+    function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => 'Statistics',
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */
