@@ -15,5 +15,5 @@ codendi.locales['git'] = {
     remove_webhook_title: 'Wait a minute…',
     add_branch_permission_placeholder: 'Branch name (master, my_feature…)',
     add_tag_permission_placeholder: 'Tag name (v1, alpha…)',
-    regexp_permission_enabled_info: 'Regexp are available, only \\n can\'t be used'
+    regexp_permission_enabled_info: 'Regular expressions are available, only \\n can\'t be used'
 };

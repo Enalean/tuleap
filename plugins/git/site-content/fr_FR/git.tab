@@ -388,7 +388,8 @@ plugin_git	save_settings	Sauvegarder la configuration
 plugin_git	update_error	Une erreur est survenue, impossible d'activer les expressions régulières pour les permissions fines Git.
 plugin_git	warning_conflit_regexp_configuration	L'utilisation des expression régulières a été désactivée au niveau de la plateforme.
 plugin_git	warning_conflit_regexp_configuration_part_two	Toutes les règles contenant une expression régulière seront supprimées et vous ne serez plus capable d'activer l'utilisation des expressions régulières pour ce dépôt.
-plugin_git	warning_conflit_regexp_configuration_confirm	Si vous ne sauvegardez pas vos modifications, l'état courrant fonctionnera encore. Merci de confirmer votre choix.
+plugin_git	warning_conflit_regexp_configuration_confirm	Si vous ne sauvegardez pas vos modifications, l'état courant fonctionnera encore. Merci de confirmer votre choix.
+plugin_git	warning_admin_activation	Activer cette option peut  avoir des impacts sur la sécurité, avec cette fonctionnalité un administrateur git peut réaliser une attaque en déni de service sur la plateforme. Merci de noter que l'activation de cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
 
 plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
