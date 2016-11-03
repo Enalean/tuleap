@@ -42,8 +42,8 @@ class DataAccessTest extends UnitTestCase {
     
     function testQuoteSmart() {
         $da = new DataAccessTestVersion($this);
-        $this->assertIdentical('123', $da->quoteSmart("123"), "An integer is not quoted");
-        $this->assertIdentical('12.3', $da->quoteSmart("12.3"), "A float is not quoted");
+        $this->assertIdentical("'123'", $da->quoteSmart("123"));
+        $this->assertIdentical("'12.3'", $da->quoteSmart("12.3"));
         $this->assertIdentical("'value'", $da->quoteSmart("value"), "A string is quoted");
         $this->assertIdentical("'evil\\'s value'", $da->quoteSmart("evil's value"));
         $this->assertIdentical("'\\\\x00'", $da->quoteSmart('\\x00'));
@@ -57,12 +57,12 @@ class DataAccessTest extends UnitTestCase {
 
     function testQuoteSmartImplode() {
         $da = new DataAccessTestVersion($this);
-        $this->assertIdentical('123', $da->quoteSmartImplode('',array("123")), "Array with one element");
-        $this->assertIdentical('123456', $da->quoteSmartImplode('',array("123","456")), "Glue is empty");
-        $this->assertIdentical('123 456', $da->quoteSmartImplode(' ',array("123","456")), "Glue is empty");
+        $this->assertIdentical("'123'", $da->quoteSmartImplode('',array("123")), "Array with one element");
+        $this->assertIdentical("'123''456'", $da->quoteSmartImplode('',array("123","456")), "Glue is empty");
+        $this->assertIdentical("'123' '456'", $da->quoteSmartImplode(' ',array("123","456")), "Glue is empty");
         $this->assertIdentical("'val1'", $da->quoteSmartImplode(' ',array("val1")), "Array with one string");
         $this->assertIdentical("'val1' OR 'val2'", $da->quoteSmartImplode(' OR ',array("val1","val2")), "Array with two strings");
-        $this->assertIdentical("'val1' OR 'val2' OR 34", $da->quoteSmartImplode(' OR ',array("val1","val2",34)), "Array with three elements");
+        $this->assertIdentical("'val1' OR 'val2' OR '34'", $da->quoteSmartImplode(' OR ',array("val1","val2",34)), "Array with three elements");
         $this->assertIdentical("'val1''val2'", $da->quoteSmartImplode('',array("val1","val2")), "Array with two strings and no glue"); // Is this what we really expect??
         $this->assertIdentical("'val\\'1' OR 'val2'", $da->quoteSmartImplode(' OR ',array("val'1","val2")), "Array with two strings");
         $this->assertIdentical("'val1'''val2'", $da->quoteSmartImplode("'",array("val1","val2")), "Glue is not escaped");// Is this what we really expect??
