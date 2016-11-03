@@ -24,6 +24,8 @@ $project_manager = ProjectManager::instance();
 $token_manager   = new SVN_TokenUsageManager(new SVN_TokenDao(), $project_manager);
 $event_manager   = EventManager::instance();
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
+
 $controller = new SVN_Admin_Controller($project_manager, $token_manager, $event_manager);
 $action     = $request->get('action');
 switch ($action) {

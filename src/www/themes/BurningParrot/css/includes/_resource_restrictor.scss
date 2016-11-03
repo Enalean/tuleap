@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.resource-restrictor-subtitle {
+    margin: ($tlp-spacing * 2) 0 $tlp-spacing;
+}
+
 .resource-restrictor-cell-project-name {
     width: 100%;
 }

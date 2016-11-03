@@ -49,19 +49,15 @@ class SVN_Admin_AllowedProjectsPresenter {
         return $csrf->fetchHTMLInput();
     }
 
-    public function resource_allowed_project_back_link() {
-        return '/admin/';
-    }
-
-    public function resource_allowed_project_back_link_title() {
-        return $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_back_link_title');
-    }
-
     public function resource_allowed_project_title() {
         return $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_title');
     }
 
-    public function information() {
+    public function resource_allowed_project_pane_title() {
+        return $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_pane_title');
+    }
+
+    public function resource_allowed_project_information() {
         return $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_information');
     }
 

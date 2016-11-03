@@ -75,6 +75,14 @@ class PluginsAdministration_ManageAllowedProjectsPresenter {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_title', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
     }
 
+    public function resource_allowed_project_pane_title() {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_pane_title', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
+    }
+
+    public function resource_allowed_project_information() {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_pane_information', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
+    }
+
     public function resource_allowed_project_allow_all() {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_all');
     }

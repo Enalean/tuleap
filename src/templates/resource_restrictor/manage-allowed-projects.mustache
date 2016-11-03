@@ -2,8 +2,16 @@
 
 <section class="tlp-pane">
     <div class="tlp-pane-container">
-        {{# allow_all_enabled }}
-            <section class="tlp-pane-section">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-archive tlp-pane-title-icon"></i> {{ resource_allowed_project_pane_title }}
+            </h1>
+        </div>
+
+        <section class="tlp-pane-section">
+            <p>{{ resource_allowed_project_information }}</p>
+
+            {{# allow_all_enabled }}
                 <form id="allowed-projects-all-form" action="{{ restricted_resource_action }}" method="POST">
                     {{{ restricted_resource_action_csrf }}}
 
@@ -22,13 +30,11 @@
                         </div>
                     </div>
                 </form>
-            </section>
-        {{/ allow_all_enabled }}
+            {{/ allow_all_enabled }}
 
-        {{# is_resource_restricted }}
-            <section class="tlp-pane-section">
+            {{# is_resource_restricted }}
                 {{> allowed-projects-list }}
-            </section>
-        {{/ is_resource_restricted }}
+            {{/ is_resource_restricted }}
+        </section>
     </div>
 </section>
