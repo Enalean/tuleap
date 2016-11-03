@@ -117,6 +117,30 @@
                 placeholder: 'Choose a type',
                 allowClear: true
             });
+            tlp.select2(document.querySelector('#append-select2'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#append-select2-small'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#append-select2-large'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#select2-prepend'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#select2-prepend-small'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
+            tlp.select2(document.querySelector('#select2-prepend-large'), {
+                placeholder: 'Choose an area',
+                allowClear: true
+            });
 
             var modal_buttons = example.querySelectorAll('[data-target^=modal-]');
             [].forEach.call(modal_buttons, function (button) {

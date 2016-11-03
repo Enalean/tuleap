@@ -35,6 +35,37 @@
 </div>
 
 <div class="tlp-form-element">
+    <label class="tlp-label" for="append-select2">Choose an area</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <select class="tlp-select" id="append-select2" name="area" style="width: 100%">
+            <option value=""></option>
+            <optgroup label="4x areas">
+                <option value="area-46">Area p46</option>
+                <option value="area-49">Area 49</option>
+            </optgroup>
+            <optgroup label="5x areas">
+                <option value="area-51">Area 51</option>
+                <option value="area-52">Area 52</option>
+                <option value="area-53" disabled>Area 53</option>
+                <option value="area-54">Area 54</option>
+                <option value="area-55">Area 55</option>
+                <option value="area-58">Area 59</option>
+            </optgroup>
+        </select>
+        <button type="button" class="tlp-append tlp-append tlp-button-primary tlp-button-outline tlp-button">
+            <i class="fa fa-plus tlp-button-icon"></i> Add
+        </button>
+    </div>
+
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#append-select2'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
     <label class="tlp-label" for="spaceship-append-small">Spaceship price append small</label>
     <div class="tlp-form-element tlp-form-element-append">
         <input type="number" class="tlp-input tlp-input-small" id="spaceship-append-small" name="spaceship" placeholder="1540">
@@ -50,6 +81,37 @@
 </div>
 
 <div class="tlp-form-element">
+    <label class="tlp-label" for="append-select2-small">Choose an area</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <select class="tlp-select tlp-select-small" id="append-select2-small" name="area" style="width: 100%">
+            <option value=""></option>
+            <optgroup label="4x areas">
+                <option value="area-46">Area p46</option>
+                <option value="area-49">Area 49</option>
+            </optgroup>
+            <optgroup label="5x areas">
+                <option value="area-51">Area 51</option>
+                <option value="area-52">Area 52</option>
+                <option value="area-53" disabled>Area 53</option>
+                <option value="area-54">Area 54</option>
+                <option value="area-55">Area 55</option>
+                <option value="area-58">Area 59</option>
+            </optgroup>
+        </select>
+        <button type="button" class="tlp-append tlp-append-small tlp-button-primary tlp-button-outline tlp-button-small">
+            <i class="fa fa-plus tlp-button-icon"></i> Add
+        </button>
+    </div>
+
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#append-select2-small'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
     <label class="tlp-label" for="spaceship-append-large">Spaceship price append large</label>
     <div class="tlp-form-element tlp-form-element-append">
         <input type="number" class="tlp-input tlp-input-large" id="spaceship-append-large" name="spaceship" placeholder="1540">
@@ -62,4 +124,35 @@
     <button type="button" class="tlp-append tlp-append-large tlp-button-primary tlp-button-outline tlp-button-large">
         <i class="fa fa-refresh tlp-button-icon"></i> Generate
     </button>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="append-select2-large">Choose an area</label>
+    <div class="tlp-form-element tlp-form-element-append">
+        <select class="tlp-select tlp-select-large" id="append-select2-large" name="area" style="width: 100%">
+            <option value=""></option>
+            <optgroup label="4x areas">
+                <option value="area-46">Area p46</option>
+                <option value="area-49">Area 49</option>
+            </optgroup>
+            <optgroup label="5x areas">
+                <option value="area-51">Area 51</option>
+                <option value="area-52">Area 52</option>
+                <option value="area-53" disabled>Area 53</option>
+                <option value="area-54">Area 54</option>
+                <option value="area-55">Area 55</option>
+                <option value="area-58">Area 59</option>
+            </optgroup>
+        </select>
+        <button type="button" class="tlp-append tlp-append-large tlp-button-primary tlp-button-outline tlp-button-large">
+            <i class="fa fa-plus tlp-button-icon"></i> Add
+        </button>
+    </div>
+
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#append-select2-large'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
 </div>

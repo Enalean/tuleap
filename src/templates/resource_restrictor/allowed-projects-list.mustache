@@ -7,7 +7,7 @@
         {{{ update_allowed_projects_action_csrf }}}
 
         <div id="project-to-allow-autocompleter" class="tlp-form-element-append tlp-table-actions-element">
-            <input id="project-to-allow" name="project-to-allow" type="text" class="tlp-input" size="30" placeholder="{{ resource_allowed_project_list_allow_placeholder }}">
+            <select class="tlp-select" id="project-to-allow" name="project-to-allow" style="width: 100%" data-placeholder="{{ resource_allowed_project_list_allow_placeholder }}"></select>
             <button type="submit" name="allow-project" class="tlp-append tlp-button-primary" value="1">
                 <i class="fa fa-check-circle tlp-button-icon"></i> {{ resource_allowed_project_list_allow_project }}
             </button>

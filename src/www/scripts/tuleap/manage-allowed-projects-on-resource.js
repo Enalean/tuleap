@@ -23,6 +23,7 @@
         bindFilterEvent();
         bindCheckboxesEvent();
         bindDeleteEvent();
+        projectAutocompleter();
     });
 
     function bindFilterEvent() {
@@ -111,6 +112,10 @@
                 $('#projects-allowed-form').submit();
             });
         }
+    }
+
+    function projectAutocompleter() {
+        tuleap.core.autocomplete_projects_for_select2(document.getElementById('project-to-allow'), { include_private_projects: 1 });
     }
 
 })(window.jQuery);

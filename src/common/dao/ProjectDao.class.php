@@ -94,7 +94,7 @@ class ProjectDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false, $isPrivate = false) {
+    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false, $isPrivate = false, $offset = 0) {
         $join    = '';
         $where   = '';
         $groupby = '';
@@ -131,7 +131,8 @@ class ProjectDao extends DataAccessObject {
                $where.
                $groupby.
                " ORDER BY group_name".
-               " LIMIT ".$this->da->escapeInt($limit);
+               " LIMIT ".$this->da->escapeInt($offset).", ".$this->da->escapeInt($limit);
+
         return $this->retrieve($sql);
     }
 
