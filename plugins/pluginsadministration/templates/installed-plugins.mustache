@@ -49,12 +49,11 @@
                                     </a>
 
                                     {{# dont_restrict }}
-                                        <button class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left"
+                                        <a href="javascript:;" class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left disabled"
                                             data-tlp-tooltip="{{ cant_restrict }}"
-                                            disabled
                                         >
                                             <i class="fa fa-lock tlp-button-icon"></i> {{ restrict_icon_label }}
-                                        </button>
+                                        </a>
                                     {{/ dont_restrict }}
                                     {{^ dont_restrict }}
                                         <a href="?view=restrict&plugin_id={{ plugin_id }}"
