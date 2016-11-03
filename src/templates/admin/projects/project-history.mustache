@@ -94,12 +94,14 @@
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="siteadmin-project-history-by">{{ by_label }}</label>
                             <div class="tlp-form-element tlp-form-element-prepend">
-                                <input type="text"
-                                       class="tlp-input"
+                                <select class="tlp-select"
                                        id="siteadmin-project-history-by"
                                        name="by"
-                                       value="{{ selected_by }}"
-                                       placeholder="paul">
+                                       data-placeholder="Paul">
+                                    {{# selected_by }}
+                                        <option value="{{ selected_by }}">{{ selected_by }}</option>
+                                    {{/ selected_by }}
+                                </select>
                                 <span class="tlp-prepend"><i class="fa fa-user"></i></span>
                             </div>
                         </div>

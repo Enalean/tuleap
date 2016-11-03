@@ -44,6 +44,10 @@ if($request->valid($vCodendiUserOnly)) {
     }
 }
 
+$json_format = false;
+if ($request->get('return_type') === 'json_for_select_2') {
+    $json_format = true;
+}
 
 // Number of user to display
 $limit = 15;
@@ -51,10 +55,13 @@ $userList = array();
 
 // Raise an evt
 $pluginAnswered = false;
+$has_more = false;
 $evParams = array('searchToken'     => $userName,
                   'limit'           => $limit,
                   'codendiUserOnly' => $codendiUserOnly,
+                  'json_format'     => $json_format,
                   'userList'        => &$userList,
+                  'has_more'        => &$has_more,
                   'pluginAnswered'  => &$pluginAnswered);
 $em = EventManager::instance();
 $em->processEvent("ajax_search_user", $evParams);
@@ -69,18 +76,34 @@ if(!$pluginAnswered) {
         $userList[] = $row['realname']." (".$row['user_name'].")";
         $dar->next();
     }
-    if($userDao->foundRows() > $limit) {
-        $userList[] = '<strong>...</strong>';
-    }
+    $has_more = $userDao->foundRows() > $limit;
 }
 
 //
 // Display
 //
+if ($json_format) {
+    $json_entries = array();
+    foreach ($userList as $username) {
+        $json_entries[] = array(
+            'id'   => $username,
+            'text' => $username
+        );
+    }
 
-$purifier = Codendi_HTMLPurifier::instance();
-echo "<ul>\n";
-foreach($userList as $user) {
-    echo '<li>' . $purifier->purify($user) . '</li>';
+    $output       = array(
+        'results' => $json_entries,
+        'pagination' => array(
+            'more' => $has_more
+        )
+    );
+
+    echo json_encode($output);
+} else {
+    $purifier = Codendi_HTMLPurifier::instance();
+    echo "<ul>\n";
+    foreach ($userList as $user) {
+        echo '<li>' . $purifier->purify($user) . '</li>';
+    }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
