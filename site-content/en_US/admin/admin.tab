@@ -182,7 +182,7 @@ admin_approve_license	error	Only site administrators can browse this page
 admin_approve_pending	title	Projects waiting for validation
 admin_approve_pending	no_pending	Take a break,
 admin_approve_pending	no_pending_next	there is no project to validate.
-admin_approve_pending	go_back	Go back
+admin_approve_pending	go_back	Go back to administration
 admin_approve_pending	approve	Approve Project
 admin_approve_pending	delete	Delete Project
 admin_approve_pending	remove_category	Remove from Category
@@ -206,7 +206,7 @@ admin_approve_pending	activate_all_label	Activate all projects
 #
 admin_approve_pending_users	title	Users waiting for validation
 admin_approve_pending_users	title_validated	Validated users needing activation
-admin_approve_pending_users	go_back	Go back
+admin_approve_pending_users	go_back	Go back to administration
 admin_approve_pending_users	take_break	Take a break,
 admin_approve_pending_users	no_pending	there is no users to approve.
 admin_approve_pending_users	no_pending_validated	there is no users to validate.
