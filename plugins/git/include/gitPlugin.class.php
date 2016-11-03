@@ -288,7 +288,6 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/online_edit.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/permissions.js"></script>';
         }
@@ -304,6 +303,8 @@ class GitPlugin extends Plugin {
             } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_admin')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-mirror.js';
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-mirror-configuration.js';
+            } else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';
             }
         }
     }

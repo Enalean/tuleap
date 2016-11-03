@@ -14,10 +14,13 @@
                     <p>{{ gitolite_config_description }}</p>
                 </div>
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="group_id">Project</label>
-                    <input type="text" class="tlp-input" id="gitolite_config_project" name="gitolite_config_project" placeholder="Project name" size="40">
+                    <label class="tlp-label" for="gitolite-project-selector">Project</label>
+                    <select class="tlp-select"
+                            id="gitolite-project-selector"
+                            name="gitolite_config_project"
+                            data-placeholder="Project name"></select>
                 </div>
-                <button type="submit" class="tlp-button-primary">
+                <button type="submit" class="tlp-button-primary" id="gitolite-config-button">
                     <i class="fa fa-repeat tlp-button-icon"></i> {{ regenerate_gitolite_configuration }}
                     </input>
                 </button>
