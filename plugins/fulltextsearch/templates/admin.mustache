@@ -10,13 +10,8 @@
             <form action="/plugins/fulltextsearch/" method="POST">
                 <p>{{ reindex_help }}</p>
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="fts_project">{{ reindex_project_label }}</label>
-                    <input type="text"
-                           name="fts_project"
-                           size="40"
-                           id="fts_project"
-                           class="tlp-input"
-                           placeholder="{{ label_placeholder_project}}">
+                    <label class="tlp-label" for="fulltext-reindex-project-autocompleter">{{ reindex_project_label }}</label>
+                    <select class="tlp-select" id="fulltext-reindex-project-autocompleter" name="fts_project" data-placeholder="{{ label_placeholder_project }}"></select>
                 </div>
 
                 <input type="hidden" name="service" value="docman">

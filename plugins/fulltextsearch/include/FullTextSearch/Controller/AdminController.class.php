@@ -65,8 +65,6 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
             'admin',
             $admin_presenter
         );
-
-        $GLOBALS['HTML']->footer(array());
     }
 
     public function reindexDocman($project_id)
