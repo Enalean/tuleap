@@ -75,6 +75,10 @@ class UserListResultsPresenter
             'status_values'        => $user_status
         );
 
+        if (! $default_params['status_values']) {
+            $default_params['status_values'] = array('ANY');
+        }
+
         if ($group_id) {
             $default_params['group_id'] = $group_id;
         }

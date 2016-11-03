@@ -173,6 +173,8 @@ if ($request->exist('status_values')) {
     } else {
         $anySelect = "";
     }
+} else {
+    $status_values = array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED);
 }
 
 if (! $group_id) {

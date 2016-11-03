@@ -73,15 +73,15 @@ class ProjectListResultsPresenterBuilder
         switch ($status_letter) {
             case Project::STATUS_ACTIVE:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'active');
-                $status_class = 'tlp-badge-success';
+                $status_class = 'tlp-badge-success tlp-badge-outline';
                 break;
             case Project::STATUS_SYSTEM:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'system');
-                $status_class = 'tlp-badge-danger tlp-badge-outline';
+                $status_class = 'tlp-badge-secondary tlp-badge-outline';
                 break;
             case Project::STATUS_PENDING:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'pending');
-                $status_class = 'tlp-badge-secondary';
+                $status_class = 'tlp-badge-info';
                 break;
             case Project::STATUS_INCOMPLETE:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'incomplete');
@@ -89,11 +89,11 @@ class ProjectListResultsPresenterBuilder
                 break;
             case Project::STATUS_HOLDING:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'holding');
-                $status_class = 'tlp-badge-info';
+                $status_class = 'tlp-badge-secondary';
                 break;
             case Project::STATUS_DELETED:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'deleted');
-                $status_class = 'tlp-badge-danger';
+                $status_class = 'tlp-badge-danger tlp-badge-outline';
                 break;
         }
 
