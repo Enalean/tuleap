@@ -17,6 +17,11 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    var user_to_grant_element = document.getElementById('permission-delegation-add-user');
+    if (user_to_grant_element) {
+        tuleap.autocomplete_users_for_select2(user_to_grant_element, { internal_users_only: 1 });
+    }
+
     var modal_add_permission_element = document.getElementById('siteadmin-add-permission-modal');
     var modal_add_permission         = tlp.modal(modal_add_permission_element, {});
 

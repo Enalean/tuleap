@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
         edit_group_modal_element = document.querySelector('#siteadmin-permission-delegation-edit-group-modal'),
         add_perm = document.querySelector('#siteadmin-permission-delegation-group-details-perms-actions-add'),
         add_perm_modal_element = document.querySelector('#siteadmin-permission-delegation-add-perm-modal'),
-        modal_add_group = tlp.modal(add_group_modal_element, {keyboard: true});
+        modal_add_group = tlp.modal(add_group_modal_element, {keyboard: true}),
+        add_user = document.getElementById('siteadmin-permission-delegation-group-details-users-actions-add-input');
 
     add_group.addEventListener('click', function () {
         modal_add_group.toggle();
@@ -55,6 +56,10 @@ document.addEventListener('DOMContentLoaded', function () {
             modal_add_perm.toggle();
             initFocus(add_perm_modal_element);
         });
+    }
+
+    if (add_user) {
+        tuleap.autocomplete_users_for_select2(add_user, { internal_users_only: 1 });
     }
 
     handlePrimaryButtonState(
