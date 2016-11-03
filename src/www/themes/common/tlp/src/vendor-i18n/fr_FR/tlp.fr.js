@@ -17,20 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tlp = tlp || { };
-
-tlp.select2 = function(element, options) {
-    options = options || {};
-
-    options.language = options.language || tlp.locale;
-
-    options.theme = 'tlp-select2';
-
-    if (element && element.classList.contains('tlp-select-small')) {
-        options.theme = 'tlp-select2-small';
-    } else if (element && element.classList.contains('tlp-select-large')) {
-        options.theme = 'tlp-select2-large';
-    }
-
-    jQuery(element).select2(options);
-}
+tlp.locale = 'fr';
