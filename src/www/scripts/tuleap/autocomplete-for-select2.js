@@ -64,6 +64,23 @@ tuleap.autocomplete_users_for_select2 = function(element, options) {
             };
         }
     };
+    options.escapeMarkup = function (markup) { return markup; };
+    options.templateResult = formatUser;
 
     tlp.select2(element, options);
+
+    function formatUser(user) {
+        if (user.loading) {
+            return user.text;
+        }
+
+        var markup = '<div class="select2-result-user"> \
+            <div class="tlp-avatar select2-result-user__avatar"> \
+                <img src="/users/' + user.login +'/avatar.png"> \
+            </div> \
+            ' + user.text +' \
+        </div>';
+
+        return markup;
+    }
 };
