@@ -18,31 +18,52 @@
  */
 
 var tuleap  = tuleap || { };
-tuleap.core = tuleap.core || { };
 
-(function() {
-    tuleap.core.autocomplete_projects_for_select2 = function(element, options) {
-        options = options || {};
+tuleap.autocomplete_projects_for_select2 = function(element, options) {
+    options = options || {};
 
-        options.include_private_projects = options.include_private_projects || 0;
-        options.placeholder              = element.dataset.placeholder || '';
-        options.minimumInputLength       = 3;
-        options.allowClear               = true;
-        options.debug                    = true;
-        options.ajax                     = {
-            url     : '/project/autocomplete.php',
-            dataType: 'json',
-            delay   : 250,
-            data    : function(params) {
-                return {
-                    return_type: 'json_for_select_2',
-                    name       : params.term,
-                    page       : params.page || 1,
-                    private    : options.include_private_projects
-                };
-            }
-        };
+    options.include_private_projects = options.include_private_projects || 0;
+    options.placeholder              = element.dataset.placeholder || '';
+    options.minimumInputLength       = 3;
+    options.allowClear               = true;
+    options.debug                    = true;
+    options.ajax                     = {
+        url     : '/project/autocomplete.php',
+        dataType: 'json',
+        delay   : 250,
+        data    : function(params) {
+            return {
+                return_type: 'json_for_select_2',
+                name       : params.term,
+                page       : params.page || 1,
+                private    : options.include_private_projects
+            };
+        }
+    };
 
-        tlp.select2(element, options);
-    }
-})();
+    tlp.select2(element, options);
+};
+
+tuleap.autocomplete_users_for_select2 = function(element, options) {
+    options = options || {};
+
+    options.internal_users_only = options.internal_users_only || 0;
+    options.placeholder         = element.dataset.placeholder || '';
+    options.minimumInputLength  = 3;
+    options.allowClear          = true;
+    options.ajax                = {
+        url     : '/user/autocomplete.php',
+        dataType: 'json',
+        delay   : 250,
+        data    : function(params) {
+            return {
+                return_type      : 'json_for_select_2',
+                name             : params.term,
+                page             : params.page || 1,
+                codendi_user_only: options.internal_users_only
+            };
+        }
+    };
+
+    tlp.select2(element, options);
+};

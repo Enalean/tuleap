@@ -275,7 +275,10 @@ class LdapPlugin extends Plugin {
                 }
             }
             if($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
-                $params['userList'][] = "<strong>...</strong>";
+                $params['has_more'] = true;
+                if (! $params['json_format']) {
+                    $params['userList'][] = "<strong>...</strong>";
+                }
             }
         }
     }

@@ -100,7 +100,7 @@ if ($json_format) {
 } else {
     echo "<ul>\n";
     foreach ($list as $entry) {
-        echo '<li>' . $purifier->purify(htmlspecialchars_decode($entry)) . '</li>';
+        echo '<li>' . $purifier->purify($entry) . '</li>';
     }
     echo "</ul>\n";
 }

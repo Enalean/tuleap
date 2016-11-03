@@ -18,7 +18,8 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     var sub_events_panels = document.querySelectorAll('.siteadmin-project-history-filter-form-subevents'),
-        events = document.getElementById('siteadmin-project-history-events');
+        events            = document.getElementById('siteadmin-project-history-events'),
+        by_filter         = document.getElementById('siteadmin-project-history-by');
 
     if (events) {
         displayCurrentSubEventsPanel();
@@ -36,6 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             displayCurrentSubEventsPanel();
         });
+    }
+
+    if (by_filter) {
+        tuleap.autocomplete_users_for_select2(by_filter, { internal_users_only: 1 });
     }
 
     var datepickers = document.querySelectorAll('.tlp-input-date');
