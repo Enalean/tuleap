@@ -131,29 +131,31 @@
                             <i class="fa fa-lock tlp-pane-title-icon"></i> {{ access_label }}
                         </h1>
                     </div>
-                    <section class="tlp-pane-section" id="siteadmin-project-information-additional-info-access">
-                        <p id="siteadmin-project-information-additional-info-access-level">
-                            <i id="siteadmin-project-information-additional-info-access-level-icon"
-                               class="fa
-                                {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
-                                {{# is_open }}fa-unlock-alt{{/ is_open }}
-                                {{# is_closed }}fa-lock{{/ is_closed }}
-                            "></i> {{ access }}
-                        </p>
-                        {{# is_public_incl_restricted }}
-                            <span class="tlp-badge-warning"
-                                  id="siteadmin-project-information-additional-info-access-level-badge"
+                    {{# access_presenter }}
+                        <section class="tlp-pane-section" id="siteadmin-project-information-additional-info-access">
+                            <p id="siteadmin-project-information-additional-info-access-level">
+                                <i id="siteadmin-project-information-additional-info-access-level-icon"
+                                   class="fa
+                                    {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
+                                    {{# is_open }}fa-unlock-alt{{/ is_open }}
+                                    {{# is_closed }}fa-lock{{/ is_closed }}
+                                "></i> {{ access }}
+                            </p>
+                            {{# is_public_incl_restricted }}
+                                <span class="tlp-badge-warning"
+                                      id="siteadmin-project-information-additional-info-access-level-badge"
+                                >
+                                    {{ incl_restricted_label }}
+                                </span>
+                            {{/ is_public_incl_restricted }}
+                            <a href="/project/admin/editgroupinfo.php?group_id={{ id }}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-wide"
+                               id="siteadmin-project-information-additional-info-access-button"
                             >
-                                {{ incl_restricted_label }}
-                            </span>
-                        {{/ is_public_incl_restricted }}
-                        <a href="/project/admin/editgroupinfo.php?group_id={{ id }}"
-                           class="tlp-button-primary tlp-button-outline tlp-button-wide"
-                           id="siteadmin-project-information-additional-info-access-button"
-                        >
-                            {{ manage_access_label }}
-                        </a>
-                    </section>
+                                {{ manage_access_label }}
+                            </a>
+                        </section>
+                    {{/ access_presenter }}
                 </div>
             </section>
                 <section class="tlp-pane">

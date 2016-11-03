@@ -38,7 +38,6 @@ class ProjectListResultsPresenterBuilder
 
         foreach ($projects as $row) {
             list($status_label, $status_class) = $this->getStatusDisplay($row['status']);
-            $visibility_label                  = $this->getVisibilityLabel($row['access']);
             $type_label                        = $this->getTypeLabel($row['type']);
             $project_name                      = util_unconvert_htmlspecialchars($row['group_name']);
 
@@ -49,7 +48,7 @@ class ProjectListResultsPresenterBuilder
                 $status_label,
                 $status_class,
                 $type_label,
-                $visibility_label,
+                $row['access'],
                 $row['nb_members']
             );
         }
@@ -98,22 +97,6 @@ class ProjectListResultsPresenterBuilder
         }
 
         return array($status_label, $status_class);
-    }
-
-    /**
-     * @param  string $visibility
-     * @return string
-     */
-    private function getVisibilityLabel($visibility)
-    {
-        switch ($visibility) {
-            case Project::ACCESS_PRIVATE:
-                return $GLOBALS['Language']->getText('admin_projectlist', 'private');
-            case Project::ACCESS_PUBLIC_UNRESTRICTED:
-                return $GLOBALS['Language']->getText('admin_projectlist', 'public_unrestricted');
-            case Project::ACCESS_PUBLIC:
-                return $GLOBALS['Language']->getText('admin_projectlist', 'public');
-        }
     }
 
     /**

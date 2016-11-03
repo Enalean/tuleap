@@ -192,7 +192,6 @@ admin_approve_pending	delete_label	Supprimer
 admin_approve_pending	validate_label	Valider
 admin_approve_pending	validate_all_label	Valider tous les projets
 admin_approve_pending	activate_all_label	Activer tous les projets
-admin_approve_pending	label_project_visibility	Visibilité
 
 #
 #-----------------------------------------------
@@ -673,7 +672,6 @@ admin_projectlist	project_name	Nom du Projet
 admin_projectlist	unix_group_name	Nom du groupe Unix
 admin_projectlist	type	Type de Projet
 admin_projectlist	members	Membres
-admin_projectlist	visibility	Visibilité
 admin_projectlist	private	Privé
 admin_projectlist	public_unrestricted	Public incluant les utilisateurs restreints
 admin_projectlist	public	Public

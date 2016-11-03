@@ -21,11 +21,9 @@
 namespace Tuleap\Project\Admin;
 
 use EventManager;
-use ForgeConfig;
 use Project;
 use ProjectManager;
 use TemplateSingleton;
-use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
 
 class ProjectDetailsPresenter
 {
@@ -52,12 +50,6 @@ class ProjectDetailsPresenter
     public $pending_label;
     public $links;
     public $manage_access_label;
-    public $incl_restricted_label;
-    public $is_public_incl_restricted;
-    public $is_wide_open;
-    public $is_open;
-    public $is_closed;
-    public $access;
     public $unix_name;
     public $save_label;
     public $unix_name_label;
@@ -73,8 +65,12 @@ class ProjectDetailsPresenter
     public $instructions_desc;
     public $is_system;
     public $is_active;
+    /**
+     * @var ProjectAccessPresenter
+     */
+    public $access_presenter;
 
-    public function __construct(Project $project, $all_custom_fields)
+    public function __construct(Project $project, $all_custom_fields, ProjectAccessPresenter $access_presenter)
     {
         $this->id          = $project->getID();
         $this->public_name = $project->getUnconvertedPublicName();
@@ -82,8 +78,6 @@ class ProjectDetailsPresenter
         $this->description = $project->getDescription();
         $this->is_system   = $project->getStatus() === Project::STATUS_SYSTEM;
         $this->is_active   = $project->isActive();
-
-        $this->defineProjectAccessProperties($project);
 
         $this->links = array();
         EventManager::instance()->processEvent(
@@ -114,7 +108,6 @@ class ProjectDetailsPresenter
         $this->members_label         = $GLOBALS['Language']->getText('admin_project', 'members_label');
         $this->pending_label         = $GLOBALS['Language']->getText('admin_project', 'pending_label');
         $this->manage_access_label   = $GLOBALS['Language']->getText('admin_project', 'manage_access_label');
-        $this->incl_restricted_label = $GLOBALS['Language']->getText('admin_project', 'incl_restricted_label');
         $this->unix_name_label       = $GLOBALS['Language']->getText('admin_project', 'unix_name_label');
         $this->save_label            = $GLOBALS['Language']->getText('admin_project', 'save_label');
         $this->status_label          = $GLOBALS['Language']->getText('admin_project', 'status_label');
@@ -123,6 +116,7 @@ class ProjectDetailsPresenter
         $this->instructions_label    = $GLOBALS['Language']->getText('admin_project', 'instructions_label');
         $this->send_email_label      = $GLOBALS['Language']->getText('admin_project', 'send_email_label');
         $this->instructions_desc     = $GLOBALS['Language']->getText('admin_project', 'instructions_desc');
+        $this->access_presenter      = $access_presenter;
     }
 
     private function getTypes(Project $project)
@@ -139,27 +133,6 @@ class ProjectDetailsPresenter
         }
 
         return $types;
-    }
-
-    private function defineProjectAccessProperties(Project $project)
-    {
-        if (ForgeConfig::areRestrictedUsersAllowed()) {
-            $this->is_public_incl_restricted = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->is_wide_open              = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->is_open                   = $project->getAccess() === Project::ACCESS_PUBLIC;
-            $this->is_closed                 = $project->getAccess() === Project::ACCESS_PRIVATE;
-        } else {
-            $this->is_public_incl_restricted = false;
-            $this->is_wide_open              = $project->getAccess() === Project::ACCESS_PUBLIC;
-            $this->is_open                   = false;
-            $this->is_closed                 = $project->getAccess() === Project::ACCESS_PRIVATE;
-        }
-
-        if ($project->getAccess() === Project::ACCESS_PRIVATE) {
-            $this->access = $GLOBALS['Language']->getText('admin_project', 'private_label');
-        } else {
-            $this->access = $GLOBALS['Language']->getText('admin_project', 'public_label');
-        }
     }
 
     private function getStatus(Project $project)

@@ -24,6 +24,7 @@ use DateHelper;
 use Project;
 use ProjectManager;
 use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
+use Tuleap\Project\Admin\ProjectAccessPresenter;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use UserManager;
@@ -76,7 +77,8 @@ class PendingProjectBuilder
                 'user_avatar'         => $admin->getAvatarUrl(),
                 'date_creation'       => DateHelper::formatForLanguage($GLOBALS['Language'], $project->getStartDate()),
                 'project_fields'      => $custom_fields,
-                'has_custom_fields'   => $this-> hasCustomFields($custom_fields)
+                'has_custom_fields'   => $this-> hasCustomFields($custom_fields),
+                'access_presenter'    => new ProjectAccessPresenter($project->getAccess())
             );
 
             $projects_id[] = $project->getID();

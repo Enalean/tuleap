@@ -71,7 +71,7 @@ class ProjectListResultsPresenter
         $this->status_header          = $GLOBALS['Language']->getText('admin_projectlist', 'status');
         $this->type_header            = $GLOBALS['Language']->getText('admin_projectlist', 'type');
         $this->members_header         = $GLOBALS['Language']->getText('admin_projectlist', 'members');
-        $this->visibility_header      = $GLOBALS['Language']->getText('admin_projectlist', 'visibility');
+        $this->visibility_header      = $GLOBALS['Language']->getText('admin_project', 'access_label');
 
         $this->title                  = $GLOBALS['Language']->getText('admin_projectlist', 'matching_projects');
         $this->export_csv             = $GLOBALS['Language']->getText('admin_projectlist', 'export_csv');

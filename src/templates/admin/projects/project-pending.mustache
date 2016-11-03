@@ -43,20 +43,21 @@
                                 <p class="project-visibility-description">{{ project_description }}</p>
                             </div>
                         </div>
-                        <div class="tlp-property pending-project-visibility">
-                            <label class="tlp-label">
-                                {{ label_project_visibility }}
-                            </label>
-                            <p>
-                                {{# project_is_public }}
-                                    <i class="fa fa-unlock"></i>
-                                {{/ project_is_public }}
-                                {{^ project_is_public }}
-                                    <i class="fa fa-lock"></i>
-                                {{/ project_is_public }}
-                                {{ project_get_access }}
-                            </p>
-                        </div>
+                        {{# access_presenter }}
+                            <div class="tlp-property pending-project-visibility">
+                                <label class="tlp-label">
+                                    {{ label_project_visibility }}
+                                </label>
+                                <p>
+                                    <i
+                                       class="fa pending-project-access-icon
+                                           {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
+                                           {{# is_open }}fa-unlock-alt{{/ is_open }}
+                                           {{# is_closed }}fa-lock{{/ is_closed }}
+                                    "></i> {{ access }}
+                                </p>
+                            </div>
+                        {{/ access_presenter }}
                     </section>
                     {{# has_custom_fields }}
                         <section class="tlp-pane-section">
