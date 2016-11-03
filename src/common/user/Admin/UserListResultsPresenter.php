@@ -70,7 +70,8 @@ class UserListResultsPresenter
         $default_params = array(
             'user_name_search'     => $user_name_search,
             'previous_sort_header' => $sort_params["sort_header"],
-            'sort_order'           => $sort_order,
+            'current_sort_header'  => $sort_params["sort_header"],
+            'sort_order'           => $sort_params['order'],
             'status_values'        => $user_status
         );
 
@@ -78,21 +79,12 @@ class UserListResultsPresenter
             $default_params['group_id'] = $group_id;
         }
 
-        $this->pagination = new PaginationPresenter(
-            $limit,
-            $offset,
-            count($this->matching_users),
-            $nb_matching_users,
-            $base_url,
-            $default_params
-        );
-
         $this->sortby_name_icon     = $sort_params["user_name_icon"];
         $this->sortby_realname_icon = $sort_params["realname_icon"];
         $this->sortby_status_icon   = $sort_params["status_icon"];
-        $this->sortby_name_url      = $base_url .'?'. http_build_query($this->getSortUrlParams('user_name', $default_params, $sort_order));
-        $this->sortby_realname_url  = $base_url .'?'. http_build_query($this->getSortUrlParams('realname', $default_params, $sort_order));
-        $this->sortby_status_url    = $base_url .'?'. http_build_query($this->getSortUrlParams('status', $default_params, $sort_order));
+        $this->sortby_name_url      = $base_url .'?'. http_build_query($this->getSortUrlParams('user_name', $default_params));
+        $this->sortby_realname_url  = $base_url .'?'. http_build_query($this->getSortUrlParams('realname', $default_params));
+        $this->sortby_status_url    = $base_url .'?'. http_build_query($this->getSortUrlParams('status', $default_params));
         $this->export_url           = $base_url .'?'. http_build_query(array('export'   => 1) + $default_params);
 
         $this->login_name_header  = $GLOBALS['Language']->getText('admin_userlist', 'login');
@@ -107,10 +99,23 @@ class UserListResultsPresenter
         $this->active_sessions_label   = $GLOBALS['Language']->getText('admin_userlist', 'active_sessions_label');
         $this->active_sessions_confirm = $GLOBALS['Language']->getText('admin_userlist', 'active_sessions_confirm', $nb_active_sessions);
         $this->no_matching_users       = $GLOBALS['Language']->getText('admin_userlist', 'no_matching_users');
+
+        $default_params['sort_order'] = $sort_order;
+        $this->pagination = new PaginationPresenter(
+            $limit,
+            $offset,
+            count($this->matching_users),
+            $nb_matching_users,
+            $base_url,
+            $default_params
+        );
     }
 
-    private function getSortUrlParams($sort, $default_params, $sort_order)
+    private function getSortUrlParams($sort, $default_params)
     {
+        if ($sort !== $default_params['current_sort_header']) {
+            $default_params['sort_order'] = 'ASC';
+        }
         return array('current_sort_header' => $sort) + $default_params;
     }
 

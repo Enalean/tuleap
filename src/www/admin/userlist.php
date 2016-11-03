@@ -42,13 +42,13 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 */
 function get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset){
     $sort_order_hash = array(
-        'sort_header' => $current_sort_header,
+        'sort_header'    => $current_sort_header,
         'user_name_icon' => '',
-        'realname_icon' => '',
-        'status_icon' => '',
-        'order' => 'ASC',
-        );
-    $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
+        'realname_icon'  => '',
+        'status_icon'    => '',
+        'order'          => 'DESC'
+    );
+    $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
 
     if ($offset === 0) {
         if ($previous_sort_header === $current_sort_header) {
@@ -64,12 +64,12 @@ function get_sort_values($previous_sort_header, $current_sort_header, $sort_orde
     }
     else {
         if ($sort_order === "ASC") {
-            $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
-            $sort_order_hash["order"] = "ASC";
-        }
-        else {
             $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
             $sort_order_hash["order"] = "DESC";
+        }
+        else {
+            $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
+            $sort_order_hash["order"] = "ASC";
         }
     }
     return $sort_order_hash;
@@ -179,14 +179,14 @@ if (! $group_id) {
     $group_id = 0;
 }
 if (isset($user_name_search) && $user_name_search) {
-    $result = $dao->listAllUsers($group_id, $user_name_search, $offset, $limit, $sort_params['sort_header'],
-        $sort_params['order'], $status_values);
+    $result = $dao->listAllUsers($group_id, $user_name_search, $offset, $limit, $current_sort_header,
+        $sort_order, $status_values);
     if ($result['numrows'] == 1) {
         $row = $result['users']->getRow();
         $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $row['user_id']);
     }
 } else {
-    $result = $dao->listAllUsers($group_id, 0, $offset, $limit, $sort_params['sort_header'], $sort_params['order'], $status_values);
+    $result = $dao->listAllUsers($group_id, 0, $offset, $limit, $current_sort_header, $sort_order, $status_values);
 }
 
 /*
