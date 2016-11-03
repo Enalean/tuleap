@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\SvnCore\Cache\Parameters;
+
 require_once 'SVN_Apache.class.php';
 
-class SVN_Apache_ModPerl extends SVN_Apache {
+class SVN_Apache_ModPerl extends SVN_Apache
+{
+    /**
+     * @var Parameters
+     */
+    private $cache_parameters;
 
-    public function getHeaders() {
+    public function __construct(Parameters $cache_parameters, array $project)
+    {
+        parent::__construct($project);
+        $this->cache_parameters = $cache_parameters;
+    }
+
+    public function getHeaders()
+    {
         $ret = 'PerlLoadModule Apache::Tuleap'.PHP_EOL;
         return $ret;
     }
     
-    protected function getProjectAuthentication($row) {
-        $conf = '';
+    protected function getProjectAuthentication($row)
+    {
+        $tuleap_dsn          = $this->escapeStringForApacheConf(
+            'DBI:mysql:' . ForgeConfig::get('sys_dbname') . ':' . ForgeConfig::get('sys_dbhost')
+        );
+        $maximum_credentials = $this->escapeStringForApacheConf($this->cache_parameters->getMaximumCredentials());
+        $lifetime            = $this->escapeStringForApacheConf($this->cache_parameters->getLifetime());
+
+        $conf  = '';
         $conf .= $this->getCommonAuthentication($row['group_name']);
         $conf .= "    PerlAccessHandler Apache::Authn::Tuleap::access_handler\n";
         $conf .= "    PerlAuthenHandler Apache::Authn::Tuleap::authen_handler\n";
-        $conf .= '    TuleapDSN "DBI:mysql:' . $GLOBALS['sys_dbname'] . ':' . $GLOBALS['sys_dbhost'] . '"' . "\n";
-        $conf .= '    TuleapDbUser "' . $GLOBALS['sys_dbauth_user'] . '"' . "\n";
-        $conf .= '    TuleapDbPass "' . $this->escapeStringForApacheConf($GLOBALS['sys_dbauth_passwd']) . '"' . "\n";
-        $conf .= '    TuleapGroupId "' . $row['group_id'] . '"' . "\n";
-        $conf .= '    TuleapCacheCredsMax 10' . "\n";
+        $conf .= '    TuleapDSN "' . $tuleap_dsn . '"' . "\n";
+        $conf .= '    TuleapDbUser "' . $this->escapeStringForApacheConf(ForgeConfig::get('sys_dbauth_user')) . '"' . "\n";
+        $conf .= '    TuleapDbPass "' . $this->escapeStringForApacheConf(ForgeConfig::get('sys_dbauth_passwd')) . '"' . "\n";
+        $conf .= '    TuleapGroupId "' . $this->escapeStringForApacheConf($row['group_id']) . '"' . "\n";
+        $conf .= '    TuleapCacheCredsMax ' . $maximum_credentials . "\n";
+        $conf .= '    TuleapCacheLifetime ' . $lifetime . "\n";
         return $conf;
     }
-    
 }
-
-?>

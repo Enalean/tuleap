@@ -19,6 +19,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SvnCore\Cache\ParameterDao;
+use Tuleap\SvnCore\Cache\ParameterRetriever;
+
 require_once('www/svn/svn_utils.php');
 
 /**
@@ -611,7 +614,11 @@ class BackendSVN extends Backend {
         $svn_root_file = $GLOBALS['svn_root_file'];
         $svn_root_file_old = $svn_root_file.".old";
         $svn_root_file_new = $svn_root_file.".new";
-        $conf = $this->getApacheConf();
+        try {
+            $conf = $this->getApacheConf();
+        } catch (Exception $ex) {
+            return false;
+        }
 
         if (file_put_contents($svn_root_file_new, $conf) !== strlen($conf)) {
             $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
@@ -643,7 +650,8 @@ class BackendSVN extends Backend {
         return new SVN_Apache_Auth_Factory(
             $this->getProjectManager(),
             EventManager::instance(),
-            $this->getSVNTokenManager()
+            $this->getSVNTokenManager(),
+            $this->getSVNCacheParameters()
         );
     }
     
@@ -823,5 +831,14 @@ class BackendSVN extends Backend {
      */
     protected function getSVNTokenManager() {
         return new SVN_TokenUsageManager(new SVN_TokenDao(), $this->getProjectManager());
+    }
+
+    /**
+     * @return \Tuleap\SvnCore\Cache\Parameters
+     */
+    protected function getSVNCacheParameters()
+    {
+        $parameter_manager = new ParameterRetriever(new ParameterDao());
+        return $parameter_manager->getParameters();
     }
 }

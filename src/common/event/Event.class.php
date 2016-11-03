@@ -406,6 +406,7 @@ class Event {
      * Parameters:
      *     'project_info'              => A row of Projects DB table
      *     'project_authorizes_tokens' => Define if project authorizes tokens
+     *     'cache_parameters'          => Parameters concerning SVN authentication cache
      *     'svn_conf_auth'             => Requested authentication method in conf file
      *     'svn_apache_auth'           => SVN_Apache_Auth, object to generate the conf if relevant
      */

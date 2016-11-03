@@ -47,6 +47,12 @@ my @directives = (
         errmsg       => 'TuleapCacheCredsMax must be decimal number',
     },
     {
+        name         => 'TuleapCacheLifetime',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+        errmsg       => 'TuleapCacheLifetime must be decimal number',
+    },
+    {
         name         => 'TuleapDSN',
         req_override => OR_AUTHCFG,
         args_how     => TAKE1,
@@ -101,6 +107,13 @@ sub TuleapCacheCredsMax {
         $self->{TuleapCacheCreds}      = APR::Table::make($self->{TuleapCachePool}, $arg);
         $self->{TuleapCacheCredsCount} = 0;
         $self->{TuleapCacheCredsMax}   = $arg;
+    }
+    return;
+}
+sub TuleapCacheLifetime {
+    my ($self, $parms, $arg) = @_;
+    if ($arg) {
+        $self->{TuleapCacheLifetime} = $arg;
     }
     return;
 }

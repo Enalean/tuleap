@@ -1,26 +1,23 @@
 <?php
-/* 
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 require_once('common/backend/BackendSVN.class.php');
 require_once('common/user/UserManager.class.php');
@@ -49,6 +46,7 @@ Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('update
 class BackendSVNTest extends TuleapTestCase {
 
     private $tmp_dir;
+    private $cache_parameters;
 
     function setUp() {
         $this->tmp_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
@@ -67,8 +65,9 @@ class BackendSVNTest extends TuleapTestCase {
         mkdir($GLOBALS['tmp_dir'], 0777, true);
         mkdir(ForgeConfig::get('sys_project_backup_path'), 0777, true);
 
-        $this->project_manager = mock('ProjectManager');
-        $this->token_manager   = mock('SVN_TokenUsageManager');
+        $this->project_manager  = mock('ProjectManager');
+        $this->token_manager    = mock('SVN_TokenUsageManager');
+        $this->cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');;
 
         $this->backend = partial_mock(
             'BackendSVN',
@@ -83,7 +82,8 @@ class BackendSVNTest extends TuleapTestCase {
                 'chmod',
                 '_getSVNAccessFile',
                 'getSVNTokenManager',
-                'getSVNAccessGroups'
+                'getSVNAccessGroups',
+                'getSVNCacheParameters'
             )
         );
     }
@@ -330,6 +330,7 @@ class BackendSVNTest extends TuleapTestCase {
         $this->backend->setReturnReference('getSvnDao', $svn_dao);
         $this->backend->setReturnReference('getSVNTokenManager', $this->token_manager);
         $this->backend->setReturnReference('getProjectManager', $this->project_manager);
+        $this->backend->setReturnReference('getSVNCacheParameters', $this->cache_parameters);
 
         $this->assertEqual($this->backend->generateSVNApacheConf(),True);
         $svnroots=file_get_contents($GLOBALS['svn_root_file']);

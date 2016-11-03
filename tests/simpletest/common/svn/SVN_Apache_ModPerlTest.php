@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,24 +20,8 @@
 require_once 'common/svn/SVN_Apache_ModPerl.class.php';
 
 
-class SVN_Apache_ModPerlTest extends UnitTestCase {
-    
-    function setUp() {
-        $GLOBALS['sys_dbhost'] = 'db_server';
-        $GLOBALS['sys_dbname'] = 'db';
-        $GLOBALS['svn_prefix'] = '/svnroot';
-        $GLOBALS['sys_dbauth_user']   = 'dbauth_user';
-        $GLOBALS['sys_dbauth_passwd'] = 'dbauth_passwd';
-    }
-    
-    function tearDown() {
-        unset($GLOBALS['sys_dbname']);
-        unset($GLOBALS['sys_dbhost']);
-        unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['sys_dbauth_user']);
-        unset($GLOBALS['sys_dbauth_passwd']);
-    }
-
+class SVN_Apache_ModPerlTest extends TuleapTestCase
+{
     private function setConfForGuineaPigProject() {
         return array('unix_group_name' => 'gpig',
                      'public_path'     => '/svnroot/gpig',
@@ -50,16 +34,16 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
      * @return SVN_Apache_ModPerl
      */
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
-        return new SVN_Apache_ModPerl($this->setConfForGuineaPigProject());
+        return new SVN_Apache_ModPerl(mock('Tuleap\SvnCore\Cache\Parameters'), $this->setConfForGuineaPigProject());
     }
 
-    function testGetSVNApacheConfHeadersShouldInsertModPerl() {
+    public function testGetSVNApacheConfHeadersShouldInsertModPerl() {
         $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
 
         $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf->getHeaders());
     }
     
-    function testGetApacheAuthShouldContainsDefaultValues() {
+    public function testGetApacheAuthShouldContainsDefaultValues() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
@@ -69,7 +53,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
         $this->assertPattern('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);
     }
     
-    function testGetApacheAuthShouldSetupPerlAccess() {
+    public function testGetApacheAuthShouldSetupPerlAccess() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
@@ -78,13 +62,28 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
         $this->assertPattern('/TuleapDSN/', $conf);
     }
     
-    function testGetApacheAuthShouldNotReferenceAuthMysql() {
+    public function testGetApacheAuthShouldNotReferenceAuthMysql() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
         
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
     }
-}
 
-?>
+    public function itShouldUseCacheParameters()
+    {
+        $cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
+        stub($cache_parameters)->getMaximumCredentials()->returns(877);
+        stub($cache_parameters)->getLifetime()->returns(947);
+
+        $apache_modperl          = new SVN_Apache_ModPerl($cache_parameters, $this->setConfForGuineaPigProject());
+        $project_db_row          = $this->setConfForGuineaPigProject();
+        $generated_configuration = $apache_modperl->getConf(
+            $project_db_row['public_path'],
+            $project_db_row['system_path']
+        );
+
+        $this->assertStringContains($generated_configuration, 'TuleapCacheCredsMax 877');
+        $this->assertStringContains($generated_configuration, 'TuleapCacheLifetime 947');
+    }
+}

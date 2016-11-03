@@ -869,7 +869,11 @@ class LdapPlugin extends Plugin {
                 if ($params['svn_conf_auth'] === SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL ||
                     $params['project_authorizes_tokens']
                 ) {
-                    $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl($this->getLdap(), $params['project_info']);
+                    $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl(
+                        $this->getLdap(),
+                        $params['cache_parameters'],
+                        $params['project_info']
+                    );
                 } else {
                     $params['svn_apache_auth'] = new LDAP_SVN_Apache($this->getLdap(), $params['project_info']);
                 }
