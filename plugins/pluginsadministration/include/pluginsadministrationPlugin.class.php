@@ -56,6 +56,7 @@ class PluginsAdministrationPlugin extends Plugin
     public function burning_parrot_get_javascript_files(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/pluginsadministration.js';
         }
     }

@@ -59,20 +59,38 @@ class PluginsAdministrationViews extends Views {
     }
 
     public function display($view='') {
-        $renderer = new AdminPageRenderer();
+        $renderer       = new AdminPageRenderer();
+        $request        = HTTPRequest::instance();
+        $plugin_factory = PluginFactory::instance();
 
         switch ($view) {
             case 'ajax_projects':
-            case 'restrict':
                 $this->header();
                 $this->$view();
                 $this->footer();
                 break;
 
-            case 'properties':
-                $request        = HTTPRequest::instance();
-                $plugin_factory = PluginFactory::instance();
+            case 'restrict':
+                $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
+                $plugin                     = $plugin_factory->getPluginById($request->get('plugin_id'));
 
+                if ($plugin->getScope() !== Plugin::SCOPE_PROJECT) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'This project cannot be restricted');
+                    $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
+                }
+
+                $presenter = $this->getPluginResourceRestrictorPresenter($plugin, $plugin_resource_restrictor);
+
+                $renderer->renderAPresenter(
+                    $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                    ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
+                    PluginsAdministration_ManageAllowedProjectsPresenter::TEMPLATE,
+                    $presenter
+                );
+
+                break;
+
+            case 'properties':
                 if ($request->exist('plugin_id')) {
                     $plugin = $plugin_factory->getPluginById($request->get('plugin_id'));
 
@@ -242,26 +260,15 @@ class PluginsAdministrationViews extends Views {
         );
     }
 
-    public function restrict() {
-        $request                    = HTTPRequest::instance();
-        $plugin_factory             = PluginFactory::instance();
-        $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
-        $plugin                     = $plugin_factory->getPluginById($request->get('plugin_id'));
-
-        if ($plugin->getScope() !== Plugin::SCOPE_PROJECT) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'This project cannot be restricted.');
-            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
-            die();
-        }
-
-        $presenter = new PluginsAdministration_ManageAllowedProjectsPresenter(
+    private function getPluginResourceRestrictorPresenter(
+        Plugin $plugin,
+        PluginResourceRestrictor $plugin_resource_restrictor
+    ) {
+        return new PluginsAdministration_ManageAllowedProjectsPresenter(
             $plugin,
             $plugin_resource_restrictor->searchAllowedProjectsOnPlugin($plugin),
             $plugin_resource_restrictor->isPluginRestricted($plugin)
         );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
-        $renderer->renderToPage(PluginsAdministration_ManageAllowedProjectsPresenter::TEMPLATE, $presenter);
     }
 
     private function getPluginResourceRestrictor() {

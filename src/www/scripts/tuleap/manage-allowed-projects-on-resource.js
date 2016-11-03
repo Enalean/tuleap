@@ -20,11 +20,18 @@
     var ESC_KEYCODE = 27;
 
     $(function() {
+        bindAllowAllEvent();
         bindFilterEvent();
         bindCheckboxesEvent();
         bindDeleteEvent();
         projectAutocompleter();
     });
+
+    function bindAllowAllEvent() {
+        $('#allowed-projects-all-allowed').on('change', function() {
+            $('#' + $(this).attr('data-form-id')).submit();
+        });
+    }
 
     function bindFilterEvent() {
         $('#projects-allowed-form').on('keyup', '#filter-projects', function(event) {
@@ -115,7 +122,11 @@
     }
 
     function projectAutocompleter() {
-        tuleap.autocomplete_projects_for_select2(document.getElementById('project-to-allow'), { include_private_projects: 1 });
+        var autocompleter = document.getElementById('project-to-allow');
+
+        if (autocompleter) {
+            tuleap.autocomplete_projects_for_select2(autocompleter, { include_private_projects: 1 });
+        }
     }
 
 })(window.jQuery);
