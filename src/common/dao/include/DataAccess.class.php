@@ -223,10 +223,7 @@ class DataAccess {
         } else {
             $value = mysql_escape_string($value);
         }
-        if (!is_numeric($value) || (isset($params['force_string']) && $params['force_string'])) {
-            $value = "'" . $value . "'";
-        }
-        return $value;
+        return "'$value'";
     }
 
     /**

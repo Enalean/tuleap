@@ -1,11 +1,13 @@
 'use strict';
 
 var gulp               = require('gulp'),
+    path               = require('path'),
     del                = require('del'),
     rename             = require('gulp-rename'),
     scss_lint          = require('gulp-scss-lint'),
-    tuleap             = require('./tools/utils/tuleap-gulp-build'),
-    fat_combined_files = [
+    tuleap             = require('./tools/utils/tuleap-gulp-build');
+
+var fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
         'src/www/scripts/polyphills/storage.js',
         'src/www/scripts/prototype/prototype.js',
@@ -147,7 +149,7 @@ var gulp               = require('gulp'),
             'src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss',
             'src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss'
         ],
-        'target_dir': 'src/www/themes/FlamingParrot/css'
+        target_dir: 'src/www/themes/FlamingParrot/css'
     },
     theme_burningparrot_scss = {
         files: [
@@ -179,11 +181,16 @@ gulp.task('clean-js-core', function() {
 });
 
 gulp.task('js-core', ['clean-js-core'], function() {
-    tuleap.concat_core_js('tuleap', fat_combined_files, asset_dir);
-    tuleap.concat_core_js('tuleap_subset', subset_combined_files, asset_dir);
-    tuleap.concat_core_js('tuleap_subset_flamingparrot', subset_combined_files.concat(subset_combined_flamingparrot_files), asset_dir);
-    tuleap.concat_core_js('flamingparrot', flaming_parrot_files, asset_dir);
-    tuleap.concat_core_js('burningparrot', burning_parrot_files, asset_dir);
+    var target_dir = path.join('src', asset_dir);
+    var files_hash = {
+        tuleap                     : fat_combined_files,
+        tuleap_subset              : subset_combined_files,
+        tuleap_subset_flamingparrot: subset_combined_files.concat(subset_combined_flamingparrot_files),
+        flamingparrot              : flaming_parrot_files,
+        burningparrot              : burning_parrot_files
+    };
+
+    return tuleap.concat_core_js(files_hash, target_dir);
 });
 
 gulp.task('js', ['js-core', 'js-plugins']);
