@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#siteadmin-projectlist {
+    display: flex;
+    align-items: flex-start;
+}
+
+#siteadmin-projectlist-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 $tlp-title-spacing;
+}
+
+#siteadmin-projectlist-header-title {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-projectlist-filter {
+    width: 300px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-projectlist-result {
+    width: 100%;
+}
+
+.siteadmin-projectlist-result-nb {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+#siteadmin-projectlist-result-table {
+    margin: 0 0 $tlp-spacing;
+}
+
+@media screen and (max-width: 1200px) {
+    #siteadmin-projectlist {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #siteadmin-projectlist-filter {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+}
+
+.siteadmin-projectlist-result-project-name,
+.siteadmin-projectlist-result-unix-group-name {
+    width: 50%;
+}
+
+.siteadmin-projectlist-result-header {
+    white-space: nowrap;
+}
+
+.siteadmin-projectlist-result-project-access-icon {
+    margin: 0 5px 0 0;
+}

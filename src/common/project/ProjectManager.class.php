@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -183,6 +183,13 @@ class ProjectManager {
         return $projects;
     }
 
+    public function countProjectsByStatus($status)
+    {
+        $dar = $this->_getDao()->searchByStatus($status);
+
+        return $this->_getDao()->foundRows();
+    }
+
     /**
      * @return Project[]
      */
@@ -208,6 +215,19 @@ class ProjectManager {
     }
 
     /**
+     * @return array
+     */
+    public function getAllPendingProjects()
+    {
+        $pending_projects = array();
+        foreach ($this->_getDao()->searchByStatus(Project::STATUS_PENDING) as $row) {
+            $pending_projects[] = $this->createProjectInstance($row);
+        }
+
+        return $pending_projects;
+    }
+
+    /**
      * Look for project with name like given one
      *
      * @param String  $name
@@ -220,10 +240,10 @@ class ProjectManager {
      *
      * @return Array of Project
      */
-    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false, $isPrivate = false) {
+    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false, $isPrivate = false, $offset = 0) {
         $projects = array();
         $dao = new ProjectDao(CodendiDataAccess::instance());
-        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin, $isPrivate);
+        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin, $isPrivate, $offset);
         $nbFound = $dao->foundRows();
         foreach($dar as $row) {
             $projects[] = $this->getAndCacheProject($row);
@@ -333,6 +353,13 @@ class ProjectManager {
         }
 
         return false;
+    }
+
+    public function updateStatus(Project $project, $status)
+    {
+        if (! $this->_getDao()->updateStatus($project->getId(), $status)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_approve_pending', 'error_update'));
+        }
     }
 
     /**

@@ -49,12 +49,14 @@ global	btn_preview	Prévisualiser
 global	btn_close	Fermer
 global	btn_reset	Réinitialiser
 global	btn_edit	Éditer
+global	btn_restrict	Restreindre
+global	search_title	Rechercher
 global	save_change	Sauvegarder vos modifications
 global	reset	réinitialiser
 global	delete	Supprimer
 global	add	Ajouter
 global	total	Total
-global	warning!	Attention !
+global	warning	Attention !
 global	yes	Oui
 global	no	Non
 global	on	Activé
@@ -67,10 +69,11 @@ global	begin	Début
 global	end	Fin
 global	next	Suivant
 global	prev	Précédent
+global	of	sur
 global	printer_version	Version imprimable
 global	error	Erreur
 global	help	Aide
-global	by	par
+global	by	Par
 global	select	Sélectionner
 global	unchanged	Inchangé
 global	or	ou

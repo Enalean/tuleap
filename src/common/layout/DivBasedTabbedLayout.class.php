@@ -107,7 +107,7 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
 	 *
 	 * @param	array	Header parameters array
 	 */
-	function header($params) {
+	function header(array $params) {
 		global $Language;
 
         $this->generic_header($params);
@@ -148,7 +148,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
       echo $this->getNotificationPlaceholder();
 	}
 
-	function footer($params) {
+	function footer(array $params) {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
         }

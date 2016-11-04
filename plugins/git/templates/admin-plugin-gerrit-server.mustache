@@ -1,142 +1,167 @@
-<form method="POST" action="?pane=gerrit_servers_admin&action=gerrit-servers">
-    {{{ csrf_input }}}
-    <h2>Admin gerrit servers</h2>
-    <dl>
-        {{# list_of_servers }}
-            <dt>
-                <h3>
-                    {{# id }}{{ host }}{{/ id }}
-                    {{^ id }}Add new gerrit server{{/ id }}
-                </h3>
-            </dt>
-            <dd>
-                <table>
-                    <tbody>
-                        <tr valign="top">
-                            <td>Host:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][host]"
-                                       value="{{ host }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>HTTP Port:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][http_port]"
-                                       value="{{ http_port }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>SSH Port:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][ssh_port]"
-                                       value="{{ ssh_port }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>Login:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][login]"
-                                       value="{{ login }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>Identity File:</td>
-                            <td>
-                                <input type="text"
-                                       name="gerrit_servers[{{ id }}][identity_file]"
-                                       value="{{ identity_file }}"
-                                />
-                            </td>
-                        </tr><tr valign="top">
-                            <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
-                            <td>
-                                <textarea
-                                    type="checkbox"
-                                    name="gerrit_servers[{{ id }}][replication_key]"
-                                    cols="30"
-                                    rows="5">{{ replication_key }}</textarea>
-                            </td>
-                        </tr><tr>
-                            <td><label>Use SSL</label></td>
-                            <td><input type="checkbox" name="gerrit_servers[{{ id }}][use_ssl]" {{# use_ssl }}checked="checked"{{/ use_ssl }} /></td>
-                        </tr><tr>
-                            <td> <label> Gerrit server version: </label> </td>
-                            <td>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][gerrit_version]"
-                                           id="gerritVersion25"
-                                           value="2.5"
-                                           {{# use_gerrit_2_5 }}checked="checked"{{/ use_gerrit_2_5 }}
-                                    />
-                                    2.5
-                                </label>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][gerrit_version]"
-                                           id="gerritVersion28"
-                                           value="2.8+"
-                                           {{^ use_gerrit_2_5 }}checked="checked"{{/ use_gerrit_2_5 }}
-                                    />
-                                    2.8+
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> <label> HTTP password: </label> </td>
-                            <td>
-                                <input type="password"
-                                       name="gerrit_servers[{{ id }}][http_password]"
-                                       value="{{ http_password }}"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> <label> Replication password: </label> </td>
-                            <td>
-                                <input type="password"
-                                       name="gerrit_servers[{{ id }}][replication_password]"
-                                       value="{{ replication_password }}"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> Authentication type </td>
-                            <td>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][auth_type]"
-                                           value="Digest"
-                                    {{# is_digest }}checked{{/ is_digest }}>Digest (default)
-                                </label>
-                                <label class="radio">
-                                    <input type="radio"
-                                           name="gerrit_servers[{{ id }}][auth_type]"
-                                           value="Basic"
-                                    {{# is_basic }}checked{{/ is_basic }}>Basic
-                                </label>
-                            </td>
-                        </tr>
+{{# list_of_servers_is_empty }}
+    <div class="empty-page">
+        <span class="empty-page-text">{{{ list_of_servers_empty_message }}}</span>
+        <button id="button-modal-add-gerrit-server" type="button" class="tlp-button-primary tlp-button-large">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ gerrit_add_server }}
+        </button>
+    </div>
+{{/ list_of_servers_is_empty }}
 
-                        {{# id }}
-                        <tr>
-                            {{# is_used }}
-                            <td><em>This server is already used by some repositories, cannot delete it.</em></td>
-                            {{/ is_used }}
-                            {{^ is_used }}
-                            <td><label>Delete?<br /><input type="checkbox" name="gerrit_servers[{{ id }}][delete]" value="1" /></label></td>
-                            {{/ is_used }}
-                        </tr>
-                        {{/ id }}
-                    </tbody>
-                </table>
-            </dd>
-        {{/ list_of_servers }}
-    </dl>
-    <p><input type="submit" value="{{ btn_submit }}" /></p>
-</form>
+{{^ list_of_servers_is_empty }}
+    <button id="button-modal-add-gerrit-server" type="button" class="tlp-button-primary add-gerrit-server-button">
+        <i class="fa fa-plus tlp-button-icon"></i> {{ gerrit_add_server }}
+    </button>
+
+    {{# list_of_servers }}
+        <div id="gerrit-servers-list">
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        {{# host }}
+                        <h1 class="tlp-pane-title">
+                            {{ host }}
+                        </h1>
+                        {{/ host }}
+                        {{^ host }}
+                        <h1 class="tlp-pane-title">
+                            {{ not_specified_host }}
+                        </h1>
+                        {{/ host }}
+                    </div>
+                    <section class="tlp-pane-section gerrit-server-info">
+                        <div class="gerrit-server-info-one">
+
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_host }}
+                                </label>
+                                {{# host }}
+                                    {{ host }}
+                                {{/ host }}
+                                {{^ host }}
+                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                {{/ host }}
+                            </div>
+
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_http_port }}
+                                </label>
+                                {{# http_port }}
+                                    {{ http_port }}
+                                {{/ http_port }}
+                                {{^ http_port }}
+                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                {{/ http_port }}
+                            </div>
+
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_use_ssl }}
+                                </label>
+                                {{# use_ssl }}
+                                    <span class="tlp-badge-success">{{ yes }}</span>
+                                {{/ use_ssl }}
+                                {{^ use_ssl }}
+                                    <span class="tlp-badge-danger">{{ no }}</span>
+                                {{/ use_ssl }}
+                            </div>
+
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_gerrit_version }}
+                                </label>
+                                {{# use_gerrit_2_5 }}
+                                    <span class="tlp-badge-primary">2.5</span>
+                                {{/ use_gerrit_2_5 }}
+                                {{^ use_gerrit_2_5 }}
+                                    <span class="tlp-badge-primary">2.8+</span>
+                                {{/ use_gerrit_2_5}}
+                            </div>
+                        </div>
+
+                        <div class="gerrit-server-info-two">
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_login }}
+                                </label>
+                                {{# login }}
+                                    {{ login }}
+                                {{/ login }}
+                                {{^ login }}
+                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                {{/ login }}
+                            </div>
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_identity_file }}
+                                </label>
+                                {{# identity_file }}
+                                    {{ identity_file }}
+                                {{/ identity_file }}
+                                {{^ identity_file }}
+                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                {{/ identity_file }}
+                            </div>
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_auth_type }}
+                                </label>
+                                {{# is_digest }}
+                                    <span class="tlp-badge-secondary">{{ digest }}</span>
+                                {{/ is_digest }}
+                                {{# is_basic }}
+                                    <span class="tlp-badge-secondary">{{ basic }}</span>
+                                {{/ is_basic }}
+                            </div>
+                            <div class="tlp-property git-info-two-ssh-key">
+                                <label class="tlp-label">
+                                    {{ gerrit_label_replication_key }}
+                                </label>
+                                {{# replication_key }}
+                                    <i class="fa fa-key"></i> {{ replication_key_ellipsis_value }}
+                                {{/ replication_key }}
+                                {{^ replication_key }}
+                                    <p class="tlp-property-empty">{{ empty_content }}</p>
+                                {{/ replication_key }}
+                            </div>
+                        </div>
+                </div>
+                <div class="tlp-pane-container gerrit-server-action-container">
+                    <section class="tlp-pane-section gerrit-server-action">
+                        <button type="button"
+                                class="tlp-button-primary tlp-button-outline action-item gerrit-action-edit-button"
+                                data-modal-id="gerrit-edit-modal-{{ id }}"
+                        >
+                            <i class="fa fa-pencil tlp-button-icon"></i>
+                                {{ btn_edit }}
+                        </button>
+                        {{> admin-plugin-gerrit-modal-edit }}
+
+                        {{# is_used }}
+                            <button type="submit" class="tlp-button-danger tlp-button-outline"
+                                    title="{{ btn_delete_title }}" disabled>
+                                <i class="fa fa-trash-o tlp-button-icon"></i>
+                                {{ btn_delete }}
+                            </button>
+                        {{/ is_used }}
+                        {{^ is_used }}
+                            <button
+                                    type="submit"
+                                    class="tlp-button-danger tlp-button-outline gerrit-action-delete-button"
+                                    data-modal-id="gerrit-delete-modal-{{ id }}"
+                            >
+                                <i class="fa fa-trash-o tlp-button-icon"></i>
+                                {{ btn_delete }}
+                            </button>
+                            {{> admin-plugin-gerrit-modal-delete }}
+                        {{/ is_used }}
+                    </section>
+                </div>
+                </section>
+            </section>
+        </div>
+    {{/ list_of_servers }}
+{{/ list_of_servers_is_empty }}
+
+{{> admin-plugin-gerrit-server-modal }}

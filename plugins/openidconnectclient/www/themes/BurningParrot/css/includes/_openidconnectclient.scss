@@ -1,0 +1,51 @@
+#providers-configuration {
+    display: flex;
+    flex-direction: column;
+}
+
+#providers-configuration-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 $tlp-title-spacing;
+
+    > .add-provider-button {
+        margin: 0 0 0 $tlp-spacing;
+    }
+}
+
+#providers-configuration-header-title {
+    margin: 0;
+}
+
+.provider-info {
+    display: flex;
+}
+
+.provider-client {
+    margin: 0 0 0 ($tlp-spacing * 2);
+}
+
+.provider-action-container {
+    display: flex;
+    flex: 0 1 auto;
+}
+
+.provider-action {
+    display: flex;
+    align-items: center;
+}
+
+.provider-action-delete-button {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+@media screen and (max-width: 1300px) {
+    .tlp-pane {
+        flex-direction: column;
+    }
+
+    .provider-action-container {
+        justify-content: flex-end;
+        border: 1px solid $tlp-ui-border-light;
+    }
+}

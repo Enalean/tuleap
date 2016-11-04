@@ -13,6 +13,7 @@ if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '
     die('Tuleap must be run on a PHP 5.3 (or greater) engine.  PHP 7 is not yet supported.');
 }
 
+require_once('common/constants.php');
 require_once('common/autoload.php');
 require_once('common/autoload_libs.php');
 

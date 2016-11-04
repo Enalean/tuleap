@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,24 +44,16 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
         return $csrf->fetchHTMLInput();
     }
 
-    public function resource_allowed_project_back_link() {
-        return '/admin/';
-    }
-
-    public function resource_allowed_project_back_link_title() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_back_link_title');
-    }
-
     public function resource_allowed_project_title() {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_title');
     }
 
-    public function information() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_information');
+    public function resource_allowed_project_subtitle() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_subtitle');
     }
 
-    public function resource_allowed_project_list() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list');
+    public function information() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_information');
     }
 
     public function resource_allowed_project_list_allow_placeholder() {
@@ -87,5 +79,10 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
 
     public function resource_allowed_project_list_empty() {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_empty');
+    }
+
+    public function url_project()
+    {
+        return MEDIAWIKI_BASE_URL . '/wiki/';
     }
 }

@@ -23,28 +23,34 @@ namespace Tuleap\Tracker\Deprecation;
 
 use TemplateRendererFactory;
 use Response;
+use Tuleap\Admin\AdminPageRenderer;
 
 class DeprecationController
 {
     private $retriever;
 
-    public function __construct(DeprecationRetriever $retriever)
-    {
-        $this->retriever = $retriever;
+    /** @var AdminPageRenderer */
+    private $admin_page_rendered;
+
+    public function __construct(
+        DeprecationRetriever $retriever,
+        AdminPageRenderer $admin_page_rendered
+    ) {
+        $this->retriever           = $retriever;
+        $this->admin_page_rendered = $admin_page_rendered;
     }
 
     public function index(Response $response)
     {
-        $title  = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title');
-        $params = array(
-            'title' => $title
-        );
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $title     = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title');
         $presenter = new DeprecationPresenter($title, $this->getDeprecatedFields());
 
-        $response->header($params);
-        $renderer->renderToPage('siteadmin-config/deprecation', $presenter);
-        $response->footer($params);
+        $this->admin_page_rendered->renderANoFramedPresenter(
+            $title,
+            TRACKER_TEMPLATE_DIR,
+            'siteadmin-config/deprecation',
+            $presenter
+        );
     }
 
     private function getDeprecatedFields()

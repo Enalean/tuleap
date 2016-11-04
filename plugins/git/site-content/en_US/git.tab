@@ -1,4 +1,3 @@
-
 plugin_git	descriptor_description	Plugin which provides Git support for Tuleap
 plugin_git	descriptor_name	Git Plugin
 plugin_git	please_choose	Please choose
@@ -9,6 +8,7 @@ plugin_git	view	view
 plugin_git	title	Git Plugin
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
+
 plugin_git	help_reference_title	Initialize a repository
 plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (for example)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;repository_url&gt; master</li>
 plugin_git	help_init_reference_msg	The current repository has not been initialized yet, this is required to allow users to clone it
@@ -70,6 +70,13 @@ plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the re
 plugin_git	default_mirros_update_success	Default mirrors updated.
 plugin_git	default_mirros_update_error	An error occured while updating default mirrors.
 
+plugin_git	mirror_no_repositories	None
+plugin_git	repos_mirror_title	Repositories on $1 mirror
+plugin_git	edit_mirror_title	Edit $1 mirror
+plugin_git	delete_mirror_title	Delete $1 mirror
+plugin_git	delete_mirror_desc	Wow, wait a minute. You are about to delete the <b>$1</b> mirror. Please confirm your action.
+plugin_git	mirror_already_used	This mirror is used by repositories, you shall not delete it.
+
 plugin_git	admin_settings	General settings
 plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration to Gerrit
@@ -88,6 +95,24 @@ plugin_git	gerrit_migrate_access_right	Migrate to Gerrit the access rights defin
 plugin_git	gerrit_template	Please choose a permission's configuration template for the migration,<br />they will be applied to the migrated repository on Gerrit:
 plugin_git	default_gerrit_template	Permissions defined in Git
 plugin_git	none_gerrit_template	No pre-set permissions
+plugin_git	gerrit_add_server	Add gerrit server
+plugin_git	add_server	Add server
+plugin_git	gerrit_no_servers	There is nothing here,<br> start by adding a gerrit server.
+plugin_git	gerrit_label_host	Host
+plugin_git	gerrit_label_http_port	HTTP port
+plugin_git	gerrit_label_ssh_port	SSH port
+plugin_git	gerrit_label_replication_key	Replication SSH Key
+plugin_git	gerrit_label_replication_key_infos	Replication SSH Key (SSH key of the user who runs gerrit server)
+plugin_git	gerrit_label_use_ssl	Use SSL?
+plugin_git	gerrit_label_login	Login
+plugin_git	gerrit_label_identity_file	Identity file
+plugin_git	gerrit_label_gerrit_version	Gerrit server version
+plugin_git	gerrit_label_http_password	HTTP password
+plugin_git	gerrit_label_replication_password	Replication password
+plugin_git	gerrit_label_auth_type	Authentication type
+plugin_git	delete_gerrit_title	Delete $1
+plugin_git	delete_gerrit_desc	Wow, wait a minute. You are about to delete the <b>$1</b> server. Please confirm your action.
+plugin_git	edit_gerrit_title	Edit $1
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
@@ -137,8 +162,8 @@ plugin_git	actions_mirror_ids_not_valid	This request is not valid (invalid mirro
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup of '$1' will be available in the backup directory
-plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
-plugin_git	actions_missing_permission	     Please define both Write and Rewind permissions.
+plugin_git	actions_name_not_available		 A file already exists with this name under gitroot
+plugin_git	actions_missing_permission		 Please define both Write and Rewind permissions.
 
 
 plugin_git	view_repo_description	Description
@@ -364,15 +389,16 @@ plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password:
 
 plugin_git	access_control_title	Access control settings
-plugin_git	allow_regexp_info	Allow usage of regexp in branches and tags during repository permission definition
+plugin_git	allow_regexp_info	Allow usage of regular expressions in branches and tags during repository permission definition
 plugin_git	save_settings	Save settings
-plugin_git	update_error	An error occurred while activating regexp option for Git fine grained permission.
-plugin_git	warning_conflit_regexp_configuration	The regexp option has been disabled at plateform level.
-plugin_git	warning_conflit_regexp_configuration_part_two	All rules containing a regexp will be deleted and you won't be able to activate option again. If you don't save your modifications, current state will still work.
+plugin_git	update_error	An error occurred while activating regular expressions option for Git fine grained permission.
+plugin_git	warning_conflit_regexp_configuration	The regular expressions option has been disabled at plateform level.
+plugin_git	warning_conflit_regexp_configuration_part_two	All rules containing regular expressions will be deleted and you won't be able to activate the option again. If you don't save your modifications, the current state will still work.
 plugin_git	warning_conflit_regexp_configuration_confirm	Please confirm your action.
+plugin_git	warning_admin_activation	Enabling this option can have security implications, with this feature a git administrator can do a denial of service attack. Please also note that this option might end up in non working state. Invalid regular expressions will be ignored silently.
 
 
-plugin_git	gitolite_config_tab_name	Gitolite configuration
+plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	general_settings_tab_name	General settings
 plugin_git	mirror_tab_name	Mirrors
@@ -387,10 +413,10 @@ plugin_git	admin_mirror_updated	Mirror updated!
 plugin_git	admin_mirror_cannot_delete	Failed to delete mirror
 plugin_git	admin_mirror_defalut_cannot_delete	An error occured whiled deleting the mirror in the default mirrors for projects.
 plugin_git	admin_mirror_deleted	Mirror deleted!
-plugin_git	add_mirror	Add a new mirror
-plugin_git	dump_mirrored_repositories_label	Dump mirrored repositories configuration
-plugin_git	dump_mirrored_repositories_text	If you click this button, a system event will be queued to dump the mirrored repositories configuration. This dump will rewrite the gitolite configuration according to the hostnames of each mirror and the hostname define for this server in the .gitolite.rc file.
-plugin_git	dump_gitolite_conf_queued	A system event has been queued. The gitolite configuration will be dumped at the time of its execution.<a href="$1"> Git queue can be found here</a>.
+plugin_git	add_mirror	Add mirror
+plugin_git	dump_mirrored_repositories_label	Rewrite mirrored repositories configuration
+plugin_git	dump_mirrored_repositories_text	A system event will be queued to dump the mirrored repositories configuration. This dump will rewrite the gitolite configuration according to the hostnames of each mirror and the hostname define for this server in the .gitolite.rc file. Do you want to continue?
+plugin_git	dump_gitolite_conf_queued	A system event has been queued. The gitolite configuration will be dumped at the time of its execution. <a href="$1">Git queue can be found here</a>.
 plugin_git	mirror_section_title	Git mirror administration
 plugin_git	url_label	SSH Host
 plugin_git	hostname_label	Hostname
@@ -399,6 +425,8 @@ plugin_git	ssh_key_label	Owner's SSH Key
 plugin_git	pwd_label	Owner's Password
 plugin_git	mirrored_repo_label	Repositories on this mirror
 plugin_git	manage_allowed_projects_label	Manage allowed projects
+plugin_git	repositories_label	Repositories on this mirror
+plugin_git	manage_allowed_projects	Manage allowed projects
 plugin_git	admin_update_button	Update
 plugin_git	admin_delete_button	Delete
 plugin_git	change_pwd	click here to change
@@ -408,8 +436,10 @@ plugin_git	mirror_repo	Repository
 plugin_git	mirror_title	List of repositories on mirror $1
 plugin_git	mirror_back	Back to mirror list
 plugin_git	mirror_allowed_project_back_link_title	Back to mirror list
-plugin_git	mirror_allowed_project_title	Manage projects allowed to use $1
-plugin_git	mirror_allowed_project_allow_all	Allow <b>all the projects</b> to use this mirror.
+plugin_git	mirror_allowed_project_title	$1 projects restriction
+plugin_git	mirror_allowed_project_pane_title	Projects allowed to use $1
+plugin_git	mirror_allowed_project_pane_information	This section allows to define which projects will be able to use $1.
+plugin_git	mirror_allowed_project_allow_all	Allow all the projects to use this mirror.
 plugin_git	mirror_allowed_project_allow_all_submit	Save
 plugin_git	mirror_allowed_project_list	List of allowed projects
 plugin_git	mirror_allowed_project_list_allow_placeholder	Project name
@@ -429,6 +459,10 @@ plugin_git	mirror_allowed_project_revoke_title	Warning
 plugin_git	mirror_allowed_project_revoke_description	You are about to revoke the access to this mirror to one or several projects. This implies the unmirroring of all repositories of the selected projects. Are you sure you want to do this?
 plugin_git	mirror_allowed_project_revoke_yes	Yes, revoke access
 plugin_git	mirror_allowed_project_revoke_no	No
+plugin_git	mirror_no_mirrors_part_one	There is nothing here,
+plugin_git	mirror_no_mirrors_part_two	start by adding a mirror.
+plugin_git	mirror_number_of_repositories	$1 repositories
+plugin_git	no_specified_mirror_name	Not specified mirror name
 
 plugin_git	system_event_queue	Git Queue
 plugin_git	mirror_system_event_queue	Grok Mirror Queue
@@ -446,9 +480,6 @@ project_admin_utils	git_admin_groups	Git admin groups
 project_admin_utils	git_fork_repositories	Git fork repositories
 
 plugin_git	identifier	Identifier
-plugin_git	identifier_placeholder	e.g. location, ...
-plugin_git	url_placeholder	e.g. tuleap.net
-plugin_git	hostname_placeholder	e.g. sfo-mirror
 
 plugin_git	how_to_use_text	How to use a Git repository:
 plugin_git	clone_text	Clone the repository in order to get your working copy:
@@ -473,7 +504,7 @@ plugin_git	regenerate_config_bad_request	Bad request.
 plugin_git	regenerate_config_project_not_exist	Project does not exist.
 plugin_git	regenerate_config_waiting	Regenerating Gitolite config for project $1. Please wait few minutes.
 
-plugin_git	admin_gitolite_config_title	Administration of Gitolite configuration
+plugin_git	admin_gitolite_config_title	Gitolite configuration
 plugin_git	admin_gitolite_config_description	This section allows you to regenerate the Gitolite configuration file of a selected project.
 plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git Plugin</a>.
 
@@ -494,11 +525,11 @@ plugin_git	add_branch_permission	Add permission on a new branch
 plugin_git	add_tag_permission	Add permission on a new tag
 plugin_git	add_permission_duplicate_pattern	Pattern $1 is already existing.
 
-plugin_git	regexp_permission_label	Enable regexp in branches and tags pattern
+plugin_git	regexp_permission_label	Enable regular expressions in branches and tags pattern
 plugin_git	title_warning_regexp_uncheck	Some rules may be deleted
-plugin_git	warning_regexp_uncheck	All rules containing a regexp will be deleted. Please confirm the desactivation of regexp.
-plugin_git	regexp_incoherence_label	For now, once the feature is enabled, it wont be possible to disable it. Enabling this option might end up in non working state. Invalid regexp will be ignored without errors.
-plugin_git	history_regexp	Regexp $1 for repository $2.
+plugin_git	warning_regexp_uncheck	All rules containing regular expressions will be deleted. Please confirm the desactivation of regular expressions.
+plugin_git	regexp_incoherence_label	For now, once the feature is enabled, it wont be possible to disable it. Enabling this option might end up in non working state. Invalid regular expressions will be ignored without errors.
+plugin_git	history_regexp	Regular expression $1 for repository $2.
 plugin_git	enabled	enabled
 plugin_git	disabled	disabled
 
@@ -516,3 +547,11 @@ plugin_git	fine_grained_delete_error	An error occured while deleting permission.
 plugin_git	fine_grained_bad_pattern	The pattern $1 is not well formed. Skipping.
 
 plugin_git	stats_read	Total number of git read access
+plugin_git	empty_content	Empty
+plugin_git	not_specified_host	Not specified host
+plugin_git	btn_delete_title	This server is already used by some repositories.
+
+plugin_git	digest	Digest
+plugin_git	basic	Basic
+
+plugin_git	regenerate_gitolite_configuration	Regenerate configuration

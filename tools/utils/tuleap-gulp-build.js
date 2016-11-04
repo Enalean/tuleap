@@ -168,6 +168,12 @@ function watch_plugins() {
                 files = files.concat(
                     plugin['themes'][theme]['files'].map(function (file) { return path.join(base_dir, file);})
                 );
+                var watched_includes = plugin['themes'][theme]['watched_includes'];
+                if (watched_includes) {
+                    files = files.concat(
+                        watched_includes.map(function (file) { return path.join(base_dir, file); })
+                    );
+                }
             });
 
             gulp.watch(files, ['sass-' + name]);

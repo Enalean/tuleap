@@ -44,6 +44,10 @@ if($request->valid($vCodendiUserOnly)) {
     }
 }
 
+$json_format = false;
+if ($request->get('return_type') === 'json_for_select_2') {
+    $json_format = true;
+}
 
 // Number of user to display
 $limit = 15;
@@ -51,10 +55,13 @@ $userList = array();
 
 // Raise an evt
 $pluginAnswered = false;
+$has_more = false;
 $evParams = array('searchToken'     => $userName,
                   'limit'           => $limit,
                   'codendiUserOnly' => $codendiUserOnly,
+                  'json_format'     => $json_format,
                   'userList'        => &$userList,
+                  'has_more'        => &$has_more,
                   'pluginAnswered'  => &$pluginAnswered);
 $em = EventManager::instance();
 $em->processEvent("ajax_search_user", $evParams);
@@ -66,21 +73,41 @@ if(!$pluginAnswered) {
     $dar = $userDao->searchUserNameLike($userName, $limit);
     while($dar->valid()) {
         $row = $dar->current();
-        $userList[] = $row['realname']." (".$row['user_name'].")";
+        $userList[] = array(
+            'display_name' => $row['realname']." (".$row['user_name'].")",
+            'login'        => $row['user_name']
+        );
         $dar->next();
     }
-    if($userDao->foundRows() > $limit) {
-        $userList[] = '<strong>...</strong>';
-    }
+    $has_more = $userDao->foundRows() > $limit;
 }
 
 //
 // Display
 //
+if ($json_format) {
+    $json_entries = array();
+    foreach ($userList as $user) {
+        $json_entries[] = array(
+            'id'    => $user['display_name'],
+            'text'  => $user['display_name'],
+            'login' => $user['login']
+        );
+    }
 
-$purifier = Codendi_HTMLPurifier::instance();
-echo "<ul>\n";
-foreach($userList as $user) {
-    echo '<li>' . $purifier->purify($user) . '</li>';
+    $output       = array(
+        'results' => $json_entries,
+        'pagination' => array(
+            'more' => $has_more
+        )
+    );
+
+    echo json_encode($output);
+} else {
+    $purifier = Codendi_HTMLPurifier::instance();
+    echo "<ul>\n";
+    foreach ($userList as $user) {
+        echo '<li>' . $purifier->purify($user['display_name']) . '</li>';
+    }
+    echo "</ul>\n";
 }
-echo "</ul>\n";

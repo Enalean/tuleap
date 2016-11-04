@@ -1,0 +1,157 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-table-radius              : 3px;
+$tlp-table-cell-padding        : 10px;
+$tlp-table-header-background   : #ffffff;
+$tlp-table-row-background-even : #fcfcfc;
+$tlp-table-row-background-odd  : #ffffff;
+$tlp-table-row-background-empty: #fcfcfc;
+
+/**
+ * Table actions
+ */
+.tlp-table-actions {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.tlp-table-actions-element {
+    margin: 0 $tlp-spacing / 2 0 0;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-table-actions-spacer {
+    flex: 1;
+}
+
+
+/**
+ * Table
+ */
+%tlp-table-th {
+    padding: $tlp-table-cell-padding;
+    background: $tlp-table-header-background;
+    color: $tlp-theme-color;
+    font-weight: 600;
+
+    &.tlp-table-cell-numeric {
+        text-align: right;
+    }
+}
+
+.tlp-table {
+    width: 100%;
+    border-radius: $tlp-table-radius;
+    overflow: hidden;
+
+    > thead > tr > th {
+        @extend %tlp-table-th;
+
+        border-bottom: 2px solid $tlp-theme-color;
+    }
+
+    > tfoot > tr > th {
+        @extend %tlp-table-th;
+
+        border-top: 2px solid $tlp-theme-color;
+    }
+
+    > tbody {
+        > tr:nth-child(even) > td {
+            background: $tlp-table-row-background-even;
+        }
+
+        > tr:nth-child(odd) > td {
+            background: $tlp-table-row-background-odd;
+        }
+
+        > tr:hover > td {
+            background: transparentize($tlp-theme-color, .93);
+        }
+
+        > tr > td {
+            padding: $tlp-table-cell-padding;
+            border-bottom: 1px solid $tlp-ui-border-normal;
+            line-height: normal;
+            vertical-align: middle;
+
+            &.tlp-table-cell-section {
+                padding: 5px $tlp-table-cell-padding;
+                background: $tlp-theme-background-color;
+                color: $tlp-theme-color;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: .3px;
+                text-transform: uppercase;
+            }
+
+            &.tlp-table-cell-empty {
+                height: 100px;
+                background: $tlp-table-row-background-empty;
+                color: transparentize($tlp-theme-color, .7);
+                font-style: italic;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            > .tlp-badge-primary,
+            > .tlp-badge-secondary,
+            > .tlp-badge-info,
+            > .tlp-badge-success,
+            > .tlp-badge-warning,
+            > .tlp-badge-danger {
+                margin: -4px 0 -3px;
+            }
+
+            > .tlp-button-small {
+                margin: -5px 0 -3px;
+            }
+        }
+
+        > tr:last-child > td {
+            border: 0;
+        }
+    }
+
+    > thead > tr > th a,
+    > tbody > tr > td a {
+        text-decoration: none;
+    }
+}
+
+.tlp-table-cell-numeric {
+    text-align: right;
+}
+
+.tlp-table-cell-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.tlp-table-sort {
+    display: block;
+}
+
+.tlp-table-sort-icon {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}

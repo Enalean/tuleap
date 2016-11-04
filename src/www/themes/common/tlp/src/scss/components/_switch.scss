@@ -1,0 +1,86 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-switch-height: 28px;
+$tlp-switch-width: 65px;
+$tlp-switch-background: #cbcbcb;
+$tlp-switch-button-background: #ffffff;
+$tlp-switch-button-width: 38px;
+$tlp-switch-button-padding: 1px;
+
+
+.tlp-switch-checkbox {
+    position: absolute;
+    visibility: hidden;
+}
+
+.tlp-switch-button {
+    display: block;
+    position: relative;
+    width: $tlp-switch-width;
+    height: $tlp-switch-height;
+    outline: none;
+    font-size: 0;
+    cursor: pointer;
+    user-select: none;
+
+    &::before {
+        display: block;
+        position: absolute;
+        top: $tlp-switch-button-padding;
+        right: $tlp-switch-button-padding;
+        bottom: $tlp-switch-button-padding;
+        left: $tlp-switch-button-padding;
+        transition: background-color 200ms;
+        border-radius: $tlp-switch-height / 2;
+        background-color: $tlp-switch-background;
+        content: '';
+    }
+
+    &::after {
+        display: block;
+        position: absolute;
+        top: $tlp-switch-button-padding + 1px;
+        bottom: $tlp-switch-button-padding + 1px;
+        left: $tlp-switch-button-padding + 1px;
+        width: $tlp-switch-button-width;
+        transition: left 200ms, color 200ms;
+        border-radius: ($tlp-switch-height - (2 * $tlp-switch-button-padding)) / 2;
+        background-color: $tlp-switch-button-background;
+        color: #ffffff;
+        font-family: 'FontAwesome';
+        font-size: 12px;
+        font-weight: 600;
+        line-height: $tlp-switch-height - $tlp-switch-button-padding;
+        text-align: center;
+        content: '\f00c';
+    }
+
+}
+
+.tlp-switch-checkbox:checked + .tlp-switch-button {
+    &::before {
+        background-color: $tlp-ui-success;
+    }
+
+    &::after {
+        left: 25px;
+        color: $tlp-ui-success;
+    }
+}

@@ -67,6 +67,13 @@ plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué da
 plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques minutes.
 plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
 
+plugin_git	mirror_no_repositories	Aucun
+plugin_git	repos_mirror_title	Dépôts sur le miroir $1
+plugin_git	edit_mirror_title	Éditer le miroir $1
+plugin_git	delete_mirror_title	Supprimer le miroir $1
+plugin_git	delete_mirror_desc	Hop hop hop, attendez une minute… Vous êtes sur le point de supprimer le miroir <b>$1</b> ! Merci de confirmer votre action.
+plugin_git	mirror_already_used	Le miroir est utilisé par des dépôts, vous ne pouvez pas le supprimer.
+
 plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
 
 plugin_git	dao_delete_error	Impossible de supprimer le dépôt de la base de données
@@ -159,6 +166,24 @@ plugin_git	gerrit_migrate_access_right	Migrer sur Gerrit les permissions défini
 plugin_git	gerrit_template	Choisissez un modèle de permissions pour la migration,<br /> elles seront appliquées au dépôt migré sur Gerrit:
 plugin_git	default_gerrit_template	Permissions définies dans Git
 plugin_git	none_gerrit_template	Pas de permissions prédéfinies
+plugin_git	gerrit_add_server	Ajouter un serveur gerrit
+plugin_git	add_server	Ajouter un serveur
+plugin_git	gerrit_no_servers	Il n'y a rien ici,<br> commencez par ajouter un serveur gerrit.
+plugin_git	gerrit_label_host	Host
+plugin_git	gerrit_label_http_port	Port HTTP
+plugin_git	gerrit_label_ssh_port	Port SSH
+plugin_git	gerrit_label_replication_key_infos	Réplication de la clé SSH (la clé SSH de l'utilisateur qui démarre le serveur gerrit)
+plugin_git	gerrit_label_replication_key	Réplication de la clé SSH
+plugin_git	gerrit_label_use_ssl	Utilisation de SSL ?
+plugin_git	gerrit_label_login	Identifiant
+plugin_git	gerrit_label_identity_file	Fichier d'identité
+plugin_git	gerrit_label_gerrit_version	Version du serveur gerrit
+plugin_git	gerrit_label_http_password	Mot de passe HTTP
+plugin_git	gerrit_label_replication_password	Réplication du mot de passe
+plugin_git	gerrit_label_auth_type	Type d'identification
+plugin_git	delete_gerrit_title	Supprimer $1
+plugin_git	delete_gerrit_desc	Hop hop hop, attendez une minute… Vous êtes sur le point de supprimer le serveur <b>$1</b> ! Merci de confirmer votre action.
+plugin_git	edit_gerrit_title	Éditer $1
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
@@ -363,9 +388,10 @@ plugin_git	save_settings	Sauvegarder la configuration
 plugin_git	update_error	Une erreur est survenue, impossible d'activer les expressions régulières pour les permissions fines Git.
 plugin_git	warning_conflit_regexp_configuration	L'utilisation des expression régulières a été désactivée au niveau de la plateforme.
 plugin_git	warning_conflit_regexp_configuration_part_two	Toutes les règles contenant une expression régulière seront supprimées et vous ne serez plus capable d'activer l'utilisation des expressions régulières pour ce dépôt.
-plugin_git	warning_conflit_regexp_configuration_confirm	Si vous ne sauvegardez pas vos modifications, l'état courrant fonctionnera encore. Merci de confirmer votre choix.
+plugin_git	warning_conflit_regexp_configuration_confirm	Si vous ne sauvegardez pas vos modifications, l'état courant fonctionnera encore. Merci de confirmer votre choix.
+plugin_git	warning_admin_activation	Activer cette option peut  avoir des impacts sur la sécurité, avec cette fonctionnalité un administrateur git peut réaliser une attaque en déni de service sur la plateforme. Merci de noter que l'activation de cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
 
-plugin_git	gitolite_config_tab_name	Configuration Gitolite
+plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	general_settings_tab_name	Configuration générale
 plugin_git	mirror_tab_name	Miroirs
@@ -380,10 +406,10 @@ plugin_git	admin_mirror_updated	Miroir modifié !
 plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le mirroir
 plugin_git	admin_mirror_defalut_cannot_delete	Une erreur est apparue lors de la suppression du mirroir en tant que mirroir par défaut.
 plugin_git	admin_mirror_deleted	Miroir supprimé!
-plugin_git	add_mirror	Ajouter un nouveau mirroir
-plugin_git	dump_mirrored_repositories_label	Reconstruire la configuration des dépôt mirroirs
-plugin_git	dump_mirrored_repositories_text	Si vous cliquez sur ce bouton, un évènement système sera généré pour reconstruire la configuration des dépôts mirroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque mirroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc.
-plugin_git	dump_gitolite_conf_queued	Un évènement système a été généré. La configuration de gitolite sera reconstruite au moment de son éxécution.<a href="$1"> La queue Git se trouve ici</a>.
+plugin_git	add_mirror	Ajouter un miroir
+plugin_git	dump_mirrored_repositories_label	Réécrire la configuration des dépôts mirroirs
+plugin_git	dump_mirrored_repositories_text	Un évènement système sera généré pour reconstruire la configuration des dépôts mirroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque mirroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc. Voulez-vous continuer ?
+plugin_git	dump_gitolite_conf_queued	Un évènement système a été généré. La configuration de gitolite sera reconstruite au moment de son éxécution. <a href="$1">La queue Git se trouve ici</a>.
 plugin_git	mirror_section_title	Administration des mirroirs
 plugin_git	url_label	Hôte SSH
 plugin_git	hostname_label	Hôte
@@ -392,6 +418,7 @@ plugin_git	ssh_key_label	Clé SSH du propriétaire
 plugin_git	pwd_label	Mot de passe du propriétaire
 plugin_git	mirrored_repo_label	Liste des dépôts présents sur ce mirroir
 plugin_git	manage_allowed_projects_label	Liste des projets autorisés sur ce mirroir
+plugin_git	repositories_label	Dépôts sur ce miroir
 plugin_git	manage_allowed_projects	Gérer les projets autorisés
 plugin_git	admin_update_button	Modifier
 plugin_git	admin_delete_button	Supprimer
@@ -402,12 +429,14 @@ plugin_git	mirror_repo	Dépôt
 plugin_git	mirror_title	Liste des dépôts sur $1
 plugin_git	mirror_back	Retour à la liste des mirroirs
 plugin_git	mirror_allowed_project_back_link_title	Retour à la liste des mirroirs
-plugin_git	mirror_allowed_project_title	Gérer les projets autorisés à utiliser $1
-plugin_git	mirror_allowed_project_allow_all	Autoriser <b>tous les projets</b> a utiliser ce miroir.
+plugin_git	mirror_allowed_project_title	Restriction de projets pour $1
+plugin_git	mirror_allowed_project_pane_title	Projets autorisés à utiliser $1
+plugin_git	mirror_allowed_project_pane_information	Cette section permet de définir les projets qui pourront utiliser ou non $1.
+plugin_git	mirror_allowed_project_allow_all	Autoriser tous les projets à utiliser ce miroir.
 plugin_git	mirror_allowed_project_allow_all_submit	Savegarder
 plugin_git	mirror_allowed_project_list	Liste des projets autorisés
 plugin_git	mirror_allowed_project_list_allow_placeholder	Nom du projet
-plugin_git	mirror_allowed_project_list_allow_project	Autorisé l'accès
+plugin_git	mirror_allowed_project_list_allow_project	Autoriser l'accès
 plugin_git	mirror_allowed_project_list_revoke_projects	Interdire l'accès aux projets sélectionnés
 plugin_git	mirror_allowed_project_list_filter_placeholder	Filtrer sur l'id ou le nom du projet
 plugin_git	mirror_allowed_project_list_id	Id
@@ -425,6 +454,10 @@ plugin_git	mirror_allowed_project_revoke_yes	Oui, interdire l'accès
 plugin_git	mirror_allowed_project_revoke_no	Non
 plugin_git	default_mirros_update_success	Mirroirs par défaut mis à jour.
 plugin_git	default_mirros_update_error	Une erreur est survenue lors de la mise à jour des mirroirs par défaut.
+plugin_git	mirror_no_mirrors_part_one	Il n'y a rien ici,
+plugin_git	mirror_no_mirrors_part_two	commencez par ajouter un miroir.
+plugin_git	mirror_number_of_repositories	$1 dépôts
+plugin_git	no_specified_mirror_name	Nom de miroir non renseigné
 
 plugin_git	system_event_queue	File d'attente Git
 plugin_git	mirror_system_event_queue	File d'attente Grok Mirror
@@ -442,9 +475,6 @@ project_admin_utils	git_admin_groups	Groupes administrateurs Git
 project_admin_utils	git_fork_repositories	Fork de dépôts Git
 
 plugin_git	identifier	Identifiant
-plugin_git	identifier_placeholder	e.g. location, ...
-plugin_git	url_placeholder	e.g. tuleap.net
-plugin_git	hostname_placeholder	e.g. sfo-mirror
 
 plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
 plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
@@ -469,7 +499,7 @@ plugin_git	regenerate_config_bad_request	La requête n'est pas valide.
 plugin_git	regenerate_config_project_not_exist	Le projet n'existe pas.
 plugin_git	regenerate_config_waiting	La regénération de la configuration Gitolite pour le projet $1 est en attente. Merci de patienter quelques minutes.
 
-plugin_git	admin_gitolite_config_title	Administration de la configuration Gitolite
+plugin_git	admin_gitolite_config_title	Configuration Gitolite
 plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
 plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "polling". Merci de consulter <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git</a>
 
@@ -512,3 +542,11 @@ plugin_git	fine_grained_delete_error	Erreur lors de la suppression de la permiss
 plugin_git	fine_grained_bad_pattern	L'expression $1 n'est pas bien formée. Elle ne sera pas pris en compte.
 
 plugin_git	stats_read	Nombre total des accès en lecture git
+plugin_git	empty_content	Vide
+plugin_git	not_specified_host	Hôte non renseigné
+plugin_git	btn_delete_title	Ce serveur est déjà utilisé par des dépôts.
+
+plugin_git	digest	"Digest"
+plugin_git	basic	Basique
+
+plugin_git	regenerate_gitolite_configuration	Régénérer la configuration

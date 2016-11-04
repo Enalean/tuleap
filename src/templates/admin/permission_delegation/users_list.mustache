@@ -1,43 +1,57 @@
-<div class="span6">
-    <form action="permission_delegation.php?action=manage-users" method="post">
-        <h3>{{ users_title }}</h3>
-
-        {{# has_users }}
-        <table class="table table-hover table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>{{ users_list_title }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# users }}
-                <tr>
-                    <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" /></td>
-                    <td><img src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
-                </tr>
-                {{/ users }}
-            </tbody>
-        </table>
-        {{/ has_users }}
-        {{^ has_users }}
-            <p class="no-user">{{ no_user }}</p>
-        {{/ has_users }}
-
-        <div class="table-actions">
-            <div class="left-actions">
-                <div class="input-append">
-                    <input type="text" name="user" id="add-user">
-                    <input type="submit" class="btn btn-primary" name="add-user" value="{{ users_action_add }}" />
-                </div>
-            </div>
-            <div class="right-actions">
-                {{# has_users }}
-                    <input type="submit" id="delete-users" class="btn btn-danger" disabled="disabled" name="remove-users" value="{{ users_action_delete }}"/>
-                {{/ has_users }}
-            </div>
-            <div style="clear: both"></div>
+<section class="tlp-pane" id="siteadmin-permission-delegation-group-details-users">
+    <form action="permission_delegation.php?action=manage-users"
+          method="POST"
+          class="tlp-pane-container"
+          id="siteadmin-permission-delegation-group-details-users-container"
+    >
+        <input type="hidden" name="id" value="{{ id }}">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ users_title }}</h1>
         </div>
-        <input type="hidden" name="id" value="{{ id }}" />
+        <section class="tlp-pane-section">
+            <div id="siteadmin-permission-delegation-group-details-users-actions">
+                <div class="tlp-form-element tlp-form-element-append"
+                     id="siteadmin-permission-delegation-group-details-users-actions-add"
+                >
+                    <select class="tlp-select"
+                            id="siteadmin-permission-delegation-group-details-users-actions-add-input"
+                            name="user"
+                            data-placeholder="Paul"></select>
+                    <button type="submit" class="tlp-append tlp-button-primary" name="add-user" value="1">
+                        <i class="fa fa-plus tlp-button-icon"></i> {{ users_action_add }}
+                    </button>
+                </div>
+                <button type="submit"
+                        id="siteadmin-permission-delegation-group-details-users-actions-delete"
+                        class="tlp-button-danger tlp-button-outline"
+                        disabled="disabled"
+                        name="remove-users"
+                        value="1"
+                >
+                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ users_action_delete }}
+                </button>
+            </div>
+
+            {{# has_users }}
+                <table class="tlp-table">
+                    <tbody>
+                        {{# users }}
+                        <tr>
+                            <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" /></td>
+                            <td class="siteadmin-permission-delegation-group-details-users-user-name">
+                                <div class="tlp-avatar-small siteadmin-permission-delegation-group-details-users-user-avatar">
+                                    {{# hasAvatar }}<img src="{{ getAvatarUrl }}">{{/ hasAvatar }}
+                                </div>
+                                {{ getRealName }} ({{ getUsername }})
+                            </td>
+                        </tr>
+                        {{/ users }}
+                    </tbody>
+                </table>
+            {{/ has_users }}
+            {{^ has_users }}
+                <p id="siteadmin-permission-delegation-group-details-users-empty">{{ no_user }}</p>
+            {{/ has_users }}
+        </section>
     </form>
-</div>
+</section>

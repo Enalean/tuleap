@@ -1,0 +1,10 @@
+{
+  "label": "Visual assets",
+  "children": [
+    "colors",
+    "avatars",
+    "typo",
+    "icons",
+    "badges"
+  ]
+}

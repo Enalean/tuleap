@@ -1,47 +1,61 @@
-<div id="siteadmin-config-natures-modal-create"
-    class="modal hide fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="siteadmin-config-natures-modal-create-title"
-    aria-hidden="true"
->
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-        <h3 id="siteadmin-config-natures-modal-create-title">{{ create_new_nature }}</h3>
-    </div>
+<form action="" id="siteadmin-config-natures-modal-create-form" method="POST">
+    <div id="siteadmin-config-natures-modal-create" class="tlp-modal" role="dialog" aria-labelledby="siteadmin-config-natures-modal-create-label">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="siteadmin-config-natures-modal-create-label">
+                <i class="fa fa-plus tlp-modal-title-icon"></i> {{ create_new_nature }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="action" value="create-nature">
 
-    <form action="" method="POST">
-        <input type="hidden" name="action" value="create-nature" />
-        <div class="modal-body">
             {{{ csrf_token }}}
 
-            <label>{{ shortname_label }}</label>
-            <input type="text"
-                name="shortname"
-                title="{{ shortname_help }}"
-                placeholder="{{ shortname_placeholder }}"
-                pattern="{{ shortname_pattern }}"
-                required />
-            <p class="help">{{ shortname_help }}</p>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="siteadmin-config-natures-modal-create-shortname">{{ shortname_label }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    id="siteadmin-config-natures-modal-create-shortname"
+                    name="shortname"
+                    class="tlp-input"
+                    title="{{ shortname_help }}"
+                    placeholder="{{ shortname_placeholder }}"
+                    pattern="{{ shortname_pattern }}"
+                    required
+                >
+                <p class="tlp-text-info">{{ shortname_help }}</p>
+            </div>
 
-            <label>{{ forward_label_label }}</label>
-            <input type="text"
-                name="forward_label"
-                placeholder="{{ forward_label_placeholder }}"
-                required />
-            <p class="help">{{ forward_label_help }}</p>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="siteadmin-config-natures-modal-create-forward">{{ forward_label_label }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    id="siteadmin-config-natures-modal-create-forward"
+                    class="tlp-input"
+                    name="forward_label"
+                    placeholder="{{ forward_label_placeholder }}"
+                    required
+                >
+                <p class="tlp-text-info">{{ forward_label_help }}</p>
+            </div>
 
-            <label>{{ reverse_label_label }}</label>
-            <input type="text"
-                name="reverse_label"
-                placeholder="{{ reverse_label_placeholder }}"
-                required />
-            <p class="help">{{ reverse_label_help }}</p>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="siteadmin-config-natures-modal-create-reverse">{{ reverse_label_label }} <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                    id="siteadmin-config-natures-modal-create-reverse"
+                    class="tlp-input"
+                    name="reverse_label"
+                    placeholder="{{ reverse_label_placeholder }}"
+                    required
+                >
+                <p class="tlp-text-info">{{ reverse_label_help }}</p>
+            </div>
         </div>
-
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
-            <input type="submit" class="btn btn-primary" value="{{ btn_create }}">
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
+            <button type="submit" form="siteadmin-config-natures-modal-create-form" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ create_new_nature }}
+            </button>
         </div>
-    </form>
-</div>
+    </div>
+</form>

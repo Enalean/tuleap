@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
@@ -187,10 +188,15 @@ class GitPlugin extends Plugin {
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
         $this->addHook('root_daily_start');
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook(Event::IS_IN_SITEADMIN);
+
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
@@ -207,10 +213,20 @@ class GitPlugin extends Plugin {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e806';
     }
 
-    public function site_admin_option_hook() {
-        $url  = $this->getPluginPath().'/admin/';
-        $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        echo '<li><a href="', $url, '">', $name, '</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_git', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/admin/'
+        );
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function getPluginInfo() {
@@ -259,16 +275,42 @@ class GitPlugin extends Plugin {
         }
     }
 
-    public function jsFile() {
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function jsFile($params) {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/git.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/online_edit.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/permissions.js"></script>';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL) === 0) {
+            if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_admin')) {
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-gerrit-server.js';
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-delete-gerrit-server.js';
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-edit-gerrit-server.js';
+            } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_admin')) {
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-add-mirror.js';
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-mirror-configuration.js';
+            } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_restriction')) {
+                $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+            }
+            else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
+                $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';
+            }
         }
     }
 
@@ -578,6 +620,7 @@ class GitPlugin extends Plugin {
             $this->getGitSystemEventManager(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
+            $this->getAdminPageRenderer(),
             $this->getRegexpFineGrainedDisabler()
         );
         $admin->process($request);
@@ -623,6 +666,11 @@ class GitPlugin extends Plugin {
             new Git_Gitolite_GitoliteRCReader(),
             new DefaultProjectMirrorDao()
         );
+    }
+
+    private function getAdminPageRenderer()
+    {
+        return new AdminPageRenderer();
     }
 
     /**
@@ -1854,26 +1902,54 @@ class GitPlugin extends Plugin {
     public function showArchivedRepositories($params) {
         $group_id              = $params['group_id'];
         $archived_repositories = $this->getRepositoryManager()->getRepositoriesForRestoreByProjectId($group_id);
-        $tab_content           = '<div class="contenu_onglet" id="contenu_onglet_git_repository">';
+        $tab_content           = '';
 
-        if (count($archived_repositories) == 0) {
-            $tab_content .= '<center>'.$GLOBALS['Language']->getText('plugin_git', 'restore_no_repo_found').'</center>';
-        } else {
-            $tab_content .= '<table>';
+        $tab_content .= '<section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('plugin_git', 'archived_repositories') .'</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>Repository name</th>
+                            <th>Creation date</th>
+                            <th>Creator</th>
+                            <th>Deleted date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+        if (count($archived_repositories)) {
             foreach($archived_repositories as $archived_repository) {
-                $tab_content .= '<tr class="boxitemgrey">';
+                $tab_content .= '<tr>';
                 $tab_content .= '<td>'.$archived_repository->getName().'</td>';
                 $tab_content .= '<td>'.$archived_repository->getCreationDate().'</td>';
                 $tab_content .= '<td>'.$archived_repository->getCreator()->getName().'</td>';
                 $tab_content .= '<td>'.$archived_repository->getDeletionDate().'</td>';
-                $tab_content .= '<td><a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')" border="0" height="16" width="16"></a></td>';
+                $tab_content .= '<td class="tlp-table-cell-actions">
+                    <a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"
+                        class="tlp-button-small tlp-button-outline tlp-button-primary"
+                        onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')"
+                    >
+                        <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                    </a>
+                </td>';
                 $tab_content .= '</tr>';
             }
-            $tab_content .= '</table>';
+        } else {
+            $tab_content .= '<tr>
+                <td class="tlp-table-cell-empty" colspan="5">
+                    '. $GLOBALS['Language']->getText('plugin_git', 'restore_no_repo_found') .'
+                </td>
+            </tr>';
         }
-        $tab_content     .= '</div>';
-        $params['id'][]  = 'git_repository';
-        $params['nom'][] = $GLOBALS['Language']->getText('plugin_git', 'archived_repositories');
+        $tab_content .= '</tbody>
+                    </table>
+                </section>
+            </div>
+        </section>';
         $params['html'][]= $tab_content;
     }
 

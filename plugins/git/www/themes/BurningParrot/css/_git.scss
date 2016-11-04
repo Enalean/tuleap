@@ -1,0 +1,133 @@
+@import 'variables/margins';
+
+@import 'gitolite';
+
+.form-element-group {
+    display: flex;
+
+    > .form-element-item:not(:last-child) {
+        margin-right: $tlp-spacing * 2;
+    }
+
+    > .form-element-item:not(:first-child) {
+        flex: 0 0 auto;
+    }
+
+    > .form-element-item:first-child {
+        flex: 1 1 auto;
+    }
+}
+
+/* -------------------- MIRROR ---------------------- */
+
+.mirror-global-action-container {
+    margin: 0 0 $tlp-spacing;
+}
+
+.mirror-info {
+    display: flex;
+}
+
+.mirror-info-two {
+    margin: 0 0 0 ($tlp-spacing * 2);
+}
+
+.mirror-info-two-ssh-key {
+    word-break: break-all;
+}
+
+.mirror-action-container {
+    display: flex;
+    flex: 0 1 auto;
+}
+
+.mirror-action {
+    display: flex;
+    align-items: center;
+}
+
+.mirror-action-delete-button,
+.mirror-action-restrict-button {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+.mirror-configuration {
+    line-height: 30px;
+}
+
+.mirror-repo-list-for-project:not(:last-child) {
+    margin: 0 0 $tlp-spacing;
+}
+
+.mirror-repo-list-for-project-reponame {
+    width: 100%;
+}
+
+/* -------------------- GERRIT ---------------------- */
+
+.add-gerrit-server-button {
+    margin-bottom: $tlp-spacing;
+}
+
+#gerrit-servers-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.gerrit-server-info-one {
+    display: flex;
+    flex-wrap: wrap;
+
+    > .tlp-property {
+        padding-right: 80px;
+        padding-bottom: 10px;
+
+    }
+}
+
+.gerrit-server-info-two {
+    display: flex;
+    flex-wrap: wrap;
+
+    > .tlp-property {
+        padding-right: 80px;
+        padding-bottom: 10px;
+
+    }
+}
+
+.git-info-two-ssh-key {
+    word-break: break-all;
+}
+
+.gerrit-server-action-container {
+    display: flex;
+    flex: 0 1 auto;
+}
+
+.gerrit-server-action {
+    display: flex;
+    align-items: center;
+
+    .action-item {
+        margin-right: 10px;
+    }
+}
+
+/* -------------------- MEDIA QUERIES ---------------------- */
+
+@media screen and (max-width: 1300px) {
+    .tlp-pane {
+        flex-direction: column;
+    }
+
+    .mirror-action-container {
+        justify-content: flex-end;
+        border-top: 1px solid $tlp-ui-border-light;
+    }
+
+    .gerrit-server-action-container {
+        justify-content: flex-end;
+        border-top: 1px solid $tlp-ui-border-light;
+    }
+}

@@ -471,6 +471,15 @@ Obsoletes: tuleap-theme-experimental %{PKG_NAME}-theme-steerforge  %{PKG_NAME}-t
 %description theme-flamingparrot
 FlamingParrot, default theme starting Tuleap 7
 
+%package theme-burningparrot
+Summary: BurningParrot, default theme starting Tuleap 10
+Group: Development/Tools
+Version: @@THEME_BURNINGPARROT_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description theme-burningparrot
+BurningParrot, default theme starting Tuleap 10
+
 #
 # Package setup
 %prep
@@ -934,7 +943,6 @@ fi
 %{APP_DIR}/src/www/file
 %{APP_DIR}/src/www/forum
 %{APP_DIR}/src/www/goto
-%{APP_DIR}/src/www/guidelines
 %{APP_DIR}/src/www/help
 %{APP_DIR}/src/www/include
 %{APP_DIR}/src/www/mail
@@ -956,7 +964,12 @@ fi
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
-%{APP_DIR}/src/www/themes/common
+%dir %{APP_DIR}/src/www/themes/common
+%{APP_DIR}/src/www/themes/common/css
+%{APP_DIR}/src/www/themes/common/font
+%{APP_DIR}/src/www/themes/common/images
+%dir %{APP_DIR}/src/www/themes/common/tlp
+%{APP_DIR}/src/www/themes/common/tlp/dist
 %{APP_DIR}/src/www/top
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour
@@ -1224,6 +1237,10 @@ fi
 %files theme-flamingparrot
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/FlamingParrot
+
+%files theme-burningparrot
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/BurningParrot
 
 #%doc
 #%config

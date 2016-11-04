@@ -1,18 +1,28 @@
-<div id="delete-group-modal" class="modal hide fade">
-    <form action="permission_delegation.php?action=delete-group" method="post">
-        <div class="modal-header">
-            <a type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-            <h3>{{ group_title_delete }}</h3>
+<form action="permission_delegation.php?action=delete-group"
+      method="post"
+      id="siteadmin-permission-delegation-delete-group-modal"
+      class="tlp-modal tlp-modal-danger"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{ group_title_delete }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
         </div>
-
-        <div class="modal-body">
-            <p>{{{ group_delete_confirmation }}}</p>
-            <input type="hidden" name="id" value="{{ id }}" />
-        </div>
-
-        <div class="modal-footer">
-            <a class="btn" data-dismiss="modal">{{ group_cancel_delete }}</a>
-            <input type="submit" class="btn btn-danger" value="{{ group_submit_delete }}" />
-        </div>
-    </form>
-</div>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{{ purified_group_delete_confirmation }}}</p>
+        <input type="hidden" name="id" value="{{ id }}" />
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ group_cancel_delete }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash tlp-button-icon"></i> {{ group_submit_delete }}
+        </button>
+    </div>
+</form>

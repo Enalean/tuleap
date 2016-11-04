@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-//  
+//
 require_once('pre.php');
 require('./site_stats_utils.php');
 
@@ -12,7 +12,7 @@ require('./site_stats_utils.php');
 // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
+$HTML->header(array('title'=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name']), 'main_classes' => array('tlp-framed')));
 
 //
 // BEGIN PAGE CONTENT CODE

@@ -83,7 +83,7 @@ if (!$error && $request->exist('export')) {
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
     $GLOBALS['HTML']->includeCalendarScripts();
-    $GLOBALS['HTML']->header(array('title' => $title));
+    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
     echo '<h1>'.$title.'</h1>';
 
     echo '<form name="form_scm_stats" method="get">';

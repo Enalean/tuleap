@@ -310,7 +310,7 @@ class Gerrit extends Pane
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
 
         $html .= '<div class="alert alert-block">';
-        $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
+        $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning') .'</h4>';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_msg') .'</p>';
         $html .= '<p>';
         $html .= '<input type="hidden" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="' . $this->hp->purify($this->request->get(self::OPTION_DISCONNECT_GERRIT_PROJECT)) . '"/>';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\Mirror\MirrorPresenter;
 
 class Git_AdminMirrorController {
 
@@ -38,13 +41,17 @@ class Git_AdminMirrorController {
     /** @var Git_SystemEventManager */
     private $git_system_event_manager;
 
+    /** @var AdminPageRenderer */
+    private $admin_page_renderer;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Git_Mirror_MirrorDataMapper $git_mirror_mapper,
         Git_MirrorResourceRestrictor $git_mirror_resource_restrictor,
         ProjectManager $project_manager,
         Git_Mirror_ManifestManager $git_mirror_manifest_manager,
-        Git_SystemEventManager $git_system_event_manager
+        Git_SystemEventManager $git_system_event_manager,
+        AdminPageRenderer $admin_page_renderer
     ) {
         $this->csrf                           = $csrf;
         $this->git_mirror_mapper              = $git_mirror_mapper;
@@ -52,18 +59,15 @@ class Git_AdminMirrorController {
         $this->project_manager                = $project_manager;
         $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
         $this->git_system_event_manager       = $git_system_event_manager;
+        $this->admin_page_renderer            = $admin_page_renderer;
     }
 
     public function process(Codendi_Request $request) {
         if ($request->get('action') == 'add-mirror') {
             $this->createMirror($request);
-        } elseif ($request->get('action') == 'show-add-mirror') {
-            $this->showAddMirror();
-        } elseif ($request->get('action') == 'show-edit-mirror') {
-            $this->showEditMirror($request);
-        } elseif ($request->get('action') == 'modify-mirror' && $request->get('update_mirror')) {
+        } elseif ($request->get('action') == 'modify-mirror') {
             $this->modifyMirror($request);
-        } elseif ($request->get('action') == 'modify-mirror' && $request->get('delete_mirror')) {
+        } elseif ($request->get('action') == 'delete-mirror') {
             $this->deleteMirror($request);
         } elseif ($request->get('action') == 'set-mirror-restriction') {
             $this->setMirrorRestriction($request);
@@ -75,36 +79,41 @@ class Git_AdminMirrorController {
     }
 
     public function display(Codendi_Request $request) {
-        $title     = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-        $presenter = null;
+        $title         = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $template_path = dirname(GIT_BASE_DIR).'/templates';
+        $presenter     = null;
 
         switch ($request->get('action')) {
-            case 'list-repositories':
-                $presenter = $this->getListRepositoriesPresenter($request);
-                break;
             case 'manage-allowed-projects':
-            case 'set-mirror-restriction':
-            case 'update-allowed-project-list':
-                $presenter = $this->getManageAllowedProjectsPresenter($request);
-                $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
-                break;
-            case 'show-edit-mirror':
-            case 'show-add-mirror':
+                $presenter     = $this->getManageAllowedProjectsPresenter($request);
+                $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
+                $this->renderAPresenter($title, $template_path, $presenter);
                 break;
             default:
                 $presenter = $this->getAllMirrorsPresenter($title);
+                $this->renderANoFramedPresenter($title, $template_path, $presenter);
                 break;
-
         }
+    }
 
-        if (! $presenter) {
-            return;
-        }
+    private function renderAPresenter($title, $template_path, $presenter)
+    {
+        $this->admin_page_renderer->renderAPresenter(
+            $title,
+            $template_path,
+            $presenter->getTemplate(),
+            $presenter
+        );
+    }
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage($presenter->getTemplate(), $presenter);
-        $GLOBALS['HTML']->footer(array());
+    private function renderANoFramedPresenter($title, $template_path, $presenter)
+    {
+        $this->admin_page_renderer->renderANoFramedPresenter(
+            $title,
+            $template_path,
+            $presenter->getTemplate(),
+            $presenter
+        );
     }
 
     private function getAllMirrorsPresenter($title) {
@@ -122,28 +131,12 @@ class Git_AdminMirrorController {
     private function getMirrorPresenters(array $mirrors) {
         $mirror_presenters = array();
         foreach($mirrors as $mirror) {
-            $mirror_presenters[] = array(
-                'id'                     => $mirror->id,
-                'url'                    => $mirror->url,
-                'hostname'               => $mirror->hostname,
-                'name'                   => $mirror->name,
-                'owner_id'               => $mirror->owner_id,
-                'owner_name'             => $mirror->owner_name,
-                'ssh_key_value'          => $mirror->ssh_key,
-                'ssh_key_ellipsis_value' => substr($mirror->ssh_key, 0, 40).'...'.substr($mirror->ssh_key, -40),
+            $mirror_presenters[] = new MirrorPresenter(
+                $mirror,
+                $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
             );
         }
         return $mirror_presenters;
-    }
-
-    private function getListRepositoriesPresenter(Codendi_Request $request) {
-        $mirror_id = $request->get('mirror_id');
-        $mirror    = $this->git_mirror_mapper->fetch($mirror_id);
-
-        return new Git_AdminMRepositoryListPresenter(
-            $mirror->url,
-            $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
-        );
     }
 
     private function getManageAllowedProjectsPresenter(Codendi_Request $request) {
@@ -162,12 +155,12 @@ class Git_AdminMirrorController {
         $mirror      = $this->git_mirror_mapper->fetch($mirror_id);
         $all_allowed = $request->get('all-allowed');
 
-        $this->checkSynchronizerToken('/plugins/git/admin/?pane=mirrors_admin&action=set-mirror-restriction&mirror_id=' . $mirror_id);
+        $this->checkSynchronizerToken('/plugins/git/admin/?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $mirror_id);
 
         if ($all_allowed) {
             if ($this->git_mirror_resource_restrictor->unsetMirrorRestricted($mirror)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_unset_restricted'));
-                $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
+                $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror_id);
             }
 
         } else {
@@ -176,12 +169,12 @@ class Git_AdminMirrorController {
                 $this->git_mirror_mapper->deleteFromDefaultMirrors($mirror->id)
             ) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_set_restricted'));
-                $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
+                $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror_id);
             }
         }
 
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_restricted_error'));
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror_id);
     }
 
     private function askForAGitoliteDumpConf() {
@@ -202,7 +195,7 @@ class Git_AdminMirrorController {
         $project_to_add        = $request->get('project-to-allow');
         $project_ids_to_remove = $request->get('project-ids-to-revoke');
 
-        $this->checkSynchronizerToken('/plugins/git/admin/?pane=mirrors_admin&action=update-allowed-project-list&mirror_id=' . $mirror_id);
+        $this->checkSynchronizerToken('/plugins/git/admin/?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $mirror_id);
 
         if ($request->get('allow-project') && ! empty($project_to_add)) {
             $this->allowProjectOnMirror($mirror, $project_to_add);
@@ -217,11 +210,11 @@ class Git_AdminMirrorController {
 
         if ($project && $this->git_mirror_resource_restrictor->allowProjectOnMirror($mirror, $project)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_allow_project'));
-            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror->id);
+            $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
         }
 
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_update_project_list_error'));
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror->id);
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
     }
 
     private function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, $project_ids) {
@@ -230,11 +223,11 @@ class Git_AdminMirrorController {
             $this->git_mirror_mapper->deleteFromDefaultMirrorsInProjects($mirror, $project_ids)
         ) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_revoke_projects'));
-            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror->id);
+            $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
         }
 
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_update_project_list_error'));
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror->id);
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
     }
 
     private function checkSynchronizerToken($url) {
@@ -267,42 +260,6 @@ class Git_AdminMirrorController {
     private function redirectToCreateWithError($message) {
         $GLOBALS['Response']->addFeedback('error', $message);
         $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-add-mirror");
-    }
-
-    private function showAddMirror() {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-        $admin_presenter = new Git_AdminMirrorAddPresenter(
-            $title,
-            $this->csrf
-        );
-
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage('admin-plugin', $admin_presenter);
-        $GLOBALS['HTML']->footer(array());
-    }
-
-    private function showEditMirror(Codendi_Request $request) {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-        try {
-            $mirror = $this->git_mirror_mapper->fetch($request->get('mirror_id'));
-        } catch (Git_Mirror_MirrorNotFoundException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_update'));
-            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');
-        }
-
-        $admin_presenter = new Git_AdminMirrorEditPresenter(
-            $title,
-            $this->csrf,
-            $mirror
-        );
-
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage('admin-plugin', $admin_presenter);
-        $GLOBALS['HTML']->footer(array());
     }
 
     private function modifyMirror(Codendi_Request $request) {

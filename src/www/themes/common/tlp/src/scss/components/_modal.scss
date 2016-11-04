@@ -1,0 +1,172 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+$tlp-modal-padding: $tlp-spacing;
+$tlp-modal-radius: 3px;
+$tlp-modal-shadow: 0 10px 36px rgba(0, 0, 0, .2);
+$tlp-modal-transition: 150ms ease-out;
+
+.tlp-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    width: 600px;
+    max-height: 90vh;
+    margin: 5vh auto;
+    transform: translateY(-25%);
+    transition: opacity $tlp-modal-transition,
+        transform $tlp-modal-transition,
+        box-shadow $tlp-modal-transition;
+    border: 0;
+    box-shadow: 0;
+    opacity: 0;
+    z-index: 1050;
+
+    &.tlp-modal-display {
+        display: flex;
+    }
+
+    &.tlp-modal-shown {
+        transform: translateY(0);
+        box-shadow: $tlp-modal-shadow;
+        opacity: 1;
+    }
+}
+
+.tlp-modal-danger > .tlp-modal-header {
+    background: $tlp-ui-danger;
+}
+
+.tlp-modal-warning > .tlp-modal-header {
+    background: $tlp-ui-warning;
+}
+
+.tlp-modal-success > .tlp-modal-header {
+    background: $tlp-ui-success;
+}
+
+.tlp-modal-info > .tlp-modal-header {
+    background: $tlp-ui-info;
+}
+
+.tlp-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    padding: $tlp-modal-padding;
+    border-top-left-radius: $tlp-modal-radius;
+    border-top-right-radius: $tlp-modal-radius;
+    background: $tlp-theme-color;
+    color: $tlp-ui-white;
+}
+
+.tlp-modal-close {
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .5;
+    }
+}
+
+.tlp-modal-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.tlp-modal-subtitle {
+    color: $tlp-ui-dimmed;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.tlp-modal-body {
+    height: 100%;
+    max-height: 70vh;
+    padding: $tlp-modal-padding;
+    background: $tlp-ui-white;
+    overflow-y: auto;
+}
+
+.tlp-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    min-height: 2 * $tlp-modal-padding + $tlp-button-normal-height;
+    padding: $tlp-modal-padding;
+    border-top: 1px solid $tlp-ui-border-light;
+    border-bottom-left-radius: $tlp-modal-radius;
+    border-bottom-right-radius: $tlp-modal-radius;
+    background: $tlp-ui-white;
+
+    &.tlp-modal-footer-large {
+        min-height: 2 * $tlp-modal-padding + $tlp-button-large-height;
+    }
+}
+
+.tlp-modal-action {
+    margin: 0 $tlp-spacing / 2 0 0;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-modal-full-screen {
+    width: calc(100% - 2 * #{$tlp-spacing});
+    height: calc(100% - 2 * #{$tlp-spacing});
+    max-height: calc(100% - 2 * #{$tlp-spacing});
+    margin: $tlp-spacing;
+
+    > .tlp-modal-body {
+        max-height: none;
+    }
+}
+
+#tlp-modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: opacity $tlp-modal-transition;
+    background: $tlp-ui-black;
+    opacity: 0;
+    z-index: 1000;
+
+    &.tlp-modal-backdrop-shown {
+        opacity: .5;
+    }
+}
+
+.tlp-modal-separator {
+    height: 1px;
+    margin: 0 -20px 20px;
+    border: 0;
+    background-color: $tlp-ui-border-light;
+    color: $tlp-ui-border-light;
+}
+
+.tlp-modal-title-icon {
+    margin: 0 5px 0 0;
+    font-size: 20px;
+}

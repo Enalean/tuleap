@@ -41,6 +41,8 @@ require_once 'common/widget/WidgetLayoutManager.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
+use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 
@@ -336,7 +338,8 @@ class ProjectCreator {
     // insert descriptions
     // insert trove categories
     private function setCategories($data, $group_id) {
-        $descfieldsinfos = getProjectsDescFieldsInfos();
+        $fields_factory = new DescriptionFieldsFactory(new DescriptionFieldsDao());
+        $descfieldsinfos = $fields_factory->getAllDescriptionFields();
 
         for($i=0;$i<sizeof($descfieldsinfos);$i++){
             $desc_id_val = $data->getField($descfieldsinfos[$i]["group_desc_id"]);

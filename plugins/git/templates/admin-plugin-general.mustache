@@ -1,21 +1,33 @@
-<h3>{{ access_control_title }}</h3>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ access_control_title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <form method="POST"
+                  action="?pane=general-settings&action=enable-regexp-usage"
+            >
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
 
-<form method="POST"
-      action="?pane=general-settings&action=enable-regexp-usage"
-      class="admin_mirror_config form-horizontal"
->
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <div class="control-group">
-        <input type="checkbox"
-            name="activate-regexp"
-            {{# is_activated }} checked="checked" {{/ is_activated }}
-        > {{ allow_regexp_info }}
+                <div class="tlp-alert-warning">{{ warning_admin_activation }}</div>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox"
+                               name="activate-regexp"
+                            {{# is_activated }} checked="checked" {{/ is_activated }}
+                        > {{ allow_regexp_info }}
+                    </label>
+                </div>
+
+                <button type="submit"
+                       class="tlp-button-primary"
+                >
+                    <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
+                </button>
+            </form>
+        </section>
     </div>
-
-    <input value="{{ save_settings }}"
-           class="btn btn-primary"
-           type="submit"
-    >
-</form>
+</section>

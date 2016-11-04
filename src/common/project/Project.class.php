@@ -23,28 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// see getProjectsDescFieldsInfos
-function cmp($a, $b){
-	if ($a["desc_rank"] == $b["desc_rank"]) {
-        return 0;
-    }
-    return ($a["desc_rank"] < $b["desc_rank"]) ? -1 : 1;
-}
- 
-function getProjectsDescFieldsInfos(){
-	$sql = 'SELECT * FROM group_desc WHERE 1';
-      
-    $descfieldsinfos = array();
-    if ($res = db_query($sql)) {
-        while($data = db_fetch_array($res)) {
-            $descfieldsinfos[] = $data;
-        }
-    }
-    
-	usort($descfieldsinfos, "cmp");
-    return $descfieldsinfos;
-}	
-
+use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\DescriptionFieldsDao;
 
 class Project extends Group implements PFO_Project {
 
@@ -434,8 +414,9 @@ class Project extends Group implements PFO_Project {
         return $subprojects;
     }
     
-    function getProjectsDescFieldsValue(){
-    	$sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id='.$this->getGroupId() ;
+    public function getProjectsDescFieldsValue()
+    {
+        $sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id=' . db_ei($this->getGroupId());
         
         $descfieldsvalue = array();
         if ($res = db_query($sql)) {
@@ -448,9 +429,11 @@ class Project extends Group implements PFO_Project {
     }
     
     function displayProjectsDescFieldsValue(){
-    	$descfieldsvalue=$this->getProjectsDescFieldsValue();
-    	$descfields = getProjectsDescFieldsInfos();
-    	$hp = Codendi_HTMLPurifier::instance();
+        $descfieldsvalue = $this->getProjectsDescFieldsValue();
+        $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
+        $descfields      = $fields_factory->getAllDescriptionFields();
+
+        $hp = Codendi_HTMLPurifier::instance();
     	
     	for($i=0;$i<sizeof($descfields);$i++){
 	

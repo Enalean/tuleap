@@ -7,9 +7,9 @@ plugin_ldap	total_entries	Nombre total d'entrées
 plugin_ldap	entry_#	No. entrée
 plugin_ldap	entry_dn	Entrée dn
 plugin_ldap	attributes	attributs
-plugin_ldap	ldap_login	Login sur l'annuaire d'entreprise :
+plugin_ldap	ldap_login	Identifiant sur l'annuaire d'entreprise
 plugin_ldap	not_found	Erreur - Introuvable
-plugin_ldap	no_ldap_login_found	Login sur l'annuaire d'entreprise introuvable
+plugin_ldap	no_ldap_login_found	Identifiant sur l'annuaire d'entreprise introuvable
 plugin_ldap	login_pls_use_ldap	Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de $1).
 plugin_ldap	ugroup_list_ldap_title	Import depuis l'annuaire
 plugin_ldap	ugroup_list_add_users	Ajouter des utilisateurs depuis l'annuaire

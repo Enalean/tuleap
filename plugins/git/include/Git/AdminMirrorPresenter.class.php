@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
 
     public $manage_mirrors = true;
 
-    public $mirrors_active = 'active';
+    public $mirrors_active = 'tlp-tab-active';
 
     public $add_a_mirror = false;
 
@@ -62,19 +62,46 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_git', 'identifier');
     }
 
-    public function identifier_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_git', 'identifier_placeholder');
-    }
-
-    public function url_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_git', 'url_placeholder');
-    }
-
-    public function hostname_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_git', 'hostname_placeholder');
-    }
-
     public function reserved_hostnames_help() {
         return $GLOBALS['Language']->getText('plugin_git', 'reserved_hostnames_help');
+    }
+
+    public function add_mirror() {
+        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
+    }
+
+    public function no_specified_mirror_name()
+    {
+        return $GLOBALS['Language']->getText('plugin_git','no_specified_mirror_name');
+    }
+
+    public function btn_edit()
+    {
+        return $GLOBALS['Language']->getText('global','btn_edit');
+    }
+
+    public function btn_restrict()
+    {
+        return $GLOBALS['Language']->getText('global','btn_restrict');
+    }
+
+    public function btn_delete()
+    {
+        return $GLOBALS['Language']->getText('global','btn_delete');
+    }
+
+    public function btn_cancel()
+    {
+        return $GLOBALS['Language']->getText('global','btn_cancel');
+    }
+
+    public function btn_yes()
+    {
+        return $GLOBALS['Language']->getText('global','yes');
+    }
+
+    public function warning()
+    {
+        return $GLOBALS['Language']->getText('global','warning');
     }
 }

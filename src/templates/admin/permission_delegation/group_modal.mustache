@@ -1,31 +1,50 @@
-<div id="add-group-modal" class="modal hide fade">
-    <form action="permission_delegation.php?action=update-group" method="post">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-            <h3>{{ group_title }}</h3>
+<form action="permission_delegation.php?action=update-group"
+      method="post"
+      id="siteadmin-permission-delegation-{{# is_new }}add{{/ is_new }}{{^ is_new }}edit{{/ is_new }}-group-modal"
+      class="tlp-modal"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-{{# is_new }}plus{{/ is_new }}{{^ is_new }}pencil{{/ is_new }} tlp-modal-title-icon"></i>
+            {{ group_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="group-name">{{ name_label }} <i class="fa fa-asterisk"></i></label>
+            <input type="text"
+                   class="tlp-input"
+                   id="group-name"
+                   name="name"
+                   placeholder="PowerRangers"
+                   size="30"
+                   value="{{ name }}"
+                   required>
         </div>
 
-        <div class="modal-body">
-            <div class="control-group">
-                <label class="control-label" for="name">{{ name_label }}</label>
-                <div class="controls">
-                    <input type="text" id="name" name="name" placeholder="{{ name_label }}" value="{{ name }}" />
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="description">{{ description_label }}</label>
-                <div class="controls">
-                    <textarea id="description" name="description" placeholder="{{ description_label }}">{{ description }}</textarea>
-                </div>
-            </div>
-            {{^ is_new }}
-                <input type="hidden" name="id" value="{{ id }}" />
-            {{/ is_new }}
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="group-description">{{ description_label }}</label>
+            <textarea class="tlp-textarea"
+                      id="group-description"
+                      name="description"
+                      rows="5"
+                      placeholder="Comment…">{{ description }}</textarea>
         </div>
 
-        <div class="modal-footer">
-            <a class="btn" data-dismiss="modal">{{ group_cancel }}</a>
-            <input type="submit" class="btn btn-primary" value="{{ group_submit }}" />
-        </div>
-    </form>
-</div>
+        {{^ is_new }}
+            <input type="hidden" name="id" value="{{ id }}" />
+        {{/ is_new }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ group_cancel }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-{{# is_new }}plus{{/ is_new }}{{^ is_new }}pencil{{/ is_new }} tlp-button-icon"></i> {{ group_submit }}
+        </button>
+    </div>
+</form>

@@ -1,0 +1,28 @@
+<form action="?action=delete-nature" id="siteadmin-config-natures-modal-delete-{{ shortname }}-form" method="post">
+    <div id="siteadmin-config-natures-modal-delete-{{ shortname }}"
+        class="tlp-modal tlp-modal-danger siteadmin-config-natures-modal-delete"
+        role="dialog"
+        aria-labelledby="siteadmin-config-natures-modal-delete-{{ shortname }}-label"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="modal-danger-label">
+                <i class="fa fa-trash-o tlp-button-icon tlp-modal-title-icon"></i> {{ delete_modal_title }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            {{{ csrf_token }}}
+            <input type="hidden" name="shortname" value="{{ shortname }}">
+
+            <p>{{{ delete_modal_content }}}</p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
+            <button type="submit" form="siteadmin-config-natures-modal-delete-{{ shortname }}-form" class="tlp-button-danger tlp-modal-action">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_modal_submit }}
+            </button>
+        </div>
+    </div>
+</form>

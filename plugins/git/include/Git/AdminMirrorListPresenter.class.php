@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,22 +23,32 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
     const TEMPLATE = 'admin-plugin';
 
     public $see_all = true;
-
     public $list_of_mirrors;
+    public $list_of_mirrors_empty_message_part_one;
+    public $list_of_mirrors_empty_message_part_two;
+    public $empty_content;
+    public $no_repositories;
+    public $btn_submit;
+    public $mirror_repo;
+    public $btn_close;
+    public $base_url;
 
     public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_mirrors) {
         parent::__construct($title, $csrf);
 
-        $this->list_of_mirrors = $list_of_mirrors;
-        $this->btn_submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->list_of_mirrors                        = $list_of_mirrors;
+        $this->list_of_mirrors_empty_message_part_one = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_mirrors_part_one');
+        $this->list_of_mirrors_empty_message_part_two = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_mirrors_part_two');
+        $this->empty_content                          = $GLOBALS['Language']->getText('plugin_git', 'empty_content');
+        $this->no_repositories                        = $GLOBALS['Language']->getText('plugin_git', 'mirror_no_repositories');
+        $this->btn_submit                             = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->btn_close                              = $GLOBALS['Language']->getText('global', 'btn_close');
+        $this->mirror_repo                            = $GLOBALS['Language']->getText('plugin_git', 'mirror_repo');
+        $this->base_url                               = GIT_BASE_URL;
     }
 
     public function getTemplate() {
         return self::TEMPLATE;
-    }
-
-    public function add_mirror() {
-        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
     }
 
     public function mirror_section_title() {
@@ -73,8 +83,8 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
         return $GLOBALS['Language']->getText('plugin_git','manage_allowed_projects_label');
     }
 
-    public function list_of_mirrors_not_empty() {
-        return count($this->list_of_mirrors) > 0;
+    public function list_of_mirrors_is_empty() {
+        return count($this->list_of_mirrors) === 0;
     }
 
     public function dump_mirrored_repositories_label() {
@@ -83,5 +93,10 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
     public function dump_mirrored_repositories_text() {
         return $GLOBALS['Language']->getText('plugin_git', 'dump_mirrored_repositories_text');
+    }
+
+    public function repositories_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_git','repositories_label');
     }
 }

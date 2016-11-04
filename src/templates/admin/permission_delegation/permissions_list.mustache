@@ -1,46 +1,42 @@
-<div class="span6">
-    {{# has_permissions }}
-    <form action="permission_delegation.php?action=delete-permissions" method="post">
-    {{/ has_permissions }}
-
-        <h3>{{ permissions_title }}</h3>
-
-        {{# has_permissions }}
-        <table class="table table-hover table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>{{ permissions_list_title }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# permissions }}
-                <tr>
-                    <td><input type="checkbox" name="permissions[]" value="{{ getId }}" class="permissions" /></td>
-                    <td>{{ getName }}</td>
-                </tr>
-                {{/ permissions }}
-            </tbody>
-        </table>
-        {{/ has_permissions }}
-        {{^ has_permissions }}
-            <p class="no-permission">{{ no_permission }}</p>
-        {{/ has_permissions }}
-
-        <div class="table-actions">
-            <div class="left-actions">
-                <button id="add-permissions" class="btn btn-primary" data-group-id="{{ id }}"><i class="icon-plus"></i> {{ permissions_action_add }}</button>
-            </div>
-            <div class="right-actions">
-                {{# has_permissions }}
-                    <input type="hidden" name="id" value="{{ id }}" />
-                    <button id="delete-permissions" class="btn btn-danger" disabled="disabled"><i class="icon-trash"></i> {{ permissions_action_delete }}</button>
-                {{/ has_permissions }}
-            </div>
-            <div style="clear: both"></div>
+<section class="tlp-pane" id="siteadmin-permission-delegation-group-details-perms">
+    <form action="permission_delegation.php?action=delete-permissions" method="POST" class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ permissions_title }}</h1>
         </div>
+        <section class="tlp-pane-section">
+            <div id="siteadmin-permission-delegation-group-details-perms-actions">
+                <button type="button"
+                        id="siteadmin-permission-delegation-group-details-perms-actions-add"
+                        class="tlp-button-primary"
+                        data-group-id="{{ id }}"
+                >
+                    <i class="fa fa-plus tlp-button-icon"></i> {{ permissions_action_add }}
+                </button>
 
-    {{# has_permissions }}
+                <input type="hidden" name="id" value="{{ id }}" />
+                <button type="submit"
+                        id="siteadmin-permission-delegation-group-details-perms-actions-delete"
+                        class="tlp-button-danger tlp-button-outline"
+                        disabled
+                >
+                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ permissions_action_delete }}
+                </button>
+            </div>
+            {{# has_permissions }}
+                <table class="tlp-table">
+                    <tbody>
+                    {{# permissions }}
+                        <tr>
+                            <td><input type="checkbox" name="permissions[]" value="{{ getId }}"></td>
+                            <td class="siteadmin-permission-delegation-group-details-perms-perm-name">{{ getName }}</td>
+                        </tr>
+                    {{/ permissions }}
+                    </tbody>
+                </table>
+            {{/ has_permissions }}
+            {{^ has_permissions }}
+                <p id="siteadmin-permission-delegation-group-details-perms-empty">{{ no_permission }}</p>
+            {{/ has_permissions }}
+        </section>
     </form>
-    {{/ has_permissions }}
-</div>
+</section>

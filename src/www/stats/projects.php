@@ -4,12 +4,12 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-//  
+//
 require_once('pre.php');
 require('./site_stats_utils.php');
 
 
-$HTML->header(array('title'=> $Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
+$HTML->header(array('title'=> $Language->getText('stats_graph','stats',$GLOBALS['sys_name']), 'main_classes' => array('tlp-framed')));
 
 // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -47,7 +47,7 @@ if ( isset( $span ) ) {
 
 	if ( isset( $trovecatid ) && $trovecatid > 0 ) {
 		$project_list = stats_generate_trove_grouplist( $trovecatid );
-	} 
+	}
 
 	if ( $span < 1 ) {
 		$span = 21;
@@ -60,7 +60,7 @@ if ( isset( $span ) ) {
 	if ( $projects != "" ) {
 		$project_list = explode(" ", $projects );
 		$trovecatid = -1;
-	} 
+	}
 
 	if ( $trovecatid == 0 ) {
 		$project_list = 0;
@@ -75,7 +75,7 @@ if ( isset( $span ) ) {
 	print '<BR><BR>' . "\n";
 	print '</DIV>' . "\n";
 
-} else { 
+} else {
 
 	   // Print the form, passing it the params, so it can save state.
 	stats_site_projects_form( $span, $orderby, $offset, $projects, $trovecatid );

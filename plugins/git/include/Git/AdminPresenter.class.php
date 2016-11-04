@@ -22,7 +22,7 @@ class Git_AdminPresenter {
 
     public $title;
 
-    public $csrf_input;
+    public $csrf_token;
 
     public $manage_gerrit           = false;
     public $manage_mirrors          = false;
@@ -34,9 +34,9 @@ class Git_AdminPresenter {
     public $gerrit_active           = '';
     public $gitolite_config_active  = '';
 
-    public function __construct($title, CSRFSynchronizerToken $csrf) {
+    public function __construct($title, CSRFSynchronizerToken $csrf_token) {
         $this->title      = $title;
-        $this->csrf_input = $csrf->fetchHTMLInput();
+        $this->csrf_token = $csrf_token;
     }
 
     public function gerrit_tab_name() {

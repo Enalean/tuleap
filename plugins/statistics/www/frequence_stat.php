@@ -1,5 +1,5 @@
 <?php
-  /** 
+  /**
    * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
    *
    * Originally written by Manuel Vacelet, 2005
@@ -56,7 +56,7 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 
 $GLOBALS['HTML']->includeCalendarScripts();
 
-$GLOBALS['HTML']->header(array('title'=> 'Frequence stat'));
+$GLOBALS['HTML']->header(array('title'=> 'Frequence stat', 'main_classes' => array('tlp-framed')));
 
 $allData = array('session' => 'Sessions',
                  'user' => 'Users',
@@ -77,7 +77,7 @@ EventManager::instance()->processEvent(
 $min = 2003;
 $max = date("Y");
 
-$allMonths = array(0 => 'All', '01', '02', '03', '04', '05', 
+$allMonths = array(0 => 'All', '01', '02', '03', '04', '05',
                  '06', '07', '08', '09', '10', '11', '12');
 
 $request = HTTPRequest::instance();
@@ -139,7 +139,7 @@ print '</select>';
 if (isset($advsrch) && $advsrch == 1) {
 
     print '<div id="id_advanced_block">';
- 
+
     print '<label>Start:</label>';
     print(html_field_date('start', $startdate, false, 10, 10, 'date_form', false));
 

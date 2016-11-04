@@ -1,0 +1,218 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2">Area</label>
+    <select class="tlp-select" id="area-select2" name="area" style="width: 100%">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area p46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-adjusted">Area adjusted</label>
+    <select class="tlp-select tlp-select-adjusted" id="area-select2-adjusted" name="area">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-adjusted'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-without-autocomplete">Area without autocomplete</label>
+    <select class="tlp-select" id="area-without-autocomplete" name="area" style="width: 100%">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-without-autocomplete'), {
+            placeholder: 'Choose an area',
+            allowClear: true,
+            minimumResultsForSearch: Infinity
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-help">Area help</label>
+    <select class="tlp-select" id="area-select2-help" name="area" style="width: 100%">
+        <option value=""></option>
+        <option value="area-46">Area 46</option>
+        <option value="area-49">Area 49</option>
+        <option value="area-51">Area 51</option>
+        <option value="area-52">Area 52</option>
+        <option value="area-53" disabled>Area 53</option>
+        <option value="area-54">Area 54</option>
+        <option value="area-55">Area 55</option>
+        <option value="area-58">Area 59</option>
+    </select>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-help'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-mandatory">Area mandatory <i class="fa fa-asterisk"></i></label>
+    <select class="tlp-select" id="area-select2-mandatory" name="area"  style="width: 100%" required>
+        <option value="" selected disabled>Choose your area</option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-mandatory'), {
+            placeholder: 'Choose an area'
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="area-select2-disabled">Area disabled</label>
+    <select class="tlp-select" id="area-select2-disabled" name="area" style="width: 100%" disabled>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-disabled'));
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="area-select2-error">Area error</label>
+    <select class="tlp-select" id="area-select2-error" name="area" style="width: 100%">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-error'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-small">Area small</label>
+    <select class="tlp-select tlp-select-small" id="area-select2-small" name="area" style="width: 100%">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area p46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-small'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="area-select2-large">Area large</label>
+    <select class="tlp-select tlp-select-large" id="area-select2-large" name="area" style="width: 100%">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area p46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#area-select2-large'), {
+            placeholder: 'Choose an area',
+            allowClear: true
+        });
+    </script>
+</div>

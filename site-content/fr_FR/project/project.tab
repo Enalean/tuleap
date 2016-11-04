@@ -392,7 +392,8 @@ project_admin_utils	project_data_export	Export des données
 project_admin_utils	tracker_import	Import outils de suivi
 project_admin_utils	access_logs	Journal des accès
 project_admin_utils	g_change_history	Historique du projet
-project_admin_utils	event	Evènement
+project_admin_utils	event	Évènement
+project_admin_utils	event_placeholder	Choisir un évènement…
 project_admin_utils	val	Valeur
 project_admin_utils	date	Date
 project_admin_utils	access	Changement d'Accès

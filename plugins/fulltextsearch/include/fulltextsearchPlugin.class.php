@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -133,6 +135,10 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('project_admin_remove_user', 'project_admin_remove_user');
         $this->_addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
 
+        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -142,6 +148,21 @@ class fulltextsearchPlugin extends Plugin {
 
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/fulltextsearch') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/fulltextsearch') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/admin-load-project-autocompleter.js';
+        }
     }
 
     public function layout_search_entry($params) {
@@ -564,8 +585,20 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @param array $params
      */
-    public function site_admin_option_hook($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => 'Full Text Search',
+            'href'  => $this->getPluginPath() . '/'
+        );
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     /**
@@ -669,14 +702,21 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_Controller_SearchError($this->getRequest());
     }
 
-    private function getAdminController() {
+    private function getAdminController()
+    {
         return new FullTextSearch_Controller_Admin(
             $this->getRequest(),
             $this->getSearchAdminClient(),
             $this->getDocmanSystemEventManager(),
             $this->getWikiSystemEventManager(),
-            $this->getTrackerSystemEventManager()
+            $this->getTrackerSystemEventManager(),
+            $this->getAdminPageRenderer()
         );
+    }
+
+    private function getAdminPageRenderer()
+    {
+        return new AdminPageRenderer();
     }
 
     private function getProjectManager() {

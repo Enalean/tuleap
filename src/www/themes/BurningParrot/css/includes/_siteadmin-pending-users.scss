@@ -1,0 +1,85 @@
+#siteadmin-no-user-icon {
+    fill: transparentize($tlp-theme-color, .2);
+}
+
+.siteadmin-pending-user-title {
+    color: inherit;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+
+    > small {
+        font-size: 15px;
+    }
+}
+
+.siteadmin-pending-user-title-button {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.siteadmin-pending-user-info {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.siteadmin-pending-user-info-property {
+    margin: 0 ($tlp-spacing * 2) 0 0;
+}
+
+.siteadmin-pending-user-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.siteadmin-pending-user-form {
+    flex: 0 1 auto;
+}
+
+.siteadmin-pending-user-actions-pending {
+    margin: 0 0 $tlp-spacing;
+}
+
+.siteadmin-pending-user-actions-buttons {
+    display: flex;
+}
+
+.siteadmin-pending-user-actions-button {
+    flex: 1 1 auto;
+
+    &:not(:last-child) {
+        margin: 0 $tlp-spacing 0 0;
+    }
+}
+
+#siteadmin-pending-users-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: ($tlp-spacing * 2) 0 0;
+}
+
+#siteadmin-pending-users-actions-restrict {
+    margin: 0 0 ($tlp-spacing / 2);
+}
+
+#siteadmin-pending-users-actions-buttons-validateall {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+@media screen and (max-width: 1300px) {
+    .siteadmin-pending-user {
+        flex-direction: column;
+
+        > .tlp-pane-container {
+            border-right: 0;
+            border-bottom: 1px solid $tlp-ui-border-light;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
+}

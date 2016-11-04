@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 /**
@@ -26,7 +26,7 @@
 * Base class to manage system events
 */
 class SystemEventManager {
-    
+
     var $dao;
     var $followers_dao;
 
@@ -38,8 +38,8 @@ class SystemEventManager {
 
         $event_manager = $this->_getEventManager();
         $events_to_listen = array(
-            Event::SYSTEM_CHECK, 
-            Event::USER_EMAIL_CHANGED, 
+            Event::SYSTEM_CHECK,
+            Event::USER_EMAIL_CHANGED,
             Event::EDIT_SSH_KEYS,
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
@@ -75,7 +75,7 @@ class SystemEventManager {
 
     /**
      * Prevent Clone
-     * 
+     *
      * @return void
      */
     private function __clone() {
@@ -86,7 +86,7 @@ class SystemEventManager {
 
     /**
      * SystemEventManager is singleton
-     * 
+     *
      * @return SystemEventManager
      */
     public static function instance() {
@@ -160,7 +160,7 @@ class SystemEventManager {
             break;
         case 'approve_pending_project':
             $this->createEvent(SystemEvent::TYPE_PROJECT_CREATE,
-                               $params['group_id'], 
+                               $params['group_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_is_deleted':
@@ -174,13 +174,13 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_HIGH);
             break;
         case 'project_admin_add_user':
-            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_CREATE, 
-                               $this->concatParameters($params, array('group_id', 'user_id')), 
+            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_CREATE,
+                               $this->concatParameters($params, array('group_id', 'user_id')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_remove_user':
-            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_DELETE, 
-                               $this->concatParameters($params, array('group_id', 'user_id')), 
+            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_DELETE,
+                               $this->concatParameters($params, array('group_id', 'user_id')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_activate_user':
@@ -200,14 +200,14 @@ class SystemEventManager {
             break;
         case 'cvs_is_private':
             $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::TYPE_CVS_IS_PRIVATE, 
-                               $this->concatParameters($params, array('group_id', 'cvs_is_private')), 
+            $this->createEvent(SystemEvent::TYPE_CVS_IS_PRIVATE,
+                               $this->concatParameters($params, array('group_id', 'cvs_is_private')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_is_private':
             $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::TYPE_PROJECT_IS_PRIVATE, 
-                               $this->concatParameters($params, array('group_id', 'project_is_private')), 
+            $this->createEvent(SystemEvent::TYPE_PROJECT_IS_PRIVATE,
+                               $this->concatParameters($params, array('group_id', 'project_is_private')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_ugroup_edition':
@@ -227,7 +227,7 @@ class SystemEventManager {
         case 'project_admin_remove_user_from_project_ugroups':
             // multiple ugroups
             // We create several events for coherency. However, the current UGROUP_MODIFY event
-            // only needs to be called once per project 
+            // only needs to be called once per project
             //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
             foreach ($params['ugroups'] as $ugroup_id) {
                 $params['ugroup_id'] = $ugroup_id;
@@ -295,7 +295,7 @@ class SystemEventManager {
             break;
         }
     }
-    
+
     /**
      * Create a new event, store it in the db and send notifications
      * @return SystemEvent or null
@@ -415,8 +415,8 @@ class SystemEventManager {
         }
         return $sysevent;
     }
-    
-    
+
+
     /**
      * @return array
      */
@@ -448,16 +448,16 @@ class SystemEventManager {
                 return $types;
         }
     }
-    
+
     protected function filterConstants(&$item, $key) {
         if (strpos($key, 'TYPE_') !== 0) {
             $item = null;
         }
     }
-    
+
     /**
      * Compute a html table to display the status of the last n events
-     * 
+     *
      * @param int                   $offset        the offset of the pagination
      * @param int                   $limit         the number of event to includ in the table
      * @param boolean               $full          display a full table or only a summary
@@ -478,7 +478,7 @@ class SystemEventManager {
             $classname .= ' table-condensed';
         }
         $html .= '<table class="'. $classname .'">';
-        
+
         if ($full) {
             $html .= '<thead><tr>';
             $html .= '<th>'. 'id' .'</td>';
@@ -492,22 +492,22 @@ class SystemEventManager {
             $html .= '<th>'. 'end_date' .'</th>';
             $html .= '<th>'. 'log' .'</th>';
             $html .= '<th>'. 'actions' .'</th>';
-            
+
             $html .= '</tr></thead>';
-            
+
         }
         $html .= '<tbody>';
-        
+
         $replay_action_params = array();
         if ($csrf) {
             $replay_action_params[$csrf->getTokenName()] = $csrf->getToken();
         }
         if (!$filter_status) {
             $filter_status = array(
-                SystemEvent::STATUS_NEW, 
-                SystemEvent::STATUS_RUNNING, 
-                SystemEvent::STATUS_DONE, 
-                SystemEvent::STATUS_WARNING, 
+                SystemEvent::STATUS_NEW,
+                SystemEvent::STATUS_RUNNING,
+                SystemEvent::STATUS_DONE,
+                SystemEvent::STATUS_WARNING,
                 SystemEvent::STATUS_ERROR,
             );
         }
@@ -529,15 +529,15 @@ class SystemEventManager {
         foreach($events as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
                 $html .= '<tr>';
-                
+
                 //id
                 $html .= '<td>'. $sysevent->getId() .'</td>';
-                
+
                 //name of the event
                 $html .= '<td>'. $sysevent->getType() .'</td>';
 
                 $html .= '<td>'. $sysevent->getOwner() .'</td>';
-                
+
                 //status
                 $html .= '<td class="system_event_status_'. $row['status'] .'"';
                 if ($sysevent->getLog()) {
@@ -546,7 +546,7 @@ class SystemEventManager {
                 $html .= '>';
                 $html .= $sysevent->getStatus();
                 $html .= '</td>';
-                
+
                 if ($full) {
                     $replay_link = '';
                     if ($sysevent->getStatus() == SystemEvent::STATUS_ERROR) {
@@ -566,7 +566,7 @@ class SystemEventManager {
                     $html .= '<td>'. nl2br($sysevent->getLog()) .'</td>';
                     $html .= '<td>'. $replay_link .'</td>';
                 }
-                
+
                 $html .= '</tr>';
             }
         }
@@ -601,7 +601,7 @@ class SystemEventManager {
                 }
             }
             $html .= '</ul></div>';
-        
+
         }
         return $html;
     }
@@ -671,25 +671,25 @@ class SystemEventManager {
 
     /**
      * Return true if there is no pending rename event of this user, otherwise false
-     * 
-     * @param PFUser $user 
+     *
+     * @param PFUser $user
      * @return Boolean
      */
     public function canRenameUser($user) {
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_USER_RENAME, $user->getId());
     }
-    
+
     /**
      * Return true if there is no pending rename event of this project, otherwise false
-     * 
-     * @param PFUser $user 
+     *
+     * @param PFUser $user
      * @return Boolean
      */
     public function canRenameProject($project) {
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
-    
-    
+
+
     /**
      * Return true if there is no pending rename user event on this new name
      * @param String $new_name
@@ -702,8 +702,8 @@ class SystemEventManager {
         }
         return false;
     }
-    
-    
+
+
     /**
      * Return true if there is no pending rename project event on this new name
      * @param String $new_name

@@ -40,8 +40,11 @@ class Admin_PermissionDelegationDeleteGroupModalPresenter {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_delete', array($this->name));
     }
 
-    public function group_delete_confirmation() {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_delete_confirmation', array($this->name));
+    public function purified_group_delete_confirmation() {
+        return Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText('admin_permission_delegation', 'group_delete_confirmation', $this->name),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 
     public function id() {

@@ -3,7 +3,9 @@
 <p class="update-n-repositories">{{{ info_mass_update }}}</p>
 
 <form action="{{ form_action }}" method="POST">
-    {{{ csrf_input }}}
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
 
     {{# mirroring_presenter }}
         <h4>{{ mirroring_title }}</h4>

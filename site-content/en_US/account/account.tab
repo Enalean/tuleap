@@ -62,10 +62,10 @@ account_options	comma	comma
 account_options	semicolon	semicolon
 account_options	tab	tab
 account_options	username_display	Username Display:
-account_options	tuleap_login_and_name	Login name (Real Name)
-account_options	tuleap_name_and_login	Real Name (login name)
-account_options	tuleap_login	Login Name
-account_options	realname	Real Name
+account_options	tuleap_login_and_name	Login (real name)
+account_options	tuleap_name_and_login	Real name (login)
+account_options	tuleap_login	Login
+account_options	realname	Real name
 account_options	auth_attempt_title	Authentication details
 account_options	auth_attempt_last_success	Last successful login:
 account_options	auth_attempt_prev_success	Previous successful login:
@@ -166,7 +166,7 @@ account_change_timezone	choose_tz	Please choose a timezone
 #-----------------------------------------------
 # Script: SF/www/scripts/check_pw.js
 #
-account_check_pw	password_robustness	Password robustness:
+account_check_pw	password_robustness	Password robustness
 account_check_pw	good	Good
 account_check_pw	bad	Bad
 #

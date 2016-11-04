@@ -21,7 +21,7 @@ plugin_openidconnectclient	or_register_label	or
 plugin_openidconnectclient	info_registration	Your new user account will be linked with $1. You must provide a password to use $2 services (CVS, SVN, Git, FTP…).
 plugin_openidconnectclient	link_registration_error	An error occurred while creating the link with OpenID Connect provider
 
-plugin_openidconnectclient_admin	title	OpenID Connect Client configuration
+plugin_openidconnectclient_admin	title	OpenID Connect
 plugin_openidconnectclient_admin	title_provider_configuration	OpenID Connect providers
 plugin_openidconnectclient_admin	https_placeholder	https://
 plugin_openidconnectclient_admin	name	Name
@@ -35,9 +35,10 @@ plugin_openidconnectclient_admin	icon	Icon
 plugin_openidconnectclient_admin	color	Color
 plugin_openidconnectclient_admin	preview	Preview of the login page button
 plugin_openidconnectclient_admin	btn_create	Create the provider
-plugin_openidconnectclient_admin	btn_delete	Remove
+plugin_openidconnectclient_admin	btn_cancel	Cancel
+plugin_openidconnectclient_admin	btn_delete	Delete
 plugin_openidconnectclient_admin	btn_update	Update the provider
-plugin_openidconnectclient_admin	add_new_provider	Add a new provider
+plugin_openidconnectclient_admin	add_new_provider	Add provider
 plugin_openidconnectclient_admin	add_new_provider_error	An error occured while adding a new provider.
 plugin_openidconnectclient_admin	add_new_provider_success	The new provider $1 have been successfully created.
 plugin_openidconnectclient_admin	update_provider	Edit provider
@@ -46,3 +47,7 @@ plugin_openidconnectclient_admin	update_provider_success	The provider $1 have be
 plugin_openidconnectclient_admin	remove_provider_error	An error occured while removing the provider $1.
 plugin_openidconnectclient_admin	remove_provider_success	The provider $1 have been removed.
 plugin_openidconnectclient_admin	malformed_data_error	Les données que vous avez fournies ne sont pas valides.
+plugin_openidconnectclient_admin	empty_content	Empty
+plugin_openidconnectclient_admin	empty_providers_text_start	There is nothing here,
+plugin_openidconnectclient_admin	empty_providers_text_end	start by adding a provider.
+plugin_openidconnectclient_admin	btn_preview	Preview

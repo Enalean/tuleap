@@ -1,71 +1,73 @@
-<h2>{{ title }}</h2>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
-{{# sections }}
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="{{ emailgateway_url }}">{{ emailgateway }}</a>
-        </li>
-        <li>
-            <a href="{{ natures_url }}">{{ natures }}</a>
-        </li>
-        <li>
-            <a href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
-        </li>
-    </ul>
-{{/ sections }}
+    {{# sections }}
+        <nav class="tlp-tabs">
+            <a class="tlp-tab tlp-tab-active" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+            <a class="tlp-tab" href="{{ natures_url }}">{{ natures }}</a>
+            <a class="tlp-tab" href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
+        </nav>
+    {{/ sections }}
 
-<form method="POST" action="" id="siteadmin-config">
-    <input type="hidden" name="action" value="update-emailgateway" />
-    {{{ csrf_token }}}
+    <div class="tlp-framed-horizontally">
+        {{# is_localinc_obsolete }}
+        <div class="tlp-alert-danger">
+            {{{ localinc_obsolete_message }}}
+        </div>
+        {{/ is_localinc_obsolete }}
 
-    {{# is_localinc_obsolete }}
-    <div class="alert alert-error">
-        {{{ localinc_obsolete_message }}}
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{ email_gateway_pane_title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>{{ email_gateway_desc }}</p>
+
+                    <form method="POST" action="">
+                        <input type="hidden" name="action" value="update-emailgateway" />
+                        {{{ csrf_token }}}
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-radio">
+                                <input type="radio"
+                                    name="emailgateway_mode"
+                                    value="disabled"
+                                    {{# is_emailgateway_disabled }}checked{{/ is_emailgateway_disabled }}
+                                >
+                                {{ disable }}
+                            </label>
+                            <p class="tlp-text-info">{{ disable_desc }}</p>
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-radio">
+                                <input type="radio"
+                                    name="emailgateway_mode"
+                                    value="token"
+                                    {{# is_token_based_emailgateway_enabled }}checked{{/ is_token_based_emailgateway_enabled }}
+                                >
+                                {{ token }}
+                            </label>
+                            <p class="tlp-text-info">{{{ token_desc }}}</p>
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-radio">
+                                <input type="radio"
+                                    name="emailgateway_mode"
+                                    value="insecure"
+                                    {{# is_insecure_emailgateway_enabled }}checked{{/ is_insecure_emailgateway_enabled }}
+                                >
+                                {{ insecure }}
+                            </label>
+                            <p class="tlp-text-info">{{{ insecure_desc }}}</p>
+                        </div>
+
+                        <div class="tracker-emailgateway-submit">
+                            <button type="submit" class="tlp-button-primary"><i class="fa fa-save tlp-button-icon"></i> {{ save_conf }}</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </section>
     </div>
-    {{/ is_localinc_obsolete }}
-
-    <p>{{ email_gateway_desc }}</p>
-
-    <label class="radio">
-        <input
-            type="radio"
-            name="emailgateway_mode"
-            value="disabled"
-            {{# is_emailgateway_disabled }}checked{{/ is_emailgateway_disabled }}
-            />
-        {{ disable }}
-    </label>
-    <p class="help">
-        {{ disable_desc }}
-    </p>
-
-    <label class="radio">
-        <input
-            type="radio"
-            name="emailgateway_mode"
-            value="token"
-            {{# is_token_based_emailgateway_enabled }}checked{{/ is_token_based_emailgateway_enabled }}
-            />
-        {{ token }}
-    </label>
-    <p class="help">
-        {{{ token_desc }}}
-    </p>
-
-    <label class="radio">
-        <input
-            type="radio"
-            name="emailgateway_mode"
-            value="insecure"
-            {{# is_insecure_emailgateway_enabled }}checked{{/ is_insecure_emailgateway_enabled }}
-            />
-        {{ insecure }}
-    </label>
-    <p class="help">
-        {{{ insecure_desc }}}
-    </p>
-
-    <div id="submit-panel">
-        <button type="submit" class="btn btn-primary"><i class="icon-save"></i> {{ save_conf }}</button>
-    </div>
-</form>
+</div>

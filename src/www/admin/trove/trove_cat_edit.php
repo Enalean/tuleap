@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('trove.php');
@@ -49,7 +49,7 @@ if ($request->exist('Submit')) {
 	trove_genfullpaths($newroot,trove_getfullname($newroot),$newroot);
 
 	session_redirect("/admin/trove/trove_cat_list.php");
-} 
+}
 
 $res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=".$request->getValidated('trove_cat_id', 'uint', 0));
 if (db_numrows($res_cat)<1) {
@@ -58,7 +58,7 @@ if (db_numrows($res_cat)<1) {
 $row_cat = db_fetch_array($res_cat);
 
 $purifier = Codendi_HTMLPurifier::instance();
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title'), 'main_classes' => array('tlp-framed')));
 
 $list_of_top_level_category_ids_purified = $purifier->purify(json_encode ($list_of_top_level_category_ids));
 
@@ -91,7 +91,7 @@ $list_of_top_level_category_ids_purified = $purifier->purify(json_encode ($list_
 </label>
 <span class="help-block"><?php echo $Language->getText('admin_trove_cat_add','display_note'); ?></span>
 
-<p><input type="submit" name="Submit" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_submit'); ?>">
+<p><input type="submit" name="Submit" class="tlp-button-primary" value="<?php echo $Language->getText('global','btn_submit'); ?>">
 </p></form>
 
 <?php

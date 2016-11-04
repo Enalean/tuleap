@@ -1,47 +1,61 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright (c) Enalean, 2016. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
 
-require_once('pre.php');    
-require_once('vars.php');
-require_once('account.php');
-require_once('proj_email.php');
-require_once('www/admin/admin_utils.php');
-require_once('www/project/admin/project_admin_utils.php');
-require_once('common/event/EventManager.class.php');
+use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
+use Tuealp\user\Admin\PendingProjectBuilder;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\ProjectPendingPresenter;
+use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
 
-$user = UserManager::instance()->getCurrentUser();
+require_once('pre.php');
+
+$user                             = UserManager::instance()->getCurrentUser();
 $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
     new User_ForgeUserGroupPermissionsDao()
 );
-$special_access = $forge_ugroup_permissions_manager->doesUserHavePermission(
+$special_access                   = $forge_ugroup_permissions_manager->doesUserHavePermission(
     $user, new User_ForgeUserGroupPermission_ProjectApproval()
 );
 
 if (! $special_access) {
-    session_require(array('group'=>'1','admin_flags'=>'A'));
+    session_require(array('group' => '1', 'admin_flags' => 'A'));
 }
 
 $action = $request->getValidated('action', 'string', '');
 
-$em         = EventManager::instance();
-$pm         = ProjectManager::instance();
-$csrf_token = new CSRFSynchronizerToken('/admin/approve-pending.php');
+$event_manager   = EventManager::instance();
+$project_manager = ProjectManager::instance();
+$csrf_token      = new CSRFSynchronizerToken('/admin/approve-pending.php');
 
 // group public choice
-if ($action=='activate') {
+if ($action == 'activate') {
     $csrf_token->check();
     $groups = array();
     if ($request->exist('list_of_groups')) {
         $groups = array_filter(array_map('intval', explode(",", $request->get('list_of_groups'))));
     }
     foreach ($groups as $group_id) {
-        $project = $pm->getProject($group_id);
-        $pm->activate($project);
+        $project = $project_manager->getProject($group_id);
+        $project_manager->activate($project);
     }
     if ($special_access) {
         $GLOBALS['Response']->redirect('/my/');
@@ -49,13 +63,14 @@ if ($action=='activate') {
         $GLOBALS['Response']->redirect('/admin/');
     }
 
-} else if ($action=='delete') {
+} else if ($action == 'delete') {
     $csrf_token->check();
-	group_add_history ('deleted','x',$group_id);
-	db_query("UPDATE groups SET status='D'"
-		. " WHERE group_id='$group_id'");
+    $group_id = $request->get('group_id');
+    $project  = $project_manager->getProject($group_id);
+    group_add_history('deleted', 'x', $project->getID());
+    $project_manager->updateStatus($project, Project::STATUS_DELETED);
 
-    $em->processEvent('project_is_deleted', array('group_id' => $group_id));
+    $event_manager->processEvent('project_is_deleted', array('group_id' => $group_id));
     if ($special_access) {
         $GLOBALS['Response']->redirect('/my/');
     } else {
@@ -63,126 +78,17 @@ if ($action=='activate') {
     }
 }
 
+$fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
+$field_builder   = new ProjectDescriptionFieldBuilder($fields_factory);
+$project_builder = new PendingProjectBuilder($project_manager, UserManager::instance(), $field_builder);
+$project_list    = $project_builder->build();
 
-// get current information
-$res_grp = db_query("SELECT * FROM groups WHERE status='P' ORDER BY register_time");
+$siteadmin = new AdminPageRenderer();
+$presenter = new ProjectPendingPresenter($project_list, $csrf_token);
 
-if (db_numrows($res_grp) < 1) {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending')));
-    echo $Language->getText('admin_approve_pending','no_pending');
-} else {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','title')));
-    $pm = ProjectManager::instance();
-    while ($row_grp = db_fetch_array($res_grp)) {
-    
-        ?>
-        <fieldset>
-            <legend style="font-size:1.3em; font-weight: bold;"><?php echo $row_grp['group_name']; ?></legend>
-        
-<?php
-        $group = $pm->getProject($row_grp['group_id']);
-        
-        $currentproject= $pm->getProject($row_grp['group_id']);
-        
-        
-        $members_id = $group->getMembersId();
-        if (count($members_id) > 0) {
-            $admin_id = $members_id[0]; // the first (and normally the only one) is the project creator)
-            $admin = UserManager::instance()->getUserById($admin_id);
-            if ($admin->getID() != 0) {
-                $project_date_creation = util_timestamp_to_userdateformat($group->getStartDate());
-                // Display the project admin (the project creator) and the creation date
-                echo $Language->getText('admin_approve_pending', 'creator_and_creation_date', array($admin->getID(), $admin->getName(), $project_date_creation));
-            }
-        }
-?>
-    
-        <p>
-        <A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_edit'); ?></b></A> | 
-        <A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_admin'); ?></b></A> | 
-        <A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_member'); ?></b></A>
-    
-        <p>
-
-        <B><?php 
-        // Get project type label
-        $template =& TemplateSingleton::instance(); 
-        echo $Language->getText('admin_groupedit','group_type'); ?>: <?php echo $template->getLabel($row_grp['type']); ?></B>
-        <BR><B><?php echo $Language->getText('admin_groupedit','home_box'); ?>: <?php print $row_grp['unix_box']; ?></B>
-        <BR><B><?php echo $Language->getText('admin_groupedit','http_domain'); ?>: <?php print $row_grp['http_domain']; ?></B>
-    
-        <br>
-        &nbsp;
-        <?php
-        $res_cat = db_query("SELECT category.category_id AS category_id,"
-            . "category.category_name AS category_name FROM category,group_category "
-            . "WHERE category.category_id=group_category.category_id AND "
-            . "group_category.group_id=$row_grp[group_id]");
-        while ($row_cat = db_fetch_array($res_cat)) {
-            print "<br>$row_cat[category_name] "
-            . '<A href="groupedit.php?group_id='. $row_grp['group_id'] 
-            .'&amp;group_idrm='. $row_grp['group_id'] 
-            .'&amp;form_catrm='. $row_cat['category_id'] .'">'
-            . "[".$Language->getText('admin_approve_pending','remove_category')."]</A>";
-        }
-    
-        // ########################## OTHER INFO
-    
-        print "<P><B>".$Language->getText('admin_groupedit','other_info')."</B>";
-        print "<br><u>".$Language->getText('admin_groupedit','public')."</u>: ". ($row_grp['access'] !== Project::ACCESS_PRIVATE ? $Language->getText('global', 'yes') :  $Language->getText('global', 'no'));
-        
-        print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
-    
- 
-    	$currentproject->displayProjectsDescFieldsValue();
-
-        $template_group = ProjectManager::instance()->getProject($row_grp['built_from_template']);
-        print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
-
-        ?>
-        <TABLE>
-            <TR>
-            <TD>
-        <FORM action="" method="POST">
-        <?php echo $csrf_token->fetchHTMLInput() ?>
-        <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
-        <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
-        </FORM>
-        </TD>
-    
-            <TD>&nbsp;</TD>
-
-            <TD> 
-        <FORM action="?" method="POST">
-        <?php echo $csrf_token->fetchHTMLInput() ?>
-        <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
-        </FORM>
-            </TD>
-            </TR>
-            </TABLE>
-        </fieldset><br />
-        <?php
-    
-    }
-    
-    //list of group_id's of pending projects
-    $arr=result_column_to_array($res_grp,0);
-    $group_list=implode($arr,',');
-    
-    echo '
-        <CENTER>
-        <FORM action="?" method="POST">
-        ' . $csrf_token->fetchHTMLInput() . '
-        <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
-        <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
-        <INPUT type="submit" name="submit" class="btn btn-primary" value="'.$Language->getText('admin_approve_pending','approve_all').'">
-        </FORM>
-        </center>
-        ';
-}
-site_admin_footer(array());
-
-?>
+$siteadmin->renderAPresenter(
+    $GLOBALS['Language']->getText('admin_approve_pending','title'),
+    ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
+    'project-pending',
+    $presenter
+);

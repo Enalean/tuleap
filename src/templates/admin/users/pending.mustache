@@ -1,0 +1,156 @@
+<h1>{{ title }}</h1>
+
+{{# users }}
+    <section class="tlp-pane siteadmin-pending-user">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title siteadmin-pending-user-title">
+                    {{ realname }}
+                    <small>@{{ login }}</small>
+                    <a href="/admin/usergroup.php?user_id={{ id }}"
+                       class="tlp-button-primary tlp-button-outline tlp-button-small siteadmin-pending-user-title-button"
+                    >
+                        {{ edit_label }}
+                    </a>
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="siteadmin-pending-user-info">
+                    <div class="tlp-property siteadmin-pending-user-info-property">
+                        <label class="tlp-label">{{ id_label }}</label>
+                        <p>{{ id }}</p>
+                    </div>
+                    <div class="tlp-property siteadmin-pending-user-info-property">
+                        <label class="tlp-label">{{ email_label }}</label>
+                        <p>{{ email }}</p>
+                    </div>
+                    <div class="tlp-property siteadmin-pending-user-info-property">
+                        <label class="tlp-label">{{ registration_date_label }}</label>
+                        <p>{{ registration_date }}</p>
+                    </div>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{ purpose_label }}</label>
+                    {{^ purpose }}
+                        <p class="tlp-property-empty">{{ empty_label }}</p>
+                    {{/ purpose }}
+                    {{# purpose }}
+                        <p>{{ purpose }}</p>
+                    {{/ purpose }}
+                </div>
+            </section>
+        </div>
+        <form class="tlp-pane-container siteadmin-pending-user-form" action="?page={{ page }}" method="POST">
+            <input type="hidden" name="list_of_users" value="{{ id }}">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <div class="tlp-pane-section siteadmin-pending-user-actions">
+                <div class="tlp-form-element siteadmin-pending-user-actions-pending">
+                    <label for="expiry-{{ id }}" class="tlp-label">{{ expiry_date_label }}</label>
+                    <div class="tlp-form-element tlp-form-element-prepend">
+                        <input type="text"
+                               id="expiry-{{ id }}"
+                               class="tlp-input tlp-input-date"
+                               size="11"
+                               name="form_expiry"
+                               value="{{ expiry_date }}">
+                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    </div>
+                    <p class="tlp-text-info">{{{ purified_expiry_date_details }}}</p>
+                </div>
+                <div>
+                    {{# can_be_restricted }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="hidden" name="status" value="standard">
+                                <input type="checkbox" name="status" value="restricted"> {{ restricted_label }}
+                            </label>
+                        </div>
+                    {{/ can_be_restricted }}
+                    <div class="siteadmin-pending-user-actions-buttons">
+                        {{# can_be_validated }}
+                            <button type="submit"
+                                    name="action_select"
+                                    value="validate"
+                                    class="tlp-button-primary siteadmin-pending-user-actions-button"
+                                    title="{{ validate_notice }}"
+                            >
+                                <i class="fa fa-envelope-o tlp-button-icon"></i>
+                                {{ validate_label }}
+                            </button>
+                        {{/ can_be_validated }}
+                        {{^ can_be_validated }}
+                            {{# can_resend_email }}
+                                <button type="submit"
+                                        name="action_select"
+                                        value="resend_email"
+                                        class="tlp-button-primary tlp-button-outline siteadmin-pending-user-actions-button"
+                                >
+                                    <i class="fa fa-envelope tlp-button-icon"></i>
+                                    {{ resend_label }}
+                                </button>
+                            {{/ can_resend_email }}
+                        {{/ can_be_validated }}
+
+                        <button type="submit"
+                                name="action_select"
+                                value="activate"
+                                class="tlp-button-success siteadmin-pending-user-actions-button"
+                                title="{{ activate_notice }}"
+                        >
+                            <i class="fa fa-check tlp-button-icon"></i>
+                            {{ activate_label }}
+                        </button>
+                        <button type="submit"
+                                name="action_select"
+                                value="delete"
+                                class="tlp-button-danger siteadmin-pending-user-actions-button"
+                        >
+                            <i class="fa fa-trash-o tlp-button-icon"></i>
+                            {{ delete_label }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+{{/ users }}
+
+<form action="?page={{ page }}" method="POST" id="siteadmin-pending-users-actions">
+    <input type="hidden" name="list_of_users" value="{{ list_ids }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    {{# can_be_restricted }}
+        <div class="tlp-form-element" id="siteadmin-pending-users-actions-restrict">
+            <label class="tlp-label tlp-checkbox">
+                <input type="hidden" name="status" value="standard">
+                <input type="checkbox" name="status" value="restricted"> {{ restricted_all_label }}
+            </label>
+        </div>
+    {{/ can_be_restricted }}
+    <div id="siteadmin-pending-users-actions-buttons">
+        {{# can_be_validated }}
+            <button type="submit"
+                    name="action_select"
+                    value="validate"
+                    class="tlp-button-primary tlp-button-large"
+                    id="siteadmin-pending-users-actions-buttons-validateall"
+                    title="{{ validate_notice }}"
+            >
+                <i class="fa fa-envelope-o tlp-button-icon"></i>
+                {{ validate_all_label }}
+            </button>
+        {{/ can_be_validated }}
+        <button type="submit"
+                name="action_select"
+                value="activate"
+                class="tlp-button-success tlp-button-large"
+                title="{{ activate_notice }}"
+        >
+            <i class="fa fa-check tlp-button-icon"></i>
+            {{ activate_all_label }}
+        </button>
+    </div>
+</form>

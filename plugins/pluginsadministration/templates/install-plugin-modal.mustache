@@ -1,0 +1,57 @@
+<form action="?" method="POST">
+    <div id="install-plugin-{{ name }}" class="
+        tlp-modal
+        {{# is_there_unmet_dependencies }}tlp-modal-danger{{/ is_there_unmet_dependencies }}
+        {{# is_there_readme }}install-plugin-modal{{/ is_there_readme }}"
+        role="dialog"
+        aria-labelledby="install-plugin-{{ name }}-label"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="install-plugin-{{ name }}-label">
+                <i class="fa fa-download tlp-modal-title-icon"></i> {{ install_modal_title }} {{ full_name }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="action" value="install">
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="confirm" value="1">
+
+            {{# is_there_unmet_dependencies }}
+                <p>{{ error_install_dependency }}</p>
+
+                <ul>
+                {{# unmet_dependencies }}
+                    <li>{{ . }}</li>
+                {{/ unmet_dependencies }}
+                </ul>
+            {{/ is_there_unmet_dependencies }}
+            {{^ is_there_unmet_dependencies }}
+                {{ install_modal_content }}
+
+                {{# is_there_readme }}
+                    <div class="install-plugin-modal-readme">
+                        {{{ readme }}}
+                    </div>
+                {{/ is_there_readme }}
+            {{/ is_there_unmet_dependencies }}
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button"
+                class="{{# is_there_unmet_dependencies }}tlp-button-danger{{/ is_there_unmet_dependencies }}
+                {{^ is_there_unmet_dependencies }}tlp-button-primary tlp-button-outline{{/ is_there_unmet_dependencies }}
+                tlp-modal-action"
+                data-dismiss="modal"
+            >
+                {{ install_modal_cancel }}
+            </button>
+            {{^ is_there_unmet_dependencies }}
+                <button type="sumit" class="tlp-button-primary tlp-modal-action">
+                    <i class="fa fa-download tlp-button-icon"></i> {{ install_modal_submit }}
+                </button>
+            {{/ is_there_unmet_dependencies }}
+        </div>
+    </div>
+</form>

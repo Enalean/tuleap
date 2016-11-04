@@ -43,6 +43,7 @@ class Presenter {
      */
     public $csrf_token;
 
+    const TEMPLATE = 'administration-providers';
 
     public function __construct(
         array $providers_presenters,
@@ -122,8 +123,8 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'https_placeholder');
     }
 
-    public function btn_close() {
-        return $GLOBALS['Language']->getText('global', 'btn_close');
+    public function btn_cancel() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_cancel');
     }
 
     public function btn_create() {
@@ -142,4 +143,28 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_update');
     }
 
+    public function there_are_providers()
+    {
+        return count(($this->providers_presenters) > 0);
+    }
+
+    public function empty_content()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'empty_content');
+    }
+
+    public function empty_providers_text_start()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'empty_providers_text_start');
+    }
+
+    public function empty_providers_text_end()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'empty_providers_text_end');
+    }
+
+    public function btn_preview()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_preview');
+    }
 }

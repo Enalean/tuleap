@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'MediawikiSiteAdminAllowedProjectsPresenter.class.php';
 require_once 'MediawikiSiteAdminResourceRestrictor.php';
 require_once 'events/SytemEvent_MEDIAWIKI_SWITCH_TO_123.class.php';
@@ -27,28 +29,36 @@ class MediawikiSiteAdminController {
     private $project_manager;
     private $resource_restrictor;
     private $system_event_manager;
+    /**
+     * @var \Tuleap\Admin\AdminPageRenderer
+     */
+    private $admin_page_renderer;
 
-    public function __construct() {
-        $this->project_manager     = ProjectManager::instance();
-        $this->resource_restrictor = new MediawikiSiteAdminResourceRestrictor(
+    public function __construct(AdminPageRenderer $admin_page_renderer)
+    {
+        $this->project_manager      = ProjectManager::instance();
+        $this->resource_restrictor  = new MediawikiSiteAdminResourceRestrictor(
             new MediawikiSiteAdminResourceRestrictorDao(),
             $this->project_manager
         );
         $this->system_event_manager = SystemEventManager::instance();
+        $this->admin_page_renderer  = $admin_page_renderer;
     }
 
-    public function site_index(HTTPRequest $request) {
+    public function site_index(HTTPRequest $request)
+    {
         $this->assertSiteAdmin($request);
 
         $presenter = new MediawikiSiteAdminAllowedProjectsPresenter(
-                $this->resource_restrictor->searchAllowedProjects()
+            $this->resource_restrictor->searchAllowedProjects()
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
-
-        $GLOBALS['HTML']->header(array('title'=>'Mediawiki', 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->admin_page_renderer->renderAPresenter(
+            'Mediawiki',
+            ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
+            $presenter::TEMPLATE,
+            $presenter
+        );
     }
 
     public function site_update_allowed_project_list(HTTPRequest $request) {

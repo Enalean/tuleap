@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Admin\AdminPageRenderer;
 
 /**
  * Controller for site admin views
@@ -31,19 +32,25 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
 
     /* FullTextSearch_TrackerSystemEventManager */
     private $tracker_system_event_manager;
+    /**
+     * @var AdminPageRenderer
+     */
+    private $admin_page_renderer;
 
     public function __construct(
         Codendi_Request $request,
         FullTextSearch_ISearchDocumentsForAdmin $client,
         FullTextSearch_DocmanSystemEventManager $docman_system_event_manager,
         FullTextSearch_WikiSystemEventManager $wiki_system_event_manager,
-        FullTextSearch_TrackerSystemEventManager $tracker_system_event_manager
+        FullTextSearch_TrackerSystemEventManager $tracker_system_event_manager,
+        AdminPageRenderer $admin_page_renderer
     ) {
         parent::__construct($request, $client);
 
         $this->docman_system_event_manager  = $docman_system_event_manager;
         $this->wiki_system_event_manager    = $wiki_system_event_manager;
         $this->tracker_system_event_manager = $tracker_system_event_manager;
+        $this->admin_page_renderer          = $admin_page_renderer;
     }
 
     public function getIndexStatus() {
@@ -51,9 +58,13 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
     }
 
     public function index() {
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title')));
-        $this->renderer->renderToPage('admin', new FullTextSearch_Presenter_AdminPresenter());
-        $GLOBALS['HTML']->footer(array());
+        $admin_presenter = new FullTextSearch_Presenter_AdminPresenter();
+        $this->admin_page_renderer->renderAPresenter(
+            $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title'),
+            FULLTEXTSEARCH_TEMPLATE_DIR,
+            'admin',
+            $admin_presenter
+        );
     }
 
     public function reindexDocman($project_id)

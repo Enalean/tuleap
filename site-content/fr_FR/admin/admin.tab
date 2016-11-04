@@ -2,27 +2,58 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
+
+admin_sidebar	users_section_title	Utilisateurs
+admin_sidebar	users_search_placeholder	Email, nom d'utilisateur…
+admin_sidebar	users_nav_all_users	Tous les utilisateurs
+admin_sidebar	users_nav_new_user	 Nouvel utilisateur
+admin_sidebar	users_nav_pending_users	Utilisateurs en attente
+admin_sidebar	users_nav_validated_users	Utilisateurs validés en attente
+admin_sidebar	users_nav_permission_delegation	Délégation de permission
+admin_sidebar	projects_section_title	Projets
+admin_sidebar	projects_search_placeholder	Id, nom unix…
+admin_sidebar	projects_nav_all_projects	Tous les projets
+admin_sidebar	projects_nav_pending_projects	Projets en attente
+admin_sidebar	configuration_section_title	Configuration globale
+admin_sidebar	configuration_nav_global_access_rights	Droits d'accès globaux
+admin_sidebar	configuration_nav_homepage	Page d'accueil
+admin_sidebar	configuration_nav_categories	Catégories de projets
+admin_sidebar	configuration_nav_project_fields	Champs de projets personnalisés
+admin_sidebar	configuration_nav_predefined_services	Services de projets prédéfinis
+admin_sidebar	configuration_nav_predefined_references	Références de projets prédéfinis
+admin_sidebar	configuration_nav_tracker_restore	Outils de suivi en attente
+admin_sidebar	configuration_nav_svn_tokens	Projets autorisants les jetons SVN
+admin_sidebar	utils_section_title	Utilitaires globaux
+admin_sidebar	utils_nav_system_events	Événements système
+admin_sidebar	utils_nav_news	Approbation des annonces
+admin_sidebar	utils_nav_mass_mail	Envoi d'emails en masse
+admin_sidebar	links_nav_plugins	Plugins
+admin_sidebar	links_nav_doc	Doc
+
 #-----------------------------------------------
 # Script: SF/www/admin/index.php
 #
 admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
-admin_main	message		<b>Attention !</b> L'utilisation du bouton <b>Retour</b> de votre navigateur est fortement déconseillée dans les fonctions d'administration.
 admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
-admin_main	header_user	Administration des utilisateurs
+admin_main	header_user	Utilisateurs en attente
 admin_main	display_user	Afficher les utilisateurs commençant par :
-admin_main	search_user	Chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
+admin_main	search_user	Utilisateur
 admin_main	search	Chercher
 admin_main	export_csv	Export CSV
+admin_main	review_pending_users	Valider les utilisateurs
+admin_main	review_pending_users_empty	Aucun utilisateur à valider
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
 admin_main	validated_user	Utilisateurs validés en <a href="$1"> attente d'activation par e-mail</a>
 admin_main	need_approval	approbation requise
 admin_main	need_validation	validation requise
-admin_main	header_group	Administration des projets
+admin_main	header_group	Projets en attente
 admin_main	display_group	Afficher les projets commençant par :
 admin_main	search_group	Chercher (Id projet, nom unix, nom complet) :
 admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
 admin_main	all_groups	Tous les <a href="$1">projets</a>
+admin_main	review_pending_projects	Valider les projets
+admin_main	review_pending_projects_empty	Aucun projet à valider
 admin_main	incomplete_group	Projets en statut <a href="$1"><B>I</B> (incomplet)</A>
 admin_main	pending_group	Projets en statut <a href="$1"><B>P</B> (en attente)</A>
 admin_main	deleted_group	Projets en statut <a href="$1"><B>D</B> (détruit)</A>
@@ -37,34 +68,37 @@ admin_main	tracker_remove	Nettoyage des outils de suivi en attente
 admin_main	tracker_template	Configuration des modèles d'outils de suivi v3
 admin_main	header_stat	Statistiques
 admin_main	stat_login	Afficher les connections les plus récentes
-admin_main	stat_spu	Générer les statistiques site/projets/utilisateurs
+admin_main	stat_spu	Voir les statistiques site, projets et utilisateurs
 admin_main	header_utils	Utilitaires site
 admin_main	mail_engine	Envoi d'e-mails en masse
-admin_main	header_sstat	Statistiques site
+admin_main	header_sstat	Statistiques
 admin_main	header_plugins	Plugins
+admin_main	manage_all_plugins	Gérer tous les plugins
 admin_main	servers	Serveurs
-admin_main	servers_admin	Administration des serveurs 
+admin_main	servers_admin	Administration des serveurs
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
-admin_main	sstat_reg_g	Projets enregistrés
-admin_main	sstat_reg_act_g	Projets enregistrés actifs
-admin_main	sstat_pend_g	Projets en attente
+admin_main	sstat_reg_g	enregistrés
+admin_main	sstat_reg_act_g	enregistrés actifs
+admin_main	sstat_pend_g	en attente
 admin_main	sstat_pend_u	Utilisateurs en attente
 admin_main	site_news	Annonces site
 admin_main	site_news_approval	Approbation annonces site
 admin_main	trove_cat	Catégories
-admin_main	trove_cat_list	Liste des catégories
+admin_main	trove_cat_list	Gérer la liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	new_user	Nouvel utilisateur
 admin_main	permission_delegation	Délégation de permission
 admin_main	active_users	Utilisateurs actifs
-admin_main	lastday_users	Les dernières 24 heures
-admin_main	lastweek_users	La semaine dernière
-admin_main	lastmonth_users	Le mois dernier
-admin_main	last3months_users	Les 3 derniers mois
-admin_main	mode_lab_users	Utilisateurs actifs ou restreints avec le mode lab activé 
-admin_main	stat_projects	Statistiques des projets
-admin_main	stat_users	Statistiques des utilisateurs
-admin_main	status_user	Par status 
+admin_main	lastday_users	actifs les dernières 24 heures
+admin_main	lastweek_users	actifs la semaine dernière
+admin_main	lastmonth_users	actifs le mois dernier
+admin_main	last3months_users	actifs les 3 derniers mois
+admin_main	mode_lab_users	Utilisateurs actifs ou restreints utilisant le mode lab
+admin_main	mode_lab_users_nb_users	utilisateurs
+admin_main	stat_projects	Projets
+admin_main	status_project	Par statut
+admin_main	stat_users	Utilisateurs
+admin_main	status_user	Par statut
 admin_main	statusactif_user	actif(s)
 admin_main	statusrestricted_user	restreint(s)
 admin_main	statushold_user	suspendu(s)
@@ -133,50 +167,71 @@ admin_approve_license	accept	Accepter
 admin_approve_license	decline	Décliner
 admin_approve_license	continue	Continuer
 admin_approve_license	error	Seuls les administrateurs du site ont accès à cette page
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
-admin_approve_pending	title	Approbation des projets en attente	
-admin_approve_pending	no_pending	Aucun projet en attente à approuver
+admin_approve_pending	title	Projets en attente de validation
+admin_approve_pending	no_pending	Prenez une pause,
+admin_approve_pending	no_pending_next	aucun projet à valider.
+admin_approve_pending	go_back	Retour à la page d'administration
 admin_approve_pending	approve	Approuver le projet
 admin_approve_pending	delete	Détruire le projet
 admin_approve_pending	remove_category	Enlever de la catégorie
 admin_approve_pending	approve_all	Tout approuver sur cette page
 admin_approve_pending	creator_and_creation_date	Créé le $3 par <a href="/admin/usergroup.php?user_id=$1">$2</a>
 admin_approve_pending	distributed_services	Serveurs pour les services distribués
+admin_approve_pending	error_update	Erreur lors de la mise à jour du projet
+admin_approve_pending	description	Description
+admin_approve_pending	see_project_details	Voir les détails du projet
+admin_approve_pending	description_label	Description
+admin_approve_pending	submitted_by_label	Soumis par
+admin_approve_pending	creation_date_label	Date de création
+admin_approve_pending	delete_label	Supprimer
+admin_approve_pending	validate_label	Valider
+admin_approve_pending	validate_all_label	Valider tous les projets
+admin_approve_pending	activate_all_label	Activer tous les projets
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
 #
-admin_approve_pending_users	title	Approbation des comptes utilisateur en attente
-admin_approve_pending_users	no_pending	Aucun compte utilisateur en attente d'approbation
-admin_approve_pending_users	no_pending_validated	Aucun compte utilisateur en attente de validation
-admin_approve_pending_users	no_validated	Aucun compte utilisateur en attente d'approbation
+admin_approve_pending_users	title	Utilisateurs en attente de validation
+admin_approve_pending_users	title_validated	Utilisateurs validés à activer
+admin_approve_pending_users	take_break	Faites une pause,
+admin_approve_pending_users	go_back	Retour à la page d'administration
+admin_approve_pending_users	no_pending	il n'y a aucun utilisateur en attente d'approbation.
+admin_approve_pending_users	no_pending_validated	il n'y a aucun utilisateur en attente de validation.
+admin_approve_pending_users	no_validated	il n'y a aucun utilisateur validé en attente d'approbation.
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
-admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
+admin_approve_pending_users	user_edit	Voir les détails de l'utilisateur
 admin_approve_pending_users	activate	Activer
+admin_approve_pending_users	activate_all	Activer tous les utilisateurs
 admin_approve_pending_users	validate_notice	Valider : Un email est envoyé à l'utilisateur pour confirmation. Si ce dernier suit le lien contenu dans l'email, le compte est activé.
 admin_approve_pending_users	activate_notice	Activer : Le compte est immédiatement actif.
 admin_approve_pending_users	delete	Détruire
 admin_approve_pending_users	purpose	Motif
 admin_approve_pending_users	other_info	Autre information
 admin_approve_pending_users	name	Nom de l'utilisateur
-admin_approve_pending_users	id	ID utilisateur
-admin_approve_pending_users	email	E-mail utilisateur
+admin_approve_pending_users	id	Id
+admin_approve_pending_users	email	E-mail
 admin_approve_pending_users	reg_date	Date d'enregistrement
+admin_approve_pending_users	empty	Pas de motif
 admin_approve_pending_users	validate	Valider
+admin_approve_pending_users	validate_all	Valider tous les utilisateurs
 admin_approve_pending_users	account	le compte
 admin_approve_pending_users	ok	Ok
-admin_approve_pending_users	all_accounts	tous les comptes 
+admin_approve_pending_users	all_accounts	tous les comptes
 admin_approve_pending_users	status	avec le statut
-admin_approve_pending_users	status_restricted	restreint
+admin_approve_pending_users	status_restricted	Utilisateur restreint
+admin_approve_pending_users	status_all_restricted	Utilisateurs restreints
 admin_approve_pending_users	status_standard	standard
 admin_approve_pending_users	email_title	Bienvenue sur $1 !
 admin_approve_pending_users	data_not_parsed	Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_approve_pending_users	expiry_date	Date d'expiration
-admin_approve_pending_users	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.</em>
-admin_approve_pending_users	resend	Renvoyer
+admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.
+admin_approve_pending_users	resend	Renvoyer l'email
 admin_approve_pending_users	resend_notice	Renvoyer l'email d'activation du compte
 #
 #-----------------------------------------------
@@ -190,7 +245,7 @@ admin_groupedit_add	unix_name	Nom unix du nouveau groupe
 # Script: SF/www/admin/groupedit.php
 #
 admin_groupedit	title	Editer un projet
-admin_groupedit	feedback_info	Mettre à jour les infos du projet
+admin_groupedit	feedback_info	Mise à jour des infos du projet
 admin_groupedit	error_group	Projet invalide passé en paramètre.
 admin_groupedit	proj_edit	Editer les détails d'un projet
 admin_groupedit	proj_admin	Administration du Projet
@@ -213,8 +268,8 @@ admin_groupedit	grp_name	Nom du projet
 admin_groupedit	unix_grp	Nom du groupe unix
 admin_groupedit	description	Description
 admin_groupedit	built_from_template	Créé à partir du patron
-admin_groupedit	rename_project_title	Renommage du Projet	
-admin_groupedit	rename_project_label	Renommage du Projet en 
+admin_groupedit	rename_project_title	Renommage du Projet
+admin_groupedit	rename_project_label	Renommage du Projet en
 admin_groupedit	rename_project_msg	Le changement du nom du projet sur le système va être traité dans quelques instants ($1 -> $2).
 admin_groupedit	rename_project_warn	La mise à jour du nom du projet ne sera effective qu'après le traitement de l'événement système correspondant.
 admin_groupedit	rename_project_already_queued	Il y a déjà une opération de renommage prévue pour ce projet. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
@@ -258,12 +313,12 @@ admin_massmail_execute	no_user	Aucun utilisateur ne correspond à votre entrée 
 #
 admin_massmail	title	Envoi de courrier électronique en masse
 admin_massmail	header	Envoi de courrier électronique en masse aux utilisateurs de $1
-admin_massmail	warning	Soyez <span class="highlight"><B>TRÈS</B></span> vigilant avec ce formulaire car son utilisation déclenche l'envoie de e-mails à de très nombreux utilisateurs.
+admin_massmail	warning	Soyez <b>très</b> vigilant avec ce formulaire car son utilisation déclenche l'envoie de e-mails à de très nombreux utilisateurs.
 admin_massmail	to_preview	Envoyer un aperçu à
 admin_massmail	to_additional	Envoyer uniquement aux abonnés de l'option "Courrier électronique supplémentaire au sujet de la communauté"
 admin_massmail	to_update	Envoyer uniquement aux abonnés de l'option "Courrier électronique à propos des mises à jour du site"
-admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets 
-admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets 
+admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets
+admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets
 admin_massmail	to_site_admin	Envoyer uniquement aux administrateurs du site
 admin_massmail	to_all	Envoyer à tous les utilisateurs quelles que soient leurs préférences
 admin_massmail	subject	Objet
@@ -298,18 +353,20 @@ admin_show_license	title	Termes et conditions de la licence
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php
 #
-admin_user_changepw	error_userid	Erreur interne&nbsp;: pas d'ID utilisateur
+admin_user_changepw	error_userid	Pas d'ID utilisateur
 admin_user_changepw	error_nopasswd	Vous devez fournir un mot de passe.
 admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
-admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu être mis à jour.
+admin_user_changepw	error_update	Le mot de passe n'a pu être mis à jour.
 admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe
-admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié. 
+admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié.
 admin_user_changepw	title	Changement de mot de passe
-admin_user_changepw	ldap_warning	ATTENTION&nbsp;: Changer le mot de passe ici ne changera pas le mot de passe LDAP !
+admin_user_changepw	ldap_warning	Changer le mot de passe ici ne changera pas le mot de passe LDAP.
 admin_user_changepw	header	Changement du mot de passe
-admin_user_changepw	new_passwd	Nouveau mot de passe
-admin_user_changepw	new_passwd2	Nouveau mot de passe (confirmez)
+admin_user_changepw	save	Mettre à jour
+admin_user_changepw	cancel	Annuler
+admin_user_changepw	password_field_label	Mot de passe
+admin_user_changepw	confirm_password_field_label	Mot de passe (confirmation)
 #
 #-----------------------------------------------
 # Script: SF/www/admin/usergroup.php
@@ -328,8 +385,7 @@ admin_usergroup	error_nogid	ID groupe manquant !
 admin_usergroup	error_add_ug	Erreur lors de l'ajout d'un utilisateur au groupe
 admin_usergroup	success_add_ug	Utilisateur ajouté au groupe avec succès
 admin_usergroup	error_member	L'utilisateur est déjà membre du groupe $1
-admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur 
-admin_usergroup	account_info	Information sur le compte Unix
+admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur
 admin_usergroup	shell	Shell
 admin_usergroup	email	E-mail
 admin_usergroup	expiry_date	Date d'expiration
@@ -347,22 +403,29 @@ admin_usergroup	current_groups	Groupes actuels
 admin_usergroup	remove_ug	Enlever l'utilisateur de ce groupe
 admin_usergroup	admin_flags	Drapeaux d'administration
 admin_usergroup	add_ug	Ajouter l'utilisateur au groupe (ID du groupe)
-admin_usergroup	change_passwd	Changer le mot de passe de l'utilisateur
+admin_usergroup	change_passwd	Changer le mot de passe
 admin_usergroup	was	Intialement :
 admin_usergroup	rename_user_msg	Le changement de Login utilisateur sur le système va être traité dans quelques instants ($1 -> $2).
 admin_usergroup	rename_user_warn	La mise à jour du Login ne sera effective qu'après le traitement de l'événement système correspondant.
 admin_usergroup	rename_user_already_queued	Il y a déjà une opération de renommage prévue pour cet utilisteur. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
-admin_usergroup	account_details	Détails du compte:
+admin_usergroup	account_details	Détails du compte
+admin_usergroup	access	Accès
+admin_usergroup	current_projects	Projets
+admin_usergroup	is_admin	Est administrateur du projet
+admin_usergroup	no_project	Membre d'aucun projet
 admin_usergroup	last_pwd_update	Dernière mise à jour du mot de passe
 admin_usergroup	last_access_date	Dernier accès
 admin_usergroup	cannot_change_status	Impossible de changer le statut avant la validation du compte
 admin_usergroup	user_public_profile	Profil public
+admin_usergroup	more_info	Plus d'information
+admin_usergroup	update_information	Sauvegarder les informations
+admin_usergroup	purpose_label	Motif
+admin_usergroup	empty_purpose	Vide
 #
 #-----------------------------------------------
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	legend	Légende pour le Statut<span class="site_admin_user_status_A">&nbsp;</span><B>Actif</B><span class="site_admin_user_status_R">&nbsp;</span><u>Restreint</u><span class="site_admin_user_status_V">&nbsp;</span>(v)Validé<span class="site_admin_user_status_W">&nbsp;</span>(vr)Validé et Restreint<span class="site_admin_user_status_D">&nbsp;</span><I>Détruit</I><span class="site_admin_user_status_S">&nbsp;</span>Suspendu<span class="site_admin_user_status_P">&nbsp;</span>(*)En attente
 admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
 admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
 admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE
@@ -370,9 +433,9 @@ admin_userlist	user_suspended	Utilisateur mis à jour avec le statut SUSPENDU
 admin_userlist	user_restricted	Utilisateur mis à jour avec le statut RESTREINT
 admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
 admin_userlist	error_noadd	Erreur - Impossibilité d'ajouter l'utilisateur au groupe
-admin_userlist	user_list	Liste des utilisateurs pour
+admin_userlist	user_list	Utilisateurs
 admin_userlist	all_groups	Tous les projets
-admin_userlist	group	Projet $1
+admin_userlist	group	in $1
 admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
 admin_userlist	validated	Validé
@@ -387,12 +450,22 @@ admin_userlist	restrict	Restreindre
 admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre
 admin_userlist	status	Statut
-admin_userlist	active_sessions	Il y a actuellement $1 sessions active. Vous pouvez <input type="submit" class="btn" value="purger toutes les sessions en cours" name="reset_all_sessions" onclick="return confirm('Êtes-vous sûr de vouloir obliger tous vos utilisateurs à se reconnecter ?');" />. Ceci forcera la reconnexion de tous les utilisateurs.
-admin_userlist	nb_projects	Nb de projets
+admin_userlist	active_sessions_label	Purger toutes les sessions en cours
+admin_userlist	active_sessions_confirm	Êtes-vous sûr de vouloir obliger tous vos utilisateurs ($1) à se reconnecter ?
+admin_userlist	nb_projects	# Projets
 admin_userlist	not_member_of	Membre d'aucun projet
 admin_userlist	member_of	Membre de $1 projet(s)
 admin_userlist	admin_of	Admin de $1 projet(s)
 admin_userlist	id_user	Id utilisateur
+admin_userlist	any	Tous
+admin_userlist	filter	Filtre
+admin_userlist	matching_users	Utilisateurs correspondants au filtre
+admin_userlist	export_csv	Export CSV
+admin_userlist	profile	Profile
+admin_userlist	no_matching_users	Il n'y a aucun utilisateur qui correspond au filtre
+admin_userlist	name	Nom
+admin_userlist	login	Login
+admin_userlist	filter_name	Email, nom, id
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
@@ -432,9 +505,10 @@ admin_trove_cat_edit	root	Racine
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
 admin_trove_cat_list	title	Arbre des projets - Liste des catégories
-admin_trove_cat_list	header	Lister les catégories
+admin_trove_cat_list	header	Catégories de classification de projets
 admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Détruire
+admin_trove_cat_list	add	Ajouter une catégorie
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #
@@ -467,7 +541,7 @@ admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
 #
 admin_desc_fields	title	Edition des Champs de Description
 admin_desc_fields	header	Edition des Champs de Description
-admin_desc_fields	header_add	Ajouter un Champ de Description 
+admin_desc_fields	header_add	Ajouter un Champ de Description
 admin_desc_fields	desc_name	Nom du champ de description
 admin_desc_fields	desc_description	Description du champ
 admin_desc_fields	desc_required	Obligatoire
@@ -519,7 +593,7 @@ admin_permission_delegation	page_description	Ici vous pouvez assigner des permis
 admin_permission_delegation	group_action_add	Ajouter un groupe
 admin_permission_delegation	group_action_edit	Editer
 admin_permission_delegation	group_action_delete	Supprimer
-admin_permission_delegation	no_group	Il n'y a pas encore de groupe. Vous pouvez commencer par en ajouter un :
+admin_permission_delegation	no_group	Il n'y a rien ici,<br>commencez par ajouter un groupe.
 admin_permission_delegation	permissions_title	Permissions
 admin_permission_delegation	no_permission	Il n'y a aucune permission associée à ce groupe
 admin_permission_delegation	users_title	Utilisateurs
@@ -534,12 +608,12 @@ admin_permission_delegation	group_title_create	Ajouter un nouveau groupe
 admin_permission_delegation	group_title_edit	Editer le groupe "$1"
 admin_permission_delegation	group_name	Nom
 admin_permission_delegation	group_description	Description
-admin_permission_delegation	group_submit_create	Créer
+admin_permission_delegation	group_submit_create	Créer le groupe
 admin_permission_delegation	group_submit_edit	Sauvegarder
 admin_permission_delegation	group_cancel	Annuler
 admin_permission_delegation	group_title_delete	Supprimer le groupe "$1"
-admin_permission_delegation	group_delete_confirmation	Vous êtes sur le point de supprimer le groupe "<b>$1</b>". Cette action est irréversible. Confirmez-vous la suppression ?
-admin_permission_delegation	group_submit_delete	Oui, supprimer
+admin_permission_delegation	group_delete_confirmation	Vous êtes sur le point de supprimer le groupe <b>$1</b>. Cette action est irréversible. Confirmez-vous la suppression ?
+admin_permission_delegation	group_submit_delete	Supprimer le groupe
 admin_permission_delegation	group_cancel_delete	Annuler
 admin_permission_delegation	user_group_already_exists	Le nom du groupe d'utilisateurs est invalide (vide ou déjà existant)
 admin_permission_delegation	ugroup_not_found	Ce groupe d'utilisateurs n'existe pas
@@ -549,3 +623,55 @@ admin_permission_delegation	permissions_modal_submit	Ajouter les permissions
 admin_permission_delegation	permissions_modal_cancel	Annuler
 admin_permission_delegation	no_permission_to_add	Ce groupe possède déjà toutes les permissions disponibles.
 admin_permission_delegation	permission_not_found	Cette permission n'existe pas
+
+admin_project	information_label	Informations
+admin_project	history_label	Historique
+admin_project	project_details_label	Détails du projet
+admin_project	access_label	Accès au projet
+admin_project	description_label	Description
+admin_project	more_label	Plus d'information
+admin_project	admin_label	Administration du projet
+admin_project	members_label	Membre du projet
+admin_project	pending_label	Docs supprimés en attente
+admin_project	manage_access_label	Gérer l'accès
+admin_project	incl_restricted_label	incl. les utilisateurs restreints
+admin_project	public_label	Public
+admin_project	private_label	Privé
+admin_project	unix_name_label	Nom du groupe unix
+admin_project	save_label	Sauvegarder les informations
+admin_project	status_label	Status
+admin_project	instructions_label	Instructions
+admin_project	instructions_desc	Un e-mail est envoyé aux administrateurs du projet lors de l'activation de ce dernier. L'e-mail sert de notification et contient des instructions basiques à propos du projet. Vous pouvez renvoyer manuellement cet e-mail.
+admin_project	send_email_label	Envoyer les instructions
+admin_project	filter_label	Filtrer
+admin_project	search_label	Rechercher
+admin_project	change_label	Historique des changements
+admin_project	history_empty_state	Il n'y a pas encore eu de changement.
+admin_project	history_empty_results	Rien dans l'historique ne correspond à votre recherche.
+#
+#-----------------------------------------------
+# Script: SF/www/admin/grouplist.php
+#
+admin_projectlist	title	Administration - Liste des projets
+admin_projectlist	project_list	Projets
+admin_projectlist	new_project	Ajouter un projet
+admin_projectlist	filter_name	Nom du Projet
+admin_projectlist	status	Statut
+admin_projectlist	filter	Filtrer
+admin_projectlist	any	Tous
+admin_projectlist	active	Actif
+admin_projectlist	system	Système
+admin_projectlist	pending	En attente
+admin_projectlist	incomplete	Incomplet
+admin_projectlist	holding	En suspens
+admin_projectlist	deleted	Supprimés
+admin_projectlist	matching_projects	Projets correspondants
+admin_projectlist	no_matching_projects	Aucun projet correspondant
+admin_projectlist	export_csv	Export CSV
+admin_projectlist	project_name	Nom du Projet
+admin_projectlist	unix_group_name	Nom du groupe Unix
+admin_projectlist	type	Type de Projet
+admin_projectlist	members	Membres
+admin_projectlist	private	Privé
+admin_projectlist	public_unrestricted	Public incluant les utilisateurs restreints
+admin_projectlist	public	Public

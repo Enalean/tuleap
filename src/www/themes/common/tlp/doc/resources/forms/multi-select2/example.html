@@ -1,0 +1,159 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-select2">Types</label>
+    <select class="tlp-select" id="types-select2" name="types[]" style="width: 100%" multiple>
+        <option value="saucer" selected>Saucer</option>
+        <option value="spheroid">Spheroid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="typess-select2">Types</label>
+    <select class="tlp-select" id="typess-select2" name="types[]" style="width: 100%" multiple>
+        <option value="saucer" selected>Saucer</option>
+        <option value="spheroid" selected>Spheroid</option>
+        <option value="triangular" selected>Triangular</option>
+        <option value="cigar" selected>Cigar</option>
+        <option value="ovoid" selected>Ovoid</option>
+        <option value="saucer" selected>Saucer</option>
+        <option value="spheroid" selected>Spheroid</option>
+        <option value="triangular" selected>Triangular</option>
+        <option value="cigar" selected>Cigar</option>
+        <option value="ovoid" selected>Ovoid</option>
+        <option value="saucer" selected>Saucer</option>
+        <option value="spheroid" selected>Spheroid</option>
+        <option value="triangular" selected>Triangular</option>
+        <option value="cigar" selected>Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#typess-select2'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-select2-adjusted">Types adjusted</label>
+    <select class="tlp-select tlp-select-adjusted" id="types-select2-adjusted" name="types[]" style="width: 100%" multiple>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid" selected>Spheroid</option>
+        <option value="triangular">Triangular 3 angles</option>
+        <option value="cigar" selected>Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-adjusted'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-select2-help">Types help</label>
+    <select class="tlp-select" id="types-select2-help" name="types[]" style="width: 100%" multiple>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-help'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-select2-mandatory">Types mandatory <i class="fa fa-asterisk"></i></label>
+    <select class="tlp-select" id="types-select2-mandatory" name="types[]" style="width: 100%" multiple required>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-mandatory'), {
+            placeholder: 'Choose a type'
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="types-select2-disabled">Types</label>
+    <select class="tlp-select" id="types-select2-disabled" name="types[]" style="width: 100%" multiple disabled>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular" selected>Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-disabled'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="types-select2-error">Types</label>
+    <select class="tlp-select" id="types-select2-error" name="types[]" style="width: 100%" multiple>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-error'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-select2-small">Types small</label>
+    <select class="tlp-select tlp-select-small" id="types-select2-small" name="types[]" style="width: 100%" multiple>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-small'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="types-select2-large">Types large</label>
+    <select class="tlp-select tlp-select-large" id="types-select2-large" name="types[]" style="width: 100%" multiple>
+        <option value="saucer">Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        tlp.select2(document.querySelector('#types-select2-large'), {
+            placeholder: 'Choose a type',
+            allowClear: true
+        });
+    </script>
+</div>

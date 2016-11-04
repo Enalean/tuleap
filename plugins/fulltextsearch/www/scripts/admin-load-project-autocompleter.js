@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-new ProjectAutoCompleter('fts_project', '', false);
+tuleap.autocomplete_projects_for_select2(document.getElementById('fulltext-reindex-project-autocompleter'), { include_private_projects: 1 });

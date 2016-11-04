@@ -28,6 +28,7 @@ use Response;
 use Feedback;
 use ForgeConfig;
 use ProjectManager;
+use Tuleap\Admin\AdminPageRenderer;
 
 class NatureConfigController {
     private static $TEMPLATE = 'siteadmin-config/natures';
@@ -51,13 +52,17 @@ class NatureConfigController {
     /** @var NatureDeletor */
     private $nature_deletor;
 
+    /** @var AdminPageRenderer */
+    private $admin_page_rendered;
+
     public function __construct(
         ProjectManager $project_manager,
         AllowedProjectsConfig $allowed_projects_config,
         NatureCreator $nature_creator,
         NatureEditor $nature_editor,
         NatureDeletor $nature_deletor,
-        NaturePresenterFactory $nature_presenter_factory
+        NaturePresenterFactory $nature_presenter_factory,
+        AdminPageRenderer $admin_page_rendered
     ) {
         $this->project_manager          = $project_manager;
         $this->nature_creator           = $nature_creator;
@@ -65,21 +70,18 @@ class NatureConfigController {
         $this->nature_editor            = $nature_editor;
         $this->nature_deletor           = $nature_deletor;
         $this->allowed_projects_config  = $allowed_projects_config;
+        $this->admin_page_rendered      = $admin_page_rendered;
     }
 
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
         $title  = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
-        $params = array(
-            'title' => $title
-        );
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
 
-        $response->header($params);
-        $renderer->renderToPage(
+        $this->admin_page_rendered->renderANoFramedPresenter(
+            $title,
+            TRACKER_TEMPLATE_DIR,
             self::$TEMPLATE,
             $this->getNatureConfigPresenter($title, $csrf)
         );
-        $response->footer($params);
     }
 
     public function createNature(Codendi_Request $request, Response $response) {
@@ -88,6 +90,15 @@ class NatureConfigController {
                 $request->get('shortname'),
                 $request->get('forward_label'),
                 $request->get('reverse_label')
+            );
+
+            $response->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'create_success',
+                    $request->get('shortname')
+                )
             );
         } catch (NatureManagementException $exception) {
             $response->addFeedback(
@@ -108,6 +119,15 @@ class NatureConfigController {
                 $request->get('shortname'),
                 $request->get('forward_label'),
                 $request->get('reverse_label')
+            );
+
+            $response->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'edit_success',
+                    $request->get('shortname')
+                )
             );
         } catch (NatureManagementException $exception) {
             $response->addFeedback(

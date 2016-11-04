@@ -1,0 +1,173 @@
+<div id="siteadmin-userlist-header">
+    <h1 id="siteadmin-userlist-header-title">{{ title }} <small>{{ context }}</small></h1>
+    <a href="/admin/register_admin.php?page=admin_creation" class="tlp-button-primary">
+        <i class="fa fa-plus tlp-button-icon"></i> {{ new_user }}
+    </a>
+</div>
+
+<div id="siteadmin-userlist">
+    <section class="tlp-pane" id="siteadmin-userlist-filter">
+        <div class="tlp-pane-container">
+            {{# search_fields }}
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <form name="usersrch" action="userlist.php" method="get">
+                        {{# group_id }}
+                            <input type="hidden" name="group_id" value="{{ group_id }}">
+                        {{/group_id}}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="user-name-search">{{ name_label }}</label>
+                            <input type="text" class="tlp-input" id="user-name-search" name="user_name_search" placeholder="paul@example.com, …" value="{{ name }}">
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="status-values">{{ status_label}}</label>
+                            <select multiple id="status-values" name="status_values[]" size="8" class="tlp-select">
+                                {{# status_values }}
+                                    <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                                {{/ status_values }}
+                            </select>
+                        </div>
+                        <div class="tlp-form-element" id="siteadmin-userlist-filter-button">
+                            <button type="submit" class="tlp-button-primary tlp-button-wide">
+                                <i class="fa fa-search tlp-button-icon"></i> {{ search }}
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            {{/ search_fields }}
+        </div>
+    </section>
+    <section class="tlp-pane" id="siteadmin-userlist-result">
+        <div class="tlp-pane-container">
+            {{# results }}
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-users"></i>
+                        {{ title }}
+                        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-userlist-result-nb">{{ nb_matching_users }}</span>
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+
+                        <form action="{{ export_url }}" method="post" class="tlp-table-actions-element">
+                            <button type="submit" class="tlp-button-secondary tlp-button-outline tlp-button-small" name="exp-csv">
+                                <i class="fa fa-download tlp-button-icon"></i> {{ export_csv }}
+                            </button>
+                        </form>
+
+                        {{# display_purge_session }}
+                            <form action="/admin/sessions.php" method="post" class="tlp-table-actions-element">
+                                {{# active_sessions_csrf }}
+                                    {{> csrf_token_input }}
+                                {{/ active_sessions_csrf }}
+                                <button type="submit"
+                                    class="tlp-button-danger tlp-button-outline tlp-button-small"
+                                    name="reset_all_sessions"
+                                    onclick="return confirm('{{ active_sessions_confirm }}');"
+                                >
+                                    <i class="fa fa-sign-out tlp-button-icon"></i> {{ active_sessions_label }}
+                                </button>
+                            </form>
+                        {{/ display_purge_session }}
+                    </div>
+
+                    <table class="tlp-table" id="siteadmin-userlist-result-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a href="{{ sortby_realname_url }}" class="tlp-table-sort">
+                                        {{ real_nam_header }}
+                                        <i class="{{ sortby_realname_icon }} tlp-table-sort-icon"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ sortby_name_url }}" class="tlp-table-sort">
+                                        {{ login_name_header }}
+                                        <i class="{{ sortby_name_icon }} tlp-table-sort-icon"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ sortby_status_url }}" class="tlp-table-sort">
+                                        {{ status_header }}
+                                        <i class="{{ sortby_status_icon }} tlp-table-sort-icon"></i>
+                                    </a>
+                                </th>
+                                {{# display_nb_projects }}
+                                    <th class="tlp-table-cell-numeric">
+                                        {{ nb_projects_header }}
+                                    </th>
+                                {{/ display_nb_projects }}
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {{# matching_users }}
+                                <tr>
+                                    <td>
+                                        <div class="siteadmin-userlist-result-name">
+                                            <div class="tlp-avatar siteadmin-userlist-result-name-avatar">
+                                                <img src="/users/{{ name }}/avatar.png" />
+                                            </div>
+                                            {{ realname }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="usergroup.php?user_id={{ id }}">@{{ name }}</a>
+                                    </td>
+                                    <td>
+                                        <span class="tlp-badge-{{ status_level }}
+                                            {{^ status_is_important }}tlp-badge-outline{{/ status_is_important}}"
+                                        >
+                                            {{ status_label }}
+                                        </span>
+                                    </td>
+                                    {{# display_nb_projects }}
+                                        <td class="tlp-table-cell-numeric">
+                                            {{# nb_admin_of }}
+                                                <span class="siteadmin-userlist-result-table-adminof tlp-tooltip tlp-tooltip-left"
+                                                      data-tlp-tooltip="{{ admin_of_title }}"
+                                                >
+                                                    <i class="fa fa-user"></i> {{ nb_admin_of }}
+                                                </span>
+                                            {{/ nb_admin_of }}
+
+                                            {{# nb_member_of }}
+                                                <span title="{{ member_of_title }}">
+                                                    {{ nb_member_of }}
+                                                </span>
+                                            {{/ nb_member_of }}
+                                            {{^ nb_member_of }}
+                                                <span title="{{ not_member_of_title }}">
+                                                    –
+                                                </span>
+                                            {{/ nb_member_of }}
+                                        </td>
+                                    {{/ display_nb_projects }}
+                                </tr>
+                            {{/ matching_users }}
+                            {{^ matching_users }}
+                                <tr>
+                                    <td colspan="
+                                        {{# display_nb_projects }}5{{/ display_nb_projects }}
+                                        {{^ display_nb_projects }}4{{/ display_nb_projects }}"
+                                        class="tlp-table-cell-empty"
+                                    >
+                                        {{ no_matching_users }}
+                                    </td>
+                                </tr>
+                            {{/ matching_users }}
+                        </tbody>
+                    </table>
+
+                    {{# pagination }}
+                        {{> pagination }}
+                    {{/ pagination }}
+
+                </section>
+            {{/ results }}
+        </div>
+    </section>
+</div>

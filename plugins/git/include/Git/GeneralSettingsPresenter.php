@@ -25,13 +25,14 @@ use Git_AdminPresenter;
 
 class GeneralSettingsPresenter extends Git_AdminPresenter
 {
-    public $general_settings_active = 'active';
+    public $general_settings_active = 'tlp-tab-active';
     public $manage_general_settings = true;
     public $access_control_title;
     public $allow_regexp_info;
     public $save_settings;
     public $is_activated;
     public $csrf_token;
+    public $warning_admin_activation;
 
     public function __construct($title, CSRFSynchronizerToken $csrf, $is_activated)
     {
@@ -40,8 +41,9 @@ class GeneralSettingsPresenter extends Git_AdminPresenter
         $this->csrf_token   = $csrf;
         $this->is_activated = $is_activated;
 
-        $this->access_control_title        = $GLOBALS['Language']->getText('plugin_git', 'access_control_title');
-        $this->allow_regexp_info           = $GLOBALS['Language']->getText('plugin_git', 'allow_regexp_info');
-        $this->save_settings               = $GLOBALS['Language']->getText('plugin_git', 'save_settings');
+        $this->access_control_title     = $GLOBALS['Language']->getText('plugin_git', 'access_control_title');
+        $this->allow_regexp_info        = $GLOBALS['Language']->getText('plugin_git', 'allow_regexp_info');
+        $this->save_settings            = $GLOBALS['Language']->getText('plugin_git', 'save_settings');
+        $this->warning_admin_activation = $GLOBALS['Language']->getText('plugin_git', 'warning_admin_activation');
     }
 }

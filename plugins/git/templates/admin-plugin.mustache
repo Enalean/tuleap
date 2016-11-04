@@ -1,41 +1,27 @@
-<h1>{{ title }}</h1>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
-<div class="tabbable">
-    <ul class="nav nav-tabs">
-        <li  class="{{ general_settings_active }}">
-            <a href="?pane=general-settings">{{ general_settings_tab_name }}</a>
-        </li>
-        <li  class="{{ gerrit_active }}">
-            <a href="?pane=gerrit_servers_admin">{{ gerrit_tab_name }}</a>
-        </li>
-        <li class="{{ mirrors_active }}">
-            <a href="?pane=mirrors_admin">{{ mirror_tab_name }}</a>
-        </li>
-        <li class="{{ gitolite_config_active }}">
-            <a href="?pane=gitolite_config">{{ gitolite_config_tab_name }}</a>
-        </li>
-    </ul>
+    <nav class="tlp-tabs">
+        <a class="tlp-tab {{ general_settings_active }}" href="?pane=general-settings">{{ general_settings_tab_name }}</a>
+        <a class="tlp-tab {{ gerrit_active }}" href="?pane=gerrit_servers_admin">{{ gerrit_tab_name }}</a>
+        <a class="tlp-tab {{ mirrors_active }}" href="?pane=mirrors_admin">{{ mirror_tab_name }}</a>
+        <a class="tlp-tab {{ gitolite_config_active }}" href="?pane=gitolite_config">{{ gitolite_config_tab_name }}</a>
+    </nav>
 
-    <div class="tab-content">
+    <div class="tlp-framed-horizontally">
         {{# manage_general_settings }}
             <div>
                 {{> admin-plugin-general }}
             </div>
         {{/ manage_general_settings }}
         {{# manage_gerrit }}
-            <div>
-                {{> admin-plugin-gerrit-server }}
-            </div>
+            {{> admin-plugin-gerrit-server }}
         {{/ manage_gerrit }}
         {{# manage_mirrors }}
-            <div>
-                {{> admin-plugin-mirrors }}
-            </div>
+            {{> admin-plugin-mirrors }}
         {{/ manage_mirrors }}
         {{# manage_gitolite_config }}
-            <div>
                 {{> admin-plugin-gitolite-config }}
-            </div>
         {{/ manage_gitolite_config }}
     </div>
 </div>

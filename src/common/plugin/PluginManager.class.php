@@ -236,7 +236,7 @@ class PluginManager {
     function getInstallReadme($name) {
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
             $path = $dir.'/'.$name;
-            if (file_exists($path.'/README.mkd') || file_exists($path.'/README')) {
+            if (file_exists($path.'/README.mkd') || file_exists($path.'/README.md') || file_exists($path.'/README.txt') || file_exists($path.'/README')) {
                 return $path.'/README';
             }
         }
@@ -349,7 +349,7 @@ class PluginManager {
         return $db_corrupted;
     }
 
-    function getNotYetInstalledPlugins() {
+    public function getNotYetInstalledPlugins() {
         return $this->plugin_factory->getNotYetInstalledPlugins();
     }
 

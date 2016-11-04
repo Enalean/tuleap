@@ -21,9 +21,9 @@
 class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresenter {
 
     /**
-     * @var string
+     * @var CSRFSynchronizerToken
      */
-    public $csrf_input;
+    public $csrf_token;
 
     /**
      * @var array
@@ -49,7 +49,7 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         $are_mirrors_defined = true;
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->csrf_input          = $csrf->fetchHTMLInput();
+        $this->csrf_token          = $csrf;
         $this->manage_mass_update  = true;
         $this->mirroring_presenter = $mirroring_presenter;
 

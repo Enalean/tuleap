@@ -56,15 +56,16 @@ class MailGatewayConfigPresenter {
         $this->is_token_based_emailgateway_enabled = $config->isTokenBasedEmailgatewayEnabled();
         $this->is_emailgateway_disabled            = $config->isEmailgatewayDisabled();
 
-        $this->email_gateway      = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
-        $this->email_gateway_desc = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway_desc');
-        $this->disable            = $GLOBALS['Language']->getText('plugin_tracker_config', 'disable');
-        $this->disable_desc       = $GLOBALS['Language']->getText('plugin_tracker_config', 'disable_desc');
-        $this->token              = $GLOBALS['Language']->getText('plugin_tracker_config', 'token');
-        $this->token_desc         = $GLOBALS['Language']->getText('plugin_tracker_config', 'token_desc');
-        $this->insecure           = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure');
-        $this->insecure_desc      = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure_desc');
-        $this->save_conf          = $GLOBALS['Language']->getText('admin_main', 'save_conf');
+        $this->email_gateway            = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
+        $this->email_gateway_pane_title = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway_pane_title');
+        $this->email_gateway_desc       = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway_desc');
+        $this->disable                  = $GLOBALS['Language']->getText('plugin_tracker_config', 'disable');
+        $this->disable_desc             = $GLOBALS['Language']->getText('plugin_tracker_config', 'disable_desc');
+        $this->token                    = $GLOBALS['Language']->getText('plugin_tracker_config', 'token');
+        $this->token_desc               = $GLOBALS['Language']->getText('plugin_tracker_config', 'token_desc');
+        $this->insecure                 = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure');
+        $this->insecure_desc            = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure_desc');
+        $this->save_conf                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
 
         $this->sections = new SectionsPresenter();
 

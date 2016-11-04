@@ -81,7 +81,7 @@ class Delete extends Pane
     {
         $html  = '';
         $html .= '<div class="alert alert-block">';
-        $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
+        $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning') .'</h4>';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'confirm_deletion_msg', array($this->repository->getFullName())) .'</p>';
         $html .= '<p>';
         $html .= '<input type="hidden" id="action" name="action" value="del" />';

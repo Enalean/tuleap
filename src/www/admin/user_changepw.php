@@ -5,9 +5,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('account.php');
 
 
@@ -41,7 +41,7 @@ function register_valid(Codendi_Request $request, CSRFSynchronizerToken $csrf_to
         }
         return false;
     }
-	
+
     // if we got this far, it must be good
     $csrf_token->check();
     $user_manager = UserManager::instance();
@@ -64,15 +64,15 @@ $purifier   = Codendi_HTMLPurifier::instance();
 $user_id    = $request->get('user_id');
 $csrf_token = new CSRFSynchronizerToken('/admin/user_changepw.php?user_id=' . urlencode($user_id));
 if (register_valid($request, $csrf_token)) {
-    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed'), 'main_classes' => array('tlp-framed')));
 ?>
 <h3><?php echo $purifier->purify($Language->getText('admin_user_changepw','header_changed')); ?></h3>
-<p><?php echo $purifier->purify($Language->getText('admin_user_changepw','msg_changed')); ?></h3>
+<p><?php echo $purifier->purify($Language->getText('admin_user_changepw','msg_changed')); ?></p>
 
 <p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
 <?php
 } else { // not valid registration, or first time to page
-    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title'), 'main_classes' => array('tlp-framed')));
 
     require_once('common/event/EventManager.class.php');
     $em =& EventManager::instance();
@@ -81,8 +81,8 @@ if (register_valid($request, $csrf_token)) {
 ?>
 <h3><?php echo $purifier->purify($Language->getText('admin_user_changepw','header')); ?></h3>
 <form action="user_changepw.php" method="post">
-<?php user_display_choose_password('', $user_id); ?>
-<p><input type="submit" class="btn btn-primary" name="Update" value="<?php echo $purifier->purify($Language->getText('global','btn_update')); ?>">
+<?php user_display_choose_password('',$user_id); ?>
+<p><input type="submit" class="tlp-button-primary" name="Update" value="<?php echo $purifier->purify($Language->getText('global','btn_update')); ?>">
 <?php
 echo $csrf_token->fetchHTMLInput();
 ?>

@@ -1,0 +1,14 @@
+            </main>
+        </div>
+        {{# javascript_in_footer }}
+            {{# is_snippet }}
+                <script type="text/javascript">
+                    {{ javascript }}
+                </script>
+            {{/ is_snippet }}
+            {{^ is_snippet }}
+                <script type="text/javascript" src="{{ javascript }}"></script>
+            {{/ is_snippet }}
+        {{/ javascript_in_footer }}
+    </body>
+</html>

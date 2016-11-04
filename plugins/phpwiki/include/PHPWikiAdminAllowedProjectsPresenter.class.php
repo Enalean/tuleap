@@ -44,14 +44,6 @@ class PHPWikiAdminAllowedProjectsPresenter {
         return $csrf->fetchHTMLInput();
     }
 
-    public function resource_allowed_project_back_link() {
-        return '/admin/';
-    }
-
-    public function resource_allowed_project_back_link_title() {
-        return $GLOBALS['Language']->getText('plugin_phpwiki', 'allowed_project_back_link_title');
-    }
-
     public function resource_allowed_project_title() {
         return $GLOBALS['Language']->getText('plugin_phpwiki', 'allowed_project_title');
     }
@@ -87,5 +79,14 @@ class PHPWikiAdminAllowedProjectsPresenter {
 
     public function resource_allowed_project_list_empty() {
         return $GLOBALS['Language']->getText('plugin_phpwiki', 'allowed_project_list_empty');
+    }
+
+    public function resource_allowed_project_subtitle() {
+        return $GLOBALS['Language']->getText('plugin_phpwiki', 'allowed_project_subtitle');
+    }
+
+    public function url_project()
+    {
+        return PHPWIKI_PLUGIN_BASE_URL . '/';
     }
 }

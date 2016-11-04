@@ -1,0 +1,33 @@
+{{# user_nav_presenter }}
+<nav id="user-nav">
+    {{# is_user_logged_in }}
+        <a href="/account/" class="nav-link user-block" title="{{ my_account_label }}">
+            <div class="tlp-avatar">
+                {{# user_has_avatar }}
+                <img src="{{ user_avatar_url }}">
+                {{/ user_has_avatar }}
+            </div>
+            <div class="user-block-names">
+                <span class="user-nav-display-name">{{ user_real_name }}</span>
+                <span class="user-nav-username">@{{ user_user_name }}</span>
+            </div>
+        </a>
+
+        {{# user_nav_items }}
+            {{> global-menu-item }}
+        {{/ user_nav_items }}
+    {{/ is_user_logged_in }}
+
+    {{^ is_user_logged_in }}
+        {{# login_menu_item }}
+            {{> global-menu-item }}
+        {{/ login_menu_item }}
+
+        {{# display_new_user_menu_item }}
+            {{# new_user_menu_item }}
+                {{> global-menu-item }}
+            {{/ new_user_menu_item }}
+        {{/ display_new_user_menu_item }}
+    {{/ is_user_logged_in }}
+</nav>
+{{/ user_nav_presenter }}

@@ -20,58 +20,116 @@
  */
 class PluginsAdministration_Presenter_InstalledPluginsPresenter {
 
-    /** @var string */
-    public $help;
-
     /** @var array */
     public $plugins;
 
-    public function __construct($help, $plugins) {
-        $this->help    = $help;
+    public function __construct($plugins)
+    {
         $this->plugins = $plugins;
     }
 
-    public function plugins_legend() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','plugins');
+    public function title()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title');
     }
 
-    public function plugin_table_head() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
+    public function installed_tab_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'installed_tab_label');
     }
 
-    public function available_table_head() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?');
+    public function not_installed_tab_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'not_installed_tab_label');
     }
 
-    public function scope_table_head() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope');
+    public function installed_pane_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'installed_pane_label');
     }
 
-    public function action_table_head() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions');
+    public function plugin_table_head()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_table_head');
     }
 
-    public function property_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','properties');
+    public function version_table_head()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'version_table_head');
     }
 
-    public function icon_label() {
+    public function description_table_head()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'description_table_head');
+    }
+
+    public function available_table_head()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'Available?');
+    }
+
+    public function scope_table_head()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'Scope');
+    }
+
+    public function icon_label()
+    {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_icon_label');
     }
 
-    public function uninstall_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','uninstall_plugin');
-    }
-
-    public function uninstall_icon_label() {
+    public function uninstall_icon_label()
+    {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_plugin_icon_label');
     }
 
-    public function restrict_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration','manage_restriction_by_project');
+    public function restrict_icon_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'manage_restriction_by_project_icon_label');
     }
 
-    public function restrict_icon_label() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'manage_restriction_by_project_icon_label');
+    public function cant_restrict()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'cant_restrict');
+    }
+
+    public function uninstall_modal_title()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_title');
+    }
+
+    public function uninstall_modal_content()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_content');
+    }
+
+    public function uninstall_modal_cancel()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_cancel');
+    }
+
+    public function uninstall_modal_submit()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_submit');
+    }
+
+    public function error_uninstall_dependency()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_uninstall_dependency');
+    }
+
+    public function uninstall_modal_list_sql()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_sql');
+    }
+
+    public function uninstall_modal_list_directory()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_directory');
+    }
+
+    public function uninstall_modal_list_web_space()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_web_space');
     }
 }

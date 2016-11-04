@@ -1,29 +1,40 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright (c) Enalean, 2016. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
 
 require_once('pre.php');
 require_once('proj_email.php');
 
+session_require(array('group' => '1', 'admin_flags' => 'A'));
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$project_id = $request->getValidated('group_id', 'uint', 0);
+$project    = ProjectManager::instance()->getProject($project_id);
 
-$content = "";
-$pm = ProjectManager::instance();
-$group = $pm->getProject($request->getValidated('group_id', 'uint', 0));
-if ($group && is_object($group) && !$group->isError()) {
-    if (!send_new_project_email($group)) {
-        $GLOBALS['feedback'] .= "<p>".$group->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+if ($project && is_object($project) && !$project->isError()) {
+    if (send_new_project_email($project)) {
+        $msg = $GLOBALS['Language']->getText('admin_newprojectmail','success');
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $msg);
     } else {
-        $content = "<p>".$Language->getText('admin_newprojectmail','success')."</p>";
+        $msg = $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $msg);
     }
 }
 
-site_header(array('title'=>$Language->getText('admin_newprojectmail','title')));
-print $content;
-site_footer(array());
-?>
+$GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. (int) $project_id);

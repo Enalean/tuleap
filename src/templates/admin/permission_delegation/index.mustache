@@ -1,45 +1,83 @@
-<div id="permission-delegation">
-    <h1>{{ page_title }}</h1>
-    <p>{{ page_description }}</p>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ page_title }}</h1>
 
     {{# has_groups }}
-        <div class="tabbable tabs-left">
-            <ul class="nav nav-tabs">
-                {{# groups }}
-                    <li {{# is_current }}class="active"{{/ is_current }}>
-                        <a href="permission_delegation.php?id={{ id }}">{{ name }}</a>
-                    </li>
-                {{/ groups }}
+        <nav class="tlp-tabs">
+            {{# groups }}
+                <a href="permission_delegation.php?id={{ id }}" class="tlp-tab {{# is_current }}tlp-tab-active{{/ is_current }}">
+                    {{ name }}
+                </a>
+            {{/ groups }}
 
-                <li>
-                    <button id="add-group" class="btn"><i class="icon-plus"></i> {{ group_action_add }}</button>
-                </li>
-            </ul>
+            <button type="button"
+                    id="siteadmin-permission-delegation-add-group"
+                    class="tlp-button-primary tlp-button-outline tlp-button-mini"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i> {{ group_action_add }}
+            </button>
+        </nav>
 
-            <div class="tab-content">
-                {{# current_group }}
-                <div class="row-fluid">
-                    <div class="span12">
-                        <h2>
-                            {{ title }}
-                            <button id="edit-group" class="btn btn-small" data-group-id="{{ id }}"><i class="icon-pencil"></i> {{ group_action_edit }}</button>
-                            <button id="delete-group" class="btn btn-small btn-danger" data-group-id="{{ id }}"><i class="icon-trash"></i> {{ group_action_delete }}</button>
-                        </h2>
-                        {{# has_description }}
-                            <p class="description">{{ description }}</p>
-                        {{/ has_description }}
-                    </div>
+        {{# current_group }}
+            <div class="tlp-framed-horizontally">
+                <div id="siteadmin-permission-delegation-group-actions">
+                    <button type="button"
+                            id="siteadmin-permission-delegation-group-actions-edit"
+                            class="tlp-button-primary tlp-button-outline tlp-button-small"
+                            data-group-id="{{ id }}"
+                    >
+                        <i class="fa fa-pencil tlp-button-icon"></i> {{ group_action_edit }}
+                    </button>
+
+                    <button type="button"
+                            id="siteadmin-permission-delegation-group-actions-delete"
+                            class="tlp-button-danger tlp-button-outline tlp-button-small"
+                            data-group-id="{{ id }}"
+                    >
+                        <i class="fa fa-trash-o tlp-button-icon"></i> {{ group_action_delete }}
+                    </button>
                 </div>
-                <div class="row-fluid">
-                    {{> permissions_list }}
 
+                {{# has_description }}
+                    <div class="tlp-property">
+                        <label class="tlp-label">{{ description_label }}</label>
+                        <p>{{ description }}</p>
+                    </div>
+                {{/ has_description }}
+
+                <div id="siteadmin-permission-delegation-group-details">
+                    {{> permissions_list }}
                     {{> users_list }}
                 </div>
-                {{/ current_group }}
             </div>
-        </div>
+        {{/ current_group }}
     {{/ has_groups }}
     {{^ has_groups }}
-        <p class="no-group">{{ no_group }} <button id="add-group" class="btn btn-primary"><i class="icon-plus"></i> {{ group_action_add }}</button></p>
+        <div class="empty-page">
+            <div class="empty-page-text">{{{ purified_no_group }}}</p>
+            <button type="button"
+                    id="siteadmin-permission-delegation-add-group"
+                    class="tlp-button-primary tlp-button-large"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i> {{ group_action_add }}
+            </button>
+        </div>
     {{/ has_groups }}
 </div>
+
+{{# add_group }}
+    {{> group_modal }}
+{{/ add_group }}
+
+{{# delete_group }}
+    {{> delete_group_modal }}
+{{/ delete_group }}
+
+{{# edit_group }}
+    {{> group_modal }}
+{{/ edit_group }}
+
+{{# add_perm_presenter }}
+    {{> permissions_modal }}
+{{/ add_perm_presenter }}
+
+<script type="text/javascript" src="/scripts/admin/permission-delegation.js"></script>

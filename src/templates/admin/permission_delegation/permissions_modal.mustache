@@ -1,33 +1,49 @@
-<div id="add-permissions-modal" class="modal hide fade">
-    <form action="permission_delegation.php?action=add-permissions" method="post">
-        <div class="modal-header">
-            <a type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-            <h3>{{ permissions_modal_title }}</h3>
+<form action="permission_delegation.php?action=add-permissions"
+      method="post"
+      id="siteadmin-permission-delegation-add-perm-modal"
+      class="tlp-modal"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-plus tlp-modal-title-icon"></i>
+            {{ permissions_modal_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
         </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# has_permissions }}
+            <p>{{{ purified_permissions_modal_description }}} :</p>
 
-        <div class="modal-body">
-            {{# has_permissions }}
-                <p>{{{ permissions_modal_description }}} :</p>
+            {{# permissions }}
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox" name="permissions[]" value="{{ getId }}" />
+                        {{ getName }}
+                    </label>
+                </div>
+            {{/ permissions }}
 
-                {{# permissions }}
-                <label>
-                    <input type="checkbox" class="available-permissions" name="permissions[]" value="{{ getId }}" />
-                    {{ getName }}
-                </label>
-                {{/ permissions }}
-
-                <input type="hidden" name="id" value="{{ id }}" />
-            {{/ has_permissions }}
-            {{^ has_permissions }}
-                <p>{{ no_permission_to_add }}</p>
-            {{/ has_permissions }}
-        </div>
-
-        <div class="modal-footer">
-            <a class="btn" data-dismiss="modal">{{ permissions_modal_cancel }}</a>
-            {{# has_permissions }}
-                <input id="submit-permissions" type="submit" class="btn btn-primary" value="{{ permissions_modal_submit }}" disabled="disabled" />
-            {{/ has_permissions }}
-        </div>
-    </form>
-</div>
+            <input type="hidden" name="id" value="{{ id }}" />
+        {{/ has_permissions }}
+        {{^ has_permissions }}
+            <p>{{ no_permission_to_add }}</p>
+        {{/ has_permissions }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ permissions_modal_cancel }}
+        </button>
+        {{# has_permissions }}
+            <button type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    id="siteadmin-permission-delegation-add-perm-modal-submit"
+                    disabled
+            >
+                <i class="fa fa-plus tlp-button-icon"></i> {{ permissions_modal_submit }}
+            </button>
+        {{/has_permissions}}
+    </div>
+</form>

@@ -1,0 +1,12 @@
+<section class="admin-sidebar-section">
+    <h1 class="admin-sidebar-section-title">
+        <i class="fa fa-cubes"></i> {{ plugins_section_title }}
+    </h1>
+
+    <nav class="admin-sidebar-section-nav">
+        <a href="/plugins/pluginsadministration/" class="admin-sidebar-section-nav-item">{{ plugins_manage_all }}</a>
+        {{# plugins }}
+            <a href="{{ href }}" class="admin-sidebar-section-nav-item">{{ label }}</a>
+        {{/ plugins }}
+    </nav>
+</section>

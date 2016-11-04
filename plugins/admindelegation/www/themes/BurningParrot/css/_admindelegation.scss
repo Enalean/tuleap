@@ -1,0 +1,34 @@
+.admindelegation-button-add-permissions {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 $tlp-title-spacing;
+}
+
+.button-grant-permission {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.permission-delegation-avatar {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+.permission-delegation-name-td {
+    width: 50%;
+}
+
+.permission-delegation-service-td {
+    width: 50%;
+}
+
+.permission-delegation-name-and-avatar {
+    display: flex;
+    align-items: center;
+}
+
+.admin-delegation-title-grant-users {
+    margin: 0;
+}
+
+#permission-delegation-add-user {
+    width: 260px;
+}

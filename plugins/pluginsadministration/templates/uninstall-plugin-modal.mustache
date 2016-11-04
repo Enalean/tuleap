@@ -1,0 +1,51 @@
+<form action="?" method="POST">
+    <div id="uninstall-plugin-{{ plugin_id }}" class="tlp-modal tlp-modal-danger install-plugin-modal" role="dialog" aria-labelledby="uninstall-plugin-{{ plugin_id }}-label">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="uninstall-plugin-{{ plugin_id }}-label">
+                <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ uninstall_modal_title }} {{ name }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="action" value="uninstall">
+            <input type="hidden" name="plugin_id" value="{{ plugin_id }}">
+            <input type="hidden" name="confirm" value="1">
+
+            {{# is_there_unmet_dependencies }}
+                <p>{{ error_uninstall_dependency }}</p>
+
+                <ul>
+                {{# unmet_dependencies }}
+                    <li>{{ . }}</li>
+                {{/ unmet_dependencies }}
+                </ul>
+            {{/ is_there_unmet_dependencies }}
+            {{^ is_there_unmet_dependencies }}
+                <p>{{ uninstall_modal_content }}</p>
+
+                <ul>
+                    <li>{{{ uninstall_modal_list_sql }}}</li>
+                    <li>{{ uninstall_modal_list_directory }}</li>
+                    <li>{{ uninstall_modal_list_web_space }}</li>
+                </ul>
+            {{/ is_there_unmet_dependencies }}
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button"
+                class="tlp-button-danger
+                {{^ is_there_unmet_dependencies }}tlp-button-outline{{/ is_there_unmet_dependencies }}
+                tlp-modal-action"
+                data-dismiss="modal"
+            >
+                {{ uninstall_modal_cancel }}
+            </button>
+            {{^ is_there_unmet_dependencies }}
+                <button type="sumit" class="tlp-button-danger tlp-modal-action">
+                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ uninstall_modal_submit }}
+                </button>
+            {{/ is_there_unmet_dependencies }}
+        </div>
+    </div>
+</form>

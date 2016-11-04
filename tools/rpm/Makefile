@@ -39,6 +39,7 @@ PLUGIN_ARTIFACTSFOLDERS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/artifacts
 
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
+THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
 
 ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/agiledashboard/www/js/kanban plugins/frs/www/js/angular
 
@@ -101,6 +102,9 @@ node:
 	cd $(BASE_DIR) &&\
 	    npm install &&\
 	    npm run build &&\
+	cd $(BASE_DIR)/src/www/themes/common/tlp &&\
+            npm install &&\
+            npm run build &&\
 	for directory in $(ANGULAR_APPS_TO_BUILD); do\
 	    cd $(BASE_DIR)/$$directory &&\
 	    npm install &&\
@@ -116,10 +120,17 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node
 				-path '*/.svn' -o\
 				-name '*.less' -o\
 				-name '*.scss' -o\
+				-name '.scss-lint.yml' -o\
 				-name ".git" -o\
 				-name ".gitignore" -o\
 				-name ".gitmodules" -o\
 				-path "*/.DS_Store" -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/doc -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/gulpfile.js -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/node_modules -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/package.json -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/README.md -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/src -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
 				-path $(PKG_NAME)-$(version)/plugins/frs/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
@@ -183,6 +194,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@PLUGIN_ARTIFACTSFOLDERS_VERSION@@/$(PLUGIN_ARTIFACTSFOLDERS_VERSION)/g' |\
 		sed -e 's/@@THEME_TULEAP_VERSION@@/$(THEME_TULEAP_VERSION)/g' |\
 		sed -e 's/@@THEME_FLAMINGPARROT_VERSION@@/$(THEME_FLAMINGPARROT_VERSION)/g' |\
+		sed -e 's/@@THEME_BURNINGPARROT_VERSION@@/$(THEME_BURNINGPARROT_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
 	rpmbuild -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)

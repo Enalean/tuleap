@@ -36,6 +36,7 @@ plugins/maillog
 !src/www/themes/common/css/bootstrap-responsive-2.3.0.min.css
 !src/www/themes/common/css/font-awesome.css
 !src/www/themes/common/css/animate.min.css
+!src/www/themes/BurningParrot/vendor/**/*.css
 !tools/plugins/datagenerator/*.css
 !tools/plugins/languages/*.css
 !tools/plugins/plugincreationwizard/*.css
@@ -51,3 +52,4 @@ npm-debug.log
 node_modules/
 src/www/assets/*
 plugins/*/www/assets/*
+src/www/themes/BurningParrot/css/vendor/*.scss

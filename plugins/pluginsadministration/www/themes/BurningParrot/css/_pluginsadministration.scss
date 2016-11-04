@@ -1,0 +1,108 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.pluginsadministration-list-tooltip-description {
+    display: none;
+}
+
+@media screen and (max-width: 1600px) {
+    .pluginsadministration-list-name-cell {
+        width: 100%;
+    }
+
+    .pluginsadministration-list-full-description {
+        display: none;
+    }
+
+    .pluginsadministration-list-tooltip-description {
+        display: inline;
+    }
+}
+
+.pluginsadministration-list-actions-cell {
+    width: 1px;
+    text-align: left;
+    white-space: nowrap;
+
+    > .tlp-button-outline.tlp-button-small {
+        margin-right: 5px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .tlp-modal-body {
+        white-space: normal;
+    }
+
+
+    @media screen and (max-width: 1200px) {
+        white-space: normal;
+
+        > .tlp-button-outline.tlp-button-small {
+            width: 100%;
+            margin: 0 0 5px;
+        }
+    }
+}
+
+.pluginsadministration-available-list-name-cell {
+    white-space: nowrap;
+}
+
+.pluginsadministration-available-list-description-cell {
+    width: 100%;
+}
+
+.install-plugin-modal:not(.tlp-modal-danger) {
+    width: 70vw;
+}
+
+.install-plugin-modal-readme {
+    margin: $tlp-spacing 0 0;
+    padding: $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: #fcfcfc;
+
+    pre {
+        overflow: auto;
+    }
+}
+
+.plugin-properties-row {
+    display: flex;
+
+    > .tlp-property {
+        margin: 0 ($tlp-spacing * 2) 0 0;
+    }
+}
+
+.plugin-properties-submit {
+    text-align: center;
+}
+
+.plugin-properties-readme-container {
+    width: 100%;
+
+    pre {
+        overflow: auto;
+    }
+}

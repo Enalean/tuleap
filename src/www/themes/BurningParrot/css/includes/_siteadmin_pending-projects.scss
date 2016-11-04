@@ -1,0 +1,94 @@
+.tlp-pane-project-pending {
+    padding: 0 $tlp-spacing $tlp-spacing;
+}
+
+.table-details-pending-project-hidden {
+    display: none;
+}
+
+#pending-project-left-pane {
+    width: 100%;
+}
+
+#pending-project-user-informations {
+    white-space: nowrap;
+}
+
+.pending-project-avatar {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+.pending-project-name-and-avatar {
+    display: flex;
+    align-items: center;
+}
+
+.pending-project-description-with-visibility {
+    display: flex;
+    align-items: center;
+}
+
+.pending-project-description-and-visibility {
+    display: flex;
+    flex-direction: column;
+}
+
+.pending-project-visibility {
+    padding: 0 0 0 $tlp-double-spacing;
+}
+
+.pending-project-properties {
+    display: flex;
+}
+
+.pending-project-user-details-infos {
+    margin: $tlp-spacing 0 0;
+}
+
+.pending-project-user-details-button {
+    display: flex;
+}
+
+.siteadmin-pending-project-actions-buttons {
+    display: flex;
+}
+
+.validate-button {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.pending-project-buttons-all {
+    margin: $tlp-double-spacing 0 0;
+    text-align: center;
+}
+
+.project-visibility {
+    display: flex;
+}
+
+.siteadmin-pending-project-title-button {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.siteadmin-pending-project-title {
+    color: inherit;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+
+    > small {
+        font-size: 15px;
+    }
+}
+
+.siteadmin-pending-project-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.pending-project-access-icon {
+    margin: 0 5px 0 0;
+}

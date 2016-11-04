@@ -37,7 +37,7 @@ $pqHtml->HandleRequest($request);
 $html = $pqHtml->displayProjectQuota($request);
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
-$GLOBALS['HTML']->header(array('title' => $title));
+$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 
 echo '<div id="plugin_statistics">';
 echo '<h1>'.$title.'</h1>';

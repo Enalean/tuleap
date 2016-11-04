@@ -8,7 +8,7 @@ plugin_admindelegation	service_SHOW_PROJECT_ADMINS	See project administrators
 plugin_admindelegation	service_SHOW_PROJECTS	See all projects
 
 # Permissions
-plugin_admindelegation	permissions_page_title	Admin rights delegation / Permissions
+plugin_admindelegation	permissions_page_title	Admin rights delegation
 plugin_admindelegation	permissions_grant_user_title	Grant user
 plugin_admindelegation	permissions_grant	Grant 
 plugin_admindelegation	permissions_to_user	to user 
@@ -16,7 +16,17 @@ plugin_admindelegation	permissions_autocomplete	Type user name (autcompletion)
 plugin_admindelegation	permissions_granted_users_title	Granted users
 plugin_admindelegation	permissions_user_col	User
 plugin_admindelegation	permissions_service_col	Service
+plugin_admindelegation	admindelegation_avatar	Avatar
 plugin_admindelegation	permissions_granted_users_service_title	Granted users per service: $1
+plugin_admindelegation	no_permissions_granted	There is nothing here,
+plugin_admindelegation	no_permissions_granted_next_part	start by granting a permission to somebody.
+plugin_admindelegation	add_grant_permission	Grant permission
+plugin_admindelegation	cancel_grant_permission	Cancel
+plugin_admindelegation	delegation_table_title	Granted users
+plugin_admindelegation	label_grant_permission	Grant permissions
+plugin_admindelegation	label_username	To user
+plugin_admindelegation	revoke_permissions	Revoke permissions
+plugin_admindelegation	modal_revoke_warning	Wow, wait a minute. Your about to revoke permission. Please confirm your action.
 
 # All widgets
 plugin_admindelegation	widget_btn_search	Search

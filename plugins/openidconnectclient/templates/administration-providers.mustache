@@ -1,55 +1,106 @@
-<h2>{{ title }}</h2>
 <div id="providers-configuration">
-    <legend>{{ title_provider_configuration }}</legend>
+    <div id="providers-configuration-header">
+        <h1 id="providers-configuration-header-title">{{ title }}</h1>
+        {{# there_are_providers }}
+        <button type="button" class="tlp-button-primary add-provider-button">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_new_provider }}
+        </button>
+        {{/ there_are_providers }}
+    </div>
 
-    <a class="btn btn-primary" data-toggle="modal" href="#siteadmin-config-providers-modal-create">
-        <span class="icon-plus"></span> {{ add_new_provider }}
-    </a>
-    {{> administration-providers-modal-create }}
-
-    <div id="providers">
-        {{# providers_presenters }}
-        <div class="provider">
-            {{# getIcon }}<i class="provider-background-icon icon-{{ getIcon }}"></i>{{/ getIcon }}
-            <h3>
-                {{# getIcon }}<i class="provider-icon icon-{{ getIcon }}"></i>{{/ getIcon }} {{ getName }}
-            </h3>
-            <div class="provider-endpoint">
-                <span class="provider-label">{{ authorization_endpoint }}</span>
-                <span>{{ getAuthorizationEndpoint }}</span>
-
-                <span class="provider-label">{{ token_endpoint }}</span>
-                <span>{{ getTokenEndpoint }}</span>
-
-                {{# getUserInfoEndpoint }}
-                <span class="provider-label">{{ userinfo_endpoint }}</span>
-                <span>{{ getUserInfoEndpoint }}</span>
-                {{/ getUserInfoEndpoint }}
+    {{# providers_presenters }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# getIcon }}<i class="fa fa-{{ getIcon }} tlp-pane-title-icon"></i>{{/ getIcon }} {{ getName }}
+                </h1>
             </div>
-            <div class="provider-client">
-                <span class="provider-label">{{ client_id }}</span>
-                <span>{{ getClientId }}</span>
-
-                <span class="provider-label">{{ client_secret }}</span>
-                <span>{{ getClientSecret }}</span>
-            </div>
-            <div class="provider-actions">
-                <a class="btn btn-small" role="button" data-toggle="modal" href="#siteadmin-config-providers-modal-update-{{ getId }}">
-                    <span class="icon-edit"></span> {{ btn_edit }}
-                </a>
-
+            <section class="tlp-pane-section provider-info">
+                <div class="provider-endpoint">
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{ authorization_endpoint }}
+                        </label>
+                        <p>{{ getAuthorizationEndpoint }}</p>
+                    </div>
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{ token_endpoint }}
+                        </label>
+                        <p>{{ getTokenEndpoint }}</p>
+                    </div>
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{ userinfo_endpoint }}
+                        </label>
+                        {{# getUserInfoEndpoint }}
+                        <p>{{ getUserInfoEndpoint }}</p>
+                        {{/ getUserInfoEndpoint }}
+                        {{^ getUserInfoEndpoint }}
+                        <p class="tlp-property-empty">{{ empty_content }}</p>
+                        {{/ getUserInfoEndpoint }}
+                    </div>
+                </div>
+                <div class="provider-client">
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{ client_id }}
+                        </label>
+                        {{# getClientId }}
+                        <p>{{ getClientId }}</p>
+                        {{/ getClientId }}
+                        {{^ getClientId }}
+                        <p class="tlp-property-empty">{{ empty_content }}</p>
+                        {{/ getClientId }}
+                    </div>
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{ client_secret }}
+                        </label>
+                        {{# getClientSecret }}
+                        <p>{{ getClientSecret }}</p>
+                        {{/ getClientSecret }}
+                        {{^ getClientSecret }}
+                        <p class="tlp-property-empty">{{ empty_content }}</p>
+                        {{/ getClientSecret }}
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="tlp-pane-container provider-action-container">
+            <section class="tlp-pane-section provider-action">
+                <button
+                    type="button"
+                    class="tlp-button-primary tlp-button-outline provider-action-edit-button"
+                    data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
+                >
+                    <i class="fa fa-pencil tlp-button-icon"></i>
+                    {{ btn_edit }}
+                </button>
                 <form method="post">
                     {{{ csrf_token }}}
                     <input type="hidden" name="action" value="delete-provider">
                     <input type="hidden" name="provider_id" value="{{ getId }}">
-                    <button type="submit" class="btn btn-small btn-danger">
-                        <span class="icon-trash"></span> {{ btn_delete }}
+                    <button type="submit" class="tlp-button-danger tlp-button-outline provider-action-delete-button">
+                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                        {{ btn_delete }}
                     </button>
                 </form>
-            </div>
-
-            {{> administration-providers-modal-update }}
+            </section>
         </div>
-        {{/ providers_presenters }}
-    </div>
+
+        {{> administration-providers-modal-update }}
+    </section>
+    {{/ providers_presenters }}
+    {{^ there_are_providers }}
+        <div class="empty-page">
+            <p class="empty-page-text">{{ empty_providers_text_start }}<br>{{ empty_providers_text_end }}</p>
+            <button type="button" class="tlp-button-primary add-provider-button">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ add_new_provider }}
+            </button>
+        </div>
+    {{/ there_are_providers}}
+
+    {{> administration-providers-modal-create }}
 </div>

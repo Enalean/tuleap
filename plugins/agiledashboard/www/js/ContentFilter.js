@@ -23,7 +23,7 @@
 
 (function($) {
     $(document).ready(function() {
-        var input_filter  = $('.content-filter.open');
+        var input_filter  = document.querySelector('.content-filter.open');
         var list_selector = '.milestone-content-open tr';
         var filter        = new tuleap.core.listFilter();
 
@@ -31,7 +31,7 @@
     });
 
     $(document).ready(function() {
-        var input_filter  = $('.content-filter.closed');
+        var input_filter  = document.querySelector('.content-filter.closed');
         var list_selector = '.milestone-content-closed tr';
         var filter        = new tuleap.core.listFilter();
 

@@ -1218,6 +1218,14 @@ class Event {
     const SVN_REPOSITORY_CREATED = 'svn_repository_created';
 
     /**
+     * Are we in a siteadmin page?
+     *
+     * Parameters:
+     *  - is_in_siteadmin => (output) Boolean
+     */
+    const IS_IN_SITEADMIN = 'is_in_siteadmin';
+
+    /**
      * When a project is created, ask plugins if some actions must be made for ugroup duplication
      *
      * Parameters:
@@ -1234,4 +1242,21 @@ class Event {
      *
      */
     const IMPORT_XML_IS_PROJECT_VALID = 'import_xml_is_project_valid';
+
+    /**
+     * CSS stylesheets that will be added to the page's <head>
+     *
+     * Parameters:
+     *    - variant: ThemeVariantColor Theme variant color
+     *    - stylesheets: String[] css paths to be added
+     */
+    const BURNING_PARROT_GET_STYLESHEETS = 'burning_parrot_get_stylesheets';
+
+    /**
+     * JavaScript files that will be added to the page's <footer>
+     *
+     * Parameters:
+     *    - javascript_files: String[] js paths to be added
+     */
+    const BURNING_PARROT_GET_JAVASCRIPT_FILES = 'burning_parrot_get_javascript_files';
 }

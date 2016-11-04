@@ -1,0 +1,17 @@
+<ul>
+    <li>When there are both cancel and primary action buttons, then the primary button is always on the right.</li>
+    <li>To be able to use large buttons on the footer you should use the class
+        <code class="code-inline">tlp-modal-footer-large</code>.</li>
+    <li>Buttons that have <code class="code-inline">data-dismiss="modal"</code> attribute in the modal
+        will close it.</li>
+    <li>Click on the backdrop or on the escape key will also close the modal.</li>
+    <li>You can remove closing modal on the escape key pressed: <code class="code-inline">var the_modal = tlp.modal('element-id', {keyboard: false} );</code></li>
+    <li>You must explicitly call the modal in javascript: <code class="code-inline">var the_modal = tlp.modal('element-id');</code>.
+        This will return a <code class="code-inline">Modal</code> instance. You can then call
+        <code class="code-inline">show()</code>,
+        <code class="code-inline">hide()</code>, or
+        <code class="code-inline">toggle()</code> methods on this instance.
+    </li>
+    <li>On the <code class="code-inline">the_modal.show()</code> method an event <code class="code-inline">tlp-modal-shown</code> is dispatched.</li>
+    <li>On the <code class="code-inline">the_modal.hide()</code> method an event <code class="code-inline">tlp-modal-hidden</code> is dispatched.</li>
+</ul>

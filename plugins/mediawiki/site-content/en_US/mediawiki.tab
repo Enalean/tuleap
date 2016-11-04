@@ -32,12 +32,13 @@ plugin_mediawiki	options_restored	Options and groups mapping have been restored.
 plugin_mediawiki	back_to_forge	Go back to $1
 
 plugin_mediawiki	allowed_project_back_link_title	Back to site admin
-plugin_mediawiki	allowed_project_title	Manage projects that use Mediawiki 1.23 (LTS)
-plugin_mediawiki	allowed_project_information	Please note that upgrading to Mediawiki 1.23 is a <strong>one-way process</strong> there is <strong>no way to revert</strong> this process.<br />This progressive migration was meant to mitigate the risks of errors during upgrade process.<br /><strong>Please ask the upgraded projects if they noticed any troubles and to report related issues.</strong>
+plugin_mediawiki	allowed_project_title	MediaWiki
+plugin_mediawiki	allowed_project_subtitle	Projects that use Mediawiki 1.23 (LTS)
+plugin_mediawiki	allowed_project_information	Please note that upgrading to Mediawiki 1.23 is a one-way process there is no way to revert this process. This progressive migration was meant to mitigate the risks of errors during upgrade process. Please ask the upgraded projects if they noticed any troubles and to report related issues.
 plugin_mediawiki	allowed_project_list	List of allowed projects
 plugin_mediawiki	allowed_project_list_allow_placeholder	Project name
-plugin_mediawiki	allowed_project_list_allow_project	Allow access
-plugin_mediawiki	allowed_project_list_filter_placeholder	Filter on project id or name
+plugin_mediawiki	allowed_project_list_allow_project	Migrate
+plugin_mediawiki	allowed_project_list_filter_placeholder	Project id or project name
 plugin_mediawiki	allowed_project_list_id	Id
 plugin_mediawiki	allowed_project_list_name	Name
 plugin_mediawiki	allowed_project_list_empty	Currently, there are no projects that uses Mediawiki 1.23.

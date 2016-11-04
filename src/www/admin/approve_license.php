@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 //
-// 
+//
 //
 // Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 //
@@ -18,7 +18,7 @@ if (!(user_isloggedin() && user_is_super_user())) {
 
 $legal_acceptance = $request->get('legal_acceptance');
 
-$HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name']))));
+$HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name'])), 'main_classes' => array('tlp-framed')));
 
 
     if ($legal_acceptance == 'ACCEPT') {
@@ -39,7 +39,7 @@ $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title'
 	// Preamble
 
 	echo '<p>'.$Language->getText('admin_approve_license', 'msg_accept');
- 
+
 	// display the license and the agree/disagree buttons
 	include($Language->getContent('admin/license_terms'));
 
@@ -52,11 +52,11 @@ $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title'
              </tr>
              <tr VALIGN="MIDDLE">
                  <td ALIGN="RIGHT"><b>&nbsp;&nbsp  </b>
-            <input type="submit" name="continueShopping_0"  border="0" class="btn btn-primary" value="'.$Language->getText('admin_approve_license', 'continue').'">
+            <input type="submit" name="continueShopping_0"  border="0" class="tlp-button-primary" value="'.$Language->getText('admin_approve_license', 'continue').'">
                 </td>
              </tr>
        </table>';
- 
+
 	echo '</form>';
     }
 

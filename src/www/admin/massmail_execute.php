@@ -88,7 +88,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
 
     if ($destination != 'preview') {
         site_header(array('title'=>$Language->getText('admin_massmail','title')));
-        print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>';
+        print '<h1>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h1>';
 
         print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)<br><br>";
         flush();

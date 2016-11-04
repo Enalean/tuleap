@@ -24,7 +24,7 @@ require_once "Widget.class.php";
  * In order to have the same output rendering than a "real" widget
  * you just have to enclose your current box based output into an
  * instance of this class.
- * 
+ *
  * Example:
  * <pre>
  * $w = new StaticWidget("Title");
@@ -53,6 +53,18 @@ class Widget_Static extends Widget {
     protected $rss     = "";
 
     /**
+     * Icon
+     * @var String
+     */
+    protected $icon    = "";
+
+    /**
+     * Icon
+     * @var String
+     */
+    protected $additional_class = "";
+
+    /**
      * Constructor
      *
      * @param String $title Widget title
@@ -65,7 +77,7 @@ class Widget_Static extends Widget {
      * Output the widget
      */
     public function display() {
-        $GLOBALS['HTML']->widget($this, null, true, null, false, false, null, null);
+        $GLOBALS['HTML']->displayStaticWidget($this);
     }
 
     /**
@@ -121,6 +133,26 @@ class Widget_Static extends Widget {
      */
     public function hasRss() {
         return ($this->rss !== "");
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setAdditionalClass($additional_class)
+    {
+        $this->additional_class = $additional_class;
+    }
+
+    public function getAdditionalClass()
+    {
+        return $this->additional_class;
     }
 }
 ?>

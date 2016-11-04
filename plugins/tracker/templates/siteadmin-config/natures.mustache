@@ -1,83 +1,109 @@
-<h2>{{ title }}</h2>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
-{{# sections }}
-    <ul class="nav nav-tabs">
-        <li>
-            <a href="{{ emailgateway_url }}">{{ emailgateway }}</a>
-        </li>
-        <li class="active">
-            <a href="{{ natures_url }}">{{ natures }}</a>
-        </li>
-        <li>
-            <a href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
-        </li>
-    </ul>
-{{/ sections }}
+    {{# sections }}
+        <nav class="tlp-tabs">
+            <a class="tlp-tab" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+            <a class="tlp-tab tlp-tab-active" href="{{ natures_url }}">{{ natures }}</a>
+            <a class="tlp-tab" href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
+        </nav>
+    {{/ sections }}
 
-<div id="siteadmin-config">
-    <legend>{{ available_natures }}</legend>
-    <p>{{ desc }}</p>
+    <div id="siteadmin-config" class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-list tlp-pane-title-icon"></i> {{ available_natures }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>{{ desc }}</p>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>{{ shortname_label }}</th>
-                <th>{{ forward_label_label }}</th>
-                <th>{{ reverse_label_label }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {{# natures }}
-                <tr>
-                    <td>{{ shortname }}</td>
-                    <td>{{ forward_label }}</td>
-                    <td>{{ reverse_label }}</td>
-                    <td class="actions">
-                        {{# is_system }}
-                            <span class="muted" data-toggle="tooltip" data-placement="right" title="{{ edit_system_nature_title }}">
-                                <i class="icon-edit"></i> {{ edit_icon_label }}
-                            </span>
-                        {{/ is_system }}
-                        {{^ is_system }}
-                            <a class=""
-                               role="button"
-                               data-toggle="modal"
-                               href="#siteadmin-config-natures-modal-edit-{{ shortname }}"
-                            >
-                                <i class="icon-edit"></i> {{ edit_icon_label }}
-                            </a>
-                            {{> siteadmin-config/natures-modal-edit }}
-                        {{/ is_system }}
+                    {{> siteadmin-config/natures-modal-create }}
 
-                        {{# is_or_has_been_used }}
-                            <span class="muted" data-toggle="tooltip" data-placement="right" title="{{ cannot_delete_title }}">
-                                <i class="icon-trash"></i> {{ delete_icon_label }}
-                            </span>
-                        {{/ is_or_has_been_used }}
-                        {{^ is_or_has_been_used }}
-                            <form action="?action=delete-nature" method="post">
-                                {{{ csrf_token }}}
-                                <input type="hidden" name="shortname" value="{{ shortname }}">
-                                <button type="submit" class="btn-link">
-                                    <i class="icon-trash"></i> {{ delete_icon_label }}
-                                </button>
-                            </form>
-                        {{/ is_or_has_been_used }}
-                    </td>
-                </tr>
-            {{/ natures }}
-        </tbody>
-    </table>
+                    <div class="tlp-table-actions">
+                        <button id="siteadmin-config-natures-modal-create-button" class="tlp-button-primary">
+                            <i class="fa fa-plus tlp-button-icon"></i> {{ create_new_nature }}
+                        </button>
+                    </div>
+                    <table class="tlp-table tracker-natures-table">
+                        <thead>
+                            <tr>
+                                <th>{{ shortname_label }}</th>
+                                <th>{{ forward_label_label }}</th>
+                                <th>{{ reverse_label_label }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{^ has_natures }}
+                            <tr>
+                                <td colspan="4" class="tlp-table-cell-empty">
+                                    {{ no_nature }}
+                                </td>
+                            </tr>
+                            {{/ has_natures }}
+                            {{# natures }}
+                                <tr>
+                                    <td>{{ shortname }}</td>
+                                    <td>{{ forward_label }}</td>
+                                    <td>{{ reverse_label }}</td>
+                                    <td class="tracker-table-nature-action-cell">
+                                        {{# is_system }}
+                                            <button class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left"
+                                                data-tlp-tooltip="{{ edit_system_nature_title }}"
+                                                disabled
+                                            >
+                                                <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_icon_label }}
+                                            </button>
+                                        {{/ is_system }}
+                                        {{^ is_system }}
+                                            <button class="tlp-button-primary tlp-button-outline tlp-button-small siteadmin-config-natures-modal-edit-button"
+                                                data-edit-modal-id="siteadmin-config-natures-modal-edit-{{ shortname }}"
+                                            >
+                                                <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_icon_label }}
+                                            </button>
 
-    <a class="btn btn-primary" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal-create">
-        <i class="icon-plus"></i> {{ create_new_nature }}
-    </a>
+                                            {{> siteadmin-config/natures-modal-edit }}
+                                        {{/ is_system }}
 
-    {{> siteadmin-config/natures-modal-create }}
+                                        {{# is_or_has_been_used }}
+                                            <button class="tlp-button-danger tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left"
+                                                data-tlp-tooltip="{{ cannot_delete_title }}"
+                                                disabled
+                                            >
+                                                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_icon_label }}
+                                            </button>
+                                        {{/ is_or_has_been_used }}
+                                        {{^ is_or_has_been_used }}
+                                            <button type="submit"
+                                                class="tlp-button-danger tlp-button-outline tlp-button-small siteadmin-config-natures-modal-delete-button"
+                                                data-delete-modal-id="siteadmin-config-natures-modal-delete-{{ shortname }}"
+                                            >
+                                                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_icon_label }}
+                                            </button>
 
-    <legend class="allowed-projects-for-nature-title">{{ allowed_projects_title }}</legend>
-    <p>{{ allowed_projects_desc }}</p>
+                                            {{> siteadmin-config/natures-modal-delete }}
+                                        {{/ is_or_has_been_used }}
+                                    </td>
+                                </tr>
+                            {{/ natures }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
 
-    {{{ allowed_projects }}}
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-archive tlp-pane-title-icon"></i> {{ allowed_projects_title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>{{ allowed_projects_desc }}</p>
+
+                    {{{ allowed_projects }}}
+                </section>
+            </div>
+        </section>
+    </div>
 </div>

@@ -1,0 +1,75 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tlp-pane {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: $tlp-ui-white;
+}
+
+.tlp-pane-container {
+    flex: 1 1 auto;
+    border-right: 1px solid $tlp-ui-border-light;
+
+    &:last-child {
+        border-right: 0;
+    }
+}
+
+.tlp-pane-header {
+    padding: $tlp-spacing;
+}
+
+%tlp-pane-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.tlp-pane-title {
+    @extend %tlp-pane-title;
+
+    margin: 0;
+    color: $tlp-ui-dimmed;
+    line-height: 22px;
+}
+
+.tlp-pane-subtitle {
+    @extend %tlp-pane-title;
+
+    margin: 0 0 $tlp-spacing;
+    color: $tlp-theme-color;
+}
+
+.tlp-pane-title-icon {
+    margin: 0 5px 0 0;
+    font-size: 14px;
+}
+
+.tlp-pane-section {
+    padding: $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}

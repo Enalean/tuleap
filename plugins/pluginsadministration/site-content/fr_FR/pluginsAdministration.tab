@@ -7,37 +7,42 @@ plugin_pluginsadministration	descriptor_name	Administration des Plugins
 #
 #
 #
-plugin_pluginsadministration	Actions	Actions
+plugin_pluginsadministration	installed_tab_label	Plugins installés
+plugin_pluginsadministration	not_installed_tab_label	Plugins disponibles
+plugin_pluginsadministration	installed_pane_label	Plugins
+plugin_pluginsadministration	not_installed_pane_label	Plugins
 plugin_pluginsadministration	change_to_unavailable	Ne pas utiliser le plugin
 plugin_pluginsadministration	change_to_available	Utiliser le plugin
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Annuler les modifications ?
 plugin_pluginsadministration	unavailable	non
 plugin_pluginsadministration	available	oui
+plugin_pluginsadministration	feedback_installed	Le plugin a été installé avec succès
 plugin_pluginsadministration	feedback_available	$1 est maintenant disponible.
 plugin_pluginsadministration	feedback_unavailable	$1 est maintenant indisponible. L'espace web et les scripts cgi sont toujours accessibles !
 plugin_pluginsadministration	Hook:	Hook :
 plugin_pluginsadministration	hook_asterisk	* : Les hooks écoutés par plusieurs plugins sont suivis d'une astérisque.
 plugin_pluginsadministration	install_plugin	Installer ce plugin
 plugin_pluginsadministration	install	Installer un plugin
+plugin_pluginsadministration	install_label	Installer
 plugin_pluginsadministration	menu	Plugins
 plugin_pluginsadministration	not_yet_installed	Plugins pas encore installés
-plugin_pluginsadministration	Plugin	Plugin
+plugin_pluginsadministration	plugin_table_head	Nom
+plugin_pluginsadministration	version_table_head	Version
+plugin_pluginsadministration	description_table_head	Description
 plugin_pluginsadministration	Plugins	Plugins
 plugin_pluginsadministration	plugins	Plugins installés
 plugin_pluginsadministration	plugin_uninstalled	Le plugin "$1" a été désinstallé.
 plugin_pluginsadministration	plugin_not_uninstalled	Le plugin "$1" n'a pas été désinstallé.
 plugin_pluginsadministration	priorities	Priorités entre plugins
 plugin_pluginsadministration	Priority	Priorité
-plugin_pluginsadministration	properties	Afficher les propriétés du plugin
-plugin_pluginsadministration	properties_icon_label	Propriétés
+plugin_pluginsadministration	properties_icon_label	Détails
 plugin_pluginsadministration	select_hook	Sélectionnez un hook :
 plugin_pluginsadministration	select_install	Sélectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associé au plugin avant de continuer.
-plugin_pluginsadministration	Available?	Disponible ?
-plugin_pluginsadministration	title	Administration des plugins
+plugin_pluginsadministration	Available?	Activé ?
+plugin_pluginsadministration	title	Plugins
 plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugin installé.</em>
 plugin_pluginsadministration	uninstall	Désinstaller
-plugin_pluginsadministration	uninstall_plugin	Désinstaller ce plugin
 plugin_pluginsadministration	uninstall_plugin_icon_label	Désinstaller
 plugin_pluginsadministration	upload	Charger l'archive
 plugin_pluginsadministration	update_priorities	Mettre à jour les priorités
@@ -49,18 +54,43 @@ plugin_pluginsadministration	scope_2	Utilisateurs
 plugin_pluginsadministration	error_avail_dependency	Impossible de désactiver $1. Veuillez désactiver les plugins suivants : $2
 plugin_pluginsadministration	error_unavail_dependency	Impossible d'activer $1. Veuillez activer les plugins suivants : $2
 plugin_pluginsadministration	error_install_dependency	Impossible d'installer ce plugin sans avoir installé au préalable :
-plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller <em>$1</em> tant que ces plugins seront installés :
+plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller ce plugin tant que ces plugins seront installés :
 plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restreindre
-plugin_pluginsadministration	manage_restriction_by_project	Gérer les restrictions par projets
+plugin_pluginsadministration	cant_restrict	Impossible de restreindre ce plugin car il a une portée système
+plugin_pluginsadministration	install_modal_title	Installer le plugin
+plugin_pluginsadministration	install_modal_content	Vous êtes sur le point d'installer un plugin. Veuillez confirmer votre action.
+plugin_pluginsadministration	install_modal_cancel	Annuler
+plugin_pluginsadministration	install_modal_submit	Installer
+plugin_pluginsadministration	uninstall_modal_title	Désinstaller le plugin
+plugin_pluginsadministration	uninstall_modal_content	Vous êtes sur le point de désinstaller un plugin. Veuillez noter les points suivants et confirmer votre action.
+plugin_pluginsadministration	uninstall_modal_cancel	Annuler
+plugin_pluginsadministration	uninstall_modal_submit	Désinstaller
+plugin_pluginsadministration	uninstall_modal_list_sql	le script <code>db/uninstall.sql</code> de ce plugin sera executé
+plugin_pluginsadministration	uninstall_modal_list_directory	le répertoire de ce plugin ne sera pas supprimé
+plugin_pluginsadministration	uninstall_modal_list_web_space	l'espace web et les scripts cgi de ce plugin resteront accessible tant que vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants
 
-plugin_pluginsadministration	plugin_allowed_project_back_link_title	Retour à la liste des plugins
-plugin_pluginsadministration	plugin_allowed_project_title	Gérer les projets autorisés à utiliser $1
-plugin_pluginsadministration	plugin_allowed_project_allow_all	Autoriser <b>tous les projets</b> a utiliser ce plugin.
-plugin_pluginsadministration	plugin_allowed_project_allow_all_submit	Sauvegarder
+plugin_pluginsadministration	properties_updated	Les propriétés du plugin ont été mises à jour avec succès
+plugin_pluginsadministration	properties_pane_title	Propriétés
+plugin_pluginsadministration	properties_pane_name	Nom
+plugin_pluginsadministration	properties_pane_version	Version
+plugin_pluginsadministration	properties_pane_description	Description
+plugin_pluginsadministration	properties_pane_scope	Portée
+plugin_pluginsadministration	properties_pane_hooks	Hooks écoutés
+plugin_pluginsadministration	properties_pane_dependencies	Dépendances
+plugin_pluginsadministration	properties_pane_enabled	Activé ?
+plugin_pluginsadministration	properties_pane_update_label	Mettre à jour les propriétés
+plugin_pluginsadministration	properties_pane_empty_hooks	Aucun hook
+plugin_pluginsadministration	properties_pane_empty_dependencies	Aucune dépendance
+plugin_pluginsadministration	properties_pane_readme_title	Readme
+
+plugin_pluginsadministration	plugin_allowed_project_title	Restriction de projets pour $1
+plugin_pluginsadministration	plugin_allowed_project_pane_title	Projets autorisés à utiliser $1
+plugin_pluginsadministration	plugin_allowed_project_pane_information	Cette section permet de définir les projets qui pourront utiliser ou non $1.
+plugin_pluginsadministration	plugin_allowed_project_allow_all	Autoriser tous les projets à utiliser ce plugin
 plugin_pluginsadministration	plugin_allowed_project_list	Liste des projets autorisés
 plugin_pluginsadministration	plugin_allowed_project_list_allow_placeholder	Nom du projet
-plugin_pluginsadministration	plugin_allowed_project_list_allow_project	Autorisé l'accès
-plugin_pluginsadministration	plugin_allowed_project_list_revoke_projects	Interdire l'accès aux projets sélectionnés
+plugin_pluginsadministration	plugin_allowed_project_list_allow_project	Autoriser
+plugin_pluginsadministration	plugin_allowed_project_list_revoke_projects	Supprimer l'autorisation
 plugin_pluginsadministration	plugin_allowed_project_list_filter_placeholder	Filtrer sur l'id ou le nom du projet
 plugin_pluginsadministration	plugin_allowed_project_list_id	Id
 plugin_pluginsadministration	plugin_allowed_project_list_name	Nom

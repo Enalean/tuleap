@@ -1,0 +1,72 @@
+<form method="POST"
+      action="?pane=mirrors_admin&action=modify-mirror"
+      id="edit-modal-{{ id }}"
+      class="tlp-modal"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i> {{ edit_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <input type="hidden" name="mirror_id" value="{{ id }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="name-required">{{ identifier }} <i class="fa fa-asterisk"></i></label>
+            <input id="name-required"
+                   class="tlp-input"
+                   name="mirror_name"
+                   type="text"
+                   placeholder="location"
+                   size="25"
+                   value="{{ name }}"
+                   required />
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="url-required">{{ url_label }} <i class="fa fa-asterisk"></i></label>
+            <input id="url-required"
+                   class="tlp-input"
+                   name="mirror_url"
+                   type="text"
+                   placeholder="tuleap.net"
+                   size="25"
+                   value="{{ url }}"
+                   required />
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="hostname">{{ hostname_label }}</label>
+            <input id="hostname"
+                   class="tlp-input"
+                   name="mirror_hostname"
+                   type="text"
+                   placeholder="sfo-mirror"
+                   value="{{ hostname }}"
+                   size="25" />
+            <p class="tlp-text-info">{{ reserved_hostnames_help }}</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="ssh-key-required">{{ ssh_key_label }} <i class="fa fa-asterisk"></i></label>
+            <textarea id="ssh-key-required"
+                      class="tlp-textarea"
+                      name="mirror_key"
+                      placeholder="Key..."
+                      required>{{ ssh_key_value }}</textarea>
+        </div>
+
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ btn_cancel }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-pencil tlp-button-icon"></i> {{ btn_submit }}
+        </button>
+    </div>
+</form>

@@ -1,23 +1,26 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
@@ -47,8 +50,12 @@ if($request->valid($vGroupId)) {
 }
 
 $project = $pm->getProject($group_id);
-if (!$project->isActive()) {
-    exit_error($GLOBALS['Language']->getText('include_exit','exit_error'), $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
+if (! $project->isActive()) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus())
+    );
+    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . (int) $group_id);
 }
 
 //if ($request->isPost()) {
@@ -84,62 +91,44 @@ $em->processEvent('show_pending_documents', $params);
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title')));
+$renderer = new AdminPageRenderer();
+$renderer->header($Language->getText('admin_groupedit', 'title'), false);
+
 ?>
-<FORM action="?" method="POST">
-<INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
-<?php 
-$project = $pm->getProject($group_id,false,true);
-echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>'; 
-echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</p>';
-?>
-        <div class="systeme_onglets">
-            <div class="onglets">
-            <?php
-            if (isset($params['id']) && $params['id']) {
-                $i=0;
-            
-                foreach($params['id'] as $id){
-                    $nom = $params['nom'][$i++];
-                    echo '<span class="onglet_0 onglet" id="onglet_'.$purifier->purify($id).'">'.$purifier->purify($nom).'</span>';
-                }
-            }
-            ?>
-            </div>
-            <div class="contenu_onglets">
-            <?php 
-            if (isset($params['html']) && $params['html']) {
-                foreach($params['html'] as $html) {
-                    echo $html;
-                }
-            }
-            ?>
-            </div>
-         </div>
-</FORM>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally"><?= $project->getUnconvertedPublicName() ?></h1>
+
+    <nav class="tlp-tabs">
+        <a href="/admin/groupedit.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
+            <?= $GLOBALS['Language']->getText('admin_project', 'information_label') ?>
+        </a>
+        <a href="/admin/projecthistory.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
+            <?= $GLOBALS['Language']->getText('admin_project', 'history_label') ?>
+        </a>
+        <a href="/admin/show_pending_documents.php?group_id=<?= (int)$group_id ?>" class="tlp-tab tlp-tab-active">
+            <?= $GLOBALS['Language']->getText('admin_project', 'pending_label') ?>
+        </a>
+    </nav>
+
+<form action="?" method="POST" class="tlp-framed-horizontally">
+<input type="hidden" name="group_id" value="<?php print (int)$group_id; ?>">
 <?php
+    $project = $pm->getProject($group_id,false,true);
+    echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
+    echo '<div class="tlp-alert-info"><p>Note: there might be some delay (max 30 minutes) between the time the file is
+        deleted and time it becomes restorable.<br />When a file is deleted by the user, it becomes restorable after
+        SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed.</p>';
+    echo '<p>Please note that <strong>actual file restoration</strong> will be done by the
+        <strong>next SYSTEM_CHECK</strong> event. This interface only schedule the restoration.</p></div>';
 
-$GLOBALS['HTML']->includeFooterJavascriptSnippet('
-                function change_onglet(name)
-                {
-                        $(\'onglet_\'+anc_onglet).className = \'onglet_0 onglet\';
-                        $(\'onglet_\'+name).className = \'onglet_1 onglet\';
-                        $(\'contenu_onglet_\'+anc_onglet).style.display = \'none\';
-                        $(\'contenu_onglet_\'+name).style.display = \'block\';
-                        anc_onglet = name;
-                }
-                $$(\'.onglet\').each(function (e) {
-                    e.observe(\'click\', function () {
-                        var id = e.id.sub(\'onglet_\', \'\');
-                        change_onglet(id);
-                        e.stop();
-                    });
-                });
-                var anc_onglet = \''.$purifier->purify($focus, CODENDI_PURIFIER_JS_QUOTE).'\';
-                change_onglet(anc_onglet);
-');
-
-site_admin_footer(array());
+    foreach($params['html'] as $html) {
+        echo $html;
+    }
+?>
+</form>
+</div>
+<?php
+$renderer->footer();
 
 /*
  * Functions
@@ -153,16 +142,28 @@ function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
     $purifier           = Codendi_HTMLPurifier::instance();
 
     $html  = '';
-    $html .= '<div class="contenu_onglet" id="contenu_onglet_frs_file">';
-    $html .= '<p>Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it become restorable.<br />When a file is deleted by the user, it become restorable after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed</p>'.
-             '<p>Please note that <strong>actual file restoration</strong> will be done by the <strong>next SYSTEM_CHECK</strong> event. This interface only schedule the restoration.</p>';
-    $i     = 1;
+    $html .= '<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('admin_groupedit','archived_files') .'</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Release name</th>
+                        <th>Package name</th>
+                        <th>Deleted date</th>
+                        <th>Forecast purge date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>';
     if ($files->rowCount() > 0) {
-        $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Forcast purge date', 'Restore');
-        $html  .= html_build_list_table_top ($titles);
         foreach ($files as $file) {
             $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $file['delete_date']);
-            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+            $html .= '<tr>';
             $html .= '<td>'.$purifier->purify($file['filename']).'</td>';
             $url   = '/file/showfiles.php?group_id='.urlencode($group_id).'#p_'.urlencode($file['package_id']).'r_'.urlencode($file['release_id']);
             $html .= '<td><a href="'.$url.'">'.$purifier->purify($file['release_name']).'</a></td>';
@@ -170,22 +171,40 @@ function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
             $html .= '<td><a href="'.$url.'">'.$purifier->purify(html_entity_decode($file['package_name'])).'</a></td>';
             $html .= '<td>'.html_time_ago($file['delete_date']).'</td>';
             $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
-            $html .= '<td align="center"><a href="?group_id='.urlencode($group_id).'&func=confirm_restore_frs_file&id='.urlencode($file['file_id']).'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td>';
+            $html .= '<td class="tlp-table-cell-actions">
+                <a href="?group_id='.urlencode($group_id).'&func=confirm_restore_frs_file&id='.urlencode($file['file_id']).'"
+                    class="tlp-button-small tlp-button-primary tlp-button-outline"
+                    onClick="return confirm(\'Confirm restore of this file\')"
+                >
+                    <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                </td>';
             $html .= '</tr>';
         }
+    } else {
+        $html .= '<tr>
+            <td class="tlp-table-cell-empty" colspan="6">
+                No restorable files found
+            </td>
+        </tr>';
     }
-    if ($i == 1) {
-        $html .= '<center>No restorable files found</center>';
-    }
+    $html .= '</tbody>
+        </table>
+    </section>';
 
     if ($toBeRestoredFiles->rowCount() > 0) {
-        if ($i == 1) {
-            $i++;
-            $titles = array ('Filename', 'Release name', 'Package name', '', '', '');
-            $html  .= html_build_list_table_top ($titles);
-        }
+        $html .= '<section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Release name</th>
+                        <th>Package name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>';
         foreach ($toBeRestoredFiles as $file) {
-            $html .= '<tr class="boxitemgrey">';
+            $html .= '<tr>';
             $html .= '<td>'.$purifier->purify($file['filename']).'</td>';
             $url   = '/file/showfiles.php?group_id='.urlencode($group_id).'#p_'.urlencode($file['package_id']).'r_'.urlencode($file['release_id']);
             $html .= '<td><a href="'.$url.'">'.$purifier->purify($file['release_name']).'</a></td>';
@@ -193,40 +212,47 @@ function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
             $html .= '<td><a href="'.$url.'">'.$purifier->purify($file['package_name']).'</a></td>';
             if ($file['release_status'] != FRSRelease::STATUS_DELETED
                 && $file['package_status'] != FRSPackage::STATUS_DELETED) {
-                $html .= '<td align="center" colspan="2">File to be restored next SYSTEM_CHECK event</td>';
+                $html .= '<td>File to be restored next SYSTEM_CHECK event</td>';
             } else {
-                $html .= '<td align="center" colspan="2">File marked to be restored in a deleted release</td>';
+                $html .= '<td>File marked to be restored in a deleted release</td>';
             }
-            $html .= '<td align="center"><img src="'.util_get_image_theme("ic/convert-grey.png").'" border="0" height="16" width="16"></td>';
             $html .= '</tr>';
         }
+        $html .= '</tbody>
+            </table>
+        </section>';
     }
 
     if ($deletedFiles->rowCount() > 0) {
-        if ($i == 1) {
-            $i++;
-            $titles = array ('Filename', 'Release name', 'Package name', '', '', '');
-            $html  .= html_build_list_table_top ($titles);
-        }
+        $html .= '<section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Release name</th>
+                        <th>Package name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>';
         foreach ($deletedFiles as $file) {
-            $html .= '<tr class="boxitemgrey"">';
+            $html .= '<tr>';
             $html .= '<td>'.$purifier->purify($file['filename']).'</td>';
             $url   = '/file/showfiles.php?group_id='.urlencode($group_id).'#p_'.urlencode($file['package_id']).'r_'.urlencode($file['release_id']);
             $html .= '<td><a href="'.$url.'">'.$purifier->purify($file['release_name']).'</a></td>';
             $url   = '/file/showfiles.php?group_id='.urlencode($group_id).'#p_'.urlencode($file['package_id']);
             $html .= '<td><a href="'.$url.'">'.$purifier->purify($file['package_name']).'</a></td>';
-            $html .= '<td align="center" colspan="2">Not yet restorable</td>';
-            $html .= '<td align="center"><img src="'.util_get_image_theme("ic/convert-grey.png").'" border="0" height="16" width="16"></td>';
+            $html .= '<td>Not yet restorable</td>';
             $html .= '</tr>';
         }
+        $html .= '</tbody>
+            </table>
+        </section>';
     }
-    if ($i > 1) {
-        $html .= '</table>';
-    }
-    $html .= '</div>';
 
-    $idArray[]   = 'frs_file';
-    $nomArray[]  = $GLOBALS['Language']->getText('admin_groupedit','archived_files');
+    $html .= '</div>
+        </section>';
+
     $htmlArray[] = $html;
 }
 
@@ -261,40 +287,62 @@ function wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlAr
     $purifier       = Codendi_HTMLPurifier::instance();
 
     $tabbed_content  = '';
-    $tabbed_content .= '<div class="contenu_onglet" id="contenu_onglet_wiki_attachment">';
+    $tabbed_content .= '<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('admin_groupedit', 'archived_wiki') .'</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>Attachment name</th>
+                        <th>Deleted date</th>
+                        <th>Forecast purge date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>';
 
-    $i     = 1;
     if ($attachments->rowCount() > 0) {
-        $titles = array ('Attachment name', 'Delete date', 'Forcast purge date', 'Restore');
-        $tabbed_content  .= html_build_list_table_top ($titles);
         foreach ($attachments as $wiki_attachment) {
+            $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
             $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
-            if($nonRestorableAttachments->rowCount()) {
-                $tabbed_content .= '<tr class="boxitemgrey">';
-                $tabbed_content .= '<td>'.$purifier->purify($wiki_attachment['name']).'</td>';
-                $tabbed_content .= '<td align="center" colspan="2">Non-restorable attachment</td>';
-                $tabbed_content .= '<td align="center"><img src="'.util_get_image_theme("ic/convert-grey.png").'" border="0" height="16" width="16"></td>';
+            $tabbed_content .= '<tr>';
+            $tabbed_content .= '<td>'.$purifier->purify($wiki_attachment['name']).'</td>';
+            $tabbed_content .= '<td>'.html_time_ago($wiki_attachment['delete_date']).'</td>';
+            $tabbed_content .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
+            $tabbed_content .= '<td class="tlp-table-cell-actions">';
+            if ($nonRestorableAttachments->rowCount()) {
+                $tabbed_content .= '<button type="button"
+                            class="tlp-button-small tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-left"
+                            data-tlp-tooltip="Non-restorable attachment"
+                            disabled>
+                        <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                    </button>';
             } else {
-                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
-                $tabbed_content .= '<tr class="'. html_get_alt_row_color($i++) .'">';
-                $tabbed_content .= '<td>'.$purifier->purify($wiki_attachment['name']).'</td>';
-                $tabbed_content .= '<td>'.html_time_ago($wiki_attachment['delete_date']).'</td>';
-                $tabbed_content .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
-                $tabbed_content .= '<td align="center"><a href="?group_id='.urlencode($group_id).'&func=confirm_restore_wiki_attachment&id='.urlencode($wiki_attachment['id']).'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this attachment\')" border="0" height="16" width="16"></a></td>';
+                $tabbed_content .= '<a href="?group_id='.urlencode($group_id).'&func=confirm_restore_wiki_attachment&id='.urlencode($wiki_attachment['id']).'"
+                        class="tlp-button-small tlp-button-primary tlp-button-outline"
+                        onClick="return confirm(\'Confirm restore of this attachment\')"
+                    >
+                        <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                    </a>';
             }
-                $tabbed_content .= '</tr>';
+            $tabbed_content .= '</td>';
+            $tabbed_content .= '</tr>';
         }
+    } else {
+        $tabbed_content .= '<tr>
+            <td class="tlp-table-cell-empty" colspan="6">
+                No restorable attachments found
+            </td>
+        </tr>';
     }
-    if ($i == 1) {
-        $tabbed_content .= '<center>No restorable Attachments found</center>';
-    }
+    $tabbed_content .= '</table>
+                </section>
+            </div>
+        </section>';
 
-    if ($i > 1) {
-        $tabbed_content .= '</table>';
-    }
-    $tabbed_content .= '</div>';
-    $idArray[]   = 'wiki_attachment';
-    $nomArray[]  = $GLOBALS['Language']->getText('admin_groupedit','archived_wiki');
     $htmlArray[] = $tabbed_content;
 }
 
@@ -313,5 +361,3 @@ function wiki_attachment_restore_process($request, $group_id) {
     }
     $GLOBALS['Response']->redirect('?group_id='.$group_id.'&focus=wiki_attachment');
 }
-
-?>

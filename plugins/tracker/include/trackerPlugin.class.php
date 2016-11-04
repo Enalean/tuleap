@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Admin\AdminSidebarPresenterBuilder;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -99,6 +100,9 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook('site_admin_option_hook');
+        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function getHooksAndCallbacks() {
@@ -170,10 +174,20 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook($params) {
-        $name = $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name');
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/config.php'
+        );
+    }
 
-        echo '<li><a href="'.$this->getPluginPath().'/config.php">'.$name.'</a></li>';
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function cssFile($params) {
@@ -194,12 +208,35 @@ class trackerPlugin extends Plugin {
         }
     }
 
+    public function burning_parrot_get_stylesheets($params)
+    {
+        $include_tracker_css_file = false;
+        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
+
+        if ($include_tracker_css_file ||
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
     public function javascript_file($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
         }
         if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
+            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
     }
 
@@ -1055,7 +1092,7 @@ class trackerPlugin extends Plugin {
     public function site_admin_configuration_tracker($params) {
         $label = $GLOBALS['Language']->getText('plugin_tracker', 'admin_tracker_template');
 
-        $params['additional_entries'][] = '<li><a href="/plugins/tracker/?group_id=100">'. $label .'</a></li>';
+        $params['additional_entries'][] = '<a href="/plugins/tracker/?group_id=100" class="admin-sidebar-section-nav-item">'. $label .'</a>';
     }
 
     public function fulltextsearch_event_does_tracker_service_use_ugroup($params) {

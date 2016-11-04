@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -22,16 +23,38 @@
  *
  */
 
-require_once 'autoload.php';
+use Tuleap\Admin\AdminPageRenderer;
+
+require_once 'constants.php';
 
 class userlogPlugin extends Plugin {
 
-	function userlogPlugin($id) {
-		$this->Plugin($id);
-        $this->_addHook('site_admin_option_hook','siteAdminHooks', true);
-        $this->_addHook('cssfile',               'cssFile', false);
+    function __construct($id)
+    {
+        parent::__construct($id);
+        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('logger_after_log_hook', 'logUser', false);
-	}
+        $this->addHook(Event::IS_IN_SITEADMIN);
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/user-logging-date-picker.js';
+        }
+    }
 
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'UserLogPluginInfo')) {
@@ -49,14 +72,20 @@ class userlogPlugin extends Plugin {
         }
     }
 
-    /**
-     * $params['HTML']
-     */
-    function siteAdminHooks($hook, $params)
+    public function siteAdminHooks($params)
     {
-        $site_url  = $this->getPluginPath() . '/';
-        $site_name = $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name');
-        echo '<li><a href="' . $site_url . '">' . $site_name . '</a></li>';
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/'
+        );
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     /**
@@ -73,7 +102,7 @@ class userlogPlugin extends Plugin {
 
             $cookie_manager = new CookieManager();
 
-            $userLogManager = new UserLogManager();
+            $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
             $userLogManager->logAccess($params['time'],
                                        $params['groupId'],
                                        $uid,
@@ -109,7 +138,7 @@ class userlogPlugin extends Plugin {
             $day = date('Y-n-j');
         }
 
-        $userLogManager = new UserLogManager();
+        $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
         $userLogManager->displayLogs($offset, $day);
     }
 

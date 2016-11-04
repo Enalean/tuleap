@@ -1,51 +1,65 @@
-<a href="{{ resource_allowed_project_back_link }}"><i class="icon-long-arrow-left"></i> {{ resource_allowed_project_back_link_title }}</a>
-
 <h1>{{ resource_allowed_project_title }}</h1>
-
-<p>{{{ information }}}</p>
-
-<div id="allowed-projects-list">
-    <h2>{{ resource_allowed_project_list }}</h2>
-
-    <form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
-        <div id="allowed-projects-list-actions">
-            {{{ update_allowed_projects_action_csrf }}}
-
-            <div id="project-to-allow-autocompleter" class="input-append">
-                <input id="project-to-allow" name="project-to-allow" type="text" placeholder="{{ resource_allowed_project_list_allow_placeholder }}">
-                <button type="submit" name="allow-project" class="btn btn-primary" value="1">
-                    <i class="icon-ok-sign icon-white"></i> {{ resource_allowed_project_list_allow_project }}
-                </button>
-            </div>
-
-            <div class="input-prepend filter">
-                <span class="add-on">&#xf002;</span>
-                <input type="text" id="filter-projects" placeholder="{{ resource_allowed_project_list_filter_placeholder }}" {{# there_is_no_project }}disabled{{/ there_is_no_project }}>
-            </div>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-archive tlp-pane-title-icon"></i> {{ resource_allowed_project_subtitle }}
+            </h1>
         </div>
+        <section class="tlp-pane-section">
+            <p class="tlp-alert-warning">{{ information }}</p>
 
-        <table class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th class="id-cell">{{ resource_allowed_project_list_id }}</th>
-                    <th>{{ resource_allowed_project_list_name }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# there_is_no_project }}
-                <tr>
-                    <td colspan="2" id="empty-project-list">{{ resource_allowed_project_list_empty }}</td>
-                </tr>
-                {{/ there_is_no_project }}
-                {{^ there_is_no_project }}
-                    {{# allowed_projects }}
-                    <tr>
-                        <td>{{ getId }}</td>
-                        <td>{{ getUnconvertedPublicName }}</td>
-                    </tr>
-                    {{/ allowed_projects }}
-                {{/ there_is_no_project }}
-            </tbody>
-        </table>
-    </form>
-</div>
+            <div id="allowed-projects-list">
+                <form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
+                    <div class="tlp-table-actions" id="allowed-projects-list-actions">
+                        {{{ update_allowed_projects_action_csrf }}}
+
+                        <div id="project-to-allow-autocompleter" class="tlp-form-element-append tlp-table-actions-element">
+                            <select class="tlp-select" id="project-to-allow" name="project-to-allow" style="width: 100%" data-placeholder="{{ resource_allowed_project_list_allow_placeholder }}"></select>
+                            <button type="submit" name="allow-project" class="tlp-append tlp-button-primary"
+                                    value="1">
+                                <i class="fa fa-arrow-circle-o-right tlp-button-icon"></i> {{ resource_allowed_project_list_allow_project }}
+                            </button>
+                        </div>
+                        <div class="tlp-table-actions-spacer"></div>
+                        <div class="tlp-form-element {{# there_is_no_project }}tlp-form-element-disabled{{/ there_is_no_project }}">
+                            <input type="search"
+                                id="filter-projects"
+                                class="tlp-search"
+                                size="28"
+                                placeholder="{{ resource_allowed_project_list_filter_placeholder }}"
+                                {{# there_is_no_project }}disabled{{/ there_is_no_project }}
+                            >
+                        </div>
+                    </div>
+
+                    <table class="tlp-table" id="allowed-projects-list">
+                        <thead>
+                            <tr>
+                                <th class="tlp-table-cell-numeric">{{ resource_allowed_project_list_id }}</th>
+                                <th class="resource-restrictor-cell-project-name">{{ resource_allowed_project_list_name }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{# there_is_no_project }}
+                            <tr>
+                                <td colspan="2" class="tlp-table-cell-empty">{{ resource_allowed_project_list_empty }}</td>
+                            </tr>
+                        {{/ there_is_no_project }}
+                        {{^ there_is_no_project }}
+                            {{# allowed_projects }}
+                                <tr>
+                                    <td class="resource-restrictor-cell-project-id tlp-table-cell-numeric">{{ getId }}</td>
+                                    <td class="resource-restrictor-cell-project-name">
+                                        <a href="{{ url_project }}?group_id={{ getGroupId }}">{{ getUnconvertedPublicName }}</a>
+                                    </td>
+                                </tr>
+                            {{/ allowed_projects }}
+                        {{/ there_is_no_project }}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </section>
+    </div>
+</section>

@@ -22,6 +22,7 @@ use Tuleap\Git\GeneralSettingsController;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Admin\AdminPageRenderer;
 
 /**
  * This routes site admin part of Git
@@ -63,6 +64,8 @@ class Git_AdminRouter {
      */
     private $regexp_disabler;
 
+    /** @var AdminPageRenderer */
+    private $admin_page_renderer;
 
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -74,6 +77,7 @@ class Git_AdminRouter {
         Git_SystemEventManager               $git_system_event_manager,
         RegexpFineGrainedRetriever           $regexp_retriever,
         RegexpFineGrainedEnabler             $regexp_enabler,
+        AdminPageRenderer                    $admin_page_renderer,
         RegexpFineGrainedDisabler            $regexp_disabler
     ) {
         $this->gerrit_server_factory          = $gerrit_server_factory;
@@ -85,7 +89,8 @@ class Git_AdminRouter {
         $this->git_system_event_manager       = $git_system_event_manager;
         $this->regexp_retriever               = $regexp_retriever;
         $this->regexp_enabler                 = $regexp_enabler;
-        $this->regexp_disabler = $regexp_disabler;
+        $this->admin_page_renderer            = $admin_page_renderer;
+        $this->regexp_disabler                = $regexp_disabler;
     }
 
     public function process(Codendi_Request $request) {
@@ -102,23 +107,34 @@ class Git_AdminRouter {
 
     private function getControllerFromRequest(Codendi_Request $request) {
         if ($request->get('pane') == 'gerrit_servers_admin') {
-            return new Git_AdminGerritController($this->csrf, $this->gerrit_server_factory);
+            return new Git_AdminGerritController(
+                $this->csrf,
+                $this->gerrit_server_factory,
+                $this->admin_page_renderer
+            );
         } elseif ($request->get('pane') == 'gitolite_config') {
-            return new Git_AdminGitoliteConfig($this->csrf, $this->project_manager, $this->git_system_event_manager);
-        } elseif ($request->get('pane') === 'mirrors_admin'){
+            return new Git_AdminGitoliteConfig(
+                $this->csrf,
+                $this->project_manager,
+                $this->git_system_event_manager,
+                $this->admin_page_renderer
+            );
+        } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction'){
             return new Git_AdminMirrorController(
                 $this->csrf,
                 $this->git_mirror_mapper,
                 $this->git_mirror_resource_restrictor,
                 $this->project_manager,
                 $this->git_mirror_manifest_manager,
-                $this->git_system_event_manager
+                $this->git_system_event_manager,
+                $this->admin_page_renderer
             );
         } else {
             return new GeneralSettingsController(
                 $this->csrf,
                 $this->regexp_retriever,
                 $this->regexp_enabler,
+                $this->admin_page_renderer,
                 $this->regexp_disabler
             );
         }

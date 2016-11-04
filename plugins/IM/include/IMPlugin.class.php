@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  */
  define("IM_DEBUG_ON",true,true);
  define("IM_DEBUG_OFF",false,true);
@@ -11,7 +11,7 @@ require_once('common/user/UserHelper.class.php');
 require_once('JabbexFactory.class.php');
 
 class IMPlugin extends Plugin {
-	
+
     var $debug;
     /**
      * last data remove ====>for testing script
@@ -31,8 +31,6 @@ class IMPlugin extends Plugin {
         $this->_addHook('project_admin_add_user', 'projectAddUser', false);
         $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
-        $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
         $this->_addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
         $this->_addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
         $this->_addHook('get_user_display_name', 'im_process_display_presence', false);
@@ -44,11 +42,12 @@ class IMPlugin extends Plugin {
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::IS_IN_SITEADMIN);
 
         $this->debug=$debug;
-        
+
     }
-    
+
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'IMPluginInfo')) {
             require_once('IMPluginInfo.class.php');
@@ -60,22 +59,22 @@ class IMPlugin extends Plugin {
     public function getServiceShortname() {
         return 'IM';
     }
-    
+
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e809';
     }
-    
+
     /**
      * Functions used for "tests"
      */
     /**
-     * @return string the last room name created  
+     * @return string the last room name created
      */
     function get_last_muc_room_name () {
 		return $this->last_im_datas["muc"];
 	}
 	/**
-     * @return string the last room name created  
+     * @return string the last room name created
      */
 	function get_last_muc_room_name_delete () {
 		return $this->last_im_datas_remove['muc'];
@@ -95,7 +94,7 @@ class IMPlugin extends Plugin {
 	function get_last_member_of_once_muc_room () {
 		return $this->last_im_datas["names_last_member_in_muc"];
 	}
-	
+
 	/**
 	 * @return string information about a member added in once muc
 	 */
@@ -105,7 +104,7 @@ class IMPlugin extends Plugin {
     /**
      * End functions for tests.
      */
-    
+
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the IM plugin pages.
         // This stops styles inadvertently clashing with the main site.
@@ -114,7 +113,7 @@ class IMPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
+
     /**
      * Returns an instance of jabdex
      * @return Jabbex object class for im processing
@@ -122,7 +121,7 @@ class IMPlugin extends Plugin {
 	function _get_im_object() {
 		return JabbexFactory::getJabbexInstance();
 	}
-	
+
 	function _this_muc_exist($unix_project_name) {
 		require_once("IM.class.php");
         require_once("IMDao.class.php");
@@ -141,14 +140,14 @@ class IMPlugin extends Plugin {
 		$icon_path = $themes_dir.'/images/icons/';
 		return $icon_path;
 	}
-    
+
     protected $_cache_presence = array();
 	/**
-	 * 
-	 * send status for a geven user 
+	 *
+	 * send status for a geven user
 	 * @return string a string mapping of a img html balise .
 	 * @param string $jid the user jabber identification .
-	 * 
+	 *
 	 */
     function _get_presence_status ($jid) {
         $presence = $this->getPresence($jid);
@@ -189,16 +188,16 @@ class IMPlugin extends Plugin {
         $this->dynamicpresence_alreadydisplayed = true;
         return $html;
     }
-    
+
     function getPresence($jid) {
         if (!isset($this->_cache_presence[$jid])) {
            if($this->_get_im_object()){
 	            $status=$this->_get_im_object()->user_status($jid);
 	            $img_src='';
 	            $img_title='';
-	            
+
 	            $custom_msg = ($status["message"]) ? $status["message"] : '';
-	            
+
 	            switch($status["status"]){
 	                case "dnd":
 	                    $img_title= $GLOBALS['Language']->getText('plugin_im_status','dnd');
@@ -229,7 +228,7 @@ class IMPlugin extends Plugin {
 	                    $img_src=$this->get_icon_path ().'off_line.gif';
 	                    break;
 	            }
-	            
+
 	            if(!empty($custom_msg)){
 	            	$img_title = ($img_title == $custom_msg) ? $img_title : ($img_title.' - '.$custom_msg);
 	            }
@@ -241,8 +240,8 @@ class IMPlugin extends Plugin {
         }
         return $this->_cache_presence[$jid];
     }
-    
-	
+
+
     function instance() {
         static $_plugin_instance;
         if (!$_plugin_instance) {
@@ -250,7 +249,7 @@ class IMPlugin extends Plugin {
         }
         return $_plugin_instance;
     }
-    
+
 	/**
 	 * This function is called when a (or several) project(s) is (are) approved.
      * Action: create a muc room and a shared group for the corresponding projects
@@ -264,7 +263,7 @@ class IMPlugin extends Plugin {
 			echo "\nIM: projectIsApproved for projects: ".$params['group_id']."<br>";
 		}
 	}
-    
+
     /**
 	 * This function is called when a project is supsended or pending
      * Action: lock the muc room
@@ -274,21 +273,21 @@ class IMPlugin extends Plugin {
 	function projectIsSuspendedOrPending($params) {
 		$this->im_lock_muc_room($params);
 	}
-    
+
     /**
 	 * This function is called when the event "project_is_deleted" is called
      * Action: lock the muc room
      *
 	 * @param array $param : contains the group_id ($params['group_id'])
-	 * 
+	 *
 	 * Before, we deleted the MUC room, but now, we only lock it,
 	 * because we want to be able to go back to Active status (that will unlock the MUC Room).
-	 * 
+	 *
 	 */
 	function projectIsDeleted($params) {
 		$this->im_lock_muc_room($params);
 	}
-	
+
 	/**
 	 * This function is called when the project is set to active
      * Action: unlock the muc room
@@ -298,7 +297,7 @@ class IMPlugin extends Plugin {
 	 function projectIsActive($params) {
 		$this->im_unlock_muc_room($params);
 	}
-	
+
 	/**
 	 * This function is called when a user is added into a project
      * Action: add user to muc room
@@ -308,8 +307,8 @@ class IMPlugin extends Plugin {
 	function projectAddUser($params) {
 		$this->im_muc_add_member($params);
 	}
-	
-	
+
+
 	/**
 	 * This function is called when a user is removed from a project
      * Action: remove user from the muc room
@@ -319,22 +318,22 @@ class IMPlugin extends Plugin {
 	function projectRemoveUser($params) {
 		$this->im_muc_remove_member($params);
 	}
-	
+
 	/**
 	 * Shared group creation
-	 * @param array params data from the shared Codendi event 
+	 * @param array params data from the shared Codendi event
 	 */
 	 function create_im_shared_group ($params) {
 		$group_ids = $params['group_id'];
 		$group_ids=explode(',',$group_ids);
-		
+
         $project_manager = $this->getProjectManager();
-        
+
         foreach($group_ids as $project_id){
 	        $project = $project_manager->getProject($project_id);
 	        $unix_project_name = $project->getUnixName();
 	        $project_name = $project->getPublicName();
-	        
+
             try{
 				if($this->_get_im_object()){
 					$this->_get_im_object()->create_shared_group($unix_project_name,$project_name);
@@ -347,10 +346,10 @@ class IMPlugin extends Plugin {
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-				}	
+				}
 			}
 		}
-		
+
 	}
 	/**
 	 * Is called by "muc_room_creation ($params)" to create a muc room.
@@ -360,10 +359,10 @@ class IMPlugin extends Plugin {
 		$group_ids = $params['group_id'];
 		$group_ids=explode(',',$group_ids);
 		//var_dump($group_ids);
-        
+
         $project_manager = $this->getProjectManager();
         $user_manager = $this->getUserManager();
-        
+
 		foreach($group_ids as $val){
 	        $project = $project_manager->getProject($val);
 	        $unix_group_name = $project->getUnixName();
@@ -388,12 +387,12 @@ class IMPlugin extends Plugin {
 				} catch(Exception $e){
 					if(!$this->debug){
 						$GLOBALS['Response']->addFeedback('error', 'MUC creation: '.$e->getMessage());
-					}	
+					}
 				}
 			}
 		}
 	}
-	
+
     /**
      * to lock an MUC room
      * @param array params:contains the data which comes from the envent listened (group_id her ).
@@ -404,7 +403,7 @@ class IMPlugin extends Plugin {
         $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
         $project_name = $project->getPublicName();
-        
+
 		if($this->_this_muc_exist ($unix_project_name)){
 			try{
 				if($this->_get_im_object()){
@@ -418,14 +417,14 @@ class IMPlugin extends Plugin {
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-				}	
+				}
 			}
 		}else{
 			//if muc not exist i do nothing about IM
 		}
-       
+
      }
-  
+
    /**
     * unlock a MUC room created and locked by "lock_muc_room($unix_project_name)".
     * @param array $params :contains the data which comes from the envent listened.
@@ -436,7 +435,7 @@ class IMPlugin extends Plugin {
         $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
         $project_name = $project->getPublicName();
-		
+
 		if($this->_this_muc_exist ($unix_project_name)){
 			try{
 				if($this->_get_im_object()){
@@ -450,12 +449,12 @@ class IMPlugin extends Plugin {
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 						$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-					}	
+					}
 			}
 			}
-		
+
  		}
- 	
+
  	/**
  	 * function called in im_process_delete_muc_room($params) to delete an muc room.
  	 * @param array $params :contains the data which comes from the envent listened.
@@ -473,18 +472,18 @@ class IMPlugin extends Plugin {
 	        }catch(Exception $e){
 	        	if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-				}	
+				}
 	        }
         }
 	}
-	
+
 	/**
  	 * function called in im_process_muc_add_member($params) to add a member in a given muc room.
  	 * @param array $params :contains the data which comes from the envent listened.
  	 */
 	function im_muc_add_member($params) {
 		$user_unix_name=$params['user_unix_name'];
-		
+
         $project_manager = $this->getProjectManager();
 		$group_id =$params['group_id'];
 		$project = $project_manager->getProject($group_id);
@@ -496,10 +495,10 @@ class IMPlugin extends Plugin {
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-				}	
+				}
 			}
         }
-		
+
 	}
 	/**
 	 * to remove a member on a muc
@@ -513,7 +512,7 @@ class IMPlugin extends Plugin {
         $unix_group_name = $project->getUnixName();
         //user infos
         $user_id=$params['user_id'];
-        
+
         $user = $this->getUserManager()->getUserById($user_id);
         $user_unix_name=$user->getUserName();
         if($this->_this_muc_exist ($unix_group_name)){
@@ -523,34 +522,29 @@ class IMPlugin extends Plugin {
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-				}	
+				}
 			}
         }
 	}
-	
+
 	/**
 	 * for hook administration :display an URL to access IM administration.
 	 * @param array $params:contains the data which comes from the envent listened.
 	 */
- 	function siteAdminHooks($params) {
-       global $Language;
-       $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
-       echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
+    function siteAdminHooks($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_im', 'link_im_admin_title'),
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
- 	
-    function site_admin_external_tool_hook($params) {
-       global $Language;
-        echo '<li><A href="externaltools.php?tool=openfire">'.
-        $GLOBALS['Language']->getText('plugin_im','link_im_admin_tool').
-        '</A></li>';
 
-    }
-        
-     function site_admin_external_tool_selection_hook($params) {
-      if ($params['tool']=='openfire') {
-                $params['title']="OpenFire Administration";
-                $params['src']='http://'.$GLOBALS['sys_default_domain'].':9090';
-            }
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
  	 function im_process_display_jabber_id($eParams) {
@@ -560,14 +554,14 @@ class IMPlugin extends Plugin {
 		$entry_label['jid']='';
 		$entry_value['jid']='';
 		if(!$pm->isPluginAvailable($plugin)){
-			//nothing to do actualy 
+			//nothing to do actualy
 		}else{
 			$im_object=$this->_get_im_object();
 			$jabberConf=$im_object->get_server_conf();
 			$server_dns=$jabberConf['server_dns'];
-			
+
 			$user_login = $this->getUserManager()->getUserById($eParams['user_id'])->getName();
-			
+
 			$jid_value=$user_login.'@'.$server_dns;
 			$label=$GLOBALS['Language']->getText('plugin_im','im_user_login');
 			//var_dump($label);
@@ -589,7 +583,7 @@ class IMPlugin extends Plugin {
  	function im_process_display_user_jabber_id ($eParams) {
 		$this->im_process_display_jabber_id ($eParams);
 	}
-	
+
 	/**
 	 * to display an user's jabber identification JID in web interface developper profil
 	 * @param array $eParams:contains the data which comes from the envent listened.
@@ -606,7 +600,7 @@ class IMPlugin extends Plugin {
                 $value
             );
 	}
-	
+
 
     function getDisplayPresence($user_id, $user_name, $realname) {
         $user_helper = UserHelper::instance();
@@ -614,17 +608,17 @@ class IMPlugin extends Plugin {
         $im_object = $this->_get_im_object();
         if(isset($im_object)&&$im_object){
 	        $jabberConf = $im_object->get_server_conf();
-	        
+
 	        $server_dns = $jabberConf['server_dns'];
-	        
+
 	        $jid_value = $user_name.'@'.$server_dns;
 	        $adm_port_im = $jabberConf['webadmin_unsec_port'];
-	        
+
 	        $presence = $this->getDynamicPresence ($jid_value);
         }else{
         	$presence='';
         }
-        
+
         return $presence . $hp->purify($user_helper->getDisplayName($user_name, $realname));
     }
 
@@ -651,13 +645,13 @@ class IMPlugin extends Plugin {
             $input .= '/>';
             $input .= $GLOBALS['Language']->getText('plugin_im', 'user_appearance_pref_display_users_presence');
             $input .= '</label>';
-            
+
             $params['preferences'][] = array(
                 'name'  => $GLOBALS['Language']->getText('plugin_im', 'user_appearance_pref_name'),
                 'value' => $input
             );
         }
-        
+
         /**
          * Only display presence for active (non restricted users)
          *
@@ -672,19 +666,19 @@ class IMPlugin extends Plugin {
                 }
             }
         }
-        
+
         function provide_exportable_items($exportable_items) {
             $exportable_items['labels']['im_muc_logs']            = $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title');
             $exportable_items['data_export_links']['im_muc_logs'] = '/plugins/IM/?log_start_date=&log_end_date=&action=muc_logs&type=export&group_id='.$exportable_items['group_id'];
         }
-        
+
 	/**
- 	 * display project members presence 
- 	 * @param array $params:contains the data which comes from the envent listened.
- 	 */
+	 * display project members presence
+	 * @param array $params:contains the data which comes from the envent listened.
+	 */
 	function im_process_display_presence ($params) {
         $user = $this->getUserManager()->getCurrentUser();
-        if ($user->isloggedIn() && !$this->getUserManager()->getCurrentUser()->isRestricted() && (! $user->getPreference('plugin_im_hide_users_presence'))) { 
+        if ($user->isloggedIn() && !$this->getUserManager()->getCurrentUser()->isRestricted() && (! $user->getPreference('plugin_im_hide_users_presence'))) {
             $params['user_display_name'] = $this->getDisplayPresence($params['user_id'], $params['user_name'], $params['realname']);
         }
 	}
@@ -697,26 +691,26 @@ class IMPlugin extends Plugin {
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
         }
     }
-    
+
     function getAvailableReferenceNatures($params) {
         $im_plugin_reference_natures = array(
             'im_chat'  => array('keyword' => 'chat', 'label' => $GLOBALS['Language']->getText('plugin_im', 'reference_chat_nature_key')));
         $params['natures'] = array_merge($params['natures'], $im_plugin_reference_natures);
     }
-    
- 	function process() {	
+
+	function process() {
         require_once('IM.class.php');
         $controler =& new IM($this);
         $controler->process();
     }
-    
-    
+
+
     function getUserManager() {
         return UserManager::instance();
     }
     function getProjectManager() {
         return ProjectManager::instance();
     }
-    
+
 }
 ?>

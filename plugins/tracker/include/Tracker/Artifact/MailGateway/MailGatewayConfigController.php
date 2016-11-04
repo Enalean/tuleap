@@ -29,6 +29,7 @@ use Codendi_Request;
 use TemplateRendererFactory;
 use Feedback;
 use Event;
+use Tuleap\Admin\AdminPageRenderer;
 
 class MailGatewayConfigController {
 
@@ -43,25 +44,27 @@ class MailGatewayConfigController {
     /** @var EventManager */
     private $event_manager;
 
+    /** @var AdminPageRenderer */
+    private $admin_page_rendered;
+
     public function __construct(
         MailGatewayConfig $config,
         Config_LocalIncFinder $localincfinder,
-        EventManager $event_manager
+        EventManager $event_manager,
+        AdminPageRenderer $admin_page_rendered
     ) {
-        $this->config         = $config;
-        $this->localincfinder = $localincfinder;
-        $this->event_manager  = $event_manager;
+        $this->config              = $config;
+        $this->localincfinder      = $localincfinder;
+        $this->event_manager       = $event_manager;
+        $this->admin_page_rendered = $admin_page_rendered;
     }
 
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
-        $title  = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
-        $params = array(
-            'title' => $title
-        );
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $title = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
 
-        $response->header($params);
-        $renderer->renderToPage(
+        $this->admin_page_rendered->renderANoFramedPresenter(
+            $title,
+            TRACKER_TEMPLATE_DIR,
             self::$TEMPLATE,
             new MailGatewayConfigPresenter(
                 $csrf,
@@ -70,7 +73,6 @@ class MailGatewayConfigController {
                 $this->config
             )
         );
-        $response->footer($params);
     }
 
     public function update(Codendi_Request $request, Response $response) {

@@ -30,6 +30,7 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderDataAccessException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
+use Tuleap\Admin\AdminPageRenderer;
 
 class Controller {
 
@@ -48,18 +49,25 @@ class Controller {
      */
     private $color_presenter_factory;
 
+    /**
+     * @var AdminPageRenderer
+     */
+    private $admin_page_renderer;
 
     public function __construct(
         ProviderManager $provider_manager,
         IconPresenterFactory $icon_presenter_factory,
-        ColorPresenterFactory $color_presenter_factory
+        ColorPresenterFactory $color_presenter_factory,
+        AdminPageRenderer $admin_page_renderer
     ) {
         $this->provider_manager        = $provider_manager;
         $this->icon_presenter_factory  = $icon_presenter_factory;
         $this->color_presenter_factory = $color_presenter_factory;
+        $this->admin_page_renderer     = $admin_page_renderer;
     }
 
-    public function showAdministration(CSRFSynchronizerToken $csrf_token) {
+    public function showAdministration(CSRFSynchronizerToken $csrf_token)
+    {
         $providers            = $this->provider_manager->getProviders();
         $providers_presenters = array();
 
@@ -77,18 +85,13 @@ class Controller {
             $this->color_presenter_factory->getColorsPresenters(),
             $csrf_token->fetchHTMLInput()
         );
-        $renderer  = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
-        $GLOBALS['HTML']->header(
-            array(
-                'title' => $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
-                'selected_top_tab' => 'admin'
-            )
+        $this->admin_page_renderer->renderAPresenter(
+            $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
+            OPENIDCONNECTCLIENT_TEMPLATE_DIR,
+            $presenter::TEMPLATE,
+            $presenter
         );
-
-        $renderer->renderToPage('administration-providers', $presenter);
-
-        $GLOBALS['HTML']->footer(array());
     }
 
     public function createProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request) {

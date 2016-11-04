@@ -1,0 +1,19 @@
+{
+  "label": "Forms",
+  "shortcode": ".tlp-form-element",
+  "children": [
+    "properties",
+    "inputs",
+    "search",
+    "textareas",
+    "selects",
+    "select2",
+    "multi-selects",
+    "multi-select2",
+    "checkboxes",
+    "radios",
+    "prepends",
+    "appends",
+    "datetime"
+  ]
+}

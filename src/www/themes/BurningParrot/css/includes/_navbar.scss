@@ -1,0 +1,175 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@mixin nav-link($max-width) {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    transition: color 100ms linear;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    > .nav-link-icon {
+        display: none;
+        font-size: initial;
+
+        @media screen and (max-width: $max-width) {
+            display: inline;
+        }
+    }
+
+    > .nav-link-icon-dropdown {
+        margin: 0 0 0 5px;
+    }
+
+    > .nav-link-text {
+        @media screen and (max-width: $max-width) {
+            display: none;
+        }
+    }
+
+    &.only-icon {
+        > .nav-link-icon {
+            display: inline;
+        }
+
+        > .nav-link-text {
+            display: none;
+        }
+    }
+}
+
+header {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: space-between;
+    width: 100%;
+    height: $navbar-height;
+    background: $navbar-background;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+    z-index: 1000;
+}
+
+.nav-link {
+    @include nav-link(900px);
+
+    &.go-to-admin {
+        color: $tlp-ui-danger;
+    }
+
+    &:hover {
+        transition: color 100ms linear;
+        color: $tlp-theme-color;
+    }
+}
+
+// scss-lint:disable VendorPrefix
+.nav-dropdown {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    &:hover {
+        transition: color 100ms linear;
+        color: $tlp-theme-color;
+    }
+}
+
+.nav-dropdown-link {
+    @include nav-link(900px);
+}
+
+#logo {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: $sidebar-width;
+    height: $navbar-height;
+    background: $tlp-theme-color url('../images/organization_logo.png') no-repeat center center;
+}
+
+.header-container {
+    display: flex;
+}
+
+#global-nav {
+    display: flex;
+    margin: 0 0 0 $tlp-spacing / 2;
+    font-weight: 600;
+}
+
+#global-search {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+}
+
+#global-search-input {
+    width: 100%;
+    min-width: 75px;
+}
+
+#user-nav {
+    display: flex;
+    margin: 0 0 0 $tlp-spacing / 2;
+    border-left: 1px solid $tlp-ui-border-normal;
+    white-space: nowrap;
+
+    > .nav-link:first-child {
+        padding: 0 $tlp-spacing 0 $tlp-spacing / 2;
+    }
+
+    > .user-block {
+        display: flex;
+        align-items: center;
+
+        > .user-block-names {
+            display: flex;
+            flex-direction: column;
+            margin: 0 0 0 $tlp-spacing / 2;
+            letter-spacing: normal;
+            text-transform: none;
+
+            @media screen and (max-width: 1100px) {
+                display: none;
+            }
+
+            > .user-nav-display-name {
+                margin: 0 0 3px;
+                color: $tlp-theme-color;
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            > .user-nav-username {
+                font-size: 12px;
+                font-weight: 600;
+            }
+        }
+    }
+}

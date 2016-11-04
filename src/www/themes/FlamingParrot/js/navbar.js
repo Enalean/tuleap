@@ -32,7 +32,7 @@
     }
 
     $(document).ready(function() {
-        var input_filter          = $('#filter-projects');
+        var input_filter          = document.getElementById('filter-projects');
         var list_element_selector = '.projects-nav .dropdown-menu li.project';
         var filter                = new tuleap.core.listFilter();
 

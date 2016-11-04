@@ -156,7 +156,7 @@ if (!$error && $request->exist('export')) {
     //Trackers v3
     $csv_exporter->buildDatas($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), "Open artifacts");
     $csv_exporter->buildDatas($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), "Closed artifacts");
-    
+
     //Docman
     $csv_exporter->buildDatas($dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
     $csv_exporter->buildDatas($dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
@@ -192,7 +192,7 @@ if (!$error && $request->exist('export')) {
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
     $GLOBALS['HTML']->includeCalendarScripts();
-    $GLOBALS['HTML']->header(array('title' => $title));
+    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
     echo '<h1>'.$title.'</h1>';
 
     echo '<form name="form_service_usage_stats" method="get">';

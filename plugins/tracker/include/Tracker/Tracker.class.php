@@ -1486,9 +1486,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     if (isset($item['url'])) {
                         $html .= '<a href="'.$item['url'].'">';
                         if (isset($item['img']) && $item['img']) {
-                            $html .= $GLOBALS['HTML']->getAbsoluteImage($item['img'], array(
-                                    'style' => 'float:left;',
-                            ));
+                            $html .= '<img src="'. $item['img'] .'" style="float: left;" />';
                         }
                         $html .= $title;
                         $html .= '</a>';

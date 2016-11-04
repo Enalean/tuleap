@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 class Git_AdminGitoliteConfig {
 
     const ACTION = 'update_config';
@@ -38,14 +40,19 @@ class Git_AdminGitoliteConfig {
      */
     private $csrf;
 
+    /** @var AdminPageRenderer */
+    private $admin_page_renderer;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
-        Git_SystemEventManager $system_event_manager
+        Git_SystemEventManager $system_event_manager,
+        AdminPageRenderer $admin_page_renderer
     ) {
         $this->csrf                 = $csrf;
         $this->project_manager      = $project_manager;
         $this->system_event_manager = $system_event_manager;
+        $this->admin_page_renderer  = $admin_page_renderer;
     }
 
     public function process(Codendi_Request $request) {
@@ -92,15 +99,18 @@ class Git_AdminGitoliteConfig {
 
     public function display(Codendi_Request $request) {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $template_path = dirname(GIT_BASE_DIR).'/templates';
 
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,
             $this->csrf
         );
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage('admin-plugin', $admin_presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->admin_page_renderer->renderANoFramedPresenter(
+            $title,
+            $template_path,
+            'admin-plugin',
+            $admin_presenter
+        );
     }
 }

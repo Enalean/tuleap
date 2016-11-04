@@ -1,0 +1,160 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.siteadmin-sidebar {
+    display: flex;
+    position: fixed;
+    top: $navbar-height;
+    left: 0;
+    flex-direction: column;
+    width: $sidebar-expanded-width;
+    height: calc(100vh - #{$navbar-height});
+    background: $tlp-theme-sidebar-background-color;
+}
+
+.admin-sidebar-section {
+    flex: 0 0 auto;
+    padding: $tlp-spacing;
+    border-top: 1px solid lighten($tlp-theme-sidebar-background-color, 5%);
+
+    &:first-child {
+        border-top: 0;
+    }
+
+    .tlp-badge-outline {
+        margin: 0 0 0 5px;
+    }
+}
+
+.admin-sidebar-section-title {
+    margin: 0 0 $tlp-spacing / 2;
+    color: transparentize(#ffffff, .65);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+
+    > .fa-group,
+    > .fa-archive,
+    > .fa-cogs,
+    > .fa-wrench,
+    > .fa-cubes {
+        margin: 0 5px 0 0;
+    }
+}
+
+// scss-lint:disable VendorPrefix
+.tlp-search.tlp-search-small.admin-sidebar-search {
+    margin: 0 0 $tlp-spacing / 2;
+    border-color: darken($tlp-theme-sidebar-background-color, 3%);
+    background: transparentize(#ffffff, .95) url('../images/admin-sidebar-search-background.png') no-repeat 10px center;
+    color: transparentize(#ffffff, .2);
+
+    &::-webkit-input-placeholder {
+        color: transparentize(#ffffff, .8);
+    }
+
+    &::-moz-placeholder {
+        color: transparentize(#ffffff, .8);
+    }
+
+    &:-ms-input-placeholder {
+        color: transparentize(#ffffff, .8);
+        opacity: 1;
+    }
+}
+
+.admin-sidebar-section-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+%admin-sidebar-nav-item {
+    transition: color 100ms;
+    font-size: 14px;
+    line-height: 28px;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:not(.tlp-text-warning) {
+        color: $tlp-ui-border-dark;
+    }
+
+    &:hover {
+        transition: color 100ms;
+        color: $tlp-theme-color;
+    }
+}
+
+.admin-sidebar-section-nav-item {
+    @extend %admin-sidebar-nav-item;
+}
+
+.admin-sidebar-links-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-sidebar-links-nav-item {
+    @extend %admin-sidebar-nav-item;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+
+    > .fa-life-saver {
+        margin: 0 0 15px;
+        font-size: 30px;
+    }
+}
+
+.admin-sidebar-version {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 60px 0 0;
+}
+
+.admin-sidebar-version-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 $tlp-spacing;
+    transition: color 100ms;
+    color: lighten($tlp-theme-sidebar-background-color, 15%);
+    font-size: 12px;
+    cursor: default;
+
+    > .admin-sidebar-tuleap {
+        margin: 0 0 10px;
+        transition: fill 100ms;
+        fill: lighten($tlp-theme-sidebar-background-color, 15%);
+    }
+
+    &:hover {
+        color: $tlp-theme-color;
+
+        > .admin-sidebar-tuleap {
+            fill: $tlp-theme-color;
+        }
+    }
+}

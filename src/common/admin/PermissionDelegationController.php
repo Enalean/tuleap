@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Admin\AdminPageRenderer;
 
 class Admin_PermissionDelegationController {
 
@@ -85,28 +86,16 @@ class Admin_PermissionDelegationController {
     private function redirect($id = null) {
         if ($id) {
             $redirect = http_build_query(array('id' => $id));
-            $GLOBALS['Response']->redirect(self::REDIRECT_URL.'/?'.$redirect);
+            $GLOBALS['Response']->redirect(self::REDIRECT_URL.'?'.$redirect);
         }
 
-        $GLOBALS['Response']->redirect(self::REDIRECT_URL.'/');
+        $GLOBALS['Response']->redirect(self::REDIRECT_URL);
     }
 
     public function process() {
         switch ($this->request->get('action')) {
-            case 'show-add-group':
-                $this->showAddGroup();
-                break;
-
-            case 'show-edit-group':
-                $this->showEditGroup($this->request->get('id'));
-                break;
-
             case 'update-group':
                 $this->updateGroup();
-                break;
-
-            case 'show-delete-group':
-                $this->showDeleteGroup($this->request->get('id'));
                 break;
 
             case 'delete-group':
@@ -135,18 +124,6 @@ class Admin_PermissionDelegationController {
         }
     }
 
-    private function showAddGroup() {
-        $presenter = new Admin_PermissionDelegationGroupModalPresenter();
-        $this->renderer->renderToPage('group_modal', $presenter);
-    }
-
-    private function showEditGroup($group_id) {
-        $group = $this->user_group_factory->getForgeUserGroupById($group_id);
-
-        $presenter = new Admin_PermissionDelegationGroupModalPresenter($group);
-        $this->renderer->renderToPage('group_modal', $presenter);
-    }
-
     private function updateGroup() {
         $id          = $this->request->get('id');
         $name        = $this->request->get('name');
@@ -168,14 +145,7 @@ class Admin_PermissionDelegationController {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
         }
 
-        $this->index();
-    }
-
-    private function showDeleteGroup($group_id) {
-        $group = $this->user_group_factory->getForgeUserGroupById($group_id);
-
-        $presenter = new Admin_PermissionDelegationDeleteGroupModalPresenter($group);
-        $this->renderer->renderToPage('delete_group_modal', $presenter);
+        $this->redirect($id);
     }
 
     private function deleteGroup() {
@@ -201,11 +171,37 @@ class Admin_PermissionDelegationController {
         $formatted_groups        = $this->getFormattedGroups($groups,$current_id);
         $current_group_presenter = $this->getCurrentGroupPresenter($formatted_groups);
 
-        $presenter = new Admin_PermissionDelegationIndexPresenter($formatted_groups, $current_group_presenter);
+        $edit_group_presenter   = null;
+        $delete_group_presenter = null;
+        $add_perm_presenter     = null;
+        if ($current_group_presenter) {
+            $current_group = $current_group_presenter->getGroup();
 
-        $this->header();
-        $this->renderer->renderToPage('index', $presenter);
-        $this->footer();
+            $delete_group_presenter = new Admin_PermissionDelegationDeleteGroupModalPresenter($current_group);
+            $edit_group_presenter   = new Admin_PermissionDelegationGroupModalPresenter($current_group);
+
+            $unused_permissions = $this->user_group_permissions_factory->getAllUnusedForgePermissionsForForgeUserGroup(
+                $current_group
+            );
+            $add_perm_presenter = new Admin_PermissionDelegationPermissionsModalPresenter($current_group, $unused_permissions);
+        }
+
+        $presenter = new Admin_PermissionDelegationIndexPresenter(
+            $formatted_groups,
+            new Admin_PermissionDelegationGroupModalPresenter(),
+            $delete_group_presenter,
+            $edit_group_presenter,
+            $add_perm_presenter,
+            $current_group_presenter
+        );
+
+        $renderer = new AdminPageRenderer();
+        $renderer->renderANoFramedPresenter(
+            $GLOBALS['Language']->getText('admin_permission_delegation', 'page_title'),
+            $this->getTemplatesDir(),
+            'index',
+            $presenter
+        );
     }
 
     private function getCurrentGroupPresenter(array $formatted_groups) {
@@ -296,15 +292,6 @@ class Admin_PermissionDelegationController {
         }
 
         $this->redirect($id);
-    }
-
-    private function header() {
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('admin_permission_delegation', 'page_title')));
-        echo '<script type="text/javascript" src="/scripts/admin/permission_delegation.js"></script>';
-    }
-
-    private function footer() {
-        $GLOBALS['HTML']->footer(array());
     }
 
     private function getTemplatesDir() {

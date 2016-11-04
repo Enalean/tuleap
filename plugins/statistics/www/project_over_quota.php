@@ -31,7 +31,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 }
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
-$GLOBALS['HTML']->header(array('title' => $title));
+$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 
 $pqHtml = new ProjectQuotaHtml();
 $pqHtml->displayProjectsOverQuota();

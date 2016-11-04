@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 class SVN_Admin_Controller {
 
     /**
@@ -53,13 +55,13 @@ class SVN_Admin_Controller {
             true
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor'
+        $renderer = new AdminPageRenderer();
+        $renderer->renderAPresenter(
+            $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_title'),
+            ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
+            $presenter::TEMPLATE,
+            $presenter
         );
-
-        $GLOBALS['HTML']->header(array('title'=>'SVN', 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
-        $GLOBALS['HTML']->footer(array());
     }
 
     private function checkAccess(HTTPRequest $request) {

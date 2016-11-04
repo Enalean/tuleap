@@ -21,7 +21,7 @@ plugin_openidconnectclient	or_register_label	ou
 plugin_openidconnectclient	info_registration	Votre nouveau compte utilisateur sera lié avec $1. Vous devez fournir un mot de passe pour vous authentifier avec les services de $2 (CVS, SVN, Git, FTP…)
 plugin_openidconnectclient	link_registration_error	Une erreur est survenue lors de la création du lien avec le fournisseur OpenID Connect
 
-plugin_openidconnectclient_admin	title	Configuration d'OpenID Connect Client
+plugin_openidconnectclient_admin	title	OpenID Connect
 plugin_openidconnectclient_admin	title_provider_configuration	Fournisseurs OpenID Connect
 plugin_openidconnectclient_admin	https_placeholder	https://
 plugin_openidconnectclient_admin	name	Nom
@@ -35,9 +35,10 @@ plugin_openidconnectclient_admin	icon	Icône
 plugin_openidconnectclient_admin	color	Couleur
 plugin_openidconnectclient_admin	preview	Aperçu du bouton de la page de connexion
 plugin_openidconnectclient_admin	btn_create	Créer le fournisseur
+plugin_openidconnectclient_admin	btn_cancel	Annuler
 plugin_openidconnectclient_admin	btn_delete	Supprimer
 plugin_openidconnectclient_admin	btn_update	Mettre à jour le fournisseur
-plugin_openidconnectclient_admin	add_new_provider	Ajouter un nouveau fournisseur
+plugin_openidconnectclient_admin	add_new_provider	Ajouter un fournisseur
 plugin_openidconnectclient_admin	add_new_provider_error	Une erreur est survenue lors de la création du nouveau fournisseur.
 plugin_openidconnectclient_admin	add_new_provider_success	Le nouveau fournisseur $1 a été créé avec succès.
 plugin_openidconnectclient_admin	update_provider	Éditer le fournisseur
@@ -46,3 +47,7 @@ plugin_openidconnectclient_admin	update_provider_success	Le fournisseur $1 a ét
 plugin_openidconnectclient_admin	remove_provider_error	Une erreur est survenue lors de la suppression du fournisseur $1.
 plugin_openidconnectclient_admin	remove_provider_success	Le fournisseur $1 a été supprimé.
 plugin_openidconnectclient_admin	malformed_data_error	Les données que vous avec fournies ne sont pas valides.
+plugin_openidconnectclient_admin	empty_content	Vide
+plugin_openidconnectclient_admin	empty_providers_text_start	Il n'y a rien ici,
+plugin_openidconnectclient_admin	empty_providers_text_end	commencez par ajouter un fournisseur.
+plugin_openidconnectclient_admin	btn_preview	Aperçu

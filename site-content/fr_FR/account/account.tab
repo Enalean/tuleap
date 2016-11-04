@@ -151,7 +151,7 @@ account_change_timezone	choose_tz	Prière de choisir un fuseau horaire
 #-----------------------------------------------
 # Script: SF/www/scripts/check_pw.js
 #
-account_check_pw	password_robustness	Robustesse du mot de passe :
+account_check_pw	password_robustness	Robustesse du mot de passe
 account_check_pw	good	Bonne
 account_check_pw	bad	Mauvaise
 account_change_pw	user_not_found	Erreur interne : Impossible de trouver l'utilisateur dans la base de donnée.

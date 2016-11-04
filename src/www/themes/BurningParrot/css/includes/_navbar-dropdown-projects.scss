@@ -1,0 +1,103 @@
+$nav-dropdown-content-projects-content-padding: 10px 20px;
+$nav-dropdown-content-border: 1px solid #cccccc;
+
+#nav-dropdown-content-projects-filter-projects {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.nav-dropdown-content-projects-adaptable {
+    max-height: 60vh;
+    border-right: $nav-dropdown-content-border;
+    border-bottom: $nav-dropdown-content-border;
+    border-left: $nav-dropdown-content-border;
+    border-bottom-left-radius: $nav-dropdown-content-border-radius;
+    border-bottom-right-radius: $nav-dropdown-content-border-radius;
+    overflow-y: auto;
+
+    @media only screen and (min-height: 415px) {
+        max-height: 80vh;
+    }
+}
+
+.nav-dropdown-content-projects-new {
+    padding: 15px;
+    border-top: 1px solid $tlp-ui-border-light;
+    text-align: center;
+}
+
+.nav-dropdown-content-projects-filter {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+}
+
+.nav-dropdown-content-projects-lists {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
+.nav-dropdown-content-projects-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-dropdown-content-projects-list-title {
+    padding: $nav-dropdown-content-projects-content-padding;
+    background-color: transparentize($tlp-theme-color, .9);
+    color: $tlp-theme-color;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.nav-dropdown-content-projects-list-project {
+    display: flex;
+    position: relative;
+    color: $tlp-ui-dimmed;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.nav-dropdown-content-projects-list-project-name,
+.nav-dropdown-content-projects-list-project-config {
+    text-decoration: none;
+}
+
+.nav-dropdown-content-projects-list-project:hover,
+.nav-dropdown-content-projects-list-project-hover {
+    background-color: transparentize($tlp-theme-color, .9);
+}
+
+.nav-dropdown-content-projects-list-project-name {
+    padding: $nav-dropdown-content-projects-content-padding;
+    color: $tlp-ui-dimmed;
+    flex: 1;
+}
+
+.nav-dropdown-content-projects-list-project-name:hover,
+.nav-dropdown-content-projects-list-project-name-hover {
+    color: $tlp-theme-color;
+}
+
+.nav-dropdown-content-projects-list-project-name-access {
+    padding: 0 5px 0 0;
+    color: $tlp-theme-color;
+
+    &.fa-unlock {
+        opacity: .4;
+    }
+}
+
+.nav-dropdown-content-projects-list-project-config {
+    padding: $nav-dropdown-content-projects-content-padding;
+    color: #cccccc;
+    font-size: 12px;
+}
+
+.nav-dropdown-content-projects-list-project-config:hover,
+.nav-dropdown-content-projects-list-project-config-hover{
+    transform: scale(1.2);
+    transition: transform 50ms linear;
+    color: $tlp-theme-color;
+}

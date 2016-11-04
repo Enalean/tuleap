@@ -1,0 +1,395 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can retribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+$tlp-button-color: #ffffff;
+$tlp-button-box-shadow: rgba(0, 0, 0, .12);
+$tlp-button-box-shadow-timing: 75ms;
+$tlp-button-background-timing: 75ms;
+
+$tlp-button-normal-height: 38px;
+$tlp-button-normal-line-height: 34px;
+$tlp-button-normal-font-size: 16px;
+$tlp-button-normal-font-weight: 400;
+$tlp-button-normal-padding: 0 15px;
+$tlp-button-normal-radius: 4px;
+
+$tlp-button-large-height: 46px;
+$tlp-button-large-line-height: 42px;
+$tlp-button-large-font-size: 22px;
+$tlp-button-large-font-weight: 400;
+$tlp-button-large-padding: 0 25px;
+$tlp-button-large-radius: 4px;
+
+$tlp-button-small-height: 28px;
+$tlp-button-small-line-height: 24px;
+$tlp-button-small-font-size: 14px;
+$tlp-button-small-font-weight: 400;
+$tlp-button-small-padding: 0 12px;
+$tlp-button-small-radius: 3px;
+
+$tlp-button-mini-height: 22px;
+$tlp-button-mini-line-height: 18px;
+$tlp-button-mini-font-size: 12px;
+$tlp-button-mini-font-weight: 600;
+$tlp-button-mini-padding: 0 8px;
+$tlp-button-mini-radius: 3px;
+
+$tlp-button-outline-hover-color: #fafafa;
+
+$tlp-button-secondary-background: #e9e9e9;
+$tlp-button-secondary-color: #444444;
+$tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
+$tlp-button-secondary-outline-border: #aaaaaa;
+$tlp-button-secondary-outline-color: #888888;
+
+
+%tlp-button {
+    display: inline-block;
+    height: $tlp-button-normal-height;
+    padding: $tlp-button-normal-padding;
+    transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
+    border: 1px solid transparent;
+    border-radius: $tlp-button-normal-radius;
+    color: $tlp-button-color;
+    font-family: $tlp-font-family;
+    font-size: $tlp-button-normal-font-size;
+    font-weight: $tlp-button-normal-font-weight;
+    letter-spacing: 0;
+    line-height: $tlp-button-normal-line-height;
+    text-decoration: none;
+    text-transform: none;
+    white-space: nowrap;
+    box-shadow: 0 1px 1px $tlp-button-box-shadow;
+    cursor: pointer;
+    vertical-align: middle;
+
+    &:hover:not(:disabled):not(.disabled):not(:active),
+    &:active,
+    &:focus {
+        transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
+        box-shadow: none;
+    }
+
+    &:disabled,
+    &.disabled {
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    > .tlp-button-icon {
+        margin: 0 4px 0 0;
+    }
+
+    > .tlp-button-icon-right {
+        margin: 0 0 0 4px;
+    }
+}
+
+/**
+ * Types
+ */
+.tlp-button-primary {
+    @extend %tlp-button;
+
+    border-color: $tlp-theme-color;
+    background: $tlp-theme-color;
+
+    &:disabled,
+    &.disabled {
+        border-color: transparent;
+        background: transparentize($tlp-theme-color, .4);
+        color: transparentize($tlp-button-color, .4);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-theme-color, 5%);
+        background: darken($tlp-theme-color, 5%);
+    }
+
+    &:active:not(.disabled) {
+        border-color: darken($tlp-theme-color, 10%);
+        background: darken($tlp-theme-color, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-theme-color;
+        background: transparent;
+        color: $tlp-theme-color;
+
+        &:disabled,
+        &.disabled {
+            border-color: transparentize($tlp-theme-color, .4);
+            color: transparentize($tlp-theme-color, .4);
+        }
+    }
+}
+
+.tlp-button-secondary {
+    @extend %tlp-button;
+
+    border-color: $tlp-button-secondary-background;
+    background: $tlp-button-secondary-background;
+    color: $tlp-button-secondary-color;
+    box-shadow: 0 1px 1px $tlp-button-secondary-box-shadow;
+
+    &:disabled,
+    &.disabled {
+        border-color: transparent;
+        background: transparentize($tlp-button-secondary-background, .4);
+        color: transparentize($tlp-button-secondary-color, .4);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active):not(.tlp-button-outline) {
+        border-color: darken($tlp-button-secondary-background, 5%);
+        background: darken($tlp-button-secondary-background, 5%);
+    }
+
+    &:active:not(.disabled):not(.tlp-button-outline) {
+        border-color: darken($tlp-button-secondary-background, 10%);
+        background: darken($tlp-button-secondary-background, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-button-secondary-outline-border;
+        background: transparent;
+        color: $tlp-button-secondary-outline-color;
+
+        &:disabled,
+        &.disabled {
+            border-color: transparentize($tlp-button-secondary-outline-color, .4);
+            color: transparentize($tlp-button-secondary-outline-color, .4);
+        }
+    }
+}
+
+.tlp-button-info {
+    @extend %tlp-button;
+
+    border-color: $tlp-ui-info;
+    background: $tlp-ui-info;
+
+    &:disabled,
+    &.disabled {
+        border-color: transparent;
+        background: transparentize($tlp-ui-info, .4);
+        color: transparentize($tlp-button-color, .4);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-info, 5%);
+        background: darken($tlp-ui-info, 5%);
+    }
+
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-info, 10%);
+        background: darken($tlp-ui-info, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-info;
+        background: transparent;
+        color: $tlp-ui-info;
+
+        &:disabled,
+        &.disabled {
+            border-color: transparentize($tlp-ui-info, .4);
+            color: transparentize($tlp-ui-info, .4);
+        }
+    }
+}
+
+.tlp-button-success {
+    @extend %tlp-button;
+
+    border-color: $tlp-ui-success;
+    background: $tlp-ui-success;
+
+    &:disabled,
+    &.disabled {
+        border-color: transparent;
+        background: transparentize($tlp-ui-success, .4);
+        color: transparentize($tlp-button-color, .4);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-success, 5%);
+        background: darken($tlp-ui-success, 5%);
+    }
+
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-success, 10%);
+        background: darken($tlp-ui-success, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-success;
+        background: transparent;
+        color: $tlp-ui-success;
+
+        &:disabled,
+        &.disabled {
+            border-color: transparentize($tlp-ui-success, .4);
+            color: transparentize($tlp-ui-success, .4);
+        }
+    }
+}
+
+.tlp-button-warning {
+    @extend %tlp-button;
+
+    border-color: $tlp-ui-warning;
+    background: $tlp-ui-warning;
+
+    &:disabled,
+    &.disabled {
+        border-color: transparent;
+        background: transparentize($tlp-ui-warning, .4);
+        color: transparentize($tlp-button-color, .4);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-warning, 5%);
+        background: darken($tlp-ui-warning, 5%);
+    }
+
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-warning, 10%);
+        background: darken($tlp-ui-warning, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-warning;
+        background: transparent;
+        color: $tlp-ui-warning;
+
+        &:disabled,
+        &.disabled {
+            border-color: transparentize($tlp-ui-warning, .4);
+            color: transparentize($tlp-ui-warning, .4);
+        }
+    }
+}
+
+.tlp-button-danger {
+    @extend %tlp-button;
+
+    border-color: $tlp-ui-danger;
+    background: $tlp-ui-danger;
+
+    &:disabled,
+    &.disabled {
+        border-color: transparent;
+        background: transparentize($tlp-ui-danger, .4);
+        color: transparentize($tlp-button-color, .4);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        border-color: darken($tlp-ui-danger, 5%);
+        background: darken($tlp-ui-danger, 5%);
+    }
+
+    &:active:not(.disabled) {
+        border-color: darken($tlp-ui-danger, 10%);
+        background: darken($tlp-ui-danger, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-danger;
+        background: transparent;
+        color: $tlp-ui-danger;
+
+        &:disabled,
+        &.disabled {
+            border-color: transparentize($tlp-ui-danger, .4);
+            color: transparentize($tlp-ui-danger, .4);
+        }
+    }
+}
+
+/**
+ * Sizes
+ */
+.tlp-button-large {
+    height: $tlp-button-large-height;
+    padding: $tlp-button-large-padding;
+    border-radius: $tlp-button-large-radius;
+    font-size: $tlp-button-large-font-size;
+    font-weight: $tlp-button-large-font-weight;
+    line-height: $tlp-button-large-line-height;
+}
+
+.tlp-button-small {
+    height: $tlp-button-small-height;
+    padding: $tlp-button-small-padding;
+    border-radius: $tlp-button-small-radius;
+    font-size: $tlp-button-small-font-size;
+    font-weight: $tlp-button-small-font-weight;
+    line-height: $tlp-button-small-line-height;
+}
+
+.tlp-button-mini {
+    height: $tlp-button-mini-height;
+    padding: $tlp-button-mini-padding;
+    border-radius: $tlp-button-mini-radius;
+    font-size: $tlp-button-mini-font-size;
+    font-weight: $tlp-button-mini-font-weight;
+    line-height: $tlp-button-mini-line-height;
+}
+
+/**
+ * Outline
+ */
+.tlp-button-outline {
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: $tlp-button-outline-hover-color;
+    }
+
+    &:active:not(.disabled) {
+        background: darken($tlp-button-outline-hover-color, 5%);
+    }
+}
+
+/**
+ * Wide
+ */
+.tlp-button-wide {
+    width: 100%;
+    text-align: center;
+}
+
+/**
+ * Overrides for a.tlp-button* so they have the good heights
+ */
+a[class*="tlp-button"] {
+    height: auto;
+    line-height: $tlp-button-normal-height - 2px;
+}
+// scss-lint:disable QualifyingElement
+a.tlp-button-large[class*="tlp-button"] {
+    line-height: $tlp-button-large-height - 2px;
+}
+// scss-lint:disable QualifyingElement
+a.tlp-button-small[class*="tlp-button"] {
+    line-height: $tlp-button-small-height - 2px;
+}
+// scss-lint:disable QualifyingElement
+a.tlp-button-mini[class*="tlp-button"] {
+    line-height: $tlp-button-mini-height - 2px;
+}

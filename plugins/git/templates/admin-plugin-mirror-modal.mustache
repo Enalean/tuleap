@@ -1,0 +1,42 @@
+<form method="POST" action="?pane=mirrors_admin&action=add-mirror">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div id="modal-add-mirror" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="modal-big-content-label">
+                <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_mirror }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="name-required">{{ identifier }} <i class="fa fa-asterisk"></i></label>
+                <input id="name-required" class="tlp-input" name="new_mirror_name" type="text" placeholder="location" size="25" required/>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="url-required">{{ url_label }} <i class="fa fa-asterisk"></i></label>
+                <input id="url-required" class="tlp-input" name="new_mirror_url" type="text" placeholder="tuleap.net" size="25" required/>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="hostname">{{ hostname_label }}</label>
+                <input id="hostname" class="tlp-input" name="new_mirror_hostname" type="text" placeholder="sfo-mirror" size="25" />
+                <p class="tlp-text-info">{{ reserved_hostnames_help }}</p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="ssh-key-required">{{ ssh_key_label }} <i class="fa fa-asterisk"></i></label>
+                <textarea id="ssh-key-required" class="tlp-textarea" name="new_mirror_key" placeholder="Key..." required></textarea>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="password-required">{{ pwd_label }} <i class="fa fa-asterisk"></i></label>
+                <input id="password-required" class="tlp-input" name="new_mirror_pwd" type="password" placeholder="************" size="40" required/>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_cancel }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action"><i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}</button>
+        </div>
+    </div>
+</form>

@@ -1,14 +1,9 @@
-<form class="form-horizontal" action="/plugins/pluginsadministration/?view=properties&plugin_id={{ plugin_id }}" method="POST">
-    <fieldset>
-        <legend>Please choose your configuration</legend>
-        <div class="control-group">
-            <input type="radio" value="{{ open_ldap_value }}" name="ldap_type" checked="checked"> {{ open_ldap_value }}
-        </div>
-        <div class="control-group">
-            <input type="radio" value="{{ active_directory_value }}" name="ldap_type"> {{ active_directory_value }}
-        </div>
-        <div class="control-group">
-            <button type="submit" class="btn">Submit</button>
-        </div>
-    </fieldset>
-</form>
+<div class="tlp-form-element">
+    <label class="tlp-label">Please choose your configuration</label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="ldap_type" value="{{ open_ldap_value }}" checked> {{ open_ldap_value }}
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="ldap_type" value="{{ active_directory_value }}"> {{ active_directory_value }}
+    </label>
+</div>

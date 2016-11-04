@@ -50,6 +50,11 @@ class Admin_PermissionDelegationGroupPresenter {
      */
     private $users;
 
+    /**
+     * @var User_ForgeUGroup
+     */
+    private $group;
+
 
     public function __construct(User_ForgeUGroup $group, array $permissions, $users) {
         $this->id          = $group->getId();
@@ -58,6 +63,12 @@ class Admin_PermissionDelegationGroupPresenter {
         $this->is_current  = false;
         $this->permissions = $permissions;
         $this->users       = $users;
+        $this->group       = $group;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
     }
 
     public function id() {
@@ -70,6 +81,10 @@ class Admin_PermissionDelegationGroupPresenter {
 
     public function description() {
         return $this->description;
+    }
+
+    public function description_label() {
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_description');
     }
 
     public function has_description() {

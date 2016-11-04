@@ -49,12 +49,14 @@ global	btn_preview	Preview
 global	btn_close	Close
 global	btn_reset	Reset
 global	btn_edit	Edit
+global	btn_restrict	Restrict
+global	search_title	Search
 global	save_change	Save your change
 global	reset	reset
 global	delete	Delete
 global	add	Add
 global	total	Total
-global	warning!	Warning!
+global	warning	Warning!
 global	yes	Yes
 global	no	No
 global	on	On
@@ -67,6 +69,7 @@ global	begin	Begin
 global	end	End
 global	next	Next
 global	prev	Previous
+global	of	of
 global	printer_version	Printer version
 global	error	Error
 global	help	Help

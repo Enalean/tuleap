@@ -20,60 +20,88 @@
 !(function ($) {
 
     function formatOptionIcon(option) {
-        return '<i class="icon-' + option.id + '"></i>';
+        return $('<i class="fa fa-' + option.id + '"></i>');
     }
 
-    function initIconSelector() {
-        $(".provider-icon-selector").select2({
-            minimumResultsForSearch: -1,
-            formatResult           : formatOptionIcon,
-            formatSelection        : formatOptionIcon,
-            containerCssClass      : 'provider-select2-select',
-            dropdownCssClass       : 'provider-select2-dropdown'
+    function initIconSelectors() {
+        var icon_select_elements = document.querySelectorAll('.provider-icon-selector');
+        [].forEach.call(icon_select_elements, function(icon_select_element) {
+            tlp.select2(icon_select_element, {
+                containerCssClass      : 'provider-icon-container',
+                dropdownCssClass       : 'provider-icon-results',
+                minimumResultsForSearch: Infinity,
+                templateResult         : formatOptionIcon,
+                templateSelection      : formatOptionIcon
+            });
         });
     }
 
     function formatOptionColor(option) {
-        return '<span class="' + option.id + '"></span>';
+        return $('<span class="' + option.id + '"></span>');
     }
 
-    function initColorSelector() {
-        $(".provider-color-selector").select2({
-            minimumResultsForSearch: -1,
-            formatResult           : formatOptionColor,
-            formatSelection        : formatOptionColor,
-            containerCssClass      : 'provider-select2-select',
-            dropdownCssClass       : 'provider-select2-dropdown'
+    function initColorSelectors() {
+        var color_select_elements = document.querySelectorAll('.provider-color-selector');
+        [].forEach.call(color_select_elements, function(color_select_element) {
+            tlp.select2(color_select_element, {
+                containerCssClass      : 'provider-color-container',
+                dropdownCssClass       : 'provider-color-results',
+                minimumResultsForSearch: Infinity,
+                templateResult         : formatOptionColor,
+                templateSelection      : formatOptionColor
+            });
         });
     }
 
     function syncPreviewButton() {
         $('.provider-name').keyup(function() {
-            $(this).parents('.modal-body').find('.provider-button-preview > a > span').html($(this).val());
+            $(this).parents('.tlp-modal-body').find('#provider-admin-modal-provider-button-preview > button > span').html($(this).val());
         });
 
-        $('.provider-icon-selector').change(function(event) {
-            var icon = $(this).parents('.modal-body').find('.provider-button-preview > a > i');
+        $('.provider-icon-selector').change(function() {
+            var icon = $(this).parents('.tlp-modal-body').find('#provider-admin-modal-provider-button-preview > button > i');
             icon.removeClass();
-            icon.addClass('icon-' + event.val);
+            icon.addClass('tlp-button-icon fa fa-' + $(this).val());
         });
 
-        $('.provider-color-selector').change(function(event) {
-            var button = $(this).parents('.modal-body').find('.provider-button-preview > a');
+        $('.provider-color-selector').change(function() {
+            var button = $(this).parents('.tlp-modal-body').find('#provider-admin-modal-provider-button-preview > button');
             button.removeClass();
-            button.addClass('btn btn-large provider-button');
+            button.addClass('tlp-button-primary tlp-button-large');
 
-            if (event.val) {
-                button.addClass('btn-primary ' + event.val);
+            if ($(this).val()) {
+                button.addClass($(this).val());
             }
         });
     }
 
+    function initCreationModal() {
+        var modal_providers_config_element = document.getElementById('siteadmin-config-providers-modal-create');
+        var modal_providers_config         = tlp.modal(modal_providers_config_element);
+
+        document.querySelector('.add-provider-button').addEventListener('click', function() {
+            modal_providers_config.toggle();
+        });
+    }
+
+    function initUpdateModals() {
+        var update_modals_update_buttons = document.querySelectorAll('.provider-action-edit-button');
+        [].forEach.call(update_modals_update_buttons, function(edit_button) {
+            var dom_provider_modal_edit  = document.getElementById(edit_button.getAttribute('data-edit-modal-id'));
+            var tlp_providers_modal_edit = tlp.modal(dom_provider_modal_edit);
+
+            edit_button.addEventListener('click', function() {
+                tlp_providers_modal_edit.toggle();
+            });
+        });
+    }
+
     $(document).ready(function() {
-        initIconSelector();
-        initColorSelector();
+        initIconSelectors();
+        initColorSelectors();
 
         syncPreviewButton();
+        initCreationModal();
+        initUpdateModals();
     });
-
 })(window.jQuery);

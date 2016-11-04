@@ -1,0 +1,94 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#siteadmin-homepage-container {
+    display: flex;
+}
+
+.siteadmin-homepage-column {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    margin: 0 $tlp-spacing 0 0;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    .tlp-pane {
+        width: 100%;
+        margin: 0 $tlp-spacing 0 0;
+
+        &:last-child {
+            margin: 0;
+        }
+
+        > .tlp-pane-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+}
+
+.siteadmin-homepage-row {
+    display: flex;
+    flex: 1 1 auto;
+    margin: 0 0 $tlp-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.siteadmin-homepage-validation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    margin: 0 0 ($tlp-spacing * 2);
+}
+
+.siteadmin-homepage-users-icon,
+.siteadmin-homepage-projects-icon {
+    fill: transparentize($tlp-theme-color, .8);
+}
+
+.siteadmin-homepage-validation-count {
+    margin: 0 0 0 $tlp-spacing;
+    font-size: 100px;
+    font-weight: 300;
+
+    &:not(.tlp-text-warning) {
+        color: transparentize($tlp-theme-color, .8);
+    }
+}
+
+.siteadmin-homepage-no-validation {
+    color: transparentize($tlp-theme-color, .6);
+    text-align: center;
+}
+
+.siteadmin-homepage-stat-badge {
+    margin: 0 5px 5px 0;
+}
+
+.siteadmin-homepage-plugins-list {
+    flex: 1 1 auto;
+}

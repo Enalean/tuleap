@@ -1,8 +1,8 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * PluginsAdministration
  */
@@ -11,29 +11,30 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('PluginsAdministrationViews.class.php');
 require_once('PluginsAdministrationActions.class.php');
 class PluginsAdministration extends Controler {
-    
+
     function PluginsAdministration() {
         session_require(array('group'=>'1','admin_flags'=>'A'));
     }
-    
+
     function request() {
         $request =& HTTPRequest::instance();
-        
+
         if ($request->exist('view')) {
             switch ($request->get('view')) {
+                case 'available':
                 case 'properties':
                 case 'restrict':
                 case 'ajax_projects':
                     $this->view = $request->get('view');
                     break;
                 default:
-                    $this->view = 'browse';
+                    $this->view = 'installed';
                     break;
             }
         } else {
-            $this->view = 'browse';
+            $this->view = 'installed';
         }
-        
+
         if ($request->exist('action')) {
             switch ($request->get('action')) {
                 case 'available':
@@ -43,22 +44,13 @@ class PluginsAdministration extends Controler {
                     $this->action = 'unavailable';
                     break;
                 case 'install':
-                    if ($request->exist('confirm')) { //The user confirm installation
+                    if ($request->exist('confirm')) {
                         $this->action = 'install';
-                        $this->view   = 'postInstall';
-                    } else {
-                        if (!$request->exist('cancel')) { //The user has not see warning yet
-                            $this->view   = 'confirmInstall';
-                        }
                     }
                     break;
                 case 'uninstall':
-                    if ($request->exist('confirm')) { //The user confirm uninstallation
+                    if ($request->exist('confirm')) {
                         $this->action = 'uninstall';
-                    } else {
-                        if (!$request->exist('cancel')) { //The user has not see warning yet
-                            $this->view   = 'confirmUninstall';
-                        }
                     }
                     break;
 

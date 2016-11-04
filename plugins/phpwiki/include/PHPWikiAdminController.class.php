@@ -1,4 +1,6 @@
 <?php
+use Tuleap\Admin\AdminPageRenderer;
+
 /**
  * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
@@ -32,28 +34,36 @@ class PHPWikiAdminController {
      * @var SystemEventManager
      */
     private $system_event_manager;
+    /**
+     * @var AdminPageRenderer
+     */
+    private $admin_page_renderer;
 
-    public function __construct() {
-        $this->project_manager     = ProjectManager::instance();
-        $this->wiki_migrator       = new PHPWikiAdminMigrator(
+    public function __construct(AdminPageRenderer $admin_page_renderer)
+    {
+        $this->project_manager      = ProjectManager::instance();
+        $this->wiki_migrator        = new PHPWikiAdminMigrator(
             new PHPWikiAdminMigratorDao(),
             $this->project_manager
         );
         $this->system_event_manager = SystemEventManager::instance();
+        $this->admin_page_renderer  = $admin_page_renderer;
     }
 
-    public function getAdminIndex(HTTPRequest $request) {
+    public function getAdminIndex(HTTPRequest $request)
+    {
         $this->checkAccess($request);
 
         $presenter = new PHPWikiAdminAllowedProjectsPresenter(
             $this->wiki_migrator->searchProjectsUsingPlugin()
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
-
-        $GLOBALS['HTML']->header(array('title'=>'PHPWiki', 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->admin_page_renderer->renderAPresenter(
+            'PHPWiki',
+            ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
+            $presenter::TEMPLATE,
+            $presenter
+        );
     }
 
     public function updateProject(HTTPRequest $request) {

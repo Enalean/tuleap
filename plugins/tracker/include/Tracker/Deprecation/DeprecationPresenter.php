@@ -36,13 +36,15 @@ class DeprecationPresenter
 
     public function __construct($title, array $deprecated_fields)
     {
-        $this->sections                = new SectionsPresenter();
-        $this->title                   = $title;
-        $this->deprecated_fields       = $deprecated_fields;
-        $this->warning_deprecation     = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'warning_deprecation');
-        $this->project_title           = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_project');
-        $this->tracker_title           = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_tracker');
-        $this->incremented_files_title = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_field');
+        $this->sections                        = new SectionsPresenter();
+        $this->title                           = $title;
+        $this->deprecated_fields               = $deprecated_fields;
+        $this->deprecated_computed_fields_pane = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'deprecated_computed_fields_pane');
+        $this->warning_deprecation             = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'warning_deprecation');
+        $this->project_title                   = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_project');
+        $this->tracker_title                   = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_tracker');
+        $this->incremented_files_title         = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_field');
+        $this->no_deprecated_fields            = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'no_deprecated_fields');
     }
 
     public function getBaseUrl()
@@ -74,5 +76,10 @@ class DeprecationPresenter
         }
 
         return $deprecated_fields;
+    }
+
+    public function hasDeprecatedFields()
+    {
+        return count($this->deprecated_fields) > 0;
     }
 }

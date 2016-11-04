@@ -3,7 +3,9 @@
 <p>{{ select_repositories }}</p>
 
 <form action="{{ form_action }}" method="POST">
-    {{{ csrf_input }}}
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
 
     <table class="table table-striped table-bordered git-admin-mass-update-table">
         <thead>

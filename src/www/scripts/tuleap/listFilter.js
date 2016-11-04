@@ -25,18 +25,7 @@
 var tuleap  = tuleap || { };
 tuleap.core = tuleap.core || { };
 
-(function($) {
-    /**
-     * @see http://css-tricks.com/snippets/jquery/make-jquery-contains-case-insensitive/
-     */
-    (function addCaseInsensitiveContainsSelector(){
-        // NEW selector
-        $.expr[':'].caseInsensitiveContains = function(a, i, m) {
-          return $(a).text().toUpperCase()
-              .indexOf(m[3].toUpperCase()) >= 0;
-        };
-    })();
-
+(function() {
     tuleap.core.listFilter = function() {
 
         var esc_keycode = 27;
@@ -45,41 +34,65 @@ tuleap.core = tuleap.core || { };
         var excluded_element;
 
         var filterProjects = function (value) {
+            var matching_elements = document.querySelectorAll(list_element);
 
-            $(list_element + ':not(:caseInsensitiveContains(' + value + ')):not(' + excluded_element + ')').hide();
-            $(list_element +':caseInsensitiveContains(' + value + '):not(' + excluded_element +')').show();
-        };
-
-        var clearFilterProjects = function () {
-            $(filter_element).val('');
-            filterProjects('');
-        };
-
-        var bindClickEventOnFilter = function ($filter_element) {
-            $filter_element.click(function(event) {
-                event.stopPropagation();
-            });
-        };
-
-        var bindKeyUpEventOnFilter = function($filter_element) {
-            $filter_element.keyup(function(event) {
-                if (event.keyCode === esc_keycode) {
-                    clearFilterProjects();
+            [].forEach.call(matching_elements, function(element) {
+                if (caseInsensitiveContains(getChildTagAWithText(element), value)) {
+                    element.style.display = 'inherit';
                 } else {
-                    filterProjects($(this).val());
+                    element.style.display = 'none';
                 }
             });
         };
 
-        var init = function($filter_element, list_element_selector, excluded_element_selector) {
-            filter_element   = $filter_element;
+        var getChildTagAWithText = function(parent) {
+            var elements_tag_a = parent.getElementsByTagName('a');
+            for (var i = 0, n = elements_tag_a.length; i < n; i++) {
+                if (elements_tag_a[i].textContent) {
+                    return elements_tag_a[i].textContent;
+                }
+            }
+        };
+
+        var caseInsensitiveContains = function(element, value) {
+            return element.toUpperCase()
+                    .indexOf(value.toUpperCase()) >= 0;
+        };
+
+        var clearFilterProjects = function () {
+            filter_element.value = '';
+            filterProjects('');
+        };
+
+        var bindClickEventOnFilter = function (filter_element_selected) {
+            if (filter_element_selected) {
+                filter_element_selected.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                });
+            }
+        };
+
+        var bindKeyUpEventOnFilter = function(filter_element_selected) {
+            if (filter_element_selected) {
+                filter_element_selected.addEventListener('keyup', function (event) {
+                    if (event.keyCode === esc_keycode) {
+                        clearFilterProjects();
+                    } else {
+                        filterProjects(filter_element_selected.value);
+                    }
+                });
+            }
+        };
+
+        var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
+            filter_element   = filter_element_selected;
             list_element     = list_element_selector;
             excluded_element = excluded_element_selector;
 
-            bindClickEventOnFilter($filter_element);
-            bindKeyUpEventOnFilter($filter_element);
+            bindClickEventOnFilter(filter_element_selected);
+            bindKeyUpEventOnFilter(filter_element_selected);
         };
 
         return {init: init};
     };
-})(window.jQuery);
+})();

@@ -1,44 +1,56 @@
-<h2>{{ title }}</h2>
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
-{{# sections }}
-    <ul class="nav nav-tabs">
-        <li>
-            <a href="{{ emailgateway_url }}">{{ emailgateway }}</a>
-        </li>
-        <li>
-            <a href="{{ natures_url }}">{{ natures }}</a>
-        </li>
-        <li class="active">
-            <a href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
-        </li>
-    </ul>
-{{/ sections }}
+    {{# sections }}
+        <nav class="tlp-tabs">
+            <a class="tlp-tab" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+            <a class="tlp-tab" href="{{ natures_url }}">{{ natures }}</a>
+            <a class="tlp-tab tlp-tab-active" href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
+        </nav>
+    {{/ sections }}
 
-<p class="alert alert-warning">
-{{ warning_deprecation }}
-</p>
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-list tlp-pane-title-icon"></i> {{ deprecated_computed_fields_pane }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-alert-warning">{{ warning_deprecation }}</div>
 
-<table class="tracker-deprecated-fields table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>{{ project_title }}</th>
-            <th>{{ tracker_title }}</th>
-            <th>{{ incremented_files_title }}</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{# getDeprecatedFields }}
-        <tr>
-            <td>
-                <a href="{{ getBaseUrl }}/project/?group_id={{ project_id }}">{{ project_name }}</a>
-            </td>
-            <td>
-                <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ project_id }}&tracker={{ tracker_id }}">{{ tracker_name }}</a>
-            </td>
-            <td>
-                <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ project_id }}&tracker={{ tracker_id }}&func=admin-formElements">{{ field_name }}</a>
-            </td>
-        </tr>
-    {{/ getDeprecatedFields }}
-    </tbody>
-</table>
+                    <table class="tlp-table tracker-deprecated-fields">
+                        <thead>
+                            <tr>
+                                <th>{{ project_title }}</th>
+                                <th>{{ tracker_title }}</th>
+                                <th>{{ incremented_files_title }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{^ hasDeprecatedFields }}
+                        <tr>
+                            <td colspan="3" class="tlp-table-cell-empty">
+                                {{ no_deprecated_fields }}
+                            </td>
+                        </tr>
+                        {{/ hasDeprecatedFields }}
+                        {{# getDeprecatedFields }}
+                            <tr>
+                                <td>
+                                    <a href="{{ getBaseUrl }}/project/?group_id={{ project_id }}">{{ project_name }}</a>
+                                </td>
+                                <td>
+                                    <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ project_id }}&tracker={{ tracker_id }}">{{ tracker_name }}</a>
+                                </td>
+                                <td>
+                                    <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ project_id }}&tracker={{ tracker_id }}&func=admin-formElements">{{ field_name }}</a>
+                                </td>
+                            </tr>
+                        {{/ getDeprecatedFields }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

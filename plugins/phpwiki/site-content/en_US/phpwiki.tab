@@ -7,13 +7,14 @@ plugin_phpwiki	reference_phpwikiversion_desc_key	Wiki version
 
 # Migration
 plugin_phpwiki	allowed_project_back_link_title	Back to site admin
-plugin_phpwiki	allowed_project_title	Migration to the PHPWiki plugin
-plugin_phpwiki	allowed_project_information	Please note that the migration to the PHPWiki plugin is a <strong>one-way process</strong> there is <strong>no way to revert</strong> this process.<br />This progressive migration was meant to mitigate the risks of errors during upgrade process.<br /><strong>Please ask the upgraded projects if they noticed any troubles and to report related issues.</strong>
+plugin_phpwiki	allowed_project_title	PHPWiki
+plugin_phpwiki	allowed_project_subtitle	Projects that use PhpWiki plugin
+plugin_phpwiki	allowed_project_information	Please note that the migration to the PHPWiki plugin is a one-way process there is no way to revert this process. This progressive migration was meant to mitigate the risks of errors during upgrade process. Please ask the upgraded projects if they noticed any troubles and to report related issues.
 plugin_phpwiki	allowed_project_list	List of projects already using the plugin
 plugin_phpwiki	allowed_project_list_allow_placeholder	Project name
 plugin_phpwiki	allowed_project_list_allow_project	Migrate
-plugin_phpwiki	allowed_project_list_filter_placeholder	Filter on project ID or name
-plugin_phpwiki	allowed_project_list_id	ID
+plugin_phpwiki	allowed_project_list_filter_placeholder	Project id or project name
+plugin_phpwiki	allowed_project_list_id	Id
 plugin_phpwiki	allowed_project_list_name	Name
 plugin_phpwiki	allowed_project_list_empty	Currently, there are no projects that uses the PHPWiki plugin.
 plugin_phpwiki	allowed_project_allow_project	Submitted project will be converted to the PHPWiki plugin (check System Events).

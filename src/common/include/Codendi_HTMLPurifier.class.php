@@ -36,15 +36,7 @@
  * </pre>
  */
 
-define('CODENDI_PURIFIER_CONVERT_HTML', 0);
-define('CODENDI_PURIFIER_STRIP_HTML', 1);
-define('CODENDI_PURIFIER_BASIC',      5);
-define('CODENDI_PURIFIER_BASIC_NOBR',      6);
-define('CODENDI_PURIFIER_LIGHT',     10);
-define('CODENDI_PURIFIER_FULL',      15);
-define('CODENDI_PURIFIER_JS_QUOTE', 20);
-define('CODENDI_PURIFIER_JS_DQUOTE', 25);
-define('CODENDI_PURIFIER_DISABLED', 100);
+require_once('common/constants.php');
 
 class Codendi_HTMLPurifier {
     /**

@@ -1,0 +1,13 @@
+// scss-lint:disable QualifyingElement
+[data-scrollbar].sticky .scrollbar-track,
+[scrollbar].sticky .scrollbar-track,
+scrollbar.sticky .scrollbar-track {
+    background: none;
+
+    .scrollbar-thumb {
+        left: 2px;
+        width: 6px;
+        border-radius: 0;
+        background: transparentize(#ffffff, .9);
+    }
+}

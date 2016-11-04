@@ -4,14 +4,14 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
+$HTML->header(array('title'=>$Language->getText('admin_massmail','title'), 'main_classes' => array('tlp-framed')));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/MassMail.js');
 
 // get numbers of users for each mailing
@@ -31,9 +31,9 @@ $res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WH
 	."user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1");
 $count_sfadmin = db_result($res_count, 0, null);
 
-print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>
+print '<h1>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h1>
 
-<P>'.$Language->getText('admin_massmail','warning').'
+<p class="tlp-text-warning">'.$Language->getText('admin_massmail', 'warning').'</p>
 
  <FORM ID="massmail_form" NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
 <label class="radio" name="'.$count_comm.'"><INPUT type="radio" name="destination" value="comm">
@@ -78,7 +78,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 <SPAN ID="preview_button"></SPAN>
 <DIV id="preview_result"></DIV>
 </P>
-<P><INPUT type="submit" name="Submit" class="btn btn-primary" value="'.$Language->getText('global','btn_submit').'">
+<P><INPUT type="submit" name="Submit" class="tlp-button-primary" value="'.$Language->getText('global','btn_submit').'">
 </TD></TR></TABLE>
 </FORM>
 ';
@@ -101,12 +101,12 @@ document.observe('dom:loaded', function() {
 
             var editor = new tuleap.textarea.RTE(mail_message_container, options);
 
-            // Building input for the submission of preview adresses 
+            // Building input for the submission of preview adresses
             var button = Builder.node('input', {'id'      : 'preview_submit',
                                                 'name'    : 'Submit',
                                                 'type'    : 'button',
                                                 'value'   : 'Preview'});
-            button.addClassName('btn');
+            button.addClassName('tlp-button-secondary');
             $('preview_button').appendChild(button);
 
             //launching initialize function on MassMail instance will observe Events on the  input built above

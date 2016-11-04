@@ -21,9 +21,9 @@
 class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresenters_AdminPresenter {
 
     /**
-     * @var string
+     * @var CSRFSynchronizerToken
      */
-    public $csrf_input;
+    public $csrf_token;
 
     /**
      * @var array
@@ -35,7 +35,7 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
         $are_mirrors_defined = true;
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->csrf_input                             = $csrf->fetchHTMLInput();
+        $this->csrf_token                             = $csrf;
         $this->manage_mass_update_select_repositories = true;
         $this->repositories                           = $repositories;
     }

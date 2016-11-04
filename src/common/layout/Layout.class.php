@@ -23,8 +23,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
-
 /**
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -32,19 +30,8 @@ use Tuleap\Layout\IncludeAssets;
  * Geoffrey Herteg, August 29, 2000
  *
  */
-abstract class Layout extends Response {
-
-
-    /**
-     * The root location for the current theme : '/themes/Tuleap/'
-     */
-    public $root;
-
-    /**
-     * The root location for images : '/themes/Tuleap/images/'
-     */
-    public $imgroot;
-
+abstract class Layout extends Tuleap\Layout\BaseLayout
+{
     /**
      * Html purifier
      */
@@ -80,7 +67,6 @@ abstract class Layout extends Response {
     private $bgpri = array();
 
     var $feeds;
-    protected $javascriptFooter;
 
     protected $breadcrumbs;
     protected $force_breadcrumbs = false;
@@ -101,23 +87,17 @@ abstract class Layout extends Response {
     protected $stylesheets = array();
 
     /**
-     * @var IncludeAssets
-     */
-    protected $include_asset;
-
-    /**
      * Constuctor
      * @param string $root the root of the theme : '/themes/Tuleap/'
      */
     public function __construct($root) {
         // Constructor for parent class...
-        parent::Response();
+        parent::__construct($root);
 
         $this->feeds       = array();
         $this->javascript  = array();
         $this->breadcrumbs = array();
         $this->toolbar     = array();
-        $this->javascriptFooter = array();
 
         /*
             Set up the priority color array one time only
@@ -132,11 +112,7 @@ abstract class Layout extends Response {
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
 
-        $this->root     = $root;
-        $this->imgroot  = $root . '/images/';
         $this->purifier = Codendi_HTMLPurifier::instance();
-
-        $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
     }
 
     function getChartColors() {
@@ -709,42 +685,6 @@ abstract class Layout extends Response {
         }
     }
 
-    public function isLabFeature() {
-        return false;
-    }
-
-    function redirect($url) {
-       $is_anon = session_hash() ? false : true;
-       $fb = $GLOBALS['feedback'] || count($this->_feedback->logs);
-       if (($is_anon && (headers_sent() || $fb)) || (!$is_anon && headers_sent())) {
-            $this->header(array('title' => 'Redirection'));
-            echo '<p>'. $GLOBALS['Language']->getText('global', 'return_to', array($url)) .'</p>';
-            echo '<script type="text/javascript">';
-            if ($fb) {
-                echo 'setTimeout(function() {';
-            }
-            echo " location.href = '". $url ."';";
-            if ($fb) {
-                echo '}, 5000);';
-            }
-            echo '</script>';
-            $this->footer(array());
-        } else {
-            if (!$is_anon && !headers_sent() && $fb) {
-                $this->_serializeFeedback();
-            }
-            // Protect against CRLF injections,
-            // This seems to be fixed in php 4.4.2 and 5.1.2 according to
-            // http://php.net/header
-            if(strpos($url, "\n")) {
-                trigger_error('HTTP header injection detected. Abort.', E_USER_ERROR);
-            } else {
-                header('Location: '. $url);
-            }
-        }
-        exit();
-    }
-
     function iframe($url, $html_options = array()) {
         $html = '';
         $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
@@ -854,39 +794,6 @@ abstract class Layout extends Response {
     }
 
     /**
-     * Add a Javascript file path that will be included at the end of the HTML page.
-     *
-     * The file will be included in the generated page just before the </body>
-     * markup.
-     * Note: the order of call of include*Javascript method is very important.
-     * see includeJavascriptFile for more details
-     *
-     * @see Layout::includeJavascriptFile
-     * @param String $file Path (relative to URL root) the the javascript file
-     *
-     * @return void
-     */
-    function includeFooterJavascriptFile($file) {
-        $this->javascriptFooter[] = array('file' => $file);
-    }
-
-    /**
-     * Add a Javascript piece of code to execute in the footer of the page.
-     *
-     * Codendi will append and execute the code just before </body> markup.
-     * Note: the order of call of include*Javascript method is very important.
-     * see includeJavascriptFile for more details
-     *
-     * @see Layout::includeJavascriptFile
-     * @param String $snippet Javascript code.
-     *
-     * @return void
-     */
-    function includeFooterJavascriptSnippet($snippet) {
-        $this->javascriptFooter[] = array('snippet' => $snippet);
-    }
-
-    /**
      * @return PFUser
      */
     protected function getUser() {
@@ -956,6 +863,28 @@ abstract class Layout extends Response {
             $feedback = '<H3><span class="feedback">'.$GLOBALS['feedback'].'</span></H3>';
         }
         return $feedback;
+    }
+
+    public function displayStaticWidget(Widget_Static $widget)
+    {
+        $layout_id           = null;
+        $readonly            = true;
+        $column_id           = null;
+        $is_minimized        = false;
+        $display_preferences = false;
+        $owner_id            = null;
+        $owner_type          = null;
+
+        $this->widget(
+            $widget,
+            $layout_id,
+            $readonly,
+            $column_id,
+            $is_minimized,
+            $display_preferences,
+            $owner_id,
+            $owner_type
+        );
     }
 
     function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type) {
@@ -1318,7 +1247,7 @@ abstract class Layout extends Response {
      * @see includeFooterJavascriptSnippet
      */
     function displayFooterJavascriptElements() {
-        foreach ($this->javascriptFooter as $js) {
+        foreach ($this->javascript_in_footer as $js) {
             if (isset($js['file'])) {
                 echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
             } else {
@@ -1589,247 +1518,6 @@ abstract class Layout extends Response {
         echo '</html>';
     }
 
-    /**
-     * Display debug info gathered along the execution
-     *
-     * @return void
-     */
-    public static function showDebugInfo() {
-        global $Language;
-
-        echo '<div id="footer_debug_separator"/>';
-        echo '<div id="footer_debug">';
-
-        echo '<div class="alert alert-info">
-                   <h4> Development useful information! </h4>
-                   The section above will show you some useful information about Tuleap for development purpose.
-              </div>';
-
-        echo '<div id="footer_debug_content">';
-            $debug_compute_tile = microtime(true) - $GLOBALS['debug_time_start'];
-            if (function_exists('xdebug_time_index')) {
-                $xdebug_time_index  = xdebug_time_index();
-            }
-
-            $query_time = 0;
-            foreach($GLOBALS['DBSTORE'] as $d) {
-                foreach($d['trace'] as $trace) {
-                    $query_time += $trace[2] - $trace[1];
-                }
-            }
-
-            $purifier = Codendi_HTMLPurifier::instance();
-
-            echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
-            echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."</span>";
-            $percent     = (int) ($GLOBALS['DEBUG_TIME_IN_PRE'] * 100 / $debug_compute_tile);
-            $sql_percent = (int) ($query_time * 100 / $debug_compute_tile);
-            echo '<table border=1><thead><tr><th></th><th>Page generated in</th></tr></thead><tbody>';
-            echo '<tr><td>pre.php</td><td>'. number_format(1000 * $GLOBALS['DEBUG_TIME_IN_PRE'], 0, '.', "'") .' ms ('. $percent .'%)</td>';
-            echo '<tr><td>remaining</td><td>'. number_format(1000 * ($debug_compute_tile - $GLOBALS['DEBUG_TIME_IN_PRE']), 0, '.', "'") .' ms</td>';
-            echo '<tr><td><b>total</td><td><b>'. number_format(1000 * $debug_compute_tile, 0, '.', "'") .' ms</td>';
-            if (function_exists('xdebug_time_index')) {
-                echo '<tr><td>xdebug</td><td>'. number_format(1000 * $xdebug_time_index, 0, '.', "'") .' ms</tr>';
-            }
-            echo '<tr><td>sql</td><td>'. number_format(1000 * $query_time, 0, '.', "'") .' ms ('. $sql_percent .'%)</tr>';
-            echo '</tbody></table>';
-            if (function_exists('xdebug_get_profiler_filename')) {
-                if ($file = xdebug_get_profiler_filename()) {
-                    echo '<div>Profiler info has been written in: '. $file .'</div>';
-                }
-            }
-
-            $hook_params = array();
-            EventManager::instance()->processEvent('layout_footer_debug', $hook_params);
-
-            //Display the config
-            // Uncomment this only if you know what you are doing. This may lead to sensitive information leakage /!\
-            //echo '<fieldset><legend id="footer_debug_config" class="'. Toggler::getClassname('footer_debug_config') .'">Config:</legend>';
-            //echo '<pre>';
-            //Config::dump();
-            //echo '</pre>';
-            //echo '</fieldset>';
-
-            // Display all queries used to generate the page
-            echo '<fieldset><legend id="footer_debug_allqueries" class="'. Toggler::getClassname('footer_debug_allqueries') .'">All queries:</legend>';
-            echo '<pre>';
-            $queries               = array();
-            $queries_by_time_taken = array();
-            $i                     = 0;
-            foreach($GLOBALS['QUERIES'] as $sql) {
-                $t = 0;
-                foreach($GLOBALS['DBSTORE'][md5($sql)]['trace'] as $trace) {
-                    $t += $trace[2] - $trace[1];
-                }
-                $q = array(
-                    'sql' => $purifier->purify($sql),
-                    'total time' => number_format(1000 * $t, 0, '.', "'") .' ms',
-                );
-                $queries[] = $q;
-                $queries_by_time_taken[] = array('n°' => $i++, 't' => $t) + $q;
-
-            }
-            print_r($queries);
-            echo '</pre>';
-            echo '</fieldset>';
-
-            // Display all queries used to generate the page ordered by time taken
-            usort($queries_by_time_taken, array(__CLASS__, 'sort_queries_by_time_taken'));
-            echo '<fieldset><legend id="footer_debug_allqueries_time_taken" class="'. Toggler::getClassname('footer_debug_allqueries_time_taken') .'">All queries by time taken:</legend>';
-            echo '<table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="0">';
-            echo '<thead><tr><th>n°</th><th style="white-space:nowrap;">time taken</th><th>sum</th><th>sql</th></tr></thead>';
-            $i   = 0;
-            $sum = 0;
-            foreach($queries_by_time_taken as $q) {
-                echo '<tr valign="top" class="'. html_get_alt_row_color($i++) .'">';
-                echo '<td>'. $q['n°'] .'</td>';
-                echo '<td style="white-space:nowrap;">'. $q['total time'] .'</td>';
-                echo '<td style="white-space:nowrap;">'. number_format(1000 * ($sum += $q['t']), 0, '.', "'") .' ms' .'</td>';
-                echo '<td><pre>'. $q['sql'] .'</pre></td>';
-                echo '</tr>';
-            }
-            echo '</table>';
-            echo '</fieldset>';
-
-            echo '<fieldset><legend id="footer_debug_queriespaths" class="'. Toggler::getClassname('footer_dubug_queriespaths') .'">Path of all queries:</legend>';
-            $max = 0;
-            foreach($GLOBALS['DBSTORE'] as $d) {
-                foreach($d['trace'] as $trace) {
-                    $time_taken = 1000 * round($trace[2] - $trace[1], 3);
-                    if ($max < $time_taken) {
-                        $max = $time_taken;
-
-                    }
-                }
-            }
-
-            $paths = array();
-            $time = $GLOBALS['debug_time_start'];
-            foreach($GLOBALS['DBSTORE'] as $d) {
-                foreach($d['trace'] as $trace) {
-                    $time_taken = 1000 * round($trace[2] - $trace[1], 3);
-                    self::_debug_backtrace_rec($paths, array_reverse($trace[0]),
-                        '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3))
-                        .'/'. $time_taken .'] '.
-                        ($time_taken >= $max ? ' <span style="background:yellow; padding-left:4px; padding-right:4px; color:red;">top!</span> ' : '') . $purifier->purify($d['sql']));
-                }
-            }
-            echo '<table>';
-            self::_debug_display_paths($paths, false);
-            echo '</table>';
-            echo '</fieldset>';
-            //Print the backtrace of specific queries
-            /*
-            echo '<pre>';
-            $specific_queries = array(48,49);
-            $i = 0;
-            foreach($GLOBALS['DBSTORE'] as $d) {
-                //echo $i ."\t". $d['sql'] ."\n";
-                if (in_array($i++, $specific_queries)) {
-                    $traces = $d['trace'][0];
-                    foreach($traces as $trace) {
-                        echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n";
-                    }
-                    echo "\n";
-                }
-            }
-            echo '</pre>';
-            /**/
-
-            // Display queries executed more than once
-            $title_displayed = false;
-            foreach ($GLOBALS['DBSTORE'] as $key => $value) {
-                if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
-                    if (!$title_displayed) {
-                        echo '<fieldset><legend>Queries executed more than once :</legend>';
-                        $title_displayed = true;
-                    }
-                    echo "<fieldset>";
-                    echo '<legend id="footer_debug_doublequery_'. $key .'" class="'. Toggler::getClassname('footer_debug_doublequery_'. $key) .'">';
-                    echo '<b>Run '.$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
-                    echo $purifier->purify($GLOBALS['DBSTORE'][$key]['sql'])."\n";
-                    echo '</legend>';
-                    self::_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
-                    echo "</fieldset>";
-                }
-            }
-            if ($title_displayed) {
-                echo '</fieldset>';
-            }
-            echo '<fieldset>';
-            echo '<legend id="footer_debug_session" class="'. Toggler::getClassname('footer_debug_session') .'">Session</legend>';
-            echo "<div>";
-            echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reload\');return false;">reload</a>';
-            echo '  |  ';
-            echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reset\');return false;">reset</a>';
-            echo '<pre id="footer_debug_session_data">'.print_r($_SESSION, 1).'</pre>';
-            echo "</div>";
-            echo '</fieldset>';
-            echo "</pre>\n";
-            echo '</div>';
-        echo '</div>';
-    }
-
-    private static function sort_queries_by_time_taken($a, $b) {
-        return strnatcasecmp($b['total time'], $a['total time']);
-    }
-
-    public static function _debug_backtraces($backtraces) {
-        $paths = array();
-        $i = 1;
-        foreach($backtraces as $b) {
-            self::_debug_backtrace_rec($paths, array_reverse($b[0]), ('#' . $i++));
-        }
-        echo '<table>';
-        self::_debug_display_paths($paths);
-        echo '</table>';
-    }
-
-    public static function _debug_backtrace_rec(&$paths, $trace, $leaf = '') {
-        if (count($trace)) {
-            $file = '';
-            if (isset($trace[0]['file'])) {
-                $file = substr($trace[0]['file'], strlen($GLOBALS['codendi_dir'])) .' #'. $trace[0]['line'];
-            }
-            $file .= ' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
-            if (strpos($file, '/src/common/dao/include/DataAccessObject.class.php') === 0) {
-                self::_debug_backtrace_rec($paths, array_slice($trace, 1), $leaf);
-            } else {
-                self::_debug_backtrace_rec($paths[$file], array_slice($trace, 1), $leaf);
-            }
-        } else if ($leaf) {
-            $paths[] = $leaf;
-        }
-    }
-
-    public static function _debug_display_paths($paths, $red = true, $padding = 0) {
-        if (is_array($paths)) {
-            $color = "black";
-            if ($red && count($paths) > 1) {
-                $color = "red";
-            }
-            $purifier = Codendi_HTMLPurifier::instance();
-            foreach($paths as $p => $next) {
-                if (is_numeric($p)) {
-                    echo '<tr style="color:green">';
-                    echo '<td></td>';
-                    echo '<td>'. $purifier->purify($next) .'</td>';
-                    echo '</tr>';
-                } else {
-                    echo '<tr style="color:'. $color .'">';
-                    echo '<td style="padding-left:'. $padding .'px;">';
-                    echo substr($p, 0, strpos($p, ' '));
-                    echo '</td>';
-                    echo '<td>';
-                    echo substr($p, strpos($p, ' '));
-                    echo '</td>';
-                    echo '</tr>';
-                }
-                self::_debug_display_paths($next, $red, $padding+20);
-            }
-        }
-    }
-
     function pv_header($params) {
         $this->generic_header($params);
         echo '
@@ -1880,8 +1568,6 @@ abstract class Layout extends Response {
         echo $this->getNotificationPlaceholder();
     }
 
-    public abstract function header($params);
-
     public function getNotificationPlaceholder() {
         return '<div id="notification-placeholder"></div>';
     }
@@ -1901,7 +1587,7 @@ abstract class Layout extends Response {
              </html>';
     }
 
-    function footer($params) {
+    function footer(array $params) {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
         }
@@ -2342,43 +2028,6 @@ abstract class Layout extends Response {
         }
         $output .= '&nbsp;&middot;&nbsp;';
         return $output;
-    }
-
-    public function getImagePath($src) {
-        return $this->imgroot . $src;
-    }
-
-    /**
-     * Build an img tag
-     *
-     * @param string $src The src of the image "trash.png"
-     * @param array $args The optionnal arguments for the tag ['alt' => 'Beautiful image']
-     * @return string <img src="/themes/Tuleap/images/trash.png" alt="Beautiful image" />
-     */
-    function getImage($src, $args = array()) {
-        return $this->getAbsoluteImage($this->getImagePath($src), $args);
-    }
-
-    /**
-     * Same as getImage but with absolute path to the image.
-     * Usefull for plugin related image for example
-     *
-     * @see getImage
-     */
-    function getAbsoluteImage($src, $args = array()) {
-        $return = '<img src="'. $src .'"';
-        foreach($args as $k => $v) {
-            $return .= ' '.$k.'="'.$v.'"';
-        }
-
-        // insert a border tag if there isn't one
-        if (!isset($args['border']) || !$args['border']) $return .= ' border="0"';
-
-        // insert alt tag if there isn't one
-        if (!isset($args['alt']) || !$args['alt']) $return .= ' alt="'. $src .'"';
-
-        $return .= ' />';
-        return $return;
     }
 
     /**

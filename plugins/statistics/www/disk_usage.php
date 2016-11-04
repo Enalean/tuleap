@@ -104,7 +104,7 @@ if ($request->validArray($vServices)) {
             break;
         default:
     }
-    
+
 }
 
 $groupByDate = array('Day', 'Week', 'Month', 'Year');
@@ -142,7 +142,7 @@ if ($request->valid($vOffset)) {
 
 $title = 'Disk usage';
 $GLOBALS['HTML']->includeCalendarScripts();
-$GLOBALS['HTML']->header(array('title' => $title));
+$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 echo '<h1>'.$title.'</h1>';
 
 echo '
@@ -187,9 +187,9 @@ switch ($func) {
             $selected[$serv] = true;
             $first           = false;
         }
-        
+
         echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h2>';
-        
+
         echo '<form name="progress_by_service" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_service" />';
 
@@ -201,7 +201,7 @@ switch ($func) {
         echo '<th>End date</th>';
         echo '<th>Options</th>';
         echo '</tr>';
-        
+
         echo '<tr>';
 
         $services = array();
@@ -238,7 +238,7 @@ switch ($func) {
 
         echo '</tr>';
         echo '</table>';
-        
+
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
 
@@ -248,7 +248,7 @@ switch ($func) {
         echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
 
         $duHtml->getServiceEvolutionForPeriod($startDate , $endDate, null, true);
-        
+
         break;
 
     case 'show_top_projects':
@@ -256,7 +256,7 @@ switch ($func) {
         // Prepare params
         $urlParam = '?func=show_top_projects&start_date='.$startDate.'&end_date='.$endDate.'&';
         echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_project', 'usage_per_project').'</h2>';
-     
+
         $selected = array();
         $first    = true;
         foreach ($selectedServices as $serv) {
@@ -267,8 +267,8 @@ switch ($func) {
             $selected[$serv] = true;
             $first           = false;
         }
-        
-       
+
+
         echo '<form name="top_projects" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_projects" />';
 
@@ -278,7 +278,7 @@ switch ($func) {
         echo '<th>Start date</th>';
         echo '<th>End date</th>';
         echo '</tr>';
-        
+
         echo '<tr>';
 
         $services = array();
@@ -308,7 +308,7 @@ switch ($func) {
         if (($startDate) && ($endDate) && ($selectedServices)) {
             $duHtml->getTopProjects($startDate, $endDate, $selectedServices, $order, $urlParam, $offset);
         }
-        
+
         break;
 
     case 'show_one_project':
@@ -346,7 +346,7 @@ switch ($func) {
         echo '<th>End date</th>';
         echo '<th>Options</th>';
         echo '</tr>';
-        
+
         echo '<tr>';
 
         $services = array();
@@ -383,7 +383,7 @@ switch ($func) {
 
         echo '</tr>';
         echo '</table>';
-        
+
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
 
         echo '</form>';
@@ -393,10 +393,10 @@ switch ($func) {
         $urlParam .= '&group_id='.$groupId;
         $urlParam .= '&graph_type=graph_project';
         echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
-        
+
         if (($groupId) && ($startDate) && ($endDate)) {
             $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
-        }       
+        }
         break;
 
     case 'show_top_users':
@@ -418,18 +418,18 @@ switch ($func) {
         break;
 
     case 'show_one_user':
-                  
+
         // Prepare params
         $urlParam    = '';
-             
+
         echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_growth').'</h2>';
-              
+
         echo '<form name="progress_by_user" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_one_user" />';
 
         echo '<label>User: </label>';
         echo '<input type="text" name="user_id" id="plugin_statistics_project" value="'.$userId.'" />';
-       
+
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
 
@@ -448,22 +448,22 @@ switch ($func) {
         }
         echo '<input type="checkbox" name="relative" value="true" '.$sel.'/>';
         echo '<label>Relative Y-axis (depend of data set values):</label><br/>';
-        
+
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
-        
+
         if (($userId) && ($startDate) && ($endDate)) {
             echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_detail').'</h3>';
             $duHtml->getUserDetails($userId);
-            
+
             $urlParam .= 'start_date='.$startDate.'&end_date='.$endDate;
             $urlParam .= '&group_by='.$selectedGroupByDate;
             $urlParam .= '&user_id='.$userId;
             $urlParam .= '&graph_type=graph_user';
-            
+
             echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
             $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
-        }    
+        }
         break;
 
     default:

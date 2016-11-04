@@ -22,7 +22,7 @@ namespace Tuleap\Git;
 
 use Codendi_Request;
 use CSRFSynchronizerToken;
-use TemplateRendererFactory;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -45,6 +45,11 @@ class GeneralSettingsController
     private $regexp_enabler;
 
     /**
+     * @var AdminPageRenderer
+     */
+    private $renderer;
+
+    /**
      * @var RegexpFineGrainedDisabler
      */
     private $regexp_disabler;
@@ -53,11 +58,13 @@ class GeneralSettingsController
         CSRFSynchronizerToken $csrf,
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
+        AdminPageRenderer $renderer,
         RegexpFineGrainedDisabler $regexp_disabler
     ) {
         $this->csrf             = $csrf;
         $this->regexp_retriever = $regexp_retriever;
         $this->regexp_enabler   = $regexp_enabler;
+        $this->renderer         = $renderer;
         $this->regexp_disabler  = $regexp_disabler;
     }
 
@@ -74,18 +81,14 @@ class GeneralSettingsController
 
     public function display()
     {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
-
+        $title     = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $presenter = new GeneralSettingsPresenter(
             $title,
             $this->csrf,
             $this->isRegexpAuthorizedForPlateform()
         );
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage('admin-plugin', $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->renderer->renderANoFramedPresenter($title, GIT_TEMPLATE_DIR, 'admin-plugin', $presenter);
     }
 
     private function isRegexpAuthorizedForPlateform()

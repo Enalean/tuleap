@@ -1,0 +1,81 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#siteadmin-userlist {
+    display: flex;
+    align-items: flex-start;
+}
+
+#siteadmin-userlist-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 $tlp-title-spacing;
+}
+
+#siteadmin-userlist-header-title {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-userlist-filter {
+    width: 300px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-userlist-filter-button {
+    text-align: center;
+}
+
+#siteadmin-userlist-result {
+    width: 100%;
+}
+
+.siteadmin-userlist-result-name {
+    display: flex;
+    align-items: center;
+}
+
+.siteadmin-userlist-result-name-avatar {
+    margin: 0 ($tlp-spacing / 2) 0 0;
+}
+
+.siteadmin-userlist-result-nb {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+#siteadmin-userlist-result-table {
+    margin: 0 0 $tlp-spacing;
+}
+
+.siteadmin-userlist-result-table-adminof {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+@media screen and (max-width: 1200px) {
+    #siteadmin-userlist {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+    }
+
+    #siteadmin-userlist-filter {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+}

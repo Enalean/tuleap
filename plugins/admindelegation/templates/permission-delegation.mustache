@@ -1,0 +1,77 @@
+<div class="admindelegation-button-add-permissions">
+    <h1 class="admin-delegation-title-grant-users">{{ admindelegation_title }}</h1>
+    {{# has_users }}
+        <button
+                type="button"
+                class="tlp-button-primary button-grant-permission"
+                id="button-grant-permission"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_grant_permission }}
+        </button>
+    {{/has_users}}
+</div>
+{{^ has_users }}
+    <div class="empty-page">
+                <span class="empty-page-text">{{ no_permissions_granted }}
+                    <br>{{ no_permissions_granted_next_part }}</span>
+        <button type="button"
+                class="tlp-button-primary tlp-button-large"
+                id="button-grant-permission"
+        >
+            <i class="fa fa-plus tlp-pane-title-icon"></i> {{ add_grant_permission }}
+        </button>
+    </div>
+{{/ has_users }}
+
+{{# has_users }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-users tlp-pane-title-icon"></i> {{ delegation_table_title }}</h1>
+            </div>
+            <form method="POST" action="?func=revoke_user">
+                <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <button
+                                type="button"
+                                class="tlp-button-danger tlp-button-outline tlp-table-actions-element"
+                                id="button-revoke-permission"
+                                disabled
+                        >
+                            <i class="fa fa-minus-circle tlp-button-icon"></i> {{ revoke_permissions }}
+                        </button>
+                        {{> modal-revoke-permission }}
+                    </div>
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th class="permission-delegation-checkbox">&nbsp;</th>
+                                <th>{{ admindelegation_user }}</th>
+                                <th>{{ admindelegation_permission }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{# users }}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="users_to_revoke[]" value="{{ user_id }}"/>
+                                </td>
+                                <td class="permission-delegation-name-td">
+                                    <div class="permission-delegation-name-and-avatar">
+                                        <div class="tlp-avatar permission-delegation-avatar">
+                                            <img src="{{ user_avatar }}">
+                                        </div>
+                                        {{ user_name }}
+                                    </div>
+                                </td>
+                                <td class="permission-delegation-service-td">{{ user_permissions }}</td>
+                            </tr>
+                        {{/ users }}
+                    </table>
+                </section>
+            </form>
+        </div>
+    </section>
+{{/ has_users }}
+
+{{> modal-add-permission }}

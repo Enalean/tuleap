@@ -95,6 +95,10 @@ $themes     = util_get_theme_list();
 natcasesort($themes);
 
 foreach ($themes as $theme) {
+    if ($theme === 'BurningParrot') {
+        continue;
+    }
+
     $is_default  = $theme === $GLOBALS['sys_themedefault'];
     $is_selected = $is_default;
     if ($user->getTheme()) {

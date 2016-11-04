@@ -90,11 +90,14 @@ class MediaWikiPlugin extends Plugin {
 
             // Site admin link
             $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+            $this->addHook(Event::IS_IN_SITEADMIN);
 
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
 
             $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
             /**
              * HACK
@@ -110,6 +113,21 @@ class MediaWikiPlugin extends Plugin {
 
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e812';
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
+            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+        }
     }
 
     /**
@@ -895,8 +913,20 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook() {
-        echo '<li><a href="'.$this->getPluginPath().'/forge_admin?action=site_index'.'">Mediawiki</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => 'Mediawiki',
+            'href'  => $this->getPluginPath() . '/forge_admin?action=site_index'
+        );
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/forge_admin?action=site_index') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function system_event_get_types_for_default_queue(array &$params) {

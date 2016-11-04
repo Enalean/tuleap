@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -22,26 +23,41 @@
  *
  */
 
-require_once('UserLogDao.class.php');
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Userlog\UserLogBuilder;
+use Tuleap\Userlog\UserLogPresenter;
+
 
 class UserLogManager {
-    function UserLogManager() {
+    /**
+     * @var AdminPageRenderer
+     */
+    private $admin_page_renderer;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
+    public function __construct(AdminPageRenderer $admin_page_renderer, UserManager $user_manager)
+    {
+        $this->admin_page_renderer = $admin_page_renderer;
+        $this->user_manager        = $user_manager;
     }
 
-    function &getDao() {
-        $da =& CodendiDataAccess::instance();
+    function getDao()
+    {
+        $da  = CodendiDataAccess::instance();
         $dao = new UserLogDao($da);
+
         return $dao;
     }
 
     function logAccess($time, $gid, $uid, $sessionHash, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $dao->addRequest($time, $gid, $uid, $sessionHash, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer);
     }
 
     function displayNewOrIdem($key, $row, &$pval, $display = null) {
-        $dis = '';
         if($pval[$key] != $row[$key]) {
             if($display === null) {
                 $dis = $row[$key];
@@ -76,138 +92,41 @@ class UserLogManager {
                       'http_referer' => -1);
     }
 
-    function displayLogs($offset, $selectedDay=null) {
-        $dao =& $this->getDao();
-
+    function displayLogs($offset, $selected_day = null)
+    {
         $year  = null;
         $month = null;
         $day   = null;
-        if($selectedDay !== null) {
-            if(preg_match('/^([0-9]+)-([0-9]{1,2})-([0-9]{1,2})$/', $selectedDay, $match)) {
+
+        if ($selected_day !== null) {
+            if (preg_match('/^([0-9]+)-([0-9]{1,2})-([0-9]{1,2})$/', $selected_day, $match)) {
                 $year  = $match[1];
                 $month = $match[2];
                 $day   = $match[3];
             }
         }
-        if($year === null) {
-            //
-            // Default dates
+        if ($year === null) {
             $year  = date('Y');
             $month = date('n');
             $day   = date('j');
         }
 
-        $start = mktime(0,0,0,$month,$day,$year);
-        $end   = mktime(23,59,59,$month,$day,$year);
+        $start = mktime(0, 0, 0, $month, $day, $year);
+        $end   = mktime(23, 59, 59, $month, $day, $year);
         $count = 100;
 
-        $dar = $dao->search($start, $end, $offset, $count);
-        $foundRows = $dao->getFoundRows();
+        $log_builder              = new UserLogBuilder($this->getDao(), $this->user_manager);
+        list($logs, $total_count) = $log_builder->build($start, $end, $offset, $count);
 
-        //
-        // Prepare Navigation bar
-        $hrefDay='day='.$year.'-'.$month.'-'.$day;
-        $prevHref = '&lt;Previous';
-        if($offset > 0) {
-            $prevOffset = $offset - $count;
-            if($prevOffset < 0) {
-                $prevOffset = 0;
-            }
-            $prevHref = '<a href="?'.$hrefDay.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
-        }
-        $nextHref = 'Next&gt;';
-        $nextOffset = $offset + $count;
-        if($nextOffset > $foundRows) {
-            $nextOffset = null;
-        } else {
-            $nextHref = '<a href="?'.$hrefDay.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
-        }
+        $presenter = new UserLogPresenter($logs, $selected_day, $count, $offset, $total_count);
 
-        //
-        // Init previous value
-        $pval = array();
-        $this->initPval($pval);
+        $this->admin_page_renderer->renderAPresenter(
+            'userlog',
+            USERLOGS_TEMPLATE_DIR,
+            'userlogs',
+            $presenter
+        );
 
-        //
-        // Start display
         $GLOBALS['Response']->includeCalendarScripts();
-        $GLOBALS['Response']->header(array('title' => 'userlog'));
-
-        echo '<form name="userlog_form" method="get" action="?">';
-        echo html_field_date('day',
-                             $year.'-'.$month.'-'.$day,
-                             false,
-                             '10',
-                             '10',
-                             'userlog_form');
-        echo ' ';
-        echo '<input type="submit" value="Submit">';
-        echo '</form>';
-
-
-        echo $prevHref." - (".$foundRows." results found)  - ".$nextHref."<br>";
-
-        echo '<table border="1">';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th>Time</th>';
-        echo '<th>Project</th>';
-        echo '<th>User</th>';
-        //echo '<th>SessionHash</th>';
-        //echo '<th>User Agent</th>';
-        echo '<th>Method</th>';
-        echo '<th>URI</th>';
-        echo '<th>Remote addr</th>';
-        echo '<th>Referer</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        $dar->rewind();
-        while($dar->valid()) {
-            $row = $dar->current();
-            $classStyle = '';
-            if($pval['hour'] != date('H', $row['time'])) {
-                //
-                //Change day
-                $classStyle = ' class="hourbreak"';
-                $year = date('Y', $row['time']);
-                $month = date('M', $row['time']);
-                $day = date('d', $row['time']);
-                $hour = date('H', $row['time']);
-                echo '<tr'.$classStyle.'>';
-                $nexthour = date('H', mktime($hour+1, 0, 0, (int)$month, (int)$day, (int)$year));
-                echo '<td colspan="9">'.$day.' '.$month.' '.$year.' between '.$hour.' and '.$nexthour.' hour</td>';
-                $this->initPval($pval);
-                echo '</tr>';
-            }
-            $classStyle = '';
-            echo '<tr'.$classStyle.'>';
-            echo '<td>'.$this->displayNewOrIdem('time', $row, $pval, date('H:i:s', $row['time'])).'</td>';
-            echo '<td>'.$this->displayNewOrIdem('group_id', $row, $pval).'</td>';
-            $name = 'Anonymous';
-            if($row['user_id'] != 0) {
-                $name = user_getname($row['user_id']);
-            }
-            echo '<td>'.$this->displayNewOrIdem('user_id', $row, $pval, $name).'</td>';
-            //echo '<td>'.$this->displayNewOrIdem('session_hash', $row, $pval).'</td>';
-            //echo '<td>'.$this->displayNewOrIdem('http_user_agent', $row, $pval).'</td>';
-            echo '<td>'.$this->displayNewOrIdem('http_request_method', $row, $pval).'</td>';
-            echo '<td>'.$this->displayNewOrIdem('http_request_uri', $row, $pval).'</td>';
-            echo '<td>'.$this->displayNewOrIdem('http_remote_addr', $row, $pval).'</td>';
-            echo '<td>'.$this->displayNewOrIdem('http_referer', $row, $pval).'</td>';
-            echo '</tr>';
-
-            $pval['hour'] = date('H', $row['time']);
-            $dar->next();
-        }
-        echo '</tbody>';
-        echo '</table>';
-
-        echo $prevHref." - (".$foundRows." results found)  - ".$nextHref."<br>";
-
-        $GLOBALS['Response']->footer(array());
     }
-
 }
-
-?>

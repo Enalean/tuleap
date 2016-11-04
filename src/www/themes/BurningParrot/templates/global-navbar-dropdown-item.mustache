@@ -1,0 +1,16 @@
+{{# navbar_dropdown }}
+    <div id="nav-dropdown-{{ id }}" class="nav-dropdown nav-dropdown-left">
+        <span class="nav-dropdown-link">
+            <i class="{{ icon }} nav-link-icon"></i>
+            <span class="nav-link-text">{{ label }}</span>
+            <i class="fa fa-caret-down nav-link-icon-dropdown"></i>
+        </span>
+        <div id="nav-dropdown-content-{{ id }}" class="nav-dropdown-content nav-dropdown-content-hidden">
+            <div class="arrow-up nav-dropdown-content-arrow-up"></div>
+            <div class="nav-dropdown-content-title">
+                {{ label }}
+            </div>
+            {{> navbar-dropdown }}
+        </div>
+    </div>
+{{/ navbar_dropdown }}

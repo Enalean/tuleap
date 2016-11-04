@@ -71,24 +71,20 @@ class PluginsAdministration_ManageAllowedProjectsPresenter {
         return $csrf->fetchHTMLInput();
     }
 
-    public function resource_allowed_project_back_link() {
-        return '/plugins/pluginsadministration/';
-    }
-
-    public function resource_allowed_project_back_link_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_back_link_title');
-    }
-
     public function resource_allowed_project_title() {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_title', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
     }
 
-    public function resource_allowed_project_allow_all() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_all');
+    public function resource_allowed_project_pane_title() {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_pane_title', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
     }
 
-    public function resource_allowed_project_allow_all_submit() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_all_submit');
+    public function resource_allowed_project_information() {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_pane_information', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
+    }
+
+    public function resource_allowed_project_allow_all() {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_all');
     }
 
     public function resource_allowed_project_list() {

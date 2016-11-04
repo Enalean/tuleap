@@ -1,23 +1,48 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/*
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright 1999-2000 (c) VA Linux Systems
+ * http://sourceforge.net
+ *
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+use Tuleap\user\Admin\UserDetailsFormatter;
+use Tuleap\User\Admin\UserDetailsAccessPresenter;
+use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\User\Admin\UserChangePasswordPresenter;
+use Tuleap\User\Password\PasswordValidatorPresenter;
 
 require_once('pre.php');
 require_once('account.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
 
-$GLOBALS['HTML']->includeCalendarScripts();
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/userdetails.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $request = HTTPRequest::instance();
 $um      = UserManager::instance();
 $em      = EventManager::instance();
+$purifier  = Codendi_HTMLPurifier::instance();
+$siteadmin = new \Tuleap\Admin\AdminPageRenderer();
 
 $user_id = null;
 $user    = null;
@@ -34,13 +59,15 @@ if (!$user_id || !$user) {
 }
 
 // Validate action
-$vAction = new Valid_Whitelist('action', array('update_user'));
+$vAction = new Valid_Whitelist('action', array('update_user', 'update_password'));
 $vAction->required();
 if ($request->valid($vAction)) {
     $action = $request->get('action');
 } else {
     $action = '';
 }
+
+$password_csrf = new CSRFSynchronizerToken('/admin/usergroup.php?user_id='.$user->getId());
 
 if ($request->isPost()) {
     if ($action == 'update_user') {
@@ -182,236 +209,103 @@ if ($request->isPost()) {
 
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
+
+    } elseif ($action == 'update_password') {
+        if (! $request->existAndNonEmpty('user_id')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_userid'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+        if (! $request->existAndNonEmpty('form_pw')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_nopasswd'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+        if ($request->get('form_pw') != $request->get('form_pw2')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_passwd'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+
+        $errors = array();
+        if (! account_pwvalid($request->get('form_pw'), $errors)) {
+            foreach($errors as $e) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e);
+                $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+            }
+        }
+
+        $password_csrf->check();
+
+        $user = $user_manager->getUserById($request->get('user_id'));
+
+        if ($user === null) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_userid'));
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
+
+        $user->setPassword($request->get('form_pw'));
+
+        if (! $user_manager->updateDb($user)) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_user_changepw', 'msg_changed'));
+        }
+
+        $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
     }
 }
 
-$HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
-$hp = Codendi_HTMLPurifier::instance();
-?>
-
-<h2><?php echo $Language->getText('admin_usergroup','header').": ".$user->getUserName()." (ID ".$user->getId().")"; ?></h2>
-
-<h3><?php echo $Language->getText('admin_usergroup','account_info'); ?></h3>
-
-<FORM method="post" name="update_user" action="?">
-<INPUT type="hidden" name="action" value="update_user">
-<INPUT type="hidden" name="user_id" value="<?php echo $user->getId(); ?>">
-
-<table>
-
-<tr><td colspan="2">
-<a href="/users/<?php echo $user->getUserName(); ?>">[<?php echo $Language->getText('admin_usergroup','user_public_profile'); ?>]</a>
-</td></tr>
-
-<tr><td colspan="2">
-<a href="user_changepw.php?user_id=<?php echo $user->getId(); ?>">[<?php echo $Language->getText('admin_usergroup','change_passwd'); ?>]</a>
-
-<?php $em->processEvent('usergroup_data', array('user_id' => $user->getId())); ?>
-<br/></td></tr>
-
-<tr><td>
-<?php echo $GLOBALS['Language']->getText('account_options', 'tuleap_login'); ?>:
-</td><td>
-<INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($user->getUserName(), CODENDI_PURIFIER_CONVERT_HTML) ; ?>" SIZE="50">
-</td></tr>
-
-<tr><td>
-<?php echo $GLOBALS['Language']->getText('account_options', 'realname'); ?>:
-</td><td>
-<INPUT TYPE="TEXT" NAME="form_realname" VALUE="<?php echo  $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) ; ?>" SIZE="50">
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','email'); ?>:
-</td><td>
-<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $hp->purify($user->getEmail(), CODENDI_PURIFIER_CONVERT_HTML); ?>" SIZE="50">
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','status'); ?>:
-</td><td>
-<?php 
-$statusVals = $user->getAllWorkingStatus();
-if (in_array($user->getStatus(), $statusVals)) {
-    // Assume getAllWorkingStatus() order never change
-    $statusTxts = array($Language->getText('admin_usergroup','active'),
-    $Language->getText('admin_usergroup','restricted'),
-    $Language->getText('admin_usergroup','suspended'),
-    $Language->getText('admin_usergroup','deleted'));
-
-    echo html_build_select_box_from_arrays($statusVals, $statusTxts, 'form_status', $user->getStatus(), false);
-} else {
-    echo '<strong>'.$Language->getText('admin_usergroup','cannot_change_status').'</strong>';
-}
-?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','expiry_date'); 
-$exp_date='';
-if($user->getExpiryDate() != 0){
-   $exp_date = format_date('Y-m-d', $user->getExpiryDate()); 
+$projects = array();
+foreach ($user->getGroups() as $project) {
+    $projects[] = new Tuleap\User\Admin\UserDetailsProjectPresenter($project, $user->isAdmin($project->getID()));
 }
 
-?>:
-</td><td>
-<?php echo $GLOBALS['HTML']->getDatePicker("expiry_date", "expiry_date", $exp_date); ?>
-</td></tr>
+$additional_details = array();
+EventManager::instance()->processEvent(
+    UserDetailsPresenter::ADDITIONAL_DETAILS,
+    array(
+        'user'               => $user,
+        'additional_details' => &$additional_details
+    )
+);
 
-<?php 
+$details_formatter = new UserDetailsFormatter();
 
-if ($GLOBALS['sys_auth_type'] == 'ldap') {
-    echo '<tr><td>';
-    echo $Language->getText('admin_usergroup', 'ldap_id').': ';
-    echo '</td><td>';
-    echo '<input type="text" name="ldap_id" value="'.$user->getLdapId().'" size="50" />';
-    echo '</td></tr>';
-}
-?>
+$additional_password_messages = array();
+EventManager::instance()->processEvent(
+    'before_admin_change_pw',
+    array(
+        'additional_password_messages' => &$additional_password_messages
+    )
+);
 
-<tr><td colspan="2"><strong><?php echo $Language->getText('admin_usergroup','unix_details'); ?></strong></td></tr>
-
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','unix_status'); ?>:
-</td><td>
-<?php 
-$unixStatusVals = $user->getAllUnixStatus();
-// Assume getAllUnixStatus() order never change
-$unixStatusTxts = array($Language->getText('admin_usergroup','no_account'),
-                        $Language->getText('admin_usergroup','active'),
-                        $Language->getText('admin_usergroup','suspended'),
-                        $Language->getText('admin_usergroup','deleted'));
-
-echo html_build_select_box_from_arrays($unixStatusVals, $unixStatusTxts, 'form_unixstatus', $user->getUnixStatus(), false);
-?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','shell'); ?>:
-</td><td>
-<SELECT name="form_shell">
-<?php account_shellselects($user->getShell()); ?>
-</SELECT>
-</td></tr>
-
-<tr><td colspan="2"><strong><?php echo $Language->getText('admin_usergroup','account_details'); ?></strong></td></tr>
-
-<tr><td>
-<?php 
-$userInfo = $um->getUserAccessInfo($user);
-echo $Language->getText('admin_usergroup', 'last_access_date');
-?>:
-</td><td>
-<?php echo html_time_ago($userInfo['last_access_date']); ?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('admin_usergroup', 'last_pwd_update'); ?>:
-</td><td>
-<?php echo html_time_ago($user->getLastPwdUpdate());?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('account_options', 'auth_attempt_last_success'); ?>
-</td><td>
-<?php echo html_time_ago($userInfo['last_auth_success']);?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('account_options', 'auth_attempt_last_failure'); ?>
-</td><td>
-<?php echo html_time_ago($userInfo['last_auth_failure']);?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('account_options', 'auth_attempt_nb_failure'); ?>
-</td><td>
-<?php echo html_time_ago($userInfo['nb_auth_failure']); ?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('account_options', 'auth_attempt_prev_success'); ?>
-</td><td>
-<?php echo html_time_ago($userInfo['last_auth_success']);?>
-</td></tr>
-
-<tr><td>
-<?php echo $Language->getText('include_user_home','member_since'); ?>:
-</td><td>
-<?php echo html_time_ago($user->getAddDate());?>
-</td></tr>
-
-<?php
-// Plugins entries
-$entry_label = array();
-$entry_value = array();
-
-$eParams = array();
-$eParams['user_id']     =  $user->getId();
-$eParams['entry_label'] =& $entry_label;
-$eParams['entry_value'] =& $entry_value;
-$em->processEvent('user_home_pi_entry', $eParams);
-
-foreach($entry_label as $key => $label) {
-    $value = $entry_value[$key];
-    echo '<tr><td>';
-    echo $label;
-    echo '</td><td>';
-    echo $value;
-    echo '</td></tr>';
-}
-?>
-
-</table>
-
-<INPUT type="submit" name="Update_Unix" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_update'); ?>">
-
-</FORM>
-
-
-<?php if($GLOBALS['sys_user_approval'] == 1){ ?>
-<HR>
-<H3><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</H3>
-<?php echo  $hp->purify($user->getRegisterPurpose(), CODENDI_PURIFIER_CONVERT_HTML) ; 
-}?>
-
-<HR>
-
-<H3><?php echo $Language->getText('admin_usergroup','current_groups'); ?></H3>
-
-<ul>
-<?php
-/*
- Iterate and show groups this user is in
- */
-$res_cat = db_query("SELECT groups.group_name AS group_name, "
-. "groups.group_id AS group_id, "
-. "user_group.admin_flags AS admin_flags FROM "
-. "groups,user_group WHERE user_group.user_id=".db_ei($user->getId())." AND "
-. "groups.group_id=user_group.group_id");
-
-$pm = ProjectManager::instance();
-
-while ($row_cat = db_fetch_array($res_cat)) {
-    echo '<li>';
-    echo '<a href="groupedit.php?group_id='. $row_cat['group_id'] .'"><b>'. $pm->getProject($row_cat['group_id'])->getPublicName() . '</b></a>';
-    if ($row_cat['admin_flags'] === 'A') {
-        echo '&nbsp;(admin)';
-    }
-    echo '</li>';
-
+$password_strategy = new PasswordStrategy();
+include($GLOBALS['Language']->getContent('account/password_strategy'));
+$passwords_validators = array();
+foreach ($password_strategy->validators as $key => $v) {
+    $passwords_validators[] = new PasswordValidatorPresenter(
+        'password_validator_msg_'. $purifier->purify($key),
+        $purifier->purify($key, CODENDI_PURIFIER_JS_QUOTE),
+        $purifier->purify($v->description())
+    );
 }
 
-?>
-</ul>
-
-<script type="text/javascript">
-codendi.locales['admin_usergroup'] = {
-        'was': '<?php echo $Language->getText('admin_usergroup','was'); ?>'
-};
-</script>
-<script type="text/javascript" src="usergroup.js"></script>
-
-<?php
-$HTML->footer(array());
-?>
+$siteadmin->renderAPresenter(
+    $Language->getText('admin_usergroup', 'title'),
+    ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
+    'user',
+    new UserDetailsPresenter(
+        $user,
+        $projects,
+        new UserDetailsAccessPresenter($user, $um->getUserAccessInfo($user)),
+        new UserChangePasswordPresenter(
+            $user,
+            $password_csrf,
+            $additional_password_messages,
+            $passwords_validators
+        ),
+        $additional_details,
+        $details_formatter->getMore($user),
+        $details_formatter->getShells($user),
+        $details_formatter->getStatus($user),
+        $details_formatter->getUnixStatus($user)
+    )
+);

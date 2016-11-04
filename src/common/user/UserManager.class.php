@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -117,6 +117,20 @@ class UserManager {
             return $this->getUserInstanceFromRow($dar->getRow());
         }
         return null;
+    }
+
+    public function countAllUsers()
+    {
+        $dar = $this->getDao()->listAllUsers(0, '', 0, 0, 'user_id', 'asc', '');
+
+        return $dar['numrows'];
+    }
+
+    public function countUsersByStatus($status)
+    {
+        $dar = $this->getDao()->searchByStatus($status);
+
+        return $this->getDao()->foundRows();
     }
 
     /**

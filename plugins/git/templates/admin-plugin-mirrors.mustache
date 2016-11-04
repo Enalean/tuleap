@@ -1,84 +1,161 @@
-<h2>{{ mirror_section_title }}</h2>
+{{# list_of_mirrors_is_empty }}
+    <div class="empty-page">
+        <span class="empty-page-text">{{ list_of_mirrors_empty_message_part_one }}<br> {{ list_of_mirrors_empty_message_part_two }}</span>
+        <button type="button"
+                id="button-modal-add-mirror"
+                class="tlp-button-primary tlp-button-large"
+                data-modal-id="modal-add-mirror"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}
+        </button>
+    </div>
+{{/ list_of_mirrors_is_empty }}
 
-{{# add_a_mirror }}
-    {{> admin-plugin-add-mirror}}
-{{/ add_a_mirror }}
-{{# modify_a_mirror }}
-    {{> admin-plugin-edit-mirror}}
-{{/ modify_a_mirror }}
-{{# see_all }}
-    <form method="POST" action="?pane=mirrors_admin&action=show-add-mirror" class="form-horizontal">
-        <input type="submit" value="{{ add_mirror }}" class="btn btn-primary"/>
-    </form>
-    {{# list_of_mirrors_not_empty }}
+{{^ list_of_mirrors_is_empty }}
+    {{# see_all }}
+        <div class="mirror-global-action-container">
+            <button type="button"
+                    id="button-modal-add-mirror"
+                    class="tlp-button-primary tlp-table-actions-element"
+                    data-modal-id="modal-add-mirror"
+            >
+                <i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}
+            </button>
+            <button type="button"
+                    id="button-modal-mirror-configuration"
+                    class="tlp-button-warning tlp-table-actions-element"
+                    data-modal-id="modal-mirror-configuration"
+            >
+                <i class="tlp-button-icon fa fa-repeat"></i> {{ dump_mirrored_repositories_label }}
+            </button>
+        </div>
 
-        <table class="table table-hover table-bordered table-striped git_admin_mirror_table" id="git_mirror_list">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>{{ identifier }}</th>
-                    <th>{{ url_label }}</th>
-                    <th>{{ hostname_label }}</th>
-                    <th>{{ owner_label }}</th>
-                    <th>{{ ssh_key_label }}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {{# list_of_mirrors }}
-                <tr>
-                    <td>
-                        <a href="?pane=mirrors_admin&action=show-edit-mirror&mirror_id={{ id }}">
-                            <i class="icon-edit"></i>
+        {{# list_of_mirrors }}
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            {{# name }}
+                                {{ name }}
+                            {{/ name }}
+                            {{^ name }}
+                                {{ no_specified_mirror_name }}
+                            {{/ name }}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section mirror-info">
+                        <div class="mirror-info-one">
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ url_label }}
+                                </label>
+                                {{# url }}
+                                    {{ url }}
+                                {{/ url }}
+                                {{^ url }}
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
+                                {{/ url }}
+                            </div>
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ owner_label }}
+                                </label>
+                                {{# owner_name }}
+                                    <a href="/admin/usergroup.php?user_id={{ owner_id }}">{{ owner_name }}</a>
+                                {{/ owner_name }}
+                                {{^ owner_name }}
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
+                                {{/ owner_name }}
+                            </div>
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ repositories_label }}
+                                </label>
+                                {{# has_repositories }}
+                                    <a href="javascript:;"
+                                       class="mirror-show-repositories"
+                                       data-modal-id="modal-show-repositories-{{ id }}"
+                                    >
+                                        {{ number_of_repositories }}
+                                    </a>
+
+                                    {{> admin-plugin-list-repositories }}
+                                {{/ has_repositories }}
+                                {{^ has_repositories }}
+                                    <span class="tlp-property-empty">{{ no_repositories }}</span>
+                                {{/ has_repositories }}
+                            </div>
+                        </div>
+                        <div class="mirror-info-two">
+                            <div class="tlp-property">
+                                <label class="tlp-label">
+                                    {{ hostname_label }}
+                                </label>
+                                {{# hostname }}
+                                    {{ hostname }}
+                                {{/ hostname }}
+                                {{^ hostname }}
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
+                                {{/ hostname }}
+                            </div>
+                            <div class="tlp-property mirror-info-two-ssh-key">
+                                <label class="tlp-label">
+                                    {{ ssh_key_label }}
+                                </label>
+                                {{# ssh_key_value }}
+                                    <i class="fa fa-key"></i>  {{ ssh_key_ellipsis_value }}
+                                {{/ ssh_key_value }}
+                                {{^ ssh_key_value }}
+                                    <span class="tlp-property-empty">{{ empty_content }}</span>
+                                {{/ ssh_key_value }}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="tlp-pane-container mirror-action-container">
+                    <section class="tlp-pane-section mirror-action">
+                        <button type="button"
+                                class="tlp-button-primary tlp-button-outline mirror-action-edit-button"
+                                data-modal-id="edit-modal-{{ id }}"
+                        >
+                            <i class="fa fa-pencil tlp-button-icon"></i>
+                            {{ btn_edit }}
+                        </button>
+
+                        <a type="button"
+                           href="?view=mirrors_restriction&action=manage-allowed-projects&mirror_id={{ id }}"
+                           class="tlp-button-primary tlp-button-outline mirror-action-restrict-button"
+                        >
+                            <i class="fa fa-lock tlp-button-icon"></i>
+                            {{ btn_restrict }}
                         </a>
-                    </td>
-                    <td class="git_admin_mirror_url">
-                        <span name="mirror_url">
-                            {{ name }}
-                        </span>
-                    </td>
-                    <td class="git_admin_mirror_url">
-                        <span name="mirror_url">
-                            {{ url }}
-                        </span>
-                    </td>
-                    <td class="git_admin_mirror_url">
-                        <span name="mirror_url">
-                            {{ hostname }}
-                        </span>
-                    </td>
-                    <td>
-                        <a href="/admin/usergroup.php?user_id={{ owner_id }}">
-                            <span name="mirror_owner">
-                                {{ owner_name }}
-                            </span>
-                        </a>
-                    </td>
-                    <td>
-                        <span name="mirror_key" class="git_admin_mirror_big_span" data-ssh_key_value="{{ ssh_key_value }}">{{ ssh_key_ellipsis_value }}</span>
-                    </td>
-                    <td>
-                        <a href="?pane=mirrors_admin&action=list-repositories&mirror_id={{ id }}">
-                            {{ mirrored_repo_label }}
-                        <a>
-                    </td>
-                    <td>
-                        <a href="?pane=mirrors_admin&action=manage-allowed-projects&mirror_id={{ id }}">
-                            {{ manage_allowed_projects_label }}
-                        <a>
-                    </td>
-                </tr>
-            {{/ list_of_mirrors }}
-            </tbody>
-        </table>
-    {{/ list_of_mirrors_not_empty }}
 
-    <h2>{{ dump_mirrored_repositories_label }}</h2>
-    <div class="alert alert-warning"> {{ dump_mirrored_repositories_text }}</div>
-    <form method="POST" action="?pane=mirrors_admin&action=dump-gitolite-conf" class="form-horizontal">
-        {{{ csrf_input }}}
-        <input type="submit" value="{{ dump_mirrored_repositories_label }}" class="btn btn-danger"/>
-    </form>
-{{/ see_all }}
+                        <button type="button"
+                                class="tlp-button-danger
+                                    tlp-button-outline
+                                    mirror-action-delete-button
+                                    {{# has_repositories }} tlp-tooltip tlp-tooltip-left {{/ has_repositories }}"
+                                data-modal-id="delete-modal-{{ id }}"
+                                {{# has_repositories }}
+                                    disabled
+                                    data-tlp-tooltip="{{ already_used }}"
+                                {{/ has_repositories }}
+                        >
+                            <i class="fa fa-trash-o tlp-button-icon"></i>
+                            {{ btn_delete }}
+                        </button>
 
+                        {{> admin-plugin-mirror-modal-edit }}
+
+                        {{^ has_repositories }}
+                            {{> admin-plugin-mirror-modal-delete }}
+                        {{/ has_repositories }}
+                    </section>
+                </div>
+            </section>
+        {{/list_of_mirrors}}
+    {{/ see_all }}
+{{/ list_of_mirrors_is_empty }}
+
+{{> admin-plugin-mirror-modal }}
+{{> admin-plugin-mirror-configuration-modal }}

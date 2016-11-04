@@ -43,6 +43,7 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
 use Tuleap\OpenIDConnectClient\UserMapping;
 use Tuleap\OpenIDConnectClient\Administration;
 use Zend\Loader\AutoloaderFactory;
+use Tuleap\Admin\AdminPageRenderer;
 
 require_once('constants.php');
 
@@ -61,6 +62,9 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook('cssfile');
         $this->addHook(Event::MANAGE_THIRD_PARTY_APPS);
         $this->addHook('site_admin_option_hook');
+        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     /**
@@ -88,6 +92,21 @@ class openidconnectclientPlugin extends Plugin {
     public function cssfile() {
         if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+        }
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = $this->getPluginPath().'/scripts/open-id-connect-client.js';
         }
     }
 
@@ -234,10 +253,20 @@ class openidconnectclientPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook() {
-        $url         = $this->getPluginPath().'/admin/';
-        $plugin_name = $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name');
-        echo '<li><a href="' . $url . '">' . $plugin_name . '</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/admin/'
+        );
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function process(HTTPRequest $request) {
@@ -277,11 +306,18 @@ class openidconnectclientPlugin extends Plugin {
         $router->route($request);
     }
 
-    public function processAdmin(HTTPRequest $request) {
+    public function processAdmin(HTTPRequest $request)
+    {
         $provider_manager        = new ProviderManager(new ProviderDao());
         $icon_presenter_factory  = new IconPresenterFactory();
         $color_presenter_factory = new ColorPresenterFactory();
-        $controller              = new Administration\Controller($provider_manager, $icon_presenter_factory, $color_presenter_factory);
+        $admin_page_renderer     = new AdminPageRenderer();
+        $controller              = new Administration\Controller(
+            $provider_manager,
+            $icon_presenter_factory,
+            $color_presenter_factory,
+            $admin_page_renderer
+        );
         $csrf_token              = new CSRFSynchronizerToken(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
 
         $router = new AdminRouter($controller, $csrf_token);

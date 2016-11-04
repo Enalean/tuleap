@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,9 +33,9 @@ class PluginsAdministrationActions extends Actions {
         $this->plugin_manager = PluginManager::instance();
         $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
     }
-    
-    // {{{ Actions
+
     function available() {
+        $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
             $plugin_manager = $this->plugin_manager;
@@ -54,17 +54,37 @@ class PluginsAdministrationActions extends Actions {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_available', array($plugin_data['name'])));
             }
         }
+
+        if ($request->get('view') === 'properties') {
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id='.$request->get('plugin_id'));
+        }
+
+        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
-    
+
     function install() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $name = $request->get('name');
         if ($name) {
-            $this->plugin_manager->installPlugin($name);
+            $plugin = $this->plugin_manager->installPlugin($name);
+
+            if ($plugin) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_installed'));
+
+                $post_install = $this->plugin_manager->getPostInstall($name);
+                if ($post_install) {
+                    $GLOBALS['Response']->addFeedback('info', '<pre>'.$post_install.'</pre>', CODENDI_PURIFIER_DISABLED);
+                }
+
+                $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id='.$plugin->getId());
+            }
         }
+
+        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=available');
     }
-    
+
     function unavailable() {
+        $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
             $plugin_manager = $this->plugin_manager;
@@ -83,22 +103,28 @@ class PluginsAdministrationActions extends Actions {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_unavailable', array($plugin_data['name'])));
             }
         }
+
+        if ($request->get('view') === 'properties') {
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id='.$request->get('plugin_id'));
+        }
+
+        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
-    
+
     function uninstall() {
         $plugin = $this->_getPluginFromRequest();
         if ($plugin) {
             $plugin_manager = $this->plugin_manager;
             $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
             if (!$uninstalled) {
-                 $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])).'</div>';
+                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])));
             } else {
-                 $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($plugin['name'])).'</div>';
+                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($plugin['name'])));
             }
         }
     }
 
-    // Secure args: force each value to be an integer.    
+    // Secure args: force each value to be an integer.
     function _validateProjectList($usList) {
         $sPrjList = null;
         $usList = trim(rtrim($usList));
@@ -143,13 +169,17 @@ class PluginsAdministrationActions extends Actions {
     }
 
     function changePluginProperties() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if($request->exist('gen_prop')) {
             $this->_changePluginGenericProperties($request->get('gen_prop'));
         }
         $user_properties = $request->get('properties');
+        $plugin = $this->_getPluginFromRequest();
+        if (! $plugin) {
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
+        }
+
         if ($user_properties) {
-            $plugin = $this->_getPluginFromRequest();
             $plug_info =& $plugin['plugin']->getPluginInfo();
             $descs =& $plug_info->getPropertyDescriptors();
             $keys  =& $descs->getKeys();
@@ -169,11 +199,13 @@ class PluginsAdministrationActions extends Actions {
                 $iter->next();
             }
             $plug_info->saveProperties();
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_updated'));
         }
+
+        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id='.$plugin['plugin']->getId());
     }
-    // }}}
-    
-    
+
+
     function _getPluginFromRequest() {
         $return = false;
         $request =& HTTPRequest::instance();

@@ -17,14 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
+ (function () {
+     'use strict';
 
-    function initTooltips() {
-        $('#siteadmin-config [data-toggle="tooltip"]').tooltip();
-    }
+     var dom_natures_modal_create = document.getElementById('siteadmin-config-natures-modal-create');
+     var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
+     document.getElementById('siteadmin-config-natures-modal-create-button').addEventListener('click', function () {
+         tlp_natures_modal_create.toggle();
+     });
 
-    $(document).ready(function() {
-        initTooltips();
-    });
+     var natures_modals_edit_buttons = document.querySelectorAll('.siteadmin-config-natures-modal-edit-button');
+     [].forEach.call(natures_modals_edit_buttons, function(natures_modals_edit_button) {
+         var dom_natures_modal_edit = document.getElementById(natures_modals_edit_button.getAttribute('data-edit-modal-id'));
+         var tlp_natures_modal_edit = tlp.modal(dom_natures_modal_edit);
 
-})(window.jQuery);
+         natures_modals_edit_button.addEventListener('click', function () {
+             tlp_natures_modal_edit.toggle();
+         });
+     });
+
+     var natures_modals_delete_buttons = document.querySelectorAll('.siteadmin-config-natures-modal-delete-button');
+     [].forEach.call(natures_modals_delete_buttons, function(natures_modals_delete_button) {
+         var dom_natures_modal_delete = document.getElementById(natures_modals_delete_button.getAttribute('data-delete-modal-id'));
+         var tlp_natures_modal_delete = tlp.modal(dom_natures_modal_delete, {});
+
+         natures_modals_delete_button.addEventListener('click', function () {
+             tlp_natures_modal_delete.toggle();
+         });
+     });
+ } ());

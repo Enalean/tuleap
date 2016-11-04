@@ -32,8 +32,21 @@ if ($request->valid($vName)) {
     exit;
 }
 
+$json_format = false;
+
+if ($request->get('return_type') === 'json_for_select_2') {
+    $json_format = true;
+}
+
 // Number of user to display
 $limit     = 15;
+$page      = 1;
+
+if ($request->get('page')) {
+    $page = (int)$request->get('page');
+}
+
+$offset    = ($page - 1) * $limit;
 $list      = array();
 $isMember  = false;
 $isAdmin   = false;
@@ -53,22 +66,41 @@ if ($request->valid($vPrivate) && $user->isSuperUser()) {
 
 $prjManager     = ProjectManager::instance();
 $nbProjectFound = 0;
-$projects       = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate);
+$projects       = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate, $offset);
 foreach ($projects as $project) {
-    $list[] = $project->getPublicName(). " (".$project->getUnixName().")";
+    $list[] = $project->getUnconvertedPublicName(). " (".$project->getUnixName().")";
 }
 
-$nbLeft = $nbProjectFound - $limit; 
-if ($nbLeft > 0) {
+$nbLeft = $nbProjectFound - $limit;
+if ($nbLeft > 0 && ! $json_format) {
     $list[] = '<strong>'.$nbLeft.' left ...</strong>';
 }
 
-//
-// Display
-//
+
 $purifier = Codendi_HTMLPurifier::instance();
-echo "<ul>\n";
-foreach ($list as $entry) {
-    echo '<li>' . $purifier->purify(htmlspecialchars_decode($entry)) . '</li>';
+
+if ($json_format) {
+    $json_entries = array();
+    foreach ($list as $entry) {
+        $json_entries[] = array(
+            'id'   => $entry,
+            'text' => $entry
+        );
+    }
+
+    $more_results = ($offset + $limit) < $nbProjectFound;
+    $output       = array(
+        'results' => $json_entries,
+        'pagination' => array(
+            'more' => $more_results
+        )
+    );
+
+    echo json_encode($output);
+} else {
+    echo "<ul>\n";
+    foreach ($list as $entry) {
+        echo '<li>' . $purifier->purify($entry) . '</li>';
+    }
+    echo "</ul>\n";
 }
-echo "</ul>\n";

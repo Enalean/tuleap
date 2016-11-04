@@ -48,7 +48,7 @@ class UserDao extends DataAccessObject {
         if (is_array($status)) {
             $where_status=$this->da->quoteSmartImplode(" OR status = ",$status);
         } else { $where_status = $this->da->quoteSmart($status); }
-        $sql = "SELECT * FROM user WHERE status = $where_status";
+        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE status = $where_status";
         return $this->retrieve($sql);
     }
 
@@ -674,6 +674,7 @@ class UserDao extends DataAccessObject {
      * return array of all users or users matching the pattern if $pattern is not empty and order
      * the result according to the clicked header and the order of sort
      *
+     * @param int $group_id
      * @param String $pattern
      * @param Integer $offset
      * @param Integer $limit
@@ -683,9 +684,10 @@ class UserDao extends DataAccessObject {
      *
      * @return Array
      */
-    function listAllUsers ($pattern = "", $offset, $limit, $sort_header, $sort_order, $status_values) {
-        $offset = $this->da->escapeInt($offset);
-        $limit  = $this->da->escapeInt($limit);
+    function listAllUsers ($group_id, $pattern, $offset, $limit, $sort_header, $sort_order, $status_values) {
+        $group_id = $this->da->escapeInt($group_id);
+        $offset   = $this->da->escapeInt($offset);
+        $limit    = $this->da->escapeInt($limit);
         $stmLimit = "";
         if ($limit != 0) {
             $stmLimit .= ' LIMIT '.$offset.', '.$limit;
@@ -709,22 +711,27 @@ class UserDao extends DataAccessObject {
             $where .= ' WHERE status IN ('.$status.')';
         }
 
+        $from = 'FROM user';
+        if ($group_id) {
+            $from .= " INNER JOIN user_group ON (user.user_id = user_group.user_id AND user_group.group_id = $group_id)";
+        }
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of
-            FROM user
+            $from
                 LEFT JOIN (
                     SELECT count(admin_flags) as nb, user_id
                     FROM user_group
                     INNER JOIN groups USING(group_id)
                     WHERE groups.status = 'A' AND admin_flags='A'
                     GROUP BY user_id
-                ) as admin_of USING (user_id)
+                ) as admin_of ON (admin_of.user_id = user.user_id)
                 LEFT JOIN (
                     SELECT count(group_id) as nb, user_id
                     FROM user_group
                     INNER JOIN groups USING(group_id)
                     WHERE groups.status = 'A'
                     GROUP BY user_id
-                ) as member_of USING (user_id)
+                ) as member_of ON (member_of.user_id = user.user_id)
             $where
             ORDER BY ".$sort_header." ".$sort_order.$stmLimit;
 
@@ -732,31 +739,6 @@ class UserDao extends DataAccessObject {
             'users'   => $this->retrieve($sql),
             'numrows' => $this->foundRows()
         );
-    }
-
-   /**
-    * return all users of a given group id
-    *
-    * @param Integer $groupId
-    * @param Integer $offset
-    * @param Integer $limit
-    *
-    * @return Array
-    */
-    function listAllUsersForGroup($groupId, $offset=0, $limit=0) {
-        $stm ="";
-        if ($limit!=0) {
-            $stm = ' ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
-        }
-        $sql ='SELECT SQL_CALC_FOUND_ROWS user.user_id AS user_id,user.user_name
-                  AS user_name, user.realname AS realname,user.status AS status
-               FROM user, user_group
-               WHERE user.user_id=user_group.user_id
-               AND user_group.group_id='.$this->da->escapeInt($groupId).'
-               ORDER BY user.user_name'.$stm;
-
-        $res = $this->retrieve($sql);
-        return array('users' => $res, 'numrows' => $this->foundRows());
     }
 
     /**

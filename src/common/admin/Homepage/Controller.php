@@ -57,7 +57,8 @@ class Admin_Homepage_Controller {
     public function index() {
         $title  = $GLOBALS['Language']->getText('admin_main', 'configure_homepage');
         $params = array(
-            'title' => $title
+            'title'        => $title,
+            'main_classes' => array('tlp-framed')
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $headlines = $this->getHeadlines();

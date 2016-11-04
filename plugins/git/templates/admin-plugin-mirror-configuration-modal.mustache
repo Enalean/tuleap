@@ -1,0 +1,22 @@
+<div id="modal-mirror-configuration" class="tlp-modal tlp-modal-warning" role="dialog" aria-labelledby="modal-big-content-label">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-big-content-label">
+            <i class="fa fa-warning tlp-modal-title-icon"></i> {{ warning }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body mirror-configuration">
+        {{ dump_mirrored_repositories_text }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-warning tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_cancel }}</button>
+        <form method="POST" action="?pane=mirrors_admin&action=dump-gitolite-conf">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <button type="submit" class="tlp-button-warning tlp-modal-action">{{ btn_yes }}</button>
+        </form>
+    </div>
+</div>

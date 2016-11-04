@@ -1,0 +1,118 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#siteadmin-permission-delegation-add-group {
+    margin: $tlp-double-spacing 0 0;
+}
+
+.tlp-tabs #siteadmin-permission-delegation-add-group {
+    margin: $tlp-half-spacing 0 0 $tlp-spacing;
+}
+
+#siteadmin-permission-delegation-group-actions {
+    margin: 0 0 $tlp-spacing;
+}
+
+#siteadmin-permission-delegation-group-actions-edit {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+#siteadmin-permission-delegation-group-details {
+    display: flex;
+}
+
+#siteadmin-permission-delegation-group-details-perms {
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+#siteadmin-permission-delegation-group-details-users {
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+#siteadmin-permission-delegation-group-details-perms-actions {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+#siteadmin-permission-delegation-group-details-perms-actions-add {
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+}
+
+#siteadmin-permission-delegation-group-details-users-actions-delete,
+#siteadmin-permission-delegation-group-details-perms-actions-delete {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+#siteadmin-permission-delegation-group-details-users-empty,
+#siteadmin-permission-delegation-group-details-perms-empty {
+    padding: $tlp-double-spacing $tlp-half-spacing;
+    background: $tlp-theme-background-color;
+    color: transparentize($tlp-theme-color, .7);
+    font-style: italic;
+    text-align: center;
+}
+
+#siteadmin-permission-delegation-group-details-users-container {
+    width: 100%;
+}
+
+#siteadmin-permission-delegation-group-details-users-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin: 0 0 $tlp-half-spacing;
+}
+
+#siteadmin-permission-delegation-group-details-users-actions-add {
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+}
+
+.siteadmin-permission-delegation-group-details-perms-perm-name {
+    width: 100%;
+}
+
+.siteadmin-permission-delegation-group-details-users-user-name {
+    width: 100%;
+}
+
+.siteadmin-permission-delegation-group-details-users-user-avatar {
+    margin: 0 $tlp-half-spacing 0 0;
+    vertical-align: middle;
+}
+
+#siteadmin-permission-delegation-group-details-users-actions-add-input {
+    width: 260px;
+}
+
+@media screen and (max-width: 1200px) {
+    #siteadmin-permission-delegation-group-details {
+        flex-direction: column;
+    }
+
+    #siteadmin-permission-delegation-group-details-perms {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+
+    #siteadmin-permission-delegation-group-details-users {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "label": "Tooltips",
+  "shortcode": ".tlp-tooltip[data-tlp-tooltip]",
+  "children": [
+    "tooltips-tags",
+    "tooltips-placement"
+  ]
+}

@@ -6,7 +6,7 @@ plugin_tracker	cannot_delete_tracker	Ce tracker ne peut pas être supprimé car 
 
 plugin_tracker	service_lbl_key	Suivi
 plugin_tracker	service_desc_key	Outils de suivi du projet
-plugin_tracker	admin_tracker_template	Configuration des modèles d'outils de suivi
+plugin_tracker	admin_tracker_template	Modèles d'outils de suivi
 
 plugin_tracker_homenav	list	Liste des outils de suivi
 plugin_tracker_homenav	search	Recherche
@@ -1647,12 +1647,15 @@ plugin_tracker	field_not_stored_exception	Le champs "$1" n'a pas pu être sauveg
 plugin_tracker	comment_not_stored_exception	Le commentaire n'a pas pu être sauvegardé.
 plugin_tracker	changeset_not_stored_exception	Le changeset n'a pas pu être sauvegardé.
 
-plugin_tracker_deprecation_panel	title	Suivi des éléments en voie d'obsolescence.
+plugin_tracker_deprecation_panel	title	Outils de suivi
+plugin_tracker_deprecation_panel	deprecation_panel	Suivi des éléments en voie d'obsolescence
+plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Suivi des champs calculés en voie d'obsolescence
 plugin_tracker_deprecation_panel	warning_deprecation	L'ancien mode de fonctionnement des champs calculés sera indisponible à partir du 31 décembre 2016.
 plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	Cet outil de suivi est basé sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir du 31 décembre 2016).
 plugin_tracker_deprecation_panel	title_project	Nom du projet
 plugin_tracker_deprecation_panel	title_tracker	Nom de l'outil de suivi
 plugin_tracker_deprecation_panel	title_field	Champs incriminé
+plugin_tracker_deprecation_panel	no_deprecated_fields	Il n'y a aucun champs en voie d'obsolescence
 plugin_tracker_deprecation_panel	adapt_message	Ce projet utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir du 31 décembre 2016). Merci de mettre à jour la configuration des champs :
 
 plugin_tracker_deprecation_field	title_autocompute	Calcul automatique
@@ -1661,8 +1664,9 @@ plugin_tracker_deprecation_field	warning_permissions	Il ne vous sera pas possibl
 
 plugin_tracker	autocomputed_field	valeur calculée
 
-plugin_tracker_config	title	Configuration générale des outils de suivi
+plugin_tracker_config	title	Outils de suivi
 plugin_tracker_config	email_gateway	Passerelle Courriel
+plugin_tracker_config	email_gateway_pane_title	Configuration de la passerelle courriel
 plugin_tracker_config	email_gateway_desc	Autoriser les utilisateurs à intéragir avec les outils de suivi par courriel.
 plugin_tracker_config	disable	Désactiver la passerelle
 plugin_tracker_config	disable_desc	La fonctionnalité est désactivée, personne ne peut intéragir avec les outils de suivi par courriel.
@@ -1692,50 +1696,57 @@ plugin_tracker_emailgateway	semantic_ko	La sémantique titre et/ou description n
 plugin_tracker_emailgateway	required_ko	Les champs autres que titre ou description ne peuvent pas être requis
 
 plugin_tracker_artifact_links_natures	column_label	Nature
-plugin_tracker_artifact_links_natures	title	Nature de liens entre artefacts
+plugin_tracker_artifact_links_natures	title	Natures de liens entre artefacts
 plugin_tracker_artifact_links_natures	available_natures	Nature disponibles
-plugin_tracker_artifact_links_natures	desc	Les liens entre artefacts peuvent être typés en spécifiant pour chaque lien sa nature. La liste des natures possibles est définie ci-dessous :
+plugin_tracker_artifact_links_natures	desc	Les liens entre artefacts peuvent être typés en spécifiant pour chaque lien sa nature. La liste des natures possibles est définie ci-dessous.
 plugin_tracker_artifact_links_natures	shortname	Nom court
 plugin_tracker_artifact_links_natures	forward_label	Label
 plugin_tracker_artifact_links_natures	reverse_label	Label inverse
 plugin_tracker_artifact_links_natures	_is_child_forward	Enfant
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
 plugin_tracker_artifact_links_natures	no_nature	Sans nature
-plugin_tracker_artifact_links_natures	create_new_nature	Créer une nouvelle nature
+plugin_tracker_artifact_links_natures	there_is_no_nature	Il n'y a aucune nature de liens entre artefacts
+plugin_tracker_artifact_links_natures	create_new_nature	Créer une nature
 plugin_tracker_artifact_links_natures	edit_nature	Éditer la nature
 plugin_tracker_artifact_links_natures	edit_icon_label	Éditer
+plugin_tracker_artifact_links_natures	update_button	Mettre à jour
 plugin_tracker_artifact_links_natures	edit_system_nature_title	L'édition des natures de liens systèmes n'est pas autorisée.
 plugin_tracker_artifact_links_natures	missing_shortname	nom court manquant
 plugin_tracker_artifact_links_natures	missing_forward_label	label manquant
 plugin_tracker_artifact_links_natures	missing_reverse_label	label inverse manquant
 plugin_tracker_artifact_links_natures	shortname_help	Seuls les lettres et le tiret bas sont autorisés pour le nom court (il doit cependant commencer par une lettre).
-plugin_tracker_artifact_links_natures	create_error	Impossible de créer la nature : $1
-plugin_tracker_artifact_links_natures	edit_error	Impossible d'éditer la nature : $1
+plugin_tracker_artifact_links_natures	create_error	Impossible de créer la nature : $1
+plugin_tracker_artifact_links_natures	edit_error	Impossible d'éditer la nature : $1
+plugin_tracker_artifact_links_natures	create_success	La nature $1 a été créée avec succès.
+plugin_tracker_artifact_links_natures	edit_success	La nature $1 a été modifié avec succès.
 plugin_tracker_artifact_links_natures	db_error	erreur lors de la manipulation de la base de données. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
 plugin_tracker_artifact_links_natures	create_same_name_error	une nature avec le nom court $1 existe déjà.
 plugin_tracker_artifact_links_natures	forward_label_help	Ex: pour la nature fixed_in, un bug est fixé dans une release donc le label sera "Fixé dans".
 plugin_tracker_artifact_links_natures	reverse_label_help	Ex: pour la nature fixed_in, un bug est fixé dans une release donc le label inverse sera "Fixé" (la release contient des bugs "Fixés").
-plugin_tracker_artifact_links_natures	shortname_placeholder	Ex: fixed_in
-plugin_tracker_artifact_links_natures	forward_label_placeholder	Ex: Fixé dans
-plugin_tracker_artifact_links_natures	reverse_label_placeholder	Ex: Fixé
-plugin_tracker_artifact_links_natures	list_of_allowed_projects	Liste des projets qui peuvent utiliser les natures de liens entre artefacts
+plugin_tracker_artifact_links_natures	shortname_placeholder	fixed_in
+plugin_tracker_artifact_links_natures	forward_label_placeholder	Fixé dans
+plugin_tracker_artifact_links_natures	reverse_label_placeholder	Fixé
+plugin_tracker_artifact_links_natures	list_of_allowed_projects	Projets autorisés à utiliser les natures de liens entre artefacts
 plugin_tracker_artifact_links_natures	list_of_allowed_projects_desc	La fonctionnalité d'ajout de nature aux liens entre artefacts est en cours de développement, aussi nous recommandons de l'activer pour un ensemble choisi de projets. Ces projets ne pourront notamment pas utiliser la hiérarchie entre trackers ni l'agile dashboard.
-plugin_tracker_artifact_links_natures	allowed_project_list_id	ID
+plugin_tracker_artifact_links_natures	allowed_project_list_id	Id
 plugin_tracker_artifact_links_natures	allowed_project_list_name	Nom
-plugin_tracker_artifact_links_natures	allowed_project_list_empty	Aucun projet ne peut utiliser les natures de liens.
+plugin_tracker_artifact_links_natures	allowed_project_list_empty	Aucun projet ne peut utiliser les natures de liens
 plugin_tracker_artifact_links_natures	allowed_project_list_allow_project	Autoriser
-plugin_tracker_artifact_links_natures	allowed_project_list_revoke_projects	Supprimer l'autorisation aux projets sélectionnés
+plugin_tracker_artifact_links_natures	allowed_project_list_revoke_projects	Supprimer l'autorisation
 plugin_tracker_artifact_links_natures	allowed_project_list_allow_placeholder	Nom du projet
-plugin_tracker_artifact_links_natures	allowed_project_list_filter_placeholder	Filtrer sur l'ID d'un projet ou le nom
-plugin_tracker_artifact_links_natures	allowed_project_revoke_title	Attention
+plugin_tracker_artifact_links_natures	allowed_project_list_filter_placeholder	Id ou nom du projet
+plugin_tracker_artifact_links_natures	allowed_project_revoke_title	Supprimer l'autorisation
 plugin_tracker_artifact_links_natures	allowed_project_revoke_description	Vous êtes sur le point de supprimer l'autorisation d'utiliser les natures de liens pour les projects sélectionnés. Êtes-vous sûr de vouloir faire celà ?
-plugin_tracker_artifact_links_natures	allowed_project_revoke_yes	Oui, supprimer l'autorisation
-plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Non
+plugin_tracker_artifact_links_natures	allowed_project_revoke_yes	Supprimer l'autorisation
+plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Annuler
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Les projets soumis ont désormais accès aux natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Les projets soumis ne peuvent plus utiliser les natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Une erreur est survenue pendant la mise à jour de la liste des projets. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
 plugin_tracker_artifact_links_natures	error_multiple_parents	L'artéfact a plus d'un parent. Impossible d'afficher le reste de la hiérarchie.
 plugin_tracker_artifact_links_natures	delete_icon_label	Supprimer
+plugin_tracker_artifact_links_natures	delete_modal_title	Supprimer une nature
+plugin_tracker_artifact_links_natures	delete_modal_submit	Supprimer
+plugin_tracker_artifact_links_natures	delete_modal_content	Vous êtes sur le point de supprimer une nature. Cette action est irréversible. Confirmez-vous la suppression ?
 plugin_tracker_artifact_links_natures	cannot_delete	la nature ne peut être supprimée car elle est ou a déjà été utilisée.
 plugin_tracker_artifact_links_natures	cannot_delete_title	Cette nature ne peut être supprimée car elle est ou a déjà été utilisée.
 plugin_tracker_artifact_links_natures	delete_success	La nature a bien été supprimée.

@@ -1,10 +1,11 @@
 'use strict';
 
-var gulp      = require('gulp'),
-    path      = require('path'),
-    del       = require('del'),
-    scss_lint = require('gulp-scss-lint'),
-    tuleap    = require('./tools/utils/tuleap-gulp-build');
+var gulp               = require('gulp'),
+    path               = require('path'),
+    del                = require('del'),
+    rename             = require('gulp-rename'),
+    scss_lint          = require('gulp-scss-lint'),
+    tuleap             = require('./tools/utils/tuleap-gulp-build');
 
 var fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
@@ -77,7 +78,6 @@ var fat_combined_files = [
         'src/www/scripts/tuleap/tuleap-mention.js',
         'src/www/scripts/tuleap/project-privacy-tooltip.js',
         'src/www/scripts/tuleap/massmail_project_members.js',
-        'src/www/scripts/tuleap/manage-allowed-projects-on-resource.js',
         'src/www/scripts/tuleap/textarea_rte.js',
         'src/www/scripts/admin/system_events.js',
         'src/www/scripts/d3/d3.min.js'
@@ -104,6 +104,14 @@ var fat_combined_files = [
         'src/www/themes/FlamingParrot/js/keymaster/keymaster.js',
         'src/www/themes/FlamingParrot/js/keymaster-sequence/keymaster.sequence.min.js',
         'src/www/themes/FlamingParrot/js/keyboard-navigation.js'
+    ],
+    burning_parrot_files = [
+        'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.js',
+        'src/www/scripts/tuleap/listFilter.js',
+        'src/www/themes/BurningParrot/js/navbar-dropdown.js',
+        'src/www/themes/BurningParrot/js/navbar-dropdown-projects.js',
+        'src/www/themes/BurningParrot/js/scrollbar.js',
+        'src/www/scripts/tuleap/autocomplete-for-select2.js'
     ],
     common_scss = {
         files: [
@@ -143,6 +151,23 @@ var fat_combined_files = [
         ],
         target_dir: 'src/www/themes/FlamingParrot/css'
     },
+    theme_burningparrot_scss = {
+        files: [
+            'src/www/themes/BurningParrot/css/burning-parrot-blue.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-green.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-grey.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-orange.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-purple.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-red.scss'
+        ],
+        watched_includes: [
+            'src/www/themes/BurningParrot/css/**/_*.scss'
+        ],
+        'target_dir': 'src/www/themes/BurningParrot/css'
+    },
+    theme_burningparrot_vendor_css = [
+            'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.css'
+    ],
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
@@ -152,7 +177,7 @@ tuleap.declare_plugin_tasks(asset_dir);
  */
 
 gulp.task('clean-js-core', function() {
-    del(asset_dir);
+    del('src/' + asset_dir + '/*');
 });
 
 gulp.task('js-core', ['clean-js-core'], function() {
@@ -161,7 +186,8 @@ gulp.task('js-core', ['clean-js-core'], function() {
         tuleap                     : fat_combined_files,
         tuleap_subset              : subset_combined_files,
         tuleap_subset_flamingparrot: subset_combined_files.concat(subset_combined_flamingparrot_files),
-        flamingparrot              : flaming_parrot_files
+        flamingparrot              : flaming_parrot_files,
+        burningparrot              : burning_parrot_files
     };
 
     return tuleap.concat_core_js(files_hash, target_dir);
@@ -191,13 +217,24 @@ gulp.task('clean-sass-core', function() {
     tuleap.sass_clean('.', select2_scss.files);
     tuleap.sass_clean('.', theme_tuleap_scss.files);
     tuleap.sass_clean('.', theme_flamingparrot_scss.files);
+    tuleap.sass_clean('.', theme_burningparrot_scss.files);
 });
 
-gulp.task('sass-core', ['clean-sass-core'], function() {
+gulp.task('rename-css-to-scss', function() {
+   gulp.src(theme_burningparrot_vendor_css)
+       .pipe(rename({
+           prefix: '_',
+           extname: '.scss'
+       }))
+       .pipe(gulp.dest(theme_burningparrot_scss.target_dir + '/vendor'));
+});
+
+gulp.task('sass-core', ['clean-sass-core', 'rename-css-to-scss'], function() {
     tuleap.sass_build('.', common_scss);
     tuleap.sass_build('.', select2_scss);
     tuleap.sass_build('.', theme_tuleap_scss);
     tuleap.sass_build('.', theme_flamingparrot_scss);
+    tuleap.sass_build('.', theme_burningparrot_scss);
 });
 
 gulp.task('sass', ['sass-core', 'sass-plugins']);
@@ -211,7 +248,8 @@ gulp.task('watch', function() {
         fat_combined_files
             .concat(subset_combined_files)
             .concat(subset_combined_flamingparrot_files)
-            .concat(flaming_parrot_files),
+            .concat(flaming_parrot_files)
+            .concat(burning_parrot_files)
         ['js-core']
     );
 
@@ -219,7 +257,9 @@ gulp.task('watch', function() {
         common_scss.files
             .concat(select2_scss.files)
             .concat(theme_tuleap_scss.files)
-            .concat(theme_flamingparrot_scss.files),
+            .concat(theme_flamingparrot_scss.files)
+            .concat(theme_burningparrot_scss.files)
+            .concat(theme_burningparrot_scss.watched_includes),
         ['sass-core']
     );
 

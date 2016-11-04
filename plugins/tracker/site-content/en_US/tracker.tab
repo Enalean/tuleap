@@ -7,7 +7,7 @@ plugin_tracker	cannot_delete_tracker	You can't delete this tracker because it is
 
 plugin_tracker	service_lbl_key	Trackers
 plugin_tracker	service_desc_key	Project Trackers
-plugin_tracker	admin_tracker_template	Configuration of predefined tracker templates
+plugin_tracker	admin_tracker_template	Predefined tracker templates
 
 plugin_tracker_homenav	list	Trackers List
 plugin_tracker_homenav	search	Cross Trackers Search
@@ -1646,12 +1646,15 @@ plugin_tracker	field_not_stored_exception	The field "$1" cannot be stored.
 plugin_tracker	comment_not_stored_exception	The comment cannot be stored.
 plugin_tracker	changeset_not_stored_exception	The changeset cannot be stored.
 
-plugin_tracker_deprecation_panel	title	Deprecation monitoring panel
+plugin_tracker_deprecation_panel	title	Trackers
+plugin_tracker_deprecation_panel	deprecation_panel	Deprecation monitoring panel
+plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Deprecated computed fields
 plugin_tracker_deprecation_panel	warning_deprecation	The legacy Computed fields will be gone by December 31st 2016.
 plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	This tracker is based on deprecated computed fields (configuration will be gone by December 31st 2016).
 plugin_tracker_deprecation_panel	title_project	Project Name
 plugin_tracker_deprecation_panel	title_tracker	Tracker Name
 plugin_tracker_deprecation_panel	title_field	Incriminated field
+plugin_tracker_deprecation_panel	no_deprecated_fields	There is no deprecated fields
 plugin_tracker_deprecation_panel	adapt_message	This project uses trackers that are based on deprecated computed fields (configuration will be gone by December 31st 2016). You should adapt now the configuration of:
 
 plugin_tracker_deprecation_field	title_autocompute	Auto-compute
@@ -1660,8 +1663,9 @@ plugin_tracker_deprecation_field	warning_permissions	You will not able to edit b
 
 plugin_tracker	autocomputed_field	autocomputed
 
-plugin_tracker_config	title	Trackers Configuration
+plugin_tracker_config	title	Trackers
 plugin_tracker_config	email_gateway	Email Gateway
+plugin_tracker_config	email_gateway_pane_title	Email Gateway configuration
 plugin_tracker_config	email_gateway_desc	Allow user to interact with trackers by email.
 plugin_tracker_config	disable	Disable email gateway
 plugin_tracker_config	disable_desc	The feature is deactivated, nobody can interact with trackers by email.
@@ -1691,18 +1695,20 @@ plugin_tracker_emailgateway	semantic_ko	Semantic title and/or description are no
 plugin_tracker_emailgateway	required_ko	Other fields than title or description cannot be required
 
 plugin_tracker_artifact_links_natures	column_label	Type
-plugin_tracker_artifact_links_natures	title	Artifact Links Type
+plugin_tracker_artifact_links_natures	title	Artifact Links Types
 plugin_tracker_artifact_links_natures	available_natures	Available types
-plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform:
+plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform.
 plugin_tracker_artifact_links_natures	shortname	Shortname
 plugin_tracker_artifact_links_natures	forward_label	Forward label
 plugin_tracker_artifact_links_natures	reverse_label	Reverse label
 plugin_tracker_artifact_links_natures	_is_child_forward	Child
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
 plugin_tracker_artifact_links_natures	no_nature	No type
-plugin_tracker_artifact_links_natures	create_new_nature	Create new type
+plugin_tracker_artifact_links_natures	there_is_no_nature	There no artifact links types
+plugin_tracker_artifact_links_natures	create_new_nature	Add type
 plugin_tracker_artifact_links_natures	edit_nature	Edit type
 plugin_tracker_artifact_links_natures	edit_icon_label	Edit
+plugin_tracker_artifact_links_natures	update_button	Update type
 plugin_tracker_artifact_links_natures	edit_system_nature_title	Editing system types is disallowed.
 plugin_tracker_artifact_links_natures	missing_shortname	missing shortname
 plugin_tracker_artifact_links_natures	missing_forward_label	missing forward label
@@ -1710,31 +1716,36 @@ plugin_tracker_artifact_links_natures	missing_reverse_label	missing reverse labe
 plugin_tracker_artifact_links_natures	shortname_help	Only letters and underscore are allowed for shortname (must start with a letter though).
 plugin_tracker_artifact_links_natures	create_error	Unable to create the requested type: $1
 plugin_tracker_artifact_links_natures	edit_error	Unable to edit the requested type: $1
+plugin_tracker_artifact_links_natures	create_success	The type $1 has been successfully created.
+plugin_tracker_artifact_links_natures	edit_success	The type $1 has been successfully updated.
 plugin_tracker_artifact_links_natures	db_error	error while playing with the database.  Help us improve your experience by sending an error report.
 plugin_tracker_artifact_links_natures	create_same_name_error	a type with $1 as shortname already exists.
 plugin_tracker_artifact_links_natures	forward_label_help	E.g. for the fixed_in type, a bug will be fixed in a release so the forward label will be "Fixed in".
 plugin_tracker_artifact_links_natures	reverse_label_help	E.g. for the fixed_in type, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).
-plugin_tracker_artifact_links_natures	shortname_placeholder	E.g. fixed_in
-plugin_tracker_artifact_links_natures	forward_label_placeholder	E.g. Fixed in
-plugin_tracker_artifact_links_natures	reverse_label_placeholder	E.g. Fixed
-plugin_tracker_artifact_links_natures	list_of_allowed_projects	List of projects which can use artifact links types
+plugin_tracker_artifact_links_natures	shortname_placeholder	fixed_in
+plugin_tracker_artifact_links_natures	forward_label_placeholder	Fixed in
+plugin_tracker_artifact_links_natures	reverse_label_placeholder	Fixed
+plugin_tracker_artifact_links_natures	list_of_allowed_projects	Projects authorized to use artifact links types
 plugin_tracker_artifact_links_natures	list_of_allowed_projects_desc	As the artifact links types feature is still under heavy development, we recommend to activate it only for a chosen set of projects. Those projects won't be able to use the tracker hierarchy nor the agile dashboard.
-plugin_tracker_artifact_links_natures	allowed_project_list_id	ID
+plugin_tracker_artifact_links_natures	allowed_project_list_id	Id
 plugin_tracker_artifact_links_natures	allowed_project_list_name	Name
-plugin_tracker_artifact_links_natures	allowed_project_list_empty	Currently, there are no projects which can use artifact links type.
+plugin_tracker_artifact_links_natures	allowed_project_list_empty	There is no project which can use artifact links type
 plugin_tracker_artifact_links_natures	allowed_project_list_allow_project	Authorize
-plugin_tracker_artifact_links_natures	allowed_project_list_revoke_projects	Revoke authorization to selected
+plugin_tracker_artifact_links_natures	allowed_project_list_revoke_projects	Revoke authorization
 plugin_tracker_artifact_links_natures	allowed_project_list_allow_placeholder	Project name
-plugin_tracker_artifact_links_natures	allowed_project_list_filter_placeholder	Filter on project ID or name
-plugin_tracker_artifact_links_natures	allowed_project_revoke_title	Warning
+plugin_tracker_artifact_links_natures	allowed_project_list_filter_placeholder	Project id or project name
+plugin_tracker_artifact_links_natures	allowed_project_revoke_title	Revoke authorization
 plugin_tracker_artifact_links_natures	allowed_project_revoke_description	You are about to revoke usage of artifact links type to one or several projects. Are you sure you want to do this?
-plugin_tracker_artifact_links_natures	allowed_project_revoke_yes	Yes, revoke usage
-plugin_tracker_artifact_links_natures	allowed_project_revoke_no	No
+plugin_tracker_artifact_links_natures	allowed_project_revoke_yes	Revoke authorization
+plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Cancel
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Submitted projects will be able to use artifact links types.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted projects will not be anymore able to use artifact links types.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Something went wrong during the update. Help us improve your experience by sending an error report.
 plugin_tracker_artifact_links_natures	error_multiple_parents	The artifact has more than one parent. Cannot display rest of hierarchy.
 plugin_tracker_artifact_links_natures	delete_icon_label	Delete
+plugin_tracker_artifact_links_natures	delete_modal_title	Delete type
+plugin_tracker_artifact_links_natures	delete_modal_submit	Delete
+plugin_tracker_artifact_links_natures	delete_modal_content	You are about to delete a type. This action is action is irreversible. Do you confirm this deletion?
 plugin_tracker_artifact_links_natures	cannot_delete	type can't be deleted because it is or has been already used.
 plugin_tracker_artifact_links_natures	cannot_delete_title	This type can't be deleted because it is or has been already used.
 plugin_tracker_artifact_links_natures	delete_success	The type has been successfuly deleted.

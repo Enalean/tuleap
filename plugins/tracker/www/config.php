@@ -35,17 +35,19 @@ use Tuleap\Tracker\Config\ConfigRouter;
 use Tuleap\Tracker\Deprecation\DeprecationController;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
+use Tuleap\Admin\AdminPageRenderer;
 
 require_once('pre.php');
 
 $plugin_manager = PluginManager::instance();
 $plugin = $plugin_manager->getPluginByName('tracker');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $project_manager  = ProjectManager::instance();
-    $request          = HTTPRequest::instance();
-    $current_user     = UserManager::instance()->getCurrentUser();
-    $nature_dao       = new NatureDao();
-    $nature_validator = new NatureValidator($nature_dao);
+    $project_manager     = ProjectManager::instance();
+    $request             = HTTPRequest::instance();
+    $current_user        = UserManager::instance()->getCurrentUser();
+    $nature_dao          = new NatureDao();
+    $nature_validator    = new NatureValidator($nature_dao);
+    $admin_page_renderer = new AdminPageRenderer();
 
     $router = new ConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
@@ -54,7 +56,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 new MailGatewayConfigDao()
             ),
             new Config_LocalIncFinder(),
-            EventManager::instance()
+            EventManager::instance(),
+            $admin_page_renderer
         ),
         new NatureConfigController(
             $project_manager,
@@ -76,7 +79,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             ),
             new NaturePresenterFactory(
                 $nature_dao
-            )
+            ),
+            $admin_page_renderer
         ),
         new DeprecationController(
             new DeprecationRetriever(
@@ -84,7 +88,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 ProjectManager::instance(),
                 TrackerFactory::instance(),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            $admin_page_renderer
         )
     );
     $router->process($request, $GLOBALS['HTML'], $current_user);

@@ -1,0 +1,32 @@
+<form method="POST"
+      action="?pane=mirrors_admin&action=delete-mirror"
+      id="delete-modal-{{ id }}"
+      class="tlp-modal tlp-modal-danger"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+
+        <input type="hidden" name="mirror_id" value="{{ id }}">
+
+        <p>{{{ purified_delete_desc }}}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ btn_cancel }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{ btn_delete }}
+        </button>
+    </div>
+</form>

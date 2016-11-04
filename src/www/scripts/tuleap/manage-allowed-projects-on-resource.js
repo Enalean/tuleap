@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean - 2015. All rights reserved
+ * Copyright (c) Enalean - 2015 - 2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +20,45 @@
     var ESC_KEYCODE = 27;
 
     $(function() {
+        bindAllowAllEvent();
         bindFilterEvent();
         bindCheckboxesEvent();
         bindDeleteEvent();
         projectAutocompleter();
     });
 
+    function bindAllowAllEvent() {
+        $('#allowed-projects-all-allowed').on('change', function() {
+            $('#' + $(this).attr('data-form-id')).submit();
+        });
+    }
+
     function bindFilterEvent() {
-        $('#allowed-projects-list-actions').on('keyup', '#filter-projects', function(event) {
+        $('#projects-allowed-form').on('keyup', '#filter-projects', function(event) {
             if (event.keyCode == ESC_KEYCODE) {
                 $(this).val('');
             }
 
-            $('#allowed-projects-list table').find('td:not(:caseInsensitiveContains(' +  $(this).val() + '))').parent().hide();
-            $('#allowed-projects-list table').find('td:caseInsensitiveContains(' +  $(this).val() + ')').parent().show();
+            search =  $(this).val();
+            table  = document.getElementById("allowed-projects-list");
+            tr     = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                var tds = tr[i].getElementsByTagName("td");
+
+                for (j = 0; j < tds.length; j++) {
+                    var tr_display = "";
+
+                    if (tds[j].classList.contains('resource-restrictor-cell-project-id') || tds[j].classList.contains('resource-restrictor-cell-project-name')) {
+                        if (tds[j].textContent.toUpperCase().indexOf(search.toUpperCase()) === -1) {
+                            tr_display = "none";
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = tr_display;
+            }
         });
     }
 
@@ -75,26 +100,33 @@
     }
 
     function bindDeleteEvent() {
-        $('#revoke-project').on('click', function(event) {
-            event.preventDefault();
-            $('#revoke-modal').modal('show');
-        });
+        var dom_natures_modal_create = document.getElementById('revoke-modal');
 
-        $('#revoke-confirm').click(function() {
-            $('<input>')
-                .attr('type', 'hidden')
-                .attr('name', 'revoke-project')
-                .attr('value', '1')
-                .appendTo('#projects-allowed-form');
+        if (dom_natures_modal_create) {
+            var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
 
-            $('#projects-allowed-form').submit();
-        });
+            $('#revoke-project').on('click', function () {
+                tlp_natures_modal_create.toggle();
+            });
 
+            $('#revoke-confirm').click(function() {
+                $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'revoke-project')
+                    .attr('value', '1')
+                    .appendTo('#projects-allowed-form');
+
+                $('#projects-allowed-form').submit();
+            });
+        }
     }
 
     function projectAutocompleter() {
-        var autocompleter = new ProjectAutoCompleter('project-to-allow', codendi.imgroot, false);
-        autocompleter.registerOnLoad();
+        var autocompleter = document.getElementById('project-to-allow');
+
+        if (autocompleter) {
+            tuleap.autocomplete_projects_for_select2(autocompleter, { include_private_projects: 1 });
+        }
     }
 
 })(window.jQuery);
