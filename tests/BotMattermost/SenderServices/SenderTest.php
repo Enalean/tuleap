@@ -28,19 +28,16 @@ class SenderTest extends TuleapTestCase
 {
 
     private $encoder_message;
-    private $notification_builder;
     private $botMattermost_client;
 
     public function setUp()
     {
         parent::setUp();
         $this->encoder_message      = mock('Tuleap\\BotMattermost\\SenderServices\\EncoderMessage');
-        $this->notification_builder = mock('Tuleap\\BotMattermost\\SenderServices\\NotificationBuilder');
         $this->botMattermost_client = mock('Tuleap\\BotMattermost\\SenderServices\\ClientBotMattermost');
 
         $this->sender = new Sender(
             $this->encoder_message,
-            $this->notification_builder,
             $this->botMattermost_client
         );
     }
@@ -54,10 +51,9 @@ class SenderTest extends TuleapTestCase
         stub($bot1)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
         stub($bot2)->getChannelsNames()->returns(array('channel1'));
         stub($bot2)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
-        stub($this->notification_builder)->buildNotificationText()->returns($text);
         $bots = array($bot1, $bot2);
 
-        $this->sender->pushNotifications($bots);
+        $this->sender->pushNotifications($bots, $text);
         $this->botMattermost_client->expectCallCount('sendMessage', 3);
     }
 }

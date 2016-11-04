@@ -46,11 +46,12 @@ class BotMattermostPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function site_admin_option_hook()
+    public function site_admin_option_hook($params)
     {
-        $url  = $this->getPluginPath().'/admin/';
-        $name = $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name');
-        echo '<li><a href="', $url, '">', $name, '</a></li>';
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/admin/'
+        );
     }
 
     public function cssfile($params)

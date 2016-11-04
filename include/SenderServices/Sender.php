@@ -27,25 +27,21 @@ class Sender
 {
 
     private $encoder_message;
-    private $notification_maker;
     private $client;
 
     public function __construct(
         EncoderMessage $encoder_message,
-        NotificationBuilder $notification_maker,
         ClientBotMattermost $client
     ) {
         $this->encoder_message    = $encoder_message;
-        $this->notification_maker = $notification_maker;
         $this->client             = $client;
     }
 
     /**
      * @param Bot[] $bots
      */
-    public function pushNotifications(array $bots)
+    public function pushNotifications(array $bots, $text)
     {
-        $text = $this->notification_maker->buildNotificationText();
         foreach ($bots as $bot) {
             $this->pushNotificationsForEachChannels($bot, $text);
         }

@@ -22,7 +22,7 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 use Guzzle\Http\Client;
 
-require_once '/usr/share/php-guzzle/guzzle.phar';
+require_once '/usr/share/php/Guzzle/autoload.php';
 
 class ClientBotMattermost
 {
