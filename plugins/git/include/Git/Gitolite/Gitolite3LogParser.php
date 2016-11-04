@@ -158,8 +158,13 @@ class Gitolite3LogParser
             $user = $this->user_manager->getUserByUserName($line[4]);
             $day  = DateTime::createFromFormat('Y-m-d.H:i:s', $line[0]);
 
-            $user->getId();
-            $this->history_dao->insertGitReadAccess($repository->getId(), $user->getId(), $day->getTimestamp());
+            if ($user) {
+                $user_id = $user->getId();
+            } else {
+                $user_id = 0;
+            }
+
+            $this->history_dao->insertGitReadAccess($repository->getId(), $user_id, $day->getTimestamp());
         }
     }
 
