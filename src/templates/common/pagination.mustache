@@ -1,55 +1,57 @@
-<div class="tlp-pagination">
-    <a href="{{ first_url }}"
-        class="tlp-button-primary
-            tlp-button-outline
-            tlp-button-small
-            tlp-pagination-button
-            {{# first_is_disabled }} disabled{{/ first_is_disabled }}"
-        role="button"
-        title="{{ first_label }}"
-    >
-        <i class="fa fa-angle-double-left"></i>
-    </a>
-    <a href="{{ previous_url }}"
-        class="tlp-button-primary
-            tlp-button-outline
-            tlp-button-small
-            tlp-pagination-button
-            {{# previous_is_disabled }}disabled{{/ previous_is_disabled }}"
-        role="button"
-        title="{{ previous_label }}"
-    >
-        <i class="fa fa-angle-left"></i>
-    </a>
+{{# has_result }}
+    <div class="tlp-pagination">
+        <a href="{{ first_url }}"
+            class="tlp-button-primary
+                tlp-button-outline
+                tlp-button-small
+                tlp-pagination-button
+                {{# first_is_disabled }} disabled{{/ first_is_disabled }}"
+            role="button"
+            title="{{ first_label }}"
+        >
+            <i class="fa fa-angle-double-left"></i>
+        </a>
+        <a href="{{ previous_url }}"
+            class="tlp-button-primary
+                tlp-button-outline
+                tlp-button-small
+                tlp-pagination-button
+                {{# previous_is_disabled }}disabled{{/ previous_is_disabled }}"
+            role="button"
+            title="{{ previous_label }}"
+        >
+            <i class="fa fa-angle-left"></i>
+        </a>
 
-    <span class="tlp-pagination-pages">
-        <span class="tlp-pagination-number">{{ offset_start_range }}</span>
-        –
-        <span class="tlp-pagination-number">{{ offset_end_range }}</span>
-        of
-        <span class="tlp-pagination-number">{{ nb_total }}</span>
-    </span>
+        <span class="tlp-pagination-pages">
+            <span class="tlp-pagination-number">{{ offset_start_range }}</span>
+            –
+            <span class="tlp-pagination-number">{{ offset_end_range }}</span>
+            of
+            <span class="tlp-pagination-number">{{ nb_total }}</span>
+        </span>
 
-    <a href="{{ next_url }}"
-        class="tlp-button-primary
-            tlp-button-outline
-            tlp-button-small
-            tlp-pagination-button
-            {{# next_is_disabled }}disabled{{/ next_is_disabled }}"
-        role="button"
-        title="{{ next_label }}"
-    >
-        <i class="fa fa-angle-right"></i>
-    </a>
-    <a href="{{ last_url }}"
-        class="tlp-button-primary
-               tlp-button-outline
-               tlp-button-small
-               tlp-pagination-button
-               {{# last_is_disabled }}disabled{{/ last_is_disabled }}"
-        role="button"
-        title="{{ last_label }}"
-    >
-        <i class="fa fa-angle-double-right"></i>
-    </a>
-</div>
+        <a href="{{ next_url }}"
+            class="tlp-button-primary
+                tlp-button-outline
+                tlp-button-small
+                tlp-pagination-button
+                {{# next_is_disabled }}disabled{{/ next_is_disabled }}"
+            role="button"
+            title="{{ next_label }}"
+        >
+            <i class="fa fa-angle-right"></i>
+        </a>
+        <a href="{{ last_url }}"
+            class="tlp-button-primary
+                   tlp-button-outline
+                   tlp-button-small
+                   tlp-pagination-button
+                   {{# last_is_disabled }}disabled{{/ last_is_disabled }}"
+            role="button"
+            title="{{ last_label }}"
+        >
+            <i class="fa fa-angle-double-right"></i>
+        </a>
+    </div>
+{{/ has_result }}
