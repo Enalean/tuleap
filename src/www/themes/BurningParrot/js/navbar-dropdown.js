@@ -17,111 +17,95 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Handle navbar dropdown events
- */
 (function() {
-    const escape_code_value = 27;
-
-    const nav_dropdow_selector_name           = 'nav-dropdown';
-    const dropdow_selector_name               = 'nav-dropdown-content';
-    const nav_dropdown_visible_name           = 'nav-dropdown-visible';
-    const nav_dropdown_content_visible_name   = 'nav-dropdown-content-visible';
-    const nav_dropdown_content_hidden_name    = 'nav-dropdown-content-hidden';
-    const nav_dropdown_content_disappear_name = 'nav-dropdown-content-disappear';
-    const nav_link_text_name                  = 'nav-link-text';
-    const nav_link_icon_name                  = 'nav-link-icon';
-    const nav_link_icon_dropdown_name         = 'nav-link-icon-dropdown';
-
-    const dropdown_selector = '.nav-dropdown-content';
+    var escape_code_value                        = 27,
+        nav_dropdown_content_classname           = 'nav-dropdown-content',
+        nav_dropdown_link_classname              = 'nav-dropdown-link',
+        nav_dropdown_content_hidden_classname    = 'nav-dropdown-content-hidden',
+        nav_dropdown_content_disappear_classname = 'nav-dropdown-content-disappear',
+        nav_dropdown_content_visible_classname   = 'nav-dropdown-content-visible';
 
     document.addEventListener('DOMContentLoaded', function() {
-        displayDropdown();
-
-        document.addEventListener('click', function(event) {
-            var target = event.target;
-            if (! target.classList.contains(nav_dropdow_selector_name)
-                && ! target.classList.contains(nav_link_text_name)
-                && ! target.classList.contains(nav_link_icon_name)
-                && ! target.classList.contains(nav_link_icon_dropdown_name)
-            ) {
-                removeDropdown();
-            }
-        });
-
-        document.addEventListener('keyup', function(event) {
-            if (event.keyCode == escape_code_value) {
-                removeDropdown();
-            }
-        });
+        bindToggleDropdown();
+        bindCloseOnClickOutsideDropdown();
+        bindCloseOnEscape();
     });
 
-    function displayDropdown() {
-        var nav_dropdow_elements = document.getElementsByClassName(nav_dropdow_selector_name);
+    function bindToggleDropdown() {
+        var nav_dropdown_links = document.getElementsByClassName(nav_dropdown_link_classname);
 
-        for (var i = 0, n = nav_dropdow_elements.length; i < n; i++) {
-            var nav_dropdow_element          = nav_dropdow_elements[i];
-            var nav_dropdow_element_children = nav_dropdow_element.children;
+        [].forEach.call(nav_dropdown_links, function(nav_dropdown_link) {
+            nav_dropdown_link.addEventListener('click', function(event) {
+                toggleDropdown(nav_dropdown_link.dataset.navDropdownContentId);
+            });
+        });
+    }
 
-            for (var j = 0, m = nav_dropdow_element_children.length; j < m; j++) {
-                nav_dropdow_element_children[j].addEventListener('click', function(event) {
-                    var target = event.target;
-                    if (! target.classList.contains(nav_link_text_name)
-                        && ! target.classList.contains(nav_link_icon_name)
-                        && ! target.classList.contains(nav_link_icon_dropdown_name)
-                    ) {
-                        event.stopPropagation();
-                    }
-                });
+    function bindCloseOnClickOutsideDropdown() {
+        document.addEventListener('click', function(event) {
+            var target = event.target;
+
+            if (! findClosest(target, nav_dropdown_content_classname)
+                && ! findClosest(target, nav_dropdown_link_classname)
+            ) {
+                hideAllDropdowns();
+            }
+        });
+    }
+
+    function bindCloseOnEscape() {
+        document.addEventListener('keyup', function(event) {
+            var target = event.target;
+
+            if (target.tagName.toLowerCase() === 'input'
+                && findAncestor(target, nav_dropdown_content_classname)
+            ) {
+                return;
             }
 
-            nav_dropdow_element.addEventListener('click', function(event) {
-                var target                  = event.target;
-                var dropdown_element        = getDropdownElement(target);
-                var dropdown_element_parent = dropdown_element.parentNode;
-
-                if (dropdown_element.classList.contains(nav_dropdown_content_hidden_name)) {
-                    dropdown_element.classList.remove(nav_dropdown_content_hidden_name);
-                }
-
-                if (dropdown_element.classList.contains(nav_dropdown_content_visible_name)) {
-                    dropdown_element.classList.add(nav_dropdown_content_disappear_name);
-                    dropdown_element.classList.remove(nav_dropdown_content_visible_name);
-                    dropdown_element_parent.classList.remove(nav_dropdown_visible_name);
-                } else {
-                    dropdown_element.classList.remove(nav_dropdown_content_disappear_name);
-                    dropdown_element.classList.add(nav_dropdown_content_visible_name);
-                    dropdown_element_parent.classList.add(nav_dropdown_visible_name);
-                }
-            });
-        }
+            if (event.keyCode == escape_code_value) {
+                hideAllDropdowns();
+            }
+        });
     }
 
-    function removeDropdown() {
-        var nav_dropdow_elements = document.getElementsByClassName(nav_dropdow_selector_name);
-        var dropdow_elements     = document.getElementsByClassName(dropdow_selector_name);
-        for (var i = 0, n = nav_dropdow_elements.length; i < n; i++) {
-            nav_dropdow_elements[i].classList.remove(nav_dropdown_visible_name);
+    function toggleDropdown(id) {
+        var dropdown = document.getElementById(id);
+
+        if (dropdown.classList.contains(nav_dropdown_content_hidden_classname)) {
+            dropdown.classList.remove(nav_dropdown_content_hidden_classname);
         }
 
-        for (i = 0, n = dropdow_elements.length; i < n; i++) {
-            dropdow_elements[i].classList.add(nav_dropdown_content_disappear_name);
-            dropdow_elements[i].classList.remove(nav_dropdown_content_visible_name);
-        }
-    }
+        if (dropdown.classList.contains(nav_dropdown_content_visible_classname)) {
+            dropdown.classList.remove(nav_dropdown_content_visible_classname);
+            dropdown.classList.add(nav_dropdown_content_disappear_classname);
 
-    function getDropdownElement(element) {
-        var dropdown_element;
-        if (element.classList.contains(nav_dropdow_selector_name)) {
-            dropdown_element = element.querySelector(dropdown_selector);
         } else {
-            dropdown_element = findAncestor(element, nav_dropdow_selector_name).querySelector(dropdown_selector);
+            dropdown.classList.add(nav_dropdown_content_visible_classname);
+            dropdown.classList.remove(nav_dropdown_content_disappear_classname);
         }
-        return dropdown_element;
     }
 
-    function findAncestor(element, cls) {
-        while ((element = element.parentElement) && ! element.classList.contains(cls)) {}
+    function hideAllDropdowns() {
+        var nav_dropdown_contents = document.getElementsByClassName(nav_dropdown_content_classname);
+
+        [].forEach.call(nav_dropdown_contents, function(nav_dropdown_content) {
+            nav_dropdown_content.classList.remove(nav_dropdown_content_visible_classname);
+            nav_dropdown_content.classList.add(nav_dropdown_content_disappear_classname);
+        });
+    }
+
+    function findClosest(element, classname) {
+        if (element.classList.contains(classname)) {
+            return element;
+        }
+
+        return findAncestor(element, classname);
+    }
+
+    function findAncestor(element, classname) {
+        while ((element = element.parentElement) && ! element.classList.contains(classname)) {}
         return element;
     }
+
 })();
