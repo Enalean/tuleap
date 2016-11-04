@@ -1,3 +1,6 @@
+Version 4.286 - Tuleap 9.1
+    * story #9585 Get rid of Bootstrap in site admin / plugins (Add margin for ssh icon key in gerrit server list)
+
 Version 4.285 - Tuleap 9.1
     * story #9585 BurningParrot in git plugin settings (Warning when gerrit server list is empty)
 
