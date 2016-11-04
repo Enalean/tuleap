@@ -15,15 +15,27 @@ Version 9.1 (Not Released Yet)
 	* request #9627: TV5: numeric values are truncated in a text field
 
 	== Plugins ==
-	* svn: 0.102
-	* tracker: 5.1029
-	* git: 4.283
-	* agiledashboard: 1.431
+	* svn: 0.103
+	* tracker: 5.1030
+	* git: 4.284
+	* agiledashboard: 1.432
 	* archivedeleteditems: 0.10
-	* docman: 2.26.122
+	* docman: 2.26.123
+	* IM: 1.5.39
+	* admindelegation: 2.14
+	* fulltextsearch: 0.136
+	* ldap: 3.115
+	* mediawiki: 0.125
+	* openidconnectclient: 0.27
+	* phpwiki: 0.12
+	* pluginsadministration: 1.21
+	* statistics: 0.67
+	* tests: 5.36
+	* userlog: 1.11
 
 	== Themes ==
-	* FlamingParrot: 1.154
+	* FlamingParrot: 1.156
+	* BurningParrot: 0.1
 
 	== Development ==
 	* request #9263 Do not use underscore in Tuleap dev hostname
