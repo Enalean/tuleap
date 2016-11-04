@@ -1,3 +1,6 @@
+Version 0.30 - Tuleap 9.1
+    * story #9585 Get rid of Bootstrap in site admin / plugins (Creation of providers shouldn't be submitable again with F5)
+
 Version 0.29 - Tuleap 9.1
     * story #9200 BurningParrot in openid connect plugin settings (Correct check when no providers are set in Open id connect plugin)
 
