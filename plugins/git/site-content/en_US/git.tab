@@ -1,11 +1,11 @@
 plugin_git	descriptor_description	Plugin which provides Git support for Tuleap
-plugin_git	descriptor_name	Git Plugin
+plugin_git	descriptor_name	Git
 plugin_git	please_choose	Please choose
 plugin_git	cancel	Cancel
 plugin_git	edit	edit
 plugin_git	view	view
 
-plugin_git	title	Git Plugin
+plugin_git	title	Git
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
 
@@ -91,7 +91,6 @@ plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already
 plugin_git	gerrit_server_migration_error	The migration failed $1, the gerrit repository is probably <strong>corrupted or partially migrated</strong>, do not use it and contact your site administration
 plugin_git	permissions_on_remote_server	You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to $1 <strong>ARE NOT propagated to Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.
-plugin_git	gerrit_migrate_access_right	Migrate to Gerrit the access rights defined in the Git plugin.
 plugin_git	gerrit_template	Please choose a permission's configuration template for the migration,<br />they will be applied to the migrated repository on Gerrit:
 plugin_git	default_gerrit_template	Permissions defined in Git
 plugin_git	none_gerrit_template	No pre-set permissions
