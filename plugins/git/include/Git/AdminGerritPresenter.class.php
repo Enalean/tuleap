@@ -108,6 +108,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public function list_of_servers_is_empty()
     {
-        return $this->list_of_servers[0]->id === 0;
+        return count($this->list_of_servers) === 0;
     }
 }
