@@ -15,7 +15,13 @@
                     </h1>
                 </div>
                 <section class="tlp-pane-section">
-                    <table class="tlp-table">
+                    <div class="tlp-table-actions">
+                        <div class="tlp-table-actions-spacer"></div>
+                        <div class="tlp-form-element ">
+                            <input type="search" id="filter-plugins" class="tlp-search" size="28" placeholder="{{ filter_label }}">
+                        </div>
+                    </div>
+                    <table class="tlp-table" id="plugins-list">
                         <thead>
                         <tr>
                             <th>{{ plugin_table_head }}</th>
@@ -27,9 +33,9 @@
                         <tbody>
                         {{# plugins }}
                             <tr>
-                                <td class="pluginsadministration-available-list-name-cell">{{ full_name }}</td>
+                                <td class="pluginsadministration-available-list-name-cell plugins-list-filterable">{{ full_name }}</td>
                                 <td>{{ version }}</td>
-                                <td class="pluginsadministration-available-list-description-cell">{{ description }}</td>
+                                <td class="pluginsadministration-available-list-description-cell plugins-list-filterable">{{ description }}</td>
                                 <td>
                                     <button class="tlp-button-primary tlp-button-outline tlp-button-small install-plugin-button"
                                         data-modal-id="install-plugin-{{ name }}"

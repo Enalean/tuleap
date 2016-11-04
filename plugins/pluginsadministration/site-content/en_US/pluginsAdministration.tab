@@ -41,6 +41,7 @@ plugin_pluginsadministration	select_hook	Select hook:
 plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
 plugin_pluginsadministration	Available?	Enabled?
 plugin_pluginsadministration	title	Plugins
+plugin_pluginsadministration	filter_label	Filter on name or description
 plugin_pluginsadministration	there_is_no_plugin	<em>There is no plugin installed yet.</em>
 plugin_pluginsadministration	uninstall	Uninstall
 plugin_pluginsadministration	uninstall_plugin_icon_label	Uninstall
