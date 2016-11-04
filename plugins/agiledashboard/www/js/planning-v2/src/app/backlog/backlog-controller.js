@@ -438,8 +438,8 @@ function BacklogController(
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {
-        return ! preventDrag(element_to_drag)
-            && ancestorHasHandleClass(handle_element);
+        return (! ancestorCannotBeDragged(handle_element)
+            && ancestorHasHandleClass(handle_element));
     }
 
     function ancestorHasHandleClass(handle_element) {
@@ -447,7 +447,8 @@ function BacklogController(
             .closest('.dragular-handle').length > 0;
     }
 
-    function preventDrag(element_to_drag) {
-        return angular.element(element_to_drag).data('nodrag');
+    function ancestorCannotBeDragged(handle_element) {
+        return (angular.element(handle_element)
+            .closest('[data-nodrag="true"]').length > 0);
     }
 }
