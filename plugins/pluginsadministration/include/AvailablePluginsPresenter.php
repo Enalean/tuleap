@@ -32,6 +32,7 @@ class AvailablePluginsPresenter
     public $version_table_head;
     public $description_table_head;
     public $install_label;
+    public $filter_label;
 
     public function __construct(array $plugins)
     {
@@ -49,5 +50,6 @@ class AvailablePluginsPresenter
         $this->error_install_dependency = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_install_dependency');
         $this->install_modal_submit     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_submit');
         $this->install_modal_cancel     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_cancel');
+        $this->filter_label             = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
     }
 }

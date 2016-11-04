@@ -132,4 +132,9 @@ class PluginsAdministration_Presenter_InstalledPluginsPresenter {
     {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_web_space');
     }
+
+    public function filter_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
+    }
 }

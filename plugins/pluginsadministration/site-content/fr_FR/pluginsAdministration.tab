@@ -41,6 +41,7 @@ plugin_pluginsadministration	select_hook	Sélectionnez un hook :
 plugin_pluginsadministration	select_install	Sélectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associé au plugin avant de continuer.
 plugin_pluginsadministration	Available?	Activé ?
 plugin_pluginsadministration	title	Plugins
+plugin_pluginsadministration	filter_label	Nom, description
 plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugin installé.</em>
 plugin_pluginsadministration	uninstall	Désinstaller
 plugin_pluginsadministration	uninstall_plugin_icon_label	Désinstaller
