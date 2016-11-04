@@ -1,3 +1,6 @@
+Version 0.29 - Tuleap 9.1
+    * story #9200 BurningParrot in openid connect plugin settings (Correct check when no providers are set in Open id connect plugin)
+
 Version 0.28 - Tuleap 9.1
     * story #9200 BurningParrot in openid connect plugin settings
 
