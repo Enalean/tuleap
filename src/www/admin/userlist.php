@@ -103,9 +103,11 @@ if ($request->exist('export')) {
     //Get status values
     $status_values = array();
     if ($request->exist('status_values')) {
-        $status = $request->get('status_values');
-        if($status != "" && $status != "ANY") {
-            $status_values = explode(',', $status);
+        $status_submitted = $request->get('status_values');
+        foreach ($status_submitted as $status) {
+            if ($status != "ANY") {
+                $status_values[] = $status;
+            }
         }
     }
     //export user list in csv format
