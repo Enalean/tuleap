@@ -1,0 +1,16 @@
+<form
+    class="nav-form"
+    action="/account/logout.php"
+    method="POST"
+>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <button
+        class="nav-form-button"
+        type="submit"
+        title="{{ label }}"
+    >
+        <i class="fa fa-power-off nav-form-button-icon"></i>
+    </button>
+</form>
