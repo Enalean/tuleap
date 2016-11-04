@@ -1,5 +1,5 @@
 $nav-dropdown-content-projects-content-padding: 10px 20px;
-$nav-dropdown-content-border: 1px solid #cccccc;
+$nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 
 #nav-dropdown-content-projects-filter-projects {
     margin: 0 $tlp-spacing 0 0;
@@ -70,9 +70,9 @@ $nav-dropdown-content-border: 1px solid #cccccc;
 }
 
 .nav-dropdown-content-projects-list-project-name {
+    flex: 1;
     padding: $nav-dropdown-content-projects-content-padding;
     color: $tlp-ui-dimmed;
-    flex: 1;
 }
 
 .nav-dropdown-content-projects-list-project-name:hover,
@@ -96,7 +96,7 @@ $nav-dropdown-content-border: 1px solid #cccccc;
 }
 
 .nav-dropdown-content-projects-list-project-config:hover,
-.nav-dropdown-content-projects-list-project-config-hover{
+.nav-dropdown-content-projects-list-project-config-hover {
     transform: scale(1.2);
     transition: transform 50ms linear;
     color: $tlp-theme-color;
