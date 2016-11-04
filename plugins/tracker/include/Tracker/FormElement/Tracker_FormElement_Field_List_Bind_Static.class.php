@@ -340,7 +340,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
         $R2 = 'R2_'. $this->field->id;
-        return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON (color.value_id = $R2.id)";
+
+        return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON ($R2.field_id = color.field_id AND color.value_id = $R2.id)";
     }
 
     /**
