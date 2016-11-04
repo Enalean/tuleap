@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 use HTTPRequest;
 use PFUser;
 use EventManager;
+use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownItemsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenterBuilder;
 
@@ -34,12 +35,17 @@ class PresenterBuilder
     /** @var PFUser */
     private $current_user;
 
+    /** @var array */
+    private $extra_tabs;
+
     public function build(
         HTTPRequest $request,
-        PFUser $current_user
+        PFUser $current_user,
+        array $extra_tabs
     ) {
         $this->request      = $request;
         $this->current_user = $current_user;
+        $this->extra_tabs   = $extra_tabs;
 
         return new Presenter(
             new GlobalNavPresenter(
@@ -58,13 +64,22 @@ class PresenterBuilder
     private function getGlobalNavbarDropdownMenuItems()
     {
         $projects_builder                 = new ProjectPresenterBuilder();
+        $navbar_dropdown_items_builder    = new DropdownItemsPresenterBuilder();
         $navbar_dropdown_projects_builder = new DropdownProjectsPresenterBuilder();
+
+        $projects  = $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user));
+        $dropdowns = $navbar_dropdown_items_builder->build($this->extra_tabs);
 
         return array(
             new GlobalNavbarDropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
                 'fa fa-archive',
-                $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user))
+                $projects
+            ),
+            new GlobalNavbarDropdownMenuItemPresenter(
+                $GLOBALS['Language']->getText('include_menu', 'extras'),
+                'fa fa-ellipsis-h',
+                $dropdowns
             )
         );
     }
@@ -72,12 +87,6 @@ class PresenterBuilder
     private function getGlobalMenuItems()
     {
         return array(
-            new GlobalMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'extras'),
-                '#',
-                'fa fa-ellipsis-h',
-                ''
-            ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'help'),
                 '/site/',

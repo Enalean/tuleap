@@ -31,7 +31,7 @@ use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder
 
 class HeaderPresenterBuilder
 {
-    /** @var Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder */
+    /** @var NavbarPresenterBuilder */
     private $navbar_presenter_builder;
 
     /** @var HTTPRequest */
@@ -77,7 +77,8 @@ class HeaderPresenterBuilder
             $this->imgroot,
             $this->navbar_presenter_builder->build(
                 $this->request,
-                $this->current_user
+                $this->current_user,
+                $this->getExtraTabs()
             ),
             $color,
             $this->getStylesheets($color),
@@ -85,6 +86,26 @@ class HeaderPresenterBuilder
             $this->getMainClassesAsString(),
             $this->sidebar
         );
+    }
+
+    private function getExtraTabs()
+    {
+        $additional_tabs = array();
+
+        include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
+
+        if ($GLOBALS['sys_use_snippet'] != 0) {
+            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
+
+            array_unshift($additional_tabs, array(
+                    'link'      => '/snippet/',
+                    'title'     => $GLOBALS['Language']->getText('include_menu','code_snippets'),
+                    'selected'  => $selected,
+                )
+            );
+        }
+
+        return $additional_tabs;
     }
 
     private function getPageTitle()

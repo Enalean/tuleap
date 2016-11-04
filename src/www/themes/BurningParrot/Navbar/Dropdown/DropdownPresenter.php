@@ -22,6 +22,8 @@ namespace Tuleap\Theme\BurningParrot\Navbar\Dropdown;
 
 abstract class DropdownPresenter
 {
+    public $is_projects = false;
+
     /** @var string */
     public $id;
 
