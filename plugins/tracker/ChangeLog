@@ -1,3 +1,6 @@
+Version 5.1029 - Tuleap 9.1
+    * request #9601: Performance issues when querying tracker_field_list_bind_decorator table
+
 Version 5.1028 - Tuleap 9.1
     * Fix issues with the CI concerning database access
 
