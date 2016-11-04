@@ -232,14 +232,17 @@ echo site_admin_warnings();
 echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';
 
-if ($GLOBALS['sys_user_approval'] == 1 || $GLOBALS['sys_project_approval'] == 1) {
+$display_user_approval_block    = $GLOBALS['sys_user_approval'] == 1 && $pending_users > 0;
+$display_project_approval_block = $GLOBALS['sys_project_approval'] == 1 && $pending_projects > 0;
+
+if ($display_user_approval_block || $display_project_approval_block) {
     echo '<div class="siteadmin-homepage-row">';
 
-    if ($GLOBALS['sys_user_approval'] == 1) {
+    if ($display_user_approval_block) {
         $wUser->display();
     }
 
-    if ($GLOBALS['sys_project_approval'] == 1) {
+    if ($display_project_approval_block) {
         $wProject->display();
     }
 
@@ -250,19 +253,6 @@ echo '<div class="siteadmin-homepage-row">';
 $wStats->display();
 $wPlugins->display();
 echo '</div>';
-echo '</div>';
-
-echo '<div class="siteadmin-homepage-column">';
-echo '<section class="tlp-pane">
-    <div class="tlp-pane-container">
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title"></h1>
-        </div>
-        <section class="tlp-pane-section">
-
-        </section>
-    </div>
-</section>';
 echo '</div>';
 echo '</div>';
 
