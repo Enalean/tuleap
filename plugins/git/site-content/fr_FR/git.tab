@@ -1,11 +1,11 @@
 plugin_git	descriptor_description	Plugin qui implémente le support de Git
-plugin_git	descriptor_name	Plugin Git
+plugin_git	descriptor_name	Git
 plugin_git	please_choose	Choisir
 plugin_git	cancel	Annuler
 plugin_git	edit	éditer
 plugin_git	view	aperçu
 
-plugin_git	title	Plugin Git
+plugin_git	title	Git
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
 
@@ -162,7 +162,6 @@ plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été 
 plugin_git	gerrit_server_migration_error	La migration a échoué $1. Le dépôt gerrit est probablement <strong>corrompu ou partiellement migré</strong>. Ne l'utilisez pas et contactez l'administration site
 plugin_git	permissions_on_remote_server	Vous ne pouvez modifier QUE les permissions en <strong>LECTURE</strong>, car elles sont gérés par un serveur Gerrit distant. Ces modifications affectent uniquement $1 et <strong>NE SONT PAS propagées vers Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes.
-plugin_git	gerrit_migrate_access_right	Migrer sur Gerrit les permissions définies dans le plugin Git.
 plugin_git	gerrit_template	Choisissez un modèle de permissions pour la migration,<br /> elles seront appliquées au dépôt migré sur Gerrit:
 plugin_git	default_gerrit_template	Permissions définies dans Git
 plugin_git	none_gerrit_template	Pas de permissions prédéfinies
