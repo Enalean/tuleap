@@ -11,10 +11,12 @@ $nav-dropdown-content-border-radius: 3px;
 
 .nav-dropdown-content-hidden {
     visibility: hidden;
+    pointer-events: none;
 }
 
 .nav-dropdown-content-disappear {
     animation: 100ms disappearNavDropdown forwards;
+    pointer-events: none;
 }
 
 @keyframes showNavDropdown {
@@ -83,7 +85,6 @@ $nav-dropdown-content-border-radius: 3px;
 }
 
 .nav-dropdown-left {
-
     > .nav-dropdown-content-visible {
         visibility: visible;
         animation: 100ms ease-in-out showNavDropdownLeft;
