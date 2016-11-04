@@ -36,6 +36,10 @@
     word-break: break-all;
 }
 
+.mirror-info-two-ssh-key-icon {
+    margin: 0 5px;
+}
+
 .mirror-action-container {
     display: flex;
     flex: 0 1 auto;
@@ -62,6 +66,7 @@
 .mirror-repo-list-for-project-reponame {
     width: 100%;
 }
+
 
 /* -------------------- GERRIT ---------------------- */
 
@@ -98,6 +103,10 @@
 
 .git-info-two-ssh-key {
     word-break: break-all;
+}
+
+.git-info-two-ssh-key-icon {
+    margin: 0 5px 0 0;
 }
 
 .gerrit-server-action-container {
