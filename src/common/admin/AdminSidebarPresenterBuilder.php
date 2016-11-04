@@ -60,8 +60,23 @@ class AdminSidebarPresenterBuilder
             $this->areTroveCategoriesEnabled(),
             $this->getAdditionalTrackerEntries(),
             $this->areSvnTokensEnabled(),
-            $this->getTuleapVersion()
+            $this->getTuleapVersion(),
+            $this->getPlugins()
         );
+    }
+
+    private function getPlugins()
+    {
+        $plugins = array();
+
+        EventManager::instance()->processEvent(
+            'site_admin_option_hook',
+            array(
+                'plugins' => &$plugins
+            )
+        );
+
+        return $plugins;
     }
 
     private function allUsersCount()

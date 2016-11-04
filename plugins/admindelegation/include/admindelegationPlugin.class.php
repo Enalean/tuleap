@@ -23,21 +23,21 @@
 
 /**
  * AdminDelegationPlugin
- * 
+ *
  * This plugin is made of two parts:
- * - The admin one, that allows to delegate some rights (called services to 
+ * - The admin one, that allows to delegate some rights (called services to
  *   selected users).
  * - The user one, made of widget in personal page, for the granted (selected)
  *   user to access to the information.
- * 
+ *
  * Each admin action (grant/revoke) is logged but as of today, the log is only in
  * the database.
- * 
+ *
  * There is no table dedicated to store services, the services are identified by
  * their id and a label. The id is a constant in the AdminDelegation_Service class.
- * 
+ *
  * @see AdminDelegation_Service
- * 
+ *
  */
 class AdminDelegationPlugin extends Plugin {
 
@@ -78,9 +78,9 @@ class AdminDelegationPlugin extends Plugin {
 
     /**
      * Check if current user is allowed to use given widget
-     * 
+     *
      * @param String  $widget
-     * 
+     *
      * @return Boolean
      */
     protected function _userCanViewWidget($widget) {
@@ -105,14 +105,18 @@ class AdminDelegationPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
-    
+
     /**
      * Hook: admin link to plugin
      *
      * @param Array $params
      */
-    public function site_admin_option_hook($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Admin delegation</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => 'Admin delegation',
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */
@@ -125,7 +129,7 @@ class AdminDelegationPlugin extends Plugin {
 
     /**
      * Hook: event raised when widget are instanciated
-     * 
+     *
      * @param Array $params
      */
     public function widget_instance($params) {
@@ -137,7 +141,7 @@ class AdminDelegationPlugin extends Plugin {
             include_once 'AdminDelegation_ShowProjectWidget.class.php';
             $params['instance'] = new AdminDelegation_ShowProjectWidget($this);
         }
-         
+
     }
 
     /**

@@ -32,6 +32,7 @@ class AdminSidebarPresenter
     public $additional_tracker_entries;
     public $are_svn_tokens_enabled;
     public $tuleap_version;
+    public $plugins;
 
     public $users_section_title;
     public $users_search_placeholder;
@@ -56,8 +57,10 @@ class AdminSidebarPresenter
     public $utils_nav_system_events;
     public $utils_nav_news;
     public $utils_nav_mass_mail;
-    public $links_nav_plugins;
     public $links_nav_doc;
+
+    public $plugins_section_title;
+    public $plugins_manage_all;
 
     public function __construct(
         $all_users_count,
@@ -69,7 +72,8 @@ class AdminSidebarPresenter
         $are_trove_categories_enabled,
         $additional_tracker_entries,
         $are_svn_tokens_enabled,
-        $tuleap_version
+        $tuleap_version,
+        $plugins
     ) {
         $this->all_users_count              = $all_users_count;
         $this->users_need_approval          = $users_need_approval;
@@ -81,6 +85,7 @@ class AdminSidebarPresenter
         $this->additional_tracker_entries   = $additional_tracker_entries;
         $this->are_svn_tokens_enabled       = $are_svn_tokens_enabled;
         $this->tuleap_version               = $tuleap_version;
+        $this->plugins                      = $plugins;
 
         $this->users_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'users_section_title');
         $this->users_search_placeholder                = $GLOBALS['Language']->getText('admin_sidebar', 'users_search_placeholder');
@@ -110,8 +115,10 @@ class AdminSidebarPresenter
         $this->utils_nav_news                          = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_news');
         $this->utils_nav_mass_mail                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_mass_mail');
 
-        $this->links_nav_plugins                       = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_plugins');
         $this->links_nav_doc                           = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_doc');
+
+        $this->plugins_section_title = $GLOBALS['Language']->getText('admin_main', 'header_plugins');
+        $this->plugins_manage_all    = $GLOBALS['Language']->getText('admin_main', 'manage_all_plugins');
     }
 
     public function isTherePendingUsers()

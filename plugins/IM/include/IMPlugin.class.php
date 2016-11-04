@@ -531,10 +531,12 @@ class IMPlugin extends Plugin {
 	 * for hook administration :display an URL to access IM administration.
 	 * @param array $params:contains the data which comes from the envent listened.
 	 */
- 	function siteAdminHooks($params) {
-       global $Language;
-       $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
-       echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
+    function siteAdminHooks($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_im', 'link_im_admin_title'),
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

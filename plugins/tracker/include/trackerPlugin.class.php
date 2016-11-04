@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Admin\AdminSidebarPresenterBuilder;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -173,10 +174,12 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook($params) {
-        $name = $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name');
-
-        echo '<li><a href="'.$this->getPluginPath().'/config.php">'.$name.'</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/config.php'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

@@ -32,7 +32,7 @@ class userlogPlugin extends Plugin {
     function __construct($id)
     {
         parent::__construct($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
+        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('logger_after_log_hook', 'logUser', false);
         $this->addHook(Event::IS_IN_SITEADMIN);
@@ -72,14 +72,12 @@ class userlogPlugin extends Plugin {
         }
     }
 
-    /**
-     * $params['HTML']
-     */
-    function siteAdminHooks($hook, $params)
+    public function siteAdminHooks($params)
     {
-        $site_url  = $this->getPluginPath() . '/';
-        $site_name = $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name');
-        echo '<li><a href="' . $site_url . '">' . $site_name . '</a></li>';
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

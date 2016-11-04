@@ -213,10 +213,12 @@ class GitPlugin extends Plugin {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e806';
     }
 
-    public function site_admin_option_hook() {
-        $url  = $this->getPluginPath().'/admin/';
-        $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        echo '<li><a href="', $url, '">', $name, '</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_git', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/admin/'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */

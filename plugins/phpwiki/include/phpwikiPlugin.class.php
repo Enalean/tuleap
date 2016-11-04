@@ -216,8 +216,12 @@ class phpwikiPlugin extends Plugin {
         }
     }
 
-    public function site_admin_option_hook() {
-        echo '<li><a href="' . $this->getPluginPath() . '/admin.php?action=index">' . $this->text . '</a></li>';
+    public function site_admin_option_hook($params)
+    {
+        $params['plugins'][] = array(
+            'label' => $this->text,
+            'href'  => $this->getPluginPath() . '/admin.php?action=index'
+        );
     }
 
     /** @see Event::IS_IN_SITEADMIN */
