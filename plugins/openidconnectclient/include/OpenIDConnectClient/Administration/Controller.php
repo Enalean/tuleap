@@ -134,7 +134,8 @@ class Controller {
                 array($provider->getName())
             )
         );
-        $this->showAdministration($csrf_token);
+
+        $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
     }
 
     public function updateProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request) {
