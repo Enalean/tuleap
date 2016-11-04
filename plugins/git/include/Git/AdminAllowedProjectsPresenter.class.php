@@ -58,20 +58,20 @@ class Git_AdminMAllowedProjectsPresenter {
     }
 
     public function restricted_resource_action() {
-        return '/plugins/git/admin/?pane=mirrors_admin&action=set-mirror-restriction&mirror_id=' . $this->mirror->id;
+        return '/plugins/git/admin/?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $this->mirror->id;
     }
 
     public function restricted_resource_action_csrf() {
-        $csrf = new CSRFSynchronizerToken('/plugins/git/admin/?pane=mirrors_admin&action=set-mirror-restriction&mirror_id=' . $this->mirror->id);
+        $csrf = new CSRFSynchronizerToken('/plugins/git/admin/?view=mirrors_restriction&action=set-mirror-restriction&mirror_id=' . $this->mirror->id);
         return $csrf->fetchHTMLInput();
     }
 
     public function update_allowed_projects_action() {
-        return '/plugins/git/admin/?pane=mirrors_admin&action=update-allowed-project-list&mirror_id=' . $this->mirror->id;
+        return '/plugins/git/admin/?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $this->mirror->id;
     }
 
     public function update_allowed_projects_action_csrf() {
-        $csrf = new CSRFSynchronizerToken('/plugins/git/admin/?pane=mirrors_admin&action=update-allowed-project-list&mirror_id=' . $this->mirror->id);
+        $csrf = new CSRFSynchronizerToken('/plugins/git/admin/?view=mirrors_restriction&action=update-allowed-project-list&mirror_id=' . $this->mirror->id);
         return $csrf->fetchHTMLInput();
     }
 
@@ -85,6 +85,14 @@ class Git_AdminMAllowedProjectsPresenter {
 
     public function resource_allowed_project_title() {
         return $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_title', array($this->mirror->url));
+    }
+
+    public function resource_allowed_project_pane_title() {
+        return $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_pane_title', array($this->mirror->url));
+    }
+
+    public function resource_allowed_project_information() {
+        return $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_pane_information', array($this->mirror->url));
     }
 
     public function resource_allowed_project_allow_all() {

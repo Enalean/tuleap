@@ -429,12 +429,14 @@ plugin_git	mirror_repo	Dépôt
 plugin_git	mirror_title	Liste des dépôts sur $1
 plugin_git	mirror_back	Retour à la liste des mirroirs
 plugin_git	mirror_allowed_project_back_link_title	Retour à la liste des mirroirs
-plugin_git	mirror_allowed_project_title	Gérer les projets autorisés à utiliser $1
-plugin_git	mirror_allowed_project_allow_all	Autoriser <b>tous les projets</b> a utiliser ce miroir.
+plugin_git	mirror_allowed_project_title	Restriction de projets pour $1
+plugin_git	mirror_allowed_project_pane_title	Projets autorisés à utiliser $1
+plugin_git	mirror_allowed_project_pane_information	Cette section permet de définir les projets qui pourront utiliser ou non $1.
+plugin_git	mirror_allowed_project_allow_all	Autoriser tous les projets à utiliser ce miroir.
 plugin_git	mirror_allowed_project_allow_all_submit	Savegarder
 plugin_git	mirror_allowed_project_list	Liste des projets autorisés
 plugin_git	mirror_allowed_project_list_allow_placeholder	Nom du projet
-plugin_git	mirror_allowed_project_list_allow_project	Autorisé l'accès
+plugin_git	mirror_allowed_project_list_allow_project	Autoriser l'accès
 plugin_git	mirror_allowed_project_list_revoke_projects	Interdire l'accès aux projets sélectionnés
 plugin_git	mirror_allowed_project_list_filter_placeholder	Filtrer sur l'id ou le nom du projet
 plugin_git	mirror_allowed_project_list_id	Id
