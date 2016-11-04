@@ -22,6 +22,7 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 
 use HTTPRequest;
 use PFUser;
+use CSRFSynchronizerToken;
 
 class UserNavPresenter
 {
@@ -113,13 +114,16 @@ class UserNavPresenter
                 '/my/',
                 'fa fa-home',
                 'only-icon'
-            ),
-            new GlobalMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'logout'),
-                '/account/logout.php',
-                'fa fa-power-off',
-                'only-icon'
             )
+        );
+    }
+
+    public function logout_menu_item()
+    {
+        $logout_csrf = new CSRFSynchronizerToken('logout_action');
+        return new GlobalLogoutMenuItemPresenter(
+            $GLOBALS['Language']->getText('include_menu', 'logout'),
+            $logout_csrf
         );
     }
 }

@@ -16,6 +16,9 @@
         {{# user_nav_items }}
             {{> global-menu-item }}
         {{/ user_nav_items }}
+        {{# logout_menu_item }}
+            {{> global-logout-menu-item }}
+        {{/ logout_menu_item }}
     {{/ is_user_logged_in }}
 
     {{^ is_user_logged_in }}

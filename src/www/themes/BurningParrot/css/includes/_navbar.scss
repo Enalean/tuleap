@@ -105,6 +105,31 @@ header {
     @include nav-link(900px);
 }
 
+.nav-form {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.nav-form-button {
+    transition: color 100ms linear;
+    border: 0;
+    background: none;
+    color: $tlp-ui-dimmed;
+    font-size: initial;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    &:hover {
+        transition: color 100ms linear;
+        color: $tlp-theme-color;
+    }
+}
+
+.nav-form-button-icon {
+    display: inline;
+}
+
 #logo {
     display: inline-block;
     flex: 0 0 auto;
