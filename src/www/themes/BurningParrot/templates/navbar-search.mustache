@@ -1,7 +1,10 @@
 {{# search_presenter }}
-<form id="global-search">
-<div class="tlp-form-element">
-    <input id="global-search-input" type="search" class="tlp-search tlp-search-small" placeholder="{{ placeholder }}">
-</div>
+<form id="global-search" action="/search/" method="GET">
+    <div class="tlp-form-element">
+        <input type="hidden" name="type_of_search" value="soft">
+        <input type="hidden" name="number_of_page_results" value="15">
+        <input type="hidden" name="exact" value="0">
+        <input type="search" id="global-search-input" name="words" class="tlp-search tlp-search-small" placeholder="{{ placeholder }}">
+    </div>
 </form>
 {{/ search_presenter }}
