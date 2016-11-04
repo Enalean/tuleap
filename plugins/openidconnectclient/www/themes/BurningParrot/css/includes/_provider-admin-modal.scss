@@ -125,8 +125,8 @@
         background: $tlp-swatch-deep-blue;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken($tlp-swatch-clockwork-orange, 5%);
-            background: darken($tlp-swatch-clockwork-orange, 5%);
+            border-color: darken($tlp-swatch-deep-blue, 5%);
+            background: darken($tlp-swatch-deep-blue, 5%);
         }
     }
 
@@ -226,8 +226,7 @@
 
 .provider-color-results {
     // scss-lint:disable SelectorFormat
-    height: 400px;
-    overflow-y: scroll;
+    height: 250px;
 
     .select2-results__option {
         padding: 3px 12px;
