@@ -145,7 +145,7 @@ class Presenter {
 
     public function there_are_providers()
     {
-        return count(($this->providers_presenters) > 0);
+        return count($this->providers_presenters)  > 0;
     }
 
     public function empty_content()
