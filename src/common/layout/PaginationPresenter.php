@@ -50,6 +50,7 @@ class PaginationPresenter
         $this->offset       = $offset;
         $this->nb_displayed = $nb_displayed;
         $this->nb_total     = $nb_total;
+        $this->has_result   = $nb_total > 0;
 
         $this->offset_start_range = $offset + 1;
         $this->offset_end_range   = $offset + $nb_displayed;
