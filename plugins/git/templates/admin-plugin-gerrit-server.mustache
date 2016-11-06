@@ -139,8 +139,9 @@
                         {{> admin-plugin-gerrit-modal-edit }}
 
                         {{# is_used }}
-                            <button type="submit" class="tlp-button-danger tlp-button-outline"
-                                    title="{{ btn_delete_title }}" disabled>
+                            <button type="submit" class="tlp-button-danger tlp-button-outline tlp-tooltip tlp-tooltip-left"
+                                    data-tlp-tooltip="{{ btn_delete_title }}"
+                                    disabled>
                                 <i class="fa fa-trash-o tlp-button-icon"></i>
                                 {{ btn_delete }}
                             </button>
