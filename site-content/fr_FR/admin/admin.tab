@@ -233,6 +233,12 @@ admin_approve_pending_users	expiry_date	Date d'expiration
 admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.
 admin_approve_pending_users	resend	Renvoyer l'email
 admin_approve_pending_users	resend_notice	Renvoyer l'email d'activation du compte
+admin_approve_pending_users	users_activated_success	Les utilisateurs ont été activés avec succès
+admin_approve_pending_users	user_activated_success	L'utilisateur a été activé avec succès
+admin_approve_pending_users	users_validated_success	Les utilisateurs ont été validés avec succès
+admin_approve_pending_users	user_validated_success	L'utilisateur a été validé avec succès
+admin_approve_pending_users	users_deleted_success	Les utilisateurs ont été supprimés avec succès
+admin_approve_pending_users	user_deleted_success	L'utilisateur a été supprimé avec succès
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php
