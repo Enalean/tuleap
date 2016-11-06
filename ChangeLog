@@ -27,7 +27,7 @@ Version 9.1 (Not Released Yet)
 	* fulltextsearch: 0.136
 	* ldap: 3.115
 	* mediawiki: 0.125
-	* openidconnectclient: 0.30
+	* openidconnectclient: 0.31
 	* phpwiki: 0.12
 	* pluginsadministration: 1.22
 	* statistics: 0.67
