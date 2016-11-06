@@ -1,0 +1,31 @@
+<form method="post">
+    <div id="siteadmin-config-providers-modal-delete-{{ getId }}"
+        class="tlp-modal tlp-modal-danger"
+        role="dialog"
+        aria-labelledby="siteadmin-config-providers-modal-delete-{{ getId }}-label"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="siteadmin-config-providers-modal-delete-{{ getId }}">
+                <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_modal_title }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <input type="hidden" name="action" value="delete-provider">
+            <input type="hidden" name="provider_id" value="{{ getId }}">
+
+            <p>{{ delete_modal_content }}</p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
+            <button type="submit" class="tlp-button-danger tlp-modal-action">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_modal_submit }}
+            </button>
+        </div>
+    </div>
+</form>

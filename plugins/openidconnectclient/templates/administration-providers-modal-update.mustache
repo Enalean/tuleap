@@ -20,7 +20,9 @@
         >&times;</div>
     </div>
     <form method="post">
-        {{{ csrf_token }}}
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="action" value="update-provider">
         <input type="hidden" name="id" value="{{ getId }}">
         <div class="tlp-modal-body">
