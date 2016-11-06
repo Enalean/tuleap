@@ -466,6 +466,8 @@ admin_userlist	no_matching_users	Il n'y a aucun utilisateur qui correspond au fi
 admin_userlist	name	Nom
 admin_userlist	login	Login
 admin_userlist	filter_name	Email, nom, id
+admin_userlist	pending_users_text	Pour votre information, <a href="$1">$2 utilisateurs attendent d'être validés</a>.
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
@@ -675,3 +677,4 @@ admin_projectlist	members	Membres
 admin_projectlist	private	Privé
 admin_projectlist	public_unrestricted	Public incluant les utilisateurs restreints
 admin_projectlist	public	Public
+admin_projectlist	pending_projects_text	Pour votre information, <a href="$1">$2 projets attendent d'être validés</a>.

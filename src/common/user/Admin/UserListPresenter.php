@@ -20,6 +20,8 @@
 
 namespace Tuleap\User\Admin;
 
+use Codendi_HTMLPurifier;
+
 class UserListPresenter
 {
 
@@ -29,13 +31,16 @@ class UserListPresenter
     public $results;
     public $new_user;
     public $group_id;
+    public $are_there_pending_users;
+    public $purified_pending_users_text;
 
     public function __construct(
         $group_id,
         $title,
         $context,
         UserListSearchFieldsPresenter $search_fields,
-        UserListResultsPresenter $results
+        UserListResultsPresenter $results,
+        $pending_users_count
     ) {
         $this->group_id      = $group_id;
         $this->title         = $title;
@@ -43,5 +48,18 @@ class UserListPresenter
         $this->search_fields = $search_fields;
         $this->results       = $results;
         $this->new_user      = $GLOBALS['Language']->getText('admin_main', 'new_user');
+
+        $this->are_there_pending_users     = $pending_users_count > 0;
+        $this->purified_pending_users_text = Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText(
+                'admin_userlist',
+                'pending_users_text',
+                array(
+                    '/admin/approve_pending_users.php?page=pending',
+                    $pending_users_count
+                )
+            ),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 }

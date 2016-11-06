@@ -226,12 +226,15 @@ $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
     $offset
 );
 
+$pending_users_count = UserManager::instance()->countUsersByStatus(PFUser::STATUS_PENDING);
+
 $user_list_presenter = new Tuleap\User\Admin\UserListPresenter(
     $group_id,
     $title,
     $context,
     $search_fields_presenter,
-    $results_presenter
+    $results_presenter,
+    $pending_users_count
 );
 
 $admin_page = new AdminPageRenderer();

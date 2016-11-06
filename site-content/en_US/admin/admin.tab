@@ -474,6 +474,7 @@ admin_userlist	no_matching_users	There isn't any matching users
 admin_userlist	name	Name
 admin_userlist	login	Login
 admin_userlist	filter_name	Email, name, id
+admin_userlist	pending_users_text	For your information, there are <a href="$1">$2 users waiting for validation</a>.
 
 #
 #-----------------------------------------------
@@ -685,3 +686,4 @@ admin_projectlist	members	Members
 admin_projectlist	private	Private
 admin_projectlist	public_unrestricted	Public Unrestricted
 admin_projectlist	public	Public
+admin_projectlist	pending_projects_text	For your information, there are <a href="$1">$2 projects waiting for validation</a>.
