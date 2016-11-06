@@ -51,3 +51,7 @@ plugin_openidconnectclient_admin	empty_content	Vide
 plugin_openidconnectclient_admin	empty_providers_text_start	Il n'y a rien ici,
 plugin_openidconnectclient_admin	empty_providers_text_end	commencez par ajouter un fournisseur.
 plugin_openidconnectclient_admin	btn_preview	Aperçu
+plugin_openidconnectclient_admin	delete_modal_title	Supprimer un fournisseur
+plugin_openidconnectclient_admin	delete_modal_content	Vous êtes sur le point de supprimer un fournisseur. Cette action est irréversible. Veuillez confirmer votre action.
+plugin_openidconnectclient_admin	btn_close	Annuler
+plugin_openidconnectclient_admin	delete_modal_submit	Supprimer

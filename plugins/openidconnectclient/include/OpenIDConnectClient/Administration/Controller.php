@@ -83,7 +83,7 @@ class Controller {
             $providers_presenters,
             $this->icon_presenter_factory->getIconsPresenters(),
             $this->color_presenter_factory->getColorsPresenters(),
-            $csrf_token->fetchHTMLInput()
+            $csrf_token
         );
 
         $this->admin_page_renderer->renderAPresenter(

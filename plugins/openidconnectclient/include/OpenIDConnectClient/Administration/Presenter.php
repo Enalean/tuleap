@@ -143,6 +143,27 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_update');
     }
 
+    public function delete_modal_title()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'delete_modal_title');
+    }
+
+    public function delete_modal_content()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'delete_modal_content');
+    }
+
+    public function btn_close()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_close');
+    }
+
+    public function delete_modal_submit()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'delete_modal_submit');
+    }
+
+
     public function there_are_providers()
     {
         return count($this->providers_presenters)  > 0;

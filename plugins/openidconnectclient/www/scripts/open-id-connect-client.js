@@ -96,6 +96,18 @@
         });
     }
 
+    function initDeleteModals() {
+        var provider_action_delete_buttons = document.querySelectorAll('.provider-action-delete-button');
+        [].forEach.call(provider_action_delete_buttons, function(delete_button) {
+            var dom_provider_modal_delete  = document.getElementById(delete_button.getAttribute('data-delete-modal-id'));
+            var tlp_providers_modal_delete = tlp.modal(dom_provider_modal_delete);
+
+            delete_button.addEventListener('click', function() {
+                tlp_providers_modal_delete.toggle();
+            });
+        });
+    }
+
     $(document).ready(function() {
         initIconSelectors();
         initColorSelectors();
@@ -103,5 +115,6 @@
         syncPreviewButton();
         initCreationModal();
         initUpdateModals();
+        initDeleteModals();
     });
 })(window.jQuery);

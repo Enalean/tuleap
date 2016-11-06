@@ -20,7 +20,9 @@
         >&times;</div>
     </div>
     <form method="post">
-        {{{ csrf_token }}}
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="action" value="create-provider">
         <div class="tlp-modal-body">
             <div id="provider-admin-modal-name-container">

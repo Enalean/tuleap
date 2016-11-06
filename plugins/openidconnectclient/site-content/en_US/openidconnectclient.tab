@@ -51,3 +51,7 @@ plugin_openidconnectclient_admin	empty_content	Empty
 plugin_openidconnectclient_admin	empty_providers_text_start	There is nothing here,
 plugin_openidconnectclient_admin	empty_providers_text_end	start by adding a provider.
 plugin_openidconnectclient_admin	btn_preview	Preview
+plugin_openidconnectclient_admin	delete_modal_title	Delete a provider
+plugin_openidconnectclient_admin	delete_modal_content	You are about to delete a provider. This action is irreversible. Do you confirm this deletion?
+plugin_openidconnectclient_admin	btn_close	Cancel
+plugin_openidconnectclient_admin	delete_modal_submit	Delete
