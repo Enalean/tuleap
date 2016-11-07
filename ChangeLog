@@ -1,3 +1,8 @@
+Version 9.0-4 (Monday, November 7th 2016)
+	== Bug Fix ==
+	* request #9627: TV5: numeric values are truncated in a text field
+	* request #9601: Performance issues when querying tracker_field_list_bind_decorator table
+
 Version 9.0-3 (Friday, October 28th 2016)
 	== Bug Fix ==
 	* request #9600: Archive deleted items must deal with duplicate content
