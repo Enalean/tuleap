@@ -5,6 +5,7 @@ Version 9.1 (Not Released Yet)
 	* request #9392: Deleted users can be switched to suspended automatically
 	* request #9505: FRS_Admin user group description is not user friendly
 	* story #9589: Add pending info to projects and users list
+	* request #8756: SVN authentication cache can be configured
 
 	== Bug Fix ==
 	* request #9599: Misleading warning message when using IE11 with compatibility
@@ -25,7 +26,7 @@ Version 9.1 (Not Released Yet)
 	* IM: 1.5.39
 	* admindelegation: 2.14
 	* fulltextsearch: 0.136
-	* ldap: 3.115
+	* ldap: 3.116
 	* mediawiki: 0.125
 	* openidconnectclient: 0.31
 	* phpwiki: 0.12
