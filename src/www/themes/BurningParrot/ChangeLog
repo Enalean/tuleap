@@ -1,3 +1,6 @@
+Version 0.6 - Tuleap 9.1
+    * story #9589 Get rid of Bootstrap in site admin / projects (More dropdown in navbar)
+
 Version 0.5 - Tuleap 9.1
     * story #9200: Get rid of Bootstrap in site admin (fix dropdown)
 
