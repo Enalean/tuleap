@@ -887,8 +887,6 @@ plugin_docman	version_restored	La <a href="$1">version sélectionnée</a> a ét�
 plugin_docman	item_restored	L'<a href="$1">item sélectionné</a> a été restauré avec succès.
 plugin_docman	version_not_restored	La version sélectionnée n'a pas pu être restaurée.
 plugin_docman	item_not_restored	L'item sélectionné n'a pas pu être restauré.
-plugin_docman	action_appears	Lorsqu'un élément à été supprimé, il apparait dans
-plugin_docman	access_logs	le fichier d'historique des accès
 
 plugin_docman	permission_requests	Demandes de permission pour le gestionnaire de documents
 plugin_docman	permission_requests_information	Le groupe séléctionné n'affectera pas les personnes notifiées pour les demandes de permission sur le service de documents.<br> Seuls les <b>gestionnaires du document</b> seront notifiés dans ce cas.
