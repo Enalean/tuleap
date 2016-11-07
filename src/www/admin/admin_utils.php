@@ -22,6 +22,6 @@ function site_admin_warnings() {
     $forgeupgrade_config = new ForgeUpgradeConfig(new System_Command());
     $forgeupgrade_config->loadDefaults();
     if (! $forgeupgrade_config->isSystemUpToDate()) {
-        return '<div class="alert alert-error">'.$GLOBALS['Language']->getText('admin_main', 'forgeupgrade').'</div>';
+        return '<div class="tlp-alert-warning">'.$GLOBALS['Language']->getText('admin_main', 'forgeupgrade').'</div>';
     }
 }
