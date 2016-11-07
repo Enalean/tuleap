@@ -126,13 +126,6 @@ var fat_combined_files = [
         ],
         target_dir: 'src/www/scripts/select2'
     },
-    theme_tuleap_scss = {
-        files: [
-            'src/www/themes/Tuleap/css/print.scss',
-            'src/www/themes/Tuleap/css/style.scss'
-        ],
-        target_dir: 'src/www/themes/Tuleap/css'
-    },
     theme_flamingparrot_scss = {
         files: [
             'src/www/themes/FlamingParrot/css/print.scss',
@@ -215,7 +208,6 @@ gulp.task('scss-lint', ['scss-lint-core', 'scss-lint-plugins']);
 gulp.task('clean-sass-core', function() {
     tuleap.sass_clean('.', common_scss.files);
     tuleap.sass_clean('.', select2_scss.files);
-    tuleap.sass_clean('.', theme_tuleap_scss.files);
     tuleap.sass_clean('.', theme_flamingparrot_scss.files);
     tuleap.sass_clean('.', theme_burningparrot_scss.files);
 });
@@ -232,7 +224,6 @@ gulp.task('rename-css-to-scss', function() {
 gulp.task('sass-core', ['clean-sass-core', 'rename-css-to-scss'], function() {
     tuleap.sass_build('.', common_scss);
     tuleap.sass_build('.', select2_scss);
-    tuleap.sass_build('.', theme_tuleap_scss);
     tuleap.sass_build('.', theme_flamingparrot_scss);
     tuleap.sass_build('.', theme_burningparrot_scss);
 });
@@ -256,7 +247,6 @@ gulp.task('watch', function() {
     gulp.watch(
         common_scss.files
             .concat(select2_scss.files)
-            .concat(theme_tuleap_scss.files)
             .concat(theme_flamingparrot_scss.files)
             .concat(theme_burningparrot_scss.files)
             .concat(theme_burningparrot_scss.watched_includes),

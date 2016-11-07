@@ -451,15 +451,6 @@ Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beau
 ## Themes
 #
 
-%package theme-tuleap
-Summary: Tuleap theme
-Group: Development/Tools
-Version: @@THEME_TULEAP_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description theme-tuleap
-Tuleap theme
-
 %package theme-flamingparrot
 Summary: FlamingParrot, default theme starting Tuleap 7
 Group: Development/Tools
@@ -1229,10 +1220,6 @@ fi
 #
 # Themes
 #
-
-%files theme-tuleap
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/Tuleap
 
 %files theme-flamingparrot
 %defattr(-,%{APP_USER},%{APP_USER},-)
