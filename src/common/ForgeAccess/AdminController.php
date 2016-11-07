@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -18,8 +18,10 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class ForgeAccess_AdminController {
+use Tuleap\Admin\AdminPageRenderer;
 
+class ForgeAccess_AdminController
+{
     const TEMPLATE                  = 'access_choice';
     const ACCESS_KEY                = ForgeAccess::CONFIG;
     const PROJECT_ADMIN_KEY         = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
@@ -71,30 +73,30 @@ class ForgeAccess_AdminController {
         $this->localincfinder = $localincfinder;
     }
 
-    public function index() {
-        $title  = $GLOBALS['Language']->getText('admin_main', 'configure_access_controls');
-        $params = array(
-            'title'        => $title,
-            'main_classes' => array('tlp-framed')
-        );
-        $renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+    public function index()
+    {
+        $title      = $GLOBALS['Language']->getText('admin_main', 'configure_access_controls');
+        $admin_page = new AdminPageRenderer();
 
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-access-mode.js');
-        $this->response->header($params);
-        $renderer->renderToPage(
-            self::TEMPLATE,
-            new ForgeAccess_AdminPresenter(
-                $this->csrf,
-                $title,
-                $this->localincfinder->getLocalIncPath(),
-                ForgeConfig::get(ForgeAccess::CONFIG),
-                count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
-                ForgeConfig::get(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL),
-                ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL),
-                ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
-            )
+
+        $admin_presenter = new ForgeAccess_AdminPresenter(
+            $this->csrf,
+            $title,
+            $this->localincfinder->getLocalIncPath(),
+            ForgeConfig::get(ForgeAccess::CONFIG),
+            count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
+            ForgeConfig::get(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL),
+            ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL),
+            ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
         );
-        $this->response->footer($params);
+
+        $admin_page->renderAPresenter(
+            $title,
+            $this->getTemplateDir(),
+            self::TEMPLATE,
+            $admin_presenter
+        );
     }
 
     public function update() {
@@ -117,7 +119,8 @@ class ForgeAccess_AdminController {
         $this->response->redirect(get_server_url());
     }
 
-    private function getTemplateDir() {
+    private function getTemplateDir()
+    {
         return ForgeConfig::get('codendi_dir') .'/src/templates/admin/anonymous/';
     }
 

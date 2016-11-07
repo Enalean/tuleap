@@ -83,6 +83,9 @@ class ForgeAccess_AdminPresenter {
     /** @var string */
     public $projects_visibility_help;
 
+    /** @var string */
+    public $platform_access_control_label;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
@@ -106,7 +109,7 @@ class ForgeAccess_AdminPresenter {
         $this->access_regular    = ($current_access_mode === ForgeAccess::REGULAR);
         $this->access_restricted = ($current_access_mode === ForgeAccess::RESTRICTED);
 
-        $this->btn_submit                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
+        $this->btn_submit                = $GLOBALS['Language']->getText('admin_main', 'btn_update_information');
         $this->localinc_obsolete_message = $GLOBALS['Language']->getText(
             'admin_main',
             'localinc_obsolete_message',
@@ -139,10 +142,10 @@ class ForgeAccess_AdminPresenter {
 
         $this->customize_ugroups_label_info           = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
 
-        $this->who_can_access            = $GLOBALS['Language']->getText('admin_main', 'who_can_access');
-        $this->projects_visibility       = $GLOBALS['Language']->getText('admin_main', 'projects_visibility');
-        $this->projects_visibility_label = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_label');
-        $this->projects_visibility_help  = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_help');
+        $this->platform_access_control_label = $GLOBALS['Language']->getText('admin_main', 'platform_access_control');
+        $this->projects_visibility           = $GLOBALS['Language']->getText('admin_main', 'projects_visibility');
+        $this->projects_visibility_label     = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_label');
+        $this->projects_visibility_help      = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_help');
     }
 
     private function isLocalIncObsolete() {

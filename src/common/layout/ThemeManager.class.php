@@ -90,8 +90,6 @@ class ThemeManager
                 $_SERVER['REQUEST_URI']
             ) && ! preg_match(
                 '`(
-                    ^/admin/forgeaccess.php
-                    |
                     ^/admin/register_admin.php
                     |
                     ^/admin/homepage.php

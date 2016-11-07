@@ -141,8 +141,8 @@ admin_main	upload_error	File upload error (error code: $1)
 admin_main	no_png	You should send a png image
 admin_main	100px	You should send an image with height smaller than 100px
 
-admin_main	configure_access_controls	Access controls
-admin_main	who_can_access	Define who can access the platform
+admin_main	configure_access_controls	Access control
+admin_main	platform_access_control	Platform access control
 admin_main	projects_visibility	Projects visibility
 admin_main	projects_visibility_label	Project administrators can choose project visibility
 admin_main	projects_visibility_help	If, in your organization, the strict privacy of the projects must be preserved by 'design', then you should uncheck this option so that project admins cannot disclose confidential resources to other platform users.
@@ -158,7 +158,8 @@ admin_main	ugroup_authenticated_users_placeholder	E.g $1 employees & subco
 admin_main	ugroup_registered_users_placeholder	E.g $1 employees
 admin_main	ugroup_authenticated_users_label	Authenticated users (Registered + Restricted) label
 admin_main	ugroup_registered_users_label	Registered users label
-admin_main	customize_ugroups_label_info	You can override default names for the two special groups groups. This only applies for git permissions at the moment.
+admin_main	customize_ugroups_label_info	You can override default names for the two special groups. This only applies for git permissions at the moment.
+admin_main	btn_update_information	Update information
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
