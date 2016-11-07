@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 
@@ -748,53 +749,52 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
     }
 
-    /**
-     * Build the list of deleted trackers of all projects with purge and restore actions.
-     *
-     * @return Void
-     */
-    public function displayDeletedTrackers() {
+    public function displayDeletedTrackers()
+    {
         $deleted_trackers = $this->getTrackerFactory()->getDeletedTrackers();
 
-        if (empty($deleted_trackers)) {
-            print '<h3>'.$GLOBALS['Language']->getText('plugin_tracker','no_pending').'</h3>';
-        } else {
-            $deleted_trackers_presenters =  array();
-            foreach ($deleted_trackers as $tracker) {
-                $project             = $tracker->getProject();
-                $tracker_ids_warning = array();
+        $deleted_trackers_presenters = array();
+        $tracker_ids_warning         = array();
+        $restore_token               = new CSRFSynchronizerToken('/tracker/admin/restore.php');
 
-                if (! $project || $project->getID() === null) {
-                    $tracker_ids_warning[] = $tracker->getId();
-                    continue;
-                }
+        foreach ($deleted_trackers as $tracker) {
+            $project             = $tracker->getProject();
+            $tracker_ids_warning = array();
 
-                $project_id                     = $project->getId();
-                $project_name                   = $project->getUnixName();
-                $tracker_id                     = $tracker->getId();
-                $tracker_name                   = $tracker->getName();
-                $deletion_date                  = date('d-m-Y',$tracker->deletion_date);
-
-                $resotre_token                  = new CSRFSynchronizerToken('/tracker/admin/restore.php');
-                $deleted_trackers_presenters [] = new DeletedTrackerPresenter(
-                                                        $tracker_id,
-                                                        $tracker_name,
-                                                        $project_id,
-                                                        $project_name,
-                                                        $deletion_date,
-                                                        $resotre_token
-                                                   );
+            if (! $project || $project->getID() === null) {
+                $tracker_ids_warning[] = $tracker->getId();
+                continue;
             }
-            $presenter = new DeletedTrackersListPresenter(
-                $deleted_trackers_presenters,
-                $tracker_ids_warning
+
+            $project_id    = $project->getId();
+            $project_name  = $project->getUnixName();
+            $tracker_id    = $tracker->getId();
+            $tracker_name  = $tracker->getName();
+            $deletion_date = date('d-m-Y', $tracker->deletion_date);
+
+            $deleted_trackers_presenters [] = new DeletedTrackerPresenter(
+                $tracker_id,
+                $tracker_name,
+                $project_id,
+                $project_name,
+                $deletion_date,
+                $restore_token
             );
-
-            $template_factory = TemplateRendererFactory::build();
-            $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-
-            $renderer->renderToPage(self::DELETED_TRACKERS_TEMPLATE_NAME, $presenter);
         }
+
+        $presenter = new DeletedTrackersListPresenter(
+            $deleted_trackers_presenters,
+            $tracker_ids_warning,
+            count($deleted_trackers_presenters) > 0
+        );
+
+        $renderer = new AdminPageRenderer();
+
+        $renderer->renderToPage(
+            $presenter->getTemplateDir(),
+            TrackerManager::DELETED_TRACKERS_TEMPLATE_NAME,
+            $presenter
+        );
     }
 
     private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user) {

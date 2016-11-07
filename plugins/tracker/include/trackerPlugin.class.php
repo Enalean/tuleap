@@ -125,7 +125,7 @@ class trackerPlugin extends Plugin {
             $this->_addHook(FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP);
         }
 
-        $this->_addHook(Event::LIST_DELETED_TRACKERS, 'displayDeletedTrackers');
+        $this->addHook(Event::LIST_DELETED_TRACKERS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -712,14 +712,10 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    /**
-     * Display the list of trackers marked as deleted with the possibility to completely purge or restore a given deleted tracker.
-     *
-     * @return Void
-     */
-    function displayDeletedTrackers() {
-         $trackerManager = new TrackerManager();
-         $trackerManager->displayDeletedTrackers();
+    public function display_deleted_trackers(array &$params)
+    {
+        $tracker_manager = new TrackerManager();
+        $tracker_manager->displayDeletedTrackers();
     }
 
    /**

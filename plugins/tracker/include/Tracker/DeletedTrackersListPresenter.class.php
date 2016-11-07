@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2014. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-class DeletedTrackersListPresenter {
+class DeletedTrackersListPresenter
+{
     public $id_column_header;
     public $tracker_column_header;
     public $project_column_header;
@@ -26,15 +27,18 @@ class DeletedTrackersListPresenter {
     public $restore_action_column_header;
     public $delete_action_column_header;
 
-    public function __construct(array $table_content, array $tracker_ids_warning) {
-        $this->title                        = $GLOBALS['Language']->getText('plugin_tracker','pending_tv5_removal');
-        $this->deleted_trackers_list        = $table_content;
-        $this->tracker_ids_warning          = $tracker_ids_warning;
-        $this->id_column_header             = $GLOBALS['Language']->getText('tracker_include_report','id');
-        $this->tracker_column_header        = $GLOBALS['Language']->getText('tracker_import_admin','tracker');
-        $this->project_column_header        = $GLOBALS['Language']->getText('global','Project');
-        $this->deletion_date_column_header  = $GLOBALS['Language']->getText('tracker_include_type','deletion_date');
-        $this->restore_action_column_header = $GLOBALS['Language']->getText('plugin_tracker','tracker_action_restore');
+    public function __construct(array $table_content, array $tracker_ids_warning, $has_trackers)
+    {
+        $this->title                       = $GLOBALS['Language']->getText('plugin_tracker', 'pending_tv5_removal');
+        $this->deleted_trackers_list       = $table_content;
+        $this->tracker_ids_warning         = $tracker_ids_warning;
+        $this->id_column_header            = $GLOBALS['Language']->getText('tracker_include_report', 'id');
+        $this->tracker_column_header       = $GLOBALS['Language']->getText('tracker_import_admin', 'tracker');
+        $this->project_column_header       = $GLOBALS['Language']->getText('global', 'Project');
+        $this->deletion_date_column_header = $GLOBALS['Language']->getText('tracker_include_type', 'deletion_date');
+        $this->restore_action              = $GLOBALS['Language']->getText('plugin_tracker', 'tracker_action_restore');
+        $this->no_trackers_label           = $GLOBALS['Language']->getText('plugin_tracker', 'no_pending');
+        $this->has_trackers                = $has_trackers;
     }
 
     public function has_warnings()
@@ -44,11 +48,12 @@ class DeletedTrackersListPresenter {
 
     public function warning_message()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker','tracker_restore_warning') . implode(',', $this->tracker_ids_warning);
+        return $GLOBALS['Language']->getText('plugin_tracker', 'tracker_restore_warning') .
+        implode(',', $this->tracker_ids_warning);
     }
 
-    public function getTemplateDir() {
-        return ForgeConfig::get('codendi_dir') .'/plugins/tracker/templates';
+    public function getTemplateDir()
+    {
+        return TRACKER_TEMPLATE_DIR;
     }
 }
- 

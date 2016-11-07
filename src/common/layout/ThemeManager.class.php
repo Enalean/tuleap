@@ -96,8 +96,6 @@ class ThemeManager
                     |
                     ^/admin/descfields/desc_fields_edit.php
                     |
-                    ^/tracker/admin/restore.php
-                    |
                     ^/admin/massmail.php
                     |
                     ^/stats

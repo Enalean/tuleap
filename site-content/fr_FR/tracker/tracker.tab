@@ -417,10 +417,10 @@ tracker_include_type	no_pending	Aucun outil de suivi V3 en attente de destructio
 tracker_include_type	pending_deletion	Outil de suivi V3 en attente de destruction
 tracker_include_type	deletion_date	Date de destruction
 tracker_include_type	delay	Retarder ?
-tracker_include_type	restore	Restaurer ?
-tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
-tracker_include_type	restore_tracker	Restaurer cet outil de suivi ?
+tracker_include_type	restore	Restaurer
 tracker_include_type	warning	** AVERTISSEMENT !! ** Détruire cet outil de suivi et toutes ses dépendances (restauration impossible) ?
+tracker_include_type	delete	Delete
+tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
 tracker_include_type	create_from_scratch	Créer un nouvel outil de suivi en totalité ou à partir d'un outil de suivi existant
 tracker_include_type	manage	Gérer les outils de suivi
 tracker_include_type	admin_or_del	Administrer ou détruire un outil de suivi.	
@@ -578,6 +578,7 @@ tracker_include_type	rank_in_fieldset	Rang dans le groupe de champs
 tracker_include_type	current_date	Date courante.
 tracker_include_type	date_value	Date particulière :
 tracker_include_type	mass_change_permissions	Changer les permissions
+plugin_tracker_include_type	tracker_v3_empty_state	Aucun tracker V3 trouvé
 
 tracker_include_type	add	Ajouter
 tracker_include_type	error_gn_default_not_added	Erreur lors de l'ajout de la notification globale par défaut

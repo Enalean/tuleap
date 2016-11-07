@@ -1,0 +1,53 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th class="tlp-table-cell-numeric">
+                            {{ table_id }}
+                        </th>
+                        <th class="pending-deleted-tv3-header">{{ table_project }}</th>
+                        <th class="pending-deleted-tv3-header">{{ table_tracker }}</th>
+                        <th class="pending-deleted-tv3-header-date">{{ table_deletion_date }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{^ has_trackers }}
+                        <tr>
+                            <td colspan="5" class="tlp-table-cell-empty">
+                                {{ tracker_v3_empty_state }}
+                            </td>
+                        </tr>
+                    {{/ has_trackers }}
+                    {{# has_trackers }}
+                        {{# trackers }}
+                            <tr>
+                                <td class="tlp-table-cell-numeric"> {{ group_artifact_id }}</td>
+                                <td>{{ project_name }}</td>
+                                <td>{{ name }}</td>
+                                <td>{{ deletion_date }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    <a
+                                            id="pending-tv3-tracker-restore-button"
+                                            class="tlp-button-info tlp-button-small tlp-button-outline"
+                                            href="/tracker/admin/restore.php?func=restore&group_id={{ group_id }}&atid={{ group_artifact_id }}">
+                                        <i class="fa fa-repeat tlp-button-icon"> </i> {{ restore }}
+                                    </a>
+                                    <a
+                                            class="tlp-button-danger tlp-button-small tlp-button-outline"
+                                            href="/tracker/admin/restore.php?func=delete&group_id={{ group_id }}&atid={{ group_artifact_id }}">
+                                        <i class="fa fa-trash-o tlp-button-icon"> </i> {{ delete }}
+                                    </a></td>
+                            </tr>
+                        {{/ trackers }}
+                    {{/ has_trackers }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>

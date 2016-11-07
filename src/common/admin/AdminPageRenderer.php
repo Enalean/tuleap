@@ -45,16 +45,22 @@ class AdminPageRenderer
     public function renderAPresenter($title, $template_path, $template_name, $presenter)
     {
         $this->header($title);
-        $this->getRenderer($template_path)->renderToPage($template_name, $presenter);
+        $this->renderToPage($template_path, $template_name, $presenter);
         $GLOBALS['HTML']->footer(array());
     }
 
     public function renderANoFramedPresenter($title, $template_path, $template_name, $presenter)
     {
         $this->header($title, false);
-        $this->getRenderer($template_path)->renderToPage($template_name, $presenter);
+        $this->renderToPage($template_path, $template_name, $presenter);
         $GLOBALS['HTML']->footer(array());
     }
+
+    public function renderToPage($template_path, $template_name, $presenter)
+    {
+        $this->getRenderer($template_path)->renderToPage($template_name, $presenter);
+    }
+
 
     private function renderSideBar()
     {

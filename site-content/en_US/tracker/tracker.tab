@@ -424,10 +424,8 @@ tracker_include_type	pending_removal	Pending Trackers V3 Removals
 tracker_include_type	no_pending	No Tracker V3 pending for Deletion
 tracker_include_type	pending_deletion	Trackers V3 Pending for Deletion
 tracker_include_type	deletion_date	Deletion date
-tracker_include_type	delay	Delay?
-tracker_include_type	restore	Restore?
-tracker_include_type	delay_deletion	Delay deletion for this tracker?
-tracker_include_type	restore_tracker	Restore this tracker?
+tracker_include_type	restore	Restore
+tracker_include_type	delete	Delete
 tracker_include_type	warning	** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?
 tracker_include_type	create_from_scratch	Create a new tracker from scratch or from an existing tracker
 tracker_include_type	manage	Manage Trackers
@@ -586,6 +584,7 @@ tracker_include_type	rank_in_fieldset	Rank in Field Set
 tracker_include_type	current_date	Current date.
 tracker_include_type	date_value	Date value:
 tracker_include_type	mass_change_permissions	Change permissions
+tracker_include_type	tracker_v3_empty_state	There isn't any matching tracker V3
 
 tracker_include_type	add	Add
 tracker_include_type	error_gn_default_not_added	Unable to add default global notification
