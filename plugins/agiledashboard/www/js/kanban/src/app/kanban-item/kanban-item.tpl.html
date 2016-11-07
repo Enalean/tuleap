@@ -37,7 +37,12 @@
         <span class="kanban-item-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
     </a>
 
-    <div class="kanban-item-label" ng-bind-html="$ctrl.getCardFieldTextValue(item.label) | tuleapHighlight:$ctrl.kanban_filter.terms"></div>
+    <div
+        class="kanban-item-label"
+        tuleap-simple-field
+        value="item.label"
+        filter-terms="$ctrl.kanban_filter.terms"
+    ></div>
 
     <ul class="extra-card-fields" ng-if="item.card_fields.length > 0">
         <li
@@ -49,7 +54,10 @@
                 ng-if="$ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldTextValue(card_field.value) | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
+                <tuleap-simple-field
+                    value="card_field.value"
+                    filter-terms="$ctrl.kanban_filter.terms"
+                ></tuleap-simple-field>
             </div>
             <div
                 class="card-field"
@@ -65,13 +73,11 @@
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
             </div>
-            <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsText(card_field.type) && card_field.value"
-            >
-                <span class="extra-card-field-title">{{ card_field.label }}: </span>
-                <span ng-bind-html="$ctrl.getCardFieldTextValue(card_field.value) | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
-            </div>
+            <card-text-field
+                ng-if="$ctrl.cardFieldIsText(card_field.type)"
+                field="card_field"
+                filter-terms="$ctrl.kanban_filter.terms"
+            ></card-text-field>
             <div
                 class="card-field"
                 ng-if="$ctrl.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0"

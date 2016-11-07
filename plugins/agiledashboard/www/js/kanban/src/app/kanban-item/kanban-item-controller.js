@@ -29,7 +29,6 @@ function KanbanItemController(
         getCardFieldFileValue       : CardFieldsService.getCardFieldFileValue,
         getCardFieldListValues      : CardFieldsService.getCardFieldListValues,
         getCardFieldPermissionsValue: CardFieldsService.getCardFieldPermissionsValue,
-        getCardFieldTextValue       : CardFieldsService.getCardFieldTextValue,
         getCardFieldUserValue       : CardFieldsService.getCardFieldUserValue,
     });
 }

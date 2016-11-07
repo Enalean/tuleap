@@ -27,7 +27,6 @@ function CardFieldsService(
         cardFieldIsComputed         : cardFieldIsComputed,
         getCardFieldDateValue       : getCardFieldDateValue,
         getCardFieldListValues      : getCardFieldListValues,
-        getCardFieldTextValue       : getCardFieldTextValue,
         getCardFieldFileValue       : getCardFieldFileValue,
         getCardFieldCrossValue      : getCardFieldCrossValue,
         getCardFieldPermissionsValue: getCardFieldPermissionsValue,
@@ -114,10 +113,6 @@ function CardFieldsService(
 
     function getCardFieldDateValue(value) {
         return $sce.trustAsHtml(moment(_.escape(value)).fromNow());
-    }
-
-    function getCardFieldTextValue(value) {
-        return $sce.trustAsHtml(_.escape(value));
     }
 
     function getCardFieldFileValue(artifact_id, field_id, file_descriptions, filter_terms) {
