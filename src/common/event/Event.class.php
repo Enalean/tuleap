@@ -634,6 +634,11 @@ class Event {
     const SVN_REVOKE_TOKENS = 'svn_revoke_tokens';
 
     /**
+     * Event raised when an admin changes the SVN authentication cache parameters
+     */
+    const SVN_AUTH_CACHE_CHANGE = 'svn_auth_cache_change';
+
+    /**
      * Event raised to see if additional info must be displayed in SVN homepage
      *
      * Paramters:

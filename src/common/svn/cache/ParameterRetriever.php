@@ -20,8 +20,6 @@
 
 namespace Tuleap\SvnCore\Cache;
 
-use DataAccessException;
-
 class ParameterRetriever
 {
     const MAXIMUM_CREDENTIALS         = 'maximum_credentials';
@@ -41,13 +39,13 @@ class ParameterRetriever
 
     /**
      * @return Parameters
-     * @throws DataAccessException
+     * @throws ParameterDataAccessException
      */
     public function getParameters()
     {
         $rows = $this->dao->search();
         if ($rows === false) {
-            throw new DataAccessException();
+            throw new ParameterDataAccessException();
         }
 
         $maximum_credentials = self::MAXIMUM_CREDENTIALS_DEFAULT;
