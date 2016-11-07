@@ -5,7 +5,7 @@ Version 9.1 (Not Released Yet)
 	* request #9392: Deleted users can be switched to suspended automatically
 	* request #9505: FRS_Admin user group description is not user friendly
 	* story #9589: Add pending info to projects and users list
-	* request #8756: SVN authentication cache can be configured
+	* request #8756: Revoked token should no longer be usable
 
 	== Bug Fix ==
 	* request #9599: Misleading warning message when using IE11 with compatibility
