@@ -609,9 +609,9 @@ admin_permission_delegation	no_user	Il n'y a aucun utilisateur associé à ce gr
 admin_permission_delegation	permissions_list_title	Permission
 admin_permission_delegation	users_list_title	Utilisateur
 admin_permission_delegation	permissions_action_add	Ajouter des permissions
-admin_permission_delegation	permissions_action_delete	Supprimer les permissions sélectionnées
-admin_permission_delegation	users_action_add	Ajouter un utilisateur
-admin_permission_delegation	users_action_delete	Supprimer les utilisateurs sélectionnés
+admin_permission_delegation	permissions_action_delete	Supprimer les permissions
+admin_permission_delegation	users_action_add	Ajouter l'utilisateur
+admin_permission_delegation	users_action_delete	Supprimer les utilisateurs
 admin_permission_delegation	group_title_create	Ajouter un nouveau groupe
 admin_permission_delegation	group_title_edit	Editer le groupe "$1"
 admin_permission_delegation	group_name	Nom

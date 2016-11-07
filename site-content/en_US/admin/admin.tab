@@ -618,9 +618,9 @@ admin_permission_delegation	no_user	There is no user associated to this group
 admin_permission_delegation	permissions_list_title	Permission
 admin_permission_delegation	users_list_title	User
 admin_permission_delegation	permissions_action_add	Add permissions
-admin_permission_delegation	permissions_action_delete	Delete selected permissions
+admin_permission_delegation	permissions_action_delete	Delete permissions
 admin_permission_delegation	users_action_add	Add user
-admin_permission_delegation	users_action_delete	Delete selected users
+admin_permission_delegation	users_action_delete	Delete users
 admin_permission_delegation	group_title_create	Create a new group
 admin_permission_delegation	group_title_edit	Edit the group "$1"
 admin_permission_delegation	group_name	Name
