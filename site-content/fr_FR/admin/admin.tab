@@ -134,7 +134,7 @@ admin_main	no_png	Merci d'uploader une image au format png
 admin_main	100px	L'image excède les 100px de hauteur
 
 admin_main	configure_access_controls	Droits d'accès
-admin_main	who_can_access	Qui peut accéder à la plateforme ?
+admin_main	platform_access_control	Droits d'accès de la plateforme
 admin_main	projects_visibility	Visibilité des projets
 admin_main	projects_visibility_label	Les administrateurs de projet peuvent choisir la visibilité du projet
 admin_main	projects_visibility_help	Si, dans votre organisation, la confidentialité des projets doit être impérativement préservée, alors vous pouvez décocher cette option afin que les administrateurs projets ne puissent pas divulguer par mégarde des ressources confidentielles aux autres utilisateurs de la plateforme.
@@ -151,6 +151,7 @@ admin_main	ugroup_registered_users_placeholder	E.g employés $1
 admin_main	ugroup_authenticated_users_label	Label pour les utilisateurs authentifiés (enregistrés + retreints)
 admin_main	ugroup_registered_users_label	Label pour les utilisateurs enregistrés
 admin_main	customize_ugroups_label_info	Vous pouvez redéfinir les noms des deux groups spéciaux suivants. Pour le moment, cela s'applique uniquement au service Git.
+admin_main	btn_update_information	Mettre à jour les informations
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

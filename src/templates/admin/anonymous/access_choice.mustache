@@ -1,8 +1,8 @@
-<h2>{{ title }}</h2>
+<h1>{{ title }}</h1>
 
 <form action=""
     method="POST"
-    id="admin-anonymous"
+    id="siteadmin-access-anonymous"
     data-current-access-mode="{{ current_access_mode }}"
     data-nb-restricted-users="{{ nb_restricted_users }}"
     data-ugroup_authenticated_users="{{ ugroup_authenticated_users }}"
@@ -16,72 +16,123 @@
     </div>
     {{/ is_localinc_obsolete }}
 
-    <legend>{{ who_can_access }}</legend>
-    <label class="radio">
-        <input type="radio"
-            name="access_mode"
-            value="anonymous"
-            {{# access_anonymous }}checked{{/ access_anonymous }}
-        />
-        {{ access_anonymous_label }}
-    </label>
-    <p class="help">
-        {{ access_anonymous_desc }}
-    </p>
-    <label class="radio">
-        <input type="radio"
-            name="access_mode"
-            value="regular"
-            {{# access_regular }}checked{{/ access_regular }}
-        />
-        {{ access_regular_label }}
-    </label>
-    <p class="help">
-        {{ access_regular_desc }}
-    </p>
-    <label class="radio">
-        <input type="radio"
-            name="access_mode"
-            value="restricted"
-            {{# access_restricted }}checked{{/ access_restricted }}
-        />
-        {{ access_restricted_label }}
-    </label>
-    <p class="help">
-        {{ access_restricted_desc }}
-    </p>
+    <div class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-lock tlp-pane-title-icon"></i> {{ platform_access_control_label }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-radio">
+                        <input
+                            type="radio"
+                            name="access_mode"
+                            value="anonymous"
+                            {{# access_anonymous }}checked{{/ access_anonymous }}
+                        > {{ access_anonymous_label }}
+                    </label>
+                    <p class="tlp-text-info siteadmin-access-option-desc">{{ access_anonymous_desc }}</p>
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-radio">
+                        <input
+                            type="radio"
+                            name="access_mode"
+                            value="regular"
+                            {{# access_regular }}checked{{/ access_regular }}
+                        > {{ access_regular_label }}
+                    </label>
+                    <p class="tlp-text-info siteadmin-access-option-desc">{{ access_regular_desc }}</p>
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-radio">
+                        <input
+                            type="radio"
+                            name="access_mode"
+                            value="restricted"
+                            {{# access_restricted }}checked{{/ access_restricted }}
+                        > {{ access_restricted_label }}
+                    </label>
+                    <p class="tlp-text-info siteadmin-access-option-desc">{{ access_restricted_desc }}</p>
 
-    <div id="customize-ugroup-labels">
-        <p>{{ customize_ugroups_label_info }}</p>
-        <label>
-            {{ ugroup_authenticated_users_label }}
-            <input type="text" name="ugroup_authenticated_users" value="{{ ugroup_authenticated_users }}" placeholder="{{ ugroup_authenticated_users_placeholder }}" />
-        </label>
-        <label>
-            {{ ugroup_registered_users_label }}
-            <input type="text" name="ugroup_registered_users" value="{{ ugroup_registered_users }}" placeholder="{{ ugroup_registered_users_placeholder }}" />
-        </label>
+                    <div id="siteadmin-access-customize-ugroup-labels">
+                        <p>{{ customize_ugroups_label_info }}</p>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="siteadmin-authenticated-ugroup-name">
+                                {{ ugroup_authenticated_users_label }}
+                            </label>
+                            <input
+                                type="text"
+                                class="tlp-input"
+                                id="siteadmin-authenticated-ugroup-name"
+                                name="ugroup_authenticated_users"
+                                value="{{ ugroup_authenticated_users }}"
+                                placeholder="{{ ugroup_authenticated_users_placeholder }}"
+                                size="30"
+                            >
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="siteadmin-restricted-ugroup-name">
+                                {{ ugroup_registered_users_label }}
+                            </label>
+                            <input
+                                type="text"
+                                class="tlp-input"
+                                id="siteadmin-restricted-ugroup-name"
+                                name="ugroup_registered_users"
+                                value="{{ ugroup_registered_users }}"
+                                placeholder="{{ ugroup_registered_users_placeholder }}"
+                                size="30"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 
-    <legend>{{ projects_visibility }}</legend>
-    <section>
-        <label class="checkbox">
-            <input type="hidden"   name="project_admin_can_choose_visibility" value="0" />
-            <input type="checkbox" name="project_admin_can_choose_visibility" value="1" {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }} />
-            {{ projects_visibility_label }}
-        </label>
-        <p class="help">
-            {{ projects_visibility_help }}
-        </p>
-    </section>
-    <div id="submit-panel">
-        {{# access_restricted }}
-            {{# nb_restricted_users }}
-                <div id="submit-panel-message">
-                    {{{ current_restricted_users_message }}}
+    <div class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-eye tlp-pane-title-icon"></i> {{ projects_visibility }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="hidden"
+                            name="project_admin_can_choose_visibility"
+                            value="0"
+                        >
+                        <input
+                            type="checkbox"
+                            name="project_admin_can_choose_visibility"
+                            value="1"
+                            {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }}
+                        >
+                        {{ projects_visibility_label }}
+                    </label>
+                    <p class="tlp-text-info siteadmin-access-option-desc">{{ projects_visibility_help }}</p>
                 </div>
-            {{/ nb_restricted_users }}
-        {{/ access_restricted }}
-        <button type="submit" class="tlp-button-primary" name="update" value="1" disabled>{{ btn_submit }}</button>
+            </section>
+        </div>
+    </div>
+
+    {{# access_restricted }}
+        {{# nb_restricted_users }}
+            <div id="siteadmin-access-submit-panel-message">
+                {{{ current_restricted_users_message }}}
+            </div>
+        {{/ nb_restricted_users }}
+    {{/ access_restricted }}
+    <div id="siteadmin-access-submit-panel">
+        <button
+            type="submit"
+            class="tlp-button-primary"
+            name="update"
+            value="1"
+            disabled
+        ><i class="fa fa-save tlp-button-icon"></i>
+        {{ btn_submit }}</button>
     </div>
 </form>

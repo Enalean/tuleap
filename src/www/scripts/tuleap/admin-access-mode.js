@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 !(function ($) {
 
     $(function () {
-        var form = $('#admin-anonymous');
+        var form = $('#siteadmin-access-anonymous');
         if (form.length === 0) {
             return;
         }
@@ -33,16 +33,16 @@
 
             if (current_access_mode === 'restricted' && nb_restricted_users > 0) {
                 if ($(this).val() !== current_access_mode) {
-                    $('#submit-panel').addClass('alert alert-warning');
+                    $('#siteadmin-access-submit-panel-message').addClass('tlp-alert-warning');
                 } else {
-                    $('#submit-panel').removeClass('alert alert-warning');
+                    $('#siteadmin-access-submit-panel-message').removeClass('tlp-alert-warning');
                 }
             }
 
             if ($(this).val() === 'restricted') {
-                $('#customize-ugroup-labels').show();
+                $('#siteadmin-access-customize-ugroup-labels').show();
             } else {
-                $('#customize-ugroup-labels').hide();
+                $('#siteadmin-access-customize-ugroup-labels').hide();
             }
         });
 
@@ -55,7 +55,7 @@
         });
 
         if (current_access_mode === 'restricted') {
-            $('#customize-ugroup-labels').show();
+            $('#siteadmin-access-customize-ugroup-labels').show();
         }
 
         function enableSubmitButton() {
