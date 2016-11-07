@@ -20,10 +20,11 @@
                             name="gitolite_config_project"
                             data-placeholder="Project name"></select>
                 </div>
-                <button type="submit" class="tlp-button-primary" id="gitolite-config-button">
-                    <i class="fa fa-repeat tlp-button-icon"></i> {{ regenerate_gitolite_configuration }}
-                    </input>
-                </button>
+                <div class="gitolite-config-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa fa-repeat tlp-button-icon"></i> {{ regenerate_gitolite_configuration }}
+                    </button>
+                </div>
             </section>
         </div>
     </section>

@@ -18,6 +18,11 @@
     }
 }
 
+.general-settings-submit {
+    margin: $tlp-double-spacing 0 0;
+    text-align: center;
+}
+
 /* -------------------- MIRROR ---------------------- */
 
 .mirror-global-action-container {
@@ -79,25 +84,17 @@
     flex-direction: column;
 }
 
-.gerrit-server-info-one {
+.gerrit-server-info-row {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 0 $tlp-spacing;
 
-    > .tlp-property {
-        padding-right: 80px;
-        padding-bottom: 10px;
-
+    &:last-child {
+        margin: 0;
     }
-}
-
-.gerrit-server-info-two {
-    display: flex;
-    flex-wrap: wrap;
 
     > .tlp-property {
-        padding-right: 80px;
-        padding-bottom: 10px;
-
+        margin: 0 $tlp-double-spacing 0 0;
     }
 }
 
