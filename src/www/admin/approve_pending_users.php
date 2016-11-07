@@ -84,6 +84,17 @@ $expiry_date = 0;
                 usleep(250000);
             }
 
+            if (count($users_array) > 1) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $Language->getText('admin_approve_pending_users', 'users_activated_success')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $Language->getText('admin_approve_pending_users', 'user_activated_success')
+                );
+            }
 
         } else if($action_select=='validate'){
             $csrf_token->check();
@@ -113,6 +124,18 @@ $expiry_date = 0;
                 usleep(250000);
             }
 
+            if (count($users_array) > 1) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $Language->getText('admin_approve_pending_users', 'users_validated_success')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $Language->getText('admin_approve_pending_users', 'user_validated_success')
+                );
+            }
+
         } else if ($action_select=='delete') {
             $csrf_token->check();
             db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
@@ -120,6 +143,18 @@ $expiry_date = 0;
             $em = EventManager::instance();
             foreach ($users_array as $user_id) {
                 $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
+            }
+
+            if (count($users_array) > 1) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $Language->getText('admin_approve_pending_users', 'users_deleted_success')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $Language->getText('admin_approve_pending_users', 'user_deleted_success')
+                );
             }
 
         }
