@@ -26,6 +26,7 @@
     width: $sidebar-expanded-width;
     height: calc(100vh - #{$navbar-height});
     background: $tlp-theme-sidebar-background-color;
+    z-index: 10000;
 }
 
 .admin-sidebar-section {

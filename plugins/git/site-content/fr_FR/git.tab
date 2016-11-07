@@ -458,8 +458,8 @@ plugin_git	mirror_no_mirrors_part_two	commencez par ajouter un miroir.
 plugin_git	mirror_number_of_repositories	$1 dépôts
 plugin_git	no_specified_mirror_name	Nom de miroir non renseigné
 
-plugin_git	system_event_queue	File d'attente Git
-plugin_git	mirror_system_event_queue	File d'attente Grok Mirror
+plugin_git	system_event_queue	Git
+plugin_git	mirror_system_event_queue	Grok Mirror
 
 project_admin_utils	git_repo_create	Création d'un dépôt Git
 project_admin_utils	git_repo_delete	Suppression d'un dépôt Git

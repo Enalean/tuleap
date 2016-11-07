@@ -1,0 +1,58 @@
+<section class="tlp-pane siteadmin-homepage-system-events">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-flag tlp-pane-title-icon"></i> {{ pane_title }}
+            </h1>
+        </div>
+        {{# sections }}
+            <a href="/admin/system_events/?queue={{ name }}" class="tlp-pane-section siteadmin-homepage-system-events-queue">
+                <h2 class="tlp-pane-subtitle">{{ title }}</h2>
+                <div class="siteadmin-homepage-system-events-queue-content">
+                    <i class="fa fa-flag siteadmin-homepage-system-events-queue-content-flag flag-{{ flag_type }}"></i>
+                    <div class="siteadmin-homepage-system-events-queue-content-details">
+                        <div class="siteadmin-homepage-system-events-queue-content-new-running-done">
+                            <span class="system-event-type-count tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-top"
+                                data-tlp-tooltip="{{ new_label_tooltip }}"
+                            >
+                                <i class="tlp-badge-icon fa fa-plus"></i> {{ new_count }}
+                            </span>
+                            <span class="system-event-type-count tlp-badge-primary tlp-tooltip tlp-tooltip-top {{^ has_running }}tlp-badge-outline{{/ has_running}}"
+                                data-tlp-tooltip="{{ running_label_tooltip }}"
+                            >
+                                <i class="tlp-badge-icon fa fa-refresh"></i> {{ running_count }}
+                            </span>
+                            <span class="system-event-type-count tlp-badge-success tlp-badge-outline tlp-tooltip tlp-tooltip-top"
+                                data-tlp-tooltip="{{ done_label_tooltip }}"
+                            >
+                                <i class="tlp-badge-icon fa fa-check"></i> {{ done_count }}
+                            </span>
+                        </div>
+                        {{# has_warning_or_error }}
+                            <div class="siteadmin-homepage-system-events-queue-content-warning-error">
+                                <span class="system-event-type-count tlp-badge-warning tlp-tooltip tlp-tooltip-top {{^ has_warning }}tlp-badge-outline{{/ has_warning}}"
+                                    data-tlp-tooltip="{{ warning_label_tooltip }}"
+                                >
+                                    <i class="tlp-badge-icon fa fa-warning"></i> {{ warning_count }} {{# has_warning_without_error }}{{ warning_label }}{{/ has_warning_without_error}}
+                                </span>
+                                <span class="system-event-type-count tlp-badge-danger tlp-tooltip tlp-tooltip-top {{^ has_error }}tlp-badge-outline{{/ has_error}}"
+                                    data-tlp-tooltip="{{ error_label_tooltip }}"
+                                >
+                                    <i class="tlp-badge-icon fa fa-exclamation-circle"></i> {{ error_count }} {{# has_error }}{{ error_label }}{{/ has_error}}
+                                </span>
+                            </div>
+                        {{/ has_warning_or_error }}
+                    </div>
+                </div>
+            </a>
+        {{/ sections }}
+        <div class="tlp-pane-spacer"></div>
+        <section class="tlp-pane-section">
+            <a href="/admin/system_events" class="tlp-button-primary tlp-button-outline tlp-button-wide"
+                title="{{ view_all_label }}"
+            >
+                {{ view_all_label }}
+            </a>
+        </section>
+    </div>
+</section>

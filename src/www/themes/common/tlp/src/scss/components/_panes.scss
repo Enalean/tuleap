@@ -26,7 +26,9 @@
 }
 
 .tlp-pane-container {
+    display: flex;
     flex: 1 1 auto;
+    flex-direction: column;
     border-right: 1px solid $tlp-ui-border-light;
 
     &:last-child {
@@ -72,4 +74,8 @@
     &:last-child {
         border-bottom: 0;
     }
+}
+
+.tlp-pane-spacer {
+    flex: 1 1 auto;
 }

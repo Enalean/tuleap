@@ -92,4 +92,4 @@ plugin_statistics	add_disk_quota	<a href="$1">Add disk quota</a>
 plugin_statistics	projects_over_quota	<a href="$1">Projects over quota</a>
 plugin_statistics	querying_purged_data	The chart displayed uses old data which has been purged in order to display it quickly. The purge operation keeps one day's worth of data for each week ended more than 3 months ago. Beyond 2 years ago, one day of each month is kept.
 
-plugin_statistics	sysevents_queue	Statistics Queue
+plugin_statistics	sysevents_queue	Statistics

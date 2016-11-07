@@ -463,8 +463,8 @@ plugin_git	mirror_no_mirrors_part_two	start by adding a mirror.
 plugin_git	mirror_number_of_repositories	$1 repositories
 plugin_git	no_specified_mirror_name	Not specified mirror name
 
-plugin_git	system_event_queue	Git Queue
-plugin_git	mirror_system_event_queue	Grok Mirror Queue
+plugin_git	system_event_queue	Git
+plugin_git	mirror_system_event_queue	Grok Mirror
 
 project_admin_utils	git_repo_create	Git repository creation
 project_admin_utils	git_repo_delete	Git repository deletion

@@ -121,9 +121,9 @@ $wStats->setContent('
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$mode_lab.' '.$Language->getText('admin_main', 'mode_lab_users_nb_users').'</span>
         </div>
 
-        <a href="lastlogins.php" class="tlp-button-primary tlp-button-outline tlp-button-wide">'.$Language->getText('admin_main', 'stat_login').'</a>
+        <a href="lastlogins.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'stat_login').'">'.$Language->getText('admin_main', 'stat_login').'</a>
     </section>
-    <section class="tlp-pane-section">
+    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last">
         <h2 class="tlp-pane-subtitle">'.$Language->getText('admin_main', 'stat_projects').'</h2>
         <div class="tlp-property">
             <label class="tlp-label">'.$Language->getText('admin_main', 'status_project').'</label>
@@ -132,8 +132,9 @@ $wStats->setContent('
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$pending_projects.' '.$Language->getText('admin_main', 'sstat_pend_g').'</span>
         </div>
     </section>
+    <div class="tlp-pane-spacer"></div>
     <section class="tlp-pane-section">
-        <a href="/stats/" class="tlp-button-primary tlp-button-outline tlp-button-wide">'.$Language->getText('admin_main', 'stat_spu').'</a>
+        <a href="/stats/" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'stat_spu').'">'.$Language->getText('admin_main', 'stat_spu').'</a>
     </section>
 ');
 
@@ -216,7 +217,11 @@ $wPlugins->setContent('
         <ul>'. $plugins_content .'</ul>
     </section>
     <section class="tlp-pane-section">
-        <a href="/plugins/pluginsadministration/" class="tlp-button-primary tlp-button-outline tlp-button-wide">'.$Language->getText('admin_main', 'manage_all_plugins').'</a>
+        <a href="/plugins/pluginsadministration/" class="tlp-button-primary tlp-button-outline tlp-button-wide"
+            title="'.$Language->getText('admin_main', 'manage_all_plugins').'"
+        >
+            '.$Language->getText('admin_main', 'manage_all_plugins').'
+        </a>
     </section>
 ');
 
@@ -254,6 +259,20 @@ $wStats->display();
 $wPlugins->display();
 echo '</div>';
 echo '</div>';
+
+$system_events_pane_builder = new Tuleap\Admin\SystemEvents\HomepagePanePresenterBuilder(
+    new SystemEventDao(),
+    EventManager::instance(),
+    SystemEventManager::instance()
+);
+$system_events_pane_renderer = TemplateRendererFactory::build()->getRenderer(
+    ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/'
+);
+$system_events_pane_renderer->renderToPage(
+    Tuleap\Admin\SystemEvents\HomepagePanePresenter::TEMPLATE,
+    $system_events_pane_builder->build()
+);
+
 echo '</div>';
 
 $GLOBALS['HTML']->footer(array());
