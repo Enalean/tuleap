@@ -37,5 +37,7 @@ class RestorePresenter
         $this->project_id        = $project_id;
         $this->restore_not_found = $GLOBALS['Language']->getText('plugin_svn', 'restore_no_repo_found');
         $this->restore_confirm   = $GLOBALS['Language']->getText('plugin_svn', 'restore_confirmation');
+        $this->repository_name   = $GLOBALS['Language']->getText('plugin_svn', 'repository_name');
+        $this->deleted_date      = $GLOBALS['Language']->getText('plugin_svn', 'deleted_date');
     }
 }

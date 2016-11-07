@@ -594,6 +594,38 @@ admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration Queue
 admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a>
 admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/codendi/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
 
+admin_show_pending_documents	note_intro	Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it becomes restorable.
+admin_show_pending_documents	note_intro_system	When a file is deleted by the user, it becomes restorable after SYSTEM_CHECK
+admin_show_pending_documents	note_intro_system_end	is processed.
+admin_show_pending_documents	note_intro_restaure	Please note that actual file restoration will be done by the next SYSTEM_CHECK event. This interface only schedules the restoration.
+
+admin_show_pending_documents	frs_filename	File name
+admin_show_pending_documents	frs_release	Release name
+admin_show_pending_documents	frs_package	Package name
+admin_show_pending_documents	frs_deleted	Deleted date
+admin_show_pending_documents	frs_forecast	Forecast date purge
+admin_show_pending_documents	frs_confirm_message	Confirm restore of this file
+admin_show_pending_documents	frs_restore	Restore
+admin_show_pending_documents	frs_no_restore	No restorable files found
+admin_show_pending_documents	frs_restore_info	File to be restored next SYSTEM_CHECK event
+admin_show_pending_documents	frs_restore_file_info	File marked to be restored in a deleted release
+admin_show_pending_documents	frs_not_yet	Not yet restorable
+admin_show_pending_documents	frs_restored	File marked to be restored
+admin_show_pending_documents	frs_not_restored	File not restored
+admin_show_pending_documents	frs_active	There is already a file with this filename having an active status
+admin_show_pending_documents	frs_same	A file with a same name is marked to be restored
+admin_show_pending_documents	frs_bad	Bad file id
+
+admin_show_pending_documents	wiki_name	Attachment name
+admin_show_pending_documents	wiki_date	Deleted date
+admin_show_pending_documents	wiki_purge	Forecast purge date
+admin_show_pending_documents	wiki_restore	Restore
+admin_show_pending_documents	wiki_confirm	Confirm restore of this attachment
+admin_show_pending_documents	wiki_no_restore	No restorable attachments found
+admin_show_pending_documents	wiki_restore_attachment	Wiki attachment restored
+admin_show_pending_documents	wiki_restore_error	Wiki attachment not restored
+admin_show_pending_documents	wiki_bad_id	Bad attachment id
+
 admin_generic_user	title	Generic user
 admin_generic_user	help	"Generic users" are per project users meant to be used in automated processes like continuous integration. Note: As of today, they can only be activated by a SOAP API call, projet by project, with project administrator access right.
 admin_generic_user	help_update	This page shows the default settings that apply to all project s. The generic user suffix can be customised with '$1' variable in local.inc

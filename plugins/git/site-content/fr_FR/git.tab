@@ -488,6 +488,11 @@ plugin_git	restore_no_repo_found	Aucun dépôt Git restorable n'a été trouvé
 plugin_git	restore_confirmation	Confirmez la restoration de ce dépôt Git
 
 plugin_git	archived_repositories	Dépôts git supprimés
+plugin_git	archived_repositories_name	Nom du dépôt
+plugin_git	archived_repositories_date	Date de création
+plugin_git	archived_repositories_creator	Créateur
+plugin_git	archived_repositories_date_delete	Date de suppression
+plugin_git	archived_repositories_restore	Restaurer
 
 plugin_git	exceed_max_input_vars_message	Nous ne pouvons pas gérer la mise à jour de l'ensemble des dépôts sélectionnés, nous avons donc limité votre sélection à $1 dépôts.
 

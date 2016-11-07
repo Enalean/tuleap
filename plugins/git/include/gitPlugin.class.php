@@ -1913,10 +1913,10 @@ class GitPlugin extends Plugin {
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th>Repository name</th>
-                            <th>Creation date</th>
-                            <th>Creator</th>
-                            <th>Deleted date</th>
+                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_name').'</th>
+                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_date').'</th>
+                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_creator').'</th>
+                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_date_delete').'</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -1933,7 +1933,7 @@ class GitPlugin extends Plugin {
                         class="tlp-button-small tlp-button-outline tlp-button-primary"
                         onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')"
                     >
-                        <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                        <i class="fa fa-repeat tlp-button-icon"></i> '.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_restore').'
                     </a>
                 </td>';
                 $tab_content .= '</tr>';
