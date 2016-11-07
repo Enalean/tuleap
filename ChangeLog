@@ -7,6 +7,7 @@ Version 9.1 (Not Released Yet)
 	* story #9589: Get rid of Bootstrap in site admin / projects
 		- Add pending info to projects and users list
 		- Style forgeupgrade not run warning
+		- i18n pending documents
 	* request #8756: Revoked token should no longer be usable
 
 	== Bug Fix ==
@@ -19,12 +20,12 @@ Version 9.1 (Not Released Yet)
 	* request #9627: TV5: numeric values are truncated in a text field
 
 	== Plugins ==
-	* svn: 0.103
+	* svn: 0.104
 	* tracker: 5.1031
-	* git: 4.289
+	* git: 4.290
 	* agiledashboard: 1.433
 	* archivedeleteditems: 0.10
-	* docman: 2.26.123
+	* docman: 2.26.124
 	* IM: 1.5.39
 	* admindelegation: 2.14
 	* fulltextsearch: 0.136
