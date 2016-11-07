@@ -170,7 +170,16 @@ svn_viewvc	bad_roottype	roottype invalide
 
 svn_widget	svnstats	Statistiques Svn
 
-svn_tokens	allowed_project_title	Jetons de connexion SVN
+svn_siteadmin	global_title	Subversion
+svn_siteadmin	token_panel_title	Jetons de connexion
+svn_siteadmin	cache_panel_title	Cache d'authentification
+
+svn_cache	settings_title	Paramètres du cache d'authentification de SVN
+svn_cache	usage_information	Ces paramètres s'appliquent uniquement à une instance utilisant le mode d'authentification modperl, aux projets pouvant utiliser les jetons d'authentification ou aux dépôts du plugin SVN.
+svn_cache	maximum_credentials_label	Nombre maximum de credentials mis en cache par dépôt
+svn_cache	lifetime_label	Durée de vie du cache (en minutes)
+svn_cache	save_settings	Sauvegarder la configuration
+
 svn_tokens	allowed_project_pane_title	Projets autorisant les jetons de connexion SVN
 svn_tokens	allowed_project_information	Cette section permet de définir les projets où les utilisateurs pourront utiliser leur jeton de connexion pour SVN.
 svn_tokens	allowed_project_list	Liste des projets autorisés

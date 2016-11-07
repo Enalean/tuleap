@@ -30,7 +30,6 @@ class AdminSidebarPresenter
     public $pending_projects_count;
     public $are_trove_categories_enabled;
     public $additional_tracker_entries;
-    public $are_svn_tokens_enabled;
     public $tuleap_version;
     public $plugins;
 
@@ -71,7 +70,6 @@ class AdminSidebarPresenter
         $pending_projects_count,
         $are_trove_categories_enabled,
         $additional_tracker_entries,
-        $are_svn_tokens_enabled,
         $tuleap_version,
         $plugins
     ) {
@@ -83,7 +81,6 @@ class AdminSidebarPresenter
         $this->pending_projects_count       = $pending_projects_count;
         $this->are_trove_categories_enabled = $are_trove_categories_enabled;
         $this->additional_tracker_entries   = $additional_tracker_entries;
-        $this->are_svn_tokens_enabled       = $are_svn_tokens_enabled;
         $this->tuleap_version               = $tuleap_version;
         $this->plugins                      = $plugins;
 
@@ -108,7 +105,7 @@ class AdminSidebarPresenter
         $this->configuration_nav_predefined_services   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_services');
         $this->configuration_nav_predefined_references = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_references');
         $this->configuration_nav_tracker_restore       = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_tracker_restore');
-        $this->configuration_nav_svn_tokens            = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_svn_tokens');
+        $this->configuration_nav_svn                   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_svn');
 
         $this->utils_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_section_title');
         $this->utils_nav_system_events                 = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_system_events');

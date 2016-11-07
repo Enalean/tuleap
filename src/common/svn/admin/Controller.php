@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+namespace Tuleap\SvnCore\Admin;
 
-$project_manager = ProjectManager::instance();
-$token_manager   = new SVN_TokenUsageManager(new SVN_TokenDao(), $project_manager);
-$event_manager   = EventManager::instance();
+use HTTPRequest;
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
-
-$controller = new SVN_Admin_Controller($project_manager, $token_manager, $event_manager);
-$action     = $request->get('action');
-switch ($action) {
-    case 'index':
-        $controller->getAdminIndex($request);
-        break;
-    case 'update_project':
-        $controller->updateProject($request);
+interface Controller
+{
+    public function process(HTTPRequest $request);
 }

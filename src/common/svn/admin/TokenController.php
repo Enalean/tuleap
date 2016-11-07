@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Admin\AdminPageRenderer;
+namespace Tuleap\SvnCore\Admin;
 
-class SVN_Admin_Controller {
+use CSRFSynchronizerToken;
+use Event;
+use EventManager;
+use Feedback;
+use HTTPRequest;
+use ProjectManager;
+use SVN_TokenUsageManager;
 
+class TokenController implements Controller
+{
     /**
      * @var ProjectManager
      */
@@ -37,60 +45,79 @@ class SVN_Admin_Controller {
      */
     private $event_manager;
 
+    /**
+     * @var Renderer
+     */
+    private $renderer;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
     public function __construct(
         ProjectManager $project_manager,
         SVN_TokenUsageManager $token_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
+        Renderer $renderer,
+        CSRFSynchronizerToken $csrf_token
     ) {
-        $this->project_manager   = $project_manager;
-        $this->token_manager     = $token_manager;
-        $this->event_manager     = $event_manager;
+        $this->project_manager = $project_manager;
+        $this->token_manager   = $token_manager;
+        $this->event_manager   = $event_manager;
+        $this->renderer        = $renderer;
+        $this->csrf_token      = $csrf_token;
     }
 
-    public function getAdminIndex(HTTPRequest $request) {
-        $this->checkAccess($request);
+    public function process(HTTPRequest $request)
+    {
+        if ($request->isPost()) {
+            $this->processFormSubmission($request);
+        }
+        $this->display();
+    }
 
-        $presenter = new SVN_Admin_AllowedProjectsPresenter(
+    private function display()
+    {
+        $presenter = new TokenPresenter(
             $this->token_manager->getProjectsAuthorizingTokens(),
-            true
+            true,
+            $this->csrf_token
         );
 
-        $renderer = new AdminPageRenderer();
-        $renderer->renderAPresenter(
-            $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_title'),
-            ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
-            $presenter::TEMPLATE,
+        $this->renderer->renderANoFramedPresenter(
             $presenter
         );
     }
 
-    private function checkAccess(HTTPRequest $request) {
-        if (! $request->getCurrentUser()->isSuperUser()) {
-            $GLOBALS['Response']->redirect('/');
+    private function processFormSubmission(HTTPRequest $request)
+    {
+        if ($request->get('action') === 'update_project') {
+            $this->updateProjectTokenUsage($request);
         }
     }
 
-    public function updateProject(HTTPRequest $request) {
-        $token = new CSRFSynchronizerToken('/admin/svn/svn_tokens.php?action=update_project');
-        $token->check();
+    private function updateProjectTokenUsage(HTTPRequest $request)
+    {
+        $this->csrf_token->check();
 
-        $project_to_add  = $request->get('project-to-allow');
+        $project_to_add = $request->get('project-to-allow');
         if ($request->get('allow-project') && !empty($project_to_add)) {
             $this->allowSVNTokensForProject($project_to_add);
         }
 
         $project_ids_to_remove = $request->get('project-ids-to-revoke');
-        if ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
+        if ($request->get('revoke-project') && !empty($project_ids_to_remove)) {
             $this->revokeProjectsAuthorization($project_ids_to_remove);
         }
 
-        $GLOBALS['Response']->redirect('/admin/svn/svn_tokens.php?action=index');
+        $GLOBALS['Response']->redirect('/admin/svn/index.php?pane=token');
     }
 
-    private function revokeProjectsAuthorization(array $project_ids_to_remove) {
+    private function revokeProjectsAuthorization(array $project_ids_to_remove)
+    {
         if (count($project_ids_to_remove) > 0 &&
-            $this->token_manager->removeProjectsAuthorizationForTokens($project_ids_to_remove)
-        ){
+            $this->token_manager->removeProjectsAuthorizationForTokens($project_ids_to_remove)) {
             $this->event_manager->processEvent(
                 Event::SVN_REVOKE_TOKENS,
                 array('project_ids' => implode(',', $project_ids_to_remove))
@@ -100,17 +127,16 @@ class SVN_Admin_Controller {
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_revoke_project')
             );
-
         } else {
             $this->sendUpdateProjectListError();
         }
     }
 
-    private function allowSVNTokensForProject($project_to_migrate) {
+    private function allowSVNTokensForProject($project_to_migrate)
+    {
         $project = $this->project_manager->getProjectFromAutocompleter($project_to_migrate);
 
         if ($project && $this->token_manager->canAuthorizeTokens($project)) {
-
             $this->token_manager->setProjectAuthorizesTokens($project);
 
             $this->event_manager->processEvent(
@@ -127,7 +153,8 @@ class SVN_Admin_Controller {
         }
     }
 
-    private function sendUpdateProjectListError() {
+    private function sendUpdateProjectListError()
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_update_project_list_error')

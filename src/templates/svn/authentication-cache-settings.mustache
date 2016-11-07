@@ -1,0 +1,28 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ settings_title }}</h1>
+        </div>
+
+        <section class="tlp-pane-section">
+            <p>
+                {{ usage_information }}
+            </p>
+            <form method="POST">
+                <div class="tlp-form-element tlp-form-element-disabled">
+                    <label for="cache-maximum-credentials" class="tlp-label">{{ maximum_credentials_label }}</label>
+                    <input id="cache-maximum-credentials" type="number" min="0" value="{{ maximum_credentials }}" class="tlp-input" disabled size="5">
+                </div>
+                <div class="tlp-form-element tlp-form-element-disabled">
+                    <label for="cache-lifetime" class="tlp-label">{{ lifetime_label }}</label>
+                    <input id="cache-lifetime" type="number" min="0" value="{{ lifetime }}" class="tlp-input" disabled size="5">
+                </div>
+                <div id="submit-button-authentication-cache-settings">
+                    <button class="tlp-button-primary" type="submit" disabled>
+                        <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</section>

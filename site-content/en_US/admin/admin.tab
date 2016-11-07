@@ -30,7 +30,7 @@ admin_sidebar	configuration_nav_project_fields	Custom project fields
 admin_sidebar	configuration_nav_predefined_services	Predefined project services
 admin_sidebar	configuration_nav_predefined_references	Predefined project references
 admin_sidebar	configuration_nav_tracker_restore	Pending trackers removal
-admin_sidebar	configuration_nav_svn_tokens	SVN tokens authorized projects
+admin_sidebar	configuration_nav_svn	Manage SVN
 admin_sidebar	utils_section_title	Global utils
 admin_sidebar	utils_nav_system_events	System events
 admin_sidebar	utils_nav_news	News approval
