@@ -571,18 +571,14 @@ class DocmanPlugin extends Plugin {
                     <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .'</h1>
                 </div>
                 <section class="tlp-pane-section">
-                    <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_version') .'</h2>
-                    <p>'. $GLOBALS['Language']->getText('plugin_docman', 'action_appears') .'
-                     <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.(int)$params['group_id'].'">'.
-                        $GLOBALS['Language']->getText('plugin_docman', 'access_logs') .'</a>.
-                    </p>';
+                    <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_version') .'</h2>';
         if (isset($res) && $res) {
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
                     <tr>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
+                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
                         <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
                         <th>'. $GLOBALS['Language']->getText('plugin_docman','label') .'</th>
                         <th>'. $GLOBALS['Language']->getText('plugin_docman','number') .'</th>
