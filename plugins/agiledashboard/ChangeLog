@@ -1,3 +1,6 @@
+Version 1.434 - Tuleap 9.1
+    * request #9630: Text card fields on Kanban should allow basic formatting
+
 Version 1.433 - Tuleap 9.1
     * request #9575: Item draggable detection improvement
 
