@@ -585,6 +585,38 @@ admin_system_events	tv3tv5_queue	File d'attente migration TV3 -> TV5
 admin_show_pending_documents	pending_doc	Les supprimés documents en suspens pour le projet <a href="/project/admin/?group_id=$1"> $2 </a>
 admin_show_pending_documents	delay_info	Comme défini dans la configuration <code>/etc/codendi/local.inc</code> par la variable <code>$sys_file_deletion_delay</code>, les éléments seront <strong>définitivement purgés</strong> du système de fichier après <strong>$1 jour.</strong>
 
+admin_show_pending_documents	note_intro	Info : il peut exister un délai (30 minutes maximum) entre le temps où un fichier a été supprimé et le temps où il peut devenir restaurable.
+admin_show_pending_documents	note_intro_system	Lorsqu'un fichier est supprimé par l'utilisateur, il devient restaurable après le SYSTEM_CHECK
+admin_show_pending_documents	note_intro_system_end	est terminé.
+admin_show_pending_documents	note_intro_restaure	Merci de noter que la restauration du fichier sera faite lors du prochain SYSTEM_CHECK. Cette interface permet seulement de planifier la restauration.
+
+admin_show_pending_documents	frs_filename	Nom du fichier
+admin_show_pending_documents	frs_release	Nom de la livraison
+admin_show_pending_documents	frs_package	Nom du paquet
+admin_show_pending_documents	frs_deleted	Date de suppression
+admin_show_pending_documents	frs_forecast	Date de purge prévue
+admin_show_pending_documents	frs_confirm_message	Confirmer la restauration du fichier
+admin_show_pending_documents	frs_restore	Restaurer
+admin_show_pending_documents	frs_no_restore	Pas de fichier restaurable
+admin_show_pending_documents	frs_restore_info	Fichiers a restaurer au prochain SYSTEM_CHECK
+admin_show_pending_documents	frs_restore_file_info	Fichier marqué à restaurer dans une livraison supprimée
+admin_show_pending_documents	frs_not_yet	Pas encore restaurable
+admin_show_pending_documents	frs_restored	Fichier marqué à restaurer
+admin_show_pending_documents	frs_not_restored	Fichier non restauré
+admin_show_pending_documents	frs_active	Il existe déjà un fichier avec le même nom et un status actif.
+admin_show_pending_documents	frs_same	Un fichier avec le même identifiant est déjà restauré
+admin_show_pending_documents	frs_bad	Mauvais identifiant de fichier
+
+admin_show_pending_documents	wiki_name	Nom du fichier
+admin_show_pending_documents	wiki_date	Date de suppression
+admin_show_pending_documents	wiki_purge	Date de purge prévue
+admin_show_pending_documents	wiki_restore	Restaurer
+admin_show_pending_documents	wiki_confirm	Confirmer la restauration de la pièce jointe
+admin_show_pending_documents	wiki_no_restore	Aucune pièce jointe restaurable trouvée
+admin_show_pending_documents	wiki_restore_attachment	Pièce jointe Wiki restaurée
+admin_show_pending_documents	wiki_restore_error	Pièce jointe Wiki non restaurée
+admin_show_pending_documents	wiki_bad_id	Mauvais identifiant de pièce jointe
+
 admin_generic_user	title	Modifier les utilisateurs génériques
 admin_generic_user	help	Les "utilisateurs génériques" de projet sont des utilisateurs dédiés aux processus automatiques de chaque projet comme l'intégration continue. A l'heure actuelle, les utilisateurs génériques s'activent uniquement par un appel à l'API SOAP, projet par projet (nécessite les droits d'administrateur projet).
 admin_generic_user	help_update	Cette page présente les valeurs par défaut qui s'appliquent à tous les projets. Le suffixe du nom peut être adapté au travers de la variable '$1' dans local.inc

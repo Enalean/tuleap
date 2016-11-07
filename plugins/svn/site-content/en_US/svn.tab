@@ -105,6 +105,8 @@ plugin_svn	delete_repository_exception	An error occured when deleting repository
 plugin_svn	archived_repositories	Deleted svn repositories
 plugin_svn	restore_confirmation	Confirm restore of the svn repository
 plugin_svn	restore_no_repo_found	No restorable svn repositories found.
+plugin_svn	repository_name	Repository name
+plugin_svn	deleted_date	Deleted date
 
 plugin_svn	anonymous_browse_access_denied	You can not browse the repository without being logged.
 

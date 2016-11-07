@@ -888,6 +888,8 @@ plugin_docman	version_restored	The <a href="$1">selected version</a> has been su
 plugin_docman	item_restored	The <a href="$1">selected item</a> has been successfully restored.
 plugin_docman	version_not_restored	The selected version has not been restored.
 plugin_docman	item_not_restored	The selected item has not been restored.
+plugin_docman	action_appears	When an element is deleted, the action appears in
+plugin_docman	access_logs	the access log
 
 plugin_docman	permission_requests	Document access requests
 plugin_docman	permission_requests_information	The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.

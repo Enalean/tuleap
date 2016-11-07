@@ -572,8 +572,9 @@ class DocmanPlugin extends Plugin {
                 </div>
                 <section class="tlp-pane-section">
                     <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_version') .'</h2>
-                    <p>When an element is deleted, the action appears in
-                     <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.
+                    <p>'. $GLOBALS['Language']->getText('plugin_docman', 'action_appears') .'
+                     <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.(int)$params['group_id'].'">'.
+                        $GLOBALS['Language']->getText('plugin_docman', 'access_logs') .'</a>.
                     </p>';
         if (isset($res) && $res) {
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);

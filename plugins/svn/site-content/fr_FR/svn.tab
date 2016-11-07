@@ -105,6 +105,8 @@ plugin_svn	delete_repository_exception	Une erreur est survenue lors de la suppre
 plugin_svn	archived_repositories	Dépôts svn supprimés
 plugin_svn	restore_confirmation	Confirmer la restauration du dépôt
 plugin_svn	restore_no_repo_found	Aucun dépôt svn à restaurer.
+plugin_svn	repository_name	Nom du dépôt
+plugin_svn	deleted_date	Date de suppression
 
 plugin_svn	anonymous_browse_access_denied	Vous ne pouvez pas naviguer dans le dépôt sans être authentifié.
 
