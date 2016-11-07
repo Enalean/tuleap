@@ -1,6 +1,6 @@
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
+# Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -576,6 +576,11 @@ CREATE TABLE svn_immutable_tags (
 CREATE TABLE svn_token_usage (
     project_id INT(11),
     PRIMARY KEY(project_id)
+);
+
+CREATE TABLE svn_cache_parameter (
+    name VARCHAR(255) PRIMARY KEY,
+    value VARCHAR(255)
 );
 
 #

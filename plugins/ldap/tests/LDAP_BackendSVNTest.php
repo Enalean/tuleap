@@ -83,11 +83,12 @@ class LDAP_BackendSVNTest extends TuleapTestCase {
         stub($ldap)->getLDAPParam('server')->returns('ldap://ldap.tuleap.com');
         stub($ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
 
-        $project_manager = mock('ProjectManager');
-        $event_manager   = new LDAP_BackendSVNTestEventManager();
-        $token_manager   = mock('SVN_TokenUsageManager');
+        $project_manager  = mock('ProjectManager');
+        $event_manager    = new LDAP_BackendSVNTestEventManager();
+        $token_manager    = mock('SVN_TokenUsageManager');
+        $cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
 
-        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager);
+        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager, $cache_parameters);
 
         $backend->setReturnValue('getSVNApacheAuthFactory', $factory);
 

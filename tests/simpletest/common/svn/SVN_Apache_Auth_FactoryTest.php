@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ class SVN_Apache_Auth_FactoryTest extends TuleapTestCase {
     private $event_manager;
     private $project_manager;
     private $token_manager;
+    private $cache_parameters;
     private $factory;
     private $project_info;
     private $project;
@@ -48,17 +49,20 @@ class SVN_Apache_Auth_FactoryTest extends TuleapTestCase {
         $this->event_manager_with_plugin_answer = new SVN_Apache_Auth_FactoryTestEventManager();
         $this->project_manager                  = mock('ProjectManager');
         $this->token_manager                    = mock('SVN_TokenUsageManager');
+        $this->cache_parameters                 = mock('Tuleap\SvnCore\Cache\Parameters');
 
         $this->factory = new SVN_Apache_Auth_Factory(
             $this->project_manager,
             $this->event_manager,
-            $this->token_manager
+            $this->token_manager,
+            $this->cache_parameters
         );
 
         $this->factory_with_plugin_answer = new SVN_Apache_Auth_Factory(
             $this->project_manager,
             $this->event_manager_with_plugin_answer,
-            $this->token_manager
+            $this->token_manager,
+            $this->cache_parameters
         );
 
         $this->project         = mock('Project');

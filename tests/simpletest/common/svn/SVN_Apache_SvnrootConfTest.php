@@ -70,11 +70,12 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
                                 'auth_mod'        => $authentification_mode));
         $repositories = array();
 
-        $project_manager = mock('ProjectManager');
-        $event_manager   = new SVN_Apache_SvnrootConfTestEventManager();
-        $token_manager   = mock('SVN_TokenUsageManager');
+        $project_manager  = mock('ProjectManager');
+        $event_manager    = new SVN_Apache_SvnrootConfTestEventManager();
+        $token_manager    = mock('SVN_TokenUsageManager');
+        $cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
 
-        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager);
+        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager, $cache_parameters);
 
         return new SVN_Apache_SvnrootConf($factory, $projects, $repositories);
     }
