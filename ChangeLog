@@ -4,7 +4,9 @@ Version 9.1 (Not Released Yet)
 	* request #9592: Lint new .scss files using scss-lint
 	* request #9392: Deleted users can be switched to suspended automatically
 	* request #9505: FRS_Admin user group description is not user friendly
-	* story #9589: Add pending info to projects and users list
+	* story #9589: Get rid of Bootstrap in site admin / projects
+		- Add pending info to projects and users list
+		- Style forgeupgrade not run warning
 	* request #8756: Revoked token should no longer be usable
 
 	== Bug Fix ==
