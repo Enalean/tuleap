@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuealp\project\Admin;
+namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Project;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -34,6 +34,7 @@ class ProjectDescriptionFieldBuilder
     {
         $this->fields_factory = $fields_factory;
     }
+
     public function build(Project $project)
     {
         $all_custom_fields = $this->fields_factory->getAllDescriptionFields();

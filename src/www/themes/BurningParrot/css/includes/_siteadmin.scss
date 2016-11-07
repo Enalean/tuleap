@@ -23,7 +23,7 @@
 @import 'siteadmin-user-details';
 @import 'siteadmin-user-password';
 @import 'siteadmin-pending-users';
-@import 'siteadmin_pending-projects';
+@import 'siteadmin-pending-projects';
 @import 'siteadmin-permission-delegation';
 @import 'siteadmin-project';
 @import 'siteadmin-project-history';
@@ -31,6 +31,7 @@
 @import 'siteadmin-platform-access';
 @import 'siteadmin-custom-homepage';
 @import 'siteadmin-pending-tracker-removal';
+@import 'siteadmin-description-fields';
 
 .siteadmin-trovecat-list-category {
     width: 100%;

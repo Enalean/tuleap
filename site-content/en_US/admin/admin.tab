@@ -576,19 +576,18 @@ admin_servers	info_notupdated	Server <em>$1</em> has not been updated
 #-----------------------------------------------
 # Script: src/www/admin/descfields/desc_fields_edit.php
 #
-admin_desc_fields	title	Description Fields Edition
-admin_desc_fields	header	Description Fields Edition
-admin_desc_fields	header_add	Add a Description Field
+admin_desc_fields	title	Project description fields edition
+admin_desc_fields	header_add	Add Field
 admin_desc_fields	desc_name	Field Name
-admin_desc_fields	desc_description	Field Description
-admin_desc_fields	desc_required	Is Required
-admin_desc_fields	desc_type	Description Type
+admin_desc_fields	desc_description	Field description
+admin_desc_fields	desc_required	Required
+admin_desc_fields	desc_type	Type
 admin_desc_fields	desc_yes	Yes
 admin_desc_fields	desc_no	No
-admin_desc_fields	desc_line	Line
-admin_desc_fields	desc_text	Text Area
-admin_desc_fields	rank_on_screen	Rank On Screen
-admin_desc_fields	del?	Delete ?
+admin_desc_fields	desc_line	String
+admin_desc_fields	desc_text	Text
+admin_desc_fields	rank	Rank
+admin_desc_fields	rank_on_screen	Rank on screen
 admin_desc_fields	ins_desc_field_fail	INSERTING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
 admin_desc_fields	del_desc_field_fail	DELETING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
 admin_desc_fields	update_required_desc_field_fail	UPDATING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
@@ -598,7 +597,10 @@ admin_desc_fields	info_rank_noint	Rank must be an integer value!
 admin_desc_fields	add_success	Description Field Successfully added !
 admin_desc_fields	update_success	Description Field Successfully updated !
 admin_desc_fields	remove_success	Description Field Successfully deleted !
-
+admin_desc_fields	edit_btn	Edit
+admin_desc_fields	delete_btn	Delete
+admin_desc_fields	description_fields_header	Project description fields
+admin_desc_fields	no_description_fields	No project description fields
 
 admin_system_events	title	System Events
 admin_system_events	notifications	Notifications

@@ -94,8 +94,6 @@ class ThemeManager
                     |
                     ^/admin/trove
                     |
-                    ^/admin/descfields/desc_fields_edit.php
-                    |
                     ^/admin/massmail.php
                     |
                     ^/stats
