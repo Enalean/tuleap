@@ -103,17 +103,18 @@ my @directives = (
 sub TuleapCacheCredsMax {
     my ($self, $parms, $arg) = @_;
     if ($arg) {
-        $self->{TuleapCachePool}       = APR::Pool->new;
-        $self->{TuleapCacheCreds}      = APR::Table::make($self->{TuleapCachePool}, $arg);
-        $self->{TuleapCacheCredsCount} = 0;
-        $self->{TuleapCacheCredsMax}   = $arg;
+        my $cache_pool                    = APR::Pool->new;
+        $self->{TuleapCacheCreds}         = APR::Table::make($cache_pool->new, $arg);
+        $self->{TuleapCacheCredsLifetime} = APR::Table::make($cache_pool->new, $arg);
+        $self->{TuleapCacheCredsCount}    = 0;
+        $self->{TuleapCacheCredsMax}      = $arg;
     }
     return;
 }
 sub TuleapCacheLifetime {
     my ($self, $parms, $arg) = @_;
     if ($arg) {
-        $self->{TuleapCacheLifetime} = $arg;
+        $self->{TuleapCacheLifetime} = $arg * 60;
     }
     return;
 }
@@ -244,9 +245,25 @@ sub is_user_in_cache {
     }
 
     my $user_secret_in_cache = $cfg->{TuleapCacheCreds}->get($username);
+    my $cache_entry_age      = $cfg->{TuleapCacheCredsLifetime}->get($username);
 
-    return (defined $user_secret_in_cache and
-        compare_string_constant_time(hash_user_secret($user_secret), $user_secret_in_cache));
+    if (not defined $user_secret_in_cache or not defined $cache_entry_age) {
+        return 0;
+    }
+
+    if ((time() - $cache_entry_age) > $cfg->{TuleapCacheLifetime}) {
+        $cfg->{TuleapCacheCreds}->unset($username);
+        $cfg->{TuleapCacheCredsLifetime}->unset($username);
+        $cfg->{TuleapCacheCredsCount}--;
+        return 0;
+    }
+
+    my $is_user_in_cache = compare_string_constant_time(hash_user_secret($user_secret), $user_secret_in_cache);
+    if ($is_user_in_cache) {
+        $cfg->{TuleapCacheCredsLifetime}->set($username, time())
+    }
+
+    return $is_user_in_cache;
 }
 
 sub add_user_to_cache {
@@ -255,14 +272,33 @@ sub add_user_to_cache {
         return 0;
     }
 
-    if ($cfg->{TuleapCacheCredsCount} < $cfg->{TuleapCacheCredsMax}) {
-        my $hashed_user_secret = hash_user_secret($user_secret);
-        $cfg->{TuleapCacheCreds}->set($username, $hashed_user_secret);
-        $cfg->{TuleapCacheCredsCount}++;
-    } else {
-        $cfg->{TuleapCacheCreds}->clear();
-        $cfg->{TuleapCacheCredsCount} = 0;
+    if ($cfg->{TuleapCacheCredsCount} >= $cfg->{TuleapCacheCredsMax}) {
+        remove_oldest_cache_entry()
     }
+
+    my $hashed_user_secret = hash_user_secret($user_secret);
+    $cfg->{TuleapCacheCreds}->set($username, $hashed_user_secret);
+    $cfg->{TuleapCacheCredsLifetime}->set($username, time());
+    $cfg->{TuleapCacheCredsCount}++;
+
+    return;
+}
+
+sub remove_oldest_cache_entry {
+    my ($cfg)            = @_;
+    my $oldest_timestamp = time();
+    my $oldest_username;
+
+    foreach my $username (keys %{$cfg->{TuleapCacheCredsLifetime}}) {
+        my $timestamp = $cfg->{TuleapCacheCredsLifetime}->get($username);
+        if ($oldest_timestamp > $timestamp) {
+            $oldest_timestamp = $username;
+            $oldest_username  = $username;
+        }
+    }
+    $cfg->{TuleapCacheCreds}->unset($oldest_username);
+    $cfg->{TuleapCacheCredsLifetime}->unset($oldest_username);
+    $cfg->{TuleapCacheCredsCount}--;
 
     return;
 }
