@@ -1,5 +1,5 @@
 {{# navbar_dropdown }}
-    <div id="nav-dropdown-{{ id }}" class="nav-dropdown nav-dropdown-left">
+    <div id="nav-dropdown-{{ id }}" class="nav-dropdown {{# is_projects }}nav-dropdown-left{{/ is_projects }}">
         <span class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-{{ id }}">
             <i class="{{ icon }} nav-link-icon"></i>
             <span class="nav-link-text">{{ label }}</span>
