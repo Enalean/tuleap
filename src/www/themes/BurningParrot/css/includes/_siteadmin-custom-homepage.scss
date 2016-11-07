@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,27 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
+.headline-custom-logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 
-    $(function () {
-        var selector = $('#admin-headline-select-language');
+.headline-custom-logo-current {
+    margin: $tlp-spacing 0 $tlp-double-spacing;
+}
 
-        bindSwitchStandardHomepage();
-        switchHeadline();
-        selector.change(switchHeadline);
+.headline-custom-logo-submit {
+    display: flex;
+    align-items: flex-start;
+}
 
-        function switchHeadline() {
-            var language_id = selector.val();
+.headline-custom-logo-or {
+    margin: $tlp-half-spacing $tlp-spacing 0;
+}
 
-            $('.admin-headline').hide();
-            $('#admin-headline-' + language_id).show().focus();
-        }
+.headline-form-element {
+    max-width: 600px;
+}
 
-        function bindSwitchStandardHomepage() {
-            $('#use_standard_homepage').on('change', function() {
-                $('#admin-homepage').submit();
-            });
-        }
-    });
+.headline-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-})(window.jQuery);
+.headline-save-button {
+    text-align: center;
+}

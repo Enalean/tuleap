@@ -129,17 +129,24 @@ admin_main	configure_homepage	Configure homepage
 admin_main	placeholder_headline	Enter meaningful headline...
 admin_main	headline	Headline
 admin_main	headline_help	Writing a compelling headline is a necessary step in order to encourage your users to sign in. Choose a catchy headline to summarize what Tuleap in your context is about. Don't be verbose though, keep the headline short.
-admin_main	use_standard_homepage_label	Use the standard Tuleap homepage.
-admin_main	use_standard_homepage_help	<b>Note:</b> the standard Tuleap homepage is only available to users with FlamingParrot theme. Others will always see the legacy homepage which can be customized via <code>/etc/tuleap/site-content/…/homepage/*</code> files.
+admin_main	use_standard_homepage_label	Use the standard Tuleap homepage
+admin_main	use_standard_homepage_help	The standard Tuleap homepage is only available to users with FlamingParrot theme. Others will always see the legacy homepage which can be customized via /etc/tuleap/site-content/…/homepage/* files.
 admin_main	successfully_updated	Successfully updated.
 admin_main	homepage_logo	Homepage logo
-admin_main	homepage_logo_help	You can upload your own logo. In order to not ruin the design of the homepage, your logo should have a transparent background and a height of 100px. Please avoid to upload too big file (< 500kB).
-admin_main	homepage_upload_logo	Upload your own logo:
+admin_main	homepage_logo_help	You can upload your own logo. In order to not ruin the design of the homepage, your logo should have a transparent background and a height of 100px.
+admin_main	homepage_logo_help_end	 Please avoid to upload too big file (< 500kB).
+admin_main	homepage_upload_logo	Upload your own logo
+admin_main	homepage_replace_logo	Replace the current logo
+admin_main	remove_custom_logo	Delete current logo
+admin_main	homepage_or_label	or
 admin_main	save_conf	Save configuration
 admin_main	logo_too_big	Uploaded file is too big
 admin_main	upload_error	File upload error (error code: $1)
 admin_main	no_png	You should send a png image
 admin_main	100px	You should send an image with height smaller than 100px
+admin_main	standard_title	Standard Tuleap homepage
+admin_main	customize_title	Customized homepage
+admin_main	label_language	Your catchy headline
 
 admin_main	system_events_pane_title	System events (last 48 hours)
 admin_main	system_events_view_all_label	View all system events

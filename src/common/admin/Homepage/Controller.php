@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -17,6 +17,8 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
+
+use Tuleap\Admin\AdminPageRenderer;
 
 class Admin_Homepage_Controller {
 
@@ -41,40 +43,44 @@ class Admin_Homepage_Controller {
     private $csrf;
 
     const TEMPLATE = 'admin';
+    /**
+     * @var AdminPageRenderer
+     */
+    private $admin_page_renderer;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Admin_Homepage_Dao $dao,
         Codendi_Request $request,
-        Response $response
+        Response $response,
+        AdminPageRenderer $admin_page_renderer
     ) {
-        $this->csrf     = $csrf;
-        $this->dao      = $dao;
-        $this->request  = $request;
-        $this->response = $response;
+        $this->csrf                = $csrf;
+        $this->dao                 = $dao;
+        $this->request             = $request;
+        $this->response            = $response;
+        $this->admin_page_renderer = $admin_page_renderer;
     }
 
-    public function index() {
-        $title  = $GLOBALS['Language']->getText('admin_main', 'configure_homepage');
-        $params = array(
-            'title'        => $title,
-            'main_classes' => array('tlp-framed')
-        );
-        $renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $headlines = $this->getHeadlines();
-
+    public function index()
+    {
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-homepage.js');
-        $this->response->header($params);
-        $renderer->renderToPage(
-            self::TEMPLATE,
-            new Admin_Homepage_Presenter(
-                $this->csrf,
-                $title,
-                $this->dao->isStandardHomepageUsed(),
-                $headlines
-            )
+
+        $title     = $GLOBALS['Language']->getText('admin_main', 'configure_homepage');
+        $headlines = $this->getHeadlines();
+        $presenter = new Admin_Homepage_Presenter(
+            $this->csrf,
+            $title,
+            $this->dao->isStandardHomepageUsed(),
+            $headlines
         );
-        $this->response->footer($params);
+
+        $this->admin_page_renderer->renderAPresenter(
+            $title,
+            $this->getTemplateDir(),
+            self::TEMPLATE,
+            $presenter
+        );
     }
 
     public function update() {
