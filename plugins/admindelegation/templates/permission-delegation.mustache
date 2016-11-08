@@ -59,7 +59,9 @@
                                 <td class="permission-delegation-name-td">
                                     <div class="permission-delegation-name-and-avatar">
                                         <div class="tlp-avatar permission-delegation-avatar">
-                                            <img src="{{ user_avatar }}">
+                                            {{# has_avatar }}
+                                                <img src="{{ user_avatar }}">
+                                            {{/ has_avatar }}
                                         </div>
                                         {{ user_name }}
                                     </div>

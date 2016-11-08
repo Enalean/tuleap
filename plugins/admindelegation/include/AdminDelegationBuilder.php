@@ -71,6 +71,7 @@ class AdminDelegationBuilder
 
             $user_list[] = array(
                 'user_id'          => $user->getId(),
+                'has_avatar'       => $user->hasAvatar(),
                 'user_avatar'      => $user->getAvatarUrl(),
                 'user_name'        => $user->getName(),
                 'user_permissions' => implode(', ', $permissions)

@@ -273,7 +273,8 @@ class LdapPlugin extends Plugin {
                 if ($lr->exist() && $lr->valid()) {
                     $params['userList'][] = array(
                         'display_name' => $sync->getCommonName($lr).' ('.$lr->getLogin().')',
-                        'login'        => $lr->getLogin()
+                        'login'        => $lr->getLogin(),
+                        'has_avatar'   => false
                     );
                 }
             }

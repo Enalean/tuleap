@@ -76,7 +76,7 @@ tuleap.autocomplete_users_for_select2 = function(element, options) {
 
         var markup = '<div class="select2-result-user"> \
             <div class="tlp-avatar select2-result-user__avatar"> \
-                <img src="/users/' + user.login +'/avatar.png"> \
+                ' + (user.has_avatar ? '<img src="/users/' + user.login +'/avatar.png">' : '') +' \
             </div> \
             ' + user.text +' \
         </div>';

@@ -75,7 +75,8 @@ if(!$pluginAnswered) {
         $row = $dar->current();
         $userList[] = array(
             'display_name' => $row['realname']." (".$row['user_name'].")",
-            'login'        => $row['user_name']
+            'login'        => $row['user_name'],
+            'has_avatar'   => $row['has_avatar']
         );
         $dar->next();
     }
@@ -89,9 +90,10 @@ if ($json_format) {
     $json_entries = array();
     foreach ($userList as $user) {
         $json_entries[] = array(
-            'id'    => $user['display_name'],
-            'text'  => $user['display_name'],
-            'login' => $user['login']
+            'id'         => $user['display_name'],
+            'text'       => $user['display_name'],
+            'login'      => $user['login'],
+            'has_avatar' => (bool)$user['has_avatar']
         );
     }
 

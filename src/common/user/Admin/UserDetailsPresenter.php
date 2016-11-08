@@ -33,6 +33,7 @@ class UserDetailsPresenter
     public $login;
     public $id;
     public $email;
+    public $has_avatar;
     public $purpose;
     public $display_purpose;
     public $access;
@@ -77,6 +78,8 @@ class UserDetailsPresenter
         $this->login  = $user->getUnixName();
         $this->email  = $user->getEmail();
         $this->expiry = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getExpiryDate());
+
+        $this->has_avatar = $user->hasAvatar();
 
         $this->access             = $access;
         $this->change_password    = $change_password;

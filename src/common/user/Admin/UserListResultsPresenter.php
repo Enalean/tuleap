@@ -139,6 +139,7 @@ class UserListResultsPresenter
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
+                $row['has_avatar'],
                 $row['status'],
                 $nb_member_of,
                 $nb_admin_of

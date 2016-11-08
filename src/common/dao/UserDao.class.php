@@ -444,7 +444,7 @@ class UserDao extends DataAccessObject {
      * This is used by "search users as you type"
      */
     function searchUserNameLike($name, $limit=0) {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS realname, user_name".
+        $sql = "SELECT SQL_CALC_FOUND_ROWS realname, user_name, has_avatar".
             " FROM user".
             " WHERE (realname LIKE '%".db_es($name)."%'".
             " OR user_name LIKE '%".db_es($name)."%')".

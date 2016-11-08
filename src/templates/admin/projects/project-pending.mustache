@@ -79,7 +79,9 @@
                                 <label class="tlp-label">{{ submitted_by_label }}</label>
                                 <div class="pending-project-name-and-avatar">
                                     <div class="tlp-avatar pending-project-avatar">
-                                        <img src="{{ user_avatar }}">
+                                        {{# user_has_avatar }}
+                                            <img src="{{ user_avatar }}">
+                                        {{/ user_has_avatar }}
                                     </div>
                                     {{ user_name }}
                                 </div>
