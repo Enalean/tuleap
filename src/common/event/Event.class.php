@@ -582,7 +582,7 @@ class Event {
      */
     const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
 
-    /*
+    /**
      * Event raised to display the list of deleted Trackers
      *
      * Expected results:

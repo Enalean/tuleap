@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) STMicroelectronics 2014. All rights reserved
  *
@@ -17,21 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class DeletedTrackerPresenter {
+class DeletedTrackerPresenter
+{
     public $id;
     public $tracker;
     public $project_id;
     public $project_name;
     public $deletion_date;
-    public $token;
+    public $csrf_token;
 
-    public function __construct( $tracker_id, $tracker_name, $project_id, $project_name, $deletion_date, $restore_token) {
+    public function __construct($tracker_id, $tracker_name, $project_id, $project_name, $deletion_date, $restore_token)
+    {
         $this->id            = $tracker_id;
         $this->tracker       = $tracker_name;
         $this->project_id    = $project_id;
         $this->project_name  = $project_name;
         $this->deletion_date = $deletion_date;
-        $this->restore_token = $restore_token->fetchHTMLInput();
+        $this->csrf_token    = $restore_token;
     }
-
 }

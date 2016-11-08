@@ -164,56 +164,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	function cannedResponseBox ($name='canned_response',$checked='xzxz') {
 		return html_build_select_box ($this->getCannedResponses(),$name,$checked);
 	}
-	
-	/**
-	 *  Display the different options and the trackers lists
-	 *
-	 *  @return void
-	 */
-	function displayPendingTrackers() {
-        $hp = Codendi_HTMLPurifier::instance();
-		global $atf,$Language;
-		
 
-		echo '<form name="cal">';
-		// Get the artfact type list
-		$at_arr = $atf->getPendingArtifactTypes();
-		echo '<H2>'.$Language->getText('tracker_include_type','pending_removal').'</H2>';
-		if (!$at_arr) {
-			echo '<h3>'.$Language->getText('tracker_include_type','no_pending').'</h3>';
-		} else {
-		    echo '<H3>'.$Language->getText('tracker_include_type','pending_deletion').'</H3>';
-
-			$title_arr=array();
-			$title_arr[]=$Language->getText('tracker_include_report','id');
-			$title_arr[]=$Language->getText('global','Project');
-			$title_arr[]=$Language->getText('tracker_import_admin','tracker');
-			$title_arr[]=$Language->getText('tracker_include_type','deletion_date');
-			$title_arr[]=$Language->getText('tracker_include_type','delay');
-			$title_arr[]=$Language->getText('tracker_include_type','restore');
-			$title_arr[]=$Language->getText('tracker_include_canned','delete');
-			echo html_build_list_table_top ($title_arr);
-		
-			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>'.
-			    '<td align="center">%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
-			$i=0;
-			while ($arr = db_fetch_array($at_arr)) {
-			    echo sprintf($fmt,
-					    util_get_alt_row_color($i),
-					    $hp->purify($arr['group_artifact_id'], CODENDI_PURIFIER_CONVERT_HTML) ,
-					    $hp->purify($arr['project_name'], CODENDI_PURIFIER_CONVERT_HTML) ,
-					    $hp->purify(SimpleSanitizer::unsanitize($arr['name']), CODENDI_PURIFIER_CONVERT_HTML) ,
-                        $GLOBALS['HTML']->getDatePicker("delay_date_".$i, "delay_date", date("Y-m-d",$arr['deletion_date'])),
-					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','delay_deletion').'\')"></a>',
-					    '<a href="/tracker/admin/restore.php?func=restore&group_id='.(int)$arr['group_id']."&atid=".(int)$arr['group_artifact_id'].'"><img src="'.util_get_image_theme("ic/convert.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','restore_tracker').'\')"></a>',
-					    '<a href="/tracker/admin/restore.php?func=delete&group_id='.(int)$arr['group_id']."&atid=".(int)$arr['group_artifact_id'].'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','warning').'\')"></a>' );
-			$i++;
-			}
-		    // final touch...
-		    echo "</TABLE></form>";
-		}
-	}
-	
 	/**
 	 *  Display the different options and the trackers lists
 	 *

@@ -459,9 +459,7 @@ plugin_tracker_include_type	pending_removal	Destruction des outils de suivi
 plugin_tracker_include_type	no_pending	Aucun outil de suivi en attente de destruction
 plugin_tracker_include_type	pending_deletion	Outil de suivi en attente de destruction
 plugin_tracker_include_type	deletion_date	Date de destruction
-plugin_tracker_include_type	delay	Retarder ?
 plugin_tracker_include_type	restore	Restaurer ?
-plugin_tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
 plugin_tracker_include_type	restore_tracker	Restaurer cet outil de suivi ?
 plugin_tracker_include_type	warning	** AVERTISSEMENT !! ** Détruire cet outil de suivi et toutes ses dépendances (restauration impossible) ?
 plugin_tracker_include_type	create_from_scratch	Créer un nouvel outil de suivi en totalité ou à partir d'un outil de suivi existant

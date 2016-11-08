@@ -1,40 +1,62 @@
-<h2>{{ title }}</h2>
+<h1>{{ title }}</h1>
 
 {{# has_warnings }}
     <p class="alert alert-warning">{{ warning_message }}</p>
 {{/ has_warnings }}
 
-<table class="table table-bordered table-striped">
-<thead>
-     <tr>
-         <th>{{ id_column_header }}</th>
-         <th>{{ tracker_column_header }}</th>
-         <th>{{ project_column_header }}</th>
-         <th>{{ deletion_date_column_header }}</th>
-         <th>{{ restore_action_column_header }}</th>
-    </tr>
-</thead>
-<tbody>
-    {{# deleted_trackers_list }}
-        <tr>
-            <td>{{ id }}</td>
-            <td>{{ tracker }}</td>
-            <td>
-                <a href="/project/admin/?group_id={{ project_id }}">
-                    {{ project_name }}
-                </a>
-            </td>
-            <td>{{ deletion_date }}</td>
-            <td>
-            <form class="trackers-pending-tracker-removal-action" method="POST" action="/plugins/tracker/?group_id={{ project_id }}&func=restore-tracker" >
-                <input type="hidden" name="tracker_id" value="{{ id }}" />
-                {{{ restore_token }}}
-                    <button type="submit" class="btn btn-link">
-                        <i class="icon-undo"> </i>
-                   </button>
-            </form>
-            </td>
-        </tr>
-    {{/ deleted_trackers_list }}
-</tbody>
-</table>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                <tr>
+                    <th class="tlp-table-cell-numeric">{{ id_column_header }}</th>
+                    <th class="header-column-deleted-tracker">{{ tracker_column_header }}</th>
+                    <th class="header-column-deleted-tracker">{{ project_column_header }}</th>
+                    <th class="header-column-deleted-tracker-date">{{ deletion_date_column_header }}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {{^ has_trackers }}
+                        <tr>
+                            <td colspan="5" class="tlp-table-cell-empty">
+                                {{ no_trackers_label }}
+                            </td>
+                        </tr>
+                    {{/ has_trackers }}
+                    {{# has_trackers }}
+                        {{# deleted_trackers_list }}
+                            <tr>
+                                <td class="tlp-table-cell-numeric">{{ id }}</td>
+                                <td>{{ tracker }}</td>
+                                <td>
+                                    <a href="/project/admin/?group_id={{ project_id }}">
+                                        {{ project_name }}
+                                    </a>
+                                </td>
+                                <td>{{ deletion_date }}</td>
+                                <td>
+                                    <form class="trackers-pending-tracker-removal-action" method="POST"
+                                          action="/plugins/tracker/?group_id={{ project_id }}&func=restore-tracker">
+                                        <input type="hidden" name="tracker_id" value="{{ id }}"/>
+                                        {{# csrf_token }}
+                                            {{> csrf_token_input }}
+                                        {{/ csrf_token }}
+                                        <button type="submit"
+                                                class="tlp-button-info tlp-button-small tlp-button-outline">
+                                            <i class="fa fa-repeat"> </i> {{ restore_action }}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {{/ deleted_trackers_list }}
+                    {{/ has_trackers }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>

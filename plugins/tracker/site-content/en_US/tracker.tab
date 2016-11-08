@@ -464,7 +464,7 @@ plugin_tracker_include_type	reports	Tracker Reports
 plugin_tracker_include_type	mail_notif	Email Notification Settings
 plugin_tracker_include_type	pending_removal	Pending Trackers Removals
 plugin_tracker_include_type	no_pending	No Tracker pending for Deletion
-plugin_tracker_include_type	pending_deletion	Trackers Pending for Deletion
+plugin_tracker_include_type	pending_deletion	Pending trackers deletion
 plugin_tracker_include_type	deletion_date	Deletion date
 plugin_tracker_include_type	delay	Delay?
 plugin_tracker_include_type	restore	Restore?
