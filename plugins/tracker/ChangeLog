@@ -1,3 +1,6 @@
+Version 5.1033 - Tuleap 9.1
+    * story #9586 Get rid of Bootstrap in site admin / configuration (Trackers pending removal)
+
 Version 5.1032 - Tuleap 9.1
     * story #9633: Tuleap theme removal
 

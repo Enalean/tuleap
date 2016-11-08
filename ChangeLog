@@ -26,7 +26,7 @@ Version 9.1 (Not Released Yet)
 
 	== Plugins ==
 	* svn: 0.104
-	* tracker: 5.1032
+	* tracker: 5.1033
 	* git: 4.293
 	* agiledashboard: 1.434
 	* archivedeleteditems: 0.10
@@ -45,7 +45,7 @@ Version 9.1 (Not Released Yet)
 
 	== Themes ==
 	* FlamingParrot: 1.161
-	* BurningParrot: 0.12
+	* BurningParrot: 0.13
 
 	== Development ==
 	* request #9263 Do not use underscore in Tuleap dev hostname
