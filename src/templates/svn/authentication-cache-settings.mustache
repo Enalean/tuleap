@@ -9,16 +9,19 @@
                 {{ usage_information }}
             </p>
             <form method="POST">
-                <div class="tlp-form-element tlp-form-element-disabled">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+                <div class="tlp-form-element">
                     <label for="cache-maximum-credentials" class="tlp-label">{{ maximum_credentials_label }}</label>
-                    <input id="cache-maximum-credentials" type="number" min="0" value="{{ maximum_credentials }}" class="tlp-input" disabled size="5">
+                    <input id="cache-maximum-credentials" type="number" min="0" name="cache-maximum-credentials" value="{{ maximum_credentials }}" class="tlp-input" size="5">
                 </div>
-                <div class="tlp-form-element tlp-form-element-disabled">
+                <div class="tlp-form-element">
                     <label for="cache-lifetime" class="tlp-label">{{ lifetime_label }}</label>
-                    <input id="cache-lifetime" type="number" min="0" value="{{ lifetime }}" class="tlp-input" disabled size="5">
+                    <input id="cache-lifetime" type="number" name="cache-lifetime" min="0" value="{{ lifetime }}" class="tlp-input" size="5">
                 </div>
                 <div id="submit-button-authentication-cache-settings">
-                    <button class="tlp-button-primary" type="submit" disabled>
+                    <button class="tlp-button-primary" type="submit">
                         <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
                     </button>
                 </div>

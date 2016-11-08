@@ -20,6 +20,7 @@
 
 namespace Tuleap\SvnCore\Admin;
 
+use CSRFSynchronizerToken;
 use Tuleap\SvnCore\Cache\Parameters;
 
 class CachePresenter extends Presenter
@@ -30,10 +31,15 @@ class CachePresenter extends Presenter
      * @var Parameters
      */
     private $parameters;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
-    public function __construct(Parameters $parameters)
+    public function __construct(Parameters $parameters, CSRFSynchronizerToken $csrf_token)
     {
         $this->parameters = $parameters;
+        $this->csrf_token = $csrf_token;
     }
 
     /**

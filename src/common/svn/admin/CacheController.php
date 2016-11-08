@@ -20,8 +20,12 @@
 
 namespace Tuleap\SvnCore\Admin;
 
+use CSRFSynchronizerToken;
+use Exception;
+use Feedback;
 use HTTPRequest;
 use Tuleap\SvnCore\Cache\Parameters;
+use Tuleap\SvnCore\Cache\ParameterSaver;
 
 class CacheController implements Controller
 {
@@ -30,24 +34,64 @@ class CacheController implements Controller
      */
     private $parameters;
     /**
+     * @var ParameterSaver
+     */
+    private $parameter_saver;
+    /**
      * @var Renderer
      */
     private $renderer;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
-    public function __construct(Parameters $parameters, Renderer $renderer)
-    {
-        $this->parameters = $parameters;
-        $this->renderer   = $renderer;
+    public function __construct(
+        Parameters $parameters,
+        ParameterSaver $parameter_saver,
+        Renderer $renderer,
+        CSRFSynchronizerToken $csrf_token
+    ) {
+        $this->parameters      = $parameters;
+        $this->parameter_saver = $parameter_saver;
+        $this->renderer        = $renderer;
+        $this->csrf_token      = $csrf_token;
     }
 
     public function process(HTTPRequest $request)
     {
+        if ($request->isPost()) {
+            $this->processFormSubmission($request);
+        }
         $this->display();
+    }
+
+    private function processFormSubmission(HTTPRequest $request)
+    {
+        $this->csrf_token->check();
+
+        try {
+            $this->parameter_saver->save(
+                $request->get('cache-maximum-credentials'),
+                $request->get('cache-lifetime')
+            );
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('svn_cache', 'save_success')
+            );
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('svn_cache', 'save_failure')
+            );
+        }
+
+        $GLOBALS['Response']->redirect('/admin/svn/index.php?pane=cache');
     }
 
     private function display()
     {
-        $presenter = new CachePresenter($this->parameters);
+        $presenter = new CachePresenter($this->parameters, $this->csrf_token);
 
         $this->renderer->renderANoFramedPresenter(
             $presenter

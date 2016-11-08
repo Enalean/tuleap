@@ -68,7 +68,7 @@ class ParameterRetrieverTest extends TuleapTestCase
 
         $parameter_manager = new ParameterRetriever($dao);
 
-        $this->expectException('DataAccessException');
+        $this->expectException('Tuleap\SvnCore\Cache\ParameterDataAccessException');
         $parameter_manager->getParameters();
     }
 }

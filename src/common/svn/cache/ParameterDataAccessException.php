@@ -20,23 +20,6 @@
 
 namespace Tuleap\SvnCore\Cache;
 
-use DataAccessObject;
-
-class ParameterDao extends DataAccessObject
+class ParameterDataAccessException extends \Exception
 {
-    public function search()
-    {
-        $sql = "SELECT * FROM svn_cache_parameter";
-        return $this->retrieve($sql);
-    }
-
-    public function save($maximum_credentials, $lifetime)
-    {
-        $maximum_credentials = $this->getDa()->quoteSmart($maximum_credentials);
-        $lifetime            = $this->getDa()->quoteSmart($lifetime);
-
-        $sql = "REPLACE INTO svn_cache_parameter(name, value)
-                VALUES ('maximum_credentials' , $maximum_credentials), ('lifetime', $lifetime)";
-        return $this->update($sql);
-    }
 }

@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright Enalean (c) 2016. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +22,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\SvnCore\Cache;
-
-use DataAccessObject;
-
-class ParameterDao extends DataAccessObject
+class SystemEvent_SVN_AUTH_CACHE_CHANGE extends SystemEvent
 {
-    public function search()
+
+    /** @var BackendSVN */
+    private $backend_svn;
+
+    public function injectDependencies(BackendSVN $backend_svn)
     {
-        $sql = "SELECT * FROM svn_cache_parameter";
-        return $this->retrieve($sql);
+        $this->backend_svn = $backend_svn;
     }
 
-    public function save($maximum_credentials, $lifetime)
+    public function process()
     {
-        $maximum_credentials = $this->getDa()->quoteSmart($maximum_credentials);
-        $lifetime            = $this->getDa()->quoteSmart($lifetime);
+        $this->backend_svn->setSVNApacheConfNeedUpdate();
+        $this->done();
+    }
 
-        $sql = "REPLACE INTO svn_cache_parameter(name, value)
-                VALUES ('maximum_credentials' , $maximum_credentials), ('lifetime', $lifetime)";
-        return $this->update($sql);
+    public function verbalizeParameters($with_link)
+    {
+        return '';
     }
 }

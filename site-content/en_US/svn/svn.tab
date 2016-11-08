@@ -186,6 +186,8 @@ svn_cache	usage_information	These settings only apply to instance using the modp
 svn_cache	maximum_credentials_label	Maximum number of credentials cached by repository
 svn_cache	lifetime_label	Cache lifetime (in minutes)
 svn_cache	save_settings	Save settings
+svn_cache	save_success	Your settings have been successfully saved and will be applied shortly.
+svn_cache	save_failure	Your settings could not be saved.
 
 svn_tokens	allowed_project_pane_title	Projects allowing SVN tokens usage
 svn_tokens	allowed_project_information	This section allows to define which projects will be able to use the tokens for SVN authentication.

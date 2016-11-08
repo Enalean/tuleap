@@ -179,6 +179,8 @@ svn_cache	usage_information	Ces paramètres s'appliquent uniquement à une insta
 svn_cache	maximum_credentials_label	Nombre maximum de credentials mis en cache par dépôt
 svn_cache	lifetime_label	Durée de vie du cache (en minutes)
 svn_cache	save_settings	Sauvegarder la configuration
+svn_cache	save_success	Vos paramètres ont été sauvegardés avec succès et vont être appliqués dans quelques instants.
+svn_cache	save_failure	Vos paramètres n'ont pas pu être sauvegardés.
 
 svn_tokens	allowed_project_pane_title	Projets autorisant les jetons de connexion SVN
 svn_tokens	allowed_project_information	Cette section permet de définir les projets où les utilisateurs pourront utiliser leur jeton de connexion pour SVN.
