@@ -51,5 +51,14 @@ class AvailablePluginsPresenter
         $this->install_modal_submit     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_submit');
         $this->install_modal_cancel     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_cancel');
         $this->filter_label             = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
+
+        $this->sortPlugins();
+    }
+
+    private function sortPlugins()
+    {
+        usort($this->plugins, function ($a, $b) {
+            return strnatcasecmp($a['full_name'], $b['full_name']);
+        });
     }
 }
