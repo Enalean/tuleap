@@ -31,6 +31,10 @@
     flex-direction: column;
     border-right: 1px solid $tlp-ui-border-light;
 
+    &:first-child {
+        width: 100%;
+    }
+
     &:last-child {
         border-right: 0;
     }

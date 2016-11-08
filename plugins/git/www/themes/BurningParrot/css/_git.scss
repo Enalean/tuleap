@@ -130,12 +130,12 @@
     }
 
     .mirror-action-container {
-        justify-content: flex-end;
+        align-items: flex-end;
         border-top: 1px solid $tlp-ui-border-light;
     }
 
     .gerrit-server-action-container {
-        justify-content: flex-end;
+        align-items: flex-end;
         border-top: 1px solid $tlp-ui-border-light;
     }
 }
