@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,12 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'vendor/smooth-scrollbar.min';
+namespace Tuleap\SvnCore\Admin;
 
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
+use HTTPRequest;
+use Tuleap\SvnCore\Cache\Parameters;
 
-@import 'includes/svn';
+class CacheController implements Controller
+{
+    /**
+     * @var Parameters
+     */
+    private $parameters;
+    /**
+     * @var Renderer
+     */
+    private $renderer;
+
+    public function __construct(Parameters $parameters, Renderer $renderer)
+    {
+        $this->parameters = $parameters;
+        $this->renderer   = $renderer;
+    }
+
+    public function process(HTTPRequest $request)
+    {
+        $this->display();
+    }
+
+    private function display()
+    {
+        $presenter = new CachePresenter($this->parameters);
+
+        $this->renderer->renderANoFramedPresenter(
+            $presenter
+        );
+    }
+}

@@ -1,0 +1,23 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ admin_title }}</h1>
+
+    <nav class="tlp-tabs">
+        <a class="tlp-tab {{# is_cache_pane_active }} tlp-tab-active {{/ is_cache_pane_active }}" href="?pane=cache">
+            {{ cache_panel_title }}
+        </a>
+        {{# is_svn_token_configurable }}
+            <a class="tlp-tab {{# is_token_pane_active }} tlp-tab-active {{/ is_token_pane_active }}" href="?pane=token">
+                {{ token_panel_title }}
+            </a>
+        {{/ is_svn_token_configurable }}
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        {{# is_cache_pane_active }}
+            {{> authentication-cache-settings }}
+        {{/ is_cache_pane_active }}
+        {{# is_token_pane_active }}
+            {{> manage-allowed-projects }}
+        {{/ is_token_pane_active }}
+    </div>
+</div>

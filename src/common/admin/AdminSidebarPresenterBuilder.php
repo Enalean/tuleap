@@ -59,7 +59,6 @@ class AdminSidebarPresenterBuilder
             $this->pendingProjectsCount(),
             $this->areTroveCategoriesEnabled(),
             $this->getAdditionalTrackerEntries(),
-            $this->areSvnTokensEnabled(),
             $this->getTuleapVersion(),
             $this->getPlugins()
         );
@@ -131,11 +130,6 @@ class AdminSidebarPresenterBuilder
         );
 
         return $additional_tracker_entries;
-    }
-
-    private function areSvnTokensEnabled()
-    {
-        return ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY) !== SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL;
     }
 
     private function getTuleapVersion()

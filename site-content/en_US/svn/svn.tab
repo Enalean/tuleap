@@ -177,7 +177,16 @@ svn_viewvc	bad_roottype	Invalid roottype
 
 svn_widget	svnstats	Svn Statistics
 
-svn_tokens	allowed_project_title	SVN tokens
+svn_siteadmin	global_title	Subversion
+svn_siteadmin	token_panel_title	Authentication tokens
+svn_siteadmin	cache_panel_title	Authentication cache
+
+svn_cache	settings_title	SVN authentication cache settings
+svn_cache	usage_information	These settings only apply to instance using the modperl authentication mode, projects having SVN token authentication mode enabled or repositories in the SVN plugin.
+svn_cache	maximum_credentials_label	Maximum number of credentials cached by repository
+svn_cache	lifetime_label	Cache lifetime (in minutes)
+svn_cache	save_settings	Save settings
+
 svn_tokens	allowed_project_pane_title	Projects allowing SVN tokens usage
 svn_tokens	allowed_project_information	This section allows to define which projects will be able to use the tokens for SVN authentication.
 svn_tokens	allowed_project_list	List of allowed projects
