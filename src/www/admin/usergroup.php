@@ -159,24 +159,24 @@ if ($request->isPost()) {
             }
 
             // Change login name
-            if ($user->getUserName() != $request->get('form_loginname')) {
+            if ($user->getUserName() != $request->get('form_user_login_name')) {
                 if (SystemEventManager::instance()->canRenameUser($user)) {
-                    $vLoginName = new Valid_UserNameFormat('form_loginname');
+                    $vLoginName = new Valid_UserNameFormat('form_user_login_name');
                     $vLoginName->required();
                     if ($request->valid($vLoginName)) {
                         switch ($user->getStatus()) {
                             case PFUser::STATUS_PENDING:
                             case PFUser::STATUS_VALIDATED:
                             case PFUser::STATUS_VALIDATED_RESTRICTED:
-                                $user->setUserName($request->get('form_loginname'));
+                                $user->setUserName($request->get('form_user_login_name'));
                                 break;
                             default:
                                 $em->processEvent(Event::USER_RENAME, array(
                                     'user_id'  => $user->getId(),
-                                    'new_name' => $request->get('form_loginname'),
+                                    'new_name' => $request->get('form_user_login_name'),
                                     'old_user' => $user)
                                 );
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','rename_user_msg', array($user->getUserName(), $request->get('form_loginname'))));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','rename_user_msg', array($user->getUserName(), $request->get('form_user_login_name'))));
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup','rename_user_warn'));
                         }
                     }
