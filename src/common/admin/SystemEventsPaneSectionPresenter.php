@@ -37,6 +37,7 @@ class HomepagePaneSectionPresenter
     public $has_running;
     public $has_warning;
     public $has_error;
+    public $has_new;
     public $has_warning_or_error;
 
     public function __construct(
@@ -57,6 +58,7 @@ class HomepagePaneSectionPresenter
         $this->warning_count             = $warning_count;
         $this->error_count               = $error_count;
 
+        $this->has_new                   = $this->new_count > 0;
         $this->has_running               = $this->running_count > 0;
         $this->has_warning               = $this->warning_count > 0;
         $this->has_error                 = $this->error_count > 0;
