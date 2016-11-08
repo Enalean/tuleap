@@ -54,12 +54,21 @@
     margin: 0 ($tlp-spacing / 2) 0 0;
 }
 
+.siteadmin-userlist-result-table-admin-icon {
+    margin: 0 5px 0 0;
+    color: $tlp-ui-dimmed;
+}
+
 .siteadmin-userlist-result-nb {
     margin: 0 0 0 ($tlp-spacing / 2);
 }
 
 #siteadmin-userlist-result-table {
     margin: 0 0 $tlp-spacing;
+
+    + .tlp-pagination {
+        margin: $tlp-double-spacing 0 0;
+    }
 }
 
 .siteadmin-userlist-result-table-adminof {

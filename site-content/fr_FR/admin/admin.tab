@@ -87,6 +87,7 @@ admin_main	trove_cat	Catégories
 admin_main	trove_cat_list	Gérer la liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	new_user	Nouvel utilisateur
+admin_main	detail_button_label	Détails
 admin_main	permission_delegation	Délégation de permission
 admin_main	active_users	Utilisateurs actifs
 admin_main	lastday_users	actifs les dernières 24 heures
@@ -713,6 +714,7 @@ admin_project	history_empty_results	Rien dans l'historique ne correspond à votr
 admin_projectlist	title	Administration - Liste des projets
 admin_projectlist	project_list	Projets
 admin_projectlist	new_project	Ajouter un projet
+admin_projectlist	detail_button_label	Détails
 admin_projectlist	filter_name	Nom du Projet
 admin_projectlist	status	Statut
 admin_projectlist	filter	Filtrer

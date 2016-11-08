@@ -95,6 +95,7 @@ admin_main	trove_cat	Trove categories
 admin_main	trove_cat_list	Manage list of trove categories
 admin_main	trove_cat_add	Add one
 admin_main	new_user	New user
+admin_main	detail_button_label	Details
 admin_main	permission_delegation	Permission delegation
 admin_main	active_users	Per activities
 admin_main	lastday_users	active last 24 hours
@@ -722,6 +723,7 @@ admin_project	history_empty_results	Nothing in the change history is matching yo
 admin_projectlist	title	Administration - Project List
 admin_projectlist	project_list	Projects
 admin_projectlist	new_project	Add project
+admin_projectlist	detail_button_label	Details
 admin_projectlist	filter_name	Project Name
 admin_projectlist	status	Status
 admin_projectlist	filter	Filter
