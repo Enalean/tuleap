@@ -25,6 +25,12 @@ $tlp-dropdown-animation: 100ms ease-in-out showDropdown;
 $flatpickr-day-hover: #f3f3f3;
 $flatpickr-day-dimmed: #d0d0d0;
 
+// scss-lint:disable QualifyingElement
+div.flatpickr-wrapper.inline div.flatpickr-calendar,
+div.flatpickr-wrapper.open div.flatpickr-calendar {
+    z-index: 100051;
+}
+
 // scss-lint:disable PseudoElement
 // scss-lint:disable QualifyingElement
 // scss-lint:disable SelectorFormat

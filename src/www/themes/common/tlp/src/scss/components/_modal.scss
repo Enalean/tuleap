@@ -38,7 +38,7 @@ $tlp-modal-transition: 150ms ease-out;
     border: 0;
     box-shadow: 0;
     opacity: 0;
-    z-index: 1050;
+    z-index: 100050;
 
     &.tlp-modal-display {
         display: flex;
@@ -151,7 +151,7 @@ $tlp-modal-transition: 150ms ease-out;
     transition: opacity $tlp-modal-transition;
     background: $tlp-ui-black;
     opacity: 0;
-    z-index: 1000;
+    z-index: 100001;
 
     &.tlp-modal-backdrop-shown {
         opacity: .5;

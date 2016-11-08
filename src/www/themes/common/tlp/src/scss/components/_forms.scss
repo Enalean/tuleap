@@ -424,6 +424,7 @@ $tlp-form-element-select-small-background-size: 6px;
         padding: 0;
         border-color: $tlp-theme-color;
         box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+        z-index: 100051;
 
         .select2-search--dropdown {
             padding: $tlp-form-element-padding-horizontal;
