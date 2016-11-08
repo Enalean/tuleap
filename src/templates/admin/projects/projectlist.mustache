@@ -71,7 +71,7 @@
                         <form action="{{ export_url }}" method="post" class="tlp-table-actions-element">
                             <button
                                 type="submit"
-                                class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                                class="tlp-button-primary tlp-button-outline"
                                 name="exp-csv"
                             >
                                 <i class="tlp-button-icon fa fa-download"></i> {{ export_csv }}
@@ -84,10 +84,11 @@
                             <tr>
                                 <th class="siteadmin-projectlist-result-header">{{ project_name_header }}</th>
                                 <th class="siteadmin-projectlist-result-header">{{ unix_group_name_header }}</th>
-                                <th class="siteadmin-projectlist-result-header">{{ status_header }}</th>
                                 <th class="siteadmin-projectlist-result-header">{{ type_header }}</th>
                                 <th class="siteadmin-projectlist-result-header tlp-table-cell-numeric">{{ members_header }}</th>
+                                <th class="siteadmin-projectlist-result-header">{{ status_header }}</th>
                                 <th class="siteadmin-projectlist-result-header">{{ visibility_header }}</th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -100,13 +101,13 @@
                                     <td class="siteadmin-projectlist-result-unix-group-name">
                                         {{ unix_group_name }}
                                     </td>
-                                    <td>
-                                        <span class="{{ status_class }}">{{ status_label }}</span>
-                                    </td>
                                     <td class="siteadmin-projectlist-result-type">
                                         {{ type_label }}
                                     </td>
                                     <td class="tlp-table-cell-numeric">{{ nb_members }}</td>
+                                    <td>
+                                        <span class="{{ status_class }}">{{ status_label }}</span>
+                                    </td>
                                     <td>
                                         {{# access_presenter }}
                                             <i class="fa siteadmin-projectlist-result-project-access-icon
@@ -115,6 +116,11 @@
                                                     {{# is_closed }}fa-lock{{/ is_closed }}
                                                 "></i> {{ access }}
                                         {{/ access_presenter }}
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <a href="groupedit.php?group_id={{ id }}" class="tlp-button-primary tlp-button-small tlp-button-outline">
+                                            <i class="fa fa-list tlp-button-icon"></i> {{ detail_button_label }}
+                                        </a>
                                     </td>
                                 </tr>
                             {{/ matching_projects }}

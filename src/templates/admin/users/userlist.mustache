@@ -59,7 +59,7 @@
                     <div class="tlp-table-actions">
 
                         <form action="{{ export_url }}" method="post" class="tlp-table-actions-element">
-                            <button type="submit" class="tlp-button-secondary tlp-button-outline tlp-button-small" name="exp-csv">
+                            <button type="submit" class="tlp-button-primary tlp-button-outline" name="exp-csv">
                                 <i class="fa fa-download tlp-button-icon"></i> {{ export_csv }}
                             </button>
                         </form>
@@ -70,7 +70,7 @@
                                     {{> csrf_token_input }}
                                 {{/ active_sessions_csrf }}
                                 <button type="submit"
-                                    class="tlp-button-danger tlp-button-outline tlp-button-small"
+                                    class="tlp-button-danger tlp-button-outline"
                                     name="reset_all_sessions"
                                     onclick="return confirm('{{ active_sessions_confirm }}');"
                                 >
@@ -84,17 +84,17 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <a href="{{ sortby_realname_url }}" class="tlp-table-sort">
-                                        {{ real_nam_header }}
-                                        <i class="{{ sortby_realname_icon }} tlp-table-sort-icon"></i>
-                                    </a>
-                                </th>
-                                <th>
                                     <a href="{{ sortby_name_url }}" class="tlp-table-sort">
                                         {{ login_name_header }}
                                         <i class="{{ sortby_name_icon }} tlp-table-sort-icon"></i>
                                     </a>
                                 </th>
+                                    <th>
+                                        <a href="{{ sortby_realname_url }}" class="tlp-table-sort">
+                                            {{ real_nam_header }}
+                                            <i class="{{ sortby_realname_icon }} tlp-table-sort-icon"></i>
+                                        </a>
+                                    </th>
                                 <th>
                                     <a href="{{ sortby_status_url }}" class="tlp-table-sort">
                                         {{ status_header }}
@@ -106,6 +106,7 @@
                                         {{ nb_projects_header }}
                                     </th>
                                 {{/ display_nb_projects }}
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -113,15 +114,15 @@
                             {{# matching_users }}
                                 <tr>
                                     <td>
+                                        <a href="usergroup.php?user_id={{ id }}">@{{ name }}</a>
+                                    </td>
+                                    <td>
                                         <div class="siteadmin-userlist-result-name">
                                             <div class="tlp-avatar siteadmin-userlist-result-name-avatar">
                                                 <img src="/users/{{ name }}/avatar.png" />
                                             </div>
                                             {{ realname }}
                                         </div>
-                                    </td>
-                                    <td>
-                                        <a href="usergroup.php?user_id={{ id }}">@{{ name }}</a>
                                     </td>
                                     <td>
                                         <span class="tlp-badge-{{ status_level }}
@@ -136,7 +137,7 @@
                                                 <span class="siteadmin-userlist-result-table-adminof tlp-tooltip tlp-tooltip-left"
                                                       data-tlp-tooltip="{{ admin_of_title }}"
                                                 >
-                                                    <i class="fa fa-user"></i> {{ nb_admin_of }}
+                                                    <i class="fa fa-id-badge siteadmin-userlist-result-table-admin-icon"></i> {{ nb_admin_of }}
                                                 </span>
                                             {{/ nb_admin_of }}
 
@@ -152,6 +153,11 @@
                                             {{/ nb_member_of }}
                                         </td>
                                     {{/ display_nb_projects }}
+                                    <td class="tlp-table-cell-actions">
+                                        <a class="tlp-button-primary tlp-button-small tlp-button-outline" href="usergroup.php?user_id={{ id }}">
+                                            <i class="fa fa-address-card-o tlp-button-icon"></i> {{ detail_button_label }}
+                                        </a>
+                                    </td>
                                 </tr>
                             {{/ matching_users }}
                             {{^ matching_users }}
