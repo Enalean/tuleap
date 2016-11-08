@@ -82,13 +82,19 @@ class SkinTuleap extends SkinTemplate {
         }
 
         $bodyAttrs['class'] .= ' has_sidebar ' . $sidebar_state;
-        $theme_manager = new ThemeManager();
-        $user_theme    = $current_user->getTheme();
+
+        $theme_manager    = new ThemeManager();
+        $user_theme       = $current_user->getTheme();
+        $prefered_variant = $current_user->getPreference('theme_variant');
 
         if ($this->hasVariant($user_theme)) {
-            $bodyAttrs['class'] .= ' ' . $current_user->getPreference('theme_variant');
+            $bodyAttrs['class'] .= ' ' . $prefered_variant;
         } elseif (! $theme_manager->isThemeValid($user_theme) && $this->hasVariant(ForgeConfig::get('sys_themedefault'))) {
-            $bodyAttrs['class'] .= ' ' . ForgeConfig::get('sys_default_theme_variant');
+            if ($prefered_variant) {
+                $bodyAttrs['class'] .= ' ' . $prefered_variant;
+            } else {
+                $bodyAttrs['class'] .= ' ' . ForgeConfig::get('sys_default_theme_variant');
+            }
         }
     }
 
@@ -130,7 +136,7 @@ class TuleapTemplate extends BaseTemplate {
                     echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
                 }
             }
- 
+
             echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
             echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
