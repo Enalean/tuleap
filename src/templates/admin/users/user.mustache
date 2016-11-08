@@ -1,6 +1,8 @@
 <h1 id="siteadmin-user-title">
     <div class="tlp-avatar-large" id="siteadmin-user-avatar">
-        <img src="/users/{{ login }}/avatar.png">
+        {{# has_avatar }}
+            <img src="/users/{{ login }}/avatar.png">
+        {{/ has_avatar }}
     </div>
     <span>
         {{ name }} <small>@{{ login }}</small>

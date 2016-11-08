@@ -28,6 +28,7 @@ class UserListResultsUserPresenter
     public $name;
     public $id;
     public $realname;
+    public $has_avatar;
     public $nb_member_of;
     public $nb_admin_of;
     public $nb_member_of_title;
@@ -40,6 +41,7 @@ class UserListResultsUserPresenter
         $id,
         $name,
         $realname,
+        $has_avatar,
         $status,
         $nb_member_of,
         $nb_admin_of
@@ -47,6 +49,7 @@ class UserListResultsUserPresenter
         $this->id           = $id;
         $this->name         = $name;
         $this->realname     = $realname;
+        $this->has_avatar   = $has_avatar;
         $this->nb_member_of = (int)$nb_member_of;
         $this->nb_admin_of  = (int)$nb_admin_of;
 
