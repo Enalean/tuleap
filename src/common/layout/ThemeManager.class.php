@@ -92,8 +92,6 @@ class ThemeManager
                 '`(
                     ^/admin/register_admin.php
                     |
-                    ^/admin/homepage.php
-                    |
                     ^/admin/trove
                     |
                     ^/admin/descfields/desc_fields_edit.php

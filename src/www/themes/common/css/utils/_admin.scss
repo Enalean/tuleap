@@ -146,51 +146,6 @@
         > h3 {
             margin: 30px 0 0;
         }
-
-        .logo-container {
-            position: relative;
-            display: inline-block;
-
-            > .pc_checkbox {
-                position: absolute;
-                top: -13px;
-                right: -12px;
-                z-index: 1;
-                width: 25px;
-                height: 25px;
-                padding: 0;
-                background: #777777 url(/themes/common/images/ic/cross_white.png) center center no-repeat;
-                border: 2px solid #FFF;
-                border-radius: 50%;
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-
-                &:hover {
-                    background-color: #999999;
-                }
-
-                &.pc_check_checked {
-                    background-color: #f33c3c;
-
-                    &:hover {
-                        background-color: #FD6060;
-                    }
-
-                    + img {
-                        opacity: 0.3;
-                    }
-                }
-
-                > input[type=checkbox] {
-                    visibility: hidden;
-                }
-            }
-
-            > img {
-                border: 1px solid #EFEFEF;
-                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJUlEQVQYV2N8+/btfwY0ICwszIguxjgUFKI7GsTH5m4M3w1ChQDLQSbp6va92AAAAABJRU5ErkJggg==) repeat;
-            }
-        }
     }
 }
 

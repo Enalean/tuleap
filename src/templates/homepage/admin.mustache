@@ -1,49 +1,110 @@
-<h2>{{ title }}</h2>
+<h1>{{ title }}</h1>
 
 <form action="" method="POST" id="admin-homepage" enctype="multipart/form-data">
-    <input type="hidden" name="MAX_FILE_SIZE" value="500000" />
-    {{{ csrf_token }}}
-    <label class="checkbox">
-        <input type="checkbox" name="use_standard_homepage" value="1" {{# use_standard_homepage }}checked="checked"{{/ use_standard_homepage }} />
-        {{ use_standard_homepage_label }}
-    </label>
-    <p class="help">{{{ use_standard_homepage_help }}}</p>
-    {{# use_standard_homepage }}
-        <section>
-            <h3>{{ logo }}</h3>
-            <p class="help">{{ logo_help }}</p>
-            <p class="logo-container">
-                {{# use_custom_logo }}
-                    <label class="pc_checkbox tracker_artifact_attachment_delete">
-                        <input type="checkbox" name="remove_custom_logo" value="1" title="Remove custom logo">
-                    </label>
-                {{/ use_custom_logo }}
-                <img src="{{ path_logo }}" alt="Logo" />
-            </p>
-            <p>
-                <label>{{ upload }}</label>
-                <input type="file" name="logo" />
-            </p>
-        </section>
+    <input type="hidden" name="MAX_FILE_SIZE" value="500000">
+    <input type="hidden" name="update" value="1">
 
-        <section>
-            <h3>{{ headline }}</h3>
-            <p class="help">{{ headline_help }}</p>
-            <select class="pull-right" id="admin-headline-select-language">
-                {{# headlines }}
-                    <option>{{ language_id }}</option>
-                {{/ headlines }}
-            </select>
-            {{# headlines }}
-                <textarea
-                    id="admin-headline-{{ language_id }}"
-                    class="admin-headline"
-                    name="headlines[{{ language_id }}]"
-                    placeholder="{{ placeholder_headline }}"
-                    rows="3"
-                >{{ headline }}</textarea>
-            {{/ headlines }}
-        </section>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-desktop tlp-pane-title-icon"></i> {{ standard_title }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>{{ use_standard_homepage_help }}</p>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="use_standard_homepage">{{ use_standard_homepage_label }}</label>
+                    <div class="tlp-switch">
+                        <input type="checkbox" id="use_standard_homepage" name="use_standard_homepage" value="1" class="tlp-switch-checkbox" {{# use_standard_homepage }}checked="checked"{{/ use_standard_homepage }}>
+                        <label for="use_standard_homepage" class="tlp-switch-button" aria-hidden>{{ use_standard_homepage_label }}</label>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    {{# use_standard_homepage }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-cogs tlp-pane-title-icon"></i> {{ customize_title }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{ logo }}</h2>
+                <p>{{ logo_help }}<br>{{ logo_help_end }}</p>
+
+                <div class="tlp-form-element headline-custom-logo-section">
+                    {{# use_custom_logo }}
+                        <img src="{{ path_logo }}" alt="Logo" class="headline-custom-logo-current">
+                    {{/ use_custom_logo }}
+
+                    <div class="headline-custom-logo-submit">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="headline-logo">
+                                {{# use_custom_logo }}
+                                    {{ replace_upload }}
+                                {{/ use_custom_logo }}
+                                {{^ use_custom_logo }}
+                                    {{ upload }}
+                                {{/ use_custom_logo }}
+                            </label>
+                            <input type="file" id="headline-logo" name="logo" >
+                        </div>
+
+                        {{# use_custom_logo }}
+                            <span class="headline-custom-logo-or">{{ or_label }}</span>
+
+                            <button type="submit"
+                                class="tlp-button-danger tlp-button-outline"
+                                name="remove_custom_logo"
+                                value="1"
+                            >
+                                {{ remove_custom_logo }}
+                            </button>
+                        {{/ use_custom_logo }}
+                    </div>
+                </div>
+            </section>
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{ headline }}</h2>
+                <p>{{ headline_help }}</p>
+
+                <div class="tlp-form-element headline-form-element">
+                    <div class="tlp-label headline-label">
+                        <label class="headline-label">{{ label_language }}</label>
+                        <select id="admin-headline-select-language" class="tlp-select tlp-select-small tlp-select-adjusted headline-language-select">
+                            {{# headlines }}
+                                <option>{{ language_id }}</option>
+                            {{/ headlines }}
+                        </select>
+                    </div>
+                    {{# headlines }}
+                        <textarea id="admin-headline-{{ language_id }}"
+                            class="admin-headline tlp-textarea"
+                            name="headlines[{{ language_id }}]"
+                            placeholder="{{ placeholder_headline }}"
+                            rows="3"
+                        >{{ headline }}</textarea>
+                    {{/ headlines }}
+                </div>
+            </section>
+
+            <section class="tlp-pane-section">
+                <div class="headline-save-button">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa fa-save tlp-button-icon"></i> {{ save }}
+                    </button>
+                </div>
+            </section>
+        </div>
+    </section>
     {{/ use_standard_homepage }}
-    <button type="submit" class="btn btn-primary" name="update" value="1">{{ save }}</button>
 </form>
