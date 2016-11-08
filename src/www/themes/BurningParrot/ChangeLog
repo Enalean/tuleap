@@ -1,3 +1,6 @@
+Version 0.14 - Tuleap 9.1
+    * story #9589: Get rid of Bootstrap in site admin / plugins (standardize project and user lists)
+
 Version 0.13 - Tuleap 9.1
     * story #9586 Get rid of Bootstrap in site admin / configuration (Trackers pending removal)
 
