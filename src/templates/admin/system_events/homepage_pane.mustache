@@ -12,7 +12,7 @@
                     <i class="fa fa-flag siteadmin-homepage-system-events-queue-content-flag flag-{{ flag_type }}"></i>
                     <div class="siteadmin-homepage-system-events-queue-content-details">
                         <div class="siteadmin-homepage-system-events-queue-content-new-running-done">
-                            <span class="system-event-type-count tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-top"
+                            <span class="system-event-type-count tlp-badge-secondary {{^ has_new }}tlp-badge-outline{{/ has_new }} tlp-tooltip tlp-tooltip-top"
                                 data-tlp-tooltip="{{ new_label_tooltip }}"
                             >
                                 <i class="tlp-badge-icon fa fa-plus"></i> {{ new_count }}
