@@ -22,7 +22,7 @@ Version 9.1 (Not Released Yet)
 	== Plugins ==
 	* svn: 0.104
 	* tracker: 5.1031
-	* git: 4.291
+	* git: 4.292
 	* agiledashboard: 1.434
 	* archivedeleteditems: 0.10
 	* docman: 2.26.125
@@ -34,13 +34,13 @@ Version 9.1 (Not Released Yet)
 	* openidconnectclient: 0.31
 	* phpwiki: 0.12
 	* pluginsadministration: 1.22
-	* statistics: 0.67
+	* statistics: 0.68
 	* tests: 5.36
 	* userlog: 1.11
 
 	== Themes ==
-	* FlamingParrot: 1.158
-	* BurningParrot: 0.7
+	* FlamingParrot: 1.159
+	* BurningParrot: 0.8
 
 	== Development ==
 	* request #9263 Do not use underscore in Tuleap dev hostname
