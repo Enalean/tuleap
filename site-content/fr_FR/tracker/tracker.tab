@@ -418,8 +418,10 @@ tracker_include_type	pending_deletion	Outil de suivi V3 en attente de destructio
 tracker_include_type	deletion_date	Date de destruction
 tracker_include_type	delay	Retarder ?
 tracker_include_type	restore	Restaurer
-tracker_include_type	warning	** AVERTISSEMENT !! ** Détruire cet outil de suivi et toutes ses dépendances (restauration impossible) ?
-tracker_include_type	delete	Delete
+tracker_include_type	warning	Détruire cet outil de suivi et toutes ses dépendances (restauration impossible) ?
+tracker_include_type	delete	Supprimer
+tracker_include_type	cancel	Annuler
+tracker_include_type	remove_tracker	Supprimer l'outil de suivi
 tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
 tracker_include_type	create_from_scratch	Créer un nouvel outil de suivi en totalité ou à partir d'un outil de suivi existant
 tracker_include_type	manage	Gérer les outils de suivi
