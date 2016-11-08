@@ -1,3 +1,6 @@
+Version 0.12 - Tuleap 9.1
+    * story #9586: Get rid of Bootstrap in site admin / configuration (Style homepage configuration)
+
 Version 0.11 - Tuleap 9.1
     * request #8756: Revoked token should no longer be usable
 
