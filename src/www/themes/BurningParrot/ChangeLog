@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 9.1
+    * story #9585: Fix dropdown in navbar z-index + icons in buttons
+
 Version 0.9 - Tuleap 9.1
     * story #9585: navbar should use small logo
 

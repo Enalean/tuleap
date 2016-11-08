@@ -40,7 +40,7 @@ Version 9.1 (Not Released Yet)
 
 	== Themes ==
 	* FlamingParrot: 1.159
-	* BurningParrot: 0.9
+	* BurningParrot: 0.10
 
 	== Development ==
 	* request #9263 Do not use underscore in Tuleap dev hostname
