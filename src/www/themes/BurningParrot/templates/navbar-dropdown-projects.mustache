@@ -4,7 +4,9 @@
             type="search"
             class="tlp-search tlp-search-small"
             placeholder="{{ filter }}">
-        <a href="/softwaremap/trove_list.php" class="tlp-button-primary tlp-button-outline tlp-button-small"><i class="fa fa-list-ul"></i> {{ browse_all }}</a>
+        <a href="/softwaremap/trove_list.php" class="tlp-button-primary tlp-button-outline tlp-button-small">
+            <i class="fa fa-list tlp-button-icon"></i> {{ browse_all }}
+        </a>
     </div>
     <div class="nav-dropdown-content-projects-lists">
         {{# has_projects_user_admins }}
@@ -50,6 +52,8 @@
         {{/ has_projects_user_belongs }}
     </div>
     <div class="nav-dropdown-content-projects-new">
-        <a href="/project/register.php" class="tlp-button-primary"><i class="fa fa-plus"></i> {{ add_project }}</a>
+        <a href="/project/register.php" class="tlp-button-primary">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_project }}
+        </a>
     </div>
 </div>
