@@ -16,6 +16,7 @@ Version 9.1 (Not Released Yet)
 	* story #9585: Get rid of Bootstrap in site admin / plugins
 		- change avatars & pending users image
 		- system events pane in admin homepage
+		- Sort available plugins
 
 	== Bug Fix ==
 	* request #9599: Misleading warning message when using IE11 with compatibility
@@ -41,7 +42,7 @@ Version 9.1 (Not Released Yet)
 	* mediawiki: 0.125
 	* openidconnectclient: 0.31
 	* phpwiki: 0.12
-	* pluginsadministration: 1.22
+	* pluginsadministration: 1.23
 	* statistics: 0.68
 	* tests: 5.36
 	* userlog: 1.11
