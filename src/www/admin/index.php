@@ -24,6 +24,9 @@ require_once('www/admin/admin_utils.php');
 require_once('www/stats/site_stats_utils.php');
 require_once('common/widget/Widget_Static.class.php');
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/d3/v4/d3.min.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-users-chart.js');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
@@ -90,19 +93,37 @@ db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 
+$purifier = Codendi_HTMLPurifier::instance();
+$statistics_users_graph = array();
+
+if ($actif_users > 0) {
+    $statistics_users_graph[] = array( 'key'=> 'active', 'label' => $Language->getText('admin_main', 'statusactif_user'), 'users' => $actif_users);
+}
+
+if ($hold_users > 0) {
+    $statistics_users_graph[] = array( 'key'=> 'suspended', 'label' => $Language->getText('admin_main', 'statushold_user'), 'users' => $hold_users);
+}
+
+if ($deleted_users > 0) {
+    $statistics_users_graph[] = array( 'key'=> 'deleted', 'label' => $Language->getText('admin_main', 'statusdeleted_user'), 'users' => $deleted_users);
+}
+
+if ($validated_users + $realpending_users > 0) {
+    $statistics_users_graph[] = array( 'key'=> 'waiting', 'label' => $Language->getText('admin_main', 'statuspending_user'), 'users' => $validated_users + $realpending_users);
+}
+
+if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
+    $statistics_users_graph[] = array( 'key'=> 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'users' => $restricted_users);
+}
+
 $user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));
 $user_stats->setIcon('fa-pie-chart');
 $user_stats->setAdditionalClass('siteadmin-homepage-statistics');
 $user_stats->setContent('
     <section class="tlp-pane-section siteadmin-homepage-statistics-section-last">
         <div class="tlp-property">
-            <label class="tlp-label">'.$Language->getText('admin_main', 'status_user').'</label>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$actif_users.' '.$Language->getText('admin_main', 'statusactif_user').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$restricted_users.' '.$Language->getText('admin_main', 'statusrestricted_user').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$hold_users.' '.$Language->getText('admin_main', 'statushold_user').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$deleted_users.' '.$Language->getText('admin_main', 'statusdeleted_user').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$validated_users.' '.$Language->getText('admin_main', 'statusvalidated_user').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$realpending_users.' '.$Language->getText('admin_main', 'statuspending_user').'</span>
+            <div id="siteadmin-homepage-statistics-users"
+                 data-statistics-users="'. $purifier->purify(json_encode($statistics_users_graph)) .'"></div>
         </div>
 
         <div class="tlp-property">

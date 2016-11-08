@@ -196,3 +196,127 @@
         }
     }
 }
+
+#siteadmin-homepage-users-legend {
+    padding: 20px;
+}
+
+#siteadmin-homepage-statistics-users {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.siteadmin-homepage-users-legend {
+    display: flex;
+    align-items: center;
+    min-width: 100px;
+    text-decoration: none;
+}
+
+.siteadmin-homepage-users-legend-text-span {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    line-height: 18px;
+    cursor: default;
+}
+
+.siteadmin-homepage-users-legend-selected {
+    font-weight: 600;
+}
+
+.siteadmin-homepage-users-legend-color-span {
+    width: 12px;
+    height: 12px;
+    margin: 0 5px 0 0;
+    border-radius: 50%;
+    opacity: .8;
+}
+
+.siteadmin-homepage-users-legend-color-active {
+    background-color: $tlp-ui-success;
+}
+
+.siteadmin-homepage-users-legend-color-suspended {
+    background-color: #cccccc;
+}
+
+.siteadmin-homepage-users-legend-color-restricted {
+    background-color: $tlp-ui-warning;
+}
+
+.siteadmin-homepage-users-legend-color-deleted {
+    background-color: $tlp-ui-danger;
+}
+
+.siteadmin-homepage-users-legend-color-waiting {
+    background-color: $tlp-ui-info;
+}
+
+.siteadmin-homepage-users-slice-path {
+    opacity: .8;
+}
+
+.siteadmin-homepage-users-slice-text {
+    font-weight: 600;
+}
+
+.siteadmin-homepage-users-slice-text-undisplayed {
+    opacity: 0;
+}
+
+.siteadmin-homepage-users-slice-active {
+
+    > path {
+        fill: $tlp-ui-success;
+    }
+
+    > text {
+        fill: darken($tlp-ui-success, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-suspended {
+
+    > path {
+        fill: #cccccc;
+    }
+
+    > text {
+        fill: darken(#cccccc, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-restricted {
+
+    > path {
+        fill: $tlp-ui-warning;
+    }
+
+    > text {
+        fill: darken($tlp-ui-warning, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-deleted {
+
+    > path {
+        fill: $tlp-ui-danger;
+    }
+
+    > text {
+        fill: darken($tlp-ui-danger, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-waiting {
+
+    > path {
+        fill: $tlp-ui-info;
+    }
+
+    > text {
+        fill: darken($tlp-ui-info, 10%);
+    }
+}

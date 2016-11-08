@@ -110,10 +110,10 @@ admin_main	stat_users	Users statistics
 admin_main	status_user	Per status
 admin_main	statusactif_user	active
 admin_main	statusrestricted_user	restricted
-admin_main	statushold_user	hold
+admin_main	statushold_user	suspended
 admin_main	statusdeleted_user	deleted
 admin_main	statusvalidated_user	validated
-admin_main	statuspending_user	pending
+admin_main	statuspending_user	waiting
 admin_main	statustotal_user	total
 admin_main	desc_fields	Project Description fields
 admin_main	desc_fields_edit	Project description fields edition

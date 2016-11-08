@@ -100,11 +100,11 @@ admin_main	stat_projects	Statistiques projets
 admin_main	status_project	Par statut
 admin_main	stat_users	Statistiques utilisateurs
 admin_main	status_user	Par statut
-admin_main	statusactif_user	actif(s)
-admin_main	statusrestricted_user	restreint(s)
-admin_main	statushold_user	suspendu(s)
-admin_main	statusdeleted_user	détruit(s)
-admin_main	statusvalidated_user	validé(s)
+admin_main	statusactif_user	actif
+admin_main	statusrestricted_user	restreint
+admin_main	statushold_user	suspendu
+admin_main	statusdeleted_user	détruit
+admin_main	statusvalidated_user	validé
 admin_main	statuspending_user	en attente
 admin_main	statustotal_user	total
 admin_main	desc_fields	Description des projets
