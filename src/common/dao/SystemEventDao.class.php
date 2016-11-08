@@ -118,6 +118,20 @@ class SystemEventDao extends DataAccessObject {
                 LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
+
+    public function searchQueueStatsForLastDay($types) {
+        $types = $this->da->quoteSmartImplode(',', $types);
+
+        $sql = "SELECT status, count(*) as nb
+                FROM system_event
+                WHERE type IN ($types)
+                  AND create_date > DATE_SUB(NOW(), INTERVAL 2 day)
+                GROUP BY status
+                ";
+
+        return $this->retrieve($sql);
+    }
+
     /**
      * 
      * The searched parameter may be at one of these positions:

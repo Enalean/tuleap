@@ -48,6 +48,7 @@
 .mirror-action-container {
     display: flex;
     flex: 0 1 auto;
+    justify-content: center;
 }
 
 .mirror-action {
@@ -109,6 +110,7 @@
 .gerrit-server-action-container {
     display: flex;
     flex: 0 1 auto;
+    justify-content: center;
 }
 
 .gerrit-server-action {

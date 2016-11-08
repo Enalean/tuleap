@@ -74,10 +74,12 @@ $tlp-button-secondary-outline-color: #888888;
     letter-spacing: 0;
     line-height: $tlp-button-normal-line-height;
     text-decoration: none;
+    text-overflow: ellipsis;
     text-transform: none;
     white-space: nowrap;
     box-shadow: 0 1px 1px $tlp-button-box-shadow;
     cursor: pointer;
+    overflow: hidden;
     vertical-align: middle;
 
     &:hover:not(:disabled):not(.disabled):not(:active),

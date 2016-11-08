@@ -67,8 +67,8 @@ admin_main	svn_token_config	Configuration des projets concernant les jetons de c
 admin_main	tracker_remove	Nettoyage des outils de suivi en attente
 admin_main	tracker_template	Configuration des modèles d'outils de suivi v3
 admin_main	header_stat	Statistiques
-admin_main	stat_login	Afficher les connections les plus récentes
-admin_main	stat_spu	Voir les statistiques site, projets et utilisateurs
+admin_main	stat_login	Afficher les connections récentes
+admin_main	stat_spu	Voir les statistiques globales
 admin_main	header_utils	Utilitaires site
 admin_main	mail_engine	Envoi d'e-mails en masse
 admin_main	header_sstat	Statistiques
@@ -132,6 +132,16 @@ admin_main	logo_too_big	Le fichier est trop gros
 admin_main	upload_error	Erreur lors de l'upload du fichier (erreur $1)
 admin_main	no_png	Merci d'uploader une image au format png
 admin_main	100px	L'image excède les 100px de hauteur
+
+admin_main	system_events_pane_title	Evénements système (dernières 48 heures)
+admin_main	system_events_view_all_label	Voir tous les événements système
+admin_main	new_label_tooltip	Nouveaux événements
+admin_main	running_label_tooltip	Evénements en cours d'exécution
+admin_main	done_label_tooltip	Evénements terminés
+admin_main	warning_label_tooltip	Evénements en alerte
+admin_main	error_label_tooltip	Evénements en erreur
+admin_main	warning_label	Alertes
+admin_main	error_label	Erreurs
 
 admin_main	configure_access_controls	Droits d'accès
 admin_main	platform_access_control	Droits d'accès de la plateforme
@@ -576,9 +586,9 @@ admin_system_events	title	Événements Système
 admin_system_events	notifications	Alertes
 admin_system_events	send_email	Envoyer un email à :
 admin_system_events	nobody	Personne
-admin_system_events	default_queue	File d'attente globale
-admin_system_events	fts_queue	File d'attente d'indexation
-admin_system_events	tv3tv5_queue	File d'attente migration TV3 -> TV5
+admin_system_events	default_queue	Queue principale
+admin_system_events	fts_queue	Full Text Search
+admin_system_events	tv3tv5_queue	Migration TV3 -> TV5
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

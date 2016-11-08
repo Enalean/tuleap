@@ -76,7 +76,7 @@ admin_main	tracker_remove	Pending trackers removal
 admin_main	tracker_template	Configuration of predefined tracker v3 templates
 admin_main	header_stat	Statistics
 admin_main	stat_login	View most recent logins
-admin_main	stat_spu	See site, projects and users statistics
+admin_main	stat_spu	See global statistics
 admin_main	header_utils	Site utilities
 admin_main	mail_engine	Mass mail engine
 admin_main	header_sstat	Statistics
@@ -140,6 +140,16 @@ admin_main	logo_too_big	Uploaded file is too big
 admin_main	upload_error	File upload error (error code: $1)
 admin_main	no_png	You should send a png image
 admin_main	100px	You should send an image with height smaller than 100px
+
+admin_main	system_events_pane_title	System events (last 48 hours)
+admin_main	system_events_view_all_label	View all system events
+admin_main	new_label_tooltip	New events
+admin_main	running_label_tooltip	Running events
+admin_main	done_label_tooltip	Done events
+admin_main	warning_label_tooltip	Events in warning
+admin_main	error_label_tooltip	Events in error
+admin_main	warning_label	Warnings
+admin_main	error_label	Errors
 
 admin_main	configure_access_controls	Access control
 admin_main	platform_access_control	Platform access control
@@ -585,9 +595,9 @@ admin_system_events	title	System Events
 admin_system_events	notifications	Notifications
 admin_system_events	send_email	Send an email to:
 admin_system_events	nobody	Nobody
-admin_system_events	default_queue	Default Queue
-admin_system_events	fts_queue	Full Text Search Queue
-admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration Queue
+admin_system_events	default_queue	Main queue
+admin_system_events	fts_queue	Full Text Search
+admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

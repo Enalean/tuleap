@@ -92,4 +92,4 @@ plugin_statistics	add_disk_quota	<a href="$1">Définir un quota disque</a>
 plugin_statistics	projects_over_quota	<a href="$1">Projets dépassant leurs quotas</a>
 plugin_statistics	querying_purged_data	Le graphique affiché se base sur des données anciennes qui ont été purgées pour des raisons de performances. Pour les données plus anciennes qu'il y a 3 mois, une journée par semaine a été conservée. Pour les données plus anciennes qu'il y a 2 ans, une journée par mois a été conservée.
 
-plugin_statistics	sysevents_queue	File d'attente Statistiques
+plugin_statistics	sysevents_queue	Statistiques
