@@ -98,6 +98,7 @@ class GeneralSettingsController
 
     private function enableRegexp()
     {
+        $this->csrf->check();
         if (! $this->regexp_enabler->enable()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'update_error'));
         }
@@ -105,6 +106,7 @@ class GeneralSettingsController
 
     private function disableRegexp()
     {
+        $this->csrf->check();
         if (! $this->regexp_disabler->disableAtSiteLevel()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'update_error'));
         }

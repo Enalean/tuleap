@@ -607,7 +607,7 @@ class GitPlugin extends Plugin {
     public function processAdmin(Codendi_Request $request) {
         $admin = new Git_AdminRouter(
             $this->getGerritServerFactory(),
-            new CSRFSynchronizerToken('/plugin/git/admin/'),
+            new CSRFSynchronizerToken('/plugins/git/admin/'),
             $this->getMirrorDataMapper(),
             new Git_MirrorResourceRestrictor(
                 new Git_RestrictedMirrorDao(),
