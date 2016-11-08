@@ -178,8 +178,11 @@ def check_read_access(username, svnrepo, svnpath):
 
 
 def __is_using_epel_viewvc():
-    loader = pkgutil.find_loader('vcauth.svnauthz')
-    return loader is not None
+    loader_vcauth = pkgutil.find_loader('vcauth')
+    if loader_vcauth is None:
+        return False
+    loader_svnauthz = pkgutil.find_loader('vcauth.svnauthz')
+    return loader_svnauthz is not None
 
 
 def __check_read_access_with_epel_viewvc(username, svnrepo, svnpath):
