@@ -63,25 +63,32 @@ class PresenterBuilder
 
     private function getGlobalNavbarDropdownMenuItems()
     {
+        $global_navbar_dropdown_menu_items = array();
+
         $projects_builder                 = new ProjectPresenterBuilder();
-        $navbar_dropdown_items_builder    = new DropdownItemsPresenterBuilder();
         $navbar_dropdown_projects_builder = new DropdownProjectsPresenterBuilder();
+        $projects                         = $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user));
 
-        $projects  = $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user));
-        $dropdowns = $navbar_dropdown_items_builder->build($this->extra_tabs);
-
-        return array(
-            new GlobalNavbarDropdownMenuItemPresenter(
+        if ($projects) {
+            $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
                 'fa fa-archive',
                 $projects
-            ),
-            new GlobalNavbarDropdownMenuItemPresenter(
+            );
+        }
+
+        $navbar_dropdown_items_builder = new DropdownItemsPresenterBuilder();
+        $dropdowns                     = $navbar_dropdown_items_builder->build($this->extra_tabs);
+
+        if ($dropdowns) {
+            $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'extras'),
                 'fa fa-ellipsis-h',
                 $dropdowns
-            )
-        );
+            );
+        }
+
+        return $global_navbar_dropdown_menu_items;
     }
 
     private function getGlobalMenuItems()
