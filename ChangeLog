@@ -12,6 +12,8 @@ Version 9.1 (Not Released Yet)
 	* story #9586: Get rid of Bootstrap in site admin / configuration
 		- Style homepage configuration
 	* story #9633: Tuleap theme removal
+	* story #9585: Get rid of Bootstrap in site admin / plugins
+		- change avatars & pending users image
 
 	== Bug Fix ==
 	* request #9599: Misleading warning message when using IE11 with compatibility
@@ -30,9 +32,9 @@ Version 9.1 (Not Released Yet)
 	* archivedeleteditems: 0.10
 	* docman: 2.26.125
 	* IM: 1.5.39
-	* admindelegation: 2.15
+	* admindelegation: 2.16
 	* fulltextsearch: 0.137
-	* ldap: 3.116
+	* ldap: 3.117
 	* mediawiki: 0.125
 	* openidconnectclient: 0.31
 	* phpwiki: 0.12
@@ -42,7 +44,7 @@ Version 9.1 (Not Released Yet)
 	* userlog: 1.11
 
 	== Themes ==
-	* FlamingParrot: 1.160
+	* FlamingParrot: 1.161
 	* BurningParrot: 0.12
 
 	== Development ==

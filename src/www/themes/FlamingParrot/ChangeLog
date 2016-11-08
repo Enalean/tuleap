@@ -1,3 +1,6 @@
+Version 1.161 - Tuleap 9.1
+    * story #9585: Get rid of Bootstrap in site admin / plugins (change avatars & pending users image)
+
 Version 1.160 - Tuleap 9.1
     * story #9586: Get rid of Bootstrap in site admin / configuration (Style homepage configuration)
 
