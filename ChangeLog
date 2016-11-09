@@ -39,7 +39,7 @@ Version 9.1 (Not Released Yet)
 	* admindelegation: 2.16
 	* fulltextsearch: 0.137
 	* ldap: 3.117
-	* mediawiki: 0.125
+	* mediawiki: 0.126
 	* openidconnectclient: 0.32
 	* phpwiki: 0.12
 	* pluginsadministration: 1.23
