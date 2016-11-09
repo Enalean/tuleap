@@ -117,40 +117,42 @@
     </section>
 {{/ users }}
 
-<form action="?page={{ page }}" method="POST" id="siteadmin-pending-users-actions">
-    <input type="hidden" name="list_of_users" value="{{ list_ids }}">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    {{# can_be_restricted }}
-        <div class="tlp-form-element" id="siteadmin-pending-users-actions-restrict">
-            <label class="tlp-label tlp-checkbox">
-                <input type="hidden" name="status" value="standard">
-                <input type="checkbox" name="status" value="restricted"> {{ restricted_all_label }}
-            </label>
-        </div>
-    {{/ can_be_restricted }}
-    <div id="siteadmin-pending-users-actions-buttons">
-        {{# can_be_validated }}
+{{# more_than_one_to_validate }}
+    <form action="?page={{ page }}" method="POST" id="siteadmin-pending-users-actions">
+        <input type="hidden" name="list_of_users" value="{{ list_ids }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        {{# can_be_restricted }}
+            <div class="tlp-form-element" id="siteadmin-pending-users-actions-restrict">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="hidden" name="status" value="standard">
+                    <input type="checkbox" name="status" value="restricted"> {{ restricted_all_label }}
+                </label>
+            </div>
+        {{/ can_be_restricted }}
+        <div id="siteadmin-pending-users-actions-buttons">
+            {{# can_be_validated }}
+                <button type="submit"
+                        name="action_select"
+                        value="validate"
+                        class="tlp-button-primary tlp-button-large"
+                        id="siteadmin-pending-users-actions-buttons-validateall"
+                        title="{{ validate_notice }}"
+                >
+                    <i class="fa fa-envelope-o tlp-button-icon"></i>
+                    {{ validate_all_label }}
+                </button>
+            {{/ can_be_validated }}
             <button type="submit"
                     name="action_select"
-                    value="validate"
-                    class="tlp-button-primary tlp-button-large"
-                    id="siteadmin-pending-users-actions-buttons-validateall"
-                    title="{{ validate_notice }}"
+                    value="activate"
+                    class="tlp-button-success tlp-button-large"
+                    title="{{ activate_notice }}"
             >
-                <i class="fa fa-envelope-o tlp-button-icon"></i>
-                {{ validate_all_label }}
+                <i class="fa fa-check tlp-button-icon"></i>
+                {{ activate_all_label }}
             </button>
-        {{/ can_be_validated }}
-        <button type="submit"
-                name="action_select"
-                value="activate"
-                class="tlp-button-success tlp-button-large"
-                title="{{ activate_notice }}"
-        >
-            <i class="fa fa-check tlp-button-icon"></i>
-            {{ activate_all_label }}
-        </button>
-    </div>
-</form>
+        </div>
+    </form>
+{{/ more_than_one_to_validate }}

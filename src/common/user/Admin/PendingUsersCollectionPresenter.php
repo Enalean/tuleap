@@ -47,6 +47,7 @@ class PendingUsersCollectionPresenter
     public $validate_all_label;
     public $activate_all_label;
     public $restricted_all_label;
+    public $more_than_one_to_validate;
 
     public function __construct($title, array $users, $page, CSRFSynchronizerToken $csrf_token)
     {
@@ -55,6 +56,8 @@ class PendingUsersCollectionPresenter
         $this->page       = $page;
         $this->csrf_token = $csrf_token;
         $this->list_ids   = $this->getListOfUserIds($users);
+
+        $this->more_than_one_to_validate = count($users) > 1;
 
         $this->can_be_restricted = ForgeConfig::areRestrictedUsersAllowed();
         $this->can_be_validated  = ForgeConfig::get('sys_user_approval') == 1 && ADMIN_APPROVE_PENDING_PAGE_PENDING == $page;
