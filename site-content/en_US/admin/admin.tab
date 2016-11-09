@@ -541,11 +541,14 @@ admin_trove_cat_edit	root	Root
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Trove - Category List
-admin_trove_cat_list	header	Trove categories
+admin_trove_cat_list	title	Project categories
+admin_trove_cat_list	header_name	Full name
+admin_trove_cat_list	header_description	Description
+admin_trove_cat_list	header	Project categories
 admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
 admin_trove_cat_list	add	Add a trove category
+admin_trove_cat_list	deletion_forbidden_label	Cannot delete a hierarchy, please remove all children before.
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #

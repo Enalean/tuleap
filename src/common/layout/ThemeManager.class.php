@@ -92,8 +92,6 @@ class ThemeManager
                 '`(
                     ^/admin/register_admin.php
                     |
-                    ^/admin/trove
-                    |
                     ^/admin/massmail.php
                     |
                     ^/stats

@@ -1,0 +1,51 @@
+<h1>{{ title }}</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <table class="tlp-table">
+                <thead>
+                <tr>
+                    <th>{{ header_name }}</th>
+                    <th>{{ header_description }}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# trovecats }}
+                    <tr>
+                        <td>
+                            <div style="margin: 0 0 0 {{ spacing }}px">
+                                {{# has_spacing }} &#8627;  {{/ has_spacing }}
+                                {{ fullname }}
+                            </div>
+                        </td>
+                        <td>{{ description }}</td>
+                        <td class="tlp-table-cell-actions">
+                            <button
+                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                id ="trove-cats-edit-button"
+                            >
+                                <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_button }}
+                            </button>
+                            <button
+                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{^ is_deletable }} tlp-button-disabled tlp-tooltip tlp-tooltip-left{{/ is_deletable }}"
+                                {{^ is_deletable }}
+                                    disabled="disabled"
+                                    data-tlp-tooltip="{{ deletion_forbidden_label }}"
+                                {{/ is_deletable }}
+                            >
+                                <i class="fa fa-trash tlp-button-icon"></i> {{ delete_button }}
+                            </button>
+                        </td>
+                    </tr>
+                {{/ trovecats }}
+                </tbody>
+                <tfoot>
+            </table>
+        </section>
+    </div>
+</section>
