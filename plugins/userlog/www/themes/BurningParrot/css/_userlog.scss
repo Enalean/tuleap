@@ -27,17 +27,13 @@
     width: 100%;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
     #user-logging-list {
         flex-direction: column;
     }
 
-    .user-logging-filter {
+    .user-logging-filter-container {
         width: 100%;
         margin: 0 0 $tlp-spacing;
-    }
-
-    .user-logging-table {
-        width: 100%;
     }
 }
