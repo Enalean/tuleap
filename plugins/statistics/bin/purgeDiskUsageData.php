@@ -29,7 +29,8 @@ require_once dirname(__FILE__).'/../include/Statistics_DiskUsagePurger.class.php
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageDao.class.php';
 
 $disk_data_purger = new Statistics_DiskUsagePurger(
-    new Statistics_DiskUsageDao(CodendiDataAccess::instance())
+    new Statistics_DiskUsageDao(),
+    new Log_ConsoleLogger()
 );
 
 try {

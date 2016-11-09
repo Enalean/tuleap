@@ -37,7 +37,7 @@ class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
         $this->initDb();
 
         $this->disk_usage_dao   = new Statistics_DiskUsageDao(CodendiDataAccess::instance());
-        $this->disk_data_purger = new Statistics_DiskUsagePurger($this->disk_usage_dao);
+        $this->disk_data_purger = new Statistics_DiskUsagePurger($this->disk_usage_dao, new Log_ConsoleLogger());
     }
 
     public function itReturnsFirstDayOfEachMonthsBetweenTwoDates() {
