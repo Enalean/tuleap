@@ -40,12 +40,12 @@ Version 9.1 (Not Released Yet)
 	* fulltextsearch: 0.137
 	* ldap: 3.117
 	* mediawiki: 0.126
-	* openidconnectclient: 0.33
+	* openidconnectclient: 0.34
 	* phpwiki: 0.12
 	* pluginsadministration: 1.23
 	* statistics: 0.68
 	* tests: 5.36
-	* userlog: 1.12
+	* userlog: 1.13
 
 	== Themes ==
 	* FlamingParrot: 1.163

@@ -1,3 +1,6 @@
+Version 1.13 - Tuleap 9.1
+    * story #9585: fix openid providers pane & userlog media query
+
 Version 1.12 - Tuleap 9.1
     * story #9585: break-word is not a valid value for word-break
 
