@@ -19,36 +19,21 @@
 
 #siteadmin-homepage-container {
     display: flex;
+    align-items: flex-start;
 }
 
 .siteadmin-homepage-column {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    width: 100%;
     margin: 0 $tlp-spacing 0 0;
-
-    &:last-child {
-        margin: 0;
-    }
-
-    .tlp-pane {
-        width: 100%;
-        margin: 0 $tlp-spacing 0 0;
-
-        &:last-child {
-            margin: 0;
-        }
-
-        > .tlp-pane-container {
-            display: flex;
-            flex-direction: column;
-        }
-    }
 }
 
 .siteadmin-homepage-row {
     display: flex;
     flex: 1 1 auto;
+    align-items: flex-start;
     margin: 0 0 $tlp-spacing;
 
     &:first-child {
@@ -61,10 +46,35 @@
 
     > .tlp-pane {
         flex: 1 1 auto;
+        width: 100%;
         max-width: 50%;
+        margin: 0 $tlp-spacing 0 0;
+
+        &:last-child {
+            margin: 0;
+        }
 
         &:first-child:last-child {
             max-width: 100%;
+        }
+
+        > .tlp-pane-container {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        flex-direction: column;
+
+        > .tlp-pane {
+            width: 100%;
+            max-width: none;
+            margin: 0 0 $tlp-spacing;
+
+            &:last-child {
+                margin: 0;
+            }
         }
     }
 }
@@ -97,12 +107,13 @@
     text-align: center;
 }
 
-.siteadmin-homepage-plugins-list {
-    flex: 1 1 auto;
-}
-
 .siteadmin-homepage-stat-badge {
     margin: 0 5px 5px 0;
+}
+
+.siteadmin-homepage-stat-lastlogins {
+    display: block;
+    margin: $tlp-half-spacing 0 $tlp-double-spacing;
 }
 
 .siteadmin-homepage-statistics,
@@ -119,8 +130,12 @@
 
 .siteadmin-homepage-system-events {
     flex: 1 1 auto;
-    max-width: 500px;
+    width: 500px;
     margin: 0;
+
+    > .tlp-pane-container > .tlp-pane-section:last-child {
+        border-top: 1px solid $tlp-ui-border-light;
+    }
 }
 
 .siteadmin-homepage-system-events-queue {

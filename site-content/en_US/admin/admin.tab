@@ -104,9 +104,9 @@ admin_main	lastmonth_users	active last month
 admin_main	last3months_users	active last 3 months
 admin_main	mode_lab_users	Active or restricted users using mode lab
 admin_main	mode_lab_users_nb_users	users
-admin_main	stat_projects	Projects
+admin_main	stat_projects	Projects statistics
 admin_main	status_project	Per status
-admin_main	stat_users	Users
+admin_main	stat_users	Users statistics
 admin_main	status_user	Per status
 admin_main	statusactif_user	active
 admin_main	statusrestricted_user	restricted
@@ -148,6 +148,8 @@ admin_main	100px	You should send an image with height smaller than 100px
 admin_main	standard_title	Standard Tuleap homepage
 admin_main	customize_title	Customized homepage
 admin_main	label_language	Your catchy headline
+admin_main	homepage_all_users	View all users
+admin_main	homepage_all_projects	View all projects
 
 admin_main	system_events_pane_title	System events (last 48 hours)
 admin_main	system_events_view_all_label	View all system events
