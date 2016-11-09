@@ -62,6 +62,8 @@ Requires: php-jwt
 Requires: php-paragonie-random-compat
 Requires: tuleap-core-subversion
 
+# Python
+Requires: python, MySQL-python
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv, perl-LDAP
 # Automatic perl dependencies
