@@ -90,14 +90,11 @@ db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 
-// Site Statistics
-$wStats = new Widget_Static($Language->getText('admin_main', 'header_sstat'));
-$wStats->setIcon('fa-pie-chart');
-$wStats->setAdditionalClass('siteadmin-homepage-statistics');
-$wStats->setContent('
-    <section class="tlp-pane-section">
-        <h2 class="tlp-pane-subtitle">'.$Language->getText('admin_main', 'stat_users').'</h2>
-
+$user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));
+$user_stats->setIcon('fa-pie-chart');
+$user_stats->setAdditionalClass('siteadmin-homepage-statistics');
+$user_stats->setContent('
+    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last">
         <div class="tlp-property">
             <label class="tlp-label">'.$Language->getText('admin_main', 'status_user').'</label>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$actif_users.' '.$Language->getText('admin_main', 'statusactif_user').'</span>
@@ -114,27 +111,38 @@ $wStats->setContent('
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(592200)).' '.$Language->getText('admin_main', 'lastweek_users').'</span>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(2678400)).' '.$Language->getText('admin_main', 'lastmonth_users').'</span>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(8031600)).' '.$Language->getText('admin_main', 'last3months_users').'</span>
+
+            <a href="/admin/lastlogins.php" class="siteadmin-homepage-stat-lastlogins" title="'.$Language->getText('admin_main', 'stat_login').'">'.$Language->getText('admin_main', 'stat_login').'</a>
         </div>
 
         <div class="tlp-property">
             <label class="tlp-label">'.$Language->getText('admin_main', 'mode_lab_users').'</label>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$mode_lab.' '.$Language->getText('admin_main', 'mode_lab_users_nb_users').'</span>
         </div>
-
-        <a href="lastlogins.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'stat_login').'">'.$Language->getText('admin_main', 'stat_login').'</a>
     </section>
+    <div class="tlp-pane-spacer"></div>
+    <section class="tlp-pane-section">
+        <a href="/admin/userlist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'homepage_all_users').'">'.$Language->getText('admin_main', 'homepage_all_users').'</a>
+    </section>
+');
+
+
+$project_stats = new Widget_Static($Language->getText('admin_main', 'stat_projects'));
+$project_stats->setIcon('fa-pie-chart');
+$project_stats->setAdditionalClass('siteadmin-homepage-statistics');
+$project_stats->setContent('
     <section class="tlp-pane-section siteadmin-homepage-statistics-section-last">
-        <h2 class="tlp-pane-subtitle">'.$Language->getText('admin_main', 'stat_projects').'</h2>
         <div class="tlp-property">
             <label class="tlp-label">'.$Language->getText('admin_main', 'status_project').'</label>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$total_groups.' '.$Language->getText('admin_main', 'sstat_reg_g').'</span>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$active_groups.' '.$Language->getText('admin_main', 'sstat_reg_act_g').'</span>
             <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$pending_projects.' '.$Language->getText('admin_main', 'sstat_pend_g').'</span>
         </div>
+
     </section>
     <div class="tlp-pane-spacer"></div>
     <section class="tlp-pane-section">
-        <a href="/stats/" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'stat_spu').'">'.$Language->getText('admin_main', 'stat_spu').'</a>
+        <a href="/admin/grouplist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'homepage_all_projects').'">'.$Language->getText('admin_main', 'homepage_all_projects').'</a>
     </section>
 ');
 
@@ -196,35 +204,6 @@ if ($GLOBALS['sys_project_approval'] == 1) {
     ');
 }
 
-// Plugins
-$plugins = array();
-$em->processEvent('site_admin_option_hook', array(
-    'plugins' => &$plugins
-));
-$plugins_content = array_reduce(
-    $plugins,
-    function ($plugins_content, $plugin) {
-        return $plugins_content . '<li><a href="'. $plugin['href'] .'">'. $plugin['label'] .'</a></li>';
-    },
-    ''
-);
-
-$wPlugins = new Widget_Static($Language->getText('admin_main', 'header_plugins'));
-$wPlugins->setAdditionalClass('siteadmin-homepage-plugins');
-$wPlugins->setIcon('fa-cubes');
-$wPlugins->setContent('
-    <section class="tlp-pane-section siteadmin-homepage-plugins-list">
-        <ul>'. $plugins_content .'</ul>
-    </section>
-    <section class="tlp-pane-section">
-        <a href="/plugins/pluginsadministration/" class="tlp-button-primary tlp-button-outline tlp-button-wide"
-            title="'.$Language->getText('admin_main', 'manage_all_plugins').'"
-        >
-            '.$Language->getText('admin_main', 'manage_all_plugins').'
-        </a>
-    </section>
-');
-
 // Start output
 $siteadmin = new \Tuleap\Admin\AdminPageRenderer();
 $siteadmin->header($Language->getText('admin_main', 'title'));
@@ -255,9 +234,11 @@ if ($display_user_approval_block || $display_project_approval_block) {
 }
 
 echo '<div class="siteadmin-homepage-row">';
-$wStats->display();
-$wPlugins->display();
+$user_stats->display();
+
+$project_stats->display();
 echo '</div>';
+
 echo '</div>';
 
 $system_events_pane_builder = new Tuleap\Admin\SystemEvents\HomepagePanePresenterBuilder(

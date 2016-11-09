@@ -96,9 +96,9 @@ admin_main	lastmonth_users	actifs le mois dernier
 admin_main	last3months_users	actifs les 3 derniers mois
 admin_main	mode_lab_users	Utilisateurs actifs ou restreints utilisant le mode lab
 admin_main	mode_lab_users_nb_users	utilisateurs
-admin_main	stat_projects	Projets
+admin_main	stat_projects	Statistiques projets
 admin_main	status_project	Par statut
-admin_main	stat_users	Utilisateurs
+admin_main	stat_users	Statistiques utilisateurs
 admin_main	status_user	Par statut
 admin_main	statusactif_user	actif(s)
 admin_main	statusrestricted_user	restreint(s)
@@ -140,6 +140,8 @@ admin_main	100px	L'image excède les 100px de hauteur
 admin_main	standard_title	Page d'accueil Tuleap standard
 admin_main	customize_title	Page d'accueil personnalisée
 admin_main	label_language	Votre accroche
+admin_main	homepage_all_users	Voir tous les utilisateurs
+admin_main	homepage_all_projects	Voir tous les projets
 
 admin_main	system_events_pane_title	Evénements système (dernières 48 heures)
 admin_main	system_events_view_all_label	Voir tous les événements système
