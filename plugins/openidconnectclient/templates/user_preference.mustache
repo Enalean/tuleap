@@ -4,7 +4,7 @@
     <div id="linked-providers">
         {{# user_mappings }}
             <form action="{{ form_action }}" class="provider" method="post">
-                <input type="hidden" name="provider_id" value="{{ provider_id }}">
+                <input type="hidden" name="user_mapping_id" value="{{ user_mapping_id }}">
                 <div class="provider-header">
                     <p class="provider-name"><i class="icon-{{ provider_icon }}"></i> {{ provider_name }}</p>
                 </div>

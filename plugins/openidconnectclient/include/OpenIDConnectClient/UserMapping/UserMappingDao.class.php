@@ -35,23 +35,31 @@ class UserMappingDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function deleteByUserIdAndProviderId($user_id, $provider_id) {
-        $user_id     = $this->getDa()->escapeInt($user_id);
-        $provider_id = $this->getDa()->escapeInt($provider_id);
+    public function deleteById($id) {
+        $id = $this->getDa()->escapeInt($id);
 
         $sql = "DELETE FROM plugin_openidconnectclient_user_mapping
-                WHERE user_id = $user_id AND provider_id  = $provider_id";
+                WHERE id = $id";
         return $this->update($sql);
     }
 
-    public function updateLastUsed($user_id, $provider_id, $last_used) {
-        $user_id     = $this->getDa()->escapeInt($user_id);
-        $provider_id = $this->getDa()->escapeInt($provider_id);
-        $last_used   = $this->getDa()->escapeInt($last_used);
+    public function updateLastUsed($id, $last_used)
+    {
+        $id        = $this->getDa()->escapeInt($id);
+        $last_used = $this->getDa()->escapeInt($last_used);
 
         $sql = "UPDATE plugin_openidconnectclient_user_mapping SET last_used = $last_used
-                WHERE provider_id = $provider_id AND user_id = $user_id";
+                WHERE id = $id";
         return $this->update($sql);
+    }
+
+    public function searchById($id)
+    {
+        $id = $this->getDa()->escapeInt($id);
+
+        $sql = "SELECT * FROM plugin_openidconnectclient_user_mapping
+                WHERE id = $id";
+        return $this->retrieve($sql);
     }
 
     public function searchByIdentifierAndProviderId($identifier, $provider_id) {
@@ -66,7 +74,7 @@ class UserMappingDao extends DataAccessObject {
     public function searchUsageByUserId($user_id) {
         $user_id = $this->getDa()->escapeInt($user_id);
 
-        $sql = "SELECT mapping.provider_id, provider.name, provider.icon, mapping.user_id, mapping.last_used
+        $sql = "SELECT mapping.id AS user_mapping_id, mapping.provider_id, provider.name, provider.icon, mapping.user_id, mapping.last_used
                 FROM plugin_openidconnectclient_user_mapping AS mapping
                 JOIN plugin_openidconnectclient_provider AS provider ON provider.id = mapping.provider_id
                 WHERE mapping.user_id = $user_id";

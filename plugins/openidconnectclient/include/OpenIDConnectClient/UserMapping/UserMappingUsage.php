@@ -23,18 +23,26 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 class UserMappingUsage {
 
+    private $user_mapping_id;
     private $provider_icon;
     private $provider_id;
     private $provider_name;
     private $user_id;
     private $last_used;
 
-    public function __construct($provider_id, $provider_name, $provider_icon, $user_id, $last_used) {
-        $this->provider_id   = $provider_id;
-        $this->provider_name = $provider_name;
-        $this->user_id       = $user_id;
-        $this->last_used     = $last_used;
-        $this->provider_icon = $provider_icon;
+    public function __construct($user_mapping_id, $provider_id, $provider_name, $provider_icon, $user_id, $last_used)
+    {
+        $this->user_mapping_id = $user_mapping_id;
+        $this->provider_id     = $provider_id;
+        $this->provider_name   = $provider_name;
+        $this->user_id         = $user_id;
+        $this->last_used       = $last_used;
+        $this->provider_icon   = $provider_icon;
+    }
+
+    public function getUserMappingId()
+    {
+        return $this->user_mapping_id;
     }
 
     public function getProviderId() {
