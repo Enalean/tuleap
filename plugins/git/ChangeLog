@@ -1,3 +1,6 @@
+Version 4.294 - Tuleap 9.1
+    * story #9585: fix tlp-pane-container width
+
 Version 4.293 - Tuleap 9.1
     * story #9525 use full regexp instead of wildcards (Enabling or disabling regular expressions for Git branches/tags ACL must be protected against CSRF)
 

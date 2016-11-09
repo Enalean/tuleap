@@ -1,3 +1,6 @@
+Version 1.163 - Tuleap 9.1
+    * story #9585: fix tlp-pane-container width
+
 Version 1.162 - Tuleap 9.1
     * story #9585: fix z-index so modals, select2 & datepickers aren't under the sidebar anymore
 
