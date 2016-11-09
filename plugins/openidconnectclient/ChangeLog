@@ -1,3 +1,6 @@
+Version 0.32 - Tuleap 9.1
+    * request #9333: Fatal error when I try to link two different accounts from the same provider
+
 Version 0.31 - Tuleap 9.1
     * story #9585: Add confirmation on delete button in OIC
 
