@@ -33,6 +33,8 @@ class ProjectPendingPresenter
      */
     public $csrf_token;
 
+    public $more_than_one_to_validate;
+
     public function __construct(array $pending_projects, CSRFSynchronizerToken $csrf_token)
     {
         $this->no_content               = $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending');
@@ -53,8 +55,9 @@ class ProjectPendingPresenter
         $this->activate_all_label       = $GLOBALS['Language']->getText('admin_approve_pending', 'activate_all_label');
         $this->label_project_visibility = $GLOBALS['Language']->getText('admin_project', 'access_label');
 
-        $this->pending_projects = $pending_projects;
-        $this->has_project      = count($pending_projects['project_list']) !== 0;
-        $this->csrf_token       = $csrf_token;
+        $this->pending_projects          = $pending_projects;
+        $this->more_than_one_to_validate = count($pending_projects['project_list']) > 1;
+        $this->has_project               = count($pending_projects['project_list']) !== 0;
+        $this->csrf_token                = $csrf_token;
     }
 }

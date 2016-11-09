@@ -121,17 +121,19 @@
             </section>
         {{/ project_list}}
 
-        <div class="pending-project-buttons-all">
-            <form action="" method="POST">
-                {{# csrf_token }}
-                    {{> csrf_token_input }}
-                {{/ csrf_token }}
-                <input type="hidden" name="action" value="activate">
-                <input type="hidden" name="list_of_groups" value="{{ projects_id }}">
-                <button type="submit" class="tlp-button-large tlp-button-success">
-                    <i class="fa fa-check tlp-button-icon"></i> {{ activate_all_label }}
-                </button>
-            </form>
-        </div>
+        {{# more_than_one_to_validate }}
+            <div class="pending-project-buttons-all">
+                <form action="" method="POST">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                    <input type="hidden" name="action" value="activate">
+                    <input type="hidden" name="list_of_groups" value="{{ projects_id }}">
+                    <button type="submit" class="tlp-button-large tlp-button-success">
+                        <i class="fa fa-check tlp-button-icon"></i> {{ activate_all_label }}
+                    </button>
+                </form>
+            </div>
+        {{/ more_than_one_to_validate }}
     {{/ pending_projects}}
 {{/ has_project }}
