@@ -1,3 +1,6 @@
+Version 4.295 - Tuleap 9.1
+    * request #9627: Fix git email settings
+
 Version 4.294 - Tuleap 9.1
     * story #9585: fix tlp-pane-container width
 
