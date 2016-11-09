@@ -9,6 +9,7 @@ Version 9.1 (Not Released Yet)
 		- Style forgeupgrade not run warning
 		- i18n pending documents
 		- standardize project and user lists
+		- Do not display "activate all" buttons if only one
 	* request #8756: Revoked token should no longer be usable
 	* story #9586: Get rid of Bootstrap in site admin / configuration
 		- Style homepage configuration
