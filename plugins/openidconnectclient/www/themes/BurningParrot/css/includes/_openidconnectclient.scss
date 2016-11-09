@@ -28,6 +28,7 @@
 .provider-action-container {
     display: flex;
     flex: 0 1 auto;
+    justify-content: center;
 }
 
 .provider-action {
@@ -45,7 +46,7 @@
     }
 
     .provider-action-container {
-        justify-content: flex-end;
+        align-items: flex-end;
         border: 1px solid $tlp-ui-border-light;
     }
 }

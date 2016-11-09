@@ -42,7 +42,6 @@
         > .tlp-pane-container {
             display: flex;
             flex-direction: column;
-            width: 100%;
         }
     }
 }
@@ -122,10 +121,6 @@
     flex: 1 1 auto;
     max-width: 500px;
     margin: 0;
-
-    > .tlp-pane-container {
-        width: 100%;
-    }
 }
 
 .siteadmin-homepage-system-events-queue {
