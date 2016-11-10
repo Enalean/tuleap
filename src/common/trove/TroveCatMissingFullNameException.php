@@ -1,6 +1,5 @@
 <?php
 /**
- * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,22 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Trove\TroveCatListBuilder;
-use Tuleap\Trove\TroveCatListController;
-use Tuleap\Trove\TroveCatRouter;
-use Tuleap\Admin\AdminPageRenderer;
+namespace Tuleap\Trove;
 
-require_once('pre.php');
+use Exception;
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/trovecat.js');
-
-session_require(array('group' => '1', 'admin_flags' => 'A'));
-
-$trove_dao = new TroveCatDao();
-
-$trove_cat_router = new TroveCatRouter(
-    new TroveCatListBuilder($trove_dao),
-    new AdminPageRenderer(),
-    new TroveCatListController($trove_dao, new TroveCatFactory($trove_dao))
-);
-$trove_cat_router->route(HTTPRequest::instance());
+class TroveCatMissingFullNameException extends Exception
+{
+}

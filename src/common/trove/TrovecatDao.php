@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
@@ -17,10 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+class TroveCatDao extends DataAccessObject
+{
 
-class TroveCatDao extends DataAccessObject {
-
-    public function getMandatoryParentCategoriesUnderRoot() {
+    public function getMandatoryParentCategoriesUnderRoot()
+    {
         $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);
 
         $sql = "SELECT DISTINCT(parent.trove_cat_id), parent.shortname, parent.fullname
@@ -33,18 +35,21 @@ class TroveCatDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getCategoryChildren($trove_cat_id) {
+    public function getCategoryChildren($trove_cat_id)
+    {
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
 
-        $sql = "SELECT trove_cat_id, shortname, fullname, description, parent
-                FROM trove_cat
-                WHERE parent = $trove_cat_id
-                ORDER BY fullname";
+        $sql = "SELECT  children.*, parent.mandatory AS parent_mandatory
+                FROM trove_cat children
+                LEFT JOIN trove_cat parent ON children.parent = parent.trove_cat_id
+                WHERE children.parent = $trove_cat_id
+                ORDER BY children.root_parent, children.fullname";
 
         return $this->retrieve($sql);
     }
 
-    public function getCategoryChildrenToDisplayDuringProjectCreation($trove_cat_id) {
+    public function getCategoryChildrenToDisplayDuringProjectCreation($trove_cat_id)
+    {
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
 
         $sql = "SELECT trove_cat_id, shortname, fullname
@@ -56,7 +61,8 @@ class TroveCatDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getMandatoryCategorySelectForAllProject($parent_category_id) {
+    public function getMandatoryCategorySelectForAllProject($parent_category_id)
+    {
         $parent_category_id = $this->da->escapeInt($parent_category_id);
 
         $sql = "SELECT groups.group_id, trove_cat.fullname AS result
@@ -69,5 +75,32 @@ class TroveCatDao extends DataAccessObject {
                 GROUP BY groups.group_id";
 
         return $this->retrieve($sql);
+    }
+
+    public function updateTroveCat($shortname, $fullname, $description, $parent, $newroot, $mandatory, $display, $trove_cat_id)
+    {
+        $shortname    = $this->da->quoteSmart($shortname);
+        $fullname     = $this->da->quoteSmart($fullname);
+        $description  = $this->da->quoteSmart($description);
+        $parent       = $this->da->escapeInt($parent);
+        $newroot      = $this->da->escapeInt($newroot);
+        $mandatory    = $this->da->escapeInt($mandatory);
+        $display      = $this->da->escapeInt($display);
+        $trove_cat_id = $this->da->escapeInt($trove_cat_id);
+
+        $version = date("Ymd", time()) . '01';
+
+        $sql = "UPDATE trove_cat SET
+              shortname = $shortname,
+              fullname = $fullname,
+              description = $description,
+              parent = $parent,
+              version = $version,
+              root_parent = $newroot,
+              mandatory = $mandatory,
+              display_during_project_creation = $display
+           WHERE trove_cat_id= $trove_cat_id";
+
+        return $this->update($sql);
     }
 }

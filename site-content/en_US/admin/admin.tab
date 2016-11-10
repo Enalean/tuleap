@@ -536,9 +536,21 @@ admin_trove_cat_delete	error_nocat	That trove category does not exist
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
-admin_trove_cat_edit	title	Trove - Edit Category
-admin_trove_cat_edit	header	Edit a Trove Category
+admin_trove_cat_edit	header	Edit project category
 admin_trove_cat_edit	root	Root
+admin_trove_cat_edit	edit	Update category
+admin_trove_cat_edit	label_fullname	Full name
+admin_trove_cat_edit	label_shortname	Short name
+admin_trove_cat_edit	label_mandatory	Mandatory
+admin_trove_cat_edit	mandatory_info	Can be selected if the parent is "Root"
+admin_trove_cat_edit	label_display	Display at project creation
+admin_trove_cat_edit	display_info	Can be selected if the parent is a mandatory top level parent
+admin_trove_cat_edit	label_description	Description
+admin_trove_cat_edit	description_placeholder	Type category description
+admin_trove_cat_edit	parent_category_label	Parent category
+admin_trove_cat_edit	missing_fullname	Fullname is required
+admin_trove_cat_edit	missing_shortname	Shortname is required
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
@@ -550,6 +562,7 @@ admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
 admin_trove_cat_list	add	Add a trove category
 admin_trove_cat_list	deletion_forbidden_label	Cannot delete a hierarchy, please remove all children before.
+admin_trove_cat_list	cancel	Cancel
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #

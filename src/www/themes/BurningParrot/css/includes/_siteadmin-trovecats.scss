@@ -1,3 +1,20 @@
-#trove-cats-edit-button {
-    margin: 0 5px 0 0;
+.trove-cats-general-properties {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.trove-cats-general-property {
+    width: 50%;
+
+    &:last-child {
+        margin: 0 $tlp-spacing;
+    }
+}
+
+.trove-cats-modal-edit {
+    text-align: left;
+}
+
+.trove-cats-checkbox-modal-edit {
+    line-height: 14px;
 }

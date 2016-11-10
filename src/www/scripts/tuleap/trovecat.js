@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,48 +17,84 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-    $(document).ready(function(){
-        var trove_cat_parent_selectbox;
+document.addEventListener("DOMContentLoaded", function() {
+    var matching_buttons = document.querySelectorAll('.trovecats-edit-button');
 
-        if ($('form[name=form_trove_cat_edit]').length === 0) {
-            return;
-        }
+    [].forEach.call(matching_buttons, function (button) {
+        var modal_element = document.getElementById(button.dataset.modalId);
 
-        trove_cat_parent_selectbox = $('select[name=form_parent]');
+        if (modal_element) {
+            var modal = tlp.modal(modal_element);
 
-        if (trove_cat_parent_selectbox.length !== 0) {
-            updateCheckboxDisabledProperty(trove_cat_parent_selectbox);
-
-            trove_cat_parent_selectbox.change(function() {
-                updateCheckboxDisabledProperty(trove_cat_parent_selectbox);
+            button.addEventListener('click', function () {
+                modal.toggle();
             });
         }
     });
 
-    function updateCheckboxDisabledProperty(trove_cat_parent_selectbox) {
-        var trove_cat_parent_selected,
-            mandatory_checkbox,
-            display_during_creation_checkbox,
-            top_level_ids;
+    selectParentCategoryOption();
+});
 
-        trove_cat_parent_selected               = trove_cat_parent_selectbox.val();
-        mandatory_checkbox                      = $('input[name=form_mandatory]');
-        display_during_creation_checkbox        = $('input[name=form_display]');
-        top_level_ids                           = JSON.parse($('form[name=form_trove_cat_edit]').attr('data-top-level-ids'));
+function selectParentCategoryOption() {
+    var select_categories = document.getElementsByClassName('trove-cats-modal-select-parent-category');
 
-        if (trove_cat_parent_selected === '0') {
-            mandatory_checkbox.prop('disabled', false);
-        } else {
-            mandatory_checkbox.prop('disabled', true);
-            mandatory_checkbox.attr('checked', false);
+    [].forEach.call(select_categories, function (select_element) {
+
+        if (select_element.dataset) {
+            var parent_id           = select_element.dataset.parentTroveId;
+            var id                  = select_element.dataset.id;
+
+            for (var i = 0; i < select_element.length; i++) {
+                var option = select_element[i];
+                if (option.value === parent_id) {
+                    option.setAttribute('selected', true);
+                    allowMandatoryPropertyOnlyForRootCategories(option.value, id);
+
+                    var selected               = select_element.options[select_element.selectedIndex];
+                    var is_option_top_level_id = selected.getAttribute('data-is-top-level-id');
+                    var is_parent_mandatory    = selected.getAttribute('data-is-parent-mandatory');
+                    allowDisableOptionForChildUnderFirstParent(is_option_top_level_id, id, is_parent_mandatory);
+                }
+            }
         }
 
-        if (top_level_ids.find(function(id) { return id==trove_cat_parent_selected; })) {
-            display_during_creation_checkbox.prop('disabled', false);
-        } else {
-            display_during_creation_checkbox.prop('disabled', true);
-            display_during_creation_checkbox.attr('checked', false);
-        }
+        select_element.addEventListener('change', function () {
+            if (select_element.dataset) {
+                allowMandatoryPropertyOnlyForRootCategories(select_element.value, id);
+
+                var selected               = select_element.options[select_element.selectedIndex];
+                var is_option_top_level_id = selected.getAttribute('data-is-top-level-id');
+                var is_parent_mandatory    = selected.getAttribute('data-is-parent-mandatory');
+                allowDisableOptionForChildUnderFirstParent(is_option_top_level_id, id, is_parent_mandatory);
+            }
+        });
+    });
+}
+
+function allowMandatoryPropertyOnlyForRootCategories(select_id, id) {
+    var mandatory_element = document.getElementById("is-mandatory-" + id),
+        mandatory_checkbox = document.getElementById("trove-cats-modal-edit-mandatory-checkbox-" + id);
+
+    if (select_id !== '0') {
+        mandatory_element.setAttribute('disabled', true);
+        mandatory_checkbox.classList += ' tlp-form-element-disabled';
+        mandatory_element.checked     = false;
+    } else {
+        mandatory_element.removeAttribute('disabled');
+        mandatory_checkbox.classList = ' tlp-form-element';
     }
-})(window.jQuery);
+}
+
+function allowDisableOptionForChildUnderFirstParent(select_is_top_level, id, is_parent_mandatory) {
+    var disable_element  = document.getElementById("is-disable-" + id),
+        disable_checkbox = document.getElementById("trove-cats-modal-edit-disable-checkbox-" + id);
+
+    if (Boolean(select_is_top_level) === false || Boolean(is_parent_mandatory) === false) {
+        disable_element.setAttribute('disabled', true);
+        disable_checkbox.classList += ' tlp-form-element-disabled';
+        disable_element.checked     = false;
+    } else {
+        disable_element.removeAttribute('disabled');
+        disable_checkbox.classList = ' tlp-form-element';
+    }
+}

@@ -527,9 +527,21 @@ admin_trove_cat_delete	error_nocat	Cette catégorie n'existe pas
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
-admin_trove_cat_edit	title	Arbre des projets - Modification d'une catégorie
 admin_trove_cat_edit	header	Modifier une catégorie
 admin_trove_cat_edit	root	Racine
+admin_trove_cat_edit	edit	Mettre à jour la catégorie
+admin_trove_cat_edit	label_fullname	Nom complet
+admin_trove_cat_edit	label_shortname	Nom court
+admin_trove_cat_edit	label_mandatory	Requis
+admin_trove_cat_edit	mandatory_info	Sélectionnable uniquement si le parent est "Root"
+admin_trove_cat_edit	label_display	Afficher lors de la création d'un projet
+admin_trove_cat_edit	display_info	Sélectionnable si le parent est un parent requis de premier niveau
+admin_trove_cat_edit	label_description	Description
+admin_trove_cat_edit	description_placeholder	Description de la catégorie de projet
+admin_trove_cat_edit	parent_category_label	Catégorie du parent
+admin_trove_cat_edit	missing_fullname	Le nom complet est obligatoire
+admin_trove_cat_edit	missing_shortname	Le nom court est obligatoire
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
@@ -541,6 +553,7 @@ admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Détruire
 admin_trove_cat_list	add	Ajouter une catégorie
 admin_trove_cat_list	deletion_forbidden_label	Impossible de détruire une hiérarchie, merci de supprimer d'abord ses enfants.
+admin_trove_cat_list	cancel	Annuler
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #

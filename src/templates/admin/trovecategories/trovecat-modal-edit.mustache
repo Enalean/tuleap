@@ -1,0 +1,93 @@
+<div class="tlp-modal trove-cats-modal-edit" id="trove-cat-edit-{{ trove_cat_id }}" role="dialog">
+
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i> {{ edit_trove_cat }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+    </div>
+
+    <form action="/admin/trove/trove_cat_list.php?action=update" method="POST" name="form-trove-cat-edit">
+        <input type="hidden" name="id" value="{{ trove_cat_id }}">
+        <div class="tlp-modal-body">
+            <div class="trove-cats-general-properties">
+                <div class="trove-cats-general-property">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="fullname-{{ trove_cat_id }}">{{ label_fullname }} <i
+                                class="fa fa-asterisk"></i></label>
+                        <input type="text" class="tlp-input" id="fullname-{{ trove_cat_id }}" name="fullname" required
+                               placeholder="{{ label_fullname }}" value="{{ fullname }}">
+                    </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="parent-{{ trove_cat_id }}">{{ parent_category_label }} <i
+                                class="fa fa-asterisk"></i></label>
+                        <select
+                                class="tlp-select trove-cats-modal-select-parent-category parent"
+                                id="parent-{{ trove_cat_id }}"
+                                name="parent"
+                                data-parent-trove-id="{{ parent }}"
+                                data-id="{{ trove_cat_id }}"
+                                data-is-parent-top-level-id="{{ is_top_level_id }}"
+                                data-is-parent-mandatory="{{ is_parent_mandatory }}"
+                        >
+                            <option value="0">{{ root_label }}</option>
+                            {{# trovecats }}
+                                <option value="{{ trove_cat_id }}" data-is-top-level-id="{{ is_top_level_id }}" data-is-parent-mandatory="{{ is_mandatory }}">
+                                   {{ hierarchy }}
+                            {{/ trovecats }}
+                        </select>
+                    </div>
+                </div>
+                <div class="trove-cats-general-property">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="shortname-{{ trove_cat_id }}">{{ label_shortname }} <i
+                                class="fa fa-asterisk"></i></label>
+                        <input type="text" class="tlp-input" id="shortname-{{ trove_cat_id }}" name="shortname" required
+                               placeholder="{{ label_shortname }}" value="{{ shortname }}">
+                    </div>
+                </div>
+            </div>
+            <hr class="tlp-modal-separator">
+            <div class="tlp-form-element" id="trove-cats-modal-edit-mandatory-checkbox-{{ trove_cat_id }}">
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                            type="checkbox"
+                            name="is-mandatory"
+                            value="1"
+                            id="is-mandatory-{{ trove_cat_id }}"
+                            class="trove-cats-checkbox-modal-edit"
+                            {{# is_mandatory }} checked {{/ is_mandatory }}
+                    > {{ label_mandatory }}
+                </label>
+                <p class="tlp-text-info">{{ mandatory_info }}</p>
+            </div>
+            <div class="tlp-form-element" id="trove-cats-modal-edit-disable-checkbox-{{ trove_cat_id }}">
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                            type="checkbox"
+                            name="display-at-project-creation"
+                            value="1"
+                            id="is-disable-{{ trove_cat_id }}"
+                            class="trove-cats-checkbox-modal-edit"
+                        {{# display_during_project_creation }} checked {{/ display_during_project_creation }}
+                    > {{ label_display }}
+                </label>
+                <p class="tlp-text-info">{{ display_info }}</p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="description-{{ trove_cat_id }}">{{ label_description }}</label>
+                <textarea class="tlp-textarea" id="description-{{ trove_cat_id }}" name="description"
+                          placeholder="{{ description_placeholder }}">{{ description }}</textarea>
+            </div>
+        </div>
+
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{ cancel }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-save tlp-button-icon"></i> {{ edit }}
+            </button>
+        </div>
+    </form>
+</div>
