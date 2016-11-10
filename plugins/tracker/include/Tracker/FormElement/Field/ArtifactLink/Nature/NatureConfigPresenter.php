@@ -62,7 +62,7 @@ class NatureConfigPresenter {
         $this->forward_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
         $this->reverse_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
         $this->btn_submit          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'update_button');
-        $this->btn_close           = $GLOBALS['Language']->getText('global', 'btn_close');
+        $this->btn_close           = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cancel_modal');
 
         $this->shortname_help     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_help');
         $this->forward_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_help');
