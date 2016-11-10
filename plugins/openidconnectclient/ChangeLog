@@ -1,3 +1,6 @@
+Version 0.35 - Tuleap 9.2
+    * request #9649: Add provider button in OpenId Connect when there is no provider should be large
+
 Version 0.34 - Tuleap 9.1
     * story #9585: fix openid providers pane & userlog media query
 
