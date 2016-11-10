@@ -1,3 +1,6 @@
+Version 5.1034 - Tuleap 9.2
+    * request #9650: Correct label for modal in artifact links types administration
+
 Version 5.1033 - Tuleap 9.1
     * story #9586 Get rid of Bootstrap in site admin / configuration (Trackers pending removal)
 
