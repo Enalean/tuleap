@@ -40,14 +40,6 @@
     text-align: left;
     white-space: nowrap;
 
-    > .tlp-button-outline.tlp-button-small {
-        margin-right: 5px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
-
     .tlp-modal-body {
         white-space: normal;
     }
@@ -56,7 +48,7 @@
     @media screen and (max-width: 1200px) {
         white-space: normal;
 
-        > .tlp-button-outline.tlp-button-small {
+        > .tlp-table-cell-actions-button {
             width: 100%;
             margin: 0 0 5px;
         }

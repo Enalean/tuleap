@@ -1930,7 +1930,7 @@ class GitPlugin extends Plugin {
                 $tab_content .= '<td>'.$archived_repository->getDeletionDate().'</td>';
                 $tab_content .= '<td class="tlp-table-cell-actions">
                     <a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"
-                        class="tlp-button-small tlp-button-outline tlp-button-primary"
+                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-outline tlp-button-primary"
                         onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')"
                     >
                         <i class="fa fa-repeat tlp-button-icon"></i> '.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_restore').'

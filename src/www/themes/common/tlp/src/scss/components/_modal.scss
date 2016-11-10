@@ -36,6 +36,8 @@ $tlp-modal-transition: 150ms ease-out;
         transform $tlp-modal-transition,
         box-shadow $tlp-modal-transition;
     border: 0;
+    text-align: left;
+    white-space: normal;
     box-shadow: 0;
     opacity: 0;
     z-index: 100050;

@@ -25,7 +25,7 @@ $tlp-tooltip-margin: 5px;
 .tlp-tooltip {
     position: relative;
 
-    &[class^="tlp-button"] {
+    &[class*="tlp-button"] {
         overflow: visible;
     }
 

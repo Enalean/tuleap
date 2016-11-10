@@ -33,13 +33,12 @@
                                 <td>{{ deletion_date }}</td>
                                 <td class="tlp-table-cell-actions">
                                     <a
-                                            id="pending-tv3-tracker-restore-button"
-                                            class="tlp-button-info tlp-button-small tlp-button-outline"
+                                            class="tlp-table-cell-actions-button tlp-button-info tlp-button-small tlp-button-outline"
                                             href="/tracker/admin/restore.php?func=restore&group_id={{ group_id }}&atid={{ group_artifact_id }}">
                                         <i class="fa fa-repeat tlp-button-icon"> </i> {{ restore }}
                                     </a>
                                     <a
-                                            class="tlp-button-danger tlp-button-small tlp-button-outline"
+                                            class="tlp-table-cell-actions-button tlp-button-danger tlp-button-small tlp-button-outline"
                                             href="/tracker/admin/restore.php?func=delete&group_id={{ group_id }}&atid={{ group_artifact_id }}">
                                         <i class="fa fa-trash-o tlp-button-icon"> </i> {{ delete }}
                                     </a></td>
