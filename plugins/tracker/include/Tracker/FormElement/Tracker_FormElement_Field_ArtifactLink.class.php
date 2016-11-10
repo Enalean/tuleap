@@ -68,6 +68,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * Parameters:
      *    'fields_data' => input/output array
      *    'field'       => input Tracker_FormElement_Field
+     *    'tracker'     => input Tracker_Artifact
      */
     const AFTER_AUGMENT_DATA_FROM_REQUEST = 'after_augment_data_from_request';
 
@@ -1799,7 +1800,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             self::AFTER_AUGMENT_DATA_FROM_REQUEST,
             array(
                 'fields_data' => &$fields_data,
-                'field'       => $this
+                'field'       => $this,
+                'tracker'     => $this->getTracker()
             )
         );
     }
