@@ -468,7 +468,7 @@ FlamingParrot, default theme starting Tuleap 7
 Summary: BurningParrot, default theme starting Tuleap 10
 Group: Development/Tools
 Version: @@THEME_BURNINGPARROT_VERSION@@
-Release: @@RELEASE@@%{?dist}
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description theme-burningparrot
 BurningParrot, default theme starting Tuleap 10
