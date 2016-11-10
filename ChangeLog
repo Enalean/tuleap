@@ -30,6 +30,7 @@ Version 9.1 (Not Released Yet)
 	* request #9636: SVN viewer can not be accessed if EPEL viewvc is not installed
 	* request #9640: Missing Python dependencies
 	* request #9638: prevent browser to autofill login field in user details page in siteadmin
+	* request #9648: BurningParrot package is not updated for each version of Tuleap
 
 	== Plugins ==
 	* svn: 0.104
