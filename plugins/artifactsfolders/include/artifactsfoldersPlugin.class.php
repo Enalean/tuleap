@@ -270,12 +270,24 @@ class ArtifactsFoldersPlugin extends Plugin
     /** @see Tracker_FormELement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST */
     public function after_augment_data_from_request(array $params)
     {
+        $request = HTTPRequest::instance();
+        if (! $this->checkRequestConcernsArtifactFoldersWithSetParameters($request, $params['tracker']->getId())) {
+            return;
+        }
+
         $augmentor = new DataFromRequestAugmentor(
-            HTTPRequest::instance(),
+            $request,
             Tracker_ArtifactFactory::instance(),
             $this->getHierarchyOfFolderBuilder()
         );
+
         $augmentor->augmentDataFromRequest($params['fields_data'][$params['field']->getId()]);
+    }
+
+    private function checkRequestConcernsArtifactFoldersWithSetParameters(HTTPRequest $request, $tracker_id)
+    {
+        return $this->getDao()->isTrackerConfiguredToContainFolders($tracker_id)
+            && $request->exist('new-artifact-folder');
     }
 
     /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
