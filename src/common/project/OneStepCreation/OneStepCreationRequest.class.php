@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2016. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -17,11 +17,6 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-
-require_once 'common/include/TemplateSingleton.class.php';
-require_once 'common/project/ProjectCreationTemplatePresenter.class.php';
-require_once 'common/valid/Rule.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
 
 /**
  * Wraps user request for one step creation form
@@ -304,42 +299,6 @@ class Project_OneStepCreation_OneStepCreationRequest {
     private function setIsPublic(array $data) {
         if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC])) {
             $this->is_public = $data[Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC];
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param string $path
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setFormSubmissionPath(string $path) {
-        $this->form_submission_path = $path;
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setLicenseType($data) {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE])) {
-            $this->license_type = $data[Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE];
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param string $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setCustomLicense($data) {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE])) {
-            $this->custom_license = trim($data[Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE]);
         }
 
         return $this;
