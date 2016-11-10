@@ -88,13 +88,14 @@ class ProjectLinksPlugin extends Plugin {
         require_once('form_utils.php');
         require_once('www/project/admin/project_admin_utils.php');
 
-        $group_id = (int) $_REQUEST['group_id'];
+        $request  = HTTPRequest::instance();
+        $group_id = (int) $request->get('group_id');
 
         // get current information
         $project = ProjectManager::instance()->getProject($group_id);
         $user    = UserManager::instance()->getCurrentUser();
         
-        if (!$project) {
+        if (! $project) {
             exit_error($Language->getText('project_admin_index','invalid_p'),
             $Language->getText('project_admin_index','p_not_found'));
         }
@@ -109,26 +110,27 @@ class ProjectLinksPlugin extends Plugin {
             return;
         }
 
-        if (isset($_REQUEST['func'])) { // updating the database?
-            $this->_adminPageUpdate_Service($_REQUEST);
+        if ($request->exist('func')) { // updating the database?
+            $this->adminPageUpdate_Service($request);
         }
+
         project_admin_header(array(
             'title' => $Language->getText('project_admin_servicebar',
                 'edit_s_bar'),
             'group' => $group_id, 'help' => 'project-links.html'));
-        if (isset($_REQUEST['disp'])) {
-            $disp = $_REQUEST['disp'];
+        if ($request->exist('disp')) {
+            $disp = $request->get('disp');
             switch ($disp) {
                 case 'edit_link_type':
-                    if (isset($_REQUEST['link_type_id'])) {
-                        $link_type_id = (int) $_REQUEST['link_type_id'];
+                    if ($request->exist('link_type_id')) {
+                        $link_type_id = (int) $request->get('link_type_id');
                     } else {
                         $link_type_id = NULL;
                     }
                     $this->_adminPage_UpdateLinkType($group_id, $link_type_id);
                     break;
                 case 'resync_template':
-                    $template_id = (int) $_REQUEST['template_id'];
+                    $template_id = (int) $request->get('template_id');
                     $this->_adminPage_ResyncTemplate($group_id, $template_id);
                     break;
             }
@@ -139,12 +141,12 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _adminPageUpdate_Service($_REQUEST) {
+    private function adminPageUpdate_Service(HTTPRequest $request) {
         global $Language, $feedback;
-        $group_id = (int) $_REQUEST['group_id'];
-        switch ($_REQUEST['func']) {
+        $group_id = (int) $request->get('group_id');
+        switch ($request->get('func')) {
             case 'pl_config_update':
-                if (isset($_REQUEST['EnableProjectLink'])) {
+                if ($request->exist('EnableProjectLink')) {
                     user_set_preference("pl_GroupId_master", $group_id);
                 } else {
                     user_del_preference("pl_GroupId_master");
@@ -154,7 +156,7 @@ class ProjectLinksPlugin extends Plugin {
 
             case 'pl_link_delete':
                 // delete project link
-                $link_id = (int) $_REQUEST['link_id'];
+                $link_id = (int) $request->get('link_id');
                 // NB: use group_id to defend against malicious use
                 if (db_query("DELETE FROM plugin_projectlinks_relationship
                             WHERE (master_group_id=".db_ei($group_id).")
@@ -170,7 +172,7 @@ class ProjectLinksPlugin extends Plugin {
 
             case 'pl_type_delete':
                 // delete project link type and all links using the type
-                $link_type_id = (int) $_REQUEST['link_type_id'];
+                $link_type_id = (int) $request->get('link_type_id');
                 // delete project relationship instances
                 // NB: use group_id to defend against malicious use
                 if (! db_query("DELETE FROM plugin_projectlinks_relationship
@@ -191,8 +193,7 @@ class ProjectLinksPlugin extends Plugin {
                         $feedback .= ' '.$Language->getText('plugin_plinks',
                         'project_link_deleted_OK');
                     }
-                    if (user_get_preference("pl_GroupId_master")
-                    == $group_id) {
+                    if (user_get_preference("pl_GroupId_master") == $group_id) {
                         // switch off linking to this project - it would be better
                         // to check if no types left, but this works well
                         user_del_preference("pl_GroupId_master");
@@ -201,17 +202,17 @@ class ProjectLinksPlugin extends Plugin {
                 break;
 
             case 'pl_type_update':
-                $q_name = "'".db_es($_REQUEST['name'])."'";
+                $q_name = "'".db_es($request->get('name'))."'";
                 $q_reverse_name = "'".db_es(
-                nz($_REQUEST['reverse_name'], $_REQUEST['name']))."'";
-                $q_description = "'".db_es($_REQUEST['description'])."'";
+                nz($request->get('reverse_name'), $request->get('name')))."'";
+                $q_description = "'".db_es($request->get('description'))."'";
                 /** **1 commented out for now - until we can decide how to deal with project links functionality
                  $q_uri_plus = db_es($_REQUEST['uri_plus']);
                  **/
                 $q_uri_plus = "'".db_es('/projects/$projname/')."'";
                 // $link_type_id is not set when submitting a new link
-                if (isset($_REQUEST['link_type_id'])) {
-                    $link_type_id = (int) $_REQUEST['link_type_id'];
+                if ($request->exist('link_type_id')) {
+                    $link_type_id = (int) $request->get('link_type_id');
                 } else {
                     $link_type_id = NULL;
                 }
@@ -248,22 +249,22 @@ class ProjectLinksPlugin extends Plugin {
                 break;
 
             case 'pl_link_update':
-                $link_type_id = (int) $_REQUEST['link_type_id'];
-                if (isset($_REQUEST['target_group_id'])) {
-                    $target_group_id = (int) $_REQUEST['target_group_id'];
+                $link_type_id = (int) $request->get('link_type_id');
+                if ($request->exist('target_group_id')) {
+                    $target_group_id = (int) $request->get('target_group_id');
                 } else {
                     $prjManager = ProjectManager::instance();
-                    $trgProject = $prjManager->getProjectFromAutocompleter($_REQUEST['target_group']);
+                    $trgProject = $prjManager->getProjectFromAutocompleter($request->get('target_group'));
                     if ($trgProject !== false) {
                         $target_group_id = $trgProject->getId();
                     } else {
                         return;
                     }
                 }
-                $group_id = (int) $_REQUEST['group_id'];
+                $group_id = (int) $request->get('group_id');
                 // NB: $link_id is not set when submitting a new link
-                if (isset($_REQUEST['link_id'])) {
-                    $link_id = (int) $_REQUEST['link_id'];
+                if ($request->exist('link_id')) {
+                    $link_id = (int) $request->get('link_id');
                 } else {
                     $link_id = NULL;
                     // if this is a new link to a template:
@@ -284,7 +285,7 @@ class ProjectLinksPlugin extends Plugin {
                 break;
 
             case 'template_sync_type_add':
-                $template_type_id = (int) $_REQUEST['template_type_id'];
+                $template_type_id = (int) $request->get('template_type_id');
                 $db_res = db_query("SELECT * FROM plugin_projectlinks_link_type
                                 WHERE (link_type_id = ".db_ei($template_type_id).");");
                 if (db_numrows($db_res) == 1) {
@@ -308,7 +309,7 @@ class ProjectLinksPlugin extends Plugin {
                 break;
 
             default:
-                $feedback .= " not implemented: '{$_REQUEST['func']}'";
+                $feedback .= " not implemented: '{$request->get('func')}'";
                 break;
         }
     }
