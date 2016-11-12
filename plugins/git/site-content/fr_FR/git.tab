@@ -383,7 +383,6 @@ plugin_git	admin_gerrit_http_password_label	HTTP password :
 
 plugin_git	access_control_title	Accès à la configuration générale
 plugin_git	allow_regexp_info	Autoriser l'utilisation des expressions régulières dans les branches et les étiquettes lors de la création d'un dépôt Git
-plugin_git	save_settings	Sauvegarder la configuration
 plugin_git	update_error	Une erreur est survenue, impossible d'activer les expressions régulières pour les permissions fines Git.
 plugin_git	warning_conflit_regexp_configuration	L'utilisation des expression régulières a été désactivée au niveau de la plateforme.
 plugin_git	warning_conflit_regexp_configuration_part_two	Toutes les règles contenant une expression régulière seront supprimées et vous ne serez plus capable d'activer l'utilisation des expressions régulières pour ce dépôt.

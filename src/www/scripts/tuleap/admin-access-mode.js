@@ -58,6 +58,10 @@
             $('#siteadmin-access-customize-ugroup-labels').show();
         }
 
+        $('#toggle-project-admin-can-choose-visibility').change(function () {
+            $(this)[0].form.submit();
+        });
+
         function enableSubmitButton() {
             form.find('[type=submit]').prop('disabled', false);
         }

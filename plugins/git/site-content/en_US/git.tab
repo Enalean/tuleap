@@ -389,7 +389,6 @@ plugin_git	admin_gerrit_http_password_label	HTTP password:
 
 plugin_git	access_control_title	Access control settings
 plugin_git	allow_regexp_info	Allow usage of regular expressions in branches and tags during repository permission definition
-plugin_git	save_settings	Save settings
 plugin_git	update_error	An error occurred while activating regular expressions option for Git fine grained permission.
 plugin_git	warning_conflit_regexp_configuration	The regular expressions option has been disabled at plateform level.
 plugin_git	warning_conflit_regexp_configuration_part_two	All rules containing regular expressions will be deleted and you won't be able to activate the option again. If you don't save your modifications, the current state will still work.

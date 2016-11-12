@@ -29,7 +29,6 @@ class GeneralSettingsPresenter extends Git_AdminPresenter
     public $manage_general_settings = true;
     public $access_control_title;
     public $allow_regexp_info;
-    public $save_settings;
     public $is_activated;
     public $csrf_token;
     public $warning_admin_activation;
@@ -43,7 +42,6 @@ class GeneralSettingsPresenter extends Git_AdminPresenter
 
         $this->access_control_title     = $GLOBALS['Language']->getText('plugin_git', 'access_control_title');
         $this->allow_regexp_info        = $GLOBALS['Language']->getText('plugin_git', 'allow_regexp_info');
-        $this->save_settings            = $GLOBALS['Language']->getText('plugin_git', 'save_settings');
         $this->warning_admin_activation = $GLOBALS['Language']->getText('plugin_git', 'warning_admin_activation');
     }
 }
