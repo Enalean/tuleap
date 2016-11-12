@@ -33,6 +33,8 @@ class AvailablePluginsPresenter
     public $description_table_head;
     public $install_label;
     public $filter_label;
+    public $no_local_plugins;
+    public $filter_empty_state;
 
     public function __construct(array $plugins)
     {
@@ -51,6 +53,8 @@ class AvailablePluginsPresenter
         $this->install_modal_submit     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_submit');
         $this->install_modal_cancel     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_cancel');
         $this->filter_label             = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
+        $this->no_local_plugins         = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'no_local_plugins');
+        $this->filter_empty_state       = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_empty_state');
 
         $this->sortPlugins();
     }

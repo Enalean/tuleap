@@ -756,3 +756,5 @@ admin_projectlist	private	Privé
 admin_projectlist	public_unrestricted	Public incluant les utilisateurs restreints
 admin_projectlist	public	Public
 admin_projectlist	pending_projects_text	Pour votre information, <a href="$1">$2 projets attendent d'être validés</a>.
+
+admin	allowed_projects_filter_empty	Il n'y a pas de projets correspondant au filtre.

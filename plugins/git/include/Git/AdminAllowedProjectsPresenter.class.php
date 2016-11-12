@@ -150,4 +150,9 @@ class Git_AdminMAllowedProjectsPresenter {
     public function resource_allowed_project_revoke_no() {
         return $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_revoke_no');
     }
+
+    public function resource_allowed_project_filter_empty()
+    {
+        return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
+    }
 }

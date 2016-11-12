@@ -124,8 +124,24 @@ $tlp-table-row-background-empty: #fcfcfc;
             }
         }
 
+        > .tlp-table-last-row > td,
         > tr:last-child > td {
             border: 0;
+        }
+
+        > .tlp-table-row-hidden {
+            display: none;
+        }
+
+
+        > .tlp-table-empty-filter {
+            > td {
+                border: 0;
+            }
+
+            &:not(.tlp-table-empty-filter-shown) {
+                display: none;
+            }
         }
     }
 

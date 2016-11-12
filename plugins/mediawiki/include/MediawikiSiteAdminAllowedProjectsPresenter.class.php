@@ -85,4 +85,9 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
     {
         return MEDIAWIKI_BASE_URL . '/wiki/';
     }
+
+    public function resource_allowed_project_filter_empty()
+    {
+        return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
+    }
 }

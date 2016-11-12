@@ -89,4 +89,9 @@ class PHPWikiAdminAllowedProjectsPresenter {
     {
         return PHPWIKI_PLUGIN_BASE_URL . '/';
     }
+
+    public function resource_allowed_project_filter_empty()
+    {
+        return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
+    }
 }

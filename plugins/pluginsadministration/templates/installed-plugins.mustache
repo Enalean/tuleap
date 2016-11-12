@@ -18,7 +18,13 @@
                     <div class="tlp-table-actions">
                         <div class="tlp-table-actions-spacer"></div>
                         <div class="tlp-form-element ">
-                            <input type="search" id="filter-plugins" class="tlp-search" size="28" placeholder="{{ filter_label }}">
+                            <input type="search"
+                                id="filter-plugins"
+                                data-target-table-id="plugins-list"
+                                autocomplete="off"
+                                class="tlp-search"
+                                size="28"
+                                placeholder="{{ filter_label }}">
                         </div>
                     </div>
                     <table class="tlp-table" id="plugins-list">
@@ -33,12 +39,17 @@
                         </tr>
                         </thead>
                         <tbody>
+                            <tr class="tlp-table-empty-filter">
+                                <td colspan="6" class="tlp-table-cell-empty">
+                                    {{ filter_empty_state }}
+                                </td>
+                            </tr>
                             {{# plugins }}
                             <tr>
-                                <td class="pluginsadministration-list-name-cell plugins-list-filterable">{{ name }}</td>
+                                <td class="pluginsadministration-list-name-cell tlp-table-cell-filterable">{{ name }}</td>
                                 <td>{{ version }}</td>
                                 <td>
-                                    <span class="pluginsadministration-list-full-description plugins-list-filterable">{{ description }}</span>
+                                    <span class="pluginsadministration-list-full-description tlp-table-cell-filterable">{{ description }}</span>
                                     <span class="pluginsadministration-list-tooltip-description tlp-tooltip tlp-tooltip-top"
                                         data-tlp-tooltip="{{ description }}"
                                     >

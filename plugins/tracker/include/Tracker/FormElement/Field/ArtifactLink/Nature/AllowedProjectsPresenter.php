@@ -43,6 +43,7 @@ class AllowedProjectsPresenter {
     public $resource_allowed_project_revoke_title;
     public $resource_allowed_project_revoke_yes;
     public $resource_allowed_project_revoke_no;
+    public $resource_allowed_project_filter_empty;
 
     public function __construct(CSRFSynchronizerToken $csrf, array $allowed_projects) {
         $this->allowed_projects    = $allowed_projects;
@@ -64,5 +65,7 @@ class AllowedProjectsPresenter {
         $this->resource_allowed_project_revoke_title       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'allowed_project_revoke_title');
         $this->resource_allowed_project_revoke_yes         = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'allowed_project_revoke_yes');
         $this->resource_allowed_project_revoke_no          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'allowed_project_revoke_no');
+
+        $this->resource_allowed_project_filter_empty = $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
     }
 }
