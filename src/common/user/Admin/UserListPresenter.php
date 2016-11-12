@@ -26,7 +26,6 @@ class UserListPresenter
 {
 
     public $title;
-    public $context;
     public $search_fields;
     public $results;
     public $new_user;
@@ -38,14 +37,12 @@ class UserListPresenter
     public function __construct(
         $group_id,
         $title,
-        $context,
         UserListSearchFieldsPresenter $search_fields,
         UserListResultsPresenter $results,
         $pending_users_count
     ) {
         $this->group_id            = $group_id;
         $this->title               = $title;
-        $this->context             = $context;
         $this->search_fields       = $search_fields;
         $this->results             = $results;
         $this->new_user            = $GLOBALS['Language']->getText('admin_main', 'new_user');

@@ -470,7 +470,6 @@ admin_userlist	error_uid	Error - Can't find user with ID $1
 admin_userlist	error_noadd	Error - Can't add user to group
 admin_userlist	user_list	Users
 admin_userlist	all_groups	All Projects
-admin_userlist	group	in $1
 admin_userlist	uid_toadd	User ID to add
 admin_userlist	active	Active
 admin_userlist	validated	Validated

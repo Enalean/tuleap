@@ -462,7 +462,6 @@ admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
 admin_userlist	error_noadd	Erreur - Impossibilité d'ajouter l'utilisateur au groupe
 admin_userlist	user_list	Utilisateurs
 admin_userlist	all_groups	Tous les projets
-admin_userlist	group	in $1
 admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
 admin_userlist	validated	Validé
@@ -692,7 +691,7 @@ admin_project	access_label	Accès au projet
 admin_project	description_label	Description
 admin_project	more_label	Plus d'information
 admin_project	admin_label	Administration du projet
-admin_project	members_label	Membre du projet
+admin_project	members_label	Membres du projet
 admin_project	pending_label	Docs supprimés en attente
 admin_project	manage_access_label	Gérer l'accès
 admin_project	incl_restricted_label	incl. les utilisateurs restreints

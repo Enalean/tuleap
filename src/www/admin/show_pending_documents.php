@@ -100,6 +100,9 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
         <a href="/admin/groupedit.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
             <?= $GLOBALS['Language']->getText('admin_project', 'information_label') ?>
         </a>
+        <a href="/admin/userlist.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
+            <?= $GLOBALS['Language']->getText('admin_project', 'members_label') ?>
+        </a>
         <a href="/admin/projecthistory.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
             <?= $GLOBALS['Language']->getText('admin_project', 'history_label') ?>
         </a>

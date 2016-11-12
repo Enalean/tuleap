@@ -1,0 +1,14 @@
+<div id="siteadmin-userlist-header">
+    <h1 id="siteadmin-userlist-header-title">{{ title }}</h1>
+    <a href="/admin/register_admin.php?page=admin_creation" class="tlp-button-primary">
+        <i class="fa fa-plus tlp-button-icon"></i> {{ new_user }}
+    </a>
+</div>
+
+{{# are_there_pending_users }}
+    <div class="tlp-alert-info">
+        {{{ purified_pending_users_text }}}
+    </div>
+{{/ are_there_pending_users}}
+
+{{> userlist }}

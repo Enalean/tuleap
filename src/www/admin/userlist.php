@@ -193,16 +193,6 @@ if (isset($user_name_search) && $user_name_search) {
     $result = $dao->listAllUsers($group_id, 0, $offset, $limit, $current_sort_header, $sort_order, $status_values);
 }
 
-/*
- * Show list of users
- */
-$title   = $Language->getText('admin_userlist','user_list');
-$context = $Language->getText('admin_userlist','all_groups');
-if ($group_id) {
-    $pm      = ProjectManager::instance();
-    $context = $Language->getText('admin_userlist', 'group', $pm->getProject($group_id)->getUnconvertedPublicName());
-}
-
 $search_fields_presenter = new Tuleap\User\Admin\UserListSearchFieldsPresenter($user_name_search, $status_values);
 
 $nb_active_sessions  = 0;
@@ -226,21 +216,40 @@ $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
     $offset
 );
 
-$pending_users_count = UserManager::instance()->countUsersByStatus(PFUser::STATUS_PENDING);
-
-$user_list_presenter = new Tuleap\User\Admin\UserListPresenter(
-    $group_id,
-    $title,
-    $context,
-    $search_fields_presenter,
-    $results_presenter,
-    $pending_users_count
-);
-
 $admin_page = new AdminPageRenderer();
-$admin_page->renderAPresenter(
-    $Language->getText('admin_userlist','title'),
-    ForgeConfig::get('codendi_dir') .'/src/templates/admin/users/',
-    'userlist',
-    $user_list_presenter
-);
+
+if ($group_id) {
+    $project = ProjectManager::instance()->getProject($group_id);
+
+    $user_list_presenter = new Tuleap\Project\Admin\ProjectMembersPresenter(
+        $project,
+        $search_fields_presenter,
+        $results_presenter
+    );
+
+    $admin_page->renderANoFramedPresenter(
+        $Language->getText('admin_project', 'members_label'),
+        ForgeConfig::get('codendi_dir') .'/src/templates/admin/users/',
+        'project-members',
+        $user_list_presenter
+    );
+} else {
+    $title = $Language->getText('admin_userlist', 'user_list');
+
+    $pending_users_count = UserManager::instance()->countUsersByStatus(PFUser::STATUS_PENDING);
+
+    $user_list_presenter = new Tuleap\User\Admin\UserListPresenter(
+        $group_id,
+        $title,
+        $search_fields_presenter,
+        $results_presenter,
+        $pending_users_count
+    );
+
+    $admin_page->renderAPresenter(
+        $title,
+        ForgeConfig::get('codendi_dir') .'/src/templates/admin/users/',
+        'all-users',
+        $user_list_presenter
+    );
+}
