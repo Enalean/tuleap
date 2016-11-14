@@ -45,14 +45,6 @@
     margin: 0 0 0 ($tlp-spacing / 2);
 }
 
-#siteadmin-projectlist-result-table {
-    margin: 0 0 $tlp-spacing;
-
-    + .tlp-pagination {
-        margin: $tlp-double-spacing 0 0;
-    }
-}
-
 @media screen and (max-width: 1200px) {
     #siteadmin-projectlist {
         display: flex;

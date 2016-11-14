@@ -35,6 +35,11 @@ $tlp-pagination-margin: 2px;
 
 .tlp-pagination-number {
     margin: 0 $tlp-pagination-margin;
-    font-size: 16px;
+    color: #444444;
+    font-size: 14px;
     font-weight: 600;
+}
+
+.tlp-table + .tlp-pagination {
+    margin: $tlp-double-spacing 0 0;
 }
