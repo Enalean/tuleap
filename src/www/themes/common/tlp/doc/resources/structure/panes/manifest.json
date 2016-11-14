@@ -3,6 +3,7 @@
   "shortcode": ".tlp-pane",
   "children": [
     "simple",
-    "splitted"
+    "splitted",
+    "buttons"
   ]
 }
