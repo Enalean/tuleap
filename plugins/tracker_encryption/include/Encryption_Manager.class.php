@@ -22,6 +22,7 @@ require_once '/usr/share/pear/Crypt/RSA.php';
 class Encryption_Manager
 {
     const HASH_FUNCTION = 'sha256';
+    const HLEN = 32;
     private $rsa;
 
     public function __construct(Tracker_Key $tracker_key)

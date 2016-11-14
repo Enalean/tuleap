@@ -21,7 +21,6 @@ require_once '/usr/share/pear/Crypt/RSA.php';
 
 class Tracker_Key
 {
-
     private $key;
     private $id_tracker;
     private $dao_pub_key;
@@ -83,6 +82,19 @@ class Tracker_Key
     public function resetEncryptedFieldValues($tracker_id)
     {
         $this->dao_pub_key->resetEncryptedFieldValues($tracker_id);
+    }
+
+    /**
+     * Defining the maximum characters for the encrypted field refered to the minimum RSA key's permissible size
+     * @param $key
+     *
+     * @return int
+     */
+    public function getFieldSize($key)
+    {
+        $rsa = new \Crypt_RSA();
+        $rsa->loadKey($key);
+        return (($rsa->getSize()/8) - (2 * Encryption_Manager::HLEN) - 2);
     }
 
 }

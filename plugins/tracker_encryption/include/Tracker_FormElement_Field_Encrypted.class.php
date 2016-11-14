@@ -110,6 +110,26 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field_Stri
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
+        $dao_pub_key        = new TrackerPublicKeyDao();
+        $tracker_key        = new Tracker_Key($dao_pub_key, $artifact->tracker_id);
+        $key                = $tracker_key->getKey();
+        $maximum_characters_allowed = $tracker_key->getFieldSize($key);
+        if ($maximum_characters_allowed !== 0 && mb_strlen($value) > $maximum_characters_allowed) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_common_artifact',
+                    'error_string_max_characters',
+                    array($this->getLabel(), $maximum_characters_allowed)
+                )
+            );
+            return false;
+        }
+        return true;
+    }
+
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
     {
         if ($value != "") {
