@@ -44,6 +44,7 @@ class SystemEventManager {
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
+            Event::MASSMAIL,
             Event::SVN_UPDATE_HOOKS,
             Event::SVN_AUTHORIZE_TOKENS,
             Event::SVN_REVOKE_TOKENS,
@@ -263,6 +264,14 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_MEDIUM);
             break;
 
+        case Event::MASSMAIL:
+            $this->createEvent(
+                SystemEvent::TYPE_MASSMAIL,
+                json_encode($params),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            break;
+
         case Event::SVN_UPDATE_HOOKS:
             $this->createEvent(
                 SystemEvent::TYPE_SVN_UPDATE_HOOKS,
@@ -323,9 +332,19 @@ class SystemEventManager {
     private function instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
         $system_event = $this->instanciateSystemEvent($type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
         if ($system_event === null) {
-            $system_event = $this->instanciateSystemEvent('SystemEvent_'.$type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
+            $klass        = $this->getClassForType($type);
+            $system_event = $this->instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
         }
         return $system_event;
+    }
+
+    private function getClassForType($type)
+    {
+        if ($type === SystemEvent::TYPE_MASSMAIL) {
+            return 'Tuleap\SystemEvent\Massmail';
+        }
+
+        return 'SystemEvent_' . $type;
     }
 
     private function instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
@@ -391,14 +410,15 @@ class SystemEventManager {
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
         case SystemEvent::TYPE_ROOT_DAILY:
         case SystemEvent::TYPE_COMPUTE_MD5SUM:
-            $klass = 'SystemEvent_'. $row['type'];
+        case SystemEvent::TYPE_MASSMAIL:
+            $klass = $this->getClassForType($row['type']);
             break;
 
         case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
         case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
         case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
         case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
-            $klass = 'SystemEvent_'. $row['type'];
+            $klass = $this->getClassForType($row['type']);
             $klass_params = array(Backend::instance(Backend::SVN));
             break;
 

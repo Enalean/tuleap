@@ -345,7 +345,8 @@ admin_lastlogins	filter_no_matching_result	There isn't any matching recent login
 #
 admin_massmail_execute	post_recvd	Received Post. Making Query
 admin_massmail_execute	mailing	Beginning mailings to $1 distinct email addresses
-admin_massmail_execute	sending	sending to
+admin_massmail_execute	sending	Preview sent
+admin_massmail_execute	no_sending	Preview could not be sent
 admin_massmail_execute	done	Done!
 admin_massmail_execute	no_user_mail	The added user $1 have no mail address.
 admin_massmail_execute	no_user	No user corresponding to entry $1.
@@ -353,19 +354,28 @@ admin_massmail_execute	no_user	No user corresponding to entry $1.
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php
 #
-admin_massmail	title	Administrative Mass Mail Engine
-admin_massmail	header	Mail Engine for $1 Subscribers
-admin_massmail	warning	Be <b>very</b> careful with this form, because submitting it <b>will</b> send email to lots of users.
-admin_massmail	to_preview	Send preview to
-admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
-admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"
-admin_massmail	to_devel	Send only to project developers
-admin_massmail	to_proj_admin	Send only to project administrators
-admin_massmail	to_site_admin	Send only to site administrators
-admin_massmail	to_all	Send to all users, regardless of their preferences
+admin_massmail	title	Mass emailing
+admin_massmail	header	Email
+admin_massmail	warning	$1 users will receive this email.
+admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings" ($1 users)
+admin_massmail	to_update	Users that agreed to receive "Site Updates" ($1 users)
+admin_massmail	to_devel	Project developers ($1 users)
+admin_massmail	to_proj_admin	Project administrators ($1 users)
+admin_massmail	to_site_admin	Site administrators ($1 users)
+admin_massmail	to_all	All users, regardless of their preferences ($1 users)
 admin_massmail	subject	Subject
-admin_massmail	text	Text of Message
-admin_massmail	footer	Your message here...\n\n---------------------\nThis email was sent from $1'. To change your email receipt preferences, please visit the site and edit your account via the "Account Maintenance" link.\n\nDirect any question to $2 or reply to this e-mail.
+admin_massmail	send_email_label	Send email
+admin_massmail	destination_label	Send to
+admin_massmail	subject_label	Subject
+admin_massmail	subject_placeholder	Catchy email subject line
+admin_massmail	content_label	Content
+admin_massmail	content_placeholder	Message…
+admin_massmail	preview_label	Preview
+admin_massmail	send_preview_label	Send preview
+admin_massmail	massmail_queued	The sending of the mail has been <a href="$1">put in the queue</a>
+admin_massmail	confirmation_title	Massmail sending
+admin_massmail	confirmation_body	Please confirm your action.
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php

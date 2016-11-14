@@ -63,6 +63,7 @@ abstract class SystemEvent {
     const TYPE_SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";    
     const TYPE_ROOT_DAILY            = "ROOT_DAILY";
     const TYPE_COMPUTE_MD5SUM        = "COMPUTE_MD5SUM";
+    const TYPE_MASSMAIL              = "MASSMAIL";
     const TYPE_SVN_UPDATE_HOOKS      = "SVN_UPDATE_HOOKS";
     const TYPE_SVN_AUTHORIZE_TOKENS  = "SVN_AUTHORIZE_TOKENS";
     const TYPE_SVN_REVOKE_TOKENS     = "SVN_REVOKE_TOKENS";

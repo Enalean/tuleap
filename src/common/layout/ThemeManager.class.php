@@ -94,8 +94,6 @@ class ThemeManager
                 '`(
                     ^/admin/register_admin.php
                     |
-                    ^/admin/massmail.php
-                    |
                     ^/stats
                 )`x',
                 $_SERVER['REQUEST_URI']
