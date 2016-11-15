@@ -19,6 +19,8 @@
   },
   "scripts": {
     "build": "node_modules/.bin/gulp build",
+    "tlp": "node_modules/.bin/gulp tlp",
+    "core": "node_modules/.bin/gulp core",
     "js": "node_modules/.bin/gulp js",
     "sass": "node_modules/.bin/gulp sass",
     "watch": "node_modules/.bin/gulp watch",

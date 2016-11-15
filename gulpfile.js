@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp               = require('gulp'),
+    exec               = require('child_process').exec,
     path               = require('path'),
     del                = require('del'),
     rename             = require('gulp-rename'),
@@ -161,7 +162,8 @@ var fat_combined_files = [
     theme_burningparrot_vendor_css = [
             'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.css'
     ],
-    asset_dir = 'www/assets';
+    burning_parrot_path = 'src/www/themes/common/tlp/',
+    asset_dir           = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
 
@@ -256,10 +258,26 @@ gulp.task('watch', function() {
     tuleap.watch_plugins();
 });
 
+gulp.task('tlp-install', function (cb) {
+    exec('npm install', {
+        cwd: burning_parrot_path
+    }, cb);
+});
+
+gulp.task('tlp-build', ['tlp-install'], function (cb) {
+    exec('npm run build', {
+        cwd: burning_parrot_path
+    }, cb);
+});
+
+gulp.task('tlp', ['tlp-build']);
+
 gulp.task('clean-core', ['clean-js-core', 'clean-sass-core']);
 
 gulp.task('clean', ['clean-core', 'clean-plugins']);
 
-gulp.task('build', ['js', 'sass']);
+gulp.task('core', ['js', 'sass']);
+
+gulp.task('build', ['tlp', 'core']);
 
 gulp.task('default', ['build']);
