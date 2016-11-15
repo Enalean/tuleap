@@ -499,19 +499,11 @@ admin_userlist	pending_users_text	Pour votre information, <a href="$1">$2 utilis
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
 #
-admin_trove_cat_add	title	Arbre des projets - Ajouter une catégorie
-admin_trove_cat_add	header	Ajouter une catégorie à l'arbre des projets
+admin_trove_cat_add	add_trove_cat	Ajouter une catégorie de projet
+admin_trove_cat_add	add	Ajouter une catégorie
 admin_trove_cat_add	short_name	Nom court de la catégorie
-admin_trove_cat_add	short_name_note	(pas d'espaces)
 admin_trove_cat_add	full_name	Nom complet de la catégorie
-admin_trove_cat_add	full_name_note	(80 caractères maximum)
 admin_trove_cat_add	description	Description de la catégorie
-admin_trove_cat_add	description_note	(255 caractères maximum)
-admin_trove_cat_add	parent	Catégorie parent
-admin_trove_cat_add	mandatory	Obligatoire
-admin_trove_cat_add	mandatory_note	Selectionnable quand la catégorie parente est "Root"
-admin_trove_cat_add	display_at_project_creation	Afficher lors de la création d'un projet
-admin_trove_cat_add	display_note	Selectionnable quand la catégorie parente est une catégorie de niveau un
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php

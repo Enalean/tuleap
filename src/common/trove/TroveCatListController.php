@@ -41,33 +41,18 @@ class TroveCatListController
         $this->trove_cat_factory = $trove_cat_factory;
     }
 
-    public function update(HTTPRequest $request)
+    public function add(HTTPRequest $request)
     {
-        if (! $request->get('fullname')) {
-            throw new TroveCatMissingFullNameException();
-        }
+        $trove_category = $this->formatTroveCategoriesFromRequest($request);
 
-        if (! $request->get('shortname')) {
-            throw new TroveCatMissingShortNameException();
-        }
-
-        $shortname    = $request->get('shortname');
-        $fullname     = $request->get('fullname');
-        $description  = $request->get('description');
-        $parent       = $request->get('parent');
-        $display      = $this->isANewRootChild($request->get('parent'), $request->get('display-at-project-creation'));
-        $mandatory    = $this->isMandatory($display, $request->get('is-mandatory'));
-        $trove_cat_id = $request->get('id');
-
-        $this->trove_cat_dao->updateTroveCat(
-            $shortname,
-            $fullname,
-            $description,
-            $parent,
-            $display,
-            $mandatory,
-            $display,
-            $trove_cat_id
+        $this->trove_cat_dao->add(
+            $trove_category['shortname'],
+            $trove_category['fullname'],
+            $trove_category['description'],
+            $trove_category['parent'],
+            $trove_category['display'],
+            $trove_category['mandatory'],
+            $trove_category['trove_cat_id']
         );
     }
 
@@ -89,5 +74,49 @@ class TroveCatListController
         }
 
         return $display;
+    }
+
+    public function update(HTTPRequest $request)
+    {
+        $trove_category = $this->formatTroveCategoriesFromRequest($request);
+
+        $this->trove_cat_dao->updateTroveCat(
+            $trove_category['shortname'],
+            $trove_category['fullname'],
+            $trove_category['description'],
+            $trove_category['parent'],
+            $trove_category['display'],
+            $trove_category['mandatory'],
+            $trove_category['display'],
+            $trove_category['trove_cat_id']
+        );
+    }
+
+    private function formatTroveCategoriesFromRequest(HTTPRequest $request)
+    {
+        if (! $request->get('fullname')) {
+            throw new TroveCatMissingFullNameException();
+        }
+
+        if (! $request->get('shortname')) {
+            throw new TroveCatMissingShortNameException();
+        }
+
+        $display = $this->isANewRootChild(
+            $request->get('parent'),
+            $request->get('display-at-project-creation')
+        );
+
+        $trove_categories = array(
+            'shortname'    => $request->get('shortname'),
+            'fullname'     => $request->get('fullname'),
+            'description'  => $request->get('description'),
+            'parent'       => $request->get('parent'),
+            'display'      => $display,
+            'mandatory'    => $this->isMandatory($display, $request->get('is-mandatory')),
+            'trove_cat_id' => $request->get('trove_cat_id')
+        );
+
+        return $trove_categories;
     }
 }

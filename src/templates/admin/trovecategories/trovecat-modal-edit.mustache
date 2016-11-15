@@ -48,7 +48,7 @@
                 </div>
             </div>
             <hr class="tlp-modal-separator">
-            <div class="tlp-form-element" id="trove-cats-modal-edit-mandatory-checkbox-{{ trove_cat_id }}">
+            <div class="tlp-form-element" id="trove-cats-modal-mandatory-checkbox-{{ trove_cat_id }}">
                 <label class="tlp-label tlp-checkbox">
                     <input
                             type="checkbox"
@@ -61,13 +61,13 @@
                 </label>
                 <p class="tlp-text-info">{{ mandatory_info }}</p>
             </div>
-            <div class="tlp-form-element" id="trove-cats-modal-edit-disable-checkbox-{{ trove_cat_id }}">
+            <div class="tlp-form-element" id="trove-cats-modal-disable-checkbox-{{ trove_cat_id }}">
                 <label class="tlp-label tlp-checkbox">
                     <input
                             type="checkbox"
                             name="display-at-project-creation"
                             value="1"
-                            id="is-disable-{{ trove_cat_id }}"
+                            id="trove-cats-modal-is-disable-{{ trove_cat_id }}"
                             class="trove-cats-checkbox-modal-edit"
                         {{# display_during_project_creation }} checked {{/ display_during_project_creation }}
                     > {{ label_display }}

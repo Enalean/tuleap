@@ -48,20 +48,26 @@ class TroveCatListPresenter
         $this->header_description       = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_description');
         $this->edit_button              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'edit');
         $this->delete_button            = $GLOBALS['Language']->getText('admin_trove_cat_list', 'delete');
-        $this->deletion_forbidden_label = $GLOBALS['Language']->getText('admin_trove_cat_list', 'deletion_forbidden_label');
+        $this->deletion_forbidden_label = $GLOBALS['Language']->getText(
+            'admin_trove_cat_list',
+            'deletion_forbidden_label'
+        );
 
-        $this->edit_trove_cat          = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'header');
-        $this->edit                    = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'edit');
-        $this->cancel                  = $GLOBALS['Language']->getText('admin_trove_cat_list', 'cancel');
-        $this->label_fullname          = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_fullname');
-        $this->label_shortname         = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_shortname');
-        $this->label_mandatory         = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_mandatory');
-        $this->mandatory_info          = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'mandatory_info');
-        $this->label_display           = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_display');
-        $this->display_info            = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'display_info');
-        $this->label_description       = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_description');
-        $this->parent_category_label   = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'parent_category_label');
-        $this->root_label              = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'root');
+        $this->edit_trove_cat        = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'header');
+        $this->edit                  = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'edit');
+        $this->cancel                = $GLOBALS['Language']->getText('admin_trove_cat_list', 'cancel');
+        $this->label_fullname        = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_fullname');
+        $this->label_shortname       = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_shortname');
+        $this->label_mandatory       = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_mandatory');
+        $this->mandatory_info        = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'mandatory_info');
+        $this->label_display         = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_display');
+        $this->display_info          = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'display_info');
+        $this->label_description     = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'label_description');
+        $this->parent_category_label = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'parent_category_label');
+        $this->root_label            = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'root');
+        $this->add_trove_cat         = $GLOBALS['Language']->getText('admin_trove_cat_add', 'add_trove_cat');
+        $this->add                   = $GLOBALS['Language']->getText('admin_trove_cat_add', 'add');
+
         $this->description_placeholder = $GLOBALS['Language']->getText(
             'admin_trove_cat_edit',
             'description_placeholder'

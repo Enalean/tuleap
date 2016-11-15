@@ -17,7 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+    var modal_add_element        = document.getElementById('trove-cat-add'),
+        button_modal_add_element = document.getElementById('add-project-category-button');
+
+    if (modal_add_element) {
+        var modal_add = tlp.modal(modal_add_element);
+
+        button_modal_add_element.addEventListener('click', function () {
+            modal_add.toggle();
+        });
+    }
+
     var matching_buttons = document.querySelectorAll('.trovecats-edit-button');
 
     [].forEach.call(matching_buttons, function (button) {
@@ -73,7 +84,7 @@ function selectParentCategoryOption() {
 
 function allowMandatoryPropertyOnlyForRootCategories(select_id, id) {
     var mandatory_element = document.getElementById("is-mandatory-" + id),
-        mandatory_checkbox = document.getElementById("trove-cats-modal-edit-mandatory-checkbox-" + id);
+        mandatory_checkbox = document.getElementById("trove-cats-modal-mandatory-checkbox-" + id);
 
     if (select_id !== '0') {
         mandatory_element.setAttribute('disabled', true);
@@ -86,8 +97,8 @@ function allowMandatoryPropertyOnlyForRootCategories(select_id, id) {
 }
 
 function allowDisableOptionForChildUnderFirstParent(select_is_top_level, id, is_parent_mandatory) {
-    var disable_element  = document.getElementById("is-disable-" + id),
-        disable_checkbox = document.getElementById("trove-cats-modal-edit-disable-checkbox-" + id);
+    var disable_element  = document.getElementById("trove-cats-modal-is-disable-" + id),
+        disable_checkbox = document.getElementById("trove-cats-modal-disable-checkbox-" + id);
 
     if (Boolean(select_is_top_level) === false || Boolean(is_parent_mandatory) === false) {
         disable_element.setAttribute('disabled', true);

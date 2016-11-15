@@ -77,8 +77,16 @@ class TroveCatDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function updateTroveCat($shortname, $fullname, $description, $parent, $newroot, $mandatory, $display, $trove_cat_id)
-    {
+    public function updateTroveCat(
+        $shortname,
+        $fullname,
+        $description,
+        $parent,
+        $newroot,
+        $mandatory,
+        $display,
+        $trove_cat_id
+    ) {
         $shortname    = $this->da->quoteSmart($shortname);
         $fullname     = $this->da->quoteSmart($fullname);
         $description  = $this->da->quoteSmart($description);
@@ -102,5 +110,48 @@ class TroveCatDao extends DataAccessObject
            WHERE trove_cat_id= $trove_cat_id";
 
         return $this->update($sql);
+    }
+
+    public function add(
+        $shortname,
+        $fullname,
+        $description,
+        $parent,
+        $root_parent,
+        $mandatory,
+        $display
+    ) {
+        $shortname   = $this->da->quoteSmart($shortname);
+        $fullname    = $this->da->quoteSmart($fullname);
+        $description = $this->da->quoteSmart($description);
+        $parent      = $this->da->escapeInt($parent);
+        $root_parent = $this->da->escapeInt($root_parent);
+        $mandatory   = $this->da->escapeInt($mandatory);
+        $display     = $this->da->escapeInt($display);
+
+        $version = date("Ymd", time()) . '01';
+
+        $sql = "INSERT INTO trove_cat (
+                  shortname,
+                  fullname,
+                  description,
+                  parent,
+                  version,
+                  root_parent,
+                  mandatory,
+                  display_during_project_creation
+              ) values (
+                  $shortname,
+                  $fullname,
+                  $description,
+                  $parent,
+                  $version,
+                  $root_parent,
+                  $mandatory,
+                  $display
+              )";
+
+        return $this->update($sql);
+
     }
 }

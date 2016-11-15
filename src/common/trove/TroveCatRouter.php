@@ -59,6 +59,10 @@ class TroveCatRouter
                     $this->trove_cat_list_controller->update($request);
                     $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
                     break;
+                case "add":
+                    $this->trove_cat_list_controller->add($request);
+                    $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
+                    break;
                 default:
                     $this->displayList();
                     break;

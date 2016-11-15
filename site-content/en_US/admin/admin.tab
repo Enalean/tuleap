@@ -507,20 +507,11 @@ admin_userlist	pending_users_text	For your information, there are <a href="$1">$
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
 #
-admin_trove_cat_add	title	Trove - Add Category
-admin_trove_cat_add	header	Add a Trove Category
+admin_trove_cat_add	add_trove_cat	Add project category
+admin_trove_cat_add	add	Add category
 admin_trove_cat_add	short_name	Category short name
-admin_trove_cat_add	short_name_note	(no spaces)
 admin_trove_cat_add	full_name	Category full name
-admin_trove_cat_add	full_name_note	(80 chars max)
 admin_trove_cat_add	description	Category description
-admin_trove_cat_add	description_note	(255 chars max)
-admin_trove_cat_add	parent	Parent Category
-admin_trove_cat_add	mandatory	Mandatory
-admin_trove_cat_add	mandatory_note	Can be selected if the parent is "Root"
-admin_trove_cat_add	display_at_project_creation	Display at project creation
-admin_trove_cat_add	display_note	Can be selected if the parent is a top level parent
-
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php

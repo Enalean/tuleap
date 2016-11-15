@@ -11,32 +11,6 @@
 $TROVE_MAXPERROOT = 3;
 $TROVE_BROWSELIMIT = 20;
 
-// regenerates full path entries for $node and all subnodes
-function trove_genfullpaths($mynode,$myfullpath,$myfullpathids) {
-	// first generate own path
-	$res_update = db_query('UPDATE trove_cat SET fullpath=\''
-		.db_es($myfullpath).'\',fullpath_ids=\''
-		.db_es($myfullpathids).'\' WHERE trove_cat_id='.db_ei($mynode));
-	// now generate paths for all children by recursive call
-	{
-		$res_child = db_query('SELECT trove_cat_id,fullname FROM '
-			.'trove_cat WHERE parent='.db_ei($mynode));
-		while ($row_child = db_fetch_array($res_child)) {
-		  //for the root node everything works a bit different ...
-		  if (!$mynode) {
-		    trove_genfullpaths($row_child['trove_cat_id'],
-				$row_child['fullname'],
-				$row_child['trove_cat_id']);
-		  } else {
-			trove_genfullpaths($row_child['trove_cat_id'],
-				$myfullpath.' :: '.$row_child['fullname'],
-				$myfullpathids.' :: '.$row_child['trove_cat_id']);
-		  }
-		}
-	}
-}
-
-// #########################################
 
 // adds a group to a trove node
 function trove_setnode($group_id,$trove_cat_id,$rootnode=0) {
