@@ -86,7 +86,8 @@ admin_main	servers	Servers
 admin_main	servers_admin	Servers administration
 admin_main	sstat_reg_u	Registered active or restricted site users
 admin_main	sstat_reg_g	registered
-admin_main	sstat_reg_act_g	registered active
+admin_main	sstat_reg_act_g	active
+admin_main	sstat_deleted	deleted
 admin_main	sstat_pend_g	pending
 admin_main	sstat_pend_u	Pending users
 admin_main	site_news	Site news

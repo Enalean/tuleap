@@ -25,7 +25,8 @@ require_once('www/stats/site_stats_utils.php');
 require_once('common/widget/Widget_Static.class.php');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/d3/v4/d3.min.js');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-users-chart.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/generate-pie-charts.js');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -45,6 +46,10 @@ $pending_projects = $row['count'];
 $res = db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
 $row = db_fetch_array($res);
 $active_groups = $row['count'];
+
+$res = db_query("SELECT count(*) AS count FROM groups WHERE status='D'");
+$row = db_fetch_array($res);
+$deleted_projects = $row['count'];
 
 db_query("SELECT count(*) AS count FROM user WHERE status='P'");
 $row = db_fetch_array();
@@ -97,33 +102,34 @@ $purifier = Codendi_HTMLPurifier::instance();
 $statistics_users_graph = array();
 
 if ($actif_users > 0) {
-    $statistics_users_graph[] = array( 'key'=> 'active', 'label' => $Language->getText('admin_main', 'statusactif_user'), 'users' => $actif_users);
+    $statistics_users_graph[] = array( 'key'=> 'active', 'label' => $Language->getText('admin_main', 'statusactif_user'), 'count' => $actif_users);
 }
 
 if ($hold_users > 0) {
-    $statistics_users_graph[] = array( 'key'=> 'suspended', 'label' => $Language->getText('admin_main', 'statushold_user'), 'users' => $hold_users);
+    $statistics_users_graph[] = array( 'key'=> 'suspended', 'label' => $Language->getText('admin_main', 'statushold_user'), 'count' => $hold_users);
 }
 
 if ($deleted_users > 0) {
-    $statistics_users_graph[] = array( 'key'=> 'deleted', 'label' => $Language->getText('admin_main', 'statusdeleted_user'), 'users' => $deleted_users);
+    $statistics_users_graph[] = array( 'key'=> 'deleted', 'label' => $Language->getText('admin_main', 'statusdeleted_user'), 'count' => $deleted_users);
 }
 
 if ($validated_users + $realpending_users > 0) {
-    $statistics_users_graph[] = array( 'key'=> 'waiting', 'label' => $Language->getText('admin_main', 'statuspending_user'), 'users' => $validated_users + $realpending_users);
+    $statistics_users_graph[] = array( 'key'=> 'waiting', 'label' => $Language->getText('admin_main', 'statuspending_user'), 'count' => $validated_users + $realpending_users);
 }
 
 if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
-    $statistics_users_graph[] = array( 'key'=> 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'users' => $restricted_users);
+    $statistics_users_graph[] = array( 'key'=> 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'count' => $restricted_users);
 }
 
 $user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));
 $user_stats->setIcon('fa-pie-chart');
 $user_stats->setAdditionalClass('siteadmin-homepage-statistics');
 $user_stats->setContent('
-    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last">
+    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last siteadmin-homepage-statistics-section-graph">
         <div class="tlp-property">
-            <div id="siteadmin-homepage-statistics-users"
-                 data-statistics-users="'. $purifier->purify(json_encode($statistics_users_graph)) .'"></div>
+            <div id="siteadmin-homepage-users"
+                 class="siteadmin-homepage-pie-chart"
+                 data-statistics="'. $purifier->purify(json_encode($statistics_users_graph)) .'"></div>
         </div>
 
         <div class="tlp-property">
@@ -151,13 +157,27 @@ $user_stats->setContent('
 $project_stats = new Widget_Static($Language->getText('admin_main', 'stat_projects'));
 $project_stats->setIcon('fa-pie-chart');
 $project_stats->setAdditionalClass('siteadmin-homepage-statistics');
+
+$statistics_projects_graph = array();
+
+if ($active_groups > 0) {
+    $statistics_projects_graph[] = array( 'key'=> 'active', 'label' => $Language->getText('admin_main', 'sstat_reg_act_g'), 'count' => $active_groups);
+}
+
+if ($pending_projects > 0) {
+    $statistics_projects_graph[] = array( 'key'=> 'pending', 'label' => $Language->getText('admin_main', 'sstat_pend_g'), 'count' => $pending_projects);
+}
+
+if ($deleted_projects > 0) {
+    $statistics_projects_graph[] = array( 'key'=> 'deleted', 'label' => $Language->getText('admin_main', 'sstat_deleted'), 'count' => $deleted_projects);
+}
+
 $project_stats->setContent('
-    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last">
+    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last siteadmin-homepage-statistics-section-graph">
         <div class="tlp-property">
-            <label class="tlp-label">'.$Language->getText('admin_main', 'status_project').'</label>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$total_groups.' '.$Language->getText('admin_main', 'sstat_reg_g').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$active_groups.' '.$Language->getText('admin_main', 'sstat_reg_act_g').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$pending_projects.' '.$Language->getText('admin_main', 'sstat_pend_g').'</span>
+            <div id="siteadmin-homepage-projects"
+                 class="siteadmin-homepage-pie-chart"
+                 data-statistics="'. $purifier->purify(json_encode($statistics_projects_graph)) .'"></div>
         </div>
 
     </section>

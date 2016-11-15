@@ -197,36 +197,50 @@
     }
 }
 
-#siteadmin-homepage-users-legend {
-    padding: 20px;
+.siteadmin-homepage-statistics-section-graph {
+    padding-top: 0;
 }
 
-#siteadmin-homepage-statistics-users {
+#siteadmin-homepage-users-legend,
+#siteadmin-homepage-projects-legend {
+    padding: 20px;
+
+    > ul {
+        padding: 0;
+    }
+}
+
+#siteadmin-homepage-users,
+#siteadmin-homepage-projects {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 }
 
-.siteadmin-homepage-users-legend {
+.siteadmin-homepage-users-legend,
+.siteadmin-homepage-projects-legend {
     display: flex;
     align-items: center;
-    min-width: 100px;
     text-decoration: none;
 }
 
-.siteadmin-homepage-users-legend-text-span {
+.siteadmin-homepage-users-legend-text-span,
+.siteadmin-homepage-projects-legend-text-span {
     color: $tlp-ui-dimmed;
     font-size: 12px;
     line-height: 18px;
     cursor: default;
 }
 
-.siteadmin-homepage-users-legend-selected {
+.siteadmin-homepage-users-legend-selected,
+.siteadmin-homepage-projects-legend-selected {
     font-weight: 600;
 }
 
-.siteadmin-homepage-users-legend-color-span {
+.siteadmin-homepage-users-legend-color-span,
+.siteadmin-homepage-projects-legend-color-span {
+    flex: 0 0 auto;
     width: 12px;
     height: 12px;
     margin: 0 5px 0 0;
@@ -234,7 +248,8 @@
     opacity: .8;
 }
 
-.siteadmin-homepage-users-legend-color-active {
+.siteadmin-homepage-users-legend-color-active,
+.siteadmin-homepage-projects-legend-color-active {
     background-color: $tlp-ui-success;
 }
 
@@ -246,27 +261,33 @@
     background-color: $tlp-ui-warning;
 }
 
-.siteadmin-homepage-users-legend-color-deleted {
+.siteadmin-homepage-users-legend-color-deleted,
+.siteadmin-homepage-projects-legend-color-deleted {
     background-color: $tlp-ui-danger;
 }
 
-.siteadmin-homepage-users-legend-color-waiting {
+.siteadmin-homepage-users-legend-color-waiting,
+.siteadmin-homepage-projects-legend-color-pending {
     background-color: $tlp-ui-info;
 }
 
-.siteadmin-homepage-users-slice-path {
+.siteadmin-homepage-users-slice-path,
+.siteadmin-homepage-projects-slice-path {
     opacity: .8;
 }
 
-.siteadmin-homepage-users-slice-text {
+.siteadmin-homepage-users-slice-text,
+.siteadmin-homepage-projects-slice-text{
     font-weight: 600;
 }
 
-.siteadmin-homepage-users-slice-text-undisplayed {
+.siteadmin-homepage-users-slice-text-undisplayed,
+.siteadmin-homepage-projects-slice-text-undisplayed {
     opacity: 0;
 }
 
-.siteadmin-homepage-users-slice-active {
+.siteadmin-homepage-users-slice-active,
+.siteadmin-homepage-projects-slice-active {
 
     > path {
         fill: $tlp-ui-success;
@@ -299,7 +320,8 @@
     }
 }
 
-.siteadmin-homepage-users-slice-deleted {
+.siteadmin-homepage-users-slice-deleted,
+.siteadmin-homepage-projects-slice-deleted {
 
     > path {
         fill: $tlp-ui-danger;
@@ -310,7 +332,8 @@
     }
 }
 
-.siteadmin-homepage-users-slice-waiting {
+.siteadmin-homepage-users-slice-waiting,
+.siteadmin-homepage-projects-slice-pending {
 
     > path {
         fill: $tlp-ui-info;

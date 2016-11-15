@@ -78,7 +78,8 @@ admin_main	servers	Serveurs
 admin_main	servers_admin	Administration des serveurs
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
 admin_main	sstat_reg_g	enregistrés
-admin_main	sstat_reg_act_g	enregistrés actifs
+admin_main	sstat_reg_act_g	actifs
+admin_main	sstat_deleted	supprimés
 admin_main	sstat_pend_g	en attente
 admin_main	sstat_pend_u	Utilisateurs en attente
 admin_main	site_news	Annonces site
