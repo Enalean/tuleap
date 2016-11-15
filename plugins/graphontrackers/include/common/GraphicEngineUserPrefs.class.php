@@ -93,10 +93,15 @@ class graphicEngineUserPrefs {
 	 *
 	 */
 
+    public function getArtifactsInOrder()
+	{
+        $select   = null;
+        $from     = null;
+        $where    = null;
+        $order_by = null;
 
-    function getArtifactsInOrder() {
         $ar  = new ArtifactReport($this->report_id,$this->atid);
-        $ar->getResultQueryElements($this->prefs,$this->morder,$this->advsrch,$aids = false,&$select,&$from,&$where,&$order_by);
+        $ar->getResultQueryElements($this->prefs,$this->morder,$this->advsrch,$aids = false,$select,$from,$where,$order_by);
         
         //artifact permissions
         $sql_group_id = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=". db_ei($this->atid);
@@ -125,10 +130,7 @@ class graphicEngineUserPrefs {
         } else {
         	$sql = "SELECT DISTINCT art.artifact_id FROM (SELECT STRAIGHT_JOIN a.artifact_id $from $where $order_by,a.artifact_id ASC) AS art";
         }
+
         return $ar->_ExecuteQueryForSelectReportItems($sql);
     }
-
-
 }
-
-?>
