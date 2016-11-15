@@ -1,3 +1,6 @@
+Version 1.18 - Tuleap 9.2
+    * request #9202: Remove call-time pass-by-reference in graphontracker (v3)
+
 Version 1.17 - Tuleap 8.18
     * request #9375 Gulpify sass
 
