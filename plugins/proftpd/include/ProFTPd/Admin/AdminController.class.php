@@ -54,15 +54,14 @@ class AdminController {
     }
 
     public function index(ServiceProFTPd $service, HTTPRequest $request) {
-        if ($this->userIsAdmin($request)) {
-            $service->renderInPage(
-                $request,
-                $GLOBALS['Language']->getText('global', 'Admin'),
-                'admin',
-                $this->getPresenter($request->getProject())
-            );
-        }
-        exit_error($GLOBALS['Language']->getText('global', 'error_perm_denied'), $GLOBALS['Language']->getText('plugin_proftpd', 'error_not_admin'));
+        $this->checkUserIsAdmin($request);
+
+        $service->renderInPage(
+            $request,
+            $GLOBALS['Language']->getText('global', 'Admin'),
+            'admin',
+            $this->getPresenter($request->getProject())
+        );
     }
 
     private function getPresenter(Project $project) {
@@ -75,10 +74,18 @@ class AdminController {
     }
 
     public function save(ServiceProFTPd $service, HTTPRequest $request) {
-        if ($this->userIsAdmin($request)) {
-            $this->saveForAdmin($request);
+        $this->checkUserIsAdmin($request);
+
+        $this->saveForAdmin($request);
+    }
+
+    private function checkUserIsAdmin(HTTPRequest $request) {
+        if (! $this->userIsAdmin($request)) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error_perm_denied'),
+                dgettext('tuleap-proftpd', 'You must be granted Project Administrator permission to access this')
+            );
         }
-        exit_error($GLOBALS['Language']->getText('global', 'error_perm_denied'), $GLOBALS['Language']->getText('plugin_proftpd', 'error_not_admin'));
     }
 
     private function saveForAdmin(HTTPRequest $request) {
@@ -92,7 +99,10 @@ class AdminController {
         $this->savePermissions($project, $request);
         $this->system_event_manager->queueACLUpdate($project->getUnixName());
 
-        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_updated'));
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-proftpd', 'Permissions will be propagated on filesystem shortly')
+        );
 
         $GLOBALS['Response']->redirect('?'.http_build_query(array(
             'group_id'   => $project->getID(),

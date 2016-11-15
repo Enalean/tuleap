@@ -1,0 +1,105 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Agile Dashboard"
+msgstr "Agile Dashboard"
+
+msgid "And more..."
+msgstr "Et plus ..."
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Dashboard of the project"
+msgstr "Dashboard du projet"
+
+msgid "Documents"
+msgstr "Documents"
+
+msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
+msgstr ""
+"N'oubliez pas d'utiliser tab/shift+tab pour naviguer dans les menus "
+"déroulants"
+
+msgid "Escape from input/textarea, close dropdown or modal"
+msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
+
+msgid "Files"
+msgstr "Fichiers"
+
+msgid "Forums"
+msgstr "Forums"
+
+msgid "Git"
+msgstr "Git"
+
+msgid "Homepage"
+msgstr "Page d'accueil"
+
+msgid "Instant messaging"
+msgstr "Messagerie Instantanée"
+
+msgid "Lists"
+msgstr "Listes"
+
+msgid "Mediawiki"
+msgstr "Mediawiki"
+
+msgid "My personnal page"
+msgstr "Ma page personnelle"
+
+msgid "Navebar"
+msgstr "Barre de menu"
+
+msgid "News"
+msgstr "Annonces"
+
+msgid "Open \"Help\" dropdown"
+msgstr "Affiche l'onglet \"Aide\""
+
+msgid "Open \"More\" dropdown"
+msgstr "Affiche l'onglet \"Plus\""
+
+msgid "Open \"Projects\" dropdown"
+msgstr "Affiche l'onglet \"Projets\""
+
+msgid "Open the account management dropdown (need to be connected)"
+msgstr "Affiche l'onglet de gestion du compte (si connecté)"
+
+msgid "Open/Close the shortcut window"
+msgstr "Ouvre/Ferme la fenêtre d'aide des raccourcis"
+
+msgid "Open/Collapse the sidebar"
+msgstr "Ouvre/Ferme la barre de service"
+
+msgid "Project web site"
+msgstr "Site web du projet"
+
+msgid "SVN"
+msgstr "SVN"
+
+msgid "Shortcut list"
+msgstr "Liste des raccourcis"
+
+msgid "Sidebar (project)"
+msgstr "Barre de service (projet)"
+
+msgid "Tracker"
+msgstr "Suivi"
+
+msgid "Wiki"
+msgstr "Wiki"

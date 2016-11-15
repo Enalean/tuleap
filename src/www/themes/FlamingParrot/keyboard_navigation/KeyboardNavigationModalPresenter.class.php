@@ -21,122 +21,122 @@
 class KeyboardNavigationModalPresenter {
 
     public function navbar() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'navbar');
+        return _('Navebar');
     }
 
     public function homepage() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'homepage');
+        return _('Homepage');
     }
 
     public function personnal_page() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'personnal_page');
+        return _('My personnal page');
     }
 
     public function projects() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'projects');
+        return _('Open "Projects" dropdown');
     }
 
     public function more() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'more');
+        return _('Open "More" dropdown');
     }
 
     public function help() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'help');
+        return _('Open "Help" dropdown');
     }
 
     public function account() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'account');
+        return _('Open the account management dropdown (need to be connected)');
     }
 
     public function sidebar_move() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_move');
+        return _('Open/Collapse the sidebar');
     }
 
     public function sidebar_dashboard() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_dashboard');
+        return _('Dashboard of the project');
     }
 
     public function sidebar_agiledashboard() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_agiledashboard');
+        return _('Agile Dashboard');
     }
 
     public function sidebar_git() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_git');
+        return _('Git');
     }
 
     public function sidebar_wiki() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_wiki');
+        return _('Wiki');
     }
 
     public function sidebar_homepage() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_homepage');
+        return _('Project web site');
     }
 
     public function sidebar_svn() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_svn');
+        return _('SVN');
     }
 
     public function sidebar_tracker() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_tracker');
+        return _('Tracker');
     }
 
     public function sidebar_docman() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_docman');
+        return _('Documents');
     }
 
     public function sidebar_cvs() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_cvs');
+        return _('CVS');
     }
 
     public function sidebar_file() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_file');
+        return _('Files');
     }
 
     public function sidebar_mediawiki() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_mediawiki');
+        return _('Mediawiki');
     }
 
     public function sidebar_im() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_im');
+        return _('Instant messaging');
     }
 
     public function sidebar_forum() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_forum');
+        return _('Forums');
     }
 
     public function sidebar_mail() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_mail');
+        return _('Lists');
     }
 
     public function sidebar_news() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_news');
+        return _('News');
     }
 
     public function and_more() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'and_more');
+        return _('And more...');
     }
 
     public function blur() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'blur');
+        return _('Escape from input/textarea, close dropdown or modal');
     }
 
     public function shortcut_helper() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'shortcut_helper');
+        return _('Open/Close the shortcut window');
     }
 
     public function tips() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'tips');
+        return _("Don't forget to use tab/shift+tab to navigate in dropdown");
     }
 
     public function close() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'close');
+        return _("Close");
     }
 
     public function sidebar_title() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'sidebar_title');
+        return _('Sidebar (project)');
     }
 
     public function shortcut_list() {
-        return $GLOBALS['Language']->getText('keyboard_navigation', 'shortcut_list');
+        return _('Shortcut list');
     }
 }

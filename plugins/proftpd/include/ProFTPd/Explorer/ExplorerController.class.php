@@ -60,7 +60,10 @@ class ExplorerController {
         if ($this->userHasPermissionToExploreSFTP($request->getCurrentUser(), $request->getProject())) {
             $this->renderIndex($service, $request);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'error_browse_rights'));
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                dgettext('tuleap-proftpd', "You're not granted sufficient rights to browse the (S)FTP repository")
+            );
             $service->renderInPage(
                 $request,
                 '',
@@ -73,7 +76,7 @@ class ExplorerController {
     private function renderIndex(ServiceProFTPd $service, HTTPRequest $request) {
         $project = $request->getProject();
         if (! $project ) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'cannot_open_project'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-proftpd', 'Cannot open project'));
             return;
         }
 
