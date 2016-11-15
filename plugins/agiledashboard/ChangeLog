@@ -1,3 +1,6 @@
+Version 1.435 - Tuleap 9.2
+    * request #9598: Get rid of nvd3 for cumulative flow diagram
+
 Version 1.434 - Tuleap 9.1
     * request #9630: Text card fields on Kanban should allow basic formatting
 
