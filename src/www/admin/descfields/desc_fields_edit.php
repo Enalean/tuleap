@@ -29,6 +29,8 @@ use Tuleap\Project\Admin\DescriptionFields\FieldsListPresenter;
 use Tuleap\Project\Admin\DescriptionFields\FieldPresenter;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder;
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/admin-description-fields.js');
+
 session_require(array('group' => '1', 'admin_flags' => 'A'));
 
 $delete_desc_id = $request->get('delete_group_desc_id');
@@ -77,7 +79,7 @@ if ($remove_required_desc_id) {
 }
 
 $update           = $request->get('Update');
-$add_desc         = $request->get('Add_desc');
+$add_desc         = $request->get('add_desc');
 $desc_name        = $request->get('form_name');
 $desc_description = $request->get('form_desc');
 $desc_type        = $request->get('form_type');

@@ -584,11 +584,11 @@ admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
 #-----------------------------------------------
 # Script: src/www/admin/descfields/desc_fields_edit.php
 #
-admin_desc_fields	title	Édition des champs de description de projet
+admin_desc_fields	title	Champs de projets personnalisés
 admin_desc_fields	header_add	Ajouter un champ
-admin_desc_fields	desc_name	Nom du champ de description
-admin_desc_fields	desc_description	Description du champ
-admin_desc_fields	desc_required	Obligatoire
+admin_desc_fields	desc_name	Nom
+admin_desc_fields	desc_description	Description
+admin_desc_fields	desc_required	Obligatoire ?
 admin_desc_fields	desc_type	Type
 admin_desc_fields	desc_yes	Oui
 admin_desc_fields	desc_no	Non
@@ -596,19 +596,32 @@ admin_desc_fields	desc_line	Chaîne
 admin_desc_fields	desc_text	Texte
 admin_desc_fields	rank	Rang
 admin_desc_fields	rank_on_screen	Rang à l'écran
-admin_desc_fields	ins_desc_field_fail	L'AJOUT DE LA DESCRIPTION A ECHOUE !  SVP contacter admin@$1 $2
-admin_desc_fields	del_desc_field_fail	LA SUPPRESSION DE LA DESCRIPTION ! SVP contacter admin@$1 $2
-admin_desc_fields	update_required_desc_field_fail	LA MISE A JOUR A ECHOUE ! SVP contacter admin@$1 $2
-admin_desc_fields	update_desc_field_fail	LA MISE A JOUR A ECHOUE OU AUCUNE DONNEE N'A ETE MODIFIEE ! $1
-admin_desc_fields	info_missed	Informations Manquantes. Svp remplissez toutes les champs obligatoires.
-admin_desc_fields	info_rank_noint	Le Rang doit être une valeur numérique !
-admin_desc_fields	add_success	Champ de Description ajouté avec succès !
-admin_desc_fields	update_success	Champ de Description modifié avec succès !
-admin_desc_fields	remove_success	Champ de Description supprimé avec succès !
+admin_desc_fields	ins_desc_field_fail	L'ajout du champ a echoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	del_desc_field_fail	La suppression du champ a échoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	update_required_desc_field_fail	La mise à jour du champ a echoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	update_desc_field_fail	La mise à jour du champ a echoué ou aucune donnée n'a été modifiée. $1.
+admin_desc_fields	info_missed	Informations manquantes. Veuillez remplir tous les champs obligatoires.
+admin_desc_fields	info_rank_noint	Le rang doit être une valeur numérique.
+admin_desc_fields	add_success	Le champ a été ajouté avec succès.
+admin_desc_fields	update_success	Le champ a été modifié avec succès.
+admin_desc_fields	remove_success	Le champ a été supprimé avec succès.
 admin_desc_fields	edit_btn	Éditer
 admin_desc_fields	delete_btn	Supprimer
-admin_desc_fields	description_fields_header	Champs de description de project
-admin_desc_fields	no_description_fields	Aucun champ de description de projet
+admin_desc_fields	description_fields_header	Champs de projets personnalisés
+admin_desc_fields	no_description_fields	Aucun champ de projets personnalisés
+admin_desc_fields	add_modal_title	Ajouter un champ
+admin_desc_fields	add_modal_cancel	Annuler
+admin_desc_fields	add_modal_submit	Ajouter
+admin_desc_fields	add_field_form_name_label	Nom
+admin_desc_fields	add_field_form_name_placeholder	Description du projet
+admin_desc_fields	add_field_form_rank_label	Rang à l'écran
+admin_desc_fields	add_field_form_required_label	Ce champ est obligatoire
+admin_desc_fields	add_field_form_type_label	Type
+admin_desc_fields	add_field_form_description_label	Description
+admin_desc_fields	add_field_form_description_placeholder	La description du projet sera utilisé par les managers pour…
+admin_desc_fields	add_field_form_description_info	Ce texte sera positionné en dessous du champ et doit aider l'utilisateur final à le remplir.
+admin_desc_fields	add_field_form_type_label_line	Chaîne de caractères
+admin_desc_fields	add_field_form_type_label_text	Zone de texte
 
 admin_system_events	title	Événements Système
 admin_system_events	notifications	Alertes

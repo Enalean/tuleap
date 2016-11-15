@@ -10,9 +10,11 @@
         </div>
         <section class="tlp-pane-section">
             <div class="tlp-table-actions">
-                <button type="button" class="tlp-button-primary tlp-table-actions-element">
+                <button type="button" id="add-description-field-button" class="tlp-button-primary tlp-table-actions-element">
                     <i class="tlp-button-icon fa fa-plus"></i> {{ btn_add_field }}
                 </button>
+
+                {{> add_description_field_modal }}
             </div>
             <table class="tlp-table">
                 <thead>
