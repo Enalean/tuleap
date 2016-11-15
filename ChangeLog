@@ -6,6 +6,13 @@ Version 9.2 (Not release yet)
 
 	== Plugins ==
 	* tracker: 5.1034
+	* proftpd: 0.29
+
+	== Themes ==
+	* FlamingParrot: 1.164
+
+	== Development ==
+	* request #9657: Tuleap goes gettext
 
 Version 9.1 (Thursday, November 10th 2016)
 

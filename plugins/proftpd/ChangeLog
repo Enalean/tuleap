@@ -1,3 +1,6 @@
+Version 0.29 - Tuleap 9.2
+    * request #9657: Tuleap goes gettext
+
 Version 0.28 - Tuleap 8.18
     * request #9375 Gulpify sass
 
