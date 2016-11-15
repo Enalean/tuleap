@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,8 +67,8 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
         return strtotime("+$next_day_number days", $date);
     }
 
-    private function isNotWeekendDay($day) {
-        return ! (date('D', $day) == 'Sat' || date('D', $day) == 'Sun');
+    public function isNotWeekendDay($day) {
+        return ! ((int) date('N', $day) === 6 || (int) date('N', $day) === 7);
     }
 
     /**

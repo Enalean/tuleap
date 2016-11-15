@@ -308,9 +308,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new ComputedFieldCalculator($this->getDao());
     }
 
-    protected function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
+    private function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
     {
-        return $this->getCalculator()->calculate(
+        return $this->getCalculator()->calculateForComputedFields(
             $artifact_ids_to_fetch,
             $timestamp,
             $stop_on_manual_value,
