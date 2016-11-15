@@ -532,11 +532,14 @@ admin_trove_cat_edit	root	Racine
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Arbre des projets - Liste des catégories
-admin_trove_cat_list	header	Catégories de classification de projets
+admin_trove_cat_list	title	Catégories de projets
+admin_trove_cat_list	header_name	Nom complet
+admin_trove_cat_list	header_description	Description
+admin_trove_cat_list	header	Catégories de projets
 admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Détruire
 admin_trove_cat_list	add	Ajouter une catégorie
+admin_trove_cat_list	deletion_forbidden_label	Impossible de détruire une hiérarchie, merci de supprimer d'abord ses enfants.
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #

@@ -36,9 +36,10 @@ class TroveCatDao extends DataAccessObject {
     public function getCategoryChildren($trove_cat_id) {
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
 
-        $sql = "SELECT trove_cat_id, shortname, fullname
+        $sql = "SELECT trove_cat_id, shortname, fullname, description, parent
                 FROM trove_cat
-                WHERE parent = $trove_cat_id";
+                WHERE parent = $trove_cat_id
+                ORDER BY fullname";
 
         return $this->retrieve($sql);
     }
