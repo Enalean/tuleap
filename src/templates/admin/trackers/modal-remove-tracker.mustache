@@ -1,0 +1,19 @@
+<div class="tlp-modal tlp-modal-danger" id="delete-tv3-modal-{{ group_artifact_id }}"  role="dialog">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ remove_tracker }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        {{ remove_confirm_message }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel }}
+        </button>
+        <a href="/tracker/admin/restore.php?func=delete&group_id={{ group_id }}&atid={{ group_artifact_id }}" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete }}
+        </a>
+    </div>
+</div>

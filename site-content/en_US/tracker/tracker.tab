@@ -426,7 +426,11 @@ tracker_include_type	pending_deletion	Trackers V3 Pending for Deletion
 tracker_include_type	deletion_date	Deletion date
 tracker_include_type	restore	Restore
 tracker_include_type	delete	Delete
-tracker_include_type	warning	** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?
+tracker_include_type	cancel	Cancel
+tracker_include_type	remove_tracker	Remove tracker
+tracker_include_type	restore_tracker	Restore tracker
+tracker_include_type	restore_confirm	Restore this tracker and all its dependencies?
+tracker_include_type	warning	Delete this tracker and all its dependencies (no possible restore operation)?
 tracker_include_type	create_from_scratch	Create a new tracker from scratch or from an existing tracker
 tracker_include_type	manage	Manage Trackers
 tracker_include_type	admin_or_del	Administrate or delete a tracker.	

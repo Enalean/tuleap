@@ -36,6 +36,10 @@ class ArtifactPendingDeletionPresenter
             'tracker_v3_empty_state'
         );
 
+        $this->remove_tracker         = $GLOBALS['Language']->getText('tracker_include_type', 'remove_tracker');
+        $this->remove_confirm_message = $GLOBALS['Language']->getText('tracker_include_type', 'warning');
+        $this->cancel                 = $GLOBALS['Language']->getText('tracker_include_type', 'cancel');
+
         $this->has_trackers = count($trackers) > 0;
         $this->trackers     = $trackers;
     }
