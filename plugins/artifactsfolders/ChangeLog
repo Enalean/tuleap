@@ -1,3 +1,6 @@
+Version 0.33 - Tuleap 9.2
+    * request #9594: Folders display artifact twice when it also a child
+
 Version 0.32 - Tuleap 9.0
     * story #9514: Go directly to the Folder tab
 
