@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    var matching_buttons = document.querySelectorAll('.trovecats-edit-button');
+    var matching_buttons = document.querySelectorAll('.trovecats-edit-button, .trovecats-delete-button');
 
     [].forEach.call(matching_buttons, function (button) {
         var modal_element = document.getElementById(button.dataset.modalId);

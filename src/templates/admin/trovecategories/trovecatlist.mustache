@@ -45,14 +45,19 @@
                             {{> trovecat-modal-edit }}
                             <button
                                 type="button"
-                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{^ is_deletable }} tlp-button-disabled tlp-tooltip tlp-tooltip-left{{/ is_deletable }}"
+                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger trovecats-delete-button
+                                tlp-button-outline {{^ is_deletable }} tlp-button-disabled tlp-tooltip tlp-tooltip-left{{/ is_deletable }}"
                                 {{^ is_deletable }}
                                     disabled="disabled"
                                     data-tlp-tooltip="{{ deletion_forbidden_label }}"
                                 {{/ is_deletable }}
+                                {{# is_deletable }}
+                                    data-modal-id="trove-cat-delete-{{ trove_cat_id }}"
+                                {{/ is_deletable }}
                             >
                                 <i class="fa fa-trash tlp-button-icon"></i> {{ delete_button }}
                             </button>
+                            {{> trovecat-modal-delete }}
                         </td>
                     </tr>
                 {{/ trovecats }}

@@ -20,6 +20,8 @@
 
 namespace Tuleap\Trove;
 
+use CSRFSynchronizerToken;
+
 class TroveCatListPresenter
 {
     /**
@@ -33,6 +35,7 @@ class TroveCatListPresenter
     public $header_description;
     public $header_name;
     public $edit_trove_cat;
+
     public $description_placeholder;
     public $root_label;
     public $parent_category_label;
@@ -40,8 +43,12 @@ class TroveCatListPresenter
     public $label_shortname;
     public $deletion_forbidden_label;
 
+    public $delete_trove_cat;
+    public $alert_description_delete_modal;
+    public $alert_description_delete_modal_next;
 
-    public function __construct(array $trovecats)
+
+    public function __construct(array $trovecats, CSRFSynchronizerToken $csrf_token)
     {
         $this->title                    = $GLOBALS['Language']->getText('admin_trove_cat_list', 'title');
         $this->header_name              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_name');
@@ -73,6 +80,12 @@ class TroveCatListPresenter
             'description_placeholder'
         );
 
-        $this->trovecats = $trovecats;
+        $this->delete_trove_cat = $GLOBALS['Language']->getText(
+            'admin_trove_cat_delete',
+            'delete_trove_cat'
+        );
+
+        $this->trovecats  = $trovecats;
+        $this->csrf_token = $csrf_token;
     }
 }

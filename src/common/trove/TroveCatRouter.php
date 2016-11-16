@@ -20,6 +20,8 @@
 
 namespace Tuleap\Trove;
 
+use CSRFSynchronizerToken;
+use Feedback;
 use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
@@ -56,11 +58,21 @@ class TroveCatRouter
         try {
             switch ($action) {
                 case "update":
+                    $token = $this->getCSRF();
+                    $token->check();
                     $this->trove_cat_list_controller->update($request);
                     $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
                     break;
                 case "add":
+                    $token = $this->getCSRF();
+                    $token->check();
                     $this->trove_cat_list_controller->add($request);
+                    $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
+                    break;
+                case "delete":
+                    $token = $this->getCSRF();
+                    $token->check();
+                    $this->trove_cat_list_controller->delete($request);
                     $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
                     break;
                 default:
@@ -69,13 +81,13 @@ class TroveCatRouter
             }
         } catch (TroveCatMissingFullNameException $e) {
             $GLOBALS['Response']->addFeedback(
-                'error',
+                Feedback::ERROR,
                 $GLOBALS['Language']->getText('admin_trove_cat_edit', 'missing_fullname')
             );
             $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
         } catch (TroveCatMissingShortNameException $e) {
             $GLOBALS['Response']->addFeedback(
-                'error',
+                Feedback::ERROR,
                 $GLOBALS['Language']->getText('admin_trove_cat_edit', 'missing_shortname')
             );
             $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
@@ -83,6 +95,12 @@ class TroveCatRouter
             $GLOBALS['Response']->addFeedback(
                 'error',
                 $GLOBALS['Language']->getText('admin_trove_cat_edit', 'update_forbidden')
+            );
+            $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
+        } catch (TroveCatParentIsRootException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('admin_trove_cat_delete', 'parent_is_root')
             );
             $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
         }
@@ -96,7 +114,8 @@ class TroveCatRouter
         $hierarchy_ids  = array();
 
         $this->list_builder->retrieveFullHierarchy(0, $last_parent, $already_seen, $trove_cat_list, $hierarchy_ids);
-        $presenter = new TroveCatListPresenter($trove_cat_list);
+
+        $presenter  = new TroveCatListPresenter($trove_cat_list, $this->getCSRF());
 
         $this->admin_renderer->renderAPresenter(
             $GLOBALS['Language']->getText('admin_trove_cat_list', 'title'),
@@ -104,5 +123,10 @@ class TroveCatRouter
             'trovecatlist',
             $presenter
         );
+    }
+
+    private function getCSRF()
+    {
+        return new CSRFSynchronizerToken('/admin/trove/trove_cat_list.php');
     }
 }

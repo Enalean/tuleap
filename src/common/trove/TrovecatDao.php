@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -179,6 +178,14 @@ class TroveCatDao extends DataAccessObject
               )";
 
         return $this->update($sql);
+    }
 
+    public function delete($trove_cat_id)
+    {
+        $trove_cat_id = $this->da->escapeInt($trove_cat_id);
+
+        $sql = "DELETE FROM trove_cat WHERE trove_cat_id = $trove_cat_id";
+
+        return $this->update($sql);
     }
 }

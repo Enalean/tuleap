@@ -130,8 +130,8 @@ class TroveCatListController
                 $child['is_top_level_id'],
                 $child['display_during_project_creation'],
                 $child['trove_cat_id'],
-                $current_trove_category['fullpath'] . ' :: ' .$child['hierarchy'],
-                $current_trove_category['fullpath'] . ' :: ' .$child['hierarchy_ids']
+                $current_trove_category['fullpath'] . ' :: ' . $child['hierarchy'],
+                $current_trove_category['fullpath'] . ' :: ' . $child['hierarchy_ids']
             );
         }
 
@@ -173,10 +173,46 @@ class TroveCatListController
             'display'      => $display,
             'mandatory'    => $this->isMandatory($display, $request->get('is-mandatory')),
             'trove_cat_id' => $request->get('id'),
-            'fullpath'     => (isset($trove_cat_list['hierarchy']))? $trove_cat_list['hierarchy']: '',
-            'fullpath_ids' => (isset($trove_cat_list['hierarchy']))? $trove_cat_list['hierarchy_id']: ''
+            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] : '',
+            'fullpath_ids' => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy_id'] : ''
         );
 
         return $trove_categories;
+    }
+
+    private function isRoot($parent)
+    {
+        return (int) $parent === 0;
+    }
+
+    public function delete(HTTPRequest $request)
+    {
+        if ($this->isRoot($request->get('parent'))) {
+            throw new TroveCatParentIsRootException();
+        }
+
+        $trove_cat_id            = $request->get('trove_cat_id');
+        $last_parent             = array();
+        $already_seen            = array();
+        $trove_category_children = array();
+        $hierarchy_ids           = array();
+
+        $this->trove_cat_retriever->retrieveChildren(
+            $trove_cat_id,
+            $last_parent,
+            $already_seen,
+            $trove_category_children,
+            $hierarchy_ids
+        );
+
+        $this->trove_cat_dao->startTransaction();
+
+        foreach ($trove_category_children as $child) {
+            $this->trove_cat_dao->delete($child['trove_cat_id']);
+        }
+
+        $this->trove_cat_dao->delete($request->get('trove_cat_id'));
+
+        $this->trove_cat_dao->commit();
     }
 }

@@ -524,14 +524,10 @@ admin_trove_cat_add	description	Description de la catégorie
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
 #
-admin_trove_cat_delete	title	Arbre des projets - Détruire une catégorie
-admin_trove_cat_delete	header	Détruire une catégorie de l'arbre des projets
-admin_trove_cat_delete	warning	<span class="feedback">**ATTENTION**</span> Vous êtes sur le point de détruire une catégorie de l'arbre des projets.
-admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catégorie possède <b>$1</b> sous-catégorie(s). Sa destruction va aussi entraîner la destruction des sous-catégories de façon récursive !!
-admin_trove_cat_delete	no_child	Cette catégorie n'a pas de sous-catégorie
-admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catégorie et ses sous-catégories (si elle en a) sont utilisées par <b>$1 projet(s)</b>. La destruction de cette catégorie entraînera la réaffectation de tous les projets à la catégorie parent (ou à 'Aucune' si la catégorie parent est la racine de l'arbre)
-admin_trove_cat_delete	no_proj	Cette catégorie n'est utilisée par aucun projet
-admin_trove_cat_delete	error_nocat	Cette catégorie n'existe pas
+admin_trove_cat_delete	delete_trove_cat	Supprimer la catégorie
+admin_trove_cat_delete	alert_description_delete_modal	Wow, attendez une minute. Vous êtes sur le point de supprimer la catégorie de projet <b>$1</b>. Veuillez confirmer votre action.
+admin_trove_cat_delete	parent_is_root	Il est impossible de supprimer une catégorie parente.
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
@@ -559,7 +555,7 @@ admin_trove_cat_list	header_name	Nom complet
 admin_trove_cat_list	header_description	Description
 admin_trove_cat_list	header	Catégories de projets
 admin_trove_cat_list	edit	Modifier
-admin_trove_cat_list	delete	Détruire
+admin_trove_cat_list	delete	Supprimer
 admin_trove_cat_list	add	Ajouter une catégorie
 admin_trove_cat_list	deletion_forbidden_label	Impossible de détruire une hiérarchie, merci de supprimer d'abord ses enfants.
 admin_trove_cat_list	cancel	Annuler

@@ -8,6 +8,9 @@
     </div>
 
     <form action="/admin/trove/trove_cat_list.php?action=update" method="POST" name="form-trove-cat-edit">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="id" value="{{ trove_cat_id }}">
         <div class="tlp-modal-body">
             <div class="trove-cats-general-properties">

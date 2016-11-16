@@ -6,6 +6,9 @@
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
     </div>
     <form action="/admin/trove/trove_cat_list.php?action=add" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="id">
         <div class="tlp-modal-body">
             <div class="trove-cats-general-properties">

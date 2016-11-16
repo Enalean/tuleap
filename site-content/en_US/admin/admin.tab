@@ -532,14 +532,10 @@ admin_trove_cat_add	description	Category description
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
 #
-admin_trove_cat_delete	title	Trove - Delete Category
-admin_trove_cat_delete	header	Delete a Trove Category
-admin_trove_cat_delete	warning	<span class="feedback">**WARNING**</span> You are about to delete a trove category of the software map.
-admin_trove_cat_delete	caution_child	<span class="feedback">**CAUTION**</span> This category has <b>$1 child</b> categorie(s). Deleting the category will also delete all the child categories recursively!!
-admin_trove_cat_delete	no_child	This category has NO child category
-admin_trove_cat_delete	caution_proj	<span class="feedback">**CAUTION**</span> This category and its children (if any) are being used by <b>$1 project(s)</b>. Deleting this category will reset existing project categories to the parent category (or 'None' if the parent is a root category)
-admin_trove_cat_delete	no_proj	This category is NOT used by any project
-admin_trove_cat_delete	error_nocat	That trove category does not exist
+admin_trove_cat_delete	delete_trove_cat	Delete project category
+admin_trove_cat_delete	alert_description_delete_modal	Wow, wait a minute. You're about to delete the <b>$1</b> category. Please confirm your action.
+admin_trove_cat_delete	parent_is_root	Cannot delete a parent category.
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
