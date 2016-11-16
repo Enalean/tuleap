@@ -50,7 +50,7 @@ class TroveCatListBuilder
                 'description'                     => $row_child['description'],
                 'spacing'                         => (count($last_parent) - 1) * 30,
                 'has_spacing'                     => count($last_parent) > 1,
-                'is_deletable'                    => $this->isNodeARootNode($row_child['parent']),
+                'is_deletable'                    => ! $this->isNodeARootNode($row_child['parent']),
                 'fullname'                        => $row_child['fullname'],
                 'shortname'                       => $row_child['shortname'],
                 'is_mandatory'                    => (boolean) $row_child['mandatory'],
