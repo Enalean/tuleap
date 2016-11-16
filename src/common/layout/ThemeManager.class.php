@@ -83,6 +83,8 @@ class ThemeManager
                 '`(
                     ^/admin/
                     |
+                    ^/admin/news.php
+                    |
                     ^/stats/
                     |
                     ^/tracker/admin/restore.php

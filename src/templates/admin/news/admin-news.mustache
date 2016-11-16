@@ -1,0 +1,43 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
+
+    <nav class="tlp-tabs">
+        <a class="tlp-tab {{# approval_queue_active }}tlp-tab-active{{/ approval_queue_active }}" href="/admin/news/?pane=approval_queue">{{ approval_queue_tab_name }}</a>
+        <a class="tlp-tab {{# deleted_news_active }}tlp-tab-active{{/ deleted_news_active }}" href="/admin/news/?pane=deleted_news">{{ deleted_news_tab_name }}</a>
+        <a class="tlp-tab {{# approved_news_active }}tlp-tab-active{{/ approved_news_active }}" href="/admin/news/?pane=approved_news">{{ approved_news_tab_name }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-newspaper-o tlp-pane-title-icon"></i> {{ pane_name }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                        <tr>
+                            <th>{{ table_title_name }}</th>
+                            <th>{{ table_content_name }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{# news_list }}
+                            <tr>
+                                <td>{{ title }}</td>
+                                <td>{{ content }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-info tlp-button-outline" href="/admin/news/?approve=1&id={{ id }}">
+                                        <i class="fa fa-list tlp-button-icon"></i> {{ table_details_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {{/ news_list }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

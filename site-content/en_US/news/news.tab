@@ -14,7 +14,7 @@
 #
 news_admin_index	group_update_err	ERROR doing newsbyte update
 news_admin_index	project_newsbyte_updated	Project NewsByte Updated.
-news_admin_index	title	NewsBytes
+news_admin_index	title	News
 news_admin_index	not_found_err	Error - not found
 news_admin_index	approve_for	Approve a NewsByte For Project: $1
 news_admin_index	submitted_by	Submitted by
@@ -53,6 +53,15 @@ news_admin_index	promoted_row_label	Displayed
 news_admin_index	update_news_list	Display select items in widget
 news_admin_index	info_text	Only the first ten news items will be displayed
 news_admin_index	no_news_items	Please add news items to choose which ones will be displayed in the widget
+news_admin_index	approval_queue_tab_name	Approval queue
+news_admin_index	deleted_news_tab_name	Deleted news
+news_admin_index	approved_news_tab_name	Approved news
+news_admin_index	approval_queue_pane_name	News waiting for approbation
+news_admin_index	deleted_news_pane_name	News deleted last week
+news_admin_index	approved_news_pane_name	News approved last week
+news_admin_index	table_title_name	Title
+news_admin_index	table_content_name	Content
+news_admin_index	table_details_name	Details
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php
