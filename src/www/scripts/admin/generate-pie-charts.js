@@ -18,6 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 (function() {
+    const PIE_CHART_MAX_HEIGHT = 200;
+    const PIE_CHART_MARGIN     = 50;
+
     initializePieCharts();
 
     function initializePieCharts() {
@@ -45,9 +48,9 @@
 
     function getSizes(element) {
         var client_rect_width = element.getBoundingClientRect().width,
-            width             = client_rect_width / 2 - 50 < 110 ? 110 : client_rect_width / 2 - 50,
-            height            = client_rect_width / 2 - 50 < 110 ? 110 : client_rect_width / 2 - 50,
-            radius            = Math.min(width, height);
+            width             = client_rect_width / 2,
+            height            = PIE_CHART_MAX_HEIGHT,
+            radius            = width - PIE_CHART_MARGIN;
 
         return {width: width, height: height, radius: radius};
     }
