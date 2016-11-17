@@ -18,8 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 (function() {
-    const PIE_CHART_MAX_HEIGHT = 200;
-    const PIE_CHART_MARGIN     = 50;
+    const PIE_CHART_MAX_HEIGHT    = 250;
+    const PIE_CHART_MARGIN        = 50;
+    const PIE_CHART_LEGEND_MARGIN = 10;
 
     initializePieCharts();
 
@@ -29,11 +30,12 @@
         [].forEach.call(pie_chart_elements, function(pie_chart_element) {
             var pie_chart_element_sizes = getSizes(pie_chart_element);
             var options = {
-                graph_id: pie_chart_element.id,
-                data    : JSON.parse(pie_chart_element.dataset.statistics),
-                width   : pie_chart_element_sizes.width,
-                height  : pie_chart_element_sizes.height,
-                radius  : pie_chart_element_sizes.radius
+                graph_id   : pie_chart_element.id,
+                graph_class: 'siteadmin-homepage-pie-chart',
+                data       : JSON.parse(pie_chart_element.dataset.statistics),
+                width      : pie_chart_element_sizes.width,
+                height     : pie_chart_element_sizes.height,
+                radius     : pie_chart_element_sizes.radius
             };
 
             var pie_chart = tuleap.admin.statistictsPieChart(options);
@@ -44,13 +46,33 @@
                 pie_chart.redraw();
             });
         });
+
+        initializePieChartsLegendSize();
+    }
+
+    function initializePieChartsLegendSize() {
+        var legend_max_width   = 0;
+        var legend_li_elements = document.querySelectorAll('.siteadmin-homepage-pie-chart-legend > li');
+
+        [].forEach.call(legend_li_elements, function(li_element) {
+            var li_width = li_element.getBoundingClientRect().width;
+
+            if (li_width > legend_max_width) {
+                legend_max_width = li_width;
+            }
+        });
+
+        [].forEach.call(legend_li_elements, function(legend_li_element) {
+            legend_li_element.style['width'] = legend_max_width + PIE_CHART_LEGEND_MARGIN + 'px';
+        });
     }
 
     function getSizes(element) {
         var client_rect_width = element.getBoundingClientRect().width,
             width             = client_rect_width / 2,
-            height            = PIE_CHART_MAX_HEIGHT,
-            radius            = width - PIE_CHART_MARGIN;
+            height            = PIE_CHART_MAX_HEIGHT > client_rect_width / 2 ?
+                client_rect_width / 2 : PIE_CHART_MAX_HEIGHT,
+            radius            = Math.min(width - PIE_CHART_MARGIN, height - PIE_CHART_MARGIN);
 
         return {width: width, height: height, radius: radius};
     }
