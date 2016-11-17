@@ -646,13 +646,44 @@ admin_desc_fields	delete_modal_content	You are about to delete a custom project 
 admin_desc_fields	delete_modal_cancel	Cancel
 admin_desc_fields	delete_modal_submit	Delete field
 
-admin_system_events	title	System Events
+admin_system_events	title	System events
 admin_system_events	notifications	Notifications
 admin_system_events	send_email	Send an email to:
 admin_system_events	nobody	Nobody
 admin_system_events	default_queue	Main queue
 admin_system_events	fts_queue	Full Text Search
 admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration
+admin_system_events	empty_state	No system event matches your criteria.
+admin_system_events	filter_label	Filter
+admin_system_events	search_label	Search
+admin_system_events	types_label	Types
+admin_system_events	type_label	Type
+admin_system_events	all_status_label	Status
+admin_system_events	status_label	Status
+admin_system_events	parameters_label	Parameters
+admin_system_events	time_taken_label	Time taken
+admin_system_events	details_label	Details
+admin_system_events	replay_label	Relaunch
+admin_system_events	id_label	Id
+admin_system_events	created_label	Created date
+admin_system_events	owner_label	Owner
+admin_system_events	priority_label	Priority
+admin_system_events	start_label	Start date
+admin_system_events	end_label	End date
+admin_system_events	log_label	Log
+admin_system_events	replayed_label	relaunched
+admin_system_events	details_title	System event details
+admin_system_events	duration_years	%y years %m months %d days %h h %i m %s s
+admin_system_events	duration_months	%m months %d days %h h %i m %s s
+admin_system_events	duration_days	%d days %h h %i m %s s
+admin_system_events	duration_hours	%h h %i m %s s
+admin_system_events	duration_minutes	%i m %s s
+admin_system_events	duration_seconds	%s s
+admin_system_events	priority_1	High
+admin_system_events	priority_2	Medium
+admin_system_events	priority_3	Low
+admin_system_events	not_ended_yet	Not ended yet
+admin_system_events	not_started_yet	Not started yet
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

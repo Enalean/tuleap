@@ -1,22 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 — 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'common/dao/SystemEventsFollowersDao.class.php';
@@ -230,6 +230,34 @@ abstract class SystemEvent {
     
     function getEndDate() {
         return $this->end_date;
+    }
+
+    public function getTimeTaken()
+    {
+        if ($this->end_date === '0000-00-00 00:00:00') {
+            return '';
+        }
+
+        $start = DateTime::createFromFormat('Y-m-d H:i:s', $this->process_date);
+        $end   = DateTime::createFromFormat('Y-m-d H:i:s', $this->end_date);
+
+        $duration = $end->diff($start);
+
+        if ($duration->y) {
+            $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_years');
+        } else if ($duration->m) {
+            $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_months');
+        } else if ($duration->d) {
+            $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_days');
+        } else if ($duration->h) {
+            $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_hours');
+        } else if ($duration->i) {
+            $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_minutes');
+        } else {
+            $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_seconds');
+        }
+
+        return $duration->format($format);
     }
     
     public function setProcessDate($process_date) {

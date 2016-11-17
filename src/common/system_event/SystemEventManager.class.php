@@ -1,23 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 — 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -484,77 +483,39 @@ class SystemEventManager {
     }
 
     /**
-     * Compute a html table to display the status of the last n events
-     *
-     * @param int                   $offset        the offset of the pagination
-     * @param int                   $limit         the number of event to includ in the table
-     * @param boolean               $full          display a full table or only a summary
-     * @param array                 $filter_status the filter on status
-     * @param array                 $filter_type   the filter on type
-     * @param CSRFSynchronizerToken $csrf          The token to use to build actions on events
+     * Compute a html table to display the status of the last 10 events,
+     * displayed in my personal page as a widget for site administrators
      *
      * @return string html
      */
-    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, CSRFSynchronizerToken $csrf = null, $queue = null) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+    public function fetchLastTenEventsStatusWidget()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        $html .= '<table class="tlp-table">';
-
-        if ($full) {
-            $html .= '<thead><tr>';
-            $html .= '<th class="tlp-table-cell-numeric">'. 'id' .'</td>';
-            $html .= '<th>'. 'type' .'</td>';
-            $html .= '<th>'. 'owner' .'</td>';
-            $html .= '<th>'. 'status' .'</th>';
-            $html .= '<th class="tlp-table-cell-numeric">'. 'priority' .'</th>';
-            $html .= '<th>'. 'parameters' .'</th>';
-            $html .= '<th>'. 'create_date' .'</th>';
-            $html .= '<th>'. 'process_date' .'</th>';
-            $html .= '<th>'. 'end_date' .'</th>';
-            $html .= '<th>'. 'log' .'</th>';
-            $html .= '<th>'. 'actions' .'</th>';
-
-            $html .= '</tr></thead>';
-
-        }
+        $html  = '';
+        $html .= '<table class="table table-striped table-condensed">';
         $html .= '<tbody>';
 
-        $replay_action_params = array();
-        if ($csrf) {
-            $replay_action_params[$csrf->getTokenName()] = $csrf->getToken();
-        }
-        if (!$filter_status) {
-            $filter_status = array(
-                SystemEvent::STATUS_NEW,
-                SystemEvent::STATUS_RUNNING,
-                SystemEvent::STATUS_DONE,
-                SystemEvent::STATUS_WARNING,
-                SystemEvent::STATUS_ERROR,
-            );
-        }
+        $filter_status = array(
+            SystemEvent::STATUS_NEW,
+            SystemEvent::STATUS_RUNNING,
+            SystemEvent::STATUS_DONE,
+            SystemEvent::STATUS_WARNING,
+            SystemEvent::STATUS_ERROR,
+        );
 
-        if ($queue) {
-            $allowed_types = $this->getTypesForQueue($queue);
-        } else {
-            $allowed_types = $this->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
-        }
+        $filter_type = $this->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
 
-        if ($filter_type) {
-            $filter_type = array_intersect($filter_type, $allowed_types);
-        } else {
-            $filter_type = $allowed_types;
-        }
+        $offset = 0;
+        $limit  = 10;
 
         $events = $this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type);
-        list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
-        $nb_displayed = count($events);
         foreach($events as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
                 $html .= '<tr>';
 
                 //id
-                $html .= '<td class="tlp-table-cell-numeric">'. $sysevent->getId() .'</td>';
+                $html .= '<td>'. $sysevent->getId() .'</td>';
 
                 //name of the event
                 $html .= '<td>'. $sysevent->getType() .'</td>';
@@ -562,77 +523,19 @@ class SystemEventManager {
                 $html .= '<td>'. $sysevent->getOwner() .'</td>';
 
                 //status
-                $html .= '<td ';
+                $html .= '<td class="system_event_status_'. $row['status'] .'"';
                 if ($sysevent->getLog()) {
-                    $html .= 'title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+                    $html .= ' title="'. $purifier->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
                 }
                 $html .= '>';
-                $html .= $this->getBadge($sysevent->getStatus());
+                $html .= $sysevent->getStatus();
                 $html .= '</td>';
-
-                if ($full) {
-                    $replay_link = '';
-                    if ($sysevent->getStatus() == SystemEvent::STATUS_ERROR) {
-                        $replay_action_params['replay'] = $sysevent->getId();
-                        $replay_link .= '<a href="/admin/system_events/?'.
-                            ($queue !== SystemEvent::DEFAULT_QUEUE ? 'queue='.$queue.'&' : '').
-                            http_build_query($replay_action_params) .'" title="Replay this event">';
-                        $replay_link .= $GLOBALS['HTML']->getImage('ic/arrow-circle.png');
-                        $replay_link .= '</a>';
-                    }
-
-                    $html .= '<td class="tlp-table-cell-numeric">'. $sysevent->getPriority() .'</td>';
-                    $html .= '<td>'. $sysevent->verbalizeParameters(true) .'</td>';
-                    $html .= '<td>'. $sysevent->getCreateDate().'</td>';
-                    $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
-                    $html .= '<td>'. $sysevent->getEndDate() .'</td>';
-                    $html .= '<td>'. nl2br($sysevent->getLog()) .'</td>';
-                    $html .= '<td>'. $replay_link .'</td>';
-                }
-
                 $html .= '</tr>';
             }
         }
         $html .= '</tbody></table>';
-        if ($full) {
-            //Pagination
-            $default_params = array(
-                'filter_status' => $filter_status,
-                'filter_type'   => $filter_type,
-                'queue'         => $queue
-            );
-            $pagination = new Tuleap\Layout\PaginationPresenter($limit, $offset, $nb_displayed, $num_total_rows, '/admin/system_events/', $default_params);
-            $renderer   = TemplateRendererFactory::build()->getRenderer($GLOBALS['tuleap_dir'] .'/src/templates/common');
 
-            $html .= $renderer->renderToString('pagination', $pagination);
-
-        }
         return $html;
-    }
-
-    private function getBadge($status)
-    {
-        switch ($status) {
-            case SystemEvent::STATUS_RUNNING:
-                $classname = 'info';
-                break;
-            case SystemEvent::STATUS_DONE:
-                $classname = 'success';
-                break;
-            case SystemEvent::STATUS_WARNING:
-                $classname = 'warning';
-                break;
-            case SystemEvent::STATUS_ERROR:
-                $classname = 'danger';
-                break;
-            case SystemEvent::STATUS_NONE:
-            case SystemEvent::STATUS_NEW:
-            default:
-                $classname = 'secondary';
-                break;
-        }
-
-        return '<span class="tlp-badge-'. $classname .'">'. $status .'</span>';
     }
 
     /**

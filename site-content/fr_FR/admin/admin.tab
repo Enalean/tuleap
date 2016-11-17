@@ -638,13 +638,44 @@ admin_desc_fields	delete_modal_content	Vous êtes sur le point de supprimer un c
 admin_desc_fields	delete_modal_cancel	Annuler
 admin_desc_fields	delete_modal_submit	Supprimer le champ
 
-admin_system_events	title	Événements Système
+admin_system_events	title	Événements système
 admin_system_events	notifications	Alertes
 admin_system_events	send_email	Envoyer un email à :
 admin_system_events	nobody	Personne
 admin_system_events	default_queue	Queue principale
 admin_system_events	fts_queue	Full Text Search
 admin_system_events	tv3tv5_queue	Migration TV3 -> TV5
+admin_system_events	empty_state	Aucun événement système ne correspond à votre filtre.
+admin_system_events	filter_label	Filtrer
+admin_system_events	search_label	Chercher
+admin_system_events	types_label	Types
+admin_system_events	type_label	Type
+admin_system_events	all_status_label	Status
+admin_system_events	status_label	Status
+admin_system_events	parameters_label	Paramètres
+admin_system_events	time_taken_label	Temps
+admin_system_events	details_label	Détails
+admin_system_events	replay_label	Relancer
+admin_system_events	id_label	Id
+admin_system_events	created_label	Date de création
+admin_system_events	owner_label	Propriétaire
+admin_system_events	priority_label	Priorité
+admin_system_events	start_label	Date de début
+admin_system_events	end_label	Date de fin
+admin_system_events	log_label	Log
+admin_system_events	replayed_label	relancé
+admin_system_events	details_title	Détails de l'événement système
+admin_system_events	duration_years	%y ans %m mois %d jours %h h %i m %s s
+admin_system_events	duration_months	%m mois %d jours %h h %i m %s s
+admin_system_events	duration_days	%d jours %h h %i m %s s
+admin_system_events	duration_hours	%h h %i m %s s
+admin_system_events	duration_minutes	%i m %s s
+admin_system_events	duration_seconds	%s s
+admin_system_events	priority_1	Haute
+admin_system_events	priority_2	Moyenne
+admin_system_events	priority_3	Basse
+admin_system_events	not_ended_yet	Pas encore fini
+admin_system_events	not_started_yet	Pas encore démarré
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

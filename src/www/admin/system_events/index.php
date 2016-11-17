@@ -1,22 +1,24 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 – 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once 'pre.php';
 require_once 'adminPresenter.class.php';
 require_once 'common/dao/SystemEventsFollowersDao.class.php';
@@ -59,7 +61,7 @@ if ($id_to_replay) {
     $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
 }
 
-$hp           = Codendi_HTMLPurifier::instance();
+$purifier = Codendi_HTMLPurifier::instance();
 
 $available_queues = array(
     SystemEventQueue::NAME => new SystemEventQueue()
@@ -89,7 +91,7 @@ foreach ($available_queues as $queue) {
 }
 
 $offset        = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
-$limit         = 50;
+$limit         = 25;
 $full          = true;
 $filter_status = $request->get('filter_status');
 if (!$filter_status) {
@@ -109,53 +111,23 @@ if (! $filter_type || (count($filter_type) === 1 && $filter_type[0] === $filter_
 }
 
 
-$all_status = array(
-    array(
-        'label'   => SystemEvent::STATUS_NEW,
-        'checked' => in_array(SystemEvent::STATUS_NEW, $filter_status)
-    ),
-    array(
-        'label'   => SystemEvent::STATUS_RUNNING,
-        'checked' => in_array(SystemEvent::STATUS_RUNNING, $filter_status)
-    ),
-    array(
-        'label'   => SystemEvent::STATUS_DONE,
-        'checked' => in_array(SystemEvent::STATUS_DONE, $filter_status)
-    ),
-    array(
-        'label'   => SystemEvent::STATUS_WARNING,
-        'checked' => in_array(SystemEvent::STATUS_WARNING, $filter_status)
-    ),
-    array(
-        'label'   => SystemEvent::STATUS_ERROR,
-        'checked' => in_array(SystemEvent::STATUS_ERROR, $filter_status)
-    )
-);
+$all_types = $se->getTypesForQueue($selected_queue_name);
+uksort($all_types, 'strnatcasecmp');
 
-
-$types = $se->getTypesForQueue($selected_queue_name);
-uksort($types, 'strnatcasecmp');
-foreach(array_chunk($types, ceil(count($types) / 3)) as $col) {
-    foreach ($col as $type) {
-        $typesArray[] = array('value' => $type, 'text' => $type);
-    }
+$dao = new SystemEventDao();
+if ($filter_type) {
+    $filter_type = array_intersect($filter_type, $all_types);
+} else {
+    $filter_type = $all_types;
 }
+$matching_events = $dao->searchLastEvents($offset, $limit, $filter_status, $filter_type)
+    ->instanciateWith(array($se, 'getInstanceFromRow'));
+$num_total_rows = $dao->foundRows();
 
-$selectbox = html_build_multiple_select_box_from_array(
-    $typesArray,
-    "filter_type[]",
-    array_values($filter_type),
-    10,
-    false,
-    '',
-    true,
-    '',
-    false,
-    '',
-    false
-);
-
-$events = $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token, $selected_queue_name);
+$events = array();
+foreach ($matching_events as $event) {
+    $events[] = new Tuleap\SystemEvent\SystemEventPresenter($event);
+}
 
 $system_event_followers = array();
 $dar = $sefdao->searchAll();
@@ -189,7 +161,7 @@ foreach ($dar as $row) {
         $row,
         array(
             'edit'           => ($request->get('edit') == $row['id']),
-            'email'          => $hp->purify($row['emails'], CODENDI_PURIFIER_CONVERT_HTML),
+            'email'          => $purifier->purify($row['emails'], CODENDI_PURIFIER_CONVERT_HTML),
             'types-selected' => $types
         )
     );
@@ -210,24 +182,41 @@ $status_new_followers = array(
     )
 );
 
+$default_params = array(
+    'filter_status' => $filter_status,
+    'filter_type'   => $filter_type,
+    'queue'         => $selected_queue_name
+);
+$pagination = new Tuleap\Layout\PaginationPresenter(
+    $limit,
+    $offset,
+    count($events),
+    $num_total_rows,
+    '/admin/system_events/',
+    $default_params
+);
+
+$search = new Tuleap\SystemEvent\SystemEventSearchPresenter($filter_status, $all_types, $filter_type);
 
 $title = $Language->getText('admin_system_events', 'title');
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/system-events.js');
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     $title,
     ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/',
     'admin-system-events',
     new SystemEvents_adminPresenter(
-        $hp,
+        $title,
+        $purifier,
         $queue_links,
         $token,
-        $all_status,
-        $selectbox,
         $events,
         $system_event_followers,
         $request->get('edit'),
         $status_new_followers,
-        $selected_queue_name
+        $selected_queue_name,
+        $search,
+        $pagination
     )
 );
