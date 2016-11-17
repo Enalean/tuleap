@@ -28,5 +28,6 @@ class AdminApprovalQueuePresenter extends AdminNewsListPresenter
         parent::__construct($title, $news_list);
 
         $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','approval_queue_pane_name');
+        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','approval_queue_no_news');
     }
 }
