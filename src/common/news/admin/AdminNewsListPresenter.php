@@ -52,5 +52,6 @@ class AdminNewsListPresenter
         $this->table_title_name        = $GLOBALS['Language']->getText('news_admin_index', 'table_title_name');
         $this->table_content_name      = $GLOBALS['Language']->getText('news_admin_index', 'table_content_name');
         $this->table_details_name      = $GLOBALS['Language']->getText('news_admin_index', 'table_details_name');
+        $this->no_news                 = $GLOBALS['Language']->getText('news_admin_index', 'no_news');
     }
 }

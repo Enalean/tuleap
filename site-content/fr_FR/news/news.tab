@@ -55,6 +55,10 @@ news_admin_index	approved_news_pane_name	Annonces approuvées la semaine derniè
 news_admin_index	table_title_name	Titre
 news_admin_index	table_content_name	Contenu
 news_admin_index	table_details_name	Détails
+news_admin_index	no_news	Il n'y a aucune annonce
+news_admin_index	approval_queue_no_news	Il n'y a aucune annonce en attente d'approbation
+news_admin_index	approved_news_no_news	Aucune annonce n'a été approuvée la semaine dernière
+news_admin_index	deleted_news_no_news	Aucune annonce n'a été rejetée la semaine dernière
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

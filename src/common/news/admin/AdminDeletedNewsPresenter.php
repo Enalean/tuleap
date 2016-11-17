@@ -28,5 +28,6 @@ class AdminDeletedNewsPresenter extends AdminNewsListPresenter
         parent::__construct($title, $news_list);
 
         $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','deleted_news_pane_name');
+        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','deleted_news_no_news');
     }
 }
