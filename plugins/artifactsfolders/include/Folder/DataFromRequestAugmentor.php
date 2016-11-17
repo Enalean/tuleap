@@ -53,10 +53,6 @@ class DataFromRequestAugmentor
 
     public function augmentDataFromRequest(array &$fields_data)
     {
-        if (! $this->request->exist('new-artifact-folder')) {
-            return;
-        }
-
         $new_artifact_folder_id = (int) $this->request->get('new-artifact-folder');
         $previous_folder        = $this->getExistingFolderForArtifactInRequest();
 
