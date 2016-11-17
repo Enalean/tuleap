@@ -22,6 +22,7 @@ use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
+use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
@@ -302,46 +303,20 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
     }
 
+    private function getCalculator()
+    {
+        return new ComputedFieldCalculator($this->getDao());
+    }
+
     protected function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
     {
-        $sum               = null;
-        $target_field_name = $this->getTargetFieldName();
-        $already_seen      = array();
-
-        do {
-            if ($timestamp !== null) {
-                $dar = $this->getDao()->getFieldValuesAtTimestamp($artifact_ids_to_fetch, $target_field_name, $timestamp, $this->getId());
-            } else {
-                $dar = $this->getDao()->getComputedFieldValues($artifact_ids_to_fetch, $target_field_name, $this->getId(), $stop_on_manual_value);
-            }
-
-            $current_fetch_artifact = $artifact_ids_to_fetch;
-            $artifact_ids_to_fetch  = array();
-            $last_id                = null;
-            if ($dar) {
-                foreach ($dar as $row) {
-                    if (! isset($already_seen[$row['id']]) && $last_id != $row['parent_id']) {
-                        if (isset($row['value']) && $row['value'] !== null) {
-                            $already_seen[$row['parent_id']] = true;
-                            $last_id                         = $row['parent_id'];
-                            $sum                            += $row['value'];
-                        } elseif ($row['type'] == 'computed') {
-                            $artifact_ids_to_fetch[]  = $row['id'];
-                        } elseif (isset($row[$row['type'].'_value'])) {
-                            $already_seen[$row['id']] = true;
-                            $sum                     += $row[$row['type'].'_value'];
-                        }
-                    }
-                }
-                $dar->freeMemory();
-            }
-
-            foreach ($current_fetch_artifact as $artifact_fetched) {
-                $already_seen[$artifact_fetched] = true;
-            }
-        } while (count($artifact_ids_to_fetch) > 0);
-
-        return $sum;
+        return $this->getCalculator()->calculate(
+            $artifact_ids_to_fetch,
+            $timestamp,
+            $stop_on_manual_value,
+            $this->getTargetFieldName(),
+            $this->getId()
+        );
     }
 
     private function computeValuesVersion(DataAccessResult $dar, PFUser $user, $timestamp, array &$computed_artifact_ids) {
