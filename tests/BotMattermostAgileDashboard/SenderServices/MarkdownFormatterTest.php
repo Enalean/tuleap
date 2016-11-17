@@ -107,4 +107,14 @@ class MarkdownFormatterTest extends TuleapTestCase
 
         $this->assertEqual($result, '[link name](https://my-url.com)');
     }
+
+    public function itFormatsAMarkdownImage()
+    {
+        $image_name = 'image name';
+        $image_url  = 'https://my-image-url.com';
+
+        $result = $this->markdown_formatter->createImage($image_name, $image_url);
+
+        $this->assertEqual($result, '![image name](https://my-image-url.com)');
+    }
 }

@@ -97,19 +97,39 @@ class StandUpNotificationBuilder
         $milestone_table = $this->markdown_formatter->createSimpleTableText(
             $this->getMilestoneInformation($milestone, $user)
         );
-        $links           = $this->getPlanningAdditionalLinks($milestone, $user);
+        $link            = $GLOBALS['Language']->getText(
+            'plugin_botmattermost_agiledashboard', 'notification_builder_quick_access'
+        ).' : '.$this->getPlanningCardwallLink($milestone);
 
         $text = $this->markdown_formatter->addTitleOfLevel(
             $milestone->getArtifactTitle().' '.$this->buildMilestoneDatesInfo($milestone), 4
         );
+        $text .= $this->markdown_formatter->addLineOfText($link);
+        $text .= $this->markdown_formatter->addLineOfText('');
         $text .= $this->markdown_formatter->addLineOfText($milestone_table);
         $text .= $this->buildLinkedArtifactsNotificationTextByMilestone($milestone, $user);
+
         $text .= $this->markdown_formatter->addLineOfText(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_quick_access').
-            ' : '.implode(", ", $links)
+            $this->markdown_formatter->createImage(
+                'Burndown',
+                $this->getBurndownImageUrl($milestone->getArtifact(), $user)
+            )
         );
 
         return $text;
+    }
+
+    private function getBurndownImageUrl(Tracker_Artifact $artifact, $user)
+    {
+        $url_query = http_build_query(
+            array(
+                'formElement' => $artifact->getABurndownField($user)->getId(),
+                'func'        => \Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                'src_aid'     => $artifact->getId()
+            )
+        );
+
+        return $this->getPrefixUrl().TRACKER_BASE_URL.'/?'.$url_query;
     }
 
     private function buildLinkedArtifactsNotificationTextByMilestone(Planning_Milestone $milestone, PFUser $user)
@@ -144,15 +164,9 @@ class StandUpNotificationBuilder
         return $artifacts;
     }
 
-    private function getPlanningAdditionalLinks(Planning_Milestone $milestone, $user)
+    private function getPlanningCardwallLink(Planning_Milestone $milestone)
     {
-        $GLOBALS['Language']->getText('plugin_cardwall', 'title');
-        $links[] = $this->buildMilestoneLinkForPane($milestone, "cardwall", "Card Wall");
-        if ($milestone->hasBurdownField($user)) {
-            $links[] = $this->buildMilestoneLinkForPane($milestone, "burndown", "Burndown");
-        }
-
-        return $links;
+        return $this->buildMilestoneLinkForPane($milestone, "cardwall", "Card Wall");
     }
 
     private function checkModificationOnArtifact(Tracker_Artifact $artifact)

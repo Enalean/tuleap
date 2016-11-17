@@ -91,6 +91,11 @@ class MarkdownFormatter
         return "[$link_name]($url)";
     }
 
+    public function createImage($image_name, $image_url)
+    {
+        return '!'.$this->createLink($image_name, $image_url);
+    }
+
     private function addOneRowOfTable($new_row)
     {
         $end_of_line  = '|'.PHP_EOL;
