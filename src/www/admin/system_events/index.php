@@ -60,11 +60,6 @@ if ($id_to_replay) {
 }
 
 $hp           = Codendi_HTMLPurifier::instance();
-$template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/';
-$renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
-
-$title = $Language->getText('admin_system_events', 'title');
-$HTML->header(array('title' => $title, 'main_classes' => array('tlp-framed-vertically')));
 
 $available_queues = array(
     SystemEventQueue::NAME => new SystemEventQueue()
@@ -215,7 +210,13 @@ $status_new_followers = array(
     )
 );
 
-$renderer->renderToPage(
+
+$title = $Language->getText('admin_system_events', 'title');
+
+$renderer = new \Tuleap\Admin\AdminPageRenderer();
+$renderer->renderANoFramedPresenter(
+    $title,
+    ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/',
     'admin-system-events',
     new SystemEvents_adminPresenter(
         $hp,
@@ -230,5 +231,3 @@ $renderer->renderToPage(
         $selected_queue_name
     )
 );
-
-$HTML->footer(array());
