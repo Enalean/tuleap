@@ -54,10 +54,10 @@ news_admin_index	update_news_list	Display select items in widget
 news_admin_index	info_text	Only the first ten news items will be displayed
 news_admin_index	no_news_items	Please add news items to choose which ones will be displayed in the widget
 news_admin_index	approval_queue_tab_name	Approval queue
-news_admin_index	deleted_news_tab_name	Deleted news
+news_admin_index	rejected_news_tab_name	Rejected news
 news_admin_index	approved_news_tab_name	Approved news
 news_admin_index	approval_queue_pane_name	News waiting for approbation
-news_admin_index	deleted_news_pane_name	News deleted last week
+news_admin_index	rejected_news_pane_name	News rejected last week
 news_admin_index	approved_news_pane_name	News approved last week
 news_admin_index	table_title_name	Title
 news_admin_index	table_content_name	Content
@@ -65,7 +65,7 @@ news_admin_index	table_details_name	Details
 news_admin_index	no_news	There is no news
 news_admin_index	approval_queue_no_news	There is no news waiting for approbation
 news_admin_index	approved_news_no_news	No news has been approved last week
-news_admin_index	deleted_news_no_news	No news has been rejected last week
+news_admin_index	rejected_news_no_news	No news has been rejected last week
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

@@ -47,10 +47,10 @@ news_admin_index	update_news_list	Afficher les annonces sélectionnées dans le 
 news_admin_index	info_text	Seulement les dix premières annonces seront affichées
 news_admin_index	no_news_items	Veuillez ajouter des annonces pour pouvoir choisir lesquelles seront affichées
 news_admin_index	approval_queue_tab_name	Queue d'approbation
-news_admin_index	deleted_news_tab_name	Annonces supprimées
+news_admin_index	rejected_news_tab_name	Annonces rejetées
 news_admin_index	approved_news_tab_name	Annonces approuvées
 news_admin_index	approval_queue_pane_name	Annonces en attente d'approbation
-news_admin_index	deleted_news_pane_name	Annonces supprimées la semaine dernière
+news_admin_index	rejected_news_pane_name	Annonces rejetées la semaine dernière
 news_admin_index	approved_news_pane_name	Annonces approuvées la semaine dernière
 news_admin_index	table_title_name	Titre
 news_admin_index	table_content_name	Contenu
@@ -58,7 +58,7 @@ news_admin_index	table_details_name	Détails
 news_admin_index	no_news	Il n'y a aucune annonce
 news_admin_index	approval_queue_no_news	Il n'y a aucune annonce en attente d'approbation
 news_admin_index	approved_news_no_news	Aucune annonce n'a été approuvée la semaine dernière
-news_admin_index	deleted_news_no_news	Aucune annonce n'a été rejetée la semaine dernière
+news_admin_index	rejected_news_no_news	Aucune annonce n'a été rejetée la semaine dernière
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php
