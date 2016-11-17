@@ -23,7 +23,7 @@ use DataAccessObject;
 
 class AdminNewsDao extends DataAccessObject
 {
-    public function getDeletedNews($old_date)
+    public function getRejectedNews($old_date)
     {
         $old_date = $this->da->escapeInt($old_date);
 

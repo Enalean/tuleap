@@ -31,9 +31,9 @@ class AdminNewsBuilder
         $this->admin_news_dao = $admin_news_dao;
     }
 
-    public function getDeletedNews($old_date)
+    public function getRejectedNews($old_date)
     {
-        return $this->build($this->admin_news_dao->getDeletedNews($old_date));
+        return $this->build($this->admin_news_dao->getRejectedNews($old_date));
     }
 
     public function getApprovedNews($old_date)

@@ -20,6 +20,9 @@
  */
 
 use Tuealp\News\Admin\AdminNewsBuilder;
+use Tuealp\News\Admin\AdminApprovedNewsPresenter;
+use Tuealp\News\Admin\AdminApprovalQueuePresenter;
+use Tuealp\News\Admin\AdminRejectedNewsPresenter;
 use Tuealp\News\Admin\AdminNewsDao;
 use Tuleap\Admin\AdminPageRenderer;
 
@@ -165,20 +168,20 @@ if (user_ismember($GLOBALS['sys_news_group'], 'A')) {
         );
 
         if (!$request->get('pane') || $request->get('pane') === 'approval_queue') {
-            $presenter = new \Tuealp\News\Admin\AdminApprovalQueuePresenter(
+            $presenter = new AdminApprovalQueuePresenter(
                 $title,
                 $admin_news_builder->getApprovalQueueNews()
             );
         } else {
-            if ($request->get('pane') === 'deleted_news') {
+            if ($request->get('pane') === 'rejected_news') {
                 /*
                  * Show list of deleted news items for this week
                  */
                 $old_date = (time() - (86400 * 7));
 
-                $presenter = new \Tuealp\News\Admin\AdminDeletedNewsPresenter(
+                $presenter = new AdminRejectedNewsPresenter(
                     $title,
-                    $admin_news_builder->getDeletedNews($old_date)
+                    $admin_news_builder->getRejectedNews($old_date)
                 );
             } else {
 
@@ -187,7 +190,7 @@ if (user_ismember($GLOBALS['sys_news_group'], 'A')) {
                  */
                 $old_date = (time() - (86400 * 7));
 
-                $presenter = new \Tuealp\News\Admin\AdminApprovedNewsPresenter(
+                $presenter = new AdminApprovedNewsPresenter(
                     $title,
                     $admin_news_builder->getApprovedNews($old_date)
                 );

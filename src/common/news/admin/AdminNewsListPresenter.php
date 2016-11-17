@@ -23,11 +23,11 @@ class AdminNewsListPresenter
 {
 
     public $approval_queue_active = false;
-    public $deleted_news_active   = false;
+    public $rejected_news_active  = false;
     public $approved_news_active  = false;
 
     public $approval_queue_tab_name;
-    public $deleted_news_tab_name;
+    public $rejected_news_tab_name;
     public $approved_news_tab_name;
     public $pane_name;
     public $table_title_name;
@@ -46,7 +46,7 @@ class AdminNewsListPresenter
         $this->title     = $title;
 
         $this->approval_queue_tab_name = $GLOBALS['Language']->getText('news_admin_index', 'approval_queue_tab_name');
-        $this->deleted_news_tab_name   = $GLOBALS['Language']->getText('news_admin_index', 'deleted_news_tab_name');
+        $this->rejected_news_tab_name  = $GLOBALS['Language']->getText('news_admin_index', 'rejected_news_tab_name');
         $this->approved_news_tab_name  = $GLOBALS['Language']->getText('news_admin_index', 'approved_news_tab_name');
         $this->pane_name               = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $this->table_title_name        = $GLOBALS['Language']->getText('news_admin_index', 'table_title_name');

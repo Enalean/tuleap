@@ -19,15 +19,15 @@
 */
 namespace Tuealp\News\Admin;
 
-class AdminDeletedNewsPresenter extends AdminNewsListPresenter
+class AdminRejectedNewsPresenter extends AdminNewsListPresenter
 {
-    public $deleted_news_active = true;
+    public $rejected_news_active = true;
 
     public function __construct($title, array $news_list)
     {
         parent::__construct($title, $news_list);
 
-        $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','deleted_news_pane_name');
-        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','deleted_news_no_news');
+        $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','rejected_news_pane_name');
+        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','rejected_news_no_news');
     }
 }
