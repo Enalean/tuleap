@@ -52,10 +52,13 @@
                             </button>
                             <button
                                 type="button"
-                                class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button"
+                                class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button delete-description-field-button"
+                                data-modal-id="delete-description-field-modal-{{ id }}"
                             >
                                 <i class="tlp-button-icon fa fa-trash-o"></i> {{ delete_btn }}
                             </button>
+
+                            {{> delete_description_field_modal }}
                         </td>
                     </tr>
                     {{/ description_fields }}

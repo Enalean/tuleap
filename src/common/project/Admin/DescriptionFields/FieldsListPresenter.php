@@ -71,5 +71,10 @@ class FieldsListPresenter
         $this->add_field_form_description_label       = $GLOBALS['Language']->getText('admin_desc_fields', 'add_field_form_description_label');
         $this->add_field_form_description_placeholder = $GLOBALS['Language']->getText('admin_desc_fields', 'add_field_form_description_placeholder');
         $this->add_field_form_description_info        = $GLOBALS['Language']->getText('admin_desc_fields', 'add_field_form_description_info');
+
+        $this->delete_modal_title                     = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_title');
+        $this->delete_modal_content                   = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_content');
+        $this->delete_modal_cancel                    = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_cancel');
+        $this->delete_modal_submit                    = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_submit');
     }
 }

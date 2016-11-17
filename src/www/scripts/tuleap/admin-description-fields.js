@@ -26,4 +26,14 @@
     document.getElementById('add-description-field-button').addEventListener('click', function () {
         add_description_field_modal_content.toggle();
     });
+
+    var delete_description_field_buttons = document.querySelectorAll('.delete-description-field-button');
+    [].forEach.call(delete_description_field_buttons, function(delete_button) {
+        var dom_delete_description_field_modal  = document.getElementById(delete_button.dataset.modalId);
+        var tlp_delete_description_field_modal = tlp.modal(dom_delete_description_field_modal);
+
+        delete_button.addEventListener('click', function() {
+            tlp_delete_description_field_modal.toggle();
+        });
+    });
 } ());
