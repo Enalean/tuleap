@@ -5,3 +5,16 @@
 .siteadmin-description-fields-description-row {
     width: 70%;
 }
+
+.add-description-field-modal-row {
+    display: flex;
+
+    > .tlp-form-element {
+        margin: 0 $tlp-double-spacing $tlp-spacing 0;
+
+        &:last-child {
+            flex: 1 1 auto;
+            margin: 0 0 $tlp-spacing;
+        }
+    }
+}
