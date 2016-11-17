@@ -32,7 +32,8 @@ class BotMattermostPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->addHook('site_admin_option_hook');
-        $this->addHook('cssfile');
+        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     /**
@@ -46,7 +47,7 @@ class BotMattermostPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function site_admin_option_hook($params)
+    public function site_admin_option_hook(array $params)
     {
         $params['plugins'][] = array(
             'label' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name'),
@@ -54,10 +55,18 @@ class BotMattermostPlugin extends Plugin
         );
     }
 
-    public function cssfile($params)
+    public function burning_parrot_get_javascript_files($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $params['javascript_files'][] = $this->getThemePath() .'/js/modals.js';
+        }
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
         }
     }
 

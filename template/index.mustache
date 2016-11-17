@@ -1,54 +1,68 @@
 <h1>{{ title }}</h1>
-<div>
-    <table class="table table-bordered table-striped" id="bot_list">
-        {{# has_bots }}
-            <thead>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ table_title }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="tlp-table-actions">
+                <button id="button-modal-add-bot" type="button" data-target="modal-add-bot" class="tlp-button-primary">
+                    <i class="fa fa-plus tlp-button-icon"></i> {{ button_add_bot }}
+                </button>
+                {{> modal-add-bot }}
+            </div>
+            <table class="tlp-table">
+                <thead>
                 <tr>
-                    <th>#</th>
                     <th>{{ table_col_avatar }}</th>
                     <th>{{ table_col_name }}</th>
                     <th>{{ table_col_webhook_url }}</th>
-                    <th>{{ table_col_channels }}</th>
-                    <th>Options</th>
-                </tr>
-            </thead>
-            <tbody>
-            {{# bots }}
-                <tr>
-                    <td>{{ getId }}</td>
-                    <td>{{# getAvatarUrl }}<img src="{{ getAvatarUrl }}" class="img-circle" width="30" height="30">{{/ getAvatarUrl }}</td>
-                    <td>{{ getName }}</td>
-                    <td>{{ getWebhookUrl }}</td>
-                    <td>{{ getChannelsNamesInOneRow }}</td>
-                    <td>
-                        <button class="btn btn-link" data-toggle="modal" href="#admin-config-bot-edit-{{ getId }}">
-                            <i class="icon-edit"></i> {{ button_edit }}
-                        </button>
-                        {{> modal-edit-bot }}
-                        <button class="btn btn-link" data-toggle="modal" href="#admin-config-bot-delete-{{ getId }}">
-                            <i class="icon-trash"></i> {{ button_delete }}
-                        </button>
-                        {{> modal-delete-bot }}
-                    </td>
-                </tr>
-            {{/ bots }}
-            </tbody>
-        {{/ has_bots }}
-        {{^ has_bots }}
-            <thead>
-                <tr>
+                    <th>{{ table_col_channels_handles }}</th>
                     <th></th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ empty_bot_list }}</td>
-                </tr>
-            </tbody>
-        {{/ has_bots }}
-    </table>
-</div>
-<button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
-    <i class="icon-plus"></i> {{ button_add_bot }}
-</button>
-{{> modal-add-bot }}
+                </thead>
+                {{# has_bots }}
+                    <tbody>
+                    {{# bots }}
+                        <tr>
+                            <td>
+                                {{# getAvatarUrl }}
+                                    <img src="{{ getAvatarUrl }}"
+                                         width="30"
+                                         height="30">
+                                {{/ getAvatarUrl }}
+                            </td>
+                            <td>{{ getName }}</td>
+                            <td>{{ getWebhookUrl }}</td>
+                            <td>{{ getChannelsNamesInOneRow }}</td>
+                            <td class="tlp-table-cell-actions">
+                                <button id="button-modal-edit-bot-{{ getId }}" type="button"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                        data-modal-id="modal-edit-bot-{{ getId }}">
+                                    <i class="fa fa-pencil tlp-button-icon"></i> {{ button_edit }}
+                                </button>
+                                {{> modal-edit-bot }}
+                                <button id="button-modal-delete-bot-{{ getId }}" type="submit"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                                        data-modal-id="modal-delete-bot-{{ getId }}">
+                                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ button_delete }}
+                                </button>
+                                {{> modal-delete-bot }}
+                            </td>
+                        </tr>
+                    {{/ bots }}
+                    </tbody>
+                {{/ has_bots }}
+                {{^ has_bots }}
+                    <tbody>
+                    <tr>
+                        <td colspan="6" class="tlp-table-cell-empty">
+                            {{ empty_bot_list }}
+                        </td>
+                    </tr>
+                    </tbody>
+                {{/ has_bots }}
+            </table>
+        </section>
+    </div>
+</section>

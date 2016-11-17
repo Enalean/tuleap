@@ -17,31 +17,35 @@ plugin_botmattermost	alert_error_delete_bot	Failed to delete the bot and its ass
 plugin_botmattermost	alert_error_update_bot	Failed to update the bot and its associated channels
 
 
-plugin_botmattermost	configuration_title	Bot Mattermost Configuration
+plugin_botmattermost	configuration_title	Bot Mattermost configuration
 plugin_botmattermost	configuration_legend_bot	Bot Configuration
 plugin_botmattermost	configuration_modal_edit_title	Edit bot
 plugin_botmattermost	configuration_modal_add_title	Add bot
 plugin_botmattermost	configuration_modal_delete_title	Delete bot
+plugin_botmattermost	configuration_label_bot_id	Id
 plugin_botmattermost	configuration_label_bot_name	Bot name
 plugin_botmattermost	configuration_label_hook_url	Webhook channel URL
 plugin_botmattermost	configuration_label_avatar_url	Avatar URL
-plugin_botmattermost	configuration_label_channels_names	Channel Names List
+plugin_botmattermost	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost	configuration_input_bot_name	Bot name...
 plugin_botmattermost	configuration_input_url	https://...
 plugin_botmattermost	configuration_input_avatar_url	Avatar link...
-plugin_botmattermost	configuration_text_area_channels_names_help	Add one channel name per row
+plugin_botmattermost	configuration_input_channels_handles	Channel1\nChannel2\n@User
+plugin_botmattermost	configuration_text_area_channels_handles_help	Add one channel name per row
+plugin_botmattermost	configuration_info_channels_handles	The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel
 
 plugin_botmattermost	configuration_button_add_bot	Add bot
-plugin_botmattermost	configuration_button_submit	Submit
+plugin_botmattermost	configuration_button_update	Update
 plugin_botmattermost	configuration_button_close	Close
 plugin_botmattermost	configuration_button_delete	Delete
 plugin_botmattermost	configuration_button_edit	Edit
 
 plugin_botmattermost	configuration_empty_list	No results
 plugin_botmattermost	configuration_table_title	Bots list
+plugin_botmattermost	configuration_table_col_id	Id
 plugin_botmattermost	configuration_table_col_name	Name
 plugin_botmattermost	configuration_table_col_webhook_url	Webhook URL
-plugin_botmattermost	configuration_table_col_channels	Channels
+plugin_botmattermost	configuration_table_col_channels_handles	Channels handles
 plugin_botmattermost	configuration_table_col_avatar	Avatar
 
-plugin_botmattermost	configuration_modal_delete_bot_content	This deletion can't be undone. Please confirm the bot deletion.
+plugin_botmattermost	configuration_modal_delete_bot_content	You are about to remove a bot. Please confirm your action.

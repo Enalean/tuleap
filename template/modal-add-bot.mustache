@@ -1,37 +1,50 @@
-<div id="admin-config-bot-add"
-    class="modal hide fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="admin-config-bot-add-title"
-    aria-hidden="true"
->
-
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-        <h3 id="configuration-edit-bot-title">{{ modal_add_title }}</h3>
+<form id="modal-add-bot" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label" method="POST"
+      action="?action=add_bot">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-big-content-label">
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ modal_add_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
     </div>
-
-    <form method="POST" action="?action=add_bot" >
-        {{{ csrf_input }}}
-
-        <div class="modal-body">
-            <label for="bot-mattermost-name">{{ label_bot_name }}</label>
-            <input id="bot-mattermost-name" type="text" name="bot_name" placeholder= "{{ input_bot_name }}" required>
-
-            <label for="bot-mattermost-webhook-url">{{ label_hook_url }}</label>
-            <input id="bot-mattermost-webhook-url" type="url" name="webhook_url" placeholder="{{ input_url }}" required pattern="{{ pattern_url }}">
-
-            <label for="bot-mattermost-avatar-url">{{ label_avatar_url }}</label>
-            <input id="bot-mattermost-avatar-url" type="url" name="avatar_url" placeholder="{{ input_url }}" pattern="{{ pattern_url }}">
-
-            <label for="bot-mattermost-channels-names">{{ label_channels_names }}</label>
-            <textarea id="bot-mattermost-channels-names" type="text" name="channels_names" rows="3"></textarea>
-            <div><span class="bot-mattermost-modal-help-info">{{ text_area_channels_names_help }}</span></div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="bot-mattermost-name">
+                {{ label_bot_name }} <i class="fa fa-asterisk"></i>
+            </label>
+            <input id="bot-mattermost-name" type="text" class="tlp-input" name="bot_name"
+                   placeholder="{{ input_bot_name }}" required>
         </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ button_close }}</button>
-            <button type="submit" class="btn btn-primary">{{ button_submit }}</button>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="bot-mattermost-webhook-url">
+                {{ label_hook_url }} <i class="fa fa-asterisk"></i>
+            </label>
+            <input id="bot-mattermost-webhook-url" type="url" class="tlp-input" name="webhook_url"
+                   placeholder="{{ input_url }}" required pattern="{{ pattern_url }}">
         </div>
-    </form>
-
-</div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="bot-mattermost-avatar-url">{{ label_avatar_url }}</label>
+            <input id="bot-mattermost-avatar-url" type="url" class="tlp-input" name="avatar_url"
+                   placeholder="{{ input_url }}" pattern="{{ pattern_url }}">
+        </div>
+        <p class="tlp-text-info"><i class="fa fa-info-circle"></i> {{{ purified_info_channels_handles }}}</p>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="bot-mattermost-channels-handles">{{ label_channels_handles }}</label>
+            <textarea id="bot-mattermost-channels-handles" type="text" class="tlp-textarea" name="channels_names"
+                      rows="3" placeholder="{{ input_channels_handles }}"></textarea>
+            <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{ text_area_channels_handles_help }}</p>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ button_close }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ button_add_bot }}
+        </button>
+    </div>
+</form>

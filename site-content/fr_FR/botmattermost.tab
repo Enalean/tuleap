@@ -17,31 +17,35 @@ plugin_botmattermost	alert_error_delete_bot	La suppression du robot et de ses sa
 plugin_botmattermost	alert_error_update_bot	La mise à jour du robot et de ses salons de discussion associés a échoué
 
 
-plugin_botmattermost	configuration_title	Configuration du robot Mattermost
+plugin_botmattermost	configuration_title	Configuration des robots Mattermost
 plugin_botmattermost	configuration_legend_bot	Configuration
 plugin_botmattermost	configuration_modal_edit_title	Éditer un robot
 plugin_botmattermost	configuration_modal_add_title	Ajouter un robot
 plugin_botmattermost	configuration_modal_delete_title	Supprimer un robot
+plugin_botmattermost	configuration_label_bot_id	Id
 plugin_botmattermost	configuration_label_bot_name	Nom du robot
 plugin_botmattermost	configuration_label_hook_url	URL du salon de discussion (webhook)
 plugin_botmattermost	configuration_label_avatar_url	URL de l'avatar
-plugin_botmattermost	configuration_label_channels_names	Liste des noms des salons de discussion
+plugin_botmattermost	configuration_label_channels_handles	Liste des identifiants des salons de discussion
 plugin_botmattermost	configuration_input_bot_name	Nom...
 plugin_botmattermost	configuration_input_url	https://...
 plugin_botmattermost	configuration_input_avatar_url	lien vers l'avatar...
-plugin_botmattermost	configuration_text_area_channels_names_help	Ajoutez un nom de salon de discussion par ligne
+plugin_botmattermost	configuration_input_channels_handles	Salon1\nSalon2\n@Utilisateur
+plugin_botmattermost	configuration_text_area_channels_handles_help	Ajoutez un nom de salon de discussion par ligne
+plugin_botmattermost	configuration_info_channels_handles	L'indentifiant du salon de discussion est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
 
-plugin_botmattermost	configuration_button_add_bot	Ajouter le robot
-plugin_botmattermost	configuration_button_submit	Envoyer
+plugin_botmattermost	configuration_button_add_bot	Ajouter un robot
+plugin_botmattermost	configuration_button_update	Modifier
 plugin_botmattermost	configuration_button_close	Fermer
 plugin_botmattermost	configuration_button_delete	Supprimer
 plugin_botmattermost	configuration_button_edit	Éditer
 
 plugin_botmattermost	configuration_empty_list	Aucun résultat
 plugin_botmattermost	configuration_table_title	Liste des robots
+plugin_botmattermost	configuration_table_col_id	Id
 plugin_botmattermost	configuration_table_col_name	Nom
 plugin_botmattermost	configuration_table_col_webhook_url	URL des salons de discussion (webhook)
-plugin_botmattermost	configuration_table_col_channels	Salons de discussion
+plugin_botmattermost	configuration_table_col_channels_handles	Identifiants des salons de discussion
 plugin_botmattermost	configuration_table_col_avatar	Avatar
 
 plugin_botmattermost	configuration_modal_delete_bot_content	Cette suppression est irréversible. Veuillez confirmer la suppresion du robot.

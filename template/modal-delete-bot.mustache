@@ -1,30 +1,28 @@
-<div id="admin-config-bot-delete-{{ getId }}"
-    class="modal hide fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="admin-config-bot-delete-title"
-    aria-hidden="true"
->
-
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-        <h3 id="modal-repository-delete-title">{{ modal_delete_title }}</h3>
+<div id="modal-delete-bot-{{ getId }}" class="tlp-modal tlp-modal-danger" role="dialog"
+     aria-labelledby="modal-simple-content-label-{{ getId }}">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-simple-content-label-{{ getId }}">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ modal_delete_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
     </div>
-
-    <div class="modal-body">
+    <div class="tlp-modal-body">
         <p>{{ modal_delete_bot_content }}</p>
     </div>
-
-    <div class="modal-footer">
+    <div class="tlp-modal-footer">
         <form method="POST" action="?action=delete_bot">
-            {{{ csrf_input }}}
-
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <input type="hidden" name="bot_id" value="{{ getId }}">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ button_close }}</button>
-            <button type="submit" class="btn btn-danger">
-                <i class="icon-trash"></i> {{ button_delete }}
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{ button_close }}
+            </button>
+            <button type="submit" class="tlp-button-danger tlp-button-action tlp-modal-action">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{ button_delete }}
             </button>
         </form>
     </div>
-
 </div>

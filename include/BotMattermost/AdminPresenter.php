@@ -20,12 +20,13 @@
 
 namespace Tuleap\BotMattermost;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 
 class AdminPresenter
 {
 
-    public $csrf_input;
+    public $csrf_token;
     public $bots;
     public $has_bots;
     public $empty_bot_list;
@@ -35,6 +36,7 @@ class AdminPresenter
     public $modal_add_title;
     public $modal_delete_title;
     public $table_title;
+    public $table_col_id;
     public $table_col_name;
     public $table_col_webhook_url;
     public $table_col_avatar;
@@ -47,7 +49,7 @@ class AdminPresenter
     public $input_url;
     public $text_area_channels_names_help;
     public $button_add_bot;
-    public $button_submit;
+    public $button_update;
     public $button_close;
     public $button_delete;
     public $button_edit;
@@ -55,9 +57,9 @@ class AdminPresenter
     public $pattern_url;
     public $modal_delete_bot_content;
 
-    public function __construct(CSRFSynchronizerToken $csrf, array $bots)
+    public function __construct(CSRFSynchronizerToken $csrf_token, array $bots)
     {
-        $this->csrf_input = $csrf->fetchHTMLInput();
+        $this->csrf_token = $csrf_token;
         $this->bots       = $bots;
 
         $this->has_bots = count($this->bots) > 0;
@@ -70,22 +72,29 @@ class AdminPresenter
         $this->modal_add_title    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_modal_add_title');
         $this->modal_delete_title = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_modal_delete_title');
 
-        $this->table_title           = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_title');
-        $this->table_col_name        = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-        $this->table_col_webhook_url = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
-        $this->table_col_avatar      = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_avatar');
-        $this->table_col_channels    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_channels');
+        $this->table_title                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_title');
+        $this->table_col_id               = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_id');
+        $this->table_col_name             = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
+        $this->table_col_webhook_url      = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
+        $this->table_col_avatar           = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_avatar');
+        $this->table_col_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_channels_handles');
 
-        $this->label_bot_name                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
-        $this->label_hook_url                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_hook_url');
-        $this->label_avatar_url              = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
-        $this->label_channels_names          = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_channels_names');
-        $this->input_bot_name                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_bot_name');
-        $this->input_url                     = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_url');
-        $this->text_area_channels_names_help = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_text_area_channels_names_help');
+        $this->label_bot_id                    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_id');
+        $this->label_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
+        $this->label_hook_url                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_hook_url');
+        $this->label_avatar_url                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
+        $this->label_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_channels_handles');
+        $this->input_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_bot_name');
+        $this->input_url                       = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_url');
+        $this->input_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_channels_handles');
+        $this->text_area_channels_handles_help = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_text_area_channels_handles_help');
+        $this->purified_info_channels_handles  = Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_info_channels_handles'),
+            CODENDI_PURIFIER_LIGHT
+        );
 
         $this->button_add_bot = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_add_bot');
-        $this->button_submit  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_submit');
+        $this->button_update  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_update');
         $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
         $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
         $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');

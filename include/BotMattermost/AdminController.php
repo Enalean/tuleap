@@ -24,6 +24,7 @@ use HTTPRequest;
 use CSRFSynchronizerToken;
 use TemplateRendererFactory;
 use Feedback;
+use Tuleap\Admin\AdminPageRenderer;
 use Valid_HTTPURI;
 use Valid_Numeric;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -73,11 +74,15 @@ class AdminController
 
     private function displayIndex()
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_BASE_DIR.'/template');
         try {
-            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name')));
-            $renderer->renderToPage('index', new AdminPresenter($this->csrf, $this->bot_factory->getBots()));
-            $GLOBALS['HTML']->footer(array());
+            $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getBots());
+            $admin_page_renderer = new AdminPageRenderer();
+            $admin_page_renderer->renderAPresenter(
+                $admin_presenter->title,
+                PLUGIN_BOT_MATTERMOST_BASE_DIR.'/template/',
+                'index',
+                $admin_presenter
+            );
         } catch (BotNotFoundException $e) {
             $this->redirectToAdminSectionWithErrorFeedback($e);
         } catch (ChannelsNotFoundException $e) {
@@ -103,7 +108,7 @@ class AdminController
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
-        $this->displayIndex();
+        $this->redirectToIndex();
     }
 
     private function deleteBot(HTTPRequest $request)
@@ -118,7 +123,7 @@ class AdminController
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
-        $this->displayIndex();
+        $this->redirectToIndex();
     }
 
     private function editBot(HTTPRequest $request)
@@ -139,7 +144,7 @@ class AdminController
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
-        $this->displayIndex();
+        $this->redirectToIndex();
     }
 
     private function validPostArgument(HTTPRequest $request)
@@ -189,5 +194,10 @@ class AdminController
     {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
         $GLOBALS['Response']->redirect('/admin/');
+    }
+
+    private function redirectToIndex()
+    {
+        $GLOBALS['Response']->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
     }
 }
