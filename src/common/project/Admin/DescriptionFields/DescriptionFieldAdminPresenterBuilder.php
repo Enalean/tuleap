@@ -33,7 +33,9 @@ class DescriptionFieldAdminPresenterBuilder
                 $field['group_desc_id'],
                 $this->getFieldTranslatedTextLabel($field['desc_name']),
                 $this->getFieldTranslatedTextLabel($field['desc_description']),
+                $field['desc_required'],
                 $this->getTranslatedRequiredLabel($field['desc_required']),
+                $field['desc_type'],
                 $this->getTranslatedTypeLabel($field['desc_type']),
                 $field['desc_rank']
             );

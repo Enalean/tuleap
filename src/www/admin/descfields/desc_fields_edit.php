@@ -84,7 +84,7 @@ if ($remove_required_desc_id) {
     $GLOBALS['Response']->redirect('/admin/descfields/desc_fields_edit.php');
 }
 
-$update           = $request->get('Update');
+$update           = $request->get('update_desc');
 $add_desc         = $request->get('add_desc');
 $desc_name        = $request->get('form_name');
 $desc_description = $request->get('form_desc');

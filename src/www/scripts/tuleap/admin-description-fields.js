@@ -27,6 +27,16 @@
         add_description_field_modal_content.toggle();
     });
 
+    var edit_description_field_buttons = document.querySelectorAll('.edit-description-field-button');
+    [].forEach.call(edit_description_field_buttons, function(edit_button) {
+        var dom_edit_description_field_modal  = document.getElementById(edit_button.dataset.modalId);
+        var tlp_edit_description_field_modal = tlp.modal(dom_edit_description_field_modal);
+
+        edit_button.addEventListener('click', function() {
+            tlp_edit_description_field_modal.toggle();
+        });
+    });
+
     var delete_description_field_buttons = document.querySelectorAll('.delete-description-field-button');
     [].forEach.call(delete_description_field_buttons, function(delete_button) {
         var dom_delete_description_field_modal  = document.getElementById(delete_button.dataset.modalId);

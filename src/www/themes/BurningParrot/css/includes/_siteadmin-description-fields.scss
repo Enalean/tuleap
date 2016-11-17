@@ -1,12 +1,16 @@
-.siteadmin-description-fields-name-row {
+.siteadmin-description-fields-name-column {
     width: 30%;
 }
 
-.siteadmin-description-fields-description-row {
+.siteadmin-description-fields-description-column {
     width: 70%;
 }
 
-.add-description-field-modal-row {
+.siteadmin-description-fields-type-column {
+    white-space: nowrap;
+}
+
+.modal-description-field-modal-row {
     display: flex;
 
     > .tlp-form-element {

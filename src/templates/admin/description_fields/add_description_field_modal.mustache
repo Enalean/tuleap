@@ -6,7 +6,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="add-description-field-modal-label">
-                <i class="fa fa-plus tlp-modal-title-icon"></i > {{ add_modal_title }}
+                <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_modal_title }}
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
                 &times;
@@ -16,29 +16,29 @@
             <div class="add-description-field-modal-row">
                 <input type="hidden" name="add_desc" value="1">
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="add-field-form-name">{{ add_field_form_name_label }} <i class="fa fa-asterisk"></i></label>
-                    <input type="text" class="tlp-input" id="add-field-form-name" name="form_name" size="30" placeholder="{{ add_field_form_name_placeholder }}" required>
+                    <label class="tlp-label" for="add-field-form-name">{{ modal_field_form_name_label }} <i class="fa fa-asterisk"></i></label>
+                    <input type="text" class="tlp-input" id="add-field-form-name" name="form_name" size="30" placeholder="{{ modal_field_form_name_placeholder }}" required>
                 </div>
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="add-field-form-type">{{ add_field_form_type_label }} <i class="fa fa-asterisk"></i></label>
+                    <label class="tlp-label" for="add-field-form-type">{{ modal_field_form_type_label }} <i class="fa fa-asterisk"></i></label>
                     <select class="tlp-select tlp-select-adjusted" id="add-field-form-type" name="form_type">
-                        <option value="line">{{ add_field_form_type_label_line }}</option>
-                        <option value="text">{{ add_field_form_type_label_text }}</option>
+                        <option value="line">{{ modal_field_form_type_label_line }}</option>
+                        <option value="text">{{ modal_field_form_type_label_text }}</option>
                     </select>
                 </div>
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="add-field-form-rank">{{ add_field_form_rank_label }} <i class="fa fa-asterisk"></i></label>
+                    <label class="tlp-label" for="add-field-form-rank">{{ modal_field_form_rank_label }} <i class="fa fa-asterisk"></i></label>
                     <input type="text" class="tlp-input" id="add-field-form-rank" name="form_rank" size="4" placeholder="12" required>
                 </div>
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="add-field-form-description">{{ add_field_form_description_label }}  <i class="fa fa-asterisk"></i></label>
-                <textarea type="text" class="tlp-textarea" id="add-field-form-description" name="form_desc" placeholder="{{ add_field_form_description_placeholder }}" required></textarea>
-                <p class="tlp-text-info">{{ add_field_form_description_info }}</p>
+                <label class="tlp-label" for="add-field-form-description">{{ modal_field_form_description_label }}  <i class="fa fa-asterisk"></i></label>
+                <textarea type="text" class="tlp-textarea" id="add-field-form-description" name="form_desc" placeholder="{{ modal_field_form_description_placeholder }}" required></textarea>
+                <p class="tlp-text-info">{{ modal_field_form_description_info }}</p>
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" name="form_required" value="1" checked> {{ add_field_form_required_label }}
+                    <input type="checkbox" name="form_required" value="1" checked> {{ modal_field_form_required_label }}
                 </label>
             </div>
         </div>

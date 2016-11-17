@@ -34,19 +34,16 @@
                 <tbody>
                     {{# description_fields }}
                     <tr>
-                        <td class="siteadmin-description-fields-name-row">
-                            <a href="desc_fields_edit.php?update_fields_desc_id={{ id }}">
-                                {{ name }}
-                            </a>
-                        </td>
-                        <td class="siteadmin-description-fields-description-row">{{{ purified_description }}}</td>
-                        <td>{{ required }}</td>
-                        <td>{{ type }}</td>
+                        <td class="siteadmin-description-fields-name-column">{{ name }}</td>
+                        <td class="siteadmin-description-fields-description-column">{{{ purified_description }}}</td>
+                        <td>{{ required_label }}</td>
+                        <td class="siteadmin-description-fields-type-column">{{ type_label }}</td>
                         <td class="tlp-table-cell-numeric">{{ rank_on_screen }}</td>
                         <td class="tlp-table-cell-actions">
                             <button
                                 type="button"
-                                class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button"
+                                class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button edit-description-field-button"
+                                data-modal-id="edit-description-field-modal-{{ id }}"
                             >
                                 <i class="tlp-button-icon fa fa-pencil"></i> {{ edit_btn }}
                             </button>
@@ -58,6 +55,7 @@
                                 <i class="tlp-button-icon fa fa-trash-o"></i> {{ delete_btn }}
                             </button>
 
+                            {{> edit_description_field_modal }}
                             {{> delete_description_field_modal }}
                         </td>
                     </tr>
