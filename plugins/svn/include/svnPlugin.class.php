@@ -568,14 +568,23 @@ class SvnPlugin extends Plugin {
 
             if ($svn_core_service && $svn_plugin_service) {
                 $data->unsetProjectServiceUsage($svn_core_service->getId());
-                $data->forceServiceUsage($svn_plugin_service->getId());
+
+                if ($this->atLeastOneSVNServiceIsUsed($svn_core_service, $svn_plugin_service)) {
+                    $data->forceServiceUsage($svn_plugin_service->getId());
+                }
 
                 $params['use_legacy_services'][Service::SVN] = false;
             }
         }
     }
 
-    private function getSVNCoreService(array $template_services) {
+    private function atLeastOneSVNServiceIsUsed(Service $svn_core_service, Service $svn_plugin_service)
+    {
+        return $svn_core_service->isUsed() || $svn_plugin_service->isUsed();
+    }
+
+    private function getSVNCoreService(array $template_services)
+    {
         foreach ($template_services as $service) {
             if ($service->getShortName() === Service::SVN) {
                 return $service;
@@ -583,7 +592,8 @@ class SvnPlugin extends Plugin {
         }
     }
 
-    private function getSVNPluginService(array $template_services) {
+    private function getSVNPluginService(array $template_services)
+    {
         foreach ($template_services as $service) {
             if ($service->getShortName() === $this->getServiceShortname()) {
                 return $service;
