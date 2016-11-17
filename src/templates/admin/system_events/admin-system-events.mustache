@@ -1,16 +1,13 @@
-<h2>{{{ page_title }}}</h2>
-<div id="admin-system-events">
-    <ul class="nav nav-tabs" id="system-events-tabs">
-    {{# queue_links }}
-        <li {{# active }} class="active" {{/ active }}>
-            <a href="{{ href }}">
-                {{ label }}
-            </a>
-        </li>
-    {{/ queue_links }}
-    </ul>
+<h1 class="tlp-framed-horizontally">{{{ page_title }}}</h1>
 
-    <form action="" method="POST">
+<div id="admin-system-events">
+    <nav class="tlp-tabs" id="system-events-tabs">
+        {{# queue_links }}
+        <a href="{{ href }}" class="tlp-tab {{# active }}tlp-tab-active{{/ active }}">{{ label }}</a>
+        {{/ queue_links }}
+    </nav>
+
+    <form action="" method="POST" class="tlp-framed-horizontally">
         {{{ token_input }}}
         <fieldset>
             <legend id="system_events_filter" class="{{ system_events_filter_classname }}">Filter:</legend>
@@ -39,7 +36,7 @@
             </div>
             <hr/>
             <p>
-                <input type="submit" name="filter" class="btn" value="{{ btn_submit_label }}" />
+                <input type="submit" name="filter" class="tlp-button-secondary" value="{{ btn_submit_label }}" />
             </p>
         </fieldset>
 
@@ -53,9 +50,9 @@
             <em>{{ nobody_label }}</em>
         {{/ has_follower }}
 
-        <table class="table table-striped table-bordered">
+        <table class="tlp-table">
             <thead>
-            <tr><th>emails</th><th>listen</th><th>&nbsp;</th></tr>
+                <tr><th>emails</th><th>listen</th><th>&nbsp;</th></tr>
             </thead>
             <tbody>
 
@@ -90,8 +87,8 @@
                 </td><td>
 
                 {{# edit }}
-                    <input type="submit" class="btn btn-primary" name="save" value="{{ btn_submit_label }}" />
-                    <input type="submit" class="btn" name="cancel" value="{{ btn_cancel_label }}" />
+                    <input type="submit" class="tlp-button-primary" name="save" value="{{ btn_submit_label }}" />
+                    <input type="submit" class="tlp-button-secondary" name="cancel" value="{{ btn_cancel_label }}" />
                 {{/ edit }}
 
                 {{^ edit }}
@@ -113,7 +110,7 @@
                         {{/ status_new_followers }}
                     </select>
                     </td><td>
-                    <input type="submit" class="btn" value="{{ btn_submit_label }}" />
+                    <input type="submit" class="tlp-button-secondary" value="{{ btn_submit_label }}" />
                     </td></tr>'
                 {{/ request_is_edit }}
 
