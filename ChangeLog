@@ -5,13 +5,13 @@ Version 9.2 (Not release yet)
 		- Disable F5 possibility when deleting tracker
 
 	== Plugins ==
-	* tracker: 5.1034
+	* tracker: 5.1035
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69
 	* projectlinks: 2.12
 	* agiledashboard: 1.435
-	* artifactsfolders: 0.34
+	* artifactsfolders: 0.35
 
 	== Themes ==
 	* FlamingParrot: 1.164

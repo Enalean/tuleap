@@ -1,3 +1,6 @@
+Version 5.1035 - Tuleap 9.2
+    * request #9654 artifactfolder fatal error on cardwall
+
 Version 5.1034 - Tuleap 9.2
     * request #9650: Correct label for modal in artifact links types administration
 
