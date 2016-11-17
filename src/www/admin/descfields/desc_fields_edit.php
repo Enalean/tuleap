@@ -40,7 +40,7 @@ if ($delete_desc_id) {
 
     if (!$result) {
         list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('admin_desc_fields', 'del_desc_field_fail', array($host, db_error())));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'del_desc_field_fail', array($host, db_error())));
     }
 
     $sql    = "DELETE FROM group_desc_value where group_desc_id='" . db_ei($delete_desc_id) . "'";
@@ -48,10 +48,12 @@ if ($delete_desc_id) {
 
     if (!$result) {
         list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('admin_desc_fields', 'del_desc_field_fail', array($host, db_error())));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'del_desc_field_fail', array($host, db_error())));
     } else {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_desc_fields', 'remove_success'));
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_desc_fields', 'remove_success'));
     }
+
+    $GLOBALS['Response']->redirect('/admin/descfields/desc_fields_edit.php');
 }
 
 $make_required_desc_id   = $request->get('make_required_desc_id');
@@ -61,10 +63,12 @@ if ($make_required_desc_id) {
     $result = db_query($sql);
     if (!$result) {
         list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('admin_desc_fields', 'update_required_desc_field_fail', array($host, db_error())));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'update_required_desc_field_fail', array($host, db_error())));
     } else {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_desc_fields', 'update_success'));
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_desc_fields', 'update_success'));
     }
+
+    $GLOBALS['Response']->redirect('/admin/descfields/desc_fields_edit.php');
 }
 
 if ($remove_required_desc_id) {
@@ -72,10 +76,12 @@ if ($remove_required_desc_id) {
     $result = db_query($sql);
     if (!$result) {
         list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('admin_desc_fields', 'update_required_desc_field_fail', array($host, db_error())));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'update_required_desc_field_fail', array($host, db_error())));
     } else {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_desc_fields', 'update_success'));
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_desc_fields', 'update_success'));
     }
+
+    $GLOBALS['Response']->redirect('/admin/descfields/desc_fields_edit.php');
 }
 
 $update           = $request->get('Update');
@@ -90,12 +96,12 @@ if ($add_desc || $update) {
     //data validation
     $valid_data = 1;
     if (!trim($desc_name) || !trim($desc_description)) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_desc_fields', 'info_missed'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'info_missed'));
         $valid_data = 0;
     }
 
     if (!is_numeric($desc_rank)) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_desc_fields', 'info_rank_noint'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'info_rank_noint'));
         $valid_data = 0;
     }
 
@@ -108,9 +114,9 @@ if ($add_desc || $update) {
 
             if (!$result) {
                 list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-                exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('admin_desc_fields', 'ins_desc_field_fail', array($host, db_error())));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'ins_desc_field_fail', array($host, db_error())));
             } else {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_desc_fields', 'add_success'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_desc_fields', 'add_success'));
             }
         } else {
             $sql = "UPDATE group_desc SET ";
@@ -124,9 +130,9 @@ if ($add_desc || $update) {
             $result = db_query($sql);
 
             if (!$result || db_affected_rows($result) < 1) {
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_desc_fields', 'update_desc_field_fail', (db_error() ? db_error() : ' ')));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_desc_fields', 'update_desc_field_fail', (db_error() ? db_error() : ' ')));
             } else {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_desc_fields', 'update_success'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_desc_fields', 'update_success'));
             }
         }
     }
@@ -137,6 +143,8 @@ if ($add_desc || $update) {
         $desc_rank        = '';
         $desc_required    = '';
     }
+
+    $GLOBALS['Response']->redirect('/admin/descfields/desc_fields_edit.php');
 }
 
 $description_fields_dao   = new DescriptionFieldsDao();
@@ -145,7 +153,7 @@ $description_fields_infos = $description_fields_dao->searchAll();
 $field_builder    = new DescriptionFieldAdminPresenterBuilder();
 $field_presenters = $field_builder->build($description_fields_infos);
 
-$title = $GLOBALS['Language']->getText('admin_desc_fields', 'title');
+$title = $Language->getText('admin_desc_fields', 'title');
 
 $custom_project_fields_list_presenter = new FieldsListPresenter(
     $title,
@@ -154,7 +162,7 @@ $custom_project_fields_list_presenter = new FieldsListPresenter(
 
 $admin_page = new AdminPageRenderer();
 $admin_page->renderAPresenter(
-    $GLOBALS['Language']->getText('admin_desc_fields', 'title'),
+    $Language->getText('admin_desc_fields', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/description_fields/',
     FieldsListPresenter::TEMPLATE,
     $custom_project_fields_list_presenter

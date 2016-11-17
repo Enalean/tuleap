@@ -631,6 +631,10 @@ admin_desc_fields	add_field_form_description_placeholder	Project description wil
 admin_desc_fields	add_field_form_description_info	This text will be displayed under the field and will help end user to fill it.
 admin_desc_fields	add_field_form_type_label_line	String
 admin_desc_fields	add_field_form_type_label_text	Text area
+admin_desc_fields	delete_modal_title	Delete field
+admin_desc_fields	delete_modal_content	You are about to delete a custom project field. Please confirm your action.
+admin_desc_fields	delete_modal_cancel	Cancel
+admin_desc_fields	delete_modal_submit	Delete field
 
 admin_system_events	title	System Events
 admin_system_events	notifications	Notifications
