@@ -1,3 +1,6 @@
+Version 0.34 - Tuleap 9.2
+    * request #9593: Folders doesn't list things that are not directly connected to it
+
 Version 0.33 - Tuleap 9.2
     * request #9594: Folders display artifact twice when it also a child
 
