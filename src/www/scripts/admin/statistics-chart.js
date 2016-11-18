@@ -32,7 +32,8 @@ tuleap.admin.statistictsPieChart =  function (options) {
         arc,
         arc_text,
         div_graph,
-        prefix;
+        prefix,
+        general_prefix;
 
     options = options || {};
 
@@ -46,6 +47,7 @@ tuleap.admin.statistictsPieChart =  function (options) {
         chart.radius(options.radius);
         chart.data(options.data);
         chart.prefix(options.graph_id);
+        chart.generalPrefix(options.graph_class);
         chart.divGraph(d3.select('#' + options.graph_id));
 
         chart.svg(chart.divGraph().append('svg')
@@ -87,7 +89,8 @@ tuleap.admin.statistictsPieChart =  function (options) {
     chart.initLegend = function() {
         var svg_legend = d3.select('#' + getGraphId()).append('div')
             .attr('id', getLegendClass())
-            .append('ul');
+            .append('ul')
+            .attr('class', getLegendGeneralClass());
 
         var legend = svg_legend.selectAll('.' + getLegendClass())
             .data(chart.data())
@@ -230,6 +233,14 @@ tuleap.admin.statistictsPieChart =  function (options) {
         return chart;
     };
 
+    chart.generalPrefix = function (new_prefix) {
+        if (!arguments.length) {
+            return general_prefix;
+        }
+        general_prefix = new_prefix;
+        return chart;
+    };
+
     chart.divGraph = function (new_div_graph) {
         if (!arguments.length) {
             return div_graph;
@@ -332,6 +343,10 @@ tuleap.admin.statistictsPieChart =  function (options) {
 
     function getSliceTextUndisplayedClass() {
         return chart.prefix() + '-slice-text-undisplayed';
+    }
+
+    function getLegendGeneralClass() {
+        return chart.generalPrefix() + '-legend';
     }
 
     function getLegendClass() {
