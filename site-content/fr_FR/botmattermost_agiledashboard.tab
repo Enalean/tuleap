@@ -8,6 +8,7 @@ plugin_botmattermost_agiledashboard	alert_invalid_post	Erreur dans la requête :
 plugin_botmattermost_agiledashboard	admin_notification_title	Notification dans Mattermost
 plugin_botmattermost_agiledashboard	admin_notification_description	Choix de robot(s) afin d'envoyer le résumé du stand-up dans Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Heure d'envoie du rapport
+plugin_botmattermost_agiledashboard	admin_notification_time_warning	L'heure renseignée doit être adaptée en fonction du fuseau horaire $1 du serveur
 
 plugin_botmattermost_agiledashboard	admin_notification_table_col_channels	Salons de discussion
 

@@ -8,6 +8,7 @@ plugin_botmattermost_agiledashboard	alert_invalid_post	Query error : invalid pos
 plugin_botmattermost_agiledashboard	admin_notification_title	Notification in Mattermost
 plugin_botmattermost_agiledashboard	admin_notification_description	Choose bot(s) to send a summary of the stand-up in Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Stand-up summary report time
+plugin_botmattermost_agiledashboard	admin_notification_time_warning	The specified time must be adapted according to the server's time zone $1
 
 plugin_botmattermost_agiledashboard	admin_notification_table_col_channels	Channels
 

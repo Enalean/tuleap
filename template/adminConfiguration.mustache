@@ -4,23 +4,26 @@
     {{/ csrf_token }}
     <legend>{{ title }}</legend>
     <fieldset>
-        <label for="bot-mattermost-agiledashboard-start-time">{{ label_send_time }}</label>
-        <div id="bot-mattermost-agiledashboard-start-time" class="input-append">
-            <span class="bot-mattermost-agiledashboard-field-time">
-                <input required
-                    name="send_time"
-                    class="input-small"
-                    data-format="hh:mm"
-                    type="text"
-                    {{# has_send_time }}
-                       value="{{ send_time }}"
-                    {{/ has_send_time }}
+        <div id="field-bot-mattermost-agiledashboard-send-time">
+            <label for="bot-mattermost-agiledashboard-send-time">{{ label_send_time }}</label>
+            <div id="bot-mattermost-agiledashboard-send-time" class="input-append">
+                <span class="bot-mattermost-agiledashboard-field-time">
+                    <input required
+                           name="send_time"
+                           class="input-small"
+                           data-format="hh:mm"
+                           type="text"
+                        {{# has_send_time }}
+                           value="{{ send_time }}"
+                        {{/ has_send_time }}
                     >
-                </input>
-                <span class="add-on">
-                    <i class="icon-time"></i>
+                    </input>
+                    <span class="add-on">
+                        <i class="icon-time"></i>
+                    </span>
                 </span>
-            </span>
+            </div>
+            <p class="text-warning"><i class="icon-warning-sign"></i> {{ alert_time_warning }}</p>
         </div>
         <span class="help-block">{{ description }}</span>
         <table class="table table-bordered table-striped" id="bot_list">

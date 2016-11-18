@@ -87,4 +87,9 @@ class AdminNotificationPresenter
     {
         return isset($this->send_time);
     }
+
+    public function alert_time_warning()
+    {
+        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_time_warning', array(date_default_timezone_get()));
+    }
 }
