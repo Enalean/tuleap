@@ -97,8 +97,6 @@ class ThemeManager
                     ^/admin/massmail.php
                     |
                     ^/stats
-                    |
-                    ^/admin/lastlogins.php
                 )`x',
                 $_SERVER['REQUEST_URI']
             );

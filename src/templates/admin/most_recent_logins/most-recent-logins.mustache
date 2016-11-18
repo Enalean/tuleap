@@ -1,0 +1,59 @@
+<h1>{{ page_title }}</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-list tlp-pane-title-icon"></i> {{ pane_title }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            {{^ no_result }}
+            <div class="tlp-table-actions">
+                <div class="tlp-table-actions-spacer"></div>
+                <div class="tlp-form-element tlp-table-actions-element tlp-table-actions-element">
+                    <input type="search"
+                        id="most-recent-logins-filter"
+                        class="tlp-search"
+                        data-target-table-id="most-recent-logins-list"
+                        autocomplete="off"
+                        size="30"
+                        placeholder="{{ filter_placeholder }}">
+                </div>
+            </div>
+            {{/ no_result }}
+            <table id="most-recent-logins-list" class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{ username_column_header }}</th>
+                        <th>{{ ip_column_header }}</th>
+                        <th>{{ date_column_header }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# no_result }}
+                        <tr>
+                            <td colspan="3" class="tlp-table-cell-empty">
+                                {{ no_result_label }}
+                            </td>
+                        </tr>
+                    {{/ no_result }}
+                    {{^ no_result }}
+                        <tr class="tlp-table-empty-filter">
+                            <td colspan="5" class="tlp-table-cell-empty">
+                                {{ filter_no_matching_result }}
+                            </td>
+                        </tr>
+                        {{# logins }}
+                            <tr>
+                                <td class="tlp-table-cell-filterable">{{ username }}</td>
+                                <td class="tlp-table-cell-filterable">{{ ip }}</td>
+                                <td class="tlp-table-cell-filterable">{{ date }}</td>
+                            </tr>
+                        {{/ logins }}
+                    {{/ no_result }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
