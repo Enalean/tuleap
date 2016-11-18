@@ -688,9 +688,9 @@ class ReferenceManager {
         }
 
         foreach ($this->additional_references as $reftype) {
-            $m = $this->_extractMatches($html, $reftype['regexp']);
-            if (! empty($m)) {
-                $ref = $reftype['cb']($m, $group_id);
+            $match = $this->_extractMatches($html, $reftype['regexp']);
+            if (! empty($match)) {
+                $ref = call_user_func($reftype['cb'], $match[0], $group_id);
                 if (! empty($ref)) {
                     $referencesInstances[] = $ref;
                 }

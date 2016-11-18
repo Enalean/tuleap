@@ -214,6 +214,15 @@ class Search_SearchController {
      * @return Search_SearchResults
      */
     private function doSearch(Search_SearchQuery $query) {
+        $reference_manager = ReferenceManager::instance();
+        $references = $reference_manager->extractReferences(
+            $query->getWords(),
+            $query->getProject()->getId()
+        );
+        if (count($references) === 1 && $references[0]->getMatch() === trim($query->getWords())) {
+            $GLOBALS['HTML']->redirect($references[0]->getGotoLink());
+        }
+
         $results = new Search_SearchResults();
 
         $search = new Search_SearchPlugin($this->event_manager);
