@@ -599,8 +599,8 @@ admin_desc_fields	desc_name	Name
 admin_desc_fields	desc_description	Description
 admin_desc_fields	desc_required	Required?
 admin_desc_fields	desc_type	Type
-admin_desc_fields	desc_yes	Yes
-admin_desc_fields	desc_no	No
+admin_desc_fields	desc_yes	Required field
+admin_desc_fields	desc_no	Optional field
 admin_desc_fields	desc_line	String
 admin_desc_fields	desc_text	Text area
 admin_desc_fields	rank	Rank

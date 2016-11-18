@@ -36,7 +36,26 @@
                     <tr>
                         <td class="siteadmin-description-fields-name-column">{{ name }}</td>
                         <td class="siteadmin-description-fields-description-column">{{{ purified_description }}}</td>
-                        <td>{{ required_label }}</td>
+                        <td>
+                            <form id="description-field-form-required-{{ id }}" action="" method="POST">
+                                {{# required_value }}
+                                    <input type="hidden" name="remove_required_desc_id" value="{{ id }}">
+                                {{/ required_value }}
+                                {{^ required_value }}
+                                    <input type="hidden" name="make_required_desc_id" value="{{ id }}">
+                                {{/ required_value }}
+
+                                <div class="tlp-switch">
+                                    <input type="checkbox"
+                                        id="description-field-required-switch-{{ id }}"
+                                        class="tlp-switch-checkbox description-field-required-switch"
+                                        data-form-id="description-field-form-required-{{ id }}"
+                                        {{# required_value }}checked{{/ required_value }}
+                                    >
+                                    <label for="description-field-required-switch-{{ id }}" class="tlp-switch-button">{{ required_label }}</label>
+                                </div>
+                            </form>
+                        </td>
                         <td class="siteadmin-description-fields-type-column">{{ type_label }}</td>
                         <td class="tlp-table-cell-numeric">{{ rank_on_screen }}</td>
                         <td class="tlp-table-cell-actions">

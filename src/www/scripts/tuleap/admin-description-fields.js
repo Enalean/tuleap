@@ -20,30 +20,54 @@
 (function () {
     'use strict';
 
-    var add_description_field_modal         = document.getElementById('add-description-field-modal');
-    var add_description_field_modal_content = tlp.modal(add_description_field_modal, {});
+    handleAddModal();
+    handleEditModals();
+    handleDeleteModals();
+    handleRequiredSwitches();
 
-    document.getElementById('add-description-field-button').addEventListener('click', function () {
-        add_description_field_modal_content.toggle();
-    });
+    function handleAddModal() {
+        var add_description_field_modal         = document.getElementById('add-description-field-modal');
+        var add_description_field_modal_content = tlp.modal(add_description_field_modal, {});
 
-    var edit_description_field_buttons = document.querySelectorAll('.edit-description-field-button');
-    [].forEach.call(edit_description_field_buttons, function(edit_button) {
-        var dom_edit_description_field_modal  = document.getElementById(edit_button.dataset.modalId);
-        var tlp_edit_description_field_modal = tlp.modal(dom_edit_description_field_modal);
-
-        edit_button.addEventListener('click', function() {
-            tlp_edit_description_field_modal.toggle();
+        document.getElementById('add-description-field-button').addEventListener('click', function () {
+            add_description_field_modal_content.toggle();
         });
-    });
+    }
 
-    var delete_description_field_buttons = document.querySelectorAll('.delete-description-field-button');
-    [].forEach.call(delete_description_field_buttons, function(delete_button) {
-        var dom_delete_description_field_modal  = document.getElementById(delete_button.dataset.modalId);
-        var tlp_delete_description_field_modal = tlp.modal(dom_delete_description_field_modal);
+    function handleEditModals() {
+        var edit_description_field_buttons = document.querySelectorAll('.edit-description-field-button');
 
-        delete_button.addEventListener('click', function() {
-            tlp_delete_description_field_modal.toggle();
+        [].forEach.call(edit_description_field_buttons, function(edit_button) {
+            var dom_edit_description_field_modal  = document.getElementById(edit_button.dataset.modalId);
+            var tlp_edit_description_field_modal = tlp.modal(dom_edit_description_field_modal);
+
+            edit_button.addEventListener('click', function() {
+                tlp_edit_description_field_modal.toggle();
+            });
         });
-    });
+    }
+
+    function handleDeleteModals() {
+        var delete_description_field_buttons = document.querySelectorAll('.delete-description-field-button');
+
+        [].forEach.call(delete_description_field_buttons, function(delete_button) {
+            var dom_delete_description_field_modal  = document.getElementById(delete_button.dataset.modalId);
+            var tlp_delete_description_field_modal = tlp.modal(dom_delete_description_field_modal);
+
+            delete_button.addEventListener('click', function() {
+                tlp_delete_description_field_modal.toggle();
+            });
+        });
+    }
+
+    function handleRequiredSwitches() {
+        var required_switches = document.querySelectorAll('.description-field-required-switch');
+
+        [].forEach.call(required_switches, function(required_switch) {
+            required_switch.addEventListener('change', function() {
+                document.getElementById(required_switch.dataset.formId).submit();
+            })
+        });
+    }
+
 } ());

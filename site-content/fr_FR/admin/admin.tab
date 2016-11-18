@@ -588,10 +588,10 @@ admin_desc_fields	title	Champs de projet personnalisés
 admin_desc_fields	header_add	Ajouter un champ
 admin_desc_fields	desc_name	Nom
 admin_desc_fields	desc_description	Description
-admin_desc_fields	desc_required	Obligatoire ?
+admin_desc_fields	desc_required	Obligatoire ?
 admin_desc_fields	desc_type	Type
-admin_desc_fields	desc_yes	Oui
-admin_desc_fields	desc_no	Non
+admin_desc_fields	desc_yes	Champ requis
+admin_desc_fields	desc_no	Champ optionnel
 admin_desc_fields	desc_line	Chaîne de caractères
 admin_desc_fields	desc_text	Zone de texte
 admin_desc_fields	rank	Rang
