@@ -331,8 +331,14 @@ admin_grouplist	id_group	Id group
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
 #
-admin_lastlogins	title	Last Logins
-admin_lastlogins	recent	Most Recent Logins
+admin_lastlogins	title	Most recent logins
+admin_lastlogins	pane_title	Most recent logins
+admin_lastlogins	no_result	There isn't any recent login
+admin_lastlogins	username_column_header	Username
+admin_lastlogins	ip_column_header	IP address
+admin_lastlogins	date_column_header	Date
+admin_lastlogins	filter_placeholder	Username, IP, date
+admin_lastlogins	filter_no_matching_result	There isn't any matching recent login
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php

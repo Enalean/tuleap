@@ -323,8 +323,14 @@ admin_grouplist	id_group	Identifiant du groupe
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
 #
-admin_lastlogins	title	Dernières connections
-admin_lastlogins	recent	Connections les plus récentes
+admin_lastlogins	title	Connexions récentes
+admin_lastlogins	pane_title	Connexions récentes
+admin_lastlogins	no_result	Il n'y a pas encore de connexion récente
+admin_lastlogins	username_column_header	Nom d'utilisateur
+admin_lastlogins	ip_column_header	Addresse IP
+admin_lastlogins	date_column_header	Date
+admin_lastlogins	filter_placeholder	Nom d'utilisateur, IP, date
+admin_lastlogins	filter_no_matching_result	Il n'y a aucune connexion récente correspondante au filtre
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php
