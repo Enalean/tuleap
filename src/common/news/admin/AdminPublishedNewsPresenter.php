@@ -17,17 +17,19 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/
 */
-namespace Tuealp\News\Admin;
+namespace Tuleap\News\Admin;
 
-class AdminApprovedNewsPresenter extends AdminNewsListPresenter
+use CSRFSynchronizerToken;
+
+class AdminPublishedNewsPresenter extends AdminNewsListPresenter
 {
-    public $approved_news_active = true;
+    public $published_news_active = true;
 
-    public function __construct($title, array $news_list)
+    public function __construct(CSRFSynchronizerToken $csrf_token, $title, array $news_list)
     {
-        parent::__construct($title, $news_list);
+        parent::__construct($csrf_token, $title, $news_list);
 
-        $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','approved_news_pane_name');
-        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','approved_news_no_news');
+        $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','published_news_pane_name');
+        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','published_news_no_news');
     }
 }

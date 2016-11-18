@@ -25,8 +25,9 @@ news_admin_index	if_edit_delete	If this item is on the $1 home page and you edit
 news_admin_index	no_queued_item_found_for	No Queued Items Found For Project: $1
 news_admin_index	new_items	These News Items Were Submitted For Project: $1
 news_admin_index	update_err	ERROR doing update
-news_admin_index	newsbyte_updated	NewsByte Updated.
-news_admin_index	newsbyte_deleted	NewsByte Deleted.
+news_admin_index	news_list_updated	News updated.
+news_admin_index	news_updated	News updated.
+news_admin_index	news_rejected	News rejected.
 news_admin_index	approve	Approve a NewsByte
 news_admin_index	submitted_for_group	Submitted for group
 news_admin_index	approve_for_front	Approve For Front Page
@@ -36,7 +37,6 @@ news_admin_index	delete	Deleted
 news_admin_index	reject	Reject (will not appear for approving anymore)
 news_admin_index	no_queued_item_found	No Queued Items Found
 news_admin_index	need_approve	These items need to be approved
-news_admin_index	approve_all	[Approve All News Requested For Promotion]
 news_admin_index	approved	[Approved]
 news_admin_index	approve_legend	News that are indexed by an icon, are asked to be promoted on $1 front page.
 news_admin_index	approve_alt	This news has been asked to be promoted on $1 front page
@@ -53,19 +53,35 @@ news_admin_index	promoted_row_label	Displayed
 news_admin_index	update_news_list	Display select items in widget
 news_admin_index	info_text	Only the first ten news items will be displayed
 news_admin_index	no_news_items	Please add news items to choose which ones will be displayed in the widget
-news_admin_index	approval_queue_tab_name	Approval queue
+news_admin_index	waiting_publication_tab_name	News waiting for publication
 news_admin_index	rejected_news_tab_name	Rejected news
-news_admin_index	approved_news_tab_name	Approved news
-news_admin_index	approval_queue_pane_name	News waiting for approbation
-news_admin_index	rejected_news_pane_name	News rejected last week
-news_admin_index	approved_news_pane_name	News approved last week
+news_admin_index	published_news_tab_name	Published news
+news_admin_index	waiting_publication_pane_name	News waiting for publication on homepage
+news_admin_index	rejected_news_pane_name	News rejected for homepage last week
+news_admin_index	published_news_pane_name	News published on homepage last week
+news_admin_index	requested_name	Requested?
+news_admin_index	requested_tooltip	Requested to be published on homepage
 news_admin_index	table_title_name	Title
 news_admin_index	table_content_name	Content
 news_admin_index	table_details_name	Details
+news_admin_index	table_review_name	Review
 news_admin_index	no_news	There is no news
-news_admin_index	approval_queue_no_news	There is no news waiting for approbation
-news_admin_index	approved_news_no_news	No news has been approved last week
+news_admin_index	waiting_publication_no_news	There is no news waiting for approbation
+news_admin_index	published_news_no_news	No news has been approved last week
 news_admin_index	rejected_news_no_news	No news has been rejected last week
+news_admin_index	title_label	Title
+news_admin_index	content_label	Content
+news_admin_index	submitted_for_group_label	Submitted for Project
+news_admin_index	submitted_by_label	Submitted by
+news_admin_index	submitted_on_label	Submitted on
+news_admin_index	pane_news_title	News
+news_admin_index	pane_information_title	Information
+news_admin_index	publish_button	Publish on homepage
+news_admin_index	reject_button	Reject from waiting queue
+news_admin_index	reject_button_from_published	Reject from published list
+news_admin_index	missing_title	Title is required
+news_admin_index	news_already_published	This news is already published
+news_admin_index	news_already_rejected	This news is already rejected
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

@@ -1,0 +1,75 @@
+<h1>{{ title }}</h1>
+
+<div class="siteadmin-news-details">
+    <section class="tlp-pane siteadmin-pane-edit-information">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-newspaper-o tlp-pane-title-icon"></i> {{ pane_news_title }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <form action="/admin/news/?action=update" method="post">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                    <input type="hidden" name="id" value="{{ id }}">
+                    <input type="hidden" name="group_id" value="{{ group_id }}">
+                    <input type="hidden" name="current_tab" value="{{ current_tab }}">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="title-required">{{ title_label }} <i class="fa fa-asterisk"></i></label>
+                        <input type="text" class="tlp-input" id="title-required" name="title" value="{{ title }}">
+                    </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="content">{{ content_label }}</label>
+                        <textarea class="tlp-textarea siteadmin-news-textarea" id="content" name="content">{{ content }}</textarea>
+                    </div>
+                    <div class="siteadmin-news-button-group">
+                        <button type="submit"
+                                class="tlp-button-success siteadmin-news-button-approve {{# publish_button_disabled }}tlp-tooltip tlp-tooltip-top{{/ publish_button_disabled }}"
+                                name="action"
+                                value="publish"
+                                {{# publish_button_disabled }}data-tlp-tooltip="{{ news_already_published }}"{{/ publish_button_disabled }}
+                                {{# publish_button_disabled }}disabled{{/ publish_button_disabled }}
+                        >
+                            <i class="fa fa-check tlp-button-icon"></i> {{ publish_button }}
+                        </button>
+                        <button type="submit"
+                                class="tlp-button-danger siteadmin-news-button-reject {{# reject_button_disabled }}tlp-tooltip tlp-tooltip-top{{/ reject_button_disabled }}"
+                                name="action"
+                                value="reject"
+                                {{# reject_button_disabled }}data-tlp-tooltip="{{ news_already_rejected }}"{{/ reject_button_disabled }}
+                                {{# reject_button_disabled }}disabled{{/ reject_button_disabled }}
+                        >
+                            <i class="fa fa-remove tlp-button-icon"></i> {{ reject_button }}
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+    <section class="tlp-pane siteadmin-pane-information">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-info-circle tlp-pane-title-icon"></i> {{ pane_information_title }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-property">
+                    <label class="tlp-label">{{ submitted_for_group_label }}</label>
+                    <p>{{ submitted_for_group }}</p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{ submitted_by_label }}</label>
+                    <div class="siteadmin-news-information-submitted-by">
+                        <div class="tlp-avatar">
+                            <img src="{{ submitted_by_url }}">
+                        </div>
+                        <div>{{ submitted_by }}</div>
+                    </div>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{ submitted_on_label }}</label>
+                    <p>{{ submitted_on }}</p>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>
