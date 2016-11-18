@@ -135,6 +135,10 @@ class Backend {
         self::$backend_instances = array();
     }
 
+    public static function setInstance($instance) {
+        self::$backend_instances[self::BACKEND] = $instance;
+    }
+
     /**
      * Get an instance of UserManager. Mainly used for mock
      * 

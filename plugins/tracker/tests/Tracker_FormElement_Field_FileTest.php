@@ -74,6 +74,11 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
 
         $this->file_info_factory = mock('Tracker_FileInfoFactory');
+
+        ForgeConfig::set('sys_http_user', 'user');
+
+        $backend = mock('Backend');
+        Backend::setInstance($backend);
     }
 
     public function tearDown() {
@@ -84,6 +89,8 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         }
         rmdir($this->thumbnails_dir);
         ForgeConfig::restore();
+        Backend::clearInstances();
+
         parent::tearDown();
     }
     

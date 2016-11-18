@@ -882,10 +882,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
 
     protected function createAttachment(Tracker_FileInfo $attachment, $file_info) {
         if ($attachment->save()) {
-            $path = $this->getRootPath();
-            if (!is_dir($path .'/thumbnails')) {
-                mkdir($path .'/thumbnails', 0777, true);
-            }
+            $this->initFolder();
+
             $method   = 'move_uploaded_file';
             $tmp_name = $file_info['tmp_name'];
 
@@ -915,10 +913,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
 
     private function createAttachmentForRest(Tracker_FileInfo $attachment, $file_info) {
-        $path = $this->getRootPath();
-        if (!is_dir($path .'/thumbnails')) {
-            mkdir($path .'/thumbnails', 0777, true);
-        }
+        $this->initFolder();
+
         $method   = 'move_uploaded_file';
         $tmp_name = $file_info['tmp_name'];
 
@@ -940,6 +936,23 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
 
         return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);
+    }
+
+    private function initFolder()
+    {
+        $backend                  = Backend::instance();
+        $path                     = $this->getRootPath() . '/thumbnails';
+        $no_filter_file_extension = array();
+
+        if (! is_dir($path)) {
+            mkdir($path, 0777, true);
+            $backend->recurseChownChgrp(
+                $this->getRootPath(),
+                ForgeConfig::get('sys_http_user'),
+                ForgeConfig::get('sys_http_user'),
+                $no_filter_file_extension
+            );
+        }
     }
 
     private function moveAttachmentToFinalPlace(Tracker_FileInfo $attachment, $method, $src_path) {
