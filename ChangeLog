@@ -5,7 +5,7 @@ Version 9.2 (Not release yet)
 		- Disable F5 possibility when deleting tracker
 
 	== Plugins ==
-	* tracker: 5.1035
+	* tracker: 5.1036
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69

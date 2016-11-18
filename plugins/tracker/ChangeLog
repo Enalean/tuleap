@@ -1,3 +1,6 @@
+Version 5.1036 - Tuleap 9.2
+    * request #9662 Tracker imported form XML import cannot add attachement
+
 Version 5.1035 - Tuleap 9.2
     * request #9654 artifactfolder fatal error on cardwall
 
