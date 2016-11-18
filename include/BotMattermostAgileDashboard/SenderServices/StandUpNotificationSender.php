@@ -51,9 +51,13 @@ class StandUpNotificationSender
             $projects_ids         = $this->getProjectsIdsFromAgileDashboardBots($agile_dashboard_bots);
 
             foreach ($projects_ids as $project_id) {
-                $bots   = $this->getBotsByProjectId($agile_dashboard_bots, $project_id);
-                $admins = $this->project_manager->getProject((int)$project_id)->getAdmins();
-                $text   = $this->notification_builder->buildNotificationText($admins[0], $project_id);
+                $bots    = $this->getBotsByProjectId($agile_dashboard_bots, $project_id);
+                $project = $this->project_manager->getProject($project_id);
+                $admins  = $project->getAdmins();
+                $text    = $this->notification_builder->buildNotificationText(
+                    $admins[0],
+                    $project
+                );
 
                 $this->sender->pushNotifications($bots, $text);
             }

@@ -27,6 +27,7 @@ use Planning;
 use Planning_MilestoneFactory;
 use Planning_Milestone;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Project;
 use Tracker_Artifact;
 
 
@@ -49,29 +50,40 @@ class StandUpNotificationBuilder
         $this->planning_factory         = $planning_factory;
     }
 
-    public function buildNotificationText(PFUser $user, $project_id)
+    public function buildNotificationText(PFUser $user, Project $project)
     {
-        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $project_id);
+        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $project->getID());
         $text           = '';
 
-        foreach ($last_plannings as $last_planning) {
-            $text .= $this->markdown_formatter->addLineOfText(
-                $this->buildPlanningNotificationText($last_planning, $user)
+        if (! empty($last_plannings)) {
+            foreach ($last_plannings as $last_planning) {
+                $text .= $this->markdown_formatter->addLineOfText(
+                    $this->buildPlanningNotificationText($last_planning, $user, $project->getPublicName())
+                );
+            }
+        } else {
+            $text .= $GLOBALS['Language']->getText(
+                'plugin_botmattermost_agiledashboard',
+                'notification_builder_no_current_plannings',
+                array($project->getPublicName())
             );
         }
+
 
         return $text;
     }
 
-    private function buildPlanningNotificationText(Planning $last_planning, PFUser $user)
+    private function buildPlanningNotificationText(Planning $last_planning, PFUser $user, $project_name)
     {
         $milestones = $this->milestone_factory->getAllCurrentMilestones($user, $last_planning);
 
         if (! empty($milestones)) {
             $title = $GLOBALS['Language']->getText(
-                'plugin_botmattermost_agiledashboard', 'notification_builder_title_stand_up_summary'
-            ).' '.$last_planning->getPlanningTracker()->getName();
-            $text  = $this->markdown_formatter->addTitleOfLevel($title, 4);
+                'plugin_botmattermost_agiledashboard',
+                'notification_builder_title_stand_up_summary',
+                array($last_planning->getName(), $project_name)
+            );
+            $text  = $this->markdown_formatter->addTitleOfLevel($title, 3);
 
             foreach ($milestones as $milestone) {
                 $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
@@ -85,7 +97,7 @@ class StandUpNotificationBuilder
             $text = $GLOBALS['Language']->getText(
                 'plugin_botmattermost_agiledashboard',
                 'notification_builder_no_current_milestones',
-                array($last_planning->getBacklogTitle())
+                array($last_planning->getName(), $project_name)
             );
         }
 
@@ -98,8 +110,8 @@ class StandUpNotificationBuilder
             $this->getMilestoneInformation($milestone, $user)
         );
         $link            = $GLOBALS['Language']->getText(
-            'plugin_botmattermost_agiledashboard', 'notification_builder_quick_access'
-        ).' : '.$this->getPlanningCardwallLink($milestone);
+                'plugin_botmattermost_agiledashboard', 'notification_builder_quick_access'
+            ).' : '.$this->getPlanningCardwallLink($milestone);
 
         $text = $this->markdown_formatter->addTitleOfLevel(
             $milestone->getArtifactTitle().' '.$this->buildMilestoneDatesInfo($milestone), 4
