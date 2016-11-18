@@ -3,6 +3,7 @@ Version 9.2 (Not release yet)
 	== Enhancement ==
 	* story #9586: Get rid of Bootstrap in site admin / configuration
 		- Disable F5 possibility when deleting tracker
+	* request #9202: Make Tuleap PHPWiki database access compatible with PHP 5.6
 
 	== Plugins ==
 	* tracker: 5.1036
