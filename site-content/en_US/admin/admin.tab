@@ -602,7 +602,7 @@ admin_desc_fields	desc_type	Type
 admin_desc_fields	desc_yes	Yes
 admin_desc_fields	desc_no	No
 admin_desc_fields	desc_line	String
-admin_desc_fields	desc_text	Text
+admin_desc_fields	desc_text	Text area
 admin_desc_fields	rank	Rank
 admin_desc_fields	rank_on_screen	Rank on screen
 admin_desc_fields	ins_desc_field_fail	Inserting description failed. Please report to admin@$1 $2.
@@ -621,16 +621,19 @@ admin_desc_fields	no_description_fields	No custom project fields
 admin_desc_fields	add_modal_title	Add field
 admin_desc_fields	add_modal_cancel	Cancel
 admin_desc_fields	add_modal_submit	Add field
-admin_desc_fields	add_field_form_name_label	Name
-admin_desc_fields	add_field_form_name_placeholder	Project description
-admin_desc_fields	add_field_form_rank_label	Rank on screen
-admin_desc_fields	add_field_form_required_label	This field is mandatory
-admin_desc_fields	add_field_form_type_label	Type
-admin_desc_fields	add_field_form_description_label	Description
-admin_desc_fields	add_field_form_description_placeholder	Project description will be used by managers to…
-admin_desc_fields	add_field_form_description_info	This text will be displayed under the field and will help end user to fill it.
-admin_desc_fields	add_field_form_type_label_line	String
-admin_desc_fields	add_field_form_type_label_text	Text area
+admin_desc_fields	edit_modal_title	Edit field
+admin_desc_fields	edit_modal_cancel	Cancel
+admin_desc_fields	edit_modal_submit	Update field
+admin_desc_fields	modal_field_form_name_label	Name
+admin_desc_fields	modal_field_form_name_placeholder	Project description
+admin_desc_fields	modal_field_form_rank_label	Rank on screen
+admin_desc_fields	modal_field_form_required_label	This field is mandatory
+admin_desc_fields	modal_field_form_type_label	Type
+admin_desc_fields	modal_field_form_description_label	Description
+admin_desc_fields	modal_field_form_description_placeholder	Project description will be used by managers to…
+admin_desc_fields	modal_field_form_description_info	This text will be displayed under the field and will help end user to fill it.
+admin_desc_fields	modal_field_form_type_label_line	String
+admin_desc_fields	modal_field_form_type_label_text	Text area
 admin_desc_fields	delete_modal_title	Delete field
 admin_desc_fields	delete_modal_content	You are about to delete a custom project field. Please confirm your action.
 admin_desc_fields	delete_modal_cancel	Cancel

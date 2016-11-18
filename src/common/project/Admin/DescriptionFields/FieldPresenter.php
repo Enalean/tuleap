@@ -27,8 +27,10 @@ class FieldPresenter
     public $id;
     public $name;
     public $purified_description;
-    public $required;
-    public $type;
+    public $required_value;
+    public $required_label;
+    public $type_is_line;
+    public $type_label;
     public $rank_on_screen;
     public $edit_btn;
     public $delete_btn;
@@ -37,16 +39,20 @@ class FieldPresenter
         $id,
         $name,
         $description,
-        $required,
-        $type,
+        $required_value,
+        $required_label,
+        $type_value,
+        $type_label,
         $rank_on_screen
     ) {
-        $this->id             = $id;
-        $this->name           = $name;
-        $this->purified_description    = Codendi_HTMLPurifier::instance()->purify($description, CODENDI_PURIFIER_LIGHT);
-        $this->required       = $required;
-        $this->type           = $type;
-        $this->rank_on_screen = $rank_on_screen;
+        $this->id                   = $id;
+        $this->name                 = $name;
+        $this->purified_description = Codendi_HTMLPurifier::instance()->purify($description, CODENDI_PURIFIER_LIGHT);
+        $this->required_value       = $required_value;
+        $this->required_label       = $required_label;
+        $this->type_is_line         = $type_value === 'line';
+        $this->type_label           = $type_label;
+        $this->rank_on_screen       = $rank_on_screen;
 
         $this->edit_btn   = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_btn');
         $this->delete_btn = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_btn');
