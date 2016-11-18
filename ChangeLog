@@ -1,3 +1,10 @@
+Version 9.1-2 (Friday, November 18th)
+	== Bug Fix ==
+	* request #9579: SVN Plugin must ne be inherited if no SVN service used in template
+	* request #9654: artifactfolder fatal error on cardwall
+	* request #9594: Folders display artifact twice when it also a child
+	* request #9593: Folders doesn't list things that are not directly connected to it
+
 Version 9.1 (Thursday, November 10th 2016)
 
 	== Enhancement ==
