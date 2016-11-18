@@ -121,9 +121,7 @@ class UserManager {
 
     public function countAllUsers()
     {
-        $dar = $this->getDao()->listAllUsers(0, '', 0, 0, 'user_id', 'asc', '');
-
-        return $dar['numrows'];
+        return $this->getDao()->countAllUsers();
     }
 
     public function countUsersByStatus($status)
