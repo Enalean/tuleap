@@ -84,10 +84,12 @@ class TroveCatRouter
 
     private function displayList()
     {
-        $root_node   = array();
-        $last_parent = array();
-        $this->list_builder->build(0, $root_node, $last_parent);
-        $presenter = new TroveCatListPresenter($root_node);
+        $last_parent    = array();
+        $already_seen   = array();
+        $trove_cat_list = array();
+
+        $this->list_builder->build(0, $last_parent, $already_seen, $trove_cat_list);
+        $presenter      = new TroveCatListPresenter($trove_cat_list);
 
         $this->admin_renderer->renderAPresenter(
             $GLOBALS['Language']->getText('admin_trove_cat_list', 'title'),

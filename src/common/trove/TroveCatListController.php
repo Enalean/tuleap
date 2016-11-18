@@ -114,7 +114,7 @@ class TroveCatListController
             'parent'       => $request->get('parent'),
             'display'      => $display,
             'mandatory'    => $this->isMandatory($display, $request->get('is-mandatory')),
-            'trove_cat_id' => $request->get('trove_cat_id')
+            'trove_cat_id' => $request->get('id')
         );
 
         return $trove_categories;
