@@ -28,7 +28,6 @@ use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\MarkdownFormatter;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
-use Tuleap\BotMattermostAgileDashboard\SenderServices\MarkdownFormater;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 
@@ -122,7 +121,8 @@ class botmattermost_agiledashboardPlugin extends Plugin
                 ),
                 $milestone_status_counter,
                 new MarkdownFormatter(),
-                $planning_factory
+                $planning_factory,
+                new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang'))
             ),
             ProjectManager::instance()
         );

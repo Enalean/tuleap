@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
+use BaseLanguage;
 use ForgeConfig;
 use PFUser;
 use PlanningFactory;
@@ -37,17 +38,20 @@ class StandUpNotificationBuilder
     private $milestone_status_counter;
     private $markdown_formatter;
     private $planning_factory;
+    private $language;
 
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $milestone_status_counter,
         MarkdownFormatter $markdown_formatter,
-        PlanningFactory $planning_factory
+        PlanningFactory $planning_factory,
+        BaseLanguage $language
     ) {
         $this->milestone_factory        = $milestone_factory;
         $this->milestone_status_counter = $milestone_status_counter;
         $this->markdown_formatter       = $markdown_formatter;
         $this->planning_factory         = $planning_factory;
+        $this->language                 = $language;
     }
 
     public function buildNotificationText(PFUser $user, Project $project)
@@ -62,13 +66,12 @@ class StandUpNotificationBuilder
                 );
             }
         } else {
-            $text .= $GLOBALS['Language']->getText(
+            $text .= $this->language->getText(
                 'plugin_botmattermost_agiledashboard',
                 'notification_builder_no_current_plannings',
                 array($project->getPublicName())
             );
         }
-
 
         return $text;
     }
@@ -78,7 +81,7 @@ class StandUpNotificationBuilder
         $milestones = $this->milestone_factory->getAllCurrentMilestones($user, $last_planning);
 
         if (! empty($milestones)) {
-            $title = $GLOBALS['Language']->getText(
+            $title = $this->language->getText(
                 'plugin_botmattermost_agiledashboard',
                 'notification_builder_title_stand_up_summary',
                 array($last_planning->getName(), $project_name)
@@ -94,7 +97,7 @@ class StandUpNotificationBuilder
                 );
             }
         } else {
-            $text = $GLOBALS['Language']->getText(
+            $text = $this->language->getText(
                 'plugin_botmattermost_agiledashboard',
                 'notification_builder_no_current_milestones',
                 array($last_planning->getName(), $project_name)
@@ -109,7 +112,7 @@ class StandUpNotificationBuilder
         $milestone_table = $this->markdown_formatter->createSimpleTableText(
             $this->getMilestoneInformation($milestone, $user)
         );
-        $link            = $GLOBALS['Language']->getText(
+        $link            = $this->language->getText(
                 'plugin_botmattermost_agiledashboard', 'notification_builder_quick_access'
             ).' : '.$this->getPlanningCardwallLink($milestone);
 
@@ -154,7 +157,7 @@ class StandUpNotificationBuilder
             $text .= $this->markdown_formatter->addLineOfText($artifacts_table);
         } else {
             $text .= $this->markdown_formatter->addTitleOfLevel(
-                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_no_update').
+                $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_no_update').
                 ' '.$milestone->getArtifactTitle(),
                 5
             );
@@ -190,19 +193,19 @@ class StandUpNotificationBuilder
     {
         $status           = $this->milestone_status_counter->getStatus($user, $milestone->getArtifactId());
         $milestone_infos  = array(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id')
+            $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id')
             => $this->buildArtifactLink($milestone->getArtifact()),
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_open')
+            $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_open')
             => $status['open'],
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_closed')
+            $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_closed')
             => $status['closed'],
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_days_remaining')
+            $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_days_remaining')
             => $this->getMilestoneDaysRemaining($milestone)
         );
         $remaining_effort = $milestone->getRemainingEffort();
 
         if (isset($remaining_effort)) {
-            $milestone_infos[$GLOBALS['Language']->getText(
+            $milestone_infos[$this->language->getText(
                 'plugin_botmattermost_agiledashboard', 'notification_builder_remaining_effort'
             )] = $remaining_effort;
         }
@@ -266,12 +269,12 @@ class StandUpNotificationBuilder
     {
         $table_body   = array();
         $table_header = array(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id'),
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_title'),
-            $GLOBALS['Language']->getText(
+            $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id'),
+            $this->language->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_title'),
+            $this->language->getText(
                 'plugin_botmattermost_agiledashboard', 'notification_builder_artifact_status'
             ),
-            $GLOBALS['Language']->getText(
+            $this->language->getText(
                 'plugin_botmattermost_agiledashboard', 'notification_builder_artifact_last_modification'
             )
         );
