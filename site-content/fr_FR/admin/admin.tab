@@ -678,6 +678,26 @@ admin_system_events	priority_3	Basse
 admin_system_events	not_ended_yet	Pas encore fini
 admin_system_events	not_started_yet	Pas encore démarré
 admin_system_events	events	Événements
+admin_system_events	add_notification	Ajouter une alerte
+admin_system_events	emails	Emails
+admin_system_events	listen	Niveau d'alerte
+admin_system_events	edit	Éditer
+admin_system_events	delete	Supprimer
+admin_system_events	delete_confirm	Vous êtes sur le point du supprimer définitivement cette alerte. Merci de confirmer votre action.
+admin_system_events	delete_notif_label	Supprimer l'alerte
+admin_system_events	edit_notif_label	Éditer l'alerte
+admin_system_events	save_notif_label	Sauvegarder les modifications
+admin_system_events	notifs_empty	Il n'y a pas d'alerte définie.
+admin_system_events	notified_label	Personnes à alerter
+admin_system_events	status_to_listen	Niveaux d'alerte écoutés
+admin_system_events	emails_instructions	Entrez logins, emails ou mailing lists. Séparez-les par une virgule.
+
+admin_system_events	save_success	L'alerte a été sauvegardée
+admin_system_events	save_error	Une erreur est survenue lors de la sauvegarde de l'alerte
+admin_system_events	delete_success	L'alerte a été supprimée
+admin_system_events	delete_error	Une erreur est survenue lors de la suppression de l'alerte
+admin_system_events	at_least_one_status	Les personnes doivent écouter au moins un niveau d'alerte
+admin_system_events	people_not_empty	La liste des personnes à alerter ne peut pas être vide
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

@@ -5,6 +5,7 @@
 <div id="admin-system-events">
     <nav class="tlp-tabs">
         <a href="/admin/system_events/" class="tlp-tab tlp-tab-active">{{ events_label }}</a>
+        <a href="/admin/system_events/notifications.php" class="tlp-tab">{{ notifications_label }}</a>
     </nav>
 
     <section class="tlp-framed-horizontally" id="systemevents">
@@ -141,86 +142,6 @@
             </div>
         </section>
     </section>
-
-    <form action="" method="POST" class="tlp-framed-horizontally">
-        {{# csrf }}
-            {{> csrf_token_input }}
-        {{/ csrf }}
-        <h3>{{ notification_title }}</h3>
-
-        {{{ send_mail_section_title }}}
-
-        {{^ has_follower }}
-            <em>{{ nobody_label }}</em>
-        {{/ has_follower }}
-
-        <table class="tlp-table">
-            <thead>
-                <tr><th>emails</th><th>listen</th><th>&nbsp;</th></tr>
-            </thead>
-            <tbody>
-
-            {{# system_event_followers }}
-                <tr valign="top"><td>
-                {{# edit }}
-                    <textarea name="followers[{{ id }}][emails]" rows="4" cols="40">
-                        {{ email }}
-                    </textarea>
-                {{/ edit }}
-
-                {{^ edit }}
-                    {{ email }}
-                {{/ edit }}
-
-                </td><td>
-
-                {{# edit }}
-                    <select name="followers[{{ id }}][types][]" size="5" multiple="multiple">
-                    {{# types-selected }}
-                        <option value="{{ label }}" {{# selected }} selected="selected" {{/ selected }}>
-                            {{ label }}
-                        </option>
-                    {{/ types-selected }}
-                    </select>
-                {{/ edit }}
-
-                {{^ edit }}
-                    {{ types }}
-                {{/ edit }}
-
-                </td><td>
-
-                {{# edit }}
-                    <input type="submit" class="tlp-button-primary" name="save" value="{{ btn_submit_label }}" />
-                    <input type="submit" class="tlp-button-secondary" name="cancel" value="{{ btn_cancel_label }}" />
-                {{/ edit }}
-
-                {{^ edit }}
-                    <a href="?edit={{ id }}&queue={{ queue }}">{{{ edit_icon }}}</a>
-                {{/ edit }}
-
-                <a class="remove_followers" href="?queue={{ queue }}&delete={{ id }}" data-message="{{ js_content }}"> {{{ cross_icon }}} </a>
-                </td></tr>
-
-                {{/ system_event_followers }}
-
-                {{^ request_is_edit }}
-                    <tr valign="top"><td>
-                    <textarea name="new_followers[emails]" id="new_followers_email" rows="4" cols="40" placeholder="{{ default_new_followers_email }}"></textarea>
-                    </td><td>
-                    <select name="new_followers[types][]" size="5" multiple="multiple">
-                        {{# status_new_followers }}
-                            <option value="{{ label }}"> {{ label }} </option>
-                        {{/ status_new_followers }}
-                    </select>
-                    </td><td>
-                    <input type="submit" class="tlp-button-secondary" value="{{ btn_submit_label }}" />
-                    </td></tr>'
-                {{/ request_is_edit }}
-
-            </tbody>
-        </table>
-    </form>
 </div>
 
 </section>

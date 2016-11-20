@@ -28,32 +28,9 @@ session_require(array('group'=>'1', 'admin_flags'=>'A'));
 
 $token  = new CSRFSynchronizerToken('/admin/system_events/');
 $se     = SystemEventManager::instance();
-$sefdao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
 
 $request_queue = $request->get('queue');
 
-if ($new_followers = $request->get('new_followers')) {
-    if (isset($new_followers['emails']) && $new_followers['emails']) {
-        if (count($new_followers['types'])) {
-            $sefdao->create($new_followers['emails'], implode(',', $new_followers['types']));
-            $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
-        }
-    }
-}
-if ($request->get('delete')) {
-    $token->check();
-    $sefdao->delete($request->get('delete'));
-    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
-}
-if ($request->get('cancel')) {
-    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
-}
-if ($request->get('save') && ($followers = $request->get('followers'))) {
-    $token->check();
-    list($id, $info) = each($followers);
-    $sefdao->save($id, $info['emails'], implode(',', $info['types']));
-    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
-}
 $id_to_replay = $request->get('replay');
 if ($id_to_replay) {
     $token->check();
@@ -74,20 +51,6 @@ EventManager::instance()->processEvent(
 $selected_queue_name = SystemEventQueue::NAME;
 if (isset($available_queues[$request_queue])) {
     $selected_queue_name = $request_queue;
-}
-
-$queue_links = array();
-foreach ($available_queues as $queue) {
-    $href = '?';
-    if ($queue->getName() !== SystemEventQueue::NAME) {
-        $href .= 'queue=' . $queue->getName();
-    }
-
-    $queue_links[] = array(
-        'href'   => $href,
-        'label'  => $queue->getLabel(),
-        'active' => $selected_queue_name === $queue->getName()
-    );
 }
 
 $offset        = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
@@ -132,59 +95,6 @@ foreach ($matching_events as $event) {
     $events[] = new Tuleap\SystemEvent\SystemEventPresenter($event);
 }
 
-$system_event_followers = array();
-$dar = $sefdao->searchAll();
-
-foreach ($dar as $row) {
-    $types_selected = explode(',', $row['types']);
-    $types = array(
-        array(
-            'label'   => SystemEvent::STATUS_NEW,
-            'selected' => in_array(SystemEvent::STATUS_NEW, $types_selected)
-        ),
-        array(
-            'label'   => SystemEvent::STATUS_RUNNING,
-            'selected' => in_array(SystemEvent::STATUS_RUNNING, $types_selected)
-        ),
-        array(
-            'label'   => SystemEvent::STATUS_DONE,
-            'selected' => in_array(SystemEvent::STATUS_DONE, $types_selected)
-        ),
-        array(
-            'label'   => SystemEvent::STATUS_WARNING,
-            'selected' => in_array(SystemEvent::STATUS_WARNING, $types_selected)
-        ),
-        array(
-            'label'   => SystemEvent::STATUS_ERROR,
-            'selected' => in_array(SystemEvent::STATUS_ERROR, $types_selected)
-        )
-    );
-
-    $system_event_followers[] = array_merge(
-        $row,
-        array(
-            'edit'           => ($request->get('edit') == $row['id']),
-            'email'          => $purifier->purify($row['emails'], CODENDI_PURIFIER_CONVERT_HTML),
-            'types-selected' => $types
-        )
-    );
-}
-
-$status_new_followers = array(
-    array(
-        'label' => SystemEvent::STATUS_NEW
-    ),
-    array(
-        'label' => SystemEvent::STATUS_DONE
-    ),
-    array(
-        'label' => SystemEvent::STATUS_WARNING
-    ),
-    array(
-        'label' => SystemEvent::STATUS_ERROR
-    )
-);
-
 $default_params = array(
     'filter_status' => $filter_status,
     'filter_type'   => $filter_type,
@@ -217,13 +127,8 @@ $renderer->renderANoFramedPresenter(
     'admin-system-events',
     new SystemEvents_adminPresenter(
         $title,
-        $purifier,
-        $queue_links,
         $token,
         $events,
-        $system_event_followers,
-        $request->get('edit'),
-        $status_new_followers,
         $selected_queue_name,
         $search,
         $pagination

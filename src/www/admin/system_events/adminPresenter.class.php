@@ -36,12 +36,6 @@ class SystemEvents_adminPresenter
     public $details_label;
     public $replay_label;
 
-    /** @var Codendi_HTMLPurifier */
-    private $purifier;
-
-    /** @var array */
-    public $queue_links;
-
     /** @var CSRFSynchronizerToken */
     public $csrf;
 
@@ -53,15 +47,6 @@ class SystemEvents_adminPresenter
     /** @var string */
     public $events;
 
-    /** @var array */
-    public $system_event_followers;
-
-    /** @var boolean */
-    public $request_is_edit;
-
-    /** @var array */
-    public $status_new_followers;
-
     /** @var string */
     public $queue;
     public $title;
@@ -71,31 +56,23 @@ class SystemEvents_adminPresenter
 
     public function __construct(
         $title,
-        Codendi_HTMLPurifier $purifier,
-        array $queue_links,
         CSRFSynchronizerToken $csrf,
         array $events,
-        array $system_event_followers,
-        $request_is_edit,
-        array $status_new_followers,
         $queue,
         Tuleap\SystemEvent\SystemEventSearchPresenter $search,
         Tuleap\Layout\PaginationPresenter $pagination
     ) {
-        $this->purifier               = $purifier;
-        $this->queue_links            = $queue_links;
-        $this->csrf                   = $csrf;
-        $this->events                 = $events;
-        $this->has_events             = count($events) > 0;
-        $this->system_event_followers = $system_event_followers;
-        $this->request_is_edit        = $request_is_edit;
-        $this->status_new_followers   = $status_new_followers;
-        $this->queue                  = $queue;
-        $this->title                  = $title;
-        $this->pagination             = $pagination;
-        $this->search                 = $search;
+        $this->csrf        = $csrf;
+        $this->events      = $events;
+        $this->has_events  = count($events) > 0;
+        $this->queue       = $queue;
+        $this->title       = $title;
+        $this->pagination  = $pagination;
+        $this->search      = $search;
 
-        $this->events_label     = $GLOBALS['Language']->getText('admin_system_events', 'events');
+        $this->events_label        = $GLOBALS['Language']->getText('admin_system_events', 'events');
+        $this->notifications_label = $GLOBALS['Language']->getText('admin_system_events', 'notifications');
+
         $this->empty_state      = $GLOBALS['Language']->getText('admin_system_events', 'empty_state');
         $this->status_label     = $GLOBALS['Language']->getText('admin_system_events', 'status_label');
         $this->parameters_label = $GLOBALS['Language']->getText('admin_system_events', 'parameters_label');
@@ -113,48 +90,5 @@ class SystemEvents_adminPresenter
         $this->replayed_label   = $GLOBALS['Language']->getText('admin_system_events', 'replayed_label');
         $this->details_title    = $GLOBALS['Language']->getText('admin_system_events', 'details_title');
         $this->close_label      = $GLOBALS['Language']->getText('global', 'btn_close');
-    }
-
-    public function btn_submit_label() {
-        return $GLOBALS['Language']->getText('global', 'btn_submit');
-    }
-
-    public function btn_cancel_label() {
-        return $GLOBALS['Language']->getText('global', 'btn_cancel');
-    }
-
-    public function notification_title() {
-        return $GLOBALS['Language']->getText('admin_system_events', 'notifications');
-    }
-
-    public function send_mail_section_title() {
-        return $GLOBALS['Language']->getText('admin_system_events', 'send_email');
-    }
-
-    public function has_follower() {
-        return count($this->system_event_followers) > 0;
-    }
-
-    public function nobody_label() {
-        return $GLOBALS['Language']->getText('admin_system_events', 'nobody');
-    }
-
-    public function edit_icon() {
-        return $GLOBALS['HTML']->getImage('ic/edit.png');
-    }
-
-    public function cross_icon() {
-        return $GLOBALS['HTML']->getImage('ic/cross.png');
-    }
-
-    public function js_content() {
-        return $this->purifier->purify('Are you sure that you want to delete?', CODENDI_PURIFIER_JS_QUOTE);
-    }
-
-    public function default_new_followers_email() {
-        return $this->purifier->purify(
-            'Type logins, emails or mailing lists. Multiple values separated by coma.',
-            CODENDI_PURIFIER_CONVERT_HTML
-        );
     }
 }

@@ -1,0 +1,62 @@
+<form action=""
+      method="POST"
+      class="tlp-modal"
+      role="dialog"
+      id="add-notification-modal"
+      aria-labelledby="add-notification-modal-label"
+>
+    {{# csrf }}
+        {{> csrf_token_input }}
+    {{/ csrf }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="add-notification-modal-label">
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_notification_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">×</div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="new-followers-emails">
+                {{ notified_label }} <i class="fa fa-asterisk"></i>
+            </label>
+            <textarea type="text"
+                      class="tlp-textarea"
+                      id="new-followers-emails"
+                      name="new_followers[emails]"
+                      rows="3"
+                      required
+                      placeholder="paul, mailing@example.com, …"
+            ></textarea>
+            <p class="tlp-text-info">{{ emails_instructions }}</p>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label">
+                {{ status_to_listen }}
+            </label>
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="new_followers[types][]" value="NEW"> New
+            </label>
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="new_followers[types][]" value="RUNNING"> Running
+            </label>
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="new_followers[types][]" value="DONE"> Done
+            </label>
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="new_followers[types][]" value="WARNING" checked> Warning
+            </label>
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="new_followers[types][]" value="ERROR" checked> Error
+            </label>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_notification_label }}
+        </button>
+    </div>
+</form>

@@ -686,6 +686,26 @@ admin_system_events	priority_3	Low
 admin_system_events	not_ended_yet	Not ended yet
 admin_system_events	not_started_yet	Not started yet
 admin_system_events	events	Events
+admin_system_events	add_notification	Add notification
+admin_system_events	emails	Emails
+admin_system_events	listen	Level
+admin_system_events	edit	Edit
+admin_system_events	delete	Delete
+admin_system_events	delete_confirm	You are about to delete permanently this notification. Please confirm your action.
+admin_system_events	delete_notif_label	Delete notification
+admin_system_events	edit_notif_label	Edit the notification
+admin_system_events	save_notif_label	Save changes
+admin_system_events	notifs_empty	There isn't any notifications.
+admin_system_events	notified_label	People to be notified
+admin_system_events	status_to_listen	Event status to listen
+admin_system_events	emails_instructions	Type logins, emails or mailing lists. Multiple values separated by coma.
+
+admin_system_events	save_success	Notification successfully saved
+admin_system_events	save_error	Error while saving the notification
+admin_system_events	delete_success	Notification successfully deleted
+admin_system_events	delete_error	Error while deleting the notification
+admin_system_events	at_least_one_status	People must listen to at least one status
+admin_system_events	people_not_empty	People to be notified cannot be empty
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
