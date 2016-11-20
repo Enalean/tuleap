@@ -67,6 +67,7 @@ class SystemEvents_adminPresenter
     public $title;
     public $has_events;
     public $empty_state;
+    public $events_label;
 
     public function __construct(
         $title,
@@ -94,6 +95,7 @@ class SystemEvents_adminPresenter
         $this->pagination             = $pagination;
         $this->search                 = $search;
 
+        $this->events_label     = $GLOBALS['Language']->getText('admin_system_events', 'events');
         $this->empty_state      = $GLOBALS['Language']->getText('admin_system_events', 'empty_state');
         $this->status_label     = $GLOBALS['Language']->getText('admin_system_events', 'status_label');
         $this->parameters_label = $GLOBALS['Language']->getText('admin_system_events', 'parameters_label');

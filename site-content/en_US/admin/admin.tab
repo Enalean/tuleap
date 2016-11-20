@@ -660,6 +660,7 @@ admin_system_events	types_label	Types
 admin_system_events	type_label	Type
 admin_system_events	all_status_label	Status
 admin_system_events	status_label	Status
+admin_system_events	queue_label	Queue
 admin_system_events	parameters_label	Parameters
 admin_system_events	time_taken_label	Time taken
 admin_system_events	details_label	Details
@@ -684,6 +685,7 @@ admin_system_events	priority_2	Medium
 admin_system_events	priority_3	Low
 admin_system_events	not_ended_yet	Not ended yet
 admin_system_events	not_started_yet	Not started yet
+admin_system_events	events	Events
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

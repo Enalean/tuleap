@@ -117,9 +117,12 @@ uksort($all_types, 'strnatcasecmp');
 $dao = new SystemEventDao();
 if ($filter_type) {
     $filter_type = array_intersect($filter_type, $all_types);
-} else {
+}
+
+if (! $filter_type) {
     $filter_type = $all_types;
 }
+
 $matching_events = $dao->searchLastEvents($offset, $limit, $filter_status, $filter_type)
     ->instanciateWith(array($se, 'getInstanceFromRow'));
 $num_total_rows = $dao->foundRows();
@@ -196,7 +199,13 @@ $pagination = new Tuleap\Layout\PaginationPresenter(
     $default_params
 );
 
-$search = new Tuleap\SystemEvent\SystemEventSearchPresenter($filter_status, $all_types, $filter_type);
+$search = new Tuleap\SystemEvent\SystemEventSearchPresenter(
+    $available_queues,
+    $selected_queue_name,
+    $filter_status,
+    $all_types,
+    $filter_type
+);
 
 $title = $Language->getText('admin_system_events', 'title');
 

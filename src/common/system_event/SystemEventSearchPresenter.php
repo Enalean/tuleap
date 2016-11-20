@@ -31,9 +31,25 @@ class SystemEventSearchPresenter
     public $search_label;
     public $types_label;
     public $status_label;
+    public $queues;
+    public $queue_label;
 
-    public function __construct($filter_status, array $types, $filter_type)
-    {
+    public function __construct(
+        array $available_queues,
+        $selected_queue_name,
+        $filter_status,
+        array $types,
+        $filter_type
+    ) {
+        $this->queues = array();
+        foreach ($available_queues as $queue) {
+            $this->queues[] = array(
+                'value'   => $queue->getName(),
+                'label'   => $queue->getLabel(),
+                'checked' => $queue->getName() === $selected_queue_name
+            );
+        }
+
         $this->status = array(
             array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_NEW)),
@@ -82,5 +98,6 @@ class SystemEventSearchPresenter
         $this->search_label = $GLOBALS['Language']->getText('admin_system_events', 'search_label');
         $this->types_label  = $GLOBALS['Language']->getText('admin_system_events', 'types_label');
         $this->status_label = $GLOBALS['Language']->getText('admin_system_events', 'all_status_label');
+        $this->queue_label  = $GLOBALS['Language']->getText('admin_system_events', 'queue_label');
     }
 }
