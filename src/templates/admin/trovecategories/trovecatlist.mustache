@@ -7,9 +7,10 @@
         </div>
         <section class="tlp-pane-section">
             <div class="tlp-table-actions">
-                <button type="button"
-                        class="tlp-button-primary tlp-table-actions-element"
-                        id="add-project-category-button"
+                <button
+                    type="button"
+                    class="tlp-button-primary tlp-table-actions-element"
+                    id="add-project-category-button"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i> {{ add_trove_cat }}
                 </button>
@@ -34,14 +35,16 @@
                         </td>
                         <td>{{ description }}</td>
                         <td class="tlp-table-cell-actions">
-                            <a
-                                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline trovecats-edit-button"
-                                    data-modal-id="trove-cat-edit-{{ trove_cat_id }}"
+                            <button
+                                type="button"
+                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline trovecats-edit-button"
+                                data-modal-id="trove-cat-edit-{{ trove_cat_id }}"
                             >
                                 <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_button }}
-                            </a>
+                            </button>
                             {{> trovecat-modal-edit }}
                             <button
+                                type="button"
                                 class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{^ is_deletable }} tlp-button-disabled tlp-tooltip tlp-tooltip-left{{/ is_deletable }}"
                                 {{^ is_deletable }}
                                     disabled="disabled"

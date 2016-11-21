@@ -1,9 +1,17 @@
-.trove-cats-general-properties {
+.trove-cats-general-property {
     display: flex;
     margin: 0 0 $tlp-spacing;
 }
 
-.trove-cats-general-property {
+.tlp-table-cell-actions-button {
+    margin: -5px 0 -3px 5px;
+}
+
+.trove-cats-fullname-property {
+    width: 50%;
+}
+
+.trove-cats-shortname-property {
     width: 50%;
 
     &:last-child {
@@ -17,4 +25,8 @@
 
 .trove-cats-checkbox-modal-edit {
     line-height: 14px;
+}
+
+.trove-cats-modal-action {
+    text-align: left;
 }
