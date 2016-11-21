@@ -1,3 +1,6 @@
+Version 1.436 - Tuleap 9.2
+    * request #9661: Enhance scrum template used in AD user onboarding
+
 Version 1.435 - Tuleap 9.2
     * request #9598: Get rid of nvd3 for cumulative flow diagram
 
