@@ -1,3 +1,6 @@
+Version 5.1037 - Tuleap 9.2
+    * request #9551: Refactoring, Add a computed field calculator for burndown
+
 Version 5.1036 - Tuleap 9.2
     * request #9662 Tracker imported form XML import cannot add attachement
 

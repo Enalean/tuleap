@@ -6,7 +6,7 @@ Version 9.2 (Not release yet)
 	* request #9202: Make Tuleap PHPWiki database access compatible with PHP 5.6
 
 	== Plugins ==
-	* tracker: 5.1036
+	* tracker: 5.1037
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69
