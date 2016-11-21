@@ -27,7 +27,7 @@ use Tuleap\Admin\AdminPageRenderer;
 class TroveCatRouter
 {
     /**
-     * @var TroveCatListBuilder
+     * @var TroveCatHierarchyRetriever
      */
     private $list_builder;
     /**
@@ -40,7 +40,7 @@ class TroveCatRouter
     private $trove_cat_list_controller;
 
     public function __construct(
-        TroveCatListBuilder $list_builder,
+        TroveCatHierarchyRetriever $list_builder,
         AdminPageRenderer $admin_renderer,
         TroveCatListController $trove_cat_list_controller
     ) {
@@ -79,6 +79,12 @@ class TroveCatRouter
                 $GLOBALS['Language']->getText('admin_trove_cat_edit', 'missing_shortname')
             );
             $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
+        } catch (CannotMoveFatherInChildException $e) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('admin_trove_cat_edit', 'update_forbidden')
+            );
+            $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
         }
     }
 
@@ -87,9 +93,10 @@ class TroveCatRouter
         $last_parent    = array();
         $already_seen   = array();
         $trove_cat_list = array();
+        $hierarchy_ids  = array();
 
-        $this->list_builder->build(0, $last_parent, $already_seen, $trove_cat_list);
-        $presenter      = new TroveCatListPresenter($trove_cat_list);
+        $this->list_builder->retrieveFullHierarchy(0, $last_parent, $already_seen, $trove_cat_list, $hierarchy_ids);
+        $presenter = new TroveCatListPresenter($trove_cat_list);
 
         $this->admin_renderer->renderAPresenter(
             $GLOBALS['Language']->getText('admin_trove_cat_list', 'title'),
