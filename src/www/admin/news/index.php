@@ -24,6 +24,7 @@ use Tuleap\News\Admin\AdminNewsController;
 use Tuleap\News\Admin\AdminNewsRouter;
 use Tuleap\News\Admin\AdminNewsDao;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\News\Admin\NewsManager;
 
 require_once('pre.php');
 
@@ -40,7 +41,7 @@ if (user_ismember($GLOBALS['sys_news_group'], 'A')) {
     $admin_news_dao      = new AdminNewsDao();
     $admin_news_builder  = new AdminNewsBuilder(
         $csrf_token,
-        $admin_news_dao,
+        NewsManager::instance(),
         ProjectManager::instance(),
         UserManager::instance()
     );

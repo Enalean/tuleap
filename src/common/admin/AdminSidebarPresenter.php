@@ -28,6 +28,7 @@ class AdminSidebarPresenter
     public $validated_users_count;
     public $all_projects_count;
     public $pending_projects_count;
+    public $ppending_news_count;
     public $are_trove_categories_enabled;
     public $additional_tracker_entries;
     public $tuleap_version;
@@ -68,6 +69,7 @@ class AdminSidebarPresenter
         $validated_users_count,
         $all_projects_count,
         $pending_projects_count,
+        $pending_news_count,
         $are_trove_categories_enabled,
         $additional_tracker_entries,
         $tuleap_version,
@@ -79,6 +81,7 @@ class AdminSidebarPresenter
         $this->validated_users_count        = $validated_users_count;
         $this->all_projects_count           = $all_projects_count;
         $this->pending_projects_count       = $pending_projects_count;
+        $this->pending_news_count           = $pending_news_count;
         $this->are_trove_categories_enabled = $are_trove_categories_enabled;
         $this->additional_tracker_entries   = $additional_tracker_entries;
         $this->tuleap_version               = $tuleap_version;
@@ -131,5 +134,10 @@ class AdminSidebarPresenter
     public function isTherePendingProjects()
     {
         return $this->pending_projects_count > 0;
+    }
+
+    public function isTherePendingNews()
+    {
+        return $this->pending_news_count > 0;
     }
 }
