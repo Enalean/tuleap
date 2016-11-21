@@ -5,6 +5,9 @@ Version 9.2 (Not release yet)
 		- Disable F5 possibility when deleting tracker
 	* request #9202: Make Tuleap PHPWiki database access compatible with PHP 5.6
 
+	== Bug Fix ==
+	* request #9666: New siteadmin is slow
+
 	== Plugins ==
 	* tracker: 5.1037
 	* proftpd: 0.29
