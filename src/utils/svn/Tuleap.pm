@@ -292,13 +292,16 @@ sub remove_oldest_cache_entry {
     foreach my $username (keys %{$cfg->{TuleapCacheCredsLifetime}}) {
         my $timestamp = $cfg->{TuleapCacheCredsLifetime}->get($username);
         if ($oldest_timestamp > $timestamp) {
-            $oldest_timestamp = $username;
+            $oldest_timestamp = $timestamp;
             $oldest_username  = $username;
         }
     }
-    $cfg->{TuleapCacheCreds}->unset($oldest_username);
-    $cfg->{TuleapCacheCredsLifetime}->unset($oldest_username);
-    $cfg->{TuleapCacheCredsCount}--;
+
+    if (defined($oldest_username)) {
+        $cfg->{TuleapCacheCreds}->unset($oldest_username);
+        $cfg->{TuleapCacheCredsLifetime}->unset($oldest_username);
+        $cfg->{TuleapCacheCredsCount}--;
+    }
 
     return;
 }
