@@ -73,65 +73,81 @@
                                 <th>{{ type_label }}</th>
                                 <th>{{ status_label }}</th>
                                 <th>{{ parameters_label }}</th>
-                                <th class="tlp-table-cell-numeric">{{ time_taken_label }}</th>
+                                <th class="tlp-table-cell-numeric systemevents-time">{{ created_at }}</th>
+                                <th class="tlp-table-cell-numeric systemevents-time">{{ start_at }}</th>
+                                <th class="tlp-table-cell-numeric systemevents-time">{{ end_at }}</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {{# events }}
+                        {{# sections }}
+                            <tbody>
                                 <tr>
-                                    <td>
-                                        {{# namespace }}
-                                            <div class="systemevents-namespace">{{ namespace }}</div>
-                                        {{/ namespace }}
-                                        {{ type }}
-                                    </td>
-                                    <td>
-                                        <div class="tlp-badge-{{ badge }}
-                                            {{^ status_need_attention }}tlp-badge-outline{{/ status_need_attention }}"
-                                        >
-                                            {{ status }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {{{ purified_parameters }}}
-                                    </td>
-                                    <td class="tlp-table-cell-numeric">{{ time_taken }}</td>
-                                    <td class="tlp-table-cell-actions">
-                                        <form action="/admin/system_events/" method="POST">
-                                            {{# csrf }}
-                                                {{> csrf_token_input }}
-                                            {{/ csrf }}
-                                            <input type="hidden" name="queue" value="{{ queue }}">
-                                            {{# can_be_replayed }}
-                                                <button type="submit"
-                                                    name="replay"
-                                                    value="{{ id }}"
-                                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
-                                                >
-                                                    <i class="fa fa-repeat tlp-button-icon"></i> {{ replay_label }}
-                                                </button>
-                                            {{/ can_be_replayed }}
+                                    <td class="tlp-table-cell-section" colspan="7">{{ label }}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                {{# events }}
+                                    <tr>
+                                        <td>
+                                            {{# namespace }}
+                                                <div class="systemevents-namespace">{{ namespace }}</div>
+                                            {{/ namespace }}
+                                            {{ type }}
+                                        </td>
+                                        <td>
+                                            <div class="tlp-badge-{{ badge }}
+                                                {{^ status_need_attention }}tlp-badge-outline{{/ status_need_attention }}"
+                                            >
+                                                {{ status }}
+                                            </div>
+                                        </td>
+                                        <td class="systemevents-parameters">
+                                            {{{ purified_parameters }}}
+                                        </td>
+                                        <td class="tlp-table-cell-numeric">
+                                            <span class="tlp-tooltip tlp-tooltip-top"
+                                                  data-tlp-tooltip="{{ create_date }}"
+                                            >
+                                                {{ create_time }}
+                                            </span>
+                                        </td>
+                                        <td class="tlp-table-cell-numeric">
+                                            <span class="tlp-tooltip tlp-tooltip-top"
+                                                  data-tlp-tooltip="{{ start_date }}"
+                                            >
+                                            {{ start_time }}
+                                            </span>
+                                        </td>
+                                        <td class="tlp-table-cell-numeric">
+                                            <span class="tlp-tooltip tlp-tooltip-top"
+                                                  data-tlp-tooltip="{{ end_date }}"
+                                            >
+                                            {{ end_time }}
+                                            </span>
+                                        </td>
+                                        <td class="tlp-table-cell-actions">
                                             <button type="button"
                                                 class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button systemevents-display-edit-modal"
                                                 data-modal-id="systemevents-details-modal-{{ id }}"
                                             >
                                                 <i class="fa fa-list tlp-button-icon"></i> {{ details_label }}
                                             </button>
-                                        </form>
 
-                                        {{> modal-details-system-event }}
-                                    </td>
-                                </tr>
-                            {{/ events }}
-                            {{^ has_events }}
+                                            {{> modal-details-system-event }}
+                                        </td>
+                                    </tr>
+                                {{/ events }}
+                            </tbody>
+                        {{/ sections }}
+                        {{^ has_events }}
+                            <tbody>
                                 <tr>
                                     <td colspan="5" class="tlp-table-cell-empty">
                                         {{ empty_state }}
                                     </td>
                                 </tr>
-                            {{/ has_events }}
-                        </tbody>
+                            </tbody>
+                        {{/ has_events }}
                     </table>
                     {{# has_events }}
                         {{# pagination }}
