@@ -1,0 +1,70 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
+
+    <nav class="tlp-tabs">
+        <a href="" class="tlp-tab tlp-tab-active">{{ frequencies_tab_label }}</a>
+        <a href="disk_usage.php" class="tlp-tab">{{ disk_usage_tab_label }}</a>
+        <a href="project_quota.php" class="tlp-tab">{{ project_quota_tab_label }}</a>
+        <a href="services_usage.php" class="tlp-tab">{{ service_usage_tab_label }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally" id="siteadmin-statistics-frequencies">
+        <section class="tlp-pane" id="siteadmin-statistics-frequencies-search">
+            <div class="tlp-pane-container">
+                {{# search_fields }}
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ title }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <form method="GET" action="index.php" name="date_form">
+                            <input type="hidden" name="advsrch" value="0">
+                            <div class="tlp-form-element">
+                                <label for="type" class="tlp-label">{{ type_label }}</label>
+                                <select
+                                    id="type"
+                                    name="type_values[]"
+                                    class="tlp-select"
+                                >
+                                    {{# type_values }}
+                                        <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                                    {{/ type_values }}
+                                </select>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="date" class="tlp-label">{{ date_label }}</label>
+                                <div class="tlp-form-element tlp-form-element-prepend">
+                                    <input
+                                        type="text"
+                                        id="date"
+                                        name="date"
+                                        class="tlp-input tlp-input-date"
+                                        size="11"
+                                        value="{{ date_value }}"
+                                    >
+                                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                </div
+                                >
+                            </div>
+                            <button type="submit" class="tlp-button-primary tlp-button-wide">
+                                <i class="fa fa-search tlp-button-icon"></i> {{ search }}
+                            </button>
+                        </form>
+                    </section>
+                {{/ search_fields }}
+            </div>
+        </section>
+
+        <section class="tlp-pane" id="siteadmin-statistics-frequencies-graph">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-bar-chart"></i> {{ frequencies_tab_label }}
+                    </div>
+                </div>
+                <section class="tlp-pane-section">
+                    <img src="{{ graph_url }}">
+                </section>
+            </div>
+        </section>
+    </div>
+</div>
