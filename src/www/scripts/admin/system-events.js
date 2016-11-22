@@ -27,4 +27,18 @@
             modal.toggle();
         });
     });
+
+    var types_selectors = document.querySelectorAll('.systemevents-types');
+    document.getElementById('queue').addEventListener('change', function () {
+        var selected_queue = this.value;
+        [].forEach.call(types_selectors, function (selector) {
+            if (selector.dataset.queue === selected_queue) {
+                selector.classList.add('systemevents-types-for-current-queue');
+                selector.disabled = false;
+            } else {
+                selector.classList.remove('systemevents-types-for-current-queue');
+                selector.disabled = true;
+            }
+        });
+    });
 })();

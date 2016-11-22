@@ -82,17 +82,20 @@ if (! $filter_type || (count($filter_type) === 1 && $filter_type[0] === $filter_
     $filter_type = array();
 }
 
-
-$all_types = $se->getTypesForQueue($selected_queue_name);
-uksort($all_types, 'strnatcasecmp');
+$all_types_by_queue = array();
+foreach ($available_queues as $name => $queue) {
+    $types = $se->getTypesForQueue($name);
+    uksort($types, 'strnatcasecmp');
+    $all_types_by_queue[$name] = $types;
+}
 
 $dao = new SystemEventDao();
 if ($filter_type) {
-    $filter_type = array_intersect($filter_type, $all_types);
+    $filter_type = array_intersect($filter_type, $all_types_by_queue[$selected_queue_name]);
 }
 
 if (! $filter_type) {
-    $filter_type = $all_types;
+    $filter_type = $all_types_by_queue[$selected_queue_name];
 }
 
 $matching_events = $dao->searchLastEvents($offset, $limit, $filter_status, $filter_type)
@@ -122,7 +125,7 @@ $search = new Tuleap\SystemEvent\SystemEventSearchPresenter(
     $available_queues,
     $selected_queue_name,
     $selected_status,
-    $all_types,
+    $all_types_by_queue,
     $filter_type
 );
 

@@ -25,7 +25,7 @@ use Codendi_HTMLPurifier;
 
 class SystemEventSearchPresenter
 {
-    public $types;
+    public $types_by_queue;
     public $status;
     public $filter_label;
     public $search_label;
@@ -37,10 +37,23 @@ class SystemEventSearchPresenter
     public function __construct(
         array $available_queues,
         $selected_queue_name,
-        $filter_status,
-        array $types,
-        $filter_type
+        array $selected_status,
+        array $types_by_queue,
+        array $selected_types
     ) {
+        $this->buildQueues($available_queues, $selected_queue_name);
+        $this->buildStatus($selected_status);
+        $this->buildTypesByQueue($selected_queue_name, $selected_types, $types_by_queue);
+
+        $this->filter_label = $GLOBALS['Language']->getText('admin_system_events', 'filter_label');
+        $this->search_label = $GLOBALS['Language']->getText('admin_system_events', 'search_label');
+        $this->types_label  = $GLOBALS['Language']->getText('admin_system_events', 'types_label');
+        $this->status_label = $GLOBALS['Language']->getText('admin_system_events', 'all_status_label');
+        $this->queue_label  = $GLOBALS['Language']->getText('admin_system_events', 'queue_label');
+    }
+
+    private function buildQueues(array $available_queues, $selected_queue_name)
+    {
         $this->queues = array();
         foreach ($available_queues as $queue) {
             $this->queues[] = array(
@@ -49,43 +62,64 @@ class SystemEventSearchPresenter
                 'checked' => $queue->getName() === $selected_queue_name
             );
         }
+    }
 
+    private function buildStatus(array $selected_status)
+    {
         $this->status = array(
             array(
                 'label'   => $GLOBALS['Language']->getText('global', 'any'),
                 'value'   => 0,
-                'checked' => count($filter_status) === 0
+                'checked' => count($selected_status) === 0
             ),
             array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_NEW)),
                 'value'   => SystemEvent::STATUS_NEW,
-                'checked' => in_array(SystemEvent::STATUS_NEW, $filter_status)
+                'checked' => in_array(SystemEvent::STATUS_NEW, $selected_status)
             ),
             array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_RUNNING)),
                 'value'   => SystemEvent::STATUS_RUNNING,
-                'checked' => in_array(SystemEvent::STATUS_RUNNING, $filter_status)
+                'checked' => in_array(SystemEvent::STATUS_RUNNING, $selected_status)
             ),
             array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_DONE)),
                 'value'   => SystemEvent::STATUS_DONE,
-                'checked' => in_array(SystemEvent::STATUS_DONE, $filter_status)
+                'checked' => in_array(SystemEvent::STATUS_DONE, $selected_status)
             ),
             array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_WARNING)),
                 'value'   => SystemEvent::STATUS_WARNING,
-                'checked' => in_array(SystemEvent::STATUS_WARNING, $filter_status)
+                'checked' => in_array(SystemEvent::STATUS_WARNING, $selected_status)
             ),
             array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_ERROR)),
                 'value'   => SystemEvent::STATUS_ERROR,
-                'checked' => in_array(SystemEvent::STATUS_ERROR, $filter_status)
+                'checked' => in_array(SystemEvent::STATUS_ERROR, $selected_status)
             )
         );
+    }
 
-        $any_value_is_checked = count($filter_type) === 0 || count($filter_type) === count($types);
+    private function buildTypesByQueue($selected_queue_name, array $selected_types, array $types_by_queue)
+    {
+        $this->types_by_queue = array();
+        foreach ($types_by_queue as $queue_name => $types) {
+            $is_current_queue = $queue_name === $selected_queue_name;
+            $this->types_by_queue[] = array(
+                'queue'      => $queue_name,
+                'is_current' => $is_current_queue,
+                'types'      => $this->buildTypes($is_current_queue, $selected_types, $types)
+            );
+        }
+    }
 
-        $this->types = array(
+    private function buildTypes($is_current_queue, array $selected_types, array $types)
+    {
+        $any_value_is_checked = ! $is_current_queue
+            || count($selected_types) === 0
+            || count($selected_types) === count($types);
+
+        $types_for_the_queue = array(
             array(
                 'label'   => $GLOBALS['Language']->getText('global', 'any'),
                 'value'   => 0,
@@ -94,17 +128,13 @@ class SystemEventSearchPresenter
         );
 
         foreach ($types as $type) {
-            $this->types[] = array(
+            $types_for_the_queue[] = array(
                 'label'   => $type,
                 'value'   => $type,
-                'checked' => ! $any_value_is_checked && in_array($type, $filter_type)
+                'checked' => ! $any_value_is_checked && in_array($type, $selected_types)
             );
         }
 
-        $this->filter_label = $GLOBALS['Language']->getText('admin_system_events', 'filter_label');
-        $this->search_label = $GLOBALS['Language']->getText('admin_system_events', 'search_label');
-        $this->types_label  = $GLOBALS['Language']->getText('admin_system_events', 'types_label');
-        $this->status_label = $GLOBALS['Language']->getText('admin_system_events', 'all_status_label');
-        $this->queue_label  = $GLOBALS['Language']->getText('admin_system_events', 'queue_label');
+        return $types_for_the_queue;
     }
 }

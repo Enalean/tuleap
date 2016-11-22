@@ -71,6 +71,10 @@
     text-align: center;
 }
 
+.systemevents-types:not(.systemevents-types-for-current-queue) {
+    display: none;
+}
+
 @media screen and (max-width: 1400px) {
     #systemevents {
         display: flex;
