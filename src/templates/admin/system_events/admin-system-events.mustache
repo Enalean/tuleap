@@ -31,7 +31,7 @@
 
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="status">{{ status_label }}</label>
-                            <select class="tlp-select" id="status" name="filter_status[]" multiple size="5">
+                            <select class="tlp-select" id="status" name="filter_status[]" multiple size="6">
                                 {{# status }}
                                     <option value="{{ value }}" {{# checked }}selected{{/ checked }}>
                                         {{ label }}
@@ -42,7 +42,7 @@
 
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="types">{{ types_label }}</label>
-                            <select class="tlp-select" id="types" name="filter_type[]" multiple size="5">
+                            <select class="tlp-select" id="types" name="filter_type[]" multiple size="10">
                                 {{# types }}
                                     <option value="{{ value }}" {{# checked }}selected{{/ checked }} title="{{ label }}">
                                         {{ label }}

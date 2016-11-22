@@ -53,19 +53,28 @@ if (isset($available_queues[$request_queue])) {
     $selected_queue_name = $request_queue;
 }
 
-$offset        = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
-$limit         = 25;
-$full          = true;
-$filter_status = $request->get('filter_status');
-if (!$filter_status) {
-    $filter_status = array(
-        SystemEvent::STATUS_NEW,
-        SystemEvent::STATUS_RUNNING,
-        SystemEvent::STATUS_DONE,
-        SystemEvent::STATUS_WARNING,
-        SystemEvent::STATUS_ERROR,
-    );
+$offset          = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
+$limit           = 25;
+$full            = true;
+$selected_status = $request->get('filter_status');
+$all_status      = array(
+    SystemEvent::STATUS_NEW,
+    SystemEvent::STATUS_RUNNING,
+    SystemEvent::STATUS_DONE,
+    SystemEvent::STATUS_WARNING,
+    SystemEvent::STATUS_ERROR,
+);
+$filter_status = $all_status;
+if (is_array($selected_status)) {
+    if (in_array("0", $selected_status) || $selected_status === $all_status) {
+        $selected_status = array();
+    } else {
+        $filter_status = array_intersect($selected_status, $filter_status);
+    }
+} else {
+    $selected_status = array();
 }
+
 $filter_type     = $request->get('filter_type');
 $filter_type_any = '0';
 
@@ -112,7 +121,7 @@ $pagination = new Tuleap\Layout\PaginationPresenter(
 $search = new Tuleap\SystemEvent\SystemEventSearchPresenter(
     $available_queues,
     $selected_queue_name,
-    $filter_status,
+    $selected_status,
     $all_types,
     $filter_type
 );

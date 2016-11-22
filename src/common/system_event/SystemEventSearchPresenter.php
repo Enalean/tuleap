@@ -52,6 +52,11 @@ class SystemEventSearchPresenter
 
         $this->status = array(
             array(
+                'label'   => $GLOBALS['Language']->getText('global', 'any'),
+                'value'   => 0,
+                'checked' => count($filter_status) === 0
+            ),
+            array(
                 'label'   => ucfirst(strtolower(SystemEvent::STATUS_NEW)),
                 'value'   => SystemEvent::STATUS_NEW,
                 'checked' => in_array(SystemEvent::STATUS_NEW, $filter_status)
@@ -78,11 +83,13 @@ class SystemEventSearchPresenter
             )
         );
 
+        $any_value_is_checked = count($filter_type) === 0 || count($filter_type) === count($types);
+
         $this->types = array(
             array(
                 'label'   => $GLOBALS['Language']->getText('global', 'any'),
                 'value'   => 0,
-                'checked' => count($filter_type) === 0
+                'checked' => $any_value_is_checked
             )
         );
 
@@ -90,7 +97,7 @@ class SystemEventSearchPresenter
             $this->types[] = array(
                 'label'   => $type,
                 'value'   => $type,
-                'checked' => in_array($type, $filter_type)
+                'checked' => ! $any_value_is_checked && in_array($type, $filter_type)
             );
         }
 
