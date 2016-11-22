@@ -42,7 +42,7 @@ class ConnectorPresenterBuilder {
      * @return ConnectorPresenter
      */
     public function getLoginConnectorPresenter($return_to) {
-        $providers                           = $this->provider_manager->getConfiguredProviders();
+        $providers                           = $this->provider_manager->getProvidersUsableToLogIn();
         $providers_authorization_request_uri = array();
         foreach($providers as $provider) {
             $providers_authorization_request_uri[] = array(

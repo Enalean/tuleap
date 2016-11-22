@@ -30,6 +30,7 @@ class Provider {
     private $user_info_endpoint;
     private $client_id;
     private $client_secret;
+    private $is_unique_authentication_endpoint;
     private $icon;
     private $color;
 
@@ -42,18 +43,21 @@ class Provider {
         $user_info_endpoint,
         $client_id,
         $client_secret,
+        $is_unique_authentication_endpoint,
         $icon,
         $color
-    ) {
-        $this->id                     = $id;
-        $this->name                   = $name;
-        $this->authorization_endpoint = $authorization_endpoint;
-        $this->token_endpoint         = $token_endpoint;
-        $this->user_info_endpoint     = $user_info_endpoint;
-        $this->client_id              = $client_id;
-        $this->client_secret          = $client_secret;
-        $this->icon                   = $icon;
-        $this->color                  = $color;
+    )
+    {
+        $this->id                                = $id;
+        $this->name                              = $name;
+        $this->authorization_endpoint            = $authorization_endpoint;
+        $this->token_endpoint                    = $token_endpoint;
+        $this->user_info_endpoint                = $user_info_endpoint;
+        $this->client_id                         = $client_id;
+        $this->client_secret                     = $client_secret;
+        $this->is_unique_authentication_endpoint = $is_unique_authentication_endpoint;
+        $this->icon                              = $icon;
+        $this->color                             = $color;
     }
 
     public function getId() {
@@ -82,6 +86,11 @@ class Provider {
 
     public function getClientSecret() {
         return $this->client_secret;
+    }
+
+    public function isUniqueAuthenticationEndpoint()
+    {
+        return $this->is_unique_authentication_endpoint;
     }
 
     public function getIcon() {

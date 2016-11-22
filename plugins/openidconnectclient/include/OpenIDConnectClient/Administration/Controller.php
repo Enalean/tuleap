@@ -159,6 +159,7 @@ class Controller {
             $userinfo_endpoint,
             $client_id,
             $client_secret,
+            false,
             $icon,
             $color
         );
