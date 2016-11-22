@@ -99,14 +99,12 @@
                             data-artifact-id="'+ tuleap.escaper.html(child.id) +'" \
                         >'+ tuleap.escaper.html(child.xref) +'</a> \
                     </td> \
-                    <td>'+ tuleap.escaper.html(child.project_label) +'</td> \
-                    <td>'+ tuleap.escaper.html(child.tracker_label) +'</td> \
+                    <td>'+ formatFolders(child.folder_hierarchy) +'</td> \
                     <td>'+ tuleap.escaper.html(child.title) +'</td> \
                     <td>'+ tuleap.escaper.html(child.status || '') +'</td> \
                     <td>'+ tuleap.escaper.html(child.last_modified_date) +'</td> \
                     <td>'+ formatUser(child.submitter) +'</td> \
-                    <td>'+ child.assignees.map(formatUser).join(', ') +'</td> \
-                    <td>'+ formatFolders(child.folder_hierarchy) +'</td>';
+                    <td>'+ child.assignees.map(formatUser).join(', ') +'</td>';
 
             if (next_row) {
                 tbody.insertBefore(additional_row, next_row);
