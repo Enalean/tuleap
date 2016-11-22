@@ -99,10 +99,10 @@ class SystemEvents_adminPresenter
         $grouped_events = array();
         /** @var \Tuleap\SystemEvent\SystemEventPresenter $event */
         foreach ($events as $event) {
-            $prefix = substr($event->create_date, 0, 10);
+            $prefix = substr($event->raw_create_date, 0, 10);
             if (! isset($grouped_events[$prefix])) {
                 $grouped_events[$prefix] = array(
-                    'label'  => $this->getSectionLabel($event->create_date),
+                    'label'  => $this->getSectionLabel($event->raw_create_date),
                     'events' => array()
                 );
             }

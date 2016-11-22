@@ -66,6 +66,11 @@
     white-space: nowrap;
 }
 
+.systemevents-not-started,
+.systemevents-not-ended {
+    text-align: center;
+}
+
 @media screen and (max-width: 1400px) {
     #systemevents {
         display: flex;

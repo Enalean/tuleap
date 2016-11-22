@@ -111,18 +111,28 @@
                                                 {{ create_time }}
                                             </span>
                                         </td>
-                                        <td class="tlp-table-cell-numeric">
+                                        <td class="tlp-table-cell-numeric {{^ is_started }}systemevents-not-started{{/ is_started }}">
                                             <span class="tlp-tooltip tlp-tooltip-top"
-                                                  data-tlp-tooltip="{{ start_date }}"
+                                                  data-tlp-tooltip="{{# is_started }}{{ start_date }}{{/ is_started }}{{^ is_started }}{{ not_started_yet }}{{/ is_started }}"
                                             >
-                                            {{ start_time }}
+                                                {{# is_started }}
+                                                    {{ start_time }}
+                                                {{/ is_started }}
+                                                {{^ is_started }}
+                                                    –
+                                                {{/ is_started }}
                                             </span>
                                         </td>
-                                        <td class="tlp-table-cell-numeric">
+                                        <td class="tlp-table-cell-numeric {{^ is_ended }}systemevents-not-ended{{/ is_ended }}">
                                             <span class="tlp-tooltip tlp-tooltip-top"
-                                                  data-tlp-tooltip="{{ end_date }}"
+                                                  data-tlp-tooltip="{{# is_ended }}{{ end_date }}{{/ is_ended }}{{^ is_ended }}{{ not_ended_yet }}{{/ is_ended }}"
                                             >
-                                            {{ end_time }}
+                                                {{# is_ended }}
+                                                    {{ end_time }}
+                                                {{/ is_ended }}
+                                                {{^ is_ended }}
+                                                    –
+                                                {{/ is_ended }}
                                             </span>
                                         </td>
                                         <td class="tlp-table-cell-actions">

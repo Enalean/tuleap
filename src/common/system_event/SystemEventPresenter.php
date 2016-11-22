@@ -26,6 +26,7 @@ use Codendi_HTMLPurifier;
 class SystemEventPresenter
 {
     private static $NULL_DATE = '0000-00-00 00:00:00';
+    private static $NULL_TIME = '00:00:00';
 
     private static $BADGES_PER_STATUS = array(
         SystemEvent::STATUS_RUNNING => 'info',
@@ -60,6 +61,7 @@ class SystemEventPresenter
     public $create_time;
     public $start_time;
     public $end_time;
+    public $raw_create_date;
 
     public function __construct(SystemEvent $sysevent)
     {
@@ -75,9 +77,11 @@ class SystemEventPresenter
         $this->is_started = $sysevent->getProcessDate() !== self::$NULL_DATE;
         $this->is_ended   = $sysevent->getEndDate() !== self::$NULL_DATE;
 
-        $this->create_date = $sysevent->getCreateDate();
-        $this->start_date  = $sysevent->getProcessDate();
-        $this->end_date    = $sysevent->getEndDate();
+        $this->raw_create_date = $sysevent->getCreateDate();
+
+        $this->create_date = $this->getLocalizedDatetime($sysevent->getCreateDate());
+        $this->start_date  = $this->getLocalizedDatetime($sysevent->getProcessDate());
+        $this->end_date    = $this->getLocalizedDatetime($sysevent->getEndDate());
         $this->create_time = substr($sysevent->getCreateDate(), 11);
         $this->start_time  = substr($sysevent->getProcessDate(), 11);
         $this->end_time    = substr($sysevent->getEndDate(), 11);
@@ -99,6 +103,11 @@ class SystemEventPresenter
 
         $this->not_ended_yet   = $GLOBALS['Language']->getText('admin_system_events', 'not_ended_yet');
         $this->not_started_yet = $GLOBALS['Language']->getText('admin_system_events', 'not_started_yet');
+    }
+
+    private function getLocalizedDatetime($datetime)
+    {
+        return date($GLOBALS['Language']->getText('system', 'datefmt_full'), strtotime($datetime));
     }
 
     private function extractNamespaceFromType($type)

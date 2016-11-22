@@ -23,6 +23,7 @@ system	locale	fr_FR
 system	locale_label	Français
 system	strftimefmt	%e %B %Y  %H:%M
 system	datefmt	d/m/Y H:i
+system	datefmt_full	d/m/Y H:i:s
 system	datefmt_short	d/m/Y
 system	datefmt_day_and_month	j M
 system	decimal_separator	,
