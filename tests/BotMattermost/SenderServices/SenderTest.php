@@ -29,16 +29,19 @@ class SenderTest extends TuleapTestCase
 
     private $encoder_message;
     private $botMattermost_client;
+    private $logger;
 
     public function setUp()
     {
         parent::setUp();
         $this->encoder_message      = mock('Tuleap\\BotMattermost\\SenderServices\\EncoderMessage');
         $this->botMattermost_client = mock('Tuleap\\BotMattermost\\SenderServices\\ClientBotMattermost');
+        $this->logger               = mock('Tuleap\\BotMattermost\\BotMattermostLogger');
 
         $this->sender = new Sender(
             $this->encoder_message,
-            $this->botMattermost_client
+            $this->botMattermost_client,
+            $this->logger
         );
     }
 

@@ -22,19 +22,23 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 use Exception;
 use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\BotMattermost\BotMattermostLogger;
 
 class Sender
 {
 
     private $encoder_message;
     private $client;
+    private $logger;
 
     public function __construct(
         EncoderMessage $encoder_message,
-        ClientBotMattermost $client
+        ClientBotMattermost $client,
+        BotMattermostLogger $logger
     ) {
-        $this->encoder_message    = $encoder_message;
-        $this->client             = $client;
+        $this->encoder_message = $encoder_message;
+        $this->client          = $client;
+        $this->logger          = $logger;
     }
 
     /**
@@ -42,17 +46,26 @@ class Sender
      */
     public function pushNotifications(array $bots, $text)
     {
+        $this->logger->debug('text: '.$text);
+        if (empty($bots)) {
+            $this->logger->warn('no bots found');
+        }
         foreach ($bots as $bot) {
+            $this->logger->debug('bot: #'.$bot->getId().' '.$bot->getName());
             $this->pushNotificationsForEachChannels($bot, $text);
         }
+
     }
 
     public function send($post_string, $url)
     {
+        $this->logger->debug('post string: '.$post_string);
+        $this->logger->debug('url: '.$url);
         try {
             $this->client->sendMessage($post_string, $url);
+            $this->logger->info('message send');
         } catch (Exception $ex) {
-            //Do nothing
+            $this->logger->error('send Failed', $ex);
         }
     }
 
@@ -61,6 +74,7 @@ class Sender
         $channels_names = $bot->getChannelsNames();
         if (count($channels_names) > 0) {
             foreach ($channels_names as $channel) {
+                $this->logger->debug('channel: '.$channel);
                 $message = $this->encoder_message->generateMessage(
                     $bot,
                     $text,
@@ -69,6 +83,7 @@ class Sender
                 $this->send($message, $bot->getWebhookUrl());
             }
         } else {
+            $this->logger->debug('No channel specified');
             $message = $this->encoder_message->generateMessage($bot, $text);
             $this->send($message, $bot->getWebhookUrl());
         }
