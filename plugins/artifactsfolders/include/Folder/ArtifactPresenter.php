@@ -30,8 +30,6 @@ class ArtifactPresenter
     public $id;
     public $html_url;
     public $xref;
-    public $tracker_label;
-    public $project_label;
     public $status;
     public $title;
     public $submitter;
@@ -44,8 +42,6 @@ class ArtifactPresenter
         $this->id               = $artifact->getId();
         $this->html_url         = $artifact->getUri();
         $this->xref             = $artifact->getXRef();
-        $this->tracker_label    = $artifact->getTracker()->getName();
-        $this->project_label    = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
         $this->status           = $artifact->getStatus();
         $this->title            = $this->getTitle($artifact);
         $this->submitter        = false;

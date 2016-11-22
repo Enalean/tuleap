@@ -2,14 +2,12 @@
     <thead>
         <tr>
             <th>{{ id_label }}</th>
-            <th>{{ project_label }}</th>
-            <th>{{ tracker_label }}</th>
+            <th>{{ folder_label }}</th>
             <th>{{ summary_label }}</th>
             <th>{{ status_label }}</th>
             <th>{{ last_update_label }}</th>
             <th>{{ submitted_by_label }}</th>
             <th>{{ assigned_to_label }}</th>
-            <th>{{ folder_label }}</th>
         </tr>
     </thead>
     <tbody>
@@ -23,8 +21,12 @@
                 <td class="artifacts-folders-rollup">
                     <a href="{{ html_url }}" class="direct-link-to-artifact" data-artifact-id="{{ id }}">{{ xref }}</a>
                 </td>
-                <td>{{ project_label }}</td>
-                <td>{{ tracker_label }}</td>
+                <td>
+                    {{# folder_hierarchy }}
+                        <i class="icon-angle-right"></i>
+                        <a class="direct-link-to-artifact" href="{{ url }}&view=artifactsfolders">{{ title }}</a>
+                    {{/ folder_hierarchy }}
+                </td>
                 <td>{{ title }}</td>
                 <td>{{ status }}</td>
                 <td>{{ last_modified_date }}</td>
@@ -37,12 +39,6 @@
                     {{# assignees }}
                         <a href="{{ url }}">{{ display_name }}</a>
                     {{/ assignees }}
-                </td>
-                <td>
-                    {{# folder_hierarchy }}
-                        <i class="icon-angle-right"></i>
-                        <a class="direct-link-to-artifact" href="{{ url }}&view=artifactsfolders">{{ title }}</a>
-                    {{/ folder_hierarchy }}
                 </td>
             </tr>
         {{/ artifacts }}
