@@ -22,20 +22,24 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
 use Git_GitRepositoryUrlManager;
+use Tuleap\BotMattermost\BotMattermostLogger;
 
 class GitNotificationBuilder
 {
 
     private $git_repository_url_manager;
+    private $logger;
 
-    public function __construct(Git_GitRepositoryUrlManager $git_repository_url_manager)
+    public function __construct(Git_GitRepositoryUrlManager $git_repository_url_manager, BotMattermostLogger $logger)
     {
         $this->git_repository_url_manager = $git_repository_url_manager;
+        $this->logger                     = $logger;
     }
 
     public function buildNotificationText(array $params)
     {
         $repository = $params['repository'];
+        $this->logger->debug('git repository: #'.$repository->getId().' '.$repository->getName());
         $link       = $this->makeLinkReview($repository, $params['newrev']);
 
         return $params['user']->getName()." ".
