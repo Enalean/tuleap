@@ -7,6 +7,7 @@ Version 9.2 (Not release yet)
 
 	== Bug Fix ==
 	* request #9666: New siteadmin is slow
+	* request #9667: SVN cache do not remove properly the oldest entry of the cache
 
 	== Plugins ==
 	* tracker: 5.1037
