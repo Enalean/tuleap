@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/
 */
-namespace Tuealp\News\Admin;
+namespace Tuleap\News\Admin;
 
 use DataAccessObject;
 
@@ -32,7 +32,7 @@ class AdminNewsDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getApprovedNews($old_date)
+    public function getPublishedNews($old_date)
     {
         $old_date = $this->da->escapeInt($old_date);
 
@@ -41,10 +41,35 @@ class AdminNewsDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getApprovalQueueNews()
+    public function getWaitingPublicationNews()
     {
         $sql = "SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
 
         return $this->retrieve($sql);
+    }
+
+    public function getNewsById($id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT groups.unix_group_name,news_bytes.*
+                FROM news_bytes,groups WHERE id=$id
+                AND news_bytes.group_id=groups.group_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function updateNews($id, $title, $content, $status, $date)
+    {
+        $id      = $this->da->escapeInt($id);
+        $title   = $this->da->quoteSmart($title);
+        $content = $this->da->quoteSmart($content);
+        $status  = $this->da->escapeInt($status);
+        $date    = $this->da->escapeInt($date);
+
+        $sql = "UPDATE news_bytes SET is_approved=$status, date=$date,
+                summary=$title, details=$content WHERE id=$id";
+
+        return $this->update($sql);
     }
 }

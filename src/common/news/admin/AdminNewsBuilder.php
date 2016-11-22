@@ -17,61 +17,125 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/
 */
-namespace Tuealp\News\Admin;
+namespace Tuleap\News\Admin;
+
+use CSRFSynchronizerToken;
+use DateHelper;
+use ProjectManager;
+use UserManager;
 
 class AdminNewsBuilder
 {
+    const NEWS_STATUS_REQUESTED_PUBLICATION = '3';
+
+    private $one_week;
     /**
      * @var AdminNewsDao
      */
     private $admin_news_dao;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
-    public function __construct(AdminNewsDao $admin_news_dao)
-    {
-        $this->admin_news_dao = $admin_news_dao;
+
+    public function __construct(
+        CSRFSynchronizerToken $csrf_token,
+        AdminNewsDao $admin_news_dao,
+        ProjectManager $project_manager,
+        UserManager $user_manager
+    ) {
+        $this->one_week        = 7 * 24 * 3600;
+        $this->csrf_token      = $csrf_token;
+        $this->admin_news_dao  = $admin_news_dao;
+        $this->project_manager = $project_manager;
+        $this->user_manager    = $user_manager;
     }
 
-    public function getRejectedNews($old_date)
+    public function getRejectedNewsPresenter()
     {
-        return $this->build($this->admin_news_dao->getRejectedNews($old_date));
+        $old_date   = (time() - $this->one_week);
+
+        $title     = $GLOBALS['Language']->getText('news_admin_index', 'title');
+        $presenter = new AdminRejectedNewsPresenter(
+            $this->csrf_token,
+            $title,
+            $this->buildNewsList($this->admin_news_dao->getRejectedNews($old_date), 'rejected_news')
+        );
+
+        return $presenter;
     }
 
-    public function getApprovedNews($old_date)
+    public function getPublishedNewsPresenter()
     {
-        return $this->build($this->admin_news_dao->getApprovedNews($old_date));
+        $old_date   = (time() - $this->one_week);
+
+        $title     = $GLOBALS['Language']->getText('news_admin_index', 'title');
+        $presenter = new AdminPublishedNewsPresenter(
+            $this->csrf_token,
+            $title,
+            $this->buildNewsList($this->admin_news_dao->getPublishedNews($old_date), 'published_news')
+        );
+
+        return $presenter;
     }
 
-    public function getApprovalQueueNews()
+    public function getWaitingPublicationNewsPresenter()
     {
-        $result          = $this->admin_news_dao->getApprovalQueueNews();
+        $result          = $this->admin_news_dao->getWaitingPublicationNews();
         $filtered_result = array();
 
         foreach ($result as $row) {
-            //if the news is private, not display it in the list of news to be approved
             $forum_id = $row['forum_id'];
             $res      = news_read_permissions($forum_id);
-            // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
-            // with ST DB state
             if ((db_numrows($res) < 1) || (db_result($res, 0, 'ugroup_id') == $GLOBALS['UGROUP_ANONYMOUS'])) {
                 $filtered_result[] = $row;
             }
         }
 
-        return $this->build($filtered_result);
+        $title     = $GLOBALS['Language']->getText('news_admin_index', 'title');
+        $presenter = new AdminWaitingPublicationPresenter(
+            $this->csrf_token,
+            $title,
+            $this->buildNewsList($filtered_result, 'waiting_publication')
+        );
+
+        return $presenter;
     }
 
-    public function build($result)
+    public function buildNewsList($result, $current_tab)
     {
         $news_list = array();
 
         foreach ($result as $row) {
-            $news_list[] = new AdminNewsPresenter(
-                $row['id'],
-                $row['summary'],
-                $row['details']
-            );
+            $news_list[] = $this->getNewsDetailsPresenter($row, $current_tab);
         }
 
         return $news_list;
+    }
+
+    public function getNewsDetailsPresenter($row, $current_tab)
+    {
+        return new AdminNewsPresenter(
+            $this->csrf_token,
+            $row['id'],
+            $row['summary'],
+            $row['details'],
+            $row['group_id'],
+            $row['is_approved'] === self::NEWS_STATUS_REQUESTED_PUBLICATION,
+            $this->project_manager->getProject($row['group_id'])->getPublicName(),
+            $this->user_manager->getUserById($row['submitted_by'])->getRealName(),
+            $this->user_manager->getUserById($row['submitted_by'])->getAvatarUrl(),
+            DateHelper::formatForLanguage($GLOBALS['Language'], $row['date']),
+            $current_tab
+        );
     }
 }
