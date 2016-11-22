@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
+use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Admin\AdminSidebarPresenterBuilder;
@@ -265,6 +266,15 @@ class trackerPlugin extends Plugin {
                     new TimePeriodWithoutWeekEnd(strtotime('today midnight'), 1),
                     new BackendLogger(),
                     new BurndownDateRetriever()
+                );
+                break;
+            case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME:
+                $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
+                $params['dependencies'] = array(
+                    new Tracker_FormElement_Field_BurndownDao(),
+                    new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
+                    new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
+                    new BackendLogger()
                 );
                 break;
             default:
@@ -1087,6 +1097,7 @@ class trackerPlugin extends Plugin {
 
     public function system_event_get_types_for_default_queue($params) {
         $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
+        $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
     }
 
 
