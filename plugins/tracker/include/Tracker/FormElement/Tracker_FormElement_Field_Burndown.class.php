@@ -256,15 +256,20 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if (! $this->isCacheCompleteForBurndown($burndown_data, $artifact)
             && ! $this->isCacheBurndownAlreadyAsked($artifact)
         ) {
-            $this->getSystemEventManager()->createEvent(
-                'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
-                $artifact->getId().SystemEvent::PARAMETER_SEPARATOR ,
-                SystemEvent::PRIORITY_MEDIUM,
-                SystemEvent::OWNER_APP
-            );
+            $this->forceBurndownCacheGeneration($artifact->getId());
         }
 
         return $burndown_data;
+    }
+
+    private function forceBurndownCacheGeneration($artifact_id)
+    {
+        $this->getSystemEventManager()->createEvent(
+            'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
+            $artifact_id.SystemEvent::PARAMETER_SEPARATOR ,
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
     }
 
     public function isCacheBurndownAlreadyAsked(Tracker_Artifact $artifact)
@@ -793,5 +798,39 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function canBeUsedAsReportCriterion() {
         return false;
+    }
+
+    /**
+     * @see Tracker_FormElement_Field::postSaveNewChangeset()
+     */
+    public function postSaveNewChangeset(
+        Tracker_Artifact $artifact,
+        PFUser $submitter,
+        Tracker_Artifact_Changeset $new_changeset,
+        Tracker_Artifact_Changeset $previous_changeset = null
+    ) {
+
+        $start_date_field = $this->getBurndownStartDateField($artifact, $submitter);
+        $duration_field   = $this->getBurndownDurationField($artifact, $submitter);
+
+        if (
+            $start_date_field &&
+            $duration_field &&
+            $previous_changeset !== null &&
+            $this->isCacheBurndownAlreadyAsked($artifact) === false
+        ) {
+            if ($this->hasFieldChanged($new_changeset, $start_date_field)
+                || $this->hasFieldChanged($new_changeset, $duration_field)
+            ) {
+                $this->forceBurndownCacheGeneration($artifact->getId());
+            }
+        }
+    }
+
+    private function hasFieldChanged(
+        Tracker_Artifact_Changeset $new_changeset,
+        Tracker_FormElement_Field $field
+    ) {
+        return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
     }
 }
