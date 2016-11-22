@@ -553,7 +553,7 @@ admin_trove_cat_edit	description_placeholder	Type category description
 admin_trove_cat_edit	parent_category_label	Parent category
 admin_trove_cat_edit	missing_fullname	Fullname is required
 admin_trove_cat_edit	missing_shortname	Shortname is required
-admin_trove_cat_edit	update_forbidden	Cannot move a project category under its own child.
+admin_trove_cat_edit	update_forbidden	Cannot move a project category under its own child or in itself.
 
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php

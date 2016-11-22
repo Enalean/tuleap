@@ -54,18 +54,27 @@ function selectParentCategoryOption() {
         if (select_element.dataset) {
             var parent_id           = select_element.dataset.parentTroveId;
             var id                  = select_element.dataset.id;
+            var is_parent_hidden    = false;
 
             for (var i = 0; i < select_element.length; i++) {
                 var option = select_element[i];
+                var selected               = select_element.options[select_element.selectedIndex];
+                var is_option_at_root_level = option.dataset.isTopLevelId;
+
+                if (Boolean(is_option_at_root_level) === true) {
+                    is_parent_hidden = false;
+                }
+
                 if (option.value === parent_id) {
                     option.setAttribute('selected', true);
                     allowMandatoryPropertyOnlyForRootCategories(option.value, id);
 
-                    var selected               = select_element.options[select_element.selectedIndex];
                     var is_option_top_level_id = selected.getAttribute('data-is-top-level-id');
                     var is_parent_mandatory    = selected.getAttribute('data-is-parent-mandatory');
                     allowDisableOptionForChildUnderFirstParent(is_option_top_level_id, id, is_parent_mandatory);
                 }
+
+                is_parent_hidden = hideChildren(id, option, is_parent_hidden);
             }
         }
 
@@ -82,17 +91,25 @@ function selectParentCategoryOption() {
     });
 }
 
+function hideChildren(id, option_children_id, is_parent_hidden) {
+    if (id === option_children_id.value || is_parent_hidden === true) {
+        option_children_id.classList.add('trove-cats-option-hidden');
+        option_children_id.setAttribute('disabled', true);
+        return true;
+    }
+}
+
 function allowMandatoryPropertyOnlyForRootCategories(select_id, id) {
     var mandatory_element = document.getElementById("is-mandatory-" + id),
         mandatory_checkbox = document.getElementById("trove-cats-modal-mandatory-checkbox-" + id);
 
     if (select_id !== '0') {
         mandatory_element.setAttribute('disabled', true);
-        mandatory_checkbox.classList += ' tlp-form-element-disabled';
+        mandatory_checkbox.classList.add('tlp-form-element-disabled');
         mandatory_element.checked     = false;
     } else {
         mandatory_element.removeAttribute('disabled');
-        mandatory_checkbox.classList = ' tlp-form-element';
+        mandatory_checkbox.classList.remove('tlp-form-element-disabled');
     }
 }
 
@@ -102,10 +119,10 @@ function allowDisableOptionForChildUnderFirstParent(select_is_top_level, id, is_
 
     if (Boolean(select_is_top_level) === false || Boolean(is_parent_mandatory) === false) {
         disable_element.setAttribute('disabled', true);
-        disable_checkbox.classList += ' tlp-form-element-disabled';
+        disable_checkbox.classList.add('tlp-form-element-disabled');
         disable_element.checked     = false;
     } else {
         disable_element.removeAttribute('disabled');
-        disable_checkbox.classList = ' tlp-form-element';
+        disable_checkbox.classList.remove('tlp-form-element-disabled');
     }
 }

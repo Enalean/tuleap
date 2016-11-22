@@ -545,7 +545,7 @@ admin_trove_cat_edit	description_placeholder	Description de la catégorie de pro
 admin_trove_cat_edit	parent_category_label	Catégorie du parent
 admin_trove_cat_edit	missing_fullname	Le nom complet est obligatoire
 admin_trove_cat_edit	missing_shortname	Le nom court est obligatoire
-admin_trove_cat_edit	update_forbidden	Il est impossible de déplacer une catégorie dans sa catégorie fille.
+admin_trove_cat_edit	update_forbidden	Il est impossible de déplacer une catégorie dans sa catégorie fille ou dans elle même.
 
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
