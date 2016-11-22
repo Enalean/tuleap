@@ -70,7 +70,7 @@ class FolderHierarchicalRepresentationCollection
             }
             $option = '<option value="' . $folder->getId() . '" ' . $selected . '>';
             $option .= $prefix;
-            $option .= $purify->purify($folder->getXRef() . ' ' . $folder->getTitle());
+            $option .= $purify->purify($folder->getTitle());
             $option .= '</option>';
             $options[] = $option;
 
