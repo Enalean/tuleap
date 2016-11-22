@@ -43,7 +43,7 @@ class Presenter
         $this->last_update_label  = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_label');
         $this->submitted_by_label = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_label');
         $this->assigned_to_label  = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'assignedto_label');
-        $this->folder_label       = $GLOBALS['Language']->getText('plugin_folders', 'tab_label');
+        $this->folder_label       = $GLOBALS['Language']->getText('plugin_folders', 'column_label');
         $this->empty_state        = $GLOBALS['Language']->getText('plugin_folders', 'empty_state');
         $this->artifacts          = $artifacts;
     }
