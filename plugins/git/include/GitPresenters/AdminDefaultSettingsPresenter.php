@@ -62,7 +62,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
      */
     public $branches_permissions;
 
-    public $are_regexp_permission_activated;
+    public $are_regexp_permission_activated_at_site_level;
 
     public $is_regexp_enabled;
 
@@ -82,24 +82,27 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         array $tags_permissions_representation,
         array $new_fine_grained_ugroups,
         $delete_url,
-        CSRFSynchronizerToken $csrf_delete
+        CSRFSynchronizerToken $csrf_delete,
+        $are_regexp_permission_activated_at_site_level,
+        $is_regexp_enabled_at_global_level
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->manage_default_settings              = true;
-        $this->mirror_presenters                    = $mirror_presenters;
-        $this->pane_access_control                  = $pane_access_control;
-        $this->pane_mirroring                       = $pane_mirroring;
-        $this->read_options                         = $read_options;
-        $this->write_options                        = $write_options;
-        $this->rewrite_options                      = $rewrite_options;
-        $this->csrf                                 = $csrf;
-        $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
-        $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
-        $this->cannot_define_per_repo_permissions   = $are_fine_grained_permissions_defined;
-        $this->are_regexp_permission_activated      = false;
-        $this->is_regexp_enabled                    = false;
-        $this->can_regexp_are_enabled               = false;
+        $this->manage_default_settings                       = true;
+        $this->mirror_presenters                             = $mirror_presenters;
+        $this->pane_access_control                           = $pane_access_control;
+        $this->pane_mirroring                                = $pane_mirroring;
+        $this->read_options                                  = $read_options;
+        $this->write_options                                 = $write_options;
+        $this->rewrite_options                               = $rewrite_options;
+        $this->csrf                                          = $csrf;
+        $this->are_fine_grained_permissions_defined          = $are_fine_grained_permissions_defined;
+        $this->can_use_fine_grained_permissions              = $can_use_fine_grained_permissions;
+        $this->cannot_define_per_repo_permissions            = $are_fine_grained_permissions_defined;
+        $this->are_regexp_permission_activated_at_site_level = $are_regexp_permission_activated_at_site_level;
+        $this->is_regexp_enabled                             = $is_regexp_enabled_at_global_level;
+
+        $this->can_regexp_are_enabled = $is_regexp_enabled_at_global_level === false;
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
