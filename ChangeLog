@@ -8,6 +8,7 @@ Version 9.2 (Not release yet)
 	== Bug Fix ==
 	* request #9666: New siteadmin is slow
 	* request #9667: SVN cache do not remove properly the oldest entry of the cache
+	* request #9673: Correct the name of scss file for Git in Siteadmin
 
 	== Plugins ==
 	* tracker: 5.1037
