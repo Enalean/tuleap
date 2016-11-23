@@ -79,9 +79,9 @@ class AdminNewsRouter
         $current_tab = $request->get('current_tab');
 
         if ($action === 'publish') {
-            $request->set('status', NewsManager::NEWS_STATUS_PUBLISHED);
+            $request->set('status', NewsRetriever::NEWS_STATUS_PUBLISHED);
         } else if ($action === 'reject') {
-            $request->set('status', NewsManager::NEWS_STATUS_REJECTED);
+            $request->set('status', NewsRetriever::NEWS_STATUS_REJECTED);
         }
 
         try {

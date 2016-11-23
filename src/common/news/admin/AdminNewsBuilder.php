@@ -28,7 +28,7 @@ class AdminNewsBuilder
 {
     private $one_week;
     /**
-     * @var NewsManager
+     * @var NewsRetriever
      */
     private $news_manager;
     /**
@@ -46,7 +46,7 @@ class AdminNewsBuilder
 
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
-        NewsManager $news_manager,
+        NewsRetriever $news_manager,
         ProjectManager $project_manager,
         UserManager $user_manager
     ) {
@@ -127,7 +127,7 @@ class AdminNewsBuilder
             $row['summary'],
             $row['details'],
             $row['group_id'],
-            $row['is_approved'] === NewsManager::NEWS_STATUS_REQUESTED_PUBLICATION,
+            $row['is_approved'] === NewsRetriever::NEWS_STATUS_REQUESTED_PUBLICATION,
             $this->project_manager->getProject($row['group_id'])->getPublicName(),
             $this->user_manager->getUserById($row['submitted_by'])->getRealName(),
             $this->user_manager->getUserById($row['submitted_by'])->getAvatarUrl(),
