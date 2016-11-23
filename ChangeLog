@@ -1,3 +1,7 @@
+Version 9.1-5 (Wednesday, November 23rd 2016)
+	== Feature ==
+	* story #9668: rename tab, dropdown & column reordering
+
 Version 9.1-4 (Wednesday, November 23rd 2016)
 	== Bug Fix ==
 	* request #9666: New siteadmin is slow
