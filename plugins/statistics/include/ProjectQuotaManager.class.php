@@ -1,6 +1,9 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once 'Statistics_ProjectQuotaDao.class.php';
 
 /**
@@ -138,21 +142,6 @@ class ProjectQuotaManager {
     }
 
     /**
-     * List all projects having custom quota
-     *
-     * @param Array  $list     List of projects Id corresponding to a filter
-     * @param int    $offset   From where the result will be displayed.
-     * @param int    $count    How many results are returned.
-     * @param String $sort     Order result set according to this parameter
-     * @param String $sortSens Specifiy if the result set sort is ascending or descending
-     *
-     * @return DataAccessResult
-     */
-    public function getAllCustomQuota($list = array(), $offset = null, $count = null, $sort = null, $sortSens = null) {
-        return $this->dao->getAllCustomQuota($list, $offset, $count, $sort, $sortSens);
-    }
-
-    /**
      * Retrieve custom quota for a given project
      *
      * @param int $groupId ID of the project we want to retrieve its custom quota
@@ -185,8 +174,6 @@ class ProjectQuotaManager {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
         } elseif (empty($quota)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota', $maxQuota));
-        } elseif (strlen($motivation) > 512) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_motivation'));
         } else {
             $project = $this->pm->getProjectFromAutocompleter($project);
             if ($project) {
@@ -242,36 +229,19 @@ class ProjectQuotaManager {
         return $maxQuota;
     }
 
-    /**
-     * Delete custom quota for a project
-     *
-     * @param Array $projects List of projects for which custom quota will be deleted
-     *
-     * @return Void
-     */
-    public function deleteCustomQuota($projects) {
-        if (empty($projects)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'nothing_to_delete'));
+    public function deleteCustomQuota(Project $project) {
+        $defaultQuota = $this->diskUsageManager->getProperty('allowed_quota');
+        $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
+        if ($this->dao->deleteCustomQuota($project->getId())) {
+            $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $project->getId());
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', $project->getUnconvertedPublicName()));
         } else {
-            $list         = array();
-            $names        = array();
-            $defaultQuota = $this->diskUsageManager->getProperty('allowed_quota');
-            $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
-            foreach ($projects as $projectId => $name) {
-                $list[]  = $projectId;
-                $names[] = $name;
-                $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $projectId);
-            }
-            if ($this->dao->deleteCustomQuota($list)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', array(join(', ', $names))));
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
-            }
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
         }
     }
 
     /**
-     * @return Dao
+     * @return Statistics_ProjectQuotaDao
      */
     public function getDao() {
         if (!isset($this->dao)) {

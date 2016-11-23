@@ -16,8 +16,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Statistics\AdminHeaderPresenter;
+use Tuleap\Statistics\ProjectQuotaPresenter;
+
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/ProjectQuotaHtml.class.php';
+
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -30,20 +35,33 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
     header('Location: '.get_server_url());
 }
 
+$csrf = new CSRFSynchronizerToken('project_quota.php');
+
 $request = HTTPRequest::instance();
 $pqHtml  = new ProjectQuotaHtml();
 $pqHtml->HandleRequest($request);
 
-$html = $pqHtml->displayProjectQuota($request);
+$project_quota_manager = new ProjectQuotaManager();
+
+$collection = $pqHtml->getListOfProjectQuotaPresenters($request);
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
-$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 
-echo '<div id="plugin_statistics">';
-echo '<h1>'.$title.'</h1>';
-echo $html;
-echo '</div>';
-
-$GLOBALS['HTML']->footer(array());
-
-?>
+$admin_page_renderer = new AdminPageRenderer();
+$admin_page_renderer->renderANoFramedPresenter(
+    $title,
+    ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+    'project-quota',
+    new ProjectQuotaPresenter(
+        new AdminHeaderPresenter(
+            $title,
+            'project_quota'
+        ),
+        $request->get('project_filter'),
+        $collection['quotas'],
+        $collection['pagination'],
+        $project_quota_manager->getDefaultQuota(),
+        $project_quota_manager->getMaximumQuota(),
+        $csrf
+    )
+);

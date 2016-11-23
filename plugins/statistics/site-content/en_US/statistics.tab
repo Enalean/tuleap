@@ -80,7 +80,7 @@ plugin_statistics	scm_repo_evolution	Number of repositories containing commits
 plugin_statistics	quota_title	Project quota
 plugin_statistics	quota_description	Custom quota for each project
 plugin_statistics	search_projects	Filter projects
-plugin_statistics	no_projects	All projects have the default quota ($1 GB).
+plugin_statistics	no_projects	There isn't any projects with a custom quota. All projects have the default quota ($1 GB).
 plugin_statistics	quota	Quota
 plugin_statistics	max_quota	Maximum quota is $1 GB
 plugin_statistics	requester	Requester
@@ -90,7 +90,6 @@ plugin_statistics	set_quota	Set custom quota for a project
 plugin_statistics	invalid_action	Invalid Action
 plugin_statistics	invalid_project	Invalid project
 plugin_statistics	invalid_quota	Quota must be between 1 and $1 Gb
-plugin_statistics	invalid_motivation	You have exceeded  the maximal size of the Motivation
 plugin_statistics	nothing_to_delete	Nothing to delete
 plugin_statistics	delete_error	An error occured when deleting entries
 plugin_statistics	add_error	Anerror occured when adding the entry
@@ -107,7 +106,7 @@ plugin_statistics	projects_over_quota_title	Projects exceeding their disk quota
 plugin_statistics	disk_quota_warning_subject	[Disk quota] [Warning] Project $1 is exceeding allowed disk quota
 plugin_statistics	disk_quota_warning_body	Dear project administrator,<br><br>The size of the project <A href="/projects/$1" >$1</A> is: "$2".<br>We advise you to delete unneeded data in order to decrease the project size growth. <br>(please note that deleting items from a subversion repository has no effect on the disk size, on the contrary, it may increase your server repository size).<br>We advise you to avoid storing binaries into your Subversion repository.<br>For Documents, you can remove oldest versions in order to decrease the project's size.<br><br>--<br>Please note that without any actions from you, for the safety of the entire platform, your project may be suspended until we find a solution.
 plugin_statistics	disk_usage_report	Disk Usage <a href="$1">Report</a>
-plugin_statistics	add_disk_quota	<a href="$1">Add disk quota</a>
+plugin_statistics	add_disk_quota	Add quota
 plugin_statistics	projects_over_quota	<a href="$1">Projects over quota</a>
 plugin_statistics	querying_purged_data	The chart displayed uses old data which has been purged in order to display it quickly. The purge operation keeps one day's worth of data for each week ended more than 3 months ago. Beyond 2 years ago, one day of each month is kept.
 
@@ -143,3 +142,17 @@ plugin_statistics	day	Day
 plugin_statistics	week	Week
 plugin_statistics	month	Month
 plugin_statistics	year	Year
+
+plugin_statistics	search	Search
+plugin_statistics	project_placeholder	MyProject
+plugin_statistics	project_label	Project
+plugin_statistics	delete_confirm	Wow, wait a minute. You are about to delete the quota for <b>$1</b> project. Please confirm your action.
+plugin_statistics	no_motivation	No motivation
+plugin_statistics	quota_size	$1 GB
+plugin_statistics	quota_unit	GB
+plugin_statistics	delete_quota	Delete quota
+plugin_statistics	delete	Delete
+plugin_statistics	details	Details
+plugin_statistics	project_quota	Project quota
+plugin_statistics	comment	Comment…
+plugin_statistics	empty_filter_results	There isn't any quota for the selected project

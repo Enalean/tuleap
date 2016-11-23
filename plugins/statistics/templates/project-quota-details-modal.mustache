@@ -1,0 +1,42 @@
+<div id="modal-details-quota-{{ project_id }}"
+      class="tlp-modal"
+      role="dialog"
+      aria-labelledby="modal-details-quota-{{ project_id }}-label"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-details-quota-{{ project_id }}-label">
+            <i class="fa fa-list tlp-modal-title-icon"></i> {{ project_quota_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-property">
+            <label class="tlp-label">{{ project_label }}</label>
+            <p><a href="/admin/groupedit.php?group_id={{ project_id }}">{{ project_name }}</a></p>
+        </div>
+        <div class="tlp-property">
+            <label class="tlp-label">{{ requester_label }}</label>
+            <p>{{ user_name }}</p>
+        </div>
+        <div class="tlp-property">
+            <label class="tlp-label">{{ quota_label }}</label>
+            <p>{{ quota }}</p>
+        </div>
+        <div class="tlp-property">
+            <label class="tlp-label">{{ motivation_label }}</label>
+            {{# purified_motivation }}
+                <p>{{{ purified_motivation }}}</p>
+            {{/ purified_motivation }}
+            {{^ purified_motivation }}
+                <p class="tlp-property-empty">{{ no_motivation }}</p>
+            {{/ purified_motivation }}
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+            {{ close_label }}
+        </button>
+    </div>
+</div>

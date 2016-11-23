@@ -80,7 +80,7 @@ plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un co
 plugin_statistics	quota_title	Quota par projet
 plugin_statistics	quota_description	Quota personnalisé par projet
 plugin_statistics	search_projects	Filtrer les projets
-plugin_statistics	no_projects	Tous les projets ont le quota par défaut ($1 Go).
+plugin_statistics	no_projects	Il n'y a pas de projet avec un quota personnalisé. Tous les projets ont le quota par défaut ($1 Go).
 plugin_statistics	quota	Quota
 plugin_statistics	max_quota	Le quota maximum est de $1 Go
 plugin_statistics	requester	Demandeur
@@ -90,7 +90,6 @@ plugin_statistics	set_quota	Définir un quota personnalisé pour un projet
 plugin_statistics	invalid_action	Action invalide
 plugin_statistics	invalid_project	Projet invalide
 plugin_statistics	invalid_quota	Le quota doit être compris entre 1 et $1 Go
-plugin_statistics	invalid_motivation	Vous avez dépassez la taille maximale de la motivation
 plugin_statistics	nothing_to_delete	Rien à supprimer
 plugin_statistics	delete_error	Une erreur est survenue lors de la suppression
 plugin_statistics	add_error	Une erreur est survenue lors de l'ajout
@@ -107,7 +106,7 @@ plugin_statistics	projects_over_quota_title	Projets excédant leur part de disqu
 plugin_statistics	disk_quota_warning_subject	[Quota disque] [Avertissement] Le projet $1 excède la part de disque permise
 plugin_statistics	disk_quota_warning_body	Cher administrateur de projet, <br><br> La taille du projet <A href="/projects/$1" >$1</A> est: "$2".<br> Nous vous conseillons de supprimer des données inutiles pour diminuer la croissance de la taille de votre projet. <br> ( Il est à noter que la suppression d'élèments d'un dépôt Subversion n'a aucun effet sur la taille de disque, au contraire, il peut augmenter la taille de votre dépôt de serveur).<br> Nous vous conseillons d'éviter de stocker des fichiers binaires dans votre dépôt Subversion.<br> Pour les documents, vous pouvez enlever les versions les plus vieilles pour diminuer la taille du projet.<br> <br>--<br> Notez S'il vous plaît que sans aucune action de vous, pour la sécurité de la plate-forme entière, votre projet peut être suspendu jusqu'à ce que nous trouvions une solution.
 plugin_statistics	disk_usage_report	<a href="$1">Rapport</a> d'utilisation disque
-plugin_statistics	add_disk_quota	<a href="$1">Définir un quota disque</a>
+plugin_statistics	add_disk_quota	Définir un quota
 plugin_statistics	projects_over_quota	<a href="$1">Projets dépassant leurs quotas</a>
 plugin_statistics	querying_purged_data	Le graphique affiché se base sur des données anciennes qui ont été purgées pour des raisons de performances. Pour les données plus anciennes qu'il y a 3 mois, une journée par semaine a été conservée. Pour les données plus anciennes qu'il y a 2 ans, une journée par mois a été conservée.
 
@@ -136,6 +135,7 @@ plugin_statistics	frequencies_filter_month	Mois
 plugin_statistics	frequencies_filter_day	Jour
 plugin_statistics	frequencies_date_choice_error	La date de fin ne devrait pas être antérieure à la date de début
 
+
 plugin_statistics	services_label	Services
 plugin_statistics	group_by_label	Grouper par
 plugin_statistics	relative_y_axis_label	Relatif à l'axe des Y (dépend du jeu de données)
@@ -143,3 +143,17 @@ plugin_statistics	day	Jour
 plugin_statistics	week	Semaine
 plugin_statistics	month	Mois
 plugin_statistics	year	Année
+
+plugin_statistics	search	Chercher
+plugin_statistics	project_placeholder	MonProjet
+plugin_statistics	project_label	Projet
+plugin_statistics	delete_confirm	Hop, hop, hop ! Attendez un instant. Vous êtes en train de supprimer le quota pour le projet <b>$1</b>. Merci de confirmer votre action.
+plugin_statistics	no_motivation	Pas de motivation donnée
+plugin_statistics	quota_size	$1 Go
+plugin_statistics	quota_unit	Go
+plugin_statistics	delete_quota	Supprimer le quota
+plugin_statistics	delete	Supprimer
+plugin_statistics	details	Détails
+plugin_statistics	project_quota	Quota du projet
+plugin_statistics	comment	Commentaire…
+plugin_statistics	empty_filter_results	Il n'y a pas de quota défini pour le projet sélectionné

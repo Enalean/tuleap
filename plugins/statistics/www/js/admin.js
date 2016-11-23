@@ -24,13 +24,37 @@ document.addEventListener('DOMContentLoaded', function () {
         tlp.datePicker(element);
     });
 
-    var project_filter = document.getElementById('project-filter');
-    if (project_filter) {
+    var project_selectors = document.querySelectorAll('.project-autocompleter');
+    [].forEach.call(project_selectors, function (project_selector) {
         tuleap.autocomplete_projects_for_select2(
-            project_filter,
+            project_selector,
             {
                 include_private_projects: true
             }
         );
-    }
+    });
+
+    var user_selectors = document.querySelectorAll('.user-autocompleter');
+    [].forEach.call(user_selectors, function (user_selector) {
+        tuleap.autocomplete_users_for_select2(
+            user_selector,
+            {
+                internal_users_only: true
+            }
+        );
+    });
+
+    var modal_buttons = document.querySelectorAll('[data-modal-id]');
+    [].forEach.call(modal_buttons, function (button) {
+        var modal_element = document.getElementById(button.dataset.modalId);
+        if (! modal_element) {
+            throw "Bad reference to an unknown modal element: '" + button.dataset.modalId +"'";
+        }
+
+        var modal = tlp.modal(modal_element);
+
+        button.addEventListener('click', function () {
+            modal.toggle();
+        });
+    });
 });

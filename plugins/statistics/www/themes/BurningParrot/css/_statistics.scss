@@ -32,21 +32,64 @@
     white-space: initial;
 }
 
+.siteadmin-statistics-project-quota,
 #siteadmin-statistics-frequencies,
 #siteadmin-statistics-disk-usage {
     display: flex;
     align-items: flex-start;
 }
 
-#siteadmin-statistics-frequencies-search,
-#siteadmin-statistics-disk-usage-search {
+.siteadmin-statistics-project-quota-filter,
+#siteadmin-statistics-disk-usage-search,
+#siteadmin-statistics-frequencies-search {
     width: 300px;
     margin: 0 $tlp-spacing 0 0;
 }
 
-#siteadmin-statistics-frequencies-graph,
-#siteadmin-statistics-disk-usage-data {
+.siteadmin-statistics-project-quota-results,
+#siteadmin-statistics-disk-usage-data,
+#siteadmin-statistics-frequencies-graph {
     width: 100%;
+}
+
+.siteadmin-statistics-project-quota-add-project,
+.siteadmin-statistics-project-quota-add-requester {
+    width: 50%;
+}
+
+.siteadmin-statistics-project-quota-results-date,
+.siteadmin-statistics-project-quota-results-requester {
+    white-space: nowrap;
+}
+
+.siteadmin-statistics-project-quota-results-project {
+    width: 30%;
+}
+
+.siteadmin-statistics-project-quota-results-motivation {
+    width: 50%;
+    max-width: 1px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.siteadmin-statistics-project-quota-results-actions {
+    width: 1px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.siteadmin-statistics-disk-usage-data-service {
+    display: flex;
+    align-items: center;
+}
+
+.siteadmin-statistics-disk-usage-data-service-color {
+    width: 25px;
+    height: 25px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
 }
 
 @media screen and (max-width: 1400px) {
@@ -64,14 +107,24 @@
     }
 }
 
-.siteadmin-statistics-disk-usage-data-service {
-    display: flex;
-    align-items: center;
-}
+@media screen and (max-width: 1200px) {
+    .siteadmin-statistics-project-quota {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-.siteadmin-statistics-disk-usage-data-service-color {
-    width: 25px;
-    height: 25px;
-    margin: 0 $tlp-half-spacing 0 0;
-    border-radius: 50%;
+    .siteadmin-statistics-project-quota-filter {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+
+    .siteadmin-statistics-project-quota-results-actions {
+        white-space: normal;
+
+        > .tlp-table-cell-actions-button {
+            width: 100%;
+            margin: 0 0 5px;
+        }
+    }
 }

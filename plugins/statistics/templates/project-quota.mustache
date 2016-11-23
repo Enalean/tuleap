@@ -1,0 +1,111 @@
+<section class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally siteadmin-statistics-project-quota">
+        <section class="tlp-pane siteadmin-statistics-project-quota-filter">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        <i class="fa fa-search tlp-pane-title-icon"></i> {{ filter_label }}
+                    </div>
+                </div>
+                <form method="GET" action="" class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="project-filter">{{ project_label }}</label>
+                        <select class="tlp-select project-autocompleter"
+                                id="project-filter"
+                                name="project_filter"
+                                style="width: 100%"
+                                data-placeholder="{{ project_placeholder }}">
+                            {{# selected_project }}
+                                <option value="{{ selected_project }}">{{ selected_project }}</option>
+                            {{/ selected_project }}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="tlp-button-primary tlp-button-wide">
+                        <i class="fa fa-search tlp-button-icon"></i> {{ search_label }}
+                    </button>
+                </form>
+            </div>
+        </section>
+        <section class="tlp-pane siteadmin-statistics-project-quota-results">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        <i class="fa fa-archive tlp-pane-title-icon"></i> {{ project_quota_tab_label }}
+                    </div>
+                </div>
+                <div class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <button type="button"
+                                class="tlp-button-primary tlp-table-actions-element"
+                                data-modal-id="modal-add-quota"
+                        >
+                            <i class="tlp-button-icon fa fa-plus"></i> {{ add_quota_label }}
+                        </button>
+                        {{> project-quota-add-modal }}
+                    </div>
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>{{ project_column }}</th>
+                                <th>{{ requester_column }}</th>
+                                <th class="tlp-table-cell-numeric">{{ quota_column }}</th>
+                                <th>{{ motivation_column }}</th>
+                                <th>{{ date_column }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{# quotas }}
+                                <tr>
+                                    <td class="siteadmin-statistics-project-quota-results-project">
+                                        <a href="/admin/groupedit.php?group_id={{ project_id }}">{{ project_name }}</a>
+                                    </td>
+                                    <td class="siteadmin-statistics-project-quota-results-requester">{{ user_name }}</td>
+                                    <td class="tlp-table-cell-numeric">{{ quota }}</td>
+                                    <td class="siteadmin-statistics-project-quota-results-motivation">{{ motivation }}</td>
+                                    <td class="siteadmin-statistics-project-quota-results-date">{{ date }}</td>
+                                    <td class="tlp-table-cell-actions siteadmin-statistics-project-quota-results-actions">
+                                        <button type="button"
+                                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                                data-modal-id="modal-details-quota-{{ project_id }}"
+                                        >
+                                            <i class="fa fa-list tlp-button-icon"></i> {{ details_label }}
+                                        </button>
+                                        <button type="button"
+                                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                                                data-modal-id="modal-delete-quota-{{ project_id }}"
+                                        >
+                                            <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_label }}
+                                        </button>
+                                        {{> project-quota-delete-modal }}
+                                        {{> project-quota-details-modal }}
+                                    </td>
+                                </tr>
+                            {{/ quotas }}
+                            {{^ has_quota }}
+                                <tr>
+                                    <td colspan="6" class="tlp-table-cell-empty">
+                                        {{# selected_project }}
+                                            {{ empty_filter_results }}
+                                        {{/ selected_project }}
+                                        {{^ selected_project }}
+                                            {{ empty_state }}
+                                        {{/ selected_project }}
+                                    </td>
+                                </tr>
+                            {{/ has_quota }}
+                        </tbody>
+                    </table>
+                    {{# pagination }}
+                        {{> pagination }}
+                    {{/ pagination }}
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
