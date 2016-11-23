@@ -26,13 +26,11 @@ use UserManager;
 
 class AdminNewsBuilder
 {
-    const NEWS_STATUS_REQUESTED_PUBLICATION = '3';
-
     private $one_week;
     /**
-     * @var AdminNewsDao
+     * @var NewsManager
      */
-    private $admin_news_dao;
+    private $news_manager;
     /**
      * @var ProjectManager
      */
@@ -46,16 +44,15 @@ class AdminNewsBuilder
      */
     private $csrf_token;
 
-
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
-        AdminNewsDao $admin_news_dao,
+        NewsManager $news_manager,
         ProjectManager $project_manager,
         UserManager $user_manager
     ) {
         $this->one_week        = 7 * 24 * 3600;
         $this->csrf_token      = $csrf_token;
-        $this->admin_news_dao  = $admin_news_dao;
+        $this->news_manager    = $news_manager;
         $this->project_manager = $project_manager;
         $this->user_manager    = $user_manager;
     }
@@ -68,7 +65,7 @@ class AdminNewsBuilder
         $presenter = new AdminRejectedNewsPresenter(
             $this->csrf_token,
             $title,
-            $this->buildNewsList($this->admin_news_dao->getRejectedNews($old_date), 'rejected_news')
+            $this->buildNewsList($this->news_manager->getRejectedNews($old_date), 'rejected_news')
         );
 
         return $presenter;
@@ -82,7 +79,7 @@ class AdminNewsBuilder
         $presenter = new AdminPublishedNewsPresenter(
             $this->csrf_token,
             $title,
-            $this->buildNewsList($this->admin_news_dao->getPublishedNews($old_date), 'published_news')
+            $this->buildNewsList($this->news_manager->getPublishedNews($old_date), 'published_news')
         );
 
         return $presenter;
@@ -90,7 +87,7 @@ class AdminNewsBuilder
 
     public function getWaitingPublicationNewsPresenter()
     {
-        $result          = $this->admin_news_dao->getWaitingPublicationNews();
+        $result          = $this->news_manager->getWaitingPublicationNews();
         $filtered_result = array();
 
         foreach ($result as $row) {
@@ -130,7 +127,7 @@ class AdminNewsBuilder
             $row['summary'],
             $row['details'],
             $row['group_id'],
-            $row['is_approved'] === self::NEWS_STATUS_REQUESTED_PUBLICATION,
+            $row['is_approved'] === NewsManager::NEWS_STATUS_REQUESTED_PUBLICATION,
             $this->project_manager->getProject($row['group_id'])->getPublicName(),
             $this->user_manager->getUserById($row['submitted_by'])->getRealName(),
             $this->user_manager->getUserById($row['submitted_by'])->getAvatarUrl(),

@@ -25,8 +25,6 @@ use Tuleap\Admin\AdminPageRenderer;
 
 class AdminNewsController
 {
-    const NEWS_STATUS_REJECTED = '2';
-
     /**
      * @var AdminNewsDao
      */
@@ -108,7 +106,7 @@ class AdminNewsController
 
     public function update(HTTPRequest $request)
     {
-        if (! $request->get('title') && $request->get('status') !== self::NEWS_STATUS_REJECTED) {
+        if (! $request->get('title') && $request->get('status') !== NewsManager::NEWS_STATUS_REJECTED) {
             throw new AdminNewsMissingTitleException();
         }
 

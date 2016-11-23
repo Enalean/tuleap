@@ -26,9 +26,6 @@ use HTTPRequest;
 
 class AdminNewsRouter
 {
-    const NEWS_STATUS_PUBLISHED = '1';
-    const NEWS_STATUS_REJECTED  = '2';
-
     /**
      * @var \Tuleap\News\Admin\AdminNewsController
      */
@@ -82,9 +79,9 @@ class AdminNewsRouter
         $current_tab = $request->get('current_tab');
 
         if ($action === 'publish') {
-            $request->set('status', self::NEWS_STATUS_PUBLISHED);
+            $request->set('status', NewsManager::NEWS_STATUS_PUBLISHED);
         } else if ($action === 'reject') {
-            $request->set('status', self::NEWS_STATUS_REJECTED);
+            $request->set('status', NewsManager::NEWS_STATUS_REJECTED);
         }
 
         try {
