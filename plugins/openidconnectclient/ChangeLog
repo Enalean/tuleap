@@ -1,3 +1,6 @@
+Version 0.38 - Tuleap 9.2
+    * story #9658: You can not unlink a provider defined has unique authentication endpoint from your user account
+
 Version 0.37 - Tuleap 9.2
     * story #9658: Request the scopes email and profile when the provider is the unique authentication endpoint
 
