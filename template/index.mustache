@@ -2,12 +2,11 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
+    <h3>{{title}}</h3>
     <fieldset>
-        <legend>{{title}}</legend>
         <input type="hidden" name="action" value="edit_notification" />
         <input type="hidden" name="repository_id" value="{{ repository_id }}" />
 
-        <h3>{{ table_title }}</h3>
         <p>{{ description }}</p>
         <table class="table table-bordered table-striped" id="bot_list">
             <thead>
