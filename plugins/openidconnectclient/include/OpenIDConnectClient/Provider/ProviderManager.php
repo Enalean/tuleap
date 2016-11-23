@@ -99,6 +99,7 @@ class ProviderManager {
             $user_info_endpoint,
             $client_id,
             $client_secret,
+            false,
             $icon,
             $color
         );
@@ -154,9 +155,9 @@ class ProviderManager {
     /**
      * @return Provider[]
      */
-    public function getConfiguredProviders() {
+    public function getProvidersUsableToLogIn() {
         $providers = array();
-        $rows      = $this->dao->searchConfiguredProviders();
+        $rows      = $this->dao->searchProvidersUsableToLogIn();
         if ($rows === false) {
             return $providers;
         }
@@ -197,6 +198,7 @@ class ProviderManager {
             $row['user_info_endpoint'],
             $row['client_id'],
             $row['client_secret'],
+            $row['unique_authentication_endpoint'],
             $row['icon'],
             $row['color']
         );
