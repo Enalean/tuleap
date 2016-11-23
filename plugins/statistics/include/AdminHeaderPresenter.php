@@ -38,6 +38,9 @@ class AdminHeaderPresenter
     public $service_usage_tab_active;
     public $scm_statistics_tab_active;
 
+    public $usage_progress_btn;
+    public $usage_progress_help;
+
     public function __construct(
         $title,
         $active_tab
@@ -55,5 +58,7 @@ class AdminHeaderPresenter
         $this->project_quota_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
         $this->service_usage_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
         $this->scm_statistics_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
+        $this->usage_progress_btn       = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_btn');
+        $this->usage_progress_help      = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_help');
     }
 }

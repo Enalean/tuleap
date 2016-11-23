@@ -17,6 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#siteadmin-statistics-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 $tlp-title-spacing;
+}
+
+#siteadmin-statistics-header-title {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+#siteadmin-statistics-header-usage-progress::before {
+    width: 30vmax;
+    white-space: initial;
+}
+
 #siteadmin-statistics-frequencies {
     display: flex;
     align-items: flex-start;

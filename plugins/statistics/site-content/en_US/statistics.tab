@@ -108,3 +108,5 @@ plugin_statistics	docdl_type	Legacy document viewed
 plugin_statistics	wikidl_type	Wiki pages viewed
 plugin_statistics	oartifact_type	Opened Artifacts (V3)
 plugin_statistics	cartifact_type	Closed (or wished end date) Artifacts (V3)
+plugin_statistics	usage_progress_btn	Usage progress (CSV)
+plugin_statistics	usage_progress_help	Generate a CSV file that contains the progress of some data figures (number of users, number of projects) over the time. For each month, it outputs the number of created projects and user accounts.
