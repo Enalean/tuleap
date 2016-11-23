@@ -35,6 +35,19 @@ class TroveCatDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function getCategoryParent($node_id)
+    {
+        $node_id = $this->da->escapeInt($node_id);
+
+        $sql = "SELECT DISTINCT(parent.trove_cat_id), parent.shortname, parent.fullname, parent.parent AS parent_id
+                FROM trove_cat parent
+                  LEFT JOIN trove_cat children ON (parent.trove_cat_id = children.parent)
+                WHERE parent.trove_cat_id = $node_id
+                  ORDER BY children.root_parent, children.fullname";
+
+        return $this->retrieve($sql);
+    }
+
     public function getCategoryChildren($trove_cat_id)
     {
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
@@ -85,7 +98,9 @@ class TroveCatDao extends DataAccessObject
         $newroot,
         $mandatory,
         $display,
-        $trove_cat_id
+        $trove_cat_id,
+        $fullpath,
+        $fullpath_ids
     ) {
         $shortname    = $this->da->quoteSmart($shortname);
         $fullname     = $this->da->quoteSmart($fullname);
@@ -95,6 +110,8 @@ class TroveCatDao extends DataAccessObject
         $mandatory    = $this->da->escapeInt($mandatory);
         $display      = $this->da->escapeInt($display);
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
+        $fullpath     = $this->da->quoteSmart($fullpath);
+        $fullpath_ids = $this->da->quoteSmart($fullpath_ids);
 
         $version = date("Ymd", time()) . '01';
 
@@ -106,7 +123,9 @@ class TroveCatDao extends DataAccessObject
               version = $version,
               root_parent = $newroot,
               mandatory = $mandatory,
-              display_during_project_creation = $display
+              display_during_project_creation = $display,
+              fullpath = $fullpath,
+              fullpath_ids = $fullpath_ids
            WHERE trove_cat_id= $trove_cat_id";
 
         return $this->update($sql);
@@ -119,7 +138,9 @@ class TroveCatDao extends DataAccessObject
         $parent,
         $root_parent,
         $mandatory,
-        $display
+        $display,
+        $fullpath,
+        $fullpath_ids
     ) {
         $shortname   = $this->da->quoteSmart($shortname);
         $fullname    = $this->da->quoteSmart($fullname);
@@ -128,6 +149,8 @@ class TroveCatDao extends DataAccessObject
         $root_parent = $this->da->escapeInt($root_parent);
         $mandatory   = $this->da->escapeInt($mandatory);
         $display     = $this->da->escapeInt($display);
+        $fullpath     = $this->da->quoteSmart($fullpath);
+        $fullpath_ids = $this->da->quoteSmart($fullpath_ids);
 
         $version = date("Ymd", time()) . '01';
 
@@ -139,7 +162,9 @@ class TroveCatDao extends DataAccessObject
                   version,
                   root_parent,
                   mandatory,
-                  display_during_project_creation
+                  display_during_project_creation,
+                  fullpath,
+                  fullpath_ids
               ) values (
                   $shortname,
                   $fullname,
@@ -148,7 +173,9 @@ class TroveCatDao extends DataAccessObject
                   $version,
                   $root_parent,
                   $mandatory,
-                  $display
+                  $display,
+                  $fullpath,
+                  $fullpath_ids
               )";
 
         return $this->update($sql);
