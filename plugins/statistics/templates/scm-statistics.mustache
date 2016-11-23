@@ -1,0 +1,62 @@
+<section class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">{{ scm_statistics_label }}</h1>
+                </div>
+                <form method="GET" action="scm_stats.php" class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label for="date-picker-start" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
+                        <div class="tlp-form-element tlp-form-element-prepend">
+                            <input type="text"
+                                   name="start"
+                                   id="date-picker-start"
+                                   class="tlp-input tlp-input-date"
+                                   size="11"
+                                   required
+                                   value="{{ start_date }}">
+                            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="tlp-form-element">
+                        <label for="date-picker-end" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
+                        <div class="tlp-form-element tlp-form-element-prepend">
+                            <input type="text"
+                                   name="end"
+                                   id="date-picker-end"
+                                   class="tlp-input tlp-input-date"
+                                   size="11"
+                                   required
+                                   value="{{ end_date }}">
+                            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="tlp-form-element">
+                        <label for="group_name" class="tlp-label">{{ project_id_label }}</label>
+                        <select
+                            class="tlp-select"
+                            id="project-filter"
+                            name="group_name"
+                            style="width: 100%"
+                            data-placeholder="{{ project_placeholder }}"
+                        ></select>
+                        <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{ project_help }}</p>
+                    </div>
+
+                    <div class="tlp-pane-section-submit">
+                        <button type="submit" class="tlp-button-primary" name="export">
+                            <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</section>

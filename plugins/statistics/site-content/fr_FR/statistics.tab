@@ -33,6 +33,7 @@ plugin_statistics	start_date	Date de début
 plugin_statistics	end_date	Date de fin
 plugin_statistics	scm_project_id	Identifiant du projet
 plugin_statistics	scm_project_id_info	L'identifiant du projet est optionnel, laissez le champ vide pour calculer les statistiques de toute la plateforme.
+plugin_statistics	scm_project_selection	Sélectionner des projets…
 plugin_statistics	csv_export_button	Exporter en CSV
 plugin_statistics	scm_month	Mois
 plugin_statistics	scm_svn_total_read	Nombre total d'accès en lecture à SVN

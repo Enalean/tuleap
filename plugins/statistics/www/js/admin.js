@@ -23,4 +23,14 @@ document.addEventListener('DOMContentLoaded', function () {
     [].forEach.call(date_picker_elements, function (element) {
         tlp.datePicker(element);
     });
+
+    var project_filter = document.getElementById('project-filter');
+    if (project_filter) {
+        tuleap.autocomplete_projects_for_select2(
+            project_filter,
+            {
+                include_private_projects: true
+            }
+        );
+    }
 });
