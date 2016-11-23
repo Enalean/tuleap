@@ -140,6 +140,7 @@ class UserMappingManager {
             $row['provider_id'],
             $row['name'],
             $row['icon'],
+            $row['unique_authentication_endpoint'],
             $row['user_id'],
             $row['last_used']
         );
