@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\FrequenciesPresenter;
 use Tuleap\Statistics\FrequenciesSearchFieldsPresenterBuilder;
 
@@ -85,8 +86,13 @@ $search_fields_presenter = $search_fields_builder->build(
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
 
-$frequencies_presenter = new FrequenciesPresenter(
+$header_presenter = new AdminHeaderPresenter(
     $title,
+    'frequencies'
+);
+
+$frequencies_presenter = new FrequenciesPresenter(
+    $header_presenter,
     $search_fields_presenter,
     $year,
     $month,

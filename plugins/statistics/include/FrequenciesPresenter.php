@@ -22,18 +22,15 @@ namespace Tuleap\Statistics;
 
 class FrequenciesPresenter
 {
-    const TEMPLATE = 'admin';
+    const TEMPLATE = 'frequencies';
 
-    public $title;
+    public $header;
     public $search_fields;
-    public $frequencies_tab_label;
-    public $disk_usage_tab_label;
-    public $project_quota_tab_label;
-    public $service_usage_tab_label;
     public $graph_url;
+    public $frequencies_label;
 
     public function __construct(
-        $title,
+        AdminHeaderPresenter $header,
         FrequenciesSearchFieldsPresenter $search_fields,
         $year,
         $month,
@@ -44,13 +41,10 @@ class FrequenciesPresenter
         $enddate,
         $filter
     ) {
-        $this->title         = $title;
+        $this->header        = $header;
         $this->search_fields = $search_fields;
 
-        $this->frequencies_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
-        $this->disk_usage_tab_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
-        $this->project_quota_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
-        $this->service_usage_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
+        $this->frequencies_label = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
 
         $this->graph_url = 'frequence_stat_graph.php?year='.urlencode($year).
                                                     '&month='.urlencode($month).

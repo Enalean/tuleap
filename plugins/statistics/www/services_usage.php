@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Statistics\AdminHeaderPresenter;
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
@@ -190,14 +191,19 @@ if (!$error && $request->exist('export') && $startDate && $endDate) {
     echo $csv_exporter->exportCSV();
 
 } else {
-    $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
+    $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+
+    $header_presenter = new AdminHeaderPresenter(
+        $title,
+        'service_usage'
+    );
 
     $admin_page_renderer = new AdminPageRenderer();
     $admin_page_renderer->renderANoFramedPresenter(
         $title,
         ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
         'service-usage',
-        new \Tuleap\Statistics\ServiceUsagePresenter($title, $startDate, $endDate)
+        new \Tuleap\Statistics\ServiceUsagePresenter($header_presenter, $startDate, $endDate)
     );
 }
 

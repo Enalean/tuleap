@@ -1,12 +1,7 @@
 <div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
-
-    <nav class="tlp-tabs">
-        <a href="" class="tlp-tab tlp-tab-active">{{ frequencies_tab_label }}</a>
-        <a href="disk_usage.php" class="tlp-tab">{{ disk_usage_tab_label }}</a>
-        <a href="project_quota.php" class="tlp-tab">{{ project_quota_tab_label }}</a>
-        <a href="services_usage.php" class="tlp-tab">{{ service_usage_tab_label }}</a>
-    </nav>
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
 
     <div class="tlp-framed-horizontally" id="siteadmin-statistics-frequencies">
         <section class="tlp-pane" id="siteadmin-statistics-frequencies-search">
@@ -58,7 +53,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <div class="tlp-pane-title">
-                        <i class="tlp-pane-title-icon fa fa-bar-chart"></i> {{ frequencies_tab_label }}
+                        <i class="tlp-pane-title-icon fa fa-bar-chart"></i> {{ frequencies_label }}
                     </div>
                 </div>
                 <section class="tlp-pane-section">
