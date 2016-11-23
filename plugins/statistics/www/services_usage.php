@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.class.php';
@@ -75,9 +77,7 @@ if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
 }
 
-if (!$error && $request->exist('export')) {
-    $startDate = $request->get('start');
-    $endDate   = $request->get('end');
+if (!$error && $request->exist('export') && $startDate && $endDate) {
 
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
@@ -191,33 +191,14 @@ if (!$error && $request->exist('export')) {
 
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
-    $GLOBALS['HTML']->includeCalendarScripts();
-    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
-    echo '<h1>'.$title.'</h1>';
 
-    echo '<form name="form_service_usage_stats" method="get">';
-    echo '<table>';
-    echo '<tr>';
-    echo '<td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'start_date').'</b>';
-    echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'end_date').'</b>';
-    echo '</td>';
-    echo '</tr><tr>';
-    echo '<td>';
-    list($timestamp,) = util_date_to_unixtime($startDate);
-    echo html_field_date('start', $startDate, false, 10, 10, 'form_service_usage_stats', false);
-    echo '</td><td>';
-    list($timestamp,) = util_date_to_unixtime($endDate);
-    echo html_field_date('end', $endDate, false, 10, 10, 'form_service_usage_stats', false);
-    echo '</td>';
-    echo '</tr><tr><td>';
-    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button').'" >';
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
-    echo '</form>';
-    $GLOBALS['HTML']->footer(array());
+    $admin_page_renderer = new AdminPageRenderer();
+    $admin_page_renderer->renderANoFramedPresenter(
+        $title,
+        ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+        'service-usage',
+        new \Tuleap\Statistics\ServiceUsagePresenter($title, $startDate, $endDate)
+    );
 }
 
 function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name) {
@@ -226,5 +207,3 @@ function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter
     $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
     $csv_exporter->buildDatas($disk_usage, $column_name);
 }
-
-?>

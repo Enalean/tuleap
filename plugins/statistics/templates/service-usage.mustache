@@ -1,0 +1,57 @@
+<section class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
+
+    <nav class="tlp-tabs">
+        <a href="" class="tlp-tab">{{ frequencies_tab_label }}</a>
+        <a href="disk_usage.php" class="tlp-tab">{{ disk_usage_tab_label }}</a>
+        <a href="project_quota.php" class="tlp-tab">{{ project_quota_tab_label }}</a>
+        <a href="services_usage.php" class="tlp-tab tlp-tab-active">{{ service_usage_tab_label }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        {{ service_usage_tab_label }}
+                    </div>
+                </div>
+                <form action="" method="GET" class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label for="date-picker-start" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
+                        <div class="tlp-form-element tlp-form-element-prepend">
+                            <input type="text"
+                                   name="start"
+                                   id="date-picker-start"
+                                   class="tlp-input tlp-input-date"
+                                   size="11"
+                                   required
+                                   value="{{ start_date }}">
+                            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="tlp-form-element">
+                        <label for="date-picker-end" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
+                        <div class="tlp-form-element tlp-form-element-prepend">
+                            <input type="text"
+                                   name="end"
+                                   id="date-picker-end"
+                                   class="tlp-input tlp-input-date"
+                                   size="11"
+                                   required
+                                   value="{{ end_date }}">
+                            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="tlp-pane-section-submit">
+                        <button type="submit" class="tlp-button-primary" name="export">
+                            <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</section>
