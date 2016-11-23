@@ -15,7 +15,7 @@ $csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
-function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $event_manager)	{
+function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $event_manager, $old_password_required)	{
     $request = HTTPRequest::instance();
 
     if (!$request->isPost() || !$request->exist('Update')) {
@@ -39,7 +39,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
         $password_expiration_checker,
         $password_handler
     );
-    if (!$login_manager->verifyPassword($user, $request->get('form_oldpw'))) {
+    if ($old_password_required && ! $login_manager->verifyPassword($user, $request->get('form_oldpw'))) {
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'incorrect_old_password'));
 		return 0;
 	}
@@ -60,7 +60,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'password_not_match'));
 		return 0;
 	}
-    if ($request->get('form_pw') === $request->get('form_oldpw')) {
+    if ($login_manager->verifyPassword($user, $request->get('form_pw'))) {
         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_change_pw', 'identical_password'));
         return 0;
     }
@@ -81,13 +81,17 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
 	return 1;
 }
 
-require_once('common/event/EventManager.class.php');
-$em = EventManager::instance();
-$em->processEvent('before_change_pw', array());
+$event_manager = EventManager::instance();
+$event_manager->processEvent('before_change_pw', array());
+$old_password_required = true;
+$event_manager->processEvent(
+    Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE,
+    array('old_password_required' => &$old_password_required)
+);
 
 // ###### first check for valid login, if so, congratulate
 $user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') : user_getid();
-if (register_valid($user_id, $csrf, $em)) {
+if (register_valid($user_id, $csrf, $event_manager, $old_password_required)) {
     $HTML->header(array('title'=>$Language->getText('account_change_pw', 'title_success')));
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>
@@ -104,9 +108,13 @@ if (register_valid($user_id, $csrf, $em)) {
 <form action="change_pw.php" method="post" autocomplete="off" >
 <p><?
 echo $csrf->fetchHTMLInput();
-echo $Language->getText('account_change_pw', 'old_password'); ?>:
-<br><input type="password" value="" name="form_oldpw">
-<?php user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
+if ($old_password_required) {
+    echo $Language->getText('account_change_pw', 'old_password'); ?>:
+    <br>
+    <input type="password" value="" name="form_oldpw">
+<?php
+}
+user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
 <p><input type="submit" class="btn btn-primary" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 

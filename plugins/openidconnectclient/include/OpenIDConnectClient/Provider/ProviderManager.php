@@ -187,6 +187,14 @@ class ProviderManager {
     }
 
     /**
+     * @return bool
+     */
+    public function isAProviderConfiguredAsUniqueAuthenticationEndpoint()
+    {
+        return $this->dao->isAProviderConfiguredAsUniqueEndPointProvider();
+    }
+
+    /**
      * @return Provider
      */
     private function instantiateFromRow(array $row) {

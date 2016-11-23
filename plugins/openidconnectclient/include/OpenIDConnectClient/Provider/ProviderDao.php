@@ -97,7 +97,7 @@ class ProviderDao  extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function isAProviderConfiguredAsUniqueEndPointProvider()
+    public function isAProviderConfiguredAsUniqueEndPointProvider()
     {
         $sql = "SELECT * FROM plugin_openidconnectclient_provider WHERE unique_authentication_endpoint = TRUE LIMIT 1";
         $this->retrieve($sql);

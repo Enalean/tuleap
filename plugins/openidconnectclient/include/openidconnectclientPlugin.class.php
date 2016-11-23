@@ -65,6 +65,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
     }
 
     /**
@@ -108,6 +109,13 @@ class openidconnectclientPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = $this->getPluginPath().'/scripts/open-id-connect-client.js';
         }
+    }
+
+    public function old_password_required_for_password_change($params)
+    {
+        $provider_manager = new ProviderManager(new ProviderDao());
+        $params['old_password_required'] = ! $this->canPluginAuthenticateUser() ||
+            ! $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
     }
 
     private function loadLibrary() {
