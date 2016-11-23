@@ -91,9 +91,22 @@
             </div>
         {{/ log }}
     </div>
-    <div class="tlp-modal-footer">
+    <form action="/admin/system_events/" method="POST" class="tlp-modal-footer">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <input type="hidden" name="queue" value="{{ queue }}">
+        {{# can_be_replayed }}
+            <button type="submit"
+                    name="replay"
+                    value="{{ id }}"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            >
+                <i class="fa fa-repeat tlp-button-icon"></i> {{ replay_label }}
+            </button>
+        {{/ can_be_replayed }}
         <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
             {{ close_label }}
         </button>
-    </div>
+    </form>
 </div>

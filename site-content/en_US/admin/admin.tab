@@ -667,10 +667,13 @@ admin_system_events	details_label	Details
 admin_system_events	replay_label	Relaunch
 admin_system_events	id_label	Id
 admin_system_events	created_label	Created date
+admin_system_events	created_at	Created at
 admin_system_events	owner_label	Owner
 admin_system_events	priority_label	Priority
 admin_system_events	start_label	Start date
+admin_system_events	start_at	Started at
 admin_system_events	end_label	End date
+admin_system_events	end_at	Ended at
 admin_system_events	log_label	Log
 admin_system_events	replayed_label	relaunched
 admin_system_events	details_title	System event details
@@ -680,6 +683,7 @@ admin_system_events	duration_days	%d days %h h %i m %s s
 admin_system_events	duration_hours	%h h %i m %s s
 admin_system_events	duration_minutes	%i m %s s
 admin_system_events	duration_seconds	%s s
+admin_system_events	section_date_format	%h %e, %Y
 admin_system_events	priority_1	High
 admin_system_events	priority_2	Medium
 admin_system_events	priority_3	Low

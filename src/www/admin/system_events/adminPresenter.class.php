@@ -44,8 +44,7 @@ class SystemEvents_adminPresenter
 
     public $types;
 
-    /** @var string */
-    public $events;
+    public $sections;
 
     /** @var string */
     public $queue;
@@ -62,13 +61,13 @@ class SystemEvents_adminPresenter
         Tuleap\SystemEvent\SystemEventSearchPresenter $search,
         Tuleap\Layout\PaginationPresenter $pagination
     ) {
-        $this->csrf        = $csrf;
-        $this->events      = $events;
-        $this->has_events  = count($events) > 0;
-        $this->queue       = $queue;
-        $this->title       = $title;
-        $this->pagination  = $pagination;
-        $this->search      = $search;
+        $this->csrf       = $csrf;
+        $this->sections   = $this->groupByCreatedDate($events);
+        $this->has_events = count($events) > 0;
+        $this->queue      = $queue;
+        $this->title      = $title;
+        $this->pagination = $pagination;
+        $this->search     = $search;
 
         $this->events_label        = $GLOBALS['Language']->getText('admin_system_events', 'events');
         $this->notifications_label = $GLOBALS['Language']->getText('admin_system_events', 'notifications');
@@ -86,9 +85,39 @@ class SystemEvents_adminPresenter
         $this->priority_label   = $GLOBALS['Language']->getText('admin_system_events', 'priority_label');
         $this->start_label      = $GLOBALS['Language']->getText('admin_system_events', 'start_label');
         $this->end_label        = $GLOBALS['Language']->getText('admin_system_events', 'end_label');
+        $this->created_at       = $GLOBALS['Language']->getText('admin_system_events', 'created_at');
+        $this->start_at         = $GLOBALS['Language']->getText('admin_system_events', 'start_at');
+        $this->end_at           = $GLOBALS['Language']->getText('admin_system_events', 'end_at');
         $this->log_label        = $GLOBALS['Language']->getText('admin_system_events', 'log_label');
         $this->replayed_label   = $GLOBALS['Language']->getText('admin_system_events', 'replayed_label');
         $this->details_title    = $GLOBALS['Language']->getText('admin_system_events', 'details_title');
         $this->close_label      = $GLOBALS['Language']->getText('global', 'btn_close');
+    }
+
+    private function groupByCreatedDate(array $events)
+    {
+        $grouped_events = array();
+        /** @var \Tuleap\SystemEvent\SystemEventPresenter $event */
+        foreach ($events as $event) {
+            $prefix = substr($event->create_date, 0, 10);
+            if (! isset($grouped_events[$prefix])) {
+                $grouped_events[$prefix] = array(
+                    'label'  => $this->getSectionLabel($event->create_date),
+                    'events' => array()
+                );
+            }
+
+            $grouped_events[$prefix]['events'][] = $event;
+        }
+
+        return array_values($grouped_events);
+    }
+
+    private function getSectionLabel($date)
+    {
+        return strftime(
+            $GLOBALS['Language']->getText('admin_system_events', 'section_date_format'),
+            strtotime($date)
+        );
     }
 }

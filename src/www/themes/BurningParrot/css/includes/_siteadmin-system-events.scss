@@ -36,6 +36,11 @@
     font-size: 12px;
 }
 
+.systemevents-parameters {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}
+
 .systemevents-details-modal-row {
     display: flex;
 }
@@ -46,6 +51,7 @@
 
 .systemevents-details-modal-log {
     white-space: pre-wrap;
+    word-break: break-all;
 }
 
 .systemevents-priority-high-icon {
@@ -54,6 +60,10 @@
 
 .systemevents-priority-low-icon {
     transform: rotate(45deg);
+}
+
+.systemevents-time {
+    white-space: nowrap;
 }
 
 @media screen and (max-width: 1400px) {

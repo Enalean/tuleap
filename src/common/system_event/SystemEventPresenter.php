@@ -57,6 +57,9 @@ class SystemEventPresenter
     public $is_replayed;
     public $start_date;
     public $not_processed_yet;
+    public $create_time;
+    public $start_time;
+    public $end_time;
 
     public function __construct(SystemEvent $sysevent)
     {
@@ -75,6 +78,9 @@ class SystemEventPresenter
         $this->create_date = $sysevent->getCreateDate();
         $this->start_date  = $sysevent->getProcessDate();
         $this->end_date    = $sysevent->getEndDate();
+        $this->create_time = substr($sysevent->getCreateDate(), 11);
+        $this->start_time  = substr($sysevent->getProcessDate(), 11);
+        $this->end_time    = substr($sysevent->getEndDate(), 11);
         $this->time_taken  = $sysevent->getTimeTaken();
 
         $this->extractNamespaceFromType($sysevent->getType());
