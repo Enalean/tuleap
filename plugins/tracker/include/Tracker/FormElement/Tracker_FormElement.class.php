@@ -187,6 +187,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $form_element_data;
     }
 
+    private function getTriggerManager() {
+        return TrackerFactory::instance()->getTriggerRulesManager();
+    }
+
+    protected function isUsedInTrigger()
+    {
+        return $this->getTriggerManager()->isUsedInTrigger($this);
+    }
+
     /**
      * Process the request
      *
@@ -203,6 +212,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $this->displayAdminFormElement($layout, $request, $current_user);
             break;
         case 'admin-formElement-remove':
+            if ($this->isUsedInTrigger()) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'used_in_triggers'));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+            }
+
             if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');

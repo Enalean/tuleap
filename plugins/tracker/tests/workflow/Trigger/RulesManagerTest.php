@@ -37,7 +37,8 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
             $this->dao,
             $this->formelement_factory,
             $this->rules_processor,
-            mock('WorkflowBackendLogger')
+            mock('WorkflowBackendLogger'),
+            mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
         );
     }
 }
@@ -54,7 +55,8 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
-                mock('WorkflowBackendLogger')
+                mock('WorkflowBackendLogger'),
+                mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
             )
         );
     }
@@ -379,7 +381,13 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
         $manager = partial_mock(
             'Tracker_Workflow_Trigger_RulesManager',
             array('getRuleById'),
-            array($this->dao, $this->formelement_factory, $this->rules_processor, mock('WorkflowBackendLogger'))
+            array(
+                $this->dao,
+                $this->formelement_factory,
+                $this->rules_processor,
+                mock('WorkflowBackendLogger'),
+                mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
+            )
         );
 
         $artifact  = mock('Tracker_Artifact');
@@ -540,6 +548,7 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
                 $this->formelement_factory,
                 $this->rules_processor,
                 mock('WorkflowBackendLogger'),
+                mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
             )
         );
     }

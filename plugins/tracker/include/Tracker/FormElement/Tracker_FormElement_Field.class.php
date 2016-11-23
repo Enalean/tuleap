@@ -862,7 +862,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return WorkflowFactory::instance();
     }
 
-    /**
+     /**
      * Is the field used in a field dependency?
      *
      * @return boolean returns true if the field is used in field dependency, false otherwise
@@ -895,6 +895,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 ). ' ';
         }
 
+        if ($this->isUsedInTrigger()) {
+            $message .= $GLOBALS['Language']->getText(
+                    'plugin_tracker_formelement_admin',
+                    'field_used_in_triggers'
+                ). ' ';
+        }
+
         if($this->isUsedInFieldDependency()) {
             $message .= $GLOBALS['Language']->getText(
                 'plugin_tracker_formelement_admin',
@@ -912,7 +919,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function canBeRemovedFromUsage() {
         $is_used = $this->isUsedInSemantics() ||
             $this->isUsedInWorkflow() ||
-            $this->isUsedInFieldDependency();
+            $this->isUsedInFieldDependency() ||
+            $this->isUsedInTrigger();
 
         if ($is_used === true) {
             return false;
