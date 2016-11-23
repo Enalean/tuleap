@@ -2,59 +2,62 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
-    <legend>{{ title }}</legend>
-    <fieldset>
-        <div id="field-bot-mattermost-agiledashboard-send-time">
-            <label for="bot-mattermost-agiledashboard-send-time">{{ label_send_time }}</label>
-            <div id="bot-mattermost-agiledashboard-send-time" class="input-append">
-                <span class="bot-mattermost-agiledashboard-field-time">
-                    <input required
-                           name="send_time"
-                           class="input-small"
-                           data-format="hh:mm"
-                           type="text"
-                        {{# has_send_time }}
-                           value="{{ send_time }}"
-                        {{/ has_send_time }}
-                    >
-                    </input>
-                    <span class="add-on">
-                        <i class="icon-time"></i>
-                    </span>
-                </span>
-            </div>
-            <p class="text-warning"><i class="icon-warning-sign"></i> {{ alert_time_warning }}</p>
-        </div>
-        <span class="help-block">{{ description }}</span>
-        <table class="table table-bordered table-striped" id="bot_list">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>{{ table_col_name }}</th>
-                    <th>{{ table_col_webhook_url }}</th>
-                    <th>{{ table_col_channels }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# botListIsEmpty }}
-                <tr>
-                    <td>{{ empty_bot_list }}</td>
-                </tr>
-                {{/ botListIsEmpty }}
-                {{^ botListIsEmpty }}
-                {{# bots }}
-                    <tr>
-                        <td><input type="checkbox" name="bots_ids[]" value="{{ id }}" {{# is_assigned }}checked="checked"{{/ is_assigned }}></td>
-                        <td>{{# avatar }}<img src="{{ avatar }}" class="img-circle" width="30" height="30">{{/ avatar }}{{ name }}</td>
-                        <td>{{ webhook_url }}</td>
-                        <td>{{ channels_names }}</td>
-                    </tr>
-                {{/ bots }}
-                {{/ botListIsEmpty }}
-            </tbody>
-        </table>
+    <div class="agiledashboard-admin-section">
+        <section>
+            <h3><i class="icon-envelope"></i> {{ title }}</h3>
+            <fieldset>
+                <div id="field-bot-mattermost-agiledashboard-send-time">
+                    <label for="bot-mattermost-agiledashboard-send-time">{{ label_send_time }}</label>
+                    <div id="bot-mattermost-agiledashboard-send-time" class="input-append">
+                        <span class="bot-mattermost-agiledashboard-field-time">
+                            <input required
+                                   name="send_time"
+                                   class="input-small"
+                                   data-format="hh:mm"
+                                   type="text"
+                                {{# has_send_time }}
+                                   value="{{ send_time }}"
+                                {{/ has_send_time }}
+                            >
+                            </input>
+                            <span class="add-on">
+                                <i class="icon-time"></i>
+                            </span>
+                        </span>
+                    </div>
+                    <p class="text-warning"><i class="icon-warning-sign"></i> {{ alert_time_warning }}</p>
+                </div>
+                <span class="help-block">{{ description }}</span>
+                <table class="table table-bordered table-striped" id="bot_list">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ table_col_name }}</th>
+                            <th>{{ table_col_webhook_url }}</th>
+                            <th>{{ table_col_channels }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{# botListIsEmpty }}
+                        <tr>
+                            <td>{{ empty_bot_list }}</td>
+                        </tr>
+                        {{/ botListIsEmpty }}
+                        {{^ botListIsEmpty }}
+                        {{# bots }}
+                            <tr>
+                                <td><input type="checkbox" name="bots_ids[]" value="{{ id }}" {{# is_assigned }}checked="checked"{{/ is_assigned }}></td>
+                                <td>{{# avatar }}<img src="{{ avatar }}" class="img-circle" width="30" height="30">{{/ avatar }}{{ name }}</td>
+                                <td>{{ webhook_url }}</td>
+                                <td>{{ channels_names }}</td>
+                            </tr>
+                        {{/ bots }}
+                        {{/ botListIsEmpty }}
+                    </tbody>
+                </table>
 
-        <div><button type="submit" class="btn btn-primary">Save</button></div>
-    </fieldset>
-
+                <div><button type="submit" class="btn btn-primary">Save</button></div>
+            </fieldset>
+        </section>
+    <div>
 </form>
