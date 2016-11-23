@@ -19,19 +19,8 @@
                     </div>
                     <form action="" method="GET" class="tlp-pane-section">
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="status">{{ queue_label }}</label>
-                            <select class="tlp-select" id="status" name="queue">
-                                {{# queues }}
-                                    <option value="{{ value }}" {{# checked }}selected{{/ checked }}>
-                                        {{ label }}
-                                    </option>
-                                {{/ queues }}
-                            </select>
-                        </div>
-
-                        <div class="tlp-form-element">
                             <label class="tlp-label" for="status">{{ status_label }}</label>
-                            <select class="tlp-select" id="status" name="filter_status[]" multiple size="6">
+                            <select class="tlp-select" id="status" name="filter_status[]" multiple size="6" autocomplete="off">
                                 {{# status }}
                                     <option value="{{ value }}" {{# checked }}selected{{/ checked }}>
                                         {{ label }}
@@ -41,17 +30,38 @@
                         </div>
 
                         <div class="tlp-form-element">
-                            <label class="tlp-label" for="types">{{ types_label }}</label>
-                            <select class="tlp-select" id="types" name="filter_type[]" multiple size="10">
-                                {{# types }}
-                                    <option value="{{ value }}" {{# checked }}selected{{/ checked }} title="{{ label }}">
+                            <label class="tlp-label" for="queue">{{ queue_label }}</label>
+                            <select class="tlp-select" id="queue" name="queue" autocomplete="off">
+                                {{# queues }}
+                                    <option value="{{ value }}" {{# checked }}selected{{/ checked }}>
                                         {{ label }}
                                     </option>
-                                {{/ types }}
+                                {{/ queues }}
                             </select>
                         </div>
 
-                        <button type="submit" name="filter" class="tlp-button-primary tlp-button-wide">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="types">{{ types_label }}</label>
+                            {{# types_by_queue }}
+                                <select class="tlp-select systemevents-types {{# is_current }}systemevents-types-for-current-queue{{/ is_current }}"
+                                    id="types"
+                                    name="filter_type[]"
+                                    multiple
+                                    size="10"
+                                    {{^ is_current }}disabled{{/ is_current }}
+                                    data-queue="{{ queue }}"
+                                    autocomplete="off"
+                                >
+                                    {{# types }}
+                                        <option value="{{ value }}" {{# checked }}selected{{/ checked }} title="{{ label }}">
+                                            {{ label }}
+                                        </option>
+                                    {{/ types }}
+                                </select>
+                            {{/ types_by_queue }}
+                        </div>
+
+                        <button type="submit" class="tlp-button-primary tlp-button-wide">
                             <i class="fa fa-search tlp-button-icon"></i> {{ search_label }}
                         </button>
                     </form>
