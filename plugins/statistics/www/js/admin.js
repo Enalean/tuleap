@@ -18,6 +18,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    var date_picker_element = document.getElementById('date');
-    tlp.datePicker(date_picker_element);
+    var date_picker_elements = document.querySelectorAll('.tlp-input-date');
+
+    [].forEach.call(date_picker_elements, function (element) {
+        tlp.datePicker(element);
+    });
 });
