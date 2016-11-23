@@ -79,7 +79,7 @@ plugin_statistics	no_project	Projet non trouvé
 plugin_statistics	quota_added	Le quota pour le projet "$1" est maintenant $2 Go
 plugin_statistics	quota_deleted	Quota supprimé pour $1
 plugin_statistics	no_search_result	Aucun résultat ne correspond à la recherche
-plugin_statistics	services_usage	Statistiques d'utilisation des services
+plugin_statistics	services_usage	Utilisation des services
 plugin_statistics	current_size	Taille actuelle du projet
 plugin_statistics	project_name	Nom du projet
 plugin_statistics	exceeding_size	Taille en excès
@@ -93,3 +93,17 @@ plugin_statistics	projects_over_quota	<a href="$1">Projets dépassant leurs quot
 plugin_statistics	querying_purged_data	Le graphique affiché se base sur des données anciennes qui ont été purgées pour des raisons de performances. Pour les données plus anciennes qu'il y a 3 mois, une journée par semaine a été conservée. Pour les données plus anciennes qu'il y a 2 ans, une journée par mois a été conservée.
 
 plugin_statistics	sysevents_queue	Statistiques
+plugin_statistics	index_page_title	Statistiques
+plugin_statistics	frequencies_title	Fréquences
+plugin_statistics	type_label	Type
+plugin_statistics	date_label	Date
+plugin_statistics	session_type	Sessions
+plugin_statistics	user_type	Utilisateurs
+plugin_statistics	forum_type	Messages de forums
+plugin_statistics	filedl_type	Fichiers téléchargés
+plugin_statistics	file_type	Fichiers publiés
+plugin_statistics	groups_type	Projets créés
+plugin_statistics	docdl_type	Anciens documents vus
+plugin_statistics	wikidl_type	Pages wiki vues
+plugin_statistics	oartifact_type	Artéfacts ouverts (V3)
+plugin_statistics	cartifact_type	Artéfacts fermés (ou date de fin souhaitée) (V3)

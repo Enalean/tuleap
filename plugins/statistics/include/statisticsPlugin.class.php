@@ -51,6 +51,9 @@ class StatisticsPlugin extends Plugin {
 
         $this->addHook('aggregate_statistics');
         $this->addHook('get_statistics_aggregation');
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
@@ -102,8 +105,7 @@ class StatisticsPlugin extends Plugin {
     public function is_in_siteadmin($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $did_we_switch_statistics_to_burning_parrot = false;
-            $params['is_in_siteadmin'] = $did_we_switch_statistics_to_burning_parrot;
+            $params['is_in_siteadmin'] = true;
         }
     }
 
@@ -276,5 +278,20 @@ class StatisticsPlugin extends Plugin {
             $params['date_start'],
             $params['date_end']
         );
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() . '/js/admin.js';
+        }
     }
 }
