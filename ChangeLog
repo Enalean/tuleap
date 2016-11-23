@@ -1,4 +1,8 @@
-Version 9.1-2 (Friday, November 18th)
+Version 9.1-3 (Tuesday, November 22nd 2016)
+	== Bug Fix ==
+	* request #9667: SVN cache do not remove properly the oldest entry of the cache
+
+Version 9.1-2 (Friday, November 18th 2016)
 	== Bug Fix ==
 	* request #9579: SVN Plugin must ne be inherited if no SVN service used in template
 	* request #9654: artifactfolder fatal error on cardwall
