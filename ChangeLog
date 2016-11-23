@@ -1,3 +1,7 @@
+Version 9.1-4 (Wednesday, November 23rd 2016)
+	== Bug Fix ==
+	* request #9666: New siteadmin is slow
+
 Version 9.1-3 (Tuesday, November 22nd 2016)
 	== Bug Fix ==
 	* request #9667: SVN cache do not remove properly the oldest entry of the cache
