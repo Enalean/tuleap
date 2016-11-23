@@ -103,7 +103,11 @@ class Flow extends Basic {
      */
     public function getAuthorizationRequestUri(Provider $provider, $return_to) {
         $this->setOptions($provider);
-        $authorization_request = $this->createAuthorizationRequest();
+        $scope = 'openid';
+        if ($provider->isUniqueAuthenticationEndpoint()) {
+            $scope = 'openid profile email';
+        }
+        $authorization_request = $this->createAuthorizationRequest($scope);
         return $this->getAuthorizationDispatcher()->createAuthorizationRequestUri(
             $authorization_request,
             $provider,
@@ -179,13 +183,12 @@ class Flow extends Basic {
      */
     public function getUserInfo($access_token)
     {
-        $user_info_request  = $this->createUserInfoRequest($access_token);
-        $user_info_endpoint = $user_info_request->getUserInfoEndpoint();
-
+        $user_info_endpoint = $this->getClientInfo()->getUserInfoEndpoint();
         if (empty($user_info_endpoint)) {
             return array();
         }
 
+        $user_info_request  = $this->createUserInfoRequest($access_token);
         $user_info_response = $this->getUserInfoDispatcher()->sendUserInfoRequest($user_info_request);
         return $user_info_response->getClaims();
     }
