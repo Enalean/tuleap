@@ -18,6 +18,7 @@ Version 9.2 (Not release yet)
 	* agiledashboard: 1.436
 	* artifactsfolders: 0.38
 	* svn: 0.105
+	* openidconnectclient: 0.36
 
 	== Themes ==
 	* FlamingParrot: 1.164

@@ -1,3 +1,6 @@
+Version 0.36 - Tuleap 9.2
+    * story #9658: We can set an OpenID Connect provider as the unique authentication endpoint in the database
+
 Version 0.35 - Tuleap 9.2
     * request #9649: Add provider button in OpenId Connect when there is no provider should be large
 
