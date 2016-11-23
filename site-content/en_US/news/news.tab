@@ -78,7 +78,7 @@ news_admin_index	pane_news_title	News
 news_admin_index	pane_information_title	Information
 news_admin_index	publish_button	Publish on homepage
 news_admin_index	reject_button	Reject from waiting queue
-news_admin_index	reject_button_from_published	Reject from published list
+news_admin_index	reject_button_from_published	Reject from homepage
 news_admin_index	missing_title	Title is required
 news_admin_index	news_already_published	This news is already published
 news_admin_index	news_already_rejected	This news is already rejected

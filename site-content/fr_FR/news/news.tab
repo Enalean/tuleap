@@ -71,7 +71,7 @@ news_admin_index	pane_news_title	Annonces
 news_admin_index	pane_information_title	Information
 news_admin_index	publish_button	Publier sur la page d'accueil
 news_admin_index	reject_button	Rejeter de la file d'attente
-news_admin_index	reject_button_from_published	Rejeter de la liste des publiées
+news_admin_index	reject_button_from_published	Rejeter de la page d'accueil
 news_admin_index	missing_title	Le titre est obligatoire
 news_admin_index	news_already_published	Cette annonce est déjà publiée
 news_admin_index	news_already_rejected	Cette annonce est déjà rejetée
