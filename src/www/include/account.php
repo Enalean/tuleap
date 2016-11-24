@@ -299,8 +299,8 @@ function account_create_mypage($user_id) {
 function account_redirect_after_login($return_to) {
     global $pv;  
 
-    $em = EventManager::instance();
-    $em->processEvent('account_redirect_after_login', array('return_to' => &$return_to));
+    $event_manager = EventManager::instance();
+    $event_manager->processEvent('account_redirect_after_login', array('return_to' => &$return_to));
 
     if($return_to) {
         $returnToToken = parse_url($return_to);
@@ -318,7 +318,7 @@ function account_redirect_after_login($return_to) {
         }
     }
 
-    $url_redirect = new URLRedirect();
+    $url_redirect = new URLRedirect($event_manager);
     $request      = HTTPRequest::instance();
     $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url, $return_to));
 }

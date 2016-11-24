@@ -25,25 +25,41 @@
  * This class is responsible for
  * the redirection.
  */
-class URLRedirect {
+class URLRedirect
+{
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
+    }
 
     /**
      * Build the redirection of user to the login page.
      */
-    public function buildReturnToLogin($server){
-        $returnTo = urlencode((($server['REQUEST_URI'] === "/") ? "/my/" : $server['REQUEST_URI']));
-        $url = parse_url($server['REQUEST_URI']);
+    public function buildReturnToLogin($server)
+    {
+        $returnTo   = ($server['REQUEST_URI'] === "/") ? "/my/" : $server['REQUEST_URI'];
+        $url        = parse_url($server['REQUEST_URI']);
+        $print_view = '';
         if (isset($url['query'])) {
             $query = $url['query'];
             if (strstr($query, 'pv=2')) {
-                $returnTo .= "&pv=2";
+                $print_view = '&pv=2';
             }
         }
         if (strpos($url['path'], '/projects') === 0) {
             $GLOBALS['Response']->send401UnauthorizedHeader();
         }
 
-        $url = '/account/login.php?return_to=' . $returnTo;
+        $url = '/account/login.php?return_to=' . urlencode($returnTo) . $print_view;
+        $this->event_manager->processEvent(Event::GET_LOGIN_URL, array(
+            'return_to' => $returnTo,
+            'login_url' => &$url
+        ));
         return $url;
     }
 
