@@ -1,3 +1,6 @@
+Version 5.1038 - Tuleap 9.2
+    * request #9551: Cache yesterday values at root daily
+
 Version 5.1037 - Tuleap 9.2
     * request #9551: Refactoring, Add a computed field calculator for burndown
 

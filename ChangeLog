@@ -9,9 +9,10 @@ Version 9.2 (Not release yet)
 	* request #9666: New siteadmin is slow
 	* request #9667: SVN cache do not remove properly the oldest entry of the cache
 	* request #9673: Correct the name of scss file for Git in Siteadmin
+	* request #9551: Burndown improvement
 
 	== Plugins ==
-	* tracker: 5.1037
+	* tracker: 5.1038
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69
