@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\BurndownDateRetriever;
+
 require_once 'common/chart/ErrorChart.class.php';
 require_once 'common/date/TimePeriodWithWeekEnd.class.php';
 require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
@@ -277,12 +279,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     private function getCachedValueOrComputeValue(Tracker_FormElement_IComputeValues $field, PFUser $user,Tracker_Artifact  $artifact, $timestamp) {
-        $last_night = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 1;
+        $last_night = $this->getBurndownDateRetriever()->getYesterday();
         if (! $this->use_cache() || $timestamp > $last_night) {
             return $field->getComputedValue($user, $artifact, $timestamp);
         }
 
         return $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $timestamp);
+    }
+
+    private function getBurndownDateRetriever()
+    {
+        return new BurndownDateRetriever();
     }
 
     /**
