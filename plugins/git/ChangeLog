@@ -1,3 +1,6 @@
+Version 4.296 - Tuleap 9.2
+    * Enhance Gitolite version checker
+
 Version 4.295 - Tuleap 9.1
     * request #9627: Fix git email settings
 
