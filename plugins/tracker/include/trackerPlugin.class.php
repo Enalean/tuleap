@@ -19,9 +19,12 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Admin\AdminSidebarPresenterBuilder;
@@ -103,6 +106,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
     }
 
     public function getHooksAndCallbacks() {
@@ -249,6 +253,16 @@ class trackerPlugin extends Plugin {
                 $params['class']        = 'SystemEvent_TRACKER_V3_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getMigrationManager(),
+                );
+                break;
+            case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME:
+                $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
+                $params['dependencies'] = array(
+                    new Tracker_FormElement_Field_BurndownDao(),
+                    new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
+                    new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
+                    new TimePeriodWithoutWeekEnd(strtotime('today midnight'), 1),
+                    new BackendLogger()
                 );
                 break;
             default:
@@ -730,6 +744,14 @@ class trackerPlugin extends Plugin {
         $trackerManager = new TrackerManager();
         $logger = new BackendLogger();
         $logger->debug("[TDR] Tuleap daily start event: launch date reminder");
+
+        $this->getSystemEventManager()->createEvent(
+            'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME,
+            "",
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
+
         return $trackerManager->sendDateReminder();
     }
 
@@ -1057,7 +1079,14 @@ class trackerPlugin extends Plugin {
         if ($params['queue'] === Tracker_SystemEvent_Tv3Tv5Queue::NAME) {
             $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
         }
+
+
     }
+
+    public function system_event_get_types_for_default_queue($params) {
+        $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
+    }
+
 
     /** @see Event::SERVICES_TRUNCATED_EMAILS */
     public function services_truncated_emails(array $params) {

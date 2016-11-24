@@ -19,18 +19,21 @@
  */
 
 /**
- *  Data Access Object for Tracker_FormElement_Field 
+ *  Data Access Object for Tracker_FormElement_Field
  */
-class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_SpecificPropertiesDao {
-    
-    function __construct() {
+class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_SpecificPropertiesDao
+{
+
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_computed';
     }
-    
-    public function save($field_id, $row) {
-        $field_id  = $this->da->escapeInt($field_id);
-        
+
+    public function save($field_id, $row)
+    {
+        $field_id = $this->da->escapeInt($field_id);
+
         $target_field_name = '';
         if (isset($row['target_field_name'])) {
             $target_field_name = $row['target_field_name'];
@@ -48,25 +51,27 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
 
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Duplicate specific properties of field
      *
      * @param int $from_field_id the field id source
-     * @param int $to_field_id   the field id target
+     * @param int $to_field_id the field id target
      *
      * @return boolean true if ok, false otherwise
      */
-    public function duplicate($from_field_id, $to_field_id) {
-        $from_field_id  = $this->da->escapeInt($from_field_id);
-        $to_field_id  = $this->da->escapeInt($to_field_id);
-        
+    public function duplicate($from_field_id, $to_field_id)
+    {
+        $from_field_id = $this->da->escapeInt($from_field_id);
+        $to_field_id   = $this->da->escapeInt($to_field_id);
+
         $sql = "REPLACE INTO $this->table_name (field_id, target_field_name, fast_compute)
                 SELECT $to_field_id, target_field_name, fast_compute FROM $this->table_name WHERE field_id = $from_field_id";
+
         return $this->update($sql);
     }
 
-     /**
+    /**
      * This method will fetch in 1 pass, for a given artifact all linked artifact
      * $target_name field values (values can be either float, int or computed)
      * If it's computed, the caller must continue its journey and call getComputedValue
@@ -77,7 +82,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      */
     public function getFieldValues(array $source_ids, $target_name)
     {
-        $source_ids   = $this->da->escapeIntImplode($source_ids);
+        $source_ids  = $this->da->escapeIntImplode($source_ids);
         $target_name = $this->da->quoteSmart($target_name);
 
         $sql = "SELECT linked_art.*,
@@ -156,6 +161,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                     $manual_selection                          AS value,
                     linked_art.tracker_id                      AS tracker_id,
                     parent_art.id                              AS parent_id,
+                    linked_art.id                              AS artifact_link_id,
                     parent_art.last_changeset_id
                 FROM tracker_artifact parent_art
                 INNER JOIN tracker_field parent_field ON (
@@ -237,7 +243,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * but it's date might be before). 99% of the time it should be transparent.
      *
      * @param Integer $source_ids
-     * @param String  $target_name
+     * @param String $target_name
      * @param Integer $timestamp
      *
      * @return DataAccessResult
@@ -255,7 +261,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         artifact_link_field.id               AS artifact_link_field,
                         ''                                  AS value_field_id,
                         f.id                      AS other_field_id,
-                        tracker_field_list_bind_static_value.label AS sb_value
+                        tracker_field_list_bind_static_value.label AS sb_value,
+                        linked_art.id AS artifact_link_id
                     FROM tracker_artifact parent_art
                         INNER JOIN tracker_changeset                    cs_parent_art1 ON (cs_parent_art1.artifact_id = parent_art.id AND cs_parent_art1.submitted_on <= $timestamp)
                         LEFT JOIN  tracker_changeset                    cs_parent_art2 ON (cs_parent_art2.artifact_id = parent_art.id AND cs_parent_art1.id < cs_parent_art2.id AND cs_parent_art2.submitted_on <= $timestamp)
@@ -294,7 +301,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         ''                                   AS artifact_link_field,
                         cv.field_id                          AS value_field_id,
                         f.id                                 AS other_field_id,
-                        NULL                                 AS sb_value
+                        NULL                                 AS sb_value,
+                        parent_art.id AS artifact_link_id
                      FROM tracker_artifact parent_art
                     INNER JOIN tracker_field               f
                         ON (
@@ -313,7 +321,133 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         return $this->retrieve($sql);
     }
 
-    public function getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp) {
+    public function getBurndownManualValueAtGivenTimestamp($artifact_id, $timestamp)
+    {
+        $artifact_id               = $this->da->escapeInt($artifact_id);
+        $timestamp                 = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT
+                    FROM_UNIXTIME(tracker_changeset.submitted_on) AS last_changeset_date,
+                    manual_value.value                            AS value
+                FROM tracker_artifact artifact
+                INNER JOIN tracker_field AS remaining_effort_field
+                    ON (
+                        remaining_effort_field.tracker_id = artifact.tracker_id
+                        AND remaining_effort_field.formElement_type = 'computed'
+                        AND remaining_effort_field.use_it = 1
+                        AND remaining_effort_field.name = 'remaining_effort'
+                    )
+                INNER JOIN tracker_changeset
+                    ON (
+                        tracker_changeset.artifact_id = artifact.id
+                        AND tracker_changeset.submitted_on <= $timestamp
+                    )
+                INNER JOIN tracker_changeset_value
+                    ON (
+                        tracker_changeset_value.changeset_id = tracker_changeset.id
+                        AND tracker_changeset_value.field_id = remaining_effort_field.id
+                    )
+                INNER JOIN tracker_changeset_value_computedfield_manual_value manual_value
+                    ON (
+                        manual_value.changeset_value_id = tracker_changeset_value.id
+                        AND tracker_changeset_value.changeset_id = tracker_changeset.id
+                    )
+                WHERE artifact.id = $artifact_id
+                AND value IS NOT NULL
+                ORDER BY last_changeset_date DESC
+                LIMIT 1";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function getBurndownComputedValueAtGivenTimestamp(array $artifacts_id, $timestamp)
+    {
+        $artifacts_id = $this->da->escapeIntImplode($artifacts_id);
+        $timestamp    = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT parent_art.id                               AS id,
+                        computed_field.formElement_type            AS type,
+                        cv_compute_i.value                         AS int_value,
+                        cv_compute_f.value                         AS float_value,
+                        linked_art.id                              AS artifact_link_id,
+                        tracker_field_list_bind_static_value.label AS sb_value
+                    FROM tracker_artifact parent_art
+                    INNER JOIN tracker_changeset                    AS cs_parent_art1
+                      ON (
+                        cs_parent_art1.artifact_id = parent_art.id
+                        AND cs_parent_art1.submitted_on <= $timestamp
+                      )
+                    LEFT JOIN  tracker_changeset                    AS cs_parent_art2
+                        ON (
+                            cs_parent_art2.artifact_id = parent_art.id
+                            AND cs_parent_art1.id < cs_parent_art2.id
+                            AND cs_parent_art2.submitted_on <= $timestamp
+                        )
+                    LEFT JOIN tracker_field                        AS field_artifact_link
+                        ON (
+                            field_artifact_link.tracker_id = parent_art.tracker_id
+                            AND field_artifact_link.formElement_type = 'art_link'
+                            AND field_artifact_link.use_it = 1
+                        )
+                    LEFT JOIN tracker_changeset_value              AS changeset_artifact_link
+                        ON (
+                            changeset_artifact_link.changeset_id = cs_parent_art1.id
+                            AND changeset_artifact_link.field_id = field_artifact_link.id
+                        )
+                    LEFT JOIN tracker_changeset_value_artifactlink AS artlink
+                        ON (artlink.changeset_value_id = changeset_artifact_link.id)
+                    LEFT JOIN tracker_artifact                     AS linked_art
+                        ON (linked_art.id = artlink.artifact_id)
+                    LEFT JOIN tracker_changeset                    AS cs_linked_art1
+                        ON (
+                            cs_linked_art1.artifact_id = linked_art.id
+                            AND cs_linked_art1.submitted_on <= $timestamp
+                        )
+                    LEFT JOIN  tracker_changeset                    AS cs_linked_art2
+                        ON (
+                            cs_linked_art2.artifact_id = linked_art.id
+                            AND cs_linked_art1.id < cs_linked_art2.id
+                            AND cs_linked_art2.submitted_on <= $timestamp
+                        )
+                    INNER JOIN tracker_field                        AS computed_field
+                    ON (
+                        computed_field.tracker_id = parent_art.tracker_id
+                        AND computed_field.name = 'remaining_effort'
+                        AND computed_field.use_it = 1
+                    )
+                    LEFT JOIN tracker_changeset_value              AS computed_changeset
+                    ON (
+                        computed_changeset.changeset_id = cs_parent_art1.id
+                        AND computed_changeset.field_id = computed_field.id
+                    )
+                    LEFT JOIN tracker_changeset_value_int cv_compute_i
+                    ON (
+                        cv_compute_i.changeset_value_id = computed_changeset.id
+                        AND computed_changeset.field_id = computed_field.id
+                    )
+                    LEFT JOIN tracker_changeset_value_float cv_compute_f
+                    ON (
+                        cv_compute_f.changeset_value_id = computed_changeset.id
+                        AND computed_changeset.field_id = computed_field.id
+                    )
+                    LEFT JOIN tracker_changeset_value_list AS cv_compute_list
+                      ON (
+                        cv_compute_list.changeset_value_id = computed_changeset.id
+                        AND computed_changeset.field_id = computed_field.id
+                    )
+                    LEFT JOIN tracker_field_list_bind_static_value
+                        ON (cv_compute_list.bindvalue_id = tracker_field_list_bind_static_value.id
+                            AND tracker_field_list_bind_static_value.label REGEXP '^[[:digit:]]+([.][[:digit:]]+)?$'
+                        )
+                WHERE parent_art.id IN ($artifacts_id)
+                AND cs_parent_art2.id IS NULL
+                AND cs_linked_art2.id IS NULL";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $field_id    = $this->da->escapeInt($field_id);
         $timestamp   = $this->da->escapeInt($timestamp);
@@ -326,7 +460,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         return $this->retrieveFirstRow($sql);
     }
 
-    public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value) {
+    public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $field_id    = $this->da->escapeInt($field_id);
         $timestamp   = $this->da->escapeInt($timestamp);
