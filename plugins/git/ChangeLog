@@ -1,3 +1,6 @@
+Version 4.297 - Tuleap 9.2
+    * story #9525: Check regexp in admin view
+
 Version 4.296 - Tuleap 9.2
     * Enhance Gitolite version checker
 
