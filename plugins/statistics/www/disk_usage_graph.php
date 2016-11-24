@@ -1,23 +1,24 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2009
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -84,13 +85,13 @@ switch($graphType){
 }
 
 
-$groupByDate = array('Day', 'Week', 'Month', 'Year');
+$groupByDate = array('day', 'deek', 'month', 'year');
 $vGroupBy = new Valid_WhiteList('group_by', $groupByDate);
 $vGroupBy->required();
 if ($request->valid($vGroupBy)) {
     $selectedGroupByDate = $request->get('group_by');
 } else {
-    $selectedGroupByDate = 'Week';
+    $selectedGroupByDate = 'week';
 }
 
 $vStartDate = new Valid('start_date');

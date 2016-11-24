@@ -26,6 +26,24 @@ plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
 plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota.
 plugin_statistics_admin_page	year	View statistics for the last $1 months
 plugin_statistics_admin_page	months	View statistics for the last year
+plugin_statistics_admin_page	disk_usage_services_menu_span_label	Services/Projects
+plugin_statistics_admin_page	disk_usage_services_menu_label	Services
+plugin_statistics_admin_page	disk_usage_top_projects_menu_label	Top projects
+plugin_statistics_admin_page	disk_usage_users_menu_span_label	Users
+plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top users
+plugin_statistics_admin_page	disk_usage_users_user_details_label	One user details
+plugin_statistics_admin_page	data_services_pane_title	Service growth
+plugin_statistics_admin_page	data_services_table_service_title	Service
+plugin_statistics_admin_page	data_services_table_start_size_title	Start size
+plugin_statistics_admin_page	data_services_table_end_size_title	End size
+plugin_statistics_admin_page	data_services_table_size_evolution_title	Size evolution
+plugin_statistics_admin_page	data_services_total_start_size_tooltip	Sum of start sizes
+plugin_statistics_admin_page	data_services_total_end_size_tooltip	Sum of end sizes
+plugin_statistics_admin_page	data_services_total_evolution_tooltip	Sum of size evolution
+plugin_statistics_admin_page	data_services_no_data	There is no matching services data
+plugin_statistics_admin_page	graph_title	Services growth over time
+plugin_statistics_admin_page	graph_y_axis_title	Size
+plugin_statistics_admin_page	graph_image_title	Results
 
 plugin_statistics	scm_title	SCM statistics
 plugin_statistics	scm_description	Display SCM statistics of the platform.
@@ -117,3 +135,11 @@ plugin_statistics	frequencies_filter_group_hour	Group by hour
 plugin_statistics	frequencies_filter_month	Month
 plugin_statistics	frequencies_filter_day	Day
 plugin_statistics	frequencies_date_choice_error	The end date should not be before the start date
+
+plugin_statistics	services_label	Services
+plugin_statistics	group_by_label	Group by
+plugin_statistics	relative_y_axis_label	Relative Y axis (depends on data set values)
+plugin_statistics	day	Day
+plugin_statistics	week	Week
+plugin_statistics	month	Month
+plugin_statistics	year	Year

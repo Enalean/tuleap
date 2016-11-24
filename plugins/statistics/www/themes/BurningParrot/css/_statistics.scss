@@ -32,29 +32,46 @@
     white-space: initial;
 }
 
-#siteadmin-statistics-frequencies {
+#siteadmin-statistics-frequencies,
+#siteadmin-statistics-disk-usage {
     display: flex;
     align-items: flex-start;
 }
 
-#siteadmin-statistics-frequencies-search {
+#siteadmin-statistics-frequencies-search,
+#siteadmin-statistics-disk-usage-search {
     width: 300px;
     margin: 0 $tlp-spacing 0 0;
 }
 
-#siteadmin-statistics-frequencies-graph {
+#siteadmin-statistics-frequencies-graph,
+#siteadmin-statistics-disk-usage-data {
     width: 100%;
 }
 
 @media screen and (max-width: 1400px) {
-    #siteadmin-statistics-frequencies {
+    #siteadmin-statistics-frequencies,
+    #siteadmin-statistics-disk-usage {
         display: flex;
         flex-direction: column;
         align-items: stretch;
     }
 
-    #siteadmin-statistics-frequencies-search {
+    #siteadmin-statistics-frequencies-search,
+    #siteadmin-statistics-disk-usage-search {
         width: 100%;
         margin: 0 0 $tlp-spacing;
     }
+}
+
+.siteadmin-statistics-disk-usage-data-service {
+    display: flex;
+    align-items: center;
+}
+
+.siteadmin-statistics-disk-usage-data-service-color {
+    width: 25px;
+    height: 25px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
 }

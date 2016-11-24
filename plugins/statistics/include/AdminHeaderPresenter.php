@@ -41,6 +41,13 @@ class AdminHeaderPresenter
     public $usage_progress_btn;
     public $usage_progress_help;
 
+    public $disk_usage_services_menu_span_label;
+    public $disk_usage_services_menu_label;
+    public $disk_usage_top_projects_menu_label;
+    public $disk_usage_users_menu_span_label;
+    public $disk_usage_users_top_users_menu_label;
+    public $disk_usage_users_user_details_label;
+
     public function __construct(
         $title,
         $active_tab
@@ -60,5 +67,12 @@ class AdminHeaderPresenter
         $this->scm_statistics_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
         $this->usage_progress_btn       = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_btn');
         $this->usage_progress_help      = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_help');
+
+        $this->disk_usage_services_menu_span_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_span_label');
+        $this->disk_usage_services_menu_label        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_label');
+        $this->disk_usage_top_projects_menu_label    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_top_projects_menu_label');
+        $this->disk_usage_users_menu_span_label      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_menu_span_label');
+        $this->disk_usage_users_top_users_menu_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_top_users_menu_label');
+        $this->disk_usage_users_user_details_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_user_details_label');
     }
 }

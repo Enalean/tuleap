@@ -16,10 +16,17 @@
         href="index.php"
         class="tlp-tab {{# frequencies_tab_active }}tlp-tab-active{{/ frequencies_tab_active }}"
     >{{ frequencies_tab_label }}</a>
-    <a
-        href="disk_usage.php"
-        class="tlp-tab {{# disk_usage_tab_active }}tlp-tab-active{{/ disk_usage_tab_active }}"
-    >{{ disk_usage_tab_label }}</a>
+    <div class="tlp-tab {{# disk_usage_tab_active }}tlp-tab-active{{/ disk_usage_tab_active }}">
+        {{ disk_usage_tab_label }} <i class="fa fa-caret-down"></i>
+        <nav class="tlp-tab-menu">
+            <span class="tlp-tab-menu-title">{{ disk_usage_services_menu_span_label }}</span>
+            <a href="disk_usage.php?menu=services" class="tlp-tab-menu-item">{{ disk_usage_services_menu_label }}</a>
+            <a href="disk_usage.php?menu=top_projects" class="tlp-tab-menu-item">{{ disk_usage_top_projects_menu_label }}</a>
+            <span class="tlp-tab-menu-title">{{ disk_usage_users_menu_span_label }}</span>
+            <a href="disk_usage.php?menu=top_users" class="tlp-tab-menu-item">{{ disk_usage_users_top_users_menu_label }}</a>
+            <a href="disk_usage.php?menu=one_user_details" class="tlp-tab-menu-item">{{ disk_usage_users_user_details_label }}</a>
+        </nav>
+    </div>
     <a
         href="project_quota.php"
         class="tlp-tab {{# project_quota_tab_active }}tlp-tab-active{{/ project_quota_tab_active }}"

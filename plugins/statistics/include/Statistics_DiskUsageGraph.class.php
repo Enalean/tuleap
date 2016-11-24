@@ -1,23 +1,24 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Nouha Terzi, 2009
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -35,12 +36,12 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $endDate
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true){
+    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute=true){
         $graph = new Chart(750,450,"auto");
         $graph->SetScale("textint");
-        $graph->title->Set("Services growth over the time");
+        $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_title'));
 
-        $graph->yaxis->title->Set("Size");
+        $graph->yaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_y_axis_title'));
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
         if ($absolute) {
@@ -50,10 +51,11 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $servicesList = $this->_dum->getProjectServices();
 
         $data = $this->_dum->getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate);
-        if (is_array($data)) {
+        if (is_array($data) && ! empty($data)) {
             $lineplots = array();
             $dates = array();
             foreach ($data as $service => $values) {
+                $color = $this->_dum->getServiceColor($service);
                 $ydata = array();
                 foreach ($values as $date => $size) {
                     $dates[] = $date;
@@ -83,7 +85,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
                 $graph->Add($accLineplot);
             }
             $graph->legend->SetReverse();
-            $graph->xaxis->title->Set($groupBy."s");
+            $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
 
@@ -310,6 +312,26 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             imagepng($im);
             imagedestroy($im);
         }
+    }
+
+    public function applyColorModifierRGB($color) {
+        $jpgraphRgb = new RGB();
+        $newColor   = $jpgraphRgb->color($color.':1.5');
+
+        unset($newColor[3]);
+
+        $col = implode(',', array_map('floor', $newColor));
+        return 'rgb('.$col.')';
+    }
+
+    public function applyColorModifierRGBA($color) {
+        $jpgraphRgb = new RGB();
+        $newColor   = $jpgraphRgb->color($color.':1.5');
+
+        unset($newColor[3]);
+
+        $col = implode(',', array_map('floor', $newColor));
+        return 'rgba('.$col.',0.5)';
     }
 
 }
