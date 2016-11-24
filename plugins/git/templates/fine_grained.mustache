@@ -13,24 +13,24 @@
             /> {{ fine_grained_permissions_checkbox_label }}
         </label>
 
-        {{# are_regexp_permission_activated }}
+        {{# are_regexp_permission_activated_at_site_level }}
             <div class="regexp_permission_activated">
                 <span class="use-regexp-label-arrow">&#8627;</span>
                 <label class="checkbox use-regexp-label">
                     <input type="checkbox"
                            name="use-regexp"
                            class="use-regexp"
-                        {{# is_regexp_enabled }} checked="checked" {{/ is_regexp_enabled }}
-                        {{^ can_regexp_are_enabled }} disabled="disabled"{{/ can_regexp_are_enabled }}
+                           {{# is_regexp_enabled }} checked="checked" {{/ is_regexp_enabled }}
+                           {{^ can_regexp_are_enabled }} disabled="disabled" {{/ can_regexp_are_enabled }}
                     />
                     <p class="regexp_permission_label">{{ regexp_permission_label }}</p>
                 </label>
                 <p class="text-warning regexp_incoherence_label">
                     <i class="icon-warning-sign"> </i>
-                    {{# can_regexp_are_enabled }} {{ regexp_incoherence_label }} {{/ can_regexp_are_enabled }}
+                    {{ regexp_incoherence_label }}
                 </p>
             </div>
-        {{/ are_regexp_permission_activated }}
+        {{/ are_regexp_permission_activated_at_site_level }}
     </div>
 
     {{# are_fine_grained_permissions_defined }}

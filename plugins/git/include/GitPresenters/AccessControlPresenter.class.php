@@ -91,7 +91,7 @@ class GitPresenters_AccessControlPresenter
         $delete_url,
         CSRFSynchronizerToken $csrf,
         $is_fork,
-        $are_regexp_permission_activated,
+        $are_regexp_permission_activated_at_site_level,
         $is_regexp_enabled,
         $warnings
     ) {
@@ -120,14 +120,14 @@ class GitPresenters_AccessControlPresenter
             'fine_grained_permissions_checkbox_label'
         );
 
-        $this->are_regexp_permission_activated = $are_regexp_permission_activated;
-        $this->is_regexp_enabled               = $is_regexp_enabled;
-        $this->can_regexp_are_enabled          = true;
-        $this->regexp_permission_label         = $GLOBALS['Language']->getText(
+        $this->are_regexp_permission_activated_at_site_level = $are_regexp_permission_activated_at_site_level;
+        $this->is_regexp_enabled                             = $is_regexp_enabled;
+        $this->can_regexp_are_enabled                        = true;
+        $this->regexp_permission_label                       = $GLOBALS['Language']->getText(
             'plugin_git',
             'regexp_permission_label'
         );
-        $this->regexp_incoherence_label        = $GLOBALS['Language']->getText(
+        $this->regexp_incoherence_label                      = $GLOBALS['Language']->getText(
             'plugin_git',
             'regexp_incoherence_label'
         );

@@ -253,3 +253,8 @@ CREATE TABLE IF NOT EXISTS plugin_git_fine_grained_regexp_enabled (
 CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_regexp_enabled (
     repository_id int(10) unsigned NOT NULL PRIMARY KEY
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_regexp_enabled (
+    project_id int(11) unsigned NOT NULL PRIMARY KEY
+);
+
