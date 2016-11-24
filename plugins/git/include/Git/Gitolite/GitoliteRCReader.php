@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,37 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
  */
 
+use Tuleap\Git\Gitolite\VersionDetector;
+
 class Git_Gitolite_GitoliteRCReader {
 
     const OLD_GITOLITE_RC_PATH = "/usr/com/gitolite/.gitolite.rc";
     const NEW_GITOLITE_RC_PATH = "/var/lib/gitolite/.gitolite.rc";
 
-    private function getGitoliteRCPath() {
-        if (!file_exists(self::OLD_GITOLITE_RC_PATH)) {
+    public function __construct(VersionDetector $version_detector)
+    {
+        $this->version_detector = $version_detector;
+    }
+
+    private function getGitoliteRCPath()
+    {
+        if (! file_exists(self::OLD_GITOLITE_RC_PATH)) {
             return self::NEW_GITOLITE_RC_PATH;
         }
+
         return self::OLD_GITOLITE_RC_PATH;
     }
 
-    private function getGitoliteVersion() {
-        $command = new System_Command();
-        $output  = $command->exec("ssh gitolite@gl-adm info");
-        $match   = array();
-
-        preg_match('/running gitolite.* (2|3)./', implode(' ', $output), $match);
-
-        if (isset($match[1])) {
-            return $match[1];
-        }
-
-        return null;
-    }
-
-    private function gitolite3IsUsed() {
-        return $this->getGitoliteVersion() == 3;
-    }
-
-    private function extractHostnameFromRCFile() {
+    private function extractHostnameFromRCFile()
+    {
         $file_path    = $this->getGitoliteRCPath();
         $file_content = file_get_contents($file_path);
         $match        = array();
@@ -63,8 +55,9 @@ class Git_Gitolite_GitoliteRCReader {
 
     }
 
-    public function getHostname() {
-        if (! $this->gitolite3IsUsed()) {
+    public function getHostname()
+    {
+        if (! $this->version_detector->isGitolite3()) {
             return;
         }
 

@@ -663,7 +663,7 @@ class GitPlugin extends Plugin {
             ),
             $this->getProjectManager(),
             $this->getGitSystemEventManager(),
-            new Git_Gitolite_GitoliteRCReader(),
+            new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
             new DefaultProjectMirrorDao()
         );
     }

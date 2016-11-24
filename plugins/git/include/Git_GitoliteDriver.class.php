@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
  */
 
 require_once 'PathJoinUtil.php';
+
+use Tuleap\Git\Gitolite\VersionDetector;
 
 /**
  * This class manage the interaction between Tuleap and Gitolite
@@ -136,7 +138,7 @@ class Git_GitoliteDriver {
                 ),
                 $this->project_manager,
                 $this->git_system_event_manager,
-                new Git_Gitolite_GitoliteRCReader(),
+                new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
                 new DefaultProjectMirrorDao()
             );
         } else {
@@ -168,7 +170,7 @@ class Git_GitoliteDriver {
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
             $this->permissions_serializer,
             $this->project_serializer,
-            new Git_Gitolite_GitoliteRCReader(),
+            new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
             $this->mirror_data_mapper,
             $this->logger,
             $this->project_manager,
