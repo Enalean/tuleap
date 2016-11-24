@@ -10,6 +10,7 @@ Version 9.2 (Not release yet)
 	* request #9667: SVN cache do not remove properly the oldest entry of the cache
 	* request #9673: Correct the name of scss file for Git in Siteadmin
 	* request #9551: Burndown improvement
+	* request #9677: Bad escaping of Markdown in Tuleap
 
 	== Plugins ==
 	* tracker: 5.1038
