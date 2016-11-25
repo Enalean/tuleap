@@ -11,9 +11,10 @@ Version 9.2 (Not release yet)
 	* request #9673: Correct the name of scss file for Git in Siteadmin
 	* request #9551: Burndown improvement
 	* request #9677: Bad escaping of Markdown in Tuleap
+	* request #9676: XML xsd:int only deals with 32bits int
 
 	== Plugins ==
-	* tracker: 5.1038
+	* tracker: 5.1039
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69
@@ -24,6 +25,7 @@ Version 9.2 (Not release yet)
 	* openidconnectclient: 0.41
 	* git: 4.297
 	* mediawiki: 0.127
+	* cardwall: 1.71
 
 	== Themes ==
 	* FlamingParrot: 1.165

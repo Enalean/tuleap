@@ -1,3 +1,6 @@
+Version 1.71 - Tuleap 9.2
+    * request #9676: XML xsd:int only deals with 32bits int
+
 Version 1.70 - Tuleap 9.0
     * request #9568 Access to a tracker page will throw a fatal error if the cardwall is enabled but not the agiledashboard
 

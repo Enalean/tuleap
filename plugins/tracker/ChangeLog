@@ -1,3 +1,6 @@
+Version 5.1039 - Tuleap 9.2
+    * request #9676: XML xsd:int only deals with 32bits int
+
 Version 5.1038 - Tuleap 9.2
     * request #9551: Cache yesterday values at root daily
 
