@@ -103,6 +103,11 @@ class TroveCatListController
 
         $this->trove_cat_dao->startTransaction();
 
+        if ($current_trove_category['parent'] ===  $current_trove_category['trove_cat_id']) {
+            $this->trove_cat_dao->rollBack();
+            throw new CannotMoveFatherInChildException();
+        }
+
         $this->trove_cat_dao->updateTroveCat(
             $current_trove_category['shortname'],
             $current_trove_category['fullname'],
