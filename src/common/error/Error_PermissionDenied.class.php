@@ -85,7 +85,8 @@ abstract class Error_PermissionDenied {
         $user = $this->getUserManager()->getCurrentUser();
 
         if ($user->isAnonymous()) {
-            $redirect = new URLRedirect();
+            $event_manager = EventManager::instance();
+            $redirect = new URLRedirect($event_manager);
             $redirect->redirectToLogin();
         } else {
             $this->buildPermissionDeniedInterface();

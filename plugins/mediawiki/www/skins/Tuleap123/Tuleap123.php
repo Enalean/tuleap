@@ -261,9 +261,11 @@ echo $footerEnd;
         $added_toolbox = array();
 
         if ($this->isUserAnonymous()) {
+            $event_manager   = EventManager::instance();
+            $url_redirect    = new URLRedirect($event_manager);
             $added_toolbox[] = array(
                 'text' => $GLOBALS['Language']->getText('include_menu','login'),
-                'href' => '/account/login.php?return_to='. $_SERVER['REQUEST_URI']
+                'href' => $url_redirect->buildReturnToLogin($_SERVER)
             );
         }
 

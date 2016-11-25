@@ -34,6 +34,7 @@ use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
 use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
+use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
@@ -66,6 +67,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
+        $this->addHook(Event::GET_LOGIN_URL);
     }
 
     /**
@@ -111,13 +113,6 @@ class openidconnectclientPlugin extends Plugin {
         }
     }
 
-    public function old_password_required_for_password_change($params)
-    {
-        $provider_manager = new ProviderManager(new ProviderDao());
-        $params['old_password_required'] = ! $this->canPluginAuthenticateUser() ||
-            ! $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
-    }
-
     private function loadLibrary() {
         AutoloaderFactory::factory(
             array(
@@ -128,6 +123,50 @@ class openidconnectclientPlugin extends Plugin {
                 )
             )
         );
+    }
+
+    /**
+     * @return ProviderManager
+     */
+    private function getProviderManager()
+    {
+        return new ProviderManager(new ProviderDao());
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint(ProviderManager $provider_manager)
+    {
+        return $this->canPluginAuthenticateUser() &&
+        $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
+    }
+
+    public function old_password_required_for_password_change($params)
+    {
+        $provider_manager                = $this->getProviderManager();
+        $params['old_password_required'] = !$this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint(
+            $provider_manager
+        );
+    }
+
+    public function get_login_url($params)
+    {
+        $provider_manager = $this->getProviderManager();
+        if (! $this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($provider_manager)) {
+            return;
+        }
+        $this->loadLibrary();
+
+        $url_generator = new Login\LoginUniqueAuthenticationUrlGenerator(
+            $provider_manager,
+            $this->getFlow($provider_manager)
+        );
+
+        try {
+            $params['login_url'] = $url_generator->getURL(urldecode($params['return_to']));
+        } catch (IncoherentDataUniqueProviderException $exception) {
+        }
     }
 
     /**
@@ -170,7 +209,7 @@ class openidconnectclientPlugin extends Plugin {
         }
         $this->loadLibrary();
 
-        $provider_manager                  = new ProviderManager(new ProviderDao());
+        $provider_manager                  = $this->getProviderManager();
         $flow                              = $this->getFlow($provider_manager);
         $login_connector_presenter_builder = new ConnectorPresenterBuilder($provider_manager, $flow);
         $login_connector_presenter         = $login_connector_presenter_builder->getLoginConnectorPresenter(
@@ -186,7 +225,7 @@ class openidconnectclientPlugin extends Plugin {
         $link_id = $request->get('openidconnect_link_id');
 
         if ($this->isUserRegistrationWithOpenIDConnectPossible($params['is_registration_confirmation'], $link_id)) {
-            $provider_manager         = new ProviderManager(new ProviderDao());
+            $provider_manager         = $this->getProviderManager();
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             try {
                 $unlinked_account     = $unlinked_account_manager->getbyId($link_id);
@@ -205,7 +244,7 @@ class openidconnectclientPlugin extends Plugin {
                     Feedback::ERROR,
                     $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
                 );
-                $GLOBALS['Response']->redirect('/account/login.php');
+                $GLOBALS['Response']->redirect('/');
             }
         }
     }
@@ -234,7 +273,7 @@ class openidconnectclientPlugin extends Plugin {
 
         if ($link_id) {
             $user_manager             = UserManager::instance();
-            $provider_manager         = new ProviderManager(new ProviderDao());
+            $provider_manager         = $this->getProviderManager();
             $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             $account_linker_controler = new AccountLinker\Controller(
@@ -284,7 +323,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->loadLibrary();
 
         $user_manager             = UserManager::instance();
-        $provider_manager         = new ProviderManager(new ProviderDao());
+        $provider_manager         = $this->getProviderManager();
         $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
         $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
         $flow                     = $this->getFlow($provider_manager);
@@ -316,7 +355,7 @@ class openidconnectclientPlugin extends Plugin {
 
     public function processAdmin(HTTPRequest $request)
     {
-        $provider_manager        = new ProviderManager(new ProviderDao());
+        $provider_manager        = $this->getProviderManager();
         $icon_presenter_factory  = new IconPresenterFactory();
         $color_presenter_factory = new ColorPresenterFactory();
         $admin_page_renderer     = new AdminPageRenderer();

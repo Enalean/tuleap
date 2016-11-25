@@ -247,7 +247,7 @@ class URLVerification {
             $user->isAnonymous() &&
             ! $this->isScriptAllowedForAnonymous($server)
         ) {
-            $redirect = new URLRedirect();
+            $redirect = new URLRedirect($this->getEventManager());
             $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }
     }

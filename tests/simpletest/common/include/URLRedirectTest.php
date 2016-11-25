@@ -24,7 +24,8 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     private $url_redirect;
 
     public function setUp() {
-        $this->url_redirect = new URLRedirect();
+        $event_manager      = mock('EventManager');
+        $this->url_redirect = new URLRedirect($event_manager);
         $this->request = mock('HTTPRequest');
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 'example.com';

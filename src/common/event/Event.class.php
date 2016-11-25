@@ -770,6 +770,15 @@ class Event {
     const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
 
     /**
+     * Get the login, can be used to redirect a non logged user for example
+     *
+     * Parameters:
+     *   'return_to' => string (IN)
+     *   'login_url' => string (OUT)
+     */
+    const GET_LOGIN_URL = 'get_login_url';
+
+    /**
      * Allow plugin to add fields in the user register form
      *
      * Parameters:
