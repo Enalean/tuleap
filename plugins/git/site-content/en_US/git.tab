@@ -280,6 +280,7 @@ plugin_git	tree_view_by	$1 by $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
 project_admin_utils	regexp_activated_for_git_repository	Regexp usage changed for git repository $1
+project_admin_utils	regexp_activated_for_git_template	Regexp usage changed for project $1
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1
 project_admin_utils	default_git_perms_granted_for_project	Default git permissions granted for project $1
 
@@ -535,6 +536,7 @@ plugin_git	title_warning_regexp_uncheck	Some rules may be deleted
 plugin_git	warning_regexp_uncheck	All rules containing regular expressions will be deleted. Please confirm the desactivation of regular expressions.
 plugin_git	regexp_incoherence_label	Enabling this option might end up in non working state. Invalid regular expressions will be ignored without errors.
 plugin_git	history_regexp	Regular expression $1 for repository $2.
+plugin_git	history_regexp_template	Regular expression $1 for project $2.
 plugin_git	enabled	enabled
 plugin_git	disabled	disabled
 

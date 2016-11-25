@@ -275,6 +275,7 @@ plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	regexp_activated_for_git_repository	Modification dans l'utilisation des expressions régulières pour le dépôt git $1
+project_admin_utils	regexp_activated_for_git_template	Modification dans l'utilisation des expressions régulières pour le projet $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
 project_admin_utils	default_git_perms_granted_for_project	Permissions git par défaut définies pour le projet $1
 
@@ -530,6 +531,7 @@ plugin_git	title_warning_regexp_uncheck	Certaines règles peuvent être supprim�
 plugin_git	warning_regexp_uncheck	L'ensemble des règles contenant des expressions régulières vont être supprimées. Merci de confirmer la désactivation de cette option.
 plugin_git	regexp_incoherence_label	Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
 plugin_git	history_regexp	Expression régulières $1 pour le dépôt $2.
+plugin_git	history_regexp_template	Expression régulières $1 pour le projet $2.
 plugin_git	enabled	activées
 plugin_git	disabled	désactivées
 
