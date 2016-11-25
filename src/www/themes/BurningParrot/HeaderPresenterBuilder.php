@@ -28,6 +28,7 @@ use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
+use URLRedirect;
 
 class HeaderPresenterBuilder
 {
@@ -60,7 +61,8 @@ class HeaderPresenterBuilder
         $title,
         $feedback_logs,
         $main_classes,
-        $sidebar
+        $sidebar,
+        URLRedirect $url_redirect
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->request                  = $request;
@@ -78,7 +80,8 @@ class HeaderPresenterBuilder
             $this->navbar_presenter_builder->build(
                 $this->request,
                 $this->current_user,
-                $this->getExtraTabs()
+                $this->getExtraTabs(),
+                $url_redirect
             ),
             $color,
             $this->getStylesheets($color),

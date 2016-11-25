@@ -42,7 +42,13 @@ class URLRedirect
      */
     public function buildReturnToLogin($server)
     {
-        $returnTo   = ($server['REQUEST_URI'] === "/") ? "/my/" : $server['REQUEST_URI'];
+        $returnTo = $server['REQUEST_URI'];
+        if ($server['REQUEST_URI'] === '/' ||
+            strpos($server['REQUEST_URI'], '/account/login.php') === 0 ||
+            strpos($server['REQUEST_URI'], '/account/register.php') === 0)
+        {
+            $returnTo = '/my/';
+        }
         $url        = parse_url($server['REQUEST_URI']);
         $print_view = '';
         if (isset($url['query'])) {

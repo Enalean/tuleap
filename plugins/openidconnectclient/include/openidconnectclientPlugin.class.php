@@ -68,6 +68,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
         $this->addHook(Event::GET_LOGIN_URL);
+        $this->addHook('display_newaccount');
     }
 
     /**
@@ -166,6 +167,14 @@ class openidconnectclientPlugin extends Plugin {
         try {
             $params['login_url'] = $url_generator->getURL(urldecode($params['return_to']));
         } catch (IncoherentDataUniqueProviderException $exception) {
+        }
+    }
+
+    public function display_newaccount($params)
+    {
+        $provider_manager = $this->getProviderManager();
+        if ($this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($provider_manager)) {
+            $params['allow'] = false;
         }
     }
 
