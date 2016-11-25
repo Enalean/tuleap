@@ -12,7 +12,7 @@
                     </div>
                     <section class="tlp-pane-section">
                         <form method="GET" action="" name="progress_by_service">
-                            <input type="hidden" name="menu" value="services" />
+                            <input type="hidden" name="menu" value="top_projects" />
                             <div class="tlp-form-element">
                                 <label for="type" class="tlp-label">{{ services_label }}</label>
                                 <select
@@ -24,18 +24,6 @@
                                     {{# service_values }}
                                         <option value="{{ key }}" {{# is_selected }}selected{{/ is_selected }}>{{ value }}</option>
                                     {{/ service_values }}
-                                </select>
-                            </div>
-                            <div class="tlp-form-element">
-                                <label for="type" class="tlp-label">{{ group_by_label }}</label>
-                                <select
-                                        id="type"
-                                        name="group_by[]"
-                                        class="tlp-select"
-                                >
-                                    {{# group_by_values }}
-                                        <option value="{{ key }}" {{# is_selected }}selected{{/ is_selected }}>{{ value }}</option>
-                                    {{/ group_by_values }}
                                 </select>
                             </div>
                             <div class="tlp-form-element">
@@ -68,16 +56,6 @@
                                 </div>
                             </div>
 
-                            <div class="tlp-form-element">
-                                <label class="tlp-label tlp-checkbox">
-                                    <input type="checkbox"
-                                           name="relative_y_axis"
-                                           value="true"
-                                           {{# relative_y_axis_value }}checked{{/relative_y_axis_value}}
-                                    /> {{ relative_y_axis_label }}
-                                </label>
-                            </div>
-
                             <button type="submit" class="tlp-button-primary tlp-button-wide">
                                 <i class="fa fa-search tlp-button-icon"></i> {{ search }}
                             </button>
@@ -95,49 +73,58 @@
                     </div>
                 </div>
                 <section class="tlp-pane-section">
-                    <img src="{{ graph_url }}" title="{{ graph_image_title }}" />
-                </section>
-                <section class="tlp-pane-section">
                     <table class="tlp-table">
                         <thead>
                         <tr>
-                            <th>{{ table_service_title }}</th>
-                            <th class="tlp-table-cell-numeric">{{ table_start_size_title }}</th>
-                            <th class="tlp-table-cell-numeric">{{ table_end_size_title }}</th>
-                            <th class="tlp-table-cell-numeric">{{ table_size_evolution_title }}</th>
+                            <th class="tlp-table-cell-numeric">{{ table_rank_title }}</th>
+                            <th class="tlp-table-cell-numeric">{{ table_id_title }}</th>
+                            <th>{{ table_name_title }}</th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ start_size_url }}" class="tlp-table-sort">
+                                    {{ table_start_size_title }} {{# order_is_start_size }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_start_size }}
+                                </a>
+                            </th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ end_size_url }}" class="tlp-table-sort">
+                                    {{ table_end_size_title }} {{# order_is_end_size }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_end_size }}
+                                </a>
+                            </th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ evolution_url }}" class="tlp-table-sort">
+                                    {{ table_evolution_size_title }} {{# order_is_evolution }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_evolution }}
+                                </a>
+                            </th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ evolution_rate_url }}" class="tlp-table-sort">
+                                    {{ table_evolution_rate_size_title }} {{# order_is_evolution_rate }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_evolution_rate }}
+                                </a>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
-                        {{# data_services }}
+                        {{# data_top_projects }}
                             <tr>
-                                <td class="siteadmin-statistics-disk-usage-data-service">
-                                    <span class="siteadmin-statistics-disk-usage-data-service-color"
-                                          style="background-color: {{ color_rgba }}; border: 3px solid {{ color_rgb }};">
-                                    </span>
-                                    <span>{{ value }}</span>
-                                </td>
+                                <td class="tlp-table-cell-numeric">{{ rank }}</td>
+                                <td class="tlp-table-cell-numeric">{{ group_id }}</td>
+                                <td>{{ group_name }}</td>
                                 <td class="tlp-table-cell-numeric">{{ start_size }}</td>
                                 <td class="tlp-table-cell-numeric">{{ end_size }}</td>
                                 <td class="tlp-table-cell-numeric">{{ evolution }}</td>
+                                <td class="tlp-table-cell-numeric">{{ evolution_rate }}</td>
                             </tr>
-                        {{/ data_services }}
-                        {{^ data_services }}
+                        {{/ data_top_projects }}
+                        {{^ data_top_projects }}
                             <tr>
-                                <td colspan="6" class="tlp-table-cell-empty">
+                                <td colspan="7" class="tlp-table-cell-empty">
                                     {{ no_data }}
                                 </td>
                             </tr>
-                        {{/ data_services }}
+                        {{/ data_top_projects }}
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <th></th>
-                            <th class="tlp-table-cell-numeric"><span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ total_start_size_tooltip }}">Σ {{ total_start_size }}</span></th>
-                            <th class="tlp-table-cell-numeric"><span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ total_end_size_tooltip }}">Σ {{ total_end_size }}</span></th>
-                            <th class="tlp-table-cell-numeric"><span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ total_evolution_tooltip }}">Σ {{ total_evolution }}</span></th>
-                        </tr>
-                        </tfoot>
                     </table>
+                    {{# pagination }}
+                        {{> pagination }}
+                    {{/ pagination }}
                 </section>
             </div>
         </section>

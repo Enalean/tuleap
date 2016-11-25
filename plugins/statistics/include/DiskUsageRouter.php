@@ -30,18 +30,24 @@ class DiskUsageRouter
     /**
      * @var Statistics_DiskUsageManager
      */
-    private $statistics_disk_usage_manager;
+    private $usage_manager;
     /**
-     * @var DiskUsagePresenterBuilder
+     * @var DiskUsageServicesPresenterBuilder
      */
-    private $disk_usage_builder;
+    private $services_builder;
+    /**
+     * @var DiskUsageTopProjectsPresenterBuilder
+     */
+    private $top_projects_builder;
 
     public function __construct(
-        Statistics_DiskUsageManager $statistics_disk_usage_manager,
-        DiskUsagePresenterBuilder $disk_usage_builder
+        Statistics_DiskUsageManager $usage_manager,
+        DiskUsageServicesPresenterBuilder $services_builder,
+        DiskUsageTopProjectsPresenterBuilder $top_projects_builder
     ) {
-        $this->statistics_disk_usage_manager = $statistics_disk_usage_manager;
-        $this->disk_usage_builder            = $disk_usage_builder;
+        $this->usage_manager        = $usage_manager;
+        $this->services_builder     = $services_builder;
+        $this->top_projects_builder = $top_projects_builder;
     }
 
     public function route(HTTPRequest $request)
@@ -52,6 +58,9 @@ class DiskUsageRouter
             switch ($menu) {
                 case 'services':
                     $this->displayServices($request);
+                    break;
+                case 'top_projects':
+                    $this->displayTopProjects($request);
                     break;
             }
         }
@@ -68,7 +77,7 @@ class DiskUsageRouter
 
         $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
 
-        $disk_usage_services_presenter = $this->disk_usage_builder->buildServices(
+        $disk_usage_services_presenter = $this->services_builder->buildServices(
             $title,
             $group_id,
             $selected_services,
@@ -84,6 +93,37 @@ class DiskUsageRouter
             ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
             'disk-usage-services',
             $disk_usage_services_presenter
+        );
+    }
+
+    private function displayTopProjects($request)
+    {
+        $limit = 25;
+
+        $selected_services = $request->get('services');
+        $start_date        = $request->get('start_date');
+        $end_date          = $request->get('end_date');
+        $order             = $request->get('order');
+        $offset            = $request->get('offset');
+
+        $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+
+        $disk_usage_top_projects_presenter = $this->top_projects_builder->buildTopProjects(
+            $title,
+            $selected_services,
+            $start_date,
+            $end_date,
+            $order,
+            $offset,
+            $limit
+        );
+
+        $admin_page_renderer = new AdminPageRenderer();
+        $admin_page_renderer->renderANoFramedPresenter(
+            $title,
+            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            'disk-usage-top-projects',
+            $disk_usage_top_projects_presenter
         );
     }
 }

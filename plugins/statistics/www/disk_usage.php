@@ -22,8 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Statistics\DiskUsagePresenterBuilder;
 use Tuleap\Statistics\DiskUsageRouter;
+use Tuleap\Statistics\DiskUsageSearchFieldsPresenterBuilder;
+use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
+use Tuleap\Statistics\DiskUsageTopProjectsPresenterBuilder;
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
@@ -137,78 +139,35 @@ if ($request->valid($vOffset)) {
     $offset = 0;
 }
 
+$disk_usage_output = new Statistics_DiskUsageOutput(
+    $duMgr
+);
+$disk_usage_graph = new Statistics_DiskUsageGraph(
+    $duMgr
+);
+$disk_usage_search_fields_builder = new DiskUsageSearchFieldsPresenterBuilder();
+$disk_usage_services_builder      = new DiskUsageServicesPresenterBuilder(
+    $duMgr,
+    $disk_usage_output,
+    $disk_usage_graph,
+    $disk_usage_search_fields_builder
+);
+$disk_usage_top_projects_builder = new DiskUsageTopProjectsPresenterBuilder(
+    $duMgr,
+    $disk_usage_output,
+    $disk_usage_search_fields_builder,
+    $disk_usage_services_builder
+);
+
 $disk_usage_router = new DiskUsageRouter(
     $duMgr,
-    new DiskUsagePresenterBuilder(
-        $duMgr,
-        new Statistics_DiskUsageOutput($duMgr),
-        new Statistics_DiskUsageGraph($duMgr)
-    )
+    $disk_usage_services_builder,
+    $disk_usage_top_projects_builder
 );
 
 $disk_usage_router->route($request);
 
 switch ($menu) {
-    case 'top_projects':
-        $urlParam = '';
-        // Prepare params
-        $urlParam = '?menu=top_projects&start_date='.$startDate.'&end_date='.$endDate.'&';
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_project', 'usage_per_project').'</h2>';
-
-        $selected = array();
-        $first    = true;
-        foreach ($selectedServices as $serv) {
-            if ($first != true) {
-                $urlParam .= '&';
-            }
-            $urlParam           .= 'services[]='.$serv;
-            $selected[$serv] = true;
-            $first           = false;
-        }
-
-
-        echo '<form name="top_projects" method="get" action="?">';
-        echo '<input type="hidden" name="menu" value="top_projects" />';
-
-         echo '<table>';
-        echo '<tr>';
-        echo '<th>Services</th>';
-        echo '<th>Start date</th>';
-        echo '<th>End date</th>';
-        echo '</tr>';
-
-        echo '<tr>';
-
-        $services = array();
-        foreach ($duMgr->getProjectServices() as $service => $label) {
-            $services[] = array('value' => $service, 'text' => $label);
-        }
-        echo '<td valign="top">';
-        echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false).' ';
-        echo '</td>';
-
-        echo '<td valign="top">';
-        list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
-        echo '</td>';
-
-        echo '<td valign="top">';
-        list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
-        echo '</td>';
-
-        echo '</tr>';
-        echo '</table>';
-
-        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
-        echo '</form>';
-
-        if (($startDate) && ($endDate) && ($selectedServices)) {
-            $duHtml->getTopProjects($startDate, $endDate, $selectedServices, $order, $urlParam, $offset);
-        }
-
-        break;
-
     case 'one_project_details':
         $project = ProjectManager::instance()->getProject($groupId);
         if ($project && !$project->isError()) {

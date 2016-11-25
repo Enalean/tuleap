@@ -30,15 +30,15 @@ class DiskUsageServicesPresenter
     public $total_end_size;
     public $total_evolution;
 
-    public $data_services_pane_title;
-    public $data_services_table_service_title;
-    public $data_services_table_start_size_title;
-    public $data_services_table_end_size_title;
-    public $data_services_table_size_evolution_title;
-    public $data_services_total_start_size_tooltip;
-    public $data_services_total_end_size_tooltip;
-    public $data_services_total_evolution_tooltip;
-    public $data_services_no_data;
+    public $pane_title;
+    public $table_service_title;
+    public $table_start_size_title;
+    public $table_end_size_title;
+    public $table_size_evolution_title;
+    public $total_start_size_tooltip;
+    public $total_end_size_tooltip;
+    public $total_evolution_tooltip;
+    public $no_data;
     public $graph_image_title;
 
     public function __construct(
@@ -58,15 +58,15 @@ class DiskUsageServicesPresenter
         $this->total_end_size   = $total_end_size;
         $this->total_evolution  = $total_evolution;
 
-        $this->data_services_pane_title                 = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_pane_title');
-        $this->data_services_table_service_title        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_table_service_title');
-        $this->data_services_table_start_size_title     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_table_start_size_title');
-        $this->data_services_table_end_size_title       = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_table_end_size_title');
-        $this->data_services_table_size_evolution_title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_table_size_evolution_title');
-        $this->data_services_total_start_size_tooltip   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_total_start_size_tooltip');
-        $this->data_services_total_end_size_tooltip     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_total_end_size_tooltip');
-        $this->data_services_total_evolution_tooltip    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_total_evolution_tooltip');
-        $this->data_services_no_data                    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_no_data');
-        $this->graph_image_title                       = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_image_title');
+        $this->pane_title                 = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_pane_title');
+        $this->table_service_title        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_service_title');
+        $this->table_start_size_title     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_start_size_title');
+        $this->table_end_size_title       = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_end_size_title');
+        $this->table_size_evolution_title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_title');
+        $this->total_start_size_tooltip   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'total_start_size_tooltip');
+        $this->total_end_size_tooltip     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'total_end_size_tooltip');
+        $this->total_evolution_tooltip    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'total_evolution_tooltip');
+        $this->no_data                    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_no_data');
+        $this->graph_image_title          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_image_title');
     }
 }

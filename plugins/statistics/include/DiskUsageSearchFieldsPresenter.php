@@ -24,37 +24,30 @@ class DiskUsageSearchFieldsPresenter
 {
     public $title;
     public $services_label;
-    public $group_by_label;
     public $start_date_label;
     public $end_date_label;
-    public $relative_y_axis_label;
     public $search;
 
     public $service_values;
-    public $group_by_values;
+    public $fields_values_url;
     public $start_date_value;
     public $end_date_value;
-    public $relative_y_axis_value;
 
     public function __construct(
         array $service_values,
-        array $group_by_values,
+        $fields_values_url,
         $start_date_value,
-        $end_date_value,
-        $relative_y_axis_value
+        $end_date_value
     ) {
-        $this->service_values        = $service_values;
-        $this->group_by_values       = $group_by_values;
-        $this->start_date_value      = $start_date_value;
-        $this->end_date_value        = $end_date_value;
-        $this->relative_y_axis_value = $relative_y_axis_value;
+        $this->service_values     = $service_values;
+        $this->fields_values_url  = $fields_values_url;
+        $this->start_date_value   = $start_date_value;
+        $this->end_date_value     = $end_date_value;
 
-        $this->title                 = $GLOBALS['Language']->getText('admin_main', 'search');
-        $this->services_label        = $GLOBALS['Language']->getText('plugin_statistics', 'services_label');
-        $this->group_by_label        = $GLOBALS['Language']->getText('plugin_statistics', 'group_by_label');
-        $this->start_date_label      = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
-        $this->end_date_label        = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->relative_y_axis_label = $GLOBALS['Language']->getText('plugin_statistics', 'relative_y_axis_label');
-        $this->search                = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->title            = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->services_label   = $GLOBALS['Language']->getText('plugin_statistics', 'services_label');
+        $this->start_date_label = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
+        $this->end_date_label   = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
+        $this->search           = $GLOBALS['Language']->getText('admin_main', 'search');
     }
 }
