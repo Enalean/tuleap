@@ -21,12 +21,13 @@ Version 9.2 (Not release yet)
 	* agiledashboard: 1.436
 	* artifactsfolders: 0.38
 	* svn: 0.105
-	* openidconnectclient: 0.40
+	* openidconnectclient: 0.41
 	* git: 4.297
 	* mediawiki: 0.127
 
 	== Themes ==
-	* FlamingParrot: 1.164
+	* FlamingParrot: 1.165
+	* BurningParrot: 0.18
 
 	== Development ==
 	* request #9657: Tuleap goes gettext
