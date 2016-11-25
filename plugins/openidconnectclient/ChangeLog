@@ -1,3 +1,6 @@
+Version 0.40 - Tuleap 9.2
+    * Users should not be redirect to the login page when they are not authenticated
+
 Version 0.39 - Tuleap 9.2
     * A user can change his password without knowing the previous one if a provider is set as unique authentication provider
 
