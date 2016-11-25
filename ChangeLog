@@ -22,13 +22,13 @@ Version 9.2 (Not release yet)
 	* agiledashboard: 1.436
 	* artifactsfolders: 0.38
 	* svn: 0.105
-	* openidconnectclient: 0.41
+	* openidconnectclient: 0.42
 	* git: 4.297
 	* mediawiki: 0.127
 	* cardwall: 1.71
 
 	== Themes ==
-	* FlamingParrot: 1.165
+	* FlamingParrot: 1.166
 	* BurningParrot: 0.18
 
 	== Development ==

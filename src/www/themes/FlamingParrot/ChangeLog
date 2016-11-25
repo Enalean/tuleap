@@ -1,3 +1,6 @@
+Version 1.166 - Tuleap 9.2
+    * Do not display the login form on the homepage if a provider is configured as unique authentication endpoint
+
 Version 1.165 - Tuleap 9.2
     * Only a login link to the provider is displayed in the navbar when this provider is configured as unique authentication endpoint.
 
