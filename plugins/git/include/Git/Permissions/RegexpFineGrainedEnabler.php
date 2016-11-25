@@ -62,6 +62,11 @@ class RegexpFineGrainedEnabler
 
     public function enableForDefault(Project $project)
     {
-        $this->regexp_default_dao->enable($project->getID());
+        $this->enableForDefaultWithProjectId($project->getID());
+    }
+
+    public function enableForDefaultWithProjectId($project_id)
+    {
+        $this->regexp_default_dao->enable($project_id);
     }
 }

@@ -45,7 +45,8 @@ class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
                 new FineGrainedRegexpValidator(),
                 mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
             ),
-            new FineGrainedPermissionSorter()
+            new FineGrainedPermissionSorter(),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
         );
 
         $this->project         = stub('Project')->getID()->returns(101);

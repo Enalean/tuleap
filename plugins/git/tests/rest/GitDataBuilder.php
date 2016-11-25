@@ -266,7 +266,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $normalizer,
             PermissionsManager::instance(),
             $validator,
-            $sorter
+            $sorter,
+            $regexp_retriever
         );
 
         $retriever        = new FineGrainedRetriever($fine_grained_dao);
