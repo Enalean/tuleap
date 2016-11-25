@@ -25,7 +25,7 @@
           <interleave>
             <optional>
               <attribute name="id">
-                <data type="integer"/>
+                <data type="long"/>
               </attribute>
             </optional>
             <attribute name="name">
@@ -33,7 +33,7 @@
             </attribute>
             <optional>
               <attribute name="rank">
-                <data type="integer"/>
+                <data type="long"/>
               </attribute>
             </optional>
             <optional>
@@ -53,7 +53,7 @@
                 <interleave>
                   <optional>
                     <attribute name="id">
-                      <data type="integer"/>
+                      <data type="long"/>
                     </attribute>
                   </optional>
                   <attribute name="name">

@@ -22,7 +22,7 @@ tracker =
         # old ids
         attribute id { xsd:string }?,
         attribute parent_id { xsd:string }?,
-        attribute group_id { xsd:int }?,
+        attribute group_id { xsd:long }?,
         # these attributes should be optional and have default values
         attribute allow_copy { "0" | "1" }?, # default is false
         attribute enable_emailgateway { "0" | "1" }?, # default is false
@@ -43,8 +43,8 @@ tracker =
 
         element cannedResponses {
             element cannedResponse {
-                attribute id { xsd:int }?,
-                attribute tracker { xsd:int }?,
+                attribute id { xsd:long }?,
+                attribute tracker { xsd:long }?,
                 element title { xsd:string },
                 element body { xsd:string }
             }*
@@ -78,7 +78,7 @@ tracker =
             element field_id {
                 attribute REF { xsd:IDREF }
             }?,
-            element is_used {xsd:int}?,
+            element is_used {xsd:long}?,
             element transitions {
                 element transition { transitionContent }*
             }?
@@ -106,11 +106,11 @@ tracker =
     formElementContent =
         # ID is internal to the XML file
         attribute ID { xsd:ID },
-        attribute rank { xsd:int },
+        attribute rank { xsd:long },
         # id is the initial id of the exported field
-        attribute id { xsd:int }?,
-        attribute tracker_id { xsd:int }?,
-        attribute parent_id { xsd:int }?,
+        attribute id { xsd:long }?,
+        attribute tracker_id { xsd:long }?,
+        attribute parent_id { xsd:long }?,
         # these attributes should be optional and have  default values
         attribute use_it { "0" | "1" }?, # default is true
         attribute scope { "S" | "P" }?, # default is 'P'
@@ -122,10 +122,10 @@ tracker =
         element description { xsd:string }?,
 
         element properties {
-            attribute maxchars { xsd:int }?,
-            attribute size { xsd:int }?,
-            attribute rows { xsd:int }?,
-            attribute cols { xsd:int }?,
+            attribute maxchars { xsd:long }?,
+            attribute size { xsd:long }?,
+            attribute rows { xsd:long }?,
+            attribute cols { xsd:long }?,
             attribute static_value { xsd:string }?,
             attribute default_value { xsd:string }?,
             attribute hint { xsd:string }?,
@@ -180,9 +180,9 @@ tracker =
             element decorators {
                 element decorator {
                     attribute REF { xsd:IDREF },
-                    attribute r { xsd:int },
-                    attribute g { xsd:int },
-                    attribute b { xsd:int }
+                    attribute r { xsd:long },
+                    attribute g { xsd:long },
+                    attribute b { xsd:long }
                 }*
             }?,
             element default_values {
@@ -204,13 +204,13 @@ tracker =
         },
         element postactions {
             element postaction_field_date {
-                attribute valuetype { xsd:int },
+                attribute valuetype { xsd:long },
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
             }*,
             element postaction_field_int {
-                attribute value { xsd:int },
+                attribute value { xsd:long },
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
@@ -373,11 +373,11 @@ tracker =
         attribute is_default { "0" | "1" }?, # default is false
         attribute is_query_displayed { "0" | "1" }?, # defaout is true
         # these ids are initial ids of the exported report
-        attribute id { xsd:int }?,
-        attribute tracker_id { xsd:int }?,
-        attribute current_renderer_id { xsd:int }?,
-        attribute user_id { xsd:int }?,
-        attribute parent_report_id { xsd:int }?,
+        attribute id { xsd:long }?,
+        attribute tracker_id { xsd:long }?,
+        attribute current_renderer_id { xsd:long }?,
+        attribute user_id { xsd:long }?,
+        attribute parent_report_id { xsd:long }?,
 
         element name { xsd:string },
         element description { xsd:string }?,
@@ -390,12 +390,12 @@ tracker =
         }
 
     criteriaContent =
-        attribute rank { xsd:int },
+        attribute rank { xsd:long },
         # these attributes should be optional and have  default values
         attribute is_advanced { "0" | "1" }?, # default is false
         # these ids are initial ids of the exported report
-        attribute id { xsd:int }?,
-        attribute report { xsd:int }?,
+        attribute id { xsd:long }?,
+        attribute report { xsd:long }?,
 
         element field {
             attribute REF { xsd:IDREF }
@@ -404,14 +404,14 @@ tracker =
     rendererContent =
         element name { xsd:string },
         element description { xsd:string }?,
-        attribute id { xsd:int }?,
-        attribute report { xsd:int }?,
-        attribute rank { xsd:int },
+        attribute id { xsd:long }?,
+        attribute report { xsd:long }?,
+        attribute rank { xsd:long },
         (
             (
                 attribute type { "table" },
-                attribute chunksz { xsd:int },
-                attribute multisort { xsd:int }?, # default is false
+                attribute chunksz { xsd:long },
+                attribute multisort { xsd:long }?, # default is false
                 element columns {
                     element field {
                         attribute REF { xsd:IDREF },
@@ -430,9 +430,9 @@ tracker =
                 attribute type { "plugin_graphontrackersv5" },
                 element charts {
                     element chart {
-                        attribute width { xsd:int },
-                        attribute height { xsd:int },
-                        attribute rank { xsd:int },
+                        attribute width { xsd:long },
+                        attribute height { xsd:long },
+                        attribute rank { xsd:long },
                         element title { xsd:string },
                         element description { xsd:string }?,
                         (
@@ -462,7 +462,7 @@ tracker =
                             (
                                 attribute type { "burnup" },
                                 attribute start_date { xsd:string }?,
-                                attribute duration { xsd:int }?,
+                                attribute duration { xsd:long }?,
                                 attribute remaining_field{ xsd:IDREF }?,
                                 attribute done_field { xsd:IDREF }?
                             )
@@ -470,7 +470,7 @@ tracker =
                             (
                                 attribute type { "burndown" },
                                 attribute start_date { xsd:string }?,
-                                attribute duration { xsd:int }?,
+                                attribute duration { xsd:long }?,
                                 attribute effort_field{ xsd:IDREF }?
                             )
                         |

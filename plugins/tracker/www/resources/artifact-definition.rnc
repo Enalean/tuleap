@@ -4,8 +4,8 @@ artifacts =
     }*
 
 artifact =
-    attribute id { xsd:int },
-    attribute tracker_id { xsd:int }?,
+    attribute id { xsd:long },
+    attribute tracker_id { xsd:long }?,
     element changeset {
         element submitted_by { tracker_user_content },
         element submitted_on { date_content },
@@ -16,7 +16,7 @@ artifact =
         attribute id { xsd:ID },
         element filename { xsd:string },
         element path { xsd:string },
-        element filesize { xsd:int },
+        element filesize { xsd:long },
         element filetype { xsd:string },
         element description { xsd:string }
     }*
@@ -81,7 +81,7 @@ artifact =
 
     field_int =
         attribute type { "int" },
-        element value { xsd:int? }
+        element value { xsd:long? }
 
     field_float =
         attribute type { "float" },
@@ -107,7 +107,7 @@ artifact =
         attribute type { "art_link" },
         element value {
             attribute nature { xsd:string }?,
-            xsd:int
+            xsd:long
         }*
 
     field_static_list =
@@ -165,7 +165,7 @@ artifact =
         attribute use_perm { xsd:boolean },
         element ugroup {
             (
-               (attribute ugroup_id { xsd:int })
+               (attribute ugroup_id { xsd:long })
              | (attribute ugroup_name { xsd:string })
             )
         }*
