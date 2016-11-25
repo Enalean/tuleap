@@ -21,12 +21,12 @@
 namespace Tuleap\Tracker\FormElement\SystemEvent;
 
 use BackendLogger;
-use DateTime;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Field_BurndownDao;
 use Tracker_FormElement_Field_ComputedDaoCache;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\BurndownDateRetriever;
 
 class SystemEvent_BURNDOWN_DAILY extends SystemEvent
 {
@@ -57,6 +57,11 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
      */
     private $time_period;
 
+    /**
+     * @var BurndownDateRetriever
+     */
+    private $date_retriever;
+
     public function verbalizeParameters($with_link)
     {
     }
@@ -66,13 +71,15 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
         BurndownCalculator $burndown_calculator,
         Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
         TimePeriodWithoutWeekEnd $time_period,
-        BackendLogger $logger
+        BackendLogger $logger,
+        BurndownDateRetriever $date_retriever
     ) {
-        $this->burndown_dao = $burndown_dao;
-        $this->logger = $logger;
+        $this->burndown_dao        = $burndown_dao;
+        $this->logger              = $logger;
         $this->burndown_calculator = $burndown_calculator;
-        $this->cache_dao = $cache_dao;
-        $this->time_period = $time_period;
+        $this->cache_dao           = $cache_dao;
+        $this->time_period         = $time_period;
+        $this->date_retriever      = $date_retriever;
     }
 
     public function process()
@@ -85,9 +92,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
 
     public function cacheYesterdayValues()
     {
-        $date = new DateTime();
-        $date->setTime(0, 0, 0);
-        $yesterday = $date->getTimestamp();
+        $yesterday = $this->date_retriever->getYesterday();
 
         if (! $this->time_period->isNotWeekendDay($yesterday)) {
             return;
@@ -103,7 +108,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
             $this->logger->debug("Caching value $value for artifact #" . $burndown['id']);
             $this->cache_dao->saveCachedFieldValueAtTimestamp(
                 $burndown['id'],
-                $burndown['remaining_effort_field_id'],
+                $burndown['burndown_field_id'],
                 $yesterday,
                 $value
             );
