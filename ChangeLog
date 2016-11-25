@@ -14,7 +14,7 @@ Version 9.2 (Not release yet)
 	* request #9676: XML xsd:int only deals with 32bits int
 
 	== Plugins ==
-	* tracker: 5.1039
+	* tracker: 5.1040
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69

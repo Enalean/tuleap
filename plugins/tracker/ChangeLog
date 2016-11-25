@@ -1,3 +1,6 @@
+Version 5.1040 - Tuleap 9.2
+    * request #9626 Fatal error when deleting a field used in a trigger
+
 Version 5.1039 - Tuleap 9.2
     * request #9676: XML xsd:int only deals with 32bits int
 
