@@ -57,31 +57,46 @@ if ($request->exist('type_values')) {
     $type_values = array('session');
 }
 
-$date_value = date('Y') . '-0-0';
-if ($request->exist('date') && $request->get('date') !== "") {
-    $date_value = $request->get('date');
-}
-list($year, $month, $day) = explode('-', $date_value);
-
-$advsrch = '0';
-if ($request->exist('advsrch')) {
-    $advsearch = $request->get('advsrch');
+if (isset($_REQUEST['start'])
+    && isset($_REQUEST['end'])
+    && strtotime($_REQUEST['start']) >= strtotime($_REQUEST['end'])
+) {
+    $date_error_message = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_date_choice_error');
+    $GLOBALS['Response']->addFeedback('error', $date_error_message);
 }
 
-if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
-    if (strtotime($_REQUEST['start']) >= strtotime($_REQUEST['end']) || $_REQUEST['start'] == '' || $_REQUEST['end'] == '') {
-        $GLOBALS['Response']->addFeedback('error', 'You make a mistake in selecting period. Please try again!');
-    }
+$v_start_date = new Valid('start');
+$v_start_date->addRule(new Rule_Date());
+$v_start_date->required();
+$start_date = $request->get('start');
+if ($request->valid($v_start_date)) {
+    $start_date = $request->get('start');
+} else {
+    $start_date = date('Y-m-d', strtotime('-1 year'));
 }
 
-$startdate = false;
-$enddate = false;
-$filter = false;
+$v_end_date = new Valid('end');
+$v_end_date->addRule(new Rule_Date());
+$v_end_date->required();
+$end_date = $request->get('end');
+if ($request->valid($v_end_date)) {
+    $end_date = $request->get('end');
+} else {
+    $end_date = date('Y-m-d');
+}
+
+if ($request->exist('filter')) {
+    $filter = $request->get('filter');
+} else {
+    $filter = 'month';
+}
 
 $search_fields_builder = new FrequenciesSearchFieldsPresenterBuilder();
 $search_fields_presenter = $search_fields_builder->build(
     $type_values,
-    $date_value
+    $filter,
+    $start_date,
+    $end_date
 );
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
@@ -94,13 +109,9 @@ $header_presenter = new AdminHeaderPresenter(
 $frequencies_presenter = new FrequenciesPresenter(
     $header_presenter,
     $search_fields_presenter,
-    $year,
-    $month,
-    $day,
     $datastr,
-    $advsrch,
-    $startdate,
-    $enddate,
+    $start_date,
+    $end_date,
     $filter
 );
 

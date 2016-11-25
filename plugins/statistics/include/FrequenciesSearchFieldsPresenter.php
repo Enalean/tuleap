@@ -25,17 +25,30 @@ class FrequenciesSearchFieldsPresenter
     public $title;
     public $type_label;
     public $type_values;
-    public $date_label;
+    public $start_date_label;
+    public $end_date_label;
+    public $start_date_value;
+    public $end_date_value;
+    public $filter_label;
+    public $filter_values;
     public $search;
 
-    public function __construct(array $type_values, $date_value)
-    {
-        $this->type_values = $type_values;
-        $this->date_value  = $date_value;
+    public function __construct(
+        array $type_values,
+        array $filter_values,
+        $start_date_value,
+        $end_date_value
+    ) {
+        $this->type_values      = $type_values;
+        $this->start_date_value = $start_date_value;
+        $this->end_date_value   = $end_date_value;
+        $this->filter_values    = $filter_values;
 
-        $this->title      = $GLOBALS['Language']->getText('admin_main', 'search');
-        $this->type_label = $GLOBALS['Language']->getText('plugin_statistics', 'type_label');
-        $this->date_label = $GLOBALS['Language']->getText('plugin_statistics', 'date_label');
-        $this->search     = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->title            = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->type_label       = $GLOBALS['Language']->getText('plugin_statistics', 'type_label');
+        $this->start_date_label = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
+        $this->end_date_label   = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
+        $this->filter_label     = $GLOBALS['Language']->getText('plugin_statistics', 'filter_label');
+        $this->search           = $GLOBALS['Language']->getText('admin_main', 'search');
     }
 }

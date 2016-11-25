@@ -27,11 +27,19 @@ class FrequenciesSearchFieldsPresenterBuilder
 {
     public function build(
         array $type_values,
-        $date_value
+        $filter_value,
+        $start_date_value,
+        $end_date_value
     ) {
-        $type_options = $this->getListOfTypeValuePresenter($type_values);
+        $type_options   = $this->getListOfTypeValuePresenter($type_values);
+        $filter_options = $this->getListOfFilterValuePresenter($filter_value);
 
-        return new FrequenciesSearchFieldsPresenter($type_options, $date_value);
+        return new FrequenciesSearchFieldsPresenter(
+            $type_options,
+            $filter_options,
+            $start_date_value,
+            $end_date_value
+        );
     }
 
     private function getListOfTypeValuePresenter(array $type_values)
@@ -56,20 +64,37 @@ class FrequenciesSearchFieldsPresenterBuilder
 
         $type_options = array();
 
-        foreach ($all_data as $key => $value) {
-            $type_options[] = $this->getTypeValuePresenter($key, $type_values, $value);
+        foreach ($all_data as $type => $label) {
+            $type_options[] = $this->getValuePresenter($type, $type_values, $label);
         }
 
         return $type_options;
     }
 
-    private function getTypeValuePresenter($type, $type_values, $label)
+    private function getListOfFilterValuePresenter($filter_value)
     {
-        $selected = in_array($type, $type_values);
+        $all_filter = array(
+           'month'  => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_month'),
+           'day'    => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_day'),
+           'hour'   => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_hour'),
+           'month1' => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_month'),
+           'day1'   => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_day'),
+        );
 
+        $filter_options = array();
+
+        foreach ($all_filter as $filter => $label) {
+            $filter_options[] = $this->getValuePresenter($filter, array($filter_value), $label);
+        }
+
+        return $filter_options;
+    }
+
+    private function getValuePresenter($value, array $selected_values, $label)
+    {
         return array(
-            'value'       => $type,
-            'is_selected' => $selected,
+            'value'       => $value,
+            'is_selected' => in_array($value, $selected_values),
             'label'       => $label
         );
     }

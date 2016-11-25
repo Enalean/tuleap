@@ -23,7 +23,7 @@ plugin_statistics_admin_page	show_statistics	Utilisation disque
 plugin_statistics_admin_page	disk_usage_period_months	Utilisation du disque pour les $1 derniers mois
 plugin_statistics_admin_page	disk_usage_period_year	Utilisation du disque pour la dernière année
 plugin_statistics_admin_page	disk_usage_period	Du $1 au $2.
-plugin_statistics_admin_page	disk_usage_proportion	Ce projet utilise <b>$1</b> de <b>$2</b> alloué. 
+plugin_statistics_admin_page	disk_usage_proportion	Ce projet utilise <b>$1</b> de <b>$2</b> alloué.
 plugin_statistics_admin_page	year	Voir les statistiques pour les $1 derniers mois
 plugin_statistics_admin_page	months	Voir les statistiques pour l'an dernier
 
@@ -97,7 +97,6 @@ plugin_statistics	sysevents_queue	Statistiques
 plugin_statistics	index_page_title	Statistiques
 plugin_statistics	frequencies_title	Fréquences
 plugin_statistics	type_label	Type
-plugin_statistics	date_label	Date
 plugin_statistics	session_type	Sessions
 plugin_statistics	user_type	Utilisateurs
 plugin_statistics	forum_type	Messages de forums
@@ -110,3 +109,11 @@ plugin_statistics	oartifact_type	Artéfacts ouverts (V3)
 plugin_statistics	cartifact_type	Artéfacts fermés (ou date de fin souhaitée) (V3)
 plugin_statistics	usage_progress_btn	Progression de l'utilisation (CSV)
 plugin_statistics	usage_progress_help	Générer un fichier CSV qui contient la progression de quelques chiffres de données (nombre d'utilisateurs, nombre de projets) dans le temps. Pour chaque mois, il génère le nombre de projets et de comptes d'utilisateur créés.
+
+plugin_statistics	filter_label	Filtrer
+plugin_statistics	frequencies_filter_group_month	Grouper par mois
+plugin_statistics	frequencies_filter_group_day	Grouper par jour
+plugin_statistics	frequencies_filter_group_hour	Grouper par heure
+plugin_statistics	frequencies_filter_month	Mois
+plugin_statistics	frequencies_filter_day	Jour
+plugin_statistics	frequencies_date_choice_error	La date de fin ne devrait pas être antérieure à la date de début

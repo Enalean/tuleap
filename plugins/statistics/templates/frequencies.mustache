@@ -12,7 +12,6 @@
                     </div>
                     <section class="tlp-pane-section">
                         <form method="GET" action="index.php" name="date_form">
-                            <input type="hidden" name="advsrch" value="0">
                             <div class="tlp-form-element">
                                 <label for="type" class="tlp-label">{{ type_label }}</label>
                                 <select
@@ -26,19 +25,44 @@
                                 </select>
                             </div>
                             <div class="tlp-form-element">
-                                <label for="date" class="tlp-label">{{ date_label }}</label>
+                                <label for="start-date-picker" class="tlp-label">{{ start_date_label }}</label>
                                 <div class="tlp-form-element tlp-form-element-prepend">
                                     <input
                                         type="text"
-                                        id="date"
-                                        name="date"
+                                        id="start-date-picker"
+                                        name="start"
                                         class="tlp-input tlp-input-date"
                                         size="11"
-                                        value="{{ date_value }}"
+                                        value="{{ start_date_value }}"
                                     >
                                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                                </div
+                                </div>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="end-date-picker" class="tlp-label">{{ end_date_label }}</label>
+                                <div class="tlp-form-element tlp-form-element-prepend">
+                                    <input
+                                        type="text"
+                                        id="end-date-picker"
+                                        name="end"
+                                        class="tlp-input tlp-input-date"
+                                        size="11"
+                                        value="{{ end_date_value }}"
+                                    >
+                                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="filter" class="tlp-label">{{ filter_label }}</label>
+                                <select
+                                    id="filter"
+                                    name="filter"
+                                    class="tlp-select"
                                 >
+                                    {{# filter_values }}
+                                        <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                                    {{/ filter_values }}
+                                </select>
                             </div>
                             <button type="submit" class="tlp-button-primary tlp-button-wide">
                                 <i class="fa fa-search tlp-button-icon"></i> {{ search }}

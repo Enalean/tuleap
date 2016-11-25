@@ -32,11 +32,7 @@ class FrequenciesPresenter
     public function __construct(
         AdminHeaderPresenter $header,
         FrequenciesSearchFieldsPresenter $search_fields,
-        $year,
-        $month,
-        $day,
         $datastr,
-        $advsrch,
         $startdate,
         $enddate,
         $filter
@@ -46,11 +42,9 @@ class FrequenciesPresenter
 
         $this->frequencies_label = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
 
-        $this->graph_url = 'frequence_stat_graph.php?year='.urlencode($year).
-                                                    '&month='.urlencode($month).
-                                                    '&day='.urlencode($day).
+        $this->graph_url = 'frequence_stat_graph.php?year=&month=&day='.
                                                     '&data='.urlencode($datastr).
-                                                    '&advsrch='.urlencode($advsrch).
+                                                    '&advsrch=1'.
                                                     '&start='.urlencode($startdate).
                                                     '&end='.urlencode($enddate).
                                                     '&filter='.urlencode($filter);

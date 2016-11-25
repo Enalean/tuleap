@@ -23,7 +23,7 @@ plugin_statistics_admin_page	show_statistics	Disk usage
 plugin_statistics_admin_page	disk_usage_period_months	Disk usage for the $1 last months
 plugin_statistics_admin_page	disk_usage_period_year	Disk usage for the last year
 plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
-plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota. 
+plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota.
 plugin_statistics_admin_page	year	View statistics for the last $1 months
 plugin_statistics_admin_page	months	View statistics for the last year
 
@@ -97,7 +97,6 @@ plugin_statistics	sysevents_queue	Statistics
 plugin_statistics	index_page_title	Statistics
 plugin_statistics	frequencies_title	Frequencies
 plugin_statistics	type_label	Type
-plugin_statistics	date_label	Date
 plugin_statistics	session_type	Sessions
 plugin_statistics	user_type	Users
 plugin_statistics	forum_type	Messages in forums
@@ -110,3 +109,11 @@ plugin_statistics	oartifact_type	Opened Artifacts (V3)
 plugin_statistics	cartifact_type	Closed (or wished end date) Artifacts (V3)
 plugin_statistics	usage_progress_btn	Usage progress (CSV)
 plugin_statistics	usage_progress_help	Generate a CSV file that contains the progress of some data figures (number of users, number of projects) over the time. For each month, it outputs the number of created projects and user accounts.
+
+plugin_statistics	filter_label	Filter
+plugin_statistics	frequencies_filter_group_month	Group by month
+plugin_statistics	frequencies_filter_group_day	Group by day
+plugin_statistics	frequencies_filter_group_hour	Group by hour
+plugin_statistics	frequencies_filter_month	Month
+plugin_statistics	frequencies_filter_day	Day
+plugin_statistics	frequencies_date_choice_error	The end date should not be before the start date
