@@ -1,3 +1,6 @@
+Version 5.1041 - Tuleap 9.2
+    * request #9551: Correct field_id saved in database and correct timestamp saved
+
 Version 5.1040 - Tuleap 9.2
     * request #9626 Fatal error when deleting a field used in a trigger
 
