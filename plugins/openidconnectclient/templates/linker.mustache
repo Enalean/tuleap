@@ -2,7 +2,12 @@
     <h1 id="login-openid-title">{{ link_page_title }}<br>{{ link_page_title_to }}</h1>
 
     <div id="login-intro">
-        {{ link_page_header }}
+        {{# is_registering_possible }}
+            {{ link_page_header_with_registration }}
+        {{/ is_registering_possible }}
+        {{^ is_registering_possible }}
+            {{ link_page_header_without_registration }}
+        {{/ is_registering_possible }}
     </div>
 
     <form action="?action=link-existing" method="post" name="form_login" autocomplete="off">
@@ -15,11 +20,13 @@
         <button type="submit" name="login" class="btn btn-primary">{{ account_login_login_btn }}</button>
     </form>
 
-    <div id="login-openid-register">
-        <span id="login-openid-or">
-            <span>{{ or_label }}</span>
-        </span>
+    {{# is_registering_possible }}
+        <div id="login-openid-register">
+            <span id="login-openid-or">
+                <span>{{ or_label }}</span>
+            </span>
 
-        <a id="login-openid-register-button" href="{{ link_to_register_page }}" class="btn">{{ register }}</a>
-    </div>
+            <a id="login-openid-register-button" href="{{ link_to_register_page }}" class="btn">{{ register }}</a>
+        </div>
+    {{/ is_registering_possible}}
 </div>

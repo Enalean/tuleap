@@ -340,17 +340,26 @@ class openidconnectclientPlugin extends Plugin {
         }
         $this->loadLibrary();
 
-        $user_manager             = UserManager::instance();
-        $provider_manager         = $this->getProviderManager();
-        $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
-        $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
-        $flow                     = $this->getFlow($provider_manager);
+        $user_manager                = UserManager::instance();
+        $provider_manager            = $this->getProviderManager();
+        $user_mapping_manager        = new UserMappingManager(new UserMappingDao());
+        $unlinked_account_manager    = new UnlinkedAccountManager(
+            new UnlinkedAccountDao(),
+            new RandomNumberGenerator()
+        );
+        $username_generator          = new Login\Registration\UsernameGenerator(new Rule_UserName());
+        $automatic_user_registration = new Login\Registration\AutomaticUserRegistration(
+            $user_manager,
+            $username_generator
+        );
+        $flow                        = $this->getFlow($provider_manager);
 
         $login_controller          = new Login\Controller(
             $user_manager,
             $provider_manager,
             $user_mapping_manager,
             $unlinked_account_manager,
+            $automatic_user_registration,
             $flow
         );
         $account_linker_controller = new AccountLinker\Controller(
