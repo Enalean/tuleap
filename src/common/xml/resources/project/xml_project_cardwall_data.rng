@@ -21,17 +21,17 @@
                   </attribute>
                   <optional>
                     <attribute name="bg_red">
-                      <data type="int"/>
+                      <data type="long"/>
                     </attribute>
                   </optional>
                   <optional>
                     <attribute name="bg_green">
-                      <data type="int"/>
+                      <data type="long"/>
                     </attribute>
                   </optional>
                   <optional>
                     <attribute name="bg_blue">
-                      <data type="int"/>
+                      <data type="long"/>
                     </attribute>
                   </optional>
                 </element>

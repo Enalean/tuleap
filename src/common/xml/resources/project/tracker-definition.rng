@@ -49,7 +49,7 @@
     </optional>
     <optional>
       <attribute name="group_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
@@ -141,12 +141,12 @@
         <element name="cannedResponse">
           <optional>
             <attribute name="id">
-              <data type="int"/>
+              <data type="long"/>
             </attribute>
           </optional>
           <optional>
             <attribute name="tracker">
-              <data type="int"/>
+              <data type="long"/>
             </attribute>
           </optional>
           <element name="title">
@@ -219,7 +219,7 @@
         </optional>
         <optional>
           <element name="is_used">
-            <data type="int"/>
+            <data type="long"/>
           </element>
         </optional>
         <optional>
@@ -281,22 +281,22 @@
       <data type="ID"/>
     </attribute>
     <attribute name="rank">
-      <data type="int"/>
+      <data type="long"/>
     </attribute>
     <optional>
       <!-- id is the initial id of the exported field -->
       <attribute name="id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="tracker_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="parent_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
@@ -351,22 +351,22 @@
       <element name="properties">
         <optional>
           <attribute name="maxchars">
-            <data type="int"/>
+            <data type="long"/>
           </attribute>
         </optional>
         <optional>
           <attribute name="size">
-            <data type="int"/>
+            <data type="long"/>
           </attribute>
         </optional>
         <optional>
           <attribute name="rows">
-            <data type="int"/>
+            <data type="long"/>
           </attribute>
         </optional>
         <optional>
           <attribute name="cols">
-            <data type="int"/>
+            <data type="long"/>
           </attribute>
         </optional>
         <optional>
@@ -518,13 +518,13 @@
                 <data type="IDREF"/>
               </attribute>
               <attribute name="r">
-                <data type="int"/>
+                <data type="long"/>
               </attribute>
               <attribute name="g">
-                <data type="int"/>
+                <data type="long"/>
               </attribute>
               <attribute name="b">
-                <data type="int"/>
+                <data type="long"/>
               </attribute>
             </element>
           </zeroOrMore>
@@ -562,7 +562,7 @@
         <zeroOrMore>
           <element name="postaction_field_date">
             <attribute name="valuetype">
-              <data type="int"/>
+              <data type="long"/>
             </attribute>
             <element name="field_id">
               <attribute name="REF">
@@ -574,7 +574,7 @@
         <zeroOrMore>
           <element name="postaction_field_int">
             <attribute name="value">
-              <data type="int"/>
+              <data type="long"/>
             </attribute>
             <element name="field_id">
               <attribute name="REF">
@@ -867,27 +867,27 @@
         these ids are initial ids of the exported report
       -->
       <attribute name="id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="tracker_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="current_renderer_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="user_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="parent_report_id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <element name="name">
@@ -915,7 +915,7 @@
   </define>
   <define name="criteriaContent">
     <attribute name="rank">
-      <data type="int"/>
+      <data type="long"/>
     </attribute>
     <optional>
       <!-- these attributes should be optional and have  default values -->
@@ -932,12 +932,12 @@
         these ids are initial ids of the exported report
       -->
       <attribute name="id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="report">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <element name="field">
@@ -957,16 +957,16 @@
     </optional>
     <optional>
       <attribute name="id">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <optional>
       <attribute name="report">
-        <data type="int"/>
+        <data type="long"/>
       </attribute>
     </optional>
     <attribute name="rank">
-      <data type="int"/>
+      <data type="long"/>
     </attribute>
     <choice>
       <group>
@@ -974,11 +974,11 @@
           <value>table</value>
         </attribute>
         <attribute name="chunksz">
-          <data type="int"/>
+          <data type="long"/>
         </attribute>
         <optional>
           <attribute name="multisort">
-            <data type="int"/>
+            <data type="long"/>
           </attribute>
         </optional>
         <optional>
@@ -1024,13 +1024,13 @@
             <zeroOrMore>
               <element name="chart">
                 <attribute name="width">
-                  <data type="int"/>
+                  <data type="long"/>
                 </attribute>
                 <attribute name="height">
-                  <data type="int"/>
+                  <data type="long"/>
                 </attribute>
                 <attribute name="rank">
-                  <data type="int"/>
+                  <data type="long"/>
                 </attribute>
                 <element name="title">
                   <data type="string"/>
@@ -1122,7 +1122,7 @@
                     </optional>
                     <optional>
                       <attribute name="duration">
-                        <data type="int"/>
+                        <data type="long"/>
                       </attribute>
                     </optional>
                     <optional>
@@ -1147,7 +1147,7 @@
                     </optional>
                     <optional>
                       <attribute name="duration">
-                        <data type="int"/>
+                        <data type="long"/>
                       </attribute>
                     </optional>
                     <optional>

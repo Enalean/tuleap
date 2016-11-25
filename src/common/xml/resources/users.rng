@@ -5,7 +5,7 @@
       <zeroOrMore>
         <element name="user">
           <element name="id">
-            <data type="int"/>
+            <data type="long"/>
           </element>
           <element name="username">
             <data type="string"/>

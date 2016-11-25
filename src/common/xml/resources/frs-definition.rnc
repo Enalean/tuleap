@@ -4,15 +4,15 @@ frs =
     element   read-access         { element ugroup { ugroup_name }+ }? &
     element   admin-access        { element ugroup { ugroup_name }+ }? &
     element package {
-        attribute id     { xsd:integer }? &
+        attribute id     { xsd:long }? &
         attribute name   { xsd:string  }  &
-        attribute rank   { xsd:integer }? &
+        attribute rank   { xsd:long }? &
         attribute hidden { xsd:boolean }? &
         element read-access {
             element ugroup { ugroup_name }*
         } &
         element release {
-            attribute id   { xsd:integer }? &
+            attribute id   { xsd:long }? &
             attribute name { xsd:string } &
             attribute time { xsd:dateTime } &
             attribute preformatted { xsd:boolean } &
