@@ -603,7 +603,8 @@ class TrackerFactory {
             $trigger_rule_dao,
             $this->getFormElementFactory(),
             $rules_processor,
-            $workflow_backend_logger
+            $workflow_backend_logger,
+            new Tracker_Workflow_Trigger_RulesBuilderFactory($this->getFormElementFactory())
         );
     }
 

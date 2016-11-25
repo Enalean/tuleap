@@ -31,16 +31,23 @@ class Tracker_Workflow_Trigger_RulesManager {
     /** @var WorkflowBackendLogger */
     private $logger;
 
+    /**
+     * @var Tracker_Workflow_Trigger_RulesBuilderFactory
+     */
+    private $trigger_builder;
+
     public function __construct(
         Tracker_Workflow_Trigger_RulesDao $dao,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesProcessor $rules_processor,
-        WorkflowBackendLogger $logger
+        WorkflowBackendLogger $logger,
+        Tracker_Workflow_Trigger_RulesBuilderFactory $trigger_builder
     ) {
         $this->dao                 = $dao;
         $this->formelement_factory = $formelement_factory;
         $this->rules_processor     = $rules_processor;
         $this->logger              = $logger;
+        $this->trigger_builder     = $trigger_builder;
     }
 
     /**
@@ -175,6 +182,11 @@ class Tracker_Workflow_Trigger_RulesManager {
         return $rules;
     }
 
+    public function getTriggerByFieldId(Tracker_FormElement $field)
+    {
+        return $this->dao->searchTriggersByFieldId($field->getId());
+    }
+
     private function getInstanceFromRow(array $row) {
         return new Tracker_Workflow_Trigger_TriggerRule(
             $row['id'],
@@ -302,4 +314,21 @@ class Tracker_Workflow_Trigger_RulesManager {
         return $new_triggers;
     }
 
+    public function isUsedInTrigger(Tracker_FormElement $field)
+    {
+        $triggered_trackers = $this->trigger_builder->getTriggeringFieldForTracker($field->getTracker())->getFields();
+
+        foreach ($triggered_trackers as $tracker_field) {
+            if ($tracker_field->getId() === $field->getId()) {
+                $triggered_field =  $this->getTriggerByFieldId($field);
+                foreach ($triggered_field as $trigger) {
+                    if ($trigger['field_id'] === $field->getId()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }

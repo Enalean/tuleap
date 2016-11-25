@@ -84,7 +84,8 @@ class WorkflowFactory {
                     UserManager::instance()->getUserById(Tracker_Workflow_WorkflowUser::ID),
                     $logger
                 ),
-                $logger
+                $logger,
+                new Tracker_Workflow_Trigger_RulesBuilderFactory($formelement_factory)
             );
 
             $c = __CLASS__;
