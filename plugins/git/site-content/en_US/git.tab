@@ -246,6 +246,7 @@ plugin_git	set_private_mails	List of mails to remove from notification
 plugin_git	feedback_event_create	There is an event in queue for a repository creation ($1), it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_delete	There is an event in queue for repository '$1' deletion, it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_permissions_not_duplicated	Your platform does not allow regular expression usage, permissions $1 not duplicated.
 
 plugin_git	gitolite_lab_feature_title	Fine grain permissions on git repositories
 plugin_git	gitolite_lab_feature_description	Allow to set specifics, distincts, permissions for Read or Write operations.

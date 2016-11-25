@@ -22,9 +22,11 @@ require_once 'common/autoload.php';
 require_once __DIR__.'/DatabaseInitialization.php';
 
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\Permissions\RegexpDefaultDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\REST\DatabaseInitialization;
@@ -242,14 +244,16 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $default_mirror_dao
         );
 
+        $regexp_retriever =  new RegexpFineGrainedRetriever(
+            new RegexpFineGrainedDao(),
+            new RegexpRepositoryDao(),
+            new RegexpDefaultDao()
+        );
+
         $validator        = new PatternValidator(
             new FineGrainedPatternValidator(),
             new FineGrainedRegexpValidator(),
-            new RegexpFineGrainedRetriever(
-                new RegexpFineGrainedDao(),
-                new RegexpRepositoryDao(),
-                new RegexpDefaultDao()
-            )
+            $regexp_retriever
         );
 
         $sorter           = new FineGrainedPermissionSorter();
@@ -265,6 +269,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $sorter
         );
 
+        $retriever        = new FineGrainedRetriever($fine_grained_dao);
         $saver            = new FineGrainedPermissionSaver($fine_grained_dao);
         $factory          = new FineGrainedPermissionFactory(
             $fine_grained_dao,
@@ -275,8 +280,15 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $sorter
         );
 
-        $replicator = new FineGrainedPermissionReplicator($fine_grained_dao, $default_factory, $saver, $factory);
-        $retriever  = new FineGrainedRetriever($fine_grained_dao);
+        $replicator = new FineGrainedPermissionReplicator(
+            $fine_grained_dao,
+            $default_factory,
+            $saver,
+            $factory,
+            new RegexpFineGrainedEnabler(new RegexpFineGrainedDao(), new RegexpRepositoryDao(), new RegexpDefaultDao()),
+            $regexp_retriever,
+            $validator
+        );
 
         $history_formatter = new HistoryValueFormatter(
             PermissionsManager::instance(),

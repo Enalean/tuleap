@@ -241,6 +241,7 @@ plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier
 plugin_git	feedback_event_create	Un événement est en attente pour la création du dépôt $1. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_git	feedback_permissions_not_duplicated	Votre plateforme ne semble pas autoriser les expressions régulières, les permissions $1 n'ont pas été dupliquées.
 
 plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépôts Git
 plugin_git	gitolite_lab_feature_description	Permet de positionner des permissions distinctes en lecture ou écriture sur chaque dépôt
