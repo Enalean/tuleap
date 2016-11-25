@@ -30,9 +30,11 @@ if (ForgeConfig::get('sys_https_host')) {
 }
 $login_form_url .= '/account/login.php';
 
-$display_homepage_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
-$display_homepage_news  = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
-
+$display_homepage_boxes      = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
+$display_homepage_news       = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
+$display_homepage_login_form = true;
+$event_manager               = EventManager::instance();
+$event_manager->processEvent(Event::DISPLAY_HOMEPAGE_LOGIN_FORM, array('is_displayed' => &$display_homepage_login_form));
 $header_params = array(
     'title' => $Language->getText('homepage', 'title'),
 );
@@ -42,7 +44,7 @@ if ($HTML->canDisplayStandardHomepage()) {
 
     $HTML->header($header_params);
     $request = HTTPRequest::instance();
-    $HTML->displayStandardHomepage($display_homepage_news, $request->isSecure());
+    $HTML->displayStandardHomepage($display_homepage_news, $display_homepage_login_form, $request->isSecure());
 } else {
     $HTML->header($header_params);
 

@@ -12,21 +12,39 @@
 
     <div class="container cta">
         <div class="row-fluid">
-            {{# display_homepage_news }}
-                <div class="homepage-news span5">
-                    {{> homepage-news }}
-                </div>
+            {{# display_homepage_login_form }}
+                {{# display_homepage_news }}
+                    <div class="homepage-news span5">
+                        {{> homepage-news }}
+                    </div>
 
-                <div class="statistics span4">
-                    {{> homepage-stats }}
-                </div>
-            {{/ display_homepage_news }}
-            {{^ display_homepage_news }}
-                <div class="homepage-discover span9">
-                </div>
-            {{/ display_homepage_news }}
+                    <div class="statistics span4">
+                        {{> homepage-stats }}
+                    </div>
+                {{/ display_homepage_news }}
+                {{^ display_homepage_news }}
+                    <div class="homepage-discover span9">
+                    </div>
+                {{/ display_homepage_news }}
 
-            {{> homepage-signin }}
+                {{> homepage-signin }}
+            {{/ display_homepage_login_form }}
+
+            {{^ display_homepage_login_form }}
+                {{# display_homepage_news }}
+                    <div class="homepage-news span7">
+                        {{> homepage-news }}
+                    </div>
+
+                    <div class="statistics span5">
+                        {{> homepage-stats }}
+                    </div>
+                {{/ display_homepage_news }}
+                {{^ display_homepage_news }}
+                    <div class="homepage-discover span12">
+                    </div>
+                {{/ display_homepage_news }}
+            {{/ display_homepage_login_form }}
         </div>
     </div>
 </section>

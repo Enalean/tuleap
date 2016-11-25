@@ -779,6 +779,14 @@ class Event {
     const GET_LOGIN_URL = 'get_login_url';
 
     /**
+     * Determine if the homepage login form should be displayed
+     *
+     * Parameters:
+     *   'is_displayed' => boolean (OUT)
+     */
+    const DISPLAY_HOMEPAGE_LOGIN_FORM = 'display_homepage_login_form';
+
+    /**
      * Allow plugin to add fields in the user register form
      *
      * Parameters:
