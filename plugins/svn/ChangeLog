@@ -1,3 +1,6 @@
+Version 0.106 - Tuleap 9.2
+    * Trust service status from XML content
+
 Version 0.105 - Tuleap 9.2
     * SVN Plugin must ne be inherited if no SVN service used in template
 
