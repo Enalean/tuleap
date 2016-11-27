@@ -490,11 +490,13 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
 
             <?php
-                $additional_info = '';
+                $additional_info   = '';
+                $notes_in_markdown = false;
 
                 $params = array(
-                    'release_id'      => $release->getReleaseId(),
-                    'additional_info' => &$additional_info
+                    'release_id'        => $release->getReleaseId(),
+                    'additional_info'   => &$additional_info,
+                    'notes_in_markdown' => &$notes_in_markdown
                 );
 
                 EventManager::instance()->processEvent(
@@ -607,6 +609,14 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </FIELDSET>
             </TD></TR>
             <TR><TD><FIELDSET><LEGEND><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','fieldset_notes')); ?></LEGEND>
+            <?php
+                if ($notes_in_markdown) {
+                    echo '<p class="help">
+                            <i class="icon-info-sign"></i>
+                            '. $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','notes_in_markdown')) .'
+                        </p>';
+                }
+            ?>
             <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="100%">
             <TR id="notes_title">
                 <TD VALIGN="TOP" width="10%">
