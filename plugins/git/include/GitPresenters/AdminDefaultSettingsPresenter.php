@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
 {
     public $title_warning_regexp_uncheck;
@@ -26,6 +26,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $regexp_incoherence_label;
     public $regexp_permission_label;
     public $warnings;
+    public $are_regexp_permission_conflicting_at_site_level;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -84,25 +85,25 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $delete_url,
         CSRFSynchronizerToken $csrf_delete,
         $are_regexp_permission_activated_at_site_level,
-        $is_regexp_enabled_at_global_level
+        $is_regexp_enabled_at_global_level,
+        $are_regexp_permission_conflicting_at_site_level
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->manage_default_settings                       = true;
-        $this->mirror_presenters                             = $mirror_presenters;
-        $this->pane_access_control                           = $pane_access_control;
-        $this->pane_mirroring                                = $pane_mirroring;
-        $this->read_options                                  = $read_options;
-        $this->write_options                                 = $write_options;
-        $this->rewrite_options                               = $rewrite_options;
-        $this->csrf                                          = $csrf;
-        $this->are_fine_grained_permissions_defined          = $are_fine_grained_permissions_defined;
-        $this->can_use_fine_grained_permissions              = $can_use_fine_grained_permissions;
-        $this->cannot_define_per_repo_permissions            = $are_fine_grained_permissions_defined;
-        $this->are_regexp_permission_activated_at_site_level = $are_regexp_permission_activated_at_site_level;
-        $this->is_regexp_enabled                             = $is_regexp_enabled_at_global_level;
-
-        $this->can_regexp_are_enabled = $is_regexp_enabled_at_global_level === false;
+        $this->manage_default_settings                         = true;
+        $this->mirror_presenters                               = $mirror_presenters;
+        $this->pane_access_control                             = $pane_access_control;
+        $this->pane_mirroring                                  = $pane_mirroring;
+        $this->read_options                                    = $read_options;
+        $this->write_options                                   = $write_options;
+        $this->rewrite_options                                 = $rewrite_options;
+        $this->csrf                                            = $csrf;
+        $this->are_fine_grained_permissions_defined            = $are_fine_grained_permissions_defined;
+        $this->can_use_fine_grained_permissions                = $can_use_fine_grained_permissions;
+        $this->cannot_define_per_repo_permissions              = $are_fine_grained_permissions_defined;
+        $this->are_regexp_permission_activated_at_site_level   = $are_regexp_permission_activated_at_site_level;
+        $this->is_regexp_enabled                               = $is_regexp_enabled_at_global_level;
+        $this->are_regexp_permission_conflicting_at_site_level = $are_regexp_permission_conflicting_at_site_level;
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
@@ -184,12 +185,12 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'plugin_git',
             'title_warning_regexp_uncheck'
         );
-        $this->warnings[]['message'] = "";
 
         $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
         $this->is_fork          = false;
         $this->disabled         = '';
+        $this->warnings         = $this->getWarningContentForRegexpDisableModal();
     }
 
     public function is_control_limited()
@@ -204,12 +205,12 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 
     public function csrf_token()
     {
-        return $this->csrf->fetchHTMLInput();
+        return $this->csrf;
     }
 
     public function default_access_rights_form_action()
     {
-        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-default-access-rights';
+        return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-default-access-rights';
     }
 
     public function table_title()
@@ -279,17 +280,17 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 
     public function read_select_box_id()
     {
-        return 'default_access_rights['.Git::DEFAULT_PERM_READ.']';
+        return 'default_access_rights[' . Git::DEFAULT_PERM_READ . ']';
     }
 
     public function write_select_box_id()
     {
-        return 'default_access_rights['.Git::DEFAULT_PERM_WRITE.']';
+        return 'default_access_rights[' . Git::DEFAULT_PERM_WRITE . ']';
     }
 
     public function rewrite_select_box_id()
     {
-        return 'default_access_rights['.Git::DEFAULT_PERM_WPLUS.']';
+        return 'default_access_rights[' . Git::DEFAULT_PERM_WPLUS . ']';
     }
 
     public function submit_default_access_rights()
@@ -299,12 +300,12 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 
     public function mirroring_href()
     {
-        return "?action=admin-default-settings&group_id=$this->project_id&pane=".GitViews::DEFAULT_SETTINGS_PANE_MIRRORING;
+        return "?action=admin-default-settings&group_id=$this->project_id&pane=" . GitViews::DEFAULT_SETTINGS_PANE_MIRRORING;
     }
 
     public function access_control_href()
     {
-        return "?action=admin-default-settings&group_id=$this->project_id&pane=".GitViews::DEFAULT_SETTINGS_PANE_ACCESS_CONTROL;
+        return "?action=admin-default-settings&group_id=$this->project_id&pane=" . GitViews::DEFAULT_SETTINGS_PANE_ACCESS_CONTROL;
     }
 
     public function fine_grained_permissions_checkbox_label()
@@ -323,5 +324,30 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public function has_tags_permissions()
     {
         return count($this->tags_permissions) > 0;
+    }
+
+    private function getWarningContentForRegexpDisableModal()
+    {
+        if ($this->are_regexp_permission_conflicting_at_site_level) {
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_conflit_regexp_configuration'
+            );
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_conflit_regexp_configuration_part_two'
+            );
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_conflit_regexp_configuration_confirm'
+            );
+        } else {
+            $warning[]['message'] = $GLOBALS['Language']->getText(
+                'plugin_git',
+                'warning_regexp_uncheck'
+            );
+        }
+
+        return $warning;
     }
 }
