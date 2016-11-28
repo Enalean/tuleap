@@ -185,6 +185,7 @@ file_admin_editreleases	fileforge_error	Une erreur s'est produite lors du dépla
 file_admin_editreleases	db_error	Une erreur s'est produite lors de l'ajout du fichier dans la base de données
 file_admin_editreleases	comment	Commentaire
 file_admin_editreleases	move_event	Le fichier est en attente de déplacement. Il sera de nouveau disponible pour le téléchargement dans quelques minutes.
+file_admin_editreleases	notes_in_markdown	Les notes et modifications sont interprétées en Markdown.
 
 #
 #-----------------------------------------------
