@@ -1,3 +1,6 @@
+Version 5.1042 - Tuleap 9.2
+    * request #9551: Generate full burndown at first display or when missing cached data
+
 Version 5.1041 - Tuleap 9.2
     * request #9551: Correct field_id saved in database and correct timestamp saved
 
