@@ -364,8 +364,22 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $extracolumn = self::EXTRACOLUMN_LINK;
         }
 
-        $html .= $this->fetchHeader($report_can_be_modified, $user, $total_rows);
-        $html .= $this->fetchTable($report_can_be_modified, $matching_ids, $total_rows, $offset, $extracolumn);
+        if ($report_can_be_modified) {
+            $with_sort_links = true;
+        } else {
+            $with_sort_links = false;
+        }
+        $only_one_column  = null;
+        $use_data_from_db = false;
+        $aggregates       = false;
+        $store_in_session = true;
+
+        $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
+        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+
+        $html .= $this->fetchHeader($report_can_be_modified, $user, $total_rows, $queries);
+        $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn);
 
         //Display next/previous
         $html .= $this->fetchNextPrevious($total_rows, $offset, $report_can_be_modified, (int)$request->get('link-artifact-id'));
@@ -380,10 +394,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function fetchHeader($report_can_be_modified, PFUser $user, $total_rows) {
+    private function fetchHeader($report_can_be_modified, PFUser $user, $total_rows, array $queries) {
         $html = '';
 
         $html .= $this->fetchViewButtons($report_can_be_modified, $user);
+
+        if ($this->sortHasUsedField() && ! $this->columnsCanBeTechnicallySorted($queries)) {
+            $html .= '<div class="tracker_report_renderer_table_sort_warning">
+                <ul class="feedback_warning">
+                    <li>' . $GLOBALS['Language']->getText('plugin_tracker_report', 'too_many_columns_sort') . '</li>
+                </ul>
+            </div>';
+        }
 
         //Display sort info
         $html .= '<div class="tracker_report_renderer_table_information">';
@@ -393,25 +415,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $html .= $this->fetchMatchingNumber($total_rows);
         $html .= '</div>';
-
-        return $html;
-    }
-
-    private function fetchTable($report_can_be_modified, $matching_ids, $total_rows, $offset, $extracolumn) {
-        $html = '';
-
-        //Display the head of the table
-        if ($report_can_be_modified) {
-            $only_one_column = null;
-            $with_sort_links = true;
-        } else {
-            $only_one_column = null;
-            $with_sort_links = false;
-        }
-        $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links);
-
-        //Display the body of the table
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn);
 
         return $html;
     }
@@ -443,7 +446,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= $head;
         }
         //Display the body of the table
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only, $store_in_session, $from_aid);
+        $aggregates = false;
+
+        $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
+        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only, $store_in_session, $from_aid);
 
         if (!$only_rows) {
             $html .= $this->fetchArtifactLinkGoToTracker();
@@ -532,8 +540,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $id_suffix              = '';
         //Display the head of the table
         $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);
+
         //Display the body of the table
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only, $store_in_session);
+        $aggregates = false;
+
+        $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
+        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only);
 
         //Dispaly range
         $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
@@ -932,6 +946,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function fetchTBody(
         $matching_ids,
         $total_rows,
+        array $queries,
+        array $columns,
         $offset,
         $extracolumn = 1,
         $only_one_column = null,
@@ -942,7 +958,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $prefill_natures = array(),
         $only_rows = false,
         $read_only = false,
-        $store_in_session = true,
         $from_aid = null
     ) {
         $html = '';
@@ -954,13 +969,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $additional_classname = 'additional';
         }
         if ($total_rows) {
-
-            $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
-
-            $aggregates = false;
-
-            $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
-
             $dao = new DataAccessObject();
             $results = array();
             foreach ($queries as $sql) {
@@ -1476,7 +1484,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         //only sort if we have 1 query
         // (too complicated to sort on multiple queries)
-        if ($ordering && count($queries) === 1) {
+        if ($ordering && $this->columnsCanBeTechnicallySorted($queries)) {
             $sort = $this->getSort($store_in_session);
             if ($this->sortHasUsedField($store_in_session)) {
                 $order = array();
@@ -1704,7 +1712,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 $link_artifact_id = (int)$request->get('link-artifact-id');
 
                                 echo $this->fetchTHead($extracolumn, $key, ! $link_artifact_id);
-                                echo $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $key);
+                                $use_data_from_db = false;
+                                $aggregates       = false;
+                                $store_in_session = true;
+
+                                $columns = $this->getTableColumns($key, $use_data_from_db);
+                                $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+
+                                echo $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn, $key);
                             }
                         }
                     }
@@ -2338,4 +2353,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return false;
     }
 
+    private function columnsCanBeTechnicallySorted(array $queries)
+    {
+        return count($queries) <= 1;
+    }
 }

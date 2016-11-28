@@ -186,6 +186,15 @@ h5.artifack_link_subtitle {
     }
 }
 
+.tracker_report_renderer_table_sort_warning {
+    clear: both;
+    margin-top: 40px;
+
+    + .tracker_report_renderer_table_information {
+        margin: 0;
+    }
+}
+
 #tracker_report_query {
     border: 1px solid #cecece;
     border-left: none;
