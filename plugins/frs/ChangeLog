@@ -1,3 +1,6 @@
+Version 0.22 - Tuleap 9.2
+    * request #9675: Inform users that we are using markdown in FRS changelog
+
 Version 0.21 - Tuleap 9.0
     * request #9509: Fix angular/di errors
 
