@@ -87,6 +87,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
 
         $start_date = new DateTime();
         $start_date->setTimestamp((int) $burndown_informations['start_date']);
+        $start_date->setTime(0, 0, 0);
 
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $burndown_informations['timestamp_end_date']);
