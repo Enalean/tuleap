@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\BurndownDateRetriever;
+use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 require_once 'common/chart/ErrorChart.class.php';
 require_once 'common/date/TimePeriodWithWeekEnd.class.php';
@@ -129,7 +130,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @param Tracker_IDisplayTrackerLayout $layout
      * @param Codendi_Request               $request
-     * @param PFUser                        $current_user 
+     * @param PFUser                        $current_user
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
@@ -241,17 +242,60 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return Tracker_Chart_Data_Burndown
      */
-    public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration) {
+    public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
+    {
         $capacity = null;
         if ($this->doesCapacityFieldExist()) {
             $capacity = $this->getCapacity($artifact);
         }
-        $time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
         $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
 
+        if (! $this->isCacheCompleteForBurndown($burndown_data, $artifact)
+            && ! $this->isCacheBurndownAlreadyAsked($artifact)
+        ) {
+            $this->getSystemEventManager()->createEvent(
+                'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
+                $artifact->getId().SystemEvent::PARAMETER_SEPARATOR ,
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
+        }
+
         return $burndown_data;
+    }
+
+    public function isCacheBurndownAlreadyAsked(Tracker_Artifact $artifact)
+    {
+        return $this->getSystemEventManager()->isThereAnEventAlreadyOnGoingMatchingFirstParameter(
+            'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME, $artifact->getId()
+        );
+    }
+
+    private function getSystemEventManager()
+    {
+        return SystemEventManager::instance();
+    }
+
+    private function isCacheCompleteForBurndown(
+        Tracker_Chart_Data_Burndown $burndown_data,
+        Tracker_Artifact $artifact
+    ) {
+        $timestamps = array();
+        foreach ($burndown_data->getTimePeriod()->getDayOffsets() as $day) {
+            $calculate_day = strtotime("+" . $day . " day", $burndown_data->getTimePeriod()->getStartDate());
+            if ($calculate_day <= $_SERVER['REQUEST_TIME']) {
+                $timestamps[] = $calculate_day;
+            }
+        }
+        $cached_days = $this->getComputedDao()->getCachedDays(
+            $artifact->getId(),
+            $this->id
+        );
+
+        return (int)$cached_days['cached_days'] === count($timestamps);
     }
 
     private function addRemainingEffortData(
@@ -733,12 +777,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * Return the Field_Date_Dao
-     *
-     * @return Tracker_FormElement_Field_DateDao The dao
+     * @return Tracker_FormElement_Field_BurndownDao The dao
      */
     protected function getDao() {
         return new Tracker_FormElement_Field_BurndownDao();
+    }
+    /**
+     * Return the Field_Date_Dao
+     *
+     * @return Tracker_FormElement_Field_ComputedDao The dao
+     */
+    protected function getComputedDao() {
+        return new Tracker_FormElement_Field_ComputedDao();
     }
 
     public function canBeUsedAsReportCriterion() {

@@ -1087,7 +1087,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($value === false) {
             $empty_array = array();
             $value = $this->getComputedValue($user, $artifact, $timestamp, $empty_array, $this->useFastCompute());
-            $dao->saveCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp, $value);
         }
 
         return $value;

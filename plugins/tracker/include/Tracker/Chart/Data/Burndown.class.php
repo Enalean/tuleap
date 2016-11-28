@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -160,6 +160,14 @@ class Tracker_Chart_Data_Burndown {
         return $this->time_period->getDuration();
     }
 
+    /**
+     * @return  TimePeriod
+     */
+    public function getTimePeriod()
+    {
+        return $this->time_period;
+    }
+
     private function getFirstEffort() {
         if($this->capacity !== null && $this->capacity > 0) {
             return $this->capacity;
@@ -178,5 +186,3 @@ class Tracker_Chart_Data_Burndown {
         return strtotime("+".$day_offset." day", $this->time_period->getStartDate()) <= $_SERVER['REQUEST_TIME'];
     }
 }
-
-?>

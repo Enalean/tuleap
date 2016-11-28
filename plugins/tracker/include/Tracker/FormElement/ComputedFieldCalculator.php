@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use DateTime;
 use Tracker_FormElement_Field_ComputedDao;
 
 class ComputedFieldCalculator
@@ -127,10 +128,14 @@ class ComputedFieldCalculator
     {
         $computed_artifacts = array();
         $manual_sum         = null;
+        $selected_day       = new DateTime();
+        $selected_day->setTimestamp($timestamp);
+        $selected_day->setTime(23, 59, 59);
+
         foreach ($artifact_ids_to_fetch as $artifact_id) {
             $manual_value = $this->computed_dao->getBurndownManualValueAtGivenTimestamp(
                 $artifact_id,
-                $timestamp
+                $selected_day->getTimestamp()
             );
 
             if ($manual_value) {
@@ -144,7 +149,7 @@ class ComputedFieldCalculator
             return array(
                 'computed_values' => $this->computed_dao->getBurndownComputedValueAtGivenTimestamp(
                     $computed_artifacts,
-                    $timestamp
+                    $selected_day->getTimestamp()
                 ),
                 'manual_sum'      => $manual_sum
             );
