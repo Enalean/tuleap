@@ -147,6 +147,7 @@ $disk_usage_graph = new Statistics_DiskUsageGraph(
 );
 $disk_usage_search_fields_builder = new DiskUsageSearchFieldsPresenterBuilder();
 $disk_usage_services_builder      = new DiskUsageServicesPresenterBuilder(
+    ProjectManager::instance(),
     $duMgr,
     $disk_usage_output,
     $disk_usage_graph,

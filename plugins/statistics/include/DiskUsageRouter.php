@@ -68,7 +68,8 @@ class DiskUsageRouter
 
     private function displayServices(HTTPRequest $request)
     {
-        $group_id               = $request->get('group_id');
+        $project_id             = $request->get('project_id');
+        $selected_project       = $request->get('project_filter');
         $selected_services      = $request->get('services');
         $selected_group_by_date = $request->get('group_by');
         $start_date             = $request->get('start_date');
@@ -78,8 +79,9 @@ class DiskUsageRouter
         $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
 
         $disk_usage_services_presenter = $this->services_builder->buildServices(
+            $project_id,
             $title,
-            $group_id,
+            $selected_project,
             $selected_services,
             $selected_group_by_date,
             $start_date,

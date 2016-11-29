@@ -120,13 +120,15 @@ class DiskUsageTopProjectsPresenterBuilder
         $rank          = $offset;
         foreach ($projects as $value) {
             $data_project = array(
-                'rank'           => $rank + 1,
-                'group_id'       => $value['group_id'],
-                'group_name'     => util_unconvert_htmlspecialchars($value['group_name']),
-                'start_size'     => $this->usage_output->sizeReadable($value['start_size']),
-                'end_size'       => $this->usage_output->sizeReadable($value['end_size']),
-                'evolution'      => $this->usage_output->sizeReadable($value['evolution']),
-                'evolution_rate' => $value['evolution_rate']
+                'rank'                => $rank + 1,
+                'project_id'          => $value['group_id'],
+                'group_name'          => util_unconvert_htmlspecialchars($value['group_name']),
+                'start_size'          => $this->usage_output->sizeReadable($value['start_size']),
+                'end_size'            => $this->usage_output->sizeReadable($value['end_size']),
+                'evolution'           => $this->usage_output->sizeReadable($value['evolution']),
+                'evolution_rate'      => $value['evolution_rate'],
+                'project_details_url' => $this->buildProjectDetailsUrl($value['group_id']),
+                'project_url'         => $this->buildProjectUrl($value['group_id'])
             );
 
             $data_projects[] = $data_project;
@@ -155,5 +157,26 @@ class DiskUsageTopProjectsPresenterBuilder
         }
 
         return $services_keys_selected;
+    }
+
+    private function buildProjectDetailsUrl($project_id)
+    {
+        $page   = '/plugins/statistics/disk_usage.php';
+        $params = array(
+            'menu'       => 'services',
+            'project_id' => $project_id
+        );
+
+        return $page.'?'.http_build_query($params);
+    }
+
+    private function buildProjectUrl($project_id)
+    {
+        $page   = '/admin/groupedit.php';
+        $params = array(
+            'group_id' => $project_id
+        );
+
+        return $page.'?'.http_build_query($params);
     }
 }

@@ -24,11 +24,16 @@ class DiskUsageServicesSearchFieldsPresenter extends DiskUsageSearchFieldsPresen
 {
     public $group_by_label;
     public $relative_y_axis_label;
+    public $project_label;
+    public $project_placeholder;
 
     public $group_by_values;
     public $relative_y_axis_value;
 
+    public $selected_project;
+
     public function __construct(
+        $selected_project,
         array $service_values,
         $fields_values_url,
         $group_by_values,
@@ -38,10 +43,13 @@ class DiskUsageServicesSearchFieldsPresenter extends DiskUsageSearchFieldsPresen
     ) {
         parent::__construct($service_values, $fields_values_url, $start_date_value, $end_date_value);
 
+        $this->selected_project      = $selected_project;
         $this->group_by_values       = $group_by_values;
         $this->relative_y_axis_value = $relative_y_axis_value;
 
         $this->group_by_label        = $GLOBALS['Language']->getText('plugin_statistics', 'group_by_label');
         $this->relative_y_axis_label = $GLOBALS['Language']->getText('plugin_statistics', 'relative_y_axis_label');
+        $this->project_label         = $GLOBALS['Language']->getText('plugin_statistics', 'project_label');
+        $this->project_placeholder   = $GLOBALS['Language']->getText('plugin_statistics', 'project_placeholder');
     }
 }

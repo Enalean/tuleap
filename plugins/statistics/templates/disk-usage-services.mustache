@@ -14,6 +14,18 @@
                         <form method="GET" action="" name="progress_by_service">
                             <input type="hidden" name="menu" value="services" />
                             <div class="tlp-form-element">
+                                <label class="tlp-label" for="project-filter">{{ project_label }}</label>
+                                <select class="tlp-select project-autocompleter"
+                                        id="project-filter"
+                                        name="project_filter"
+                                        style="width: 100%"
+                                        data-placeholder="{{ project_placeholder }}">
+                                    {{# selected_project }}
+                                        <option value="{{ selected_project }}">{{ selected_project }}</option>
+                                    {{/ selected_project }}
+                                </select>
+                            </div>
+                            <div class="tlp-form-element">
                                 <label for="type" class="tlp-label">{{ services_label }}</label>
                                 <select
                                         id="type"

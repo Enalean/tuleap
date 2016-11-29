@@ -47,7 +47,9 @@ plugin_statistics_admin_page	table_size_evolution_rate_title	Evolution rate (%)
 plugin_statistics_admin_page	total_start_size_tooltip	Sum of start sizes
 plugin_statistics_admin_page	total_end_size_tooltip	Sum of end sizes
 plugin_statistics_admin_page	total_evolution_tooltip	Sum of size evolution
+plugin_statistics_admin_page	table_project_details_title	Statistics
 plugin_statistics_admin_page	graph_title	Services growth over time
+plugin_statistics_admin_page	graph_project_title	Project by service growth over time
 plugin_statistics_admin_page	graph_y_axis_title	Size
 plugin_statistics_admin_page	graph_image_title	Results
 

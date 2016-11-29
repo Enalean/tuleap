@@ -22,6 +22,7 @@ namespace Tuleap\Statistics;
 
 use DateInterval;
 use DateTime;
+use ProjectManager;
 use Statistics_DiskUsageGraph;
 use Statistics_DiskUsageManager;
 use Statistics_DiskUsageOutput;
@@ -44,8 +45,13 @@ class DiskUsageServicesPresenterBuilder
      * @var DiskUsageSearchFieldsPresenterBuilder
      */
     private $search_fields_builder;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
+        ProjectManager $project_manager,
         Statistics_DiskUsageManager $usage_manager,
         Statistics_DiskUsageOutput $usage_output,
         Statistics_DiskUsageGraph $usage_graph,
@@ -55,21 +61,36 @@ class DiskUsageServicesPresenterBuilder
         $this->usage_manager         = $usage_manager;
         $this->usage_output          = $usage_output;
         $this->search_fields_builder = $search_fields_builder;
+        $this->project_manager       = $project_manager;
     }
 
     public function buildServices(
+        $project_id,
         $title,
-        $group_id,
+        $selected_project,
         $selected_services,
         $selected_group_by_date,
         $start_date,
         $end_date,
         $relative_y_axis
     ) {
+        if ($project_id) {
+            $project = $this->project_manager->getProject($project_id);
+            if (! $project->isError()) {
+                $selected_project = $project->getUnconvertedPublicName().' ('.$project->getUnixName().')';
+            }
+        } else if ($selected_project) {
+            $project = $this->project_manager->getProjectFromAutocompleter($selected_project);
+            if ($project) {
+                $project_id = $project->getID();
+            }
+        }
+
         $group_by_date_with_selected = $this->getGroupByDateValues($selected_group_by_date[0]);
         $services_with_selected      = $this->getServiceValues($selected_services);
 
         $search_fields = $this->search_fields_builder->buildSearchFieldsForServices(
+            $selected_project,
             $services_with_selected,
             $group_by_date_with_selected,
             $start_date,
@@ -77,10 +98,10 @@ class DiskUsageServicesPresenterBuilder
             $relative_y_axis
         );
 
-        $graph_url = $this->buildGraphParam($search_fields);
+        $graph_url = $this->buildGraphParam($project_id, $search_fields);
 
         list($services, $total_start_size, $total_end_size, $total_evolution) = $this->buildDataServices(
-            $group_id,
+            $project_id,
             $search_fields
         );
 
@@ -95,21 +116,22 @@ class DiskUsageServicesPresenterBuilder
         );
     }
 
-    private function buildGraphParam(DiskUsageServicesSearchFieldsPresenter $search_fields)
+    private function buildGraphParam($project_id, DiskUsageServicesSearchFieldsPresenter $search_fields)
     {
-        $url_param = $search_fields->fields_values_url;
+        $page   = '/plugins/statistics/disk_usage_graph.php';
+        $params = $search_fields->fields_values_url;
 
-        if ($search_fields->relative_y_axis_value) {
-            $search_fields->fields_values_url .= '&relative='.$search_fields->relative_y_axis_value;
+        if ($project_id) {
+            $params['group_id']   = $project_id;
+            $params['graph_type'] = 'graph_project';
+        } else {
+            $params['graph_type'] = 'graph_service';
         }
 
-        $url_param .= '&group_by='.$this->getSelectedGroupByDate($search_fields->group_by_values);
-        $url_param .= '&graph_type=graph_service';
-
-        return $url_param;
+        return $page.'?'.http_build_query($params);
     }
 
-    private function buildDataServices($group_id, DiskUsageServicesSearchFieldsPresenter $search_fields)
+    private function buildDataServices($project_id, DiskUsageServicesSearchFieldsPresenter $search_fields)
     {
         $total_start_size = 0;
         $total_end_size   = 0;
@@ -117,11 +139,11 @@ class DiskUsageServicesPresenterBuilder
 
         $services = $this->getSelectedServices($search_fields->service_values);
 
-        if ($group_id) {
+        if ($project_id) {
             $evolution_by_service = $this->usage_manager->returnServiceEvolutionForPeriod(
                 $search_fields->start_date_value,
                 $search_fields->end_date_value,
-                $group_id
+                $project_id
             );
         } else {
             $evolution_by_service = $this->usage_manager->returnServiceEvolutionForPeriod(
@@ -206,17 +228,6 @@ class DiskUsageServicesPresenterBuilder
         }
 
         return $selected_services;
-    }
-
-    private function getSelectedGroupByDate(array $group_by_values)
-    {
-        foreach ($group_by_values as $group_by_value) {
-            if ($group_by_value['is_selected']) {
-                return $group_by_value['key'];
-            }
-        }
-
-        return $group_by_values[0]['key'];
     }
 
     public function getServiceValues($selected_services)

@@ -26,6 +26,7 @@ use DateTime;
 class DiskUsageSearchFieldsPresenterBuilder
 {
     public function buildSearchFieldsForServices(
+        $selected_project,
         $services_with_selected,
         $group_by_date_with_selected,
         $start_date_value,
@@ -43,8 +44,15 @@ class DiskUsageSearchFieldsPresenterBuilder
         }
 
         return new DiskUsageServicesSearchFieldsPresenter(
+            $selected_project,
             $services_with_selected,
-            $this->buildUrlParam('disk_usage_graph.php', '', $services_with_selected, $start_date_value, $end_date_value),
+            $this->buildUrlParamsForServices(
+                $services_with_selected,
+                $start_date_value,
+                $end_date_value,
+                $group_by_date_with_selected,
+                $relative_y_axis_value
+            ),
             $group_by_date_with_selected,
             $start_date_value,
             $end_date_value,
@@ -69,22 +77,22 @@ class DiskUsageSearchFieldsPresenterBuilder
 
         return new DiskUsageTopProjectsSearchFieldsPresenter(
             $services_with_selected,
-            $this->buildUrlParam('disk_usage.php', 'top_projects', $services_with_selected, $start_date_value, $end_date_value),
+            $this->buildUrlParamsForTopProjects($services_with_selected, $start_date_value, $end_date_value),
             $start_date_value,
             $end_date_value
         );
     }
 
-    protected function buildUrlParam($page, $menu, array $service_values, $start_date_value, $end_date_value)
-    {
-        $url_param = $page;
-        $params    = array(
+    private function buildUrlParamsForServices(
+        array $service_values,
+        $start_date_value,
+        $end_date_value,
+        $group_by_date_with_selected,
+        $relative_y_axis_value
+    ) {
+        $params = array(
             'services' => array()
         );
-
-        if ($menu) {
-            $params['menu'] = $menu;
-        }
 
         foreach ($service_values as $service) {
             if ($service['is_selected']) {
@@ -95,6 +103,44 @@ class DiskUsageSearchFieldsPresenterBuilder
         $params['start_date'] = $start_date_value;
         $params['end_date']   = $end_date_value;
 
-        return $url_param.'?'.http_build_query($params);
+        if ($relative_y_axis_value) {
+            $params['relative'] = $relative_y_axis_value;
+        }
+
+        $params['group_by'] = $this->getSelectedGroupByDate($group_by_date_with_selected);
+
+        return $params;
+    }
+
+    private function buildUrlParamsForTopProjects(
+        array $service_values,
+        $start_date_value,
+        $end_date_value
+    ) {
+        $params = array(
+            'services' => array()
+        );
+
+        foreach ($service_values as $service) {
+            if ($service['is_selected']) {
+                $params['services'][] = $service['key'];
+            }
+        }
+
+        $params['start_date'] = $start_date_value;
+        $params['end_date']   = $end_date_value;
+
+        return $params;
+    }
+
+    private function getSelectedGroupByDate(array $group_by_values)
+    {
+        foreach ($group_by_values as $group_by_value) {
+            if ($group_by_value['is_selected']) {
+                return $group_by_value['key'];
+            }
+        }
+
+        return $group_by_values[0]['key'];
     }
 }

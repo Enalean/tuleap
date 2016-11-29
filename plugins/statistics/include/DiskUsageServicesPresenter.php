@@ -43,7 +43,7 @@ class DiskUsageServicesPresenter
 
     public function __construct(
         AdminHeaderPresenter $header,
-        DiskUsageSearchFieldsPresenter $search_fields,
+        DiskUsageServicesSearchFieldsPresenter $search_fields,
         $graph_url,
         array $data_services,
         $total_start_size,

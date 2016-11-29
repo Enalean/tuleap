@@ -77,7 +77,6 @@
                         <thead>
                         <tr>
                             <th class="tlp-table-cell-numeric">{{ table_rank_title }}</th>
-                            <th class="tlp-table-cell-numeric">{{ table_id_title }}</th>
                             <th>{{ table_name_title }}</th>
                             <th class="tlp-table-cell-numeric">
                                 <a href="{{ start_size_url }}" class="tlp-table-sort">
@@ -99,18 +98,27 @@
                                     {{ table_evolution_rate_size_title }} {{# order_is_evolution_rate }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_evolution_rate }}
                                 </a>
                             </th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         {{# data_top_projects }}
                             <tr>
                                 <td class="tlp-table-cell-numeric">{{ rank }}</td>
-                                <td class="tlp-table-cell-numeric">{{ group_id }}</td>
-                                <td>{{ group_name }}</td>
+                                <td>
+                                    <a href="{{ project_url }}">
+                                        {{ group_name }}
+                                    </a>
+                                </td>
                                 <td class="tlp-table-cell-numeric">{{ start_size }}</td>
                                 <td class="tlp-table-cell-numeric">{{ end_size }}</td>
                                 <td class="tlp-table-cell-numeric">{{ evolution }}</td>
                                 <td class="tlp-table-cell-numeric">{{ evolution_rate }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" href="{{ project_details_url }}">
+                                        <i class="fa fa-area-chart tlp-button-icon"></i> {{ table_project_details_title }}
+                                    </a>
+                                </td>
                             </tr>
                         {{/ data_top_projects }}
                         {{^ data_top_projects }}

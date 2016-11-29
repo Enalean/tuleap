@@ -47,7 +47,9 @@ plugin_statistics_admin_page	table_size_evolution_rate_title	Moyenne de l'évolu
 plugin_statistics_admin_page	total_start_size_tooltip	Somme des tailles de départ
 plugin_statistics_admin_page	total_end_size_tooltip	Somme des tailles de fin
 plugin_statistics_admin_page	total_evolution_tooltip	Somme des évolutions des tailles
+plugin_statistics_admin_page	table_project_details_title	Statistiques
 plugin_statistics_admin_page	graph_title	Croissance des services en fonction du temps
+plugin_statistics_admin_page	graph_project_title	Croissance du project par service en fonction du temps
 plugin_statistics_admin_page	graph_y_axis_title	Taille
 plugin_statistics_admin_page	graph_image_title	Résultats
 

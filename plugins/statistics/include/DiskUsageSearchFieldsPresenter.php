@@ -35,7 +35,7 @@ class DiskUsageSearchFieldsPresenter
 
     public function __construct(
         array $service_values,
-        $fields_values_url,
+        array $fields_values_url,
         $start_date_value,
         $end_date_value
     ) {

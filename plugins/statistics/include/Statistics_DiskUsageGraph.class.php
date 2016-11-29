@@ -154,9 +154,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
     function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true){
         $graph = new Chart(750,450,"auto");
         $graph->SetScale("textint");
-        $graph->title->Set("Project by service growth over the time");
+        $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_project_title'));
 
-        $graph->yaxis->title->Set("Size");
+        $graph->yaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_y_axis_title'));
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
         if ($absolute) {
@@ -166,7 +166,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $servicesList = $this->_dum->getProjectServices($siteAdminView);
 
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
-        if (is_array($data) && count($data)) {
+        if (is_array($data) && ! empty($data)) {
             $lineplots = array();
             $dates = array();
             $lineAdded = false;
@@ -206,7 +206,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             }
             if ($lineAdded) {
             $graph->legend->SetReverse();
-            $graph->xaxis->title->Set($groupBy."s");
+            $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
             $graph->Stroke();
