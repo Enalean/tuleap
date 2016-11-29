@@ -263,7 +263,6 @@ class trackerPlugin extends Plugin {
                     new Tracker_FormElement_Field_BurndownDao(),
                     new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
-                    new TimePeriodWithoutWeekEnd(strtotime('today midnight'), 1),
                     new BackendLogger(),
                     new BurndownDateRetriever()
                 );
