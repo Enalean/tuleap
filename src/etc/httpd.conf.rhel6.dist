@@ -73,7 +73,7 @@ Timeout 60
 # KeepAlive: Whether or not to allow persistent connections (more than
 # one request per connection). Set to "Off" to deactivate.
 #
-KeepAlive Off
+KeepAlive On
 
 #
 # MaxKeepAliveRequests: The maximum number of requests to allow
