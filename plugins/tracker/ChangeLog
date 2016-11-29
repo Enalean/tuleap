@@ -1,3 +1,6 @@
+Version 5.1044 - Tuleap 9.2
+    * request #9551: End date for burndown calculation is wrong
+
 Version 5.1043 - Tuleap 9.2
     * request #9551: When start date has changed, burndown always ask to generate cache
 
