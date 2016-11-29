@@ -1303,6 +1303,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $sql = "SELECT cv.changeset_id, cv.has_changed, val.*, a.tracker_id, a.last_changeset_id
                     FROM tracker_changeset_value_artifactlink AS val
                          INNER JOIN tracker_artifact AS a ON(a.id = val.artifact_id)
+                         INNER JOIN tracker AS t ON(t.id = a.tracker_id AND t.deletion_date IS NULL)
                          INNER JOIN tracker_changeset_value AS cv
                          ON ( val.changeset_value_id = cv.id
                           AND cv.field_id = $field_id
