@@ -40,15 +40,13 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         ),
     );
 
-    /**
-     * Given an artifact, return a numerical value of the field for this artifact.
-     *
-     * @param PFUser             $user     The user who see the results
-     * @param Tracker_Artifact $artifact The artifact on which the value is computed
-     *
-     * @return mixed
-     */
-    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+    public function getComputedValue(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $timestamp = null,
+        array &$computed_artifact_ids = array(),
+        $use_fast_compute = true
+    ) {
         if ($this->userCanRead($user)) {
             if ($timestamp !== null) {
                 return $this->getComputedValueAt($artifact, $timestamp);

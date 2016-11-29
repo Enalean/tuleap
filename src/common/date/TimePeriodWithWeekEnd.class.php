@@ -34,4 +34,9 @@ class TimePeriodWithWeekEnd extends TimePeriod {
             return range(0, $this->getDuration());
         }
     }
+
+    public function getCountDayUntilDate($date)
+    {
+        return count($this->getDayOffsets());
+    }
 }

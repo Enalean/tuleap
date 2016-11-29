@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,82 +45,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addEffortAt(0, 14);
 
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 14, 14, 14));
-    }
-
-
-    public function testWhenRemainingEffortValuesDoesntStartInTheSameTimeThanStartDate() {
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
-        $burndown_data->addEffortAt(0, null);
-        $burndown_data->addEffortAt(1, null);
-        $burndown_data->addEffortAt(2, 14);
-        $burndown_data->addEffortAt(3, 13);
-        $burndown_data->addEffortAt(4, 12);
-        $burndown_data->addEffortAt(5, 11);
-
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 13, 12, 11));
-    }
-
-    public function testWhenRemainingEffortValuesDoesntStartInTheSameTimeThanStartDate2() {
-        $start_date       = strtotime('-2 day', $_SERVER['REQUEST_TIME']);
-        $duration         = 5;
-        $time_period      = new TimePeriodWithWeekEnd($start_date, $duration);
-        $burndown_data    = new Tracker_Chart_Data_Burndown($time_period);
-        $burndown_data->addEffortAt(0, null);
-        $burndown_data->addEffortAt(1, null);
-        $burndown_data->addEffortAt(2, 14);
-
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, null, null, null));
-    }
-
-    public function itShouldNotResetPreviousValuesWhenPushingNullAfterHavingPushAnActualNumber() {
-        $start_date       = strtotime('-4 day', $_SERVER['REQUEST_TIME']);
-        $duration         = 5;
-        $time_period      = new TimePeriodWithWeekEnd($start_date, $duration);
-        $burndown_data    = new Tracker_Chart_Data_Burndown($time_period);
-        $burndown_data->addEffortAt(0, null);
-        $burndown_data->addEffortAt(1, null);
-        $burndown_data->addEffortAt(2, 14);
-        $burndown_data->addEffortAt(3, 7);
-        $burndown_data->addEffortAt(4, null);
-
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 7, null, null));
-    }
-
-    public function itDoesNotCompleteRemainingEffortValuesInTheFuture() {
-        $start_date       = strtotime('-1 day', $_SERVER['REQUEST_TIME']);
-        $duration         = 5;
-        $time_period      = new TimePeriodWithWeekEnd($start_date, $duration);
-        $burndown_data    = new Tracker_Chart_Data_Burndown($time_period);
-        $burndown_data->addEffortAt(0, 14);
-
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, null, null, null, null));
-    }
-
-    public function itDoesNotCompleteRemainingEffortValuesInTheFuture2() {
-        $start_date    = strtotime('-2 day', $_SERVER['REQUEST_TIME']);
-        $duration      = 5;
-        $time_period   = new TimePeriodWithWeekEnd($start_date, $duration);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
-        $burndown_data->addEffortAt(0, 14);
-        $burndown_data->addEffortAt(1, 13);
-
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 13, null, null, null));
-    }
-
-    public function itReturnsRemainingEffortsWithNonLinearDayOffsets() {
-        $time_period = mock('TimePeriod');
-        stub($time_period)->getStartDate()->returns($this->start_date);
-        stub($time_period)->getDayOffsets()->returns(array(0, 1, 4, 5, 6, 7));
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
-        $burndown_data->addEffortAt(0, 14);
-        $burndown_data->addEffortAt(1, 13);
-        $burndown_data->addEffortAt(4, 10);
-        $burndown_data->addEffortAt(5, 5);
-        $burndown_data->addEffortAt(6, 2);
-        $burndown_data->addEffortAt(7, 0);
-
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 10, 5, 2, 0));
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, null, null, null, null, null));
     }
 
     public function itComputesIdealBurndownWhenAddingRemainingEffort() {
@@ -190,7 +115,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
 
         $results = json_decode($burndown_data->getJsonRepresentation());
 
-        $expected_points = array(5,4,3,1,1,1);
+        $expected_points = array(5,4,3,1);
 
         $this->assertEqual($results->duration, 5);
         $this->assertEqual($results->capacity, 7);
