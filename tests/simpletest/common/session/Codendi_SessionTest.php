@@ -20,18 +20,25 @@
 
 require_once('common/session/Codendi_Session.class.php');
 
-class Codendi_SessionTest extends UnitTestCase {
+class Codendi_SessionTest extends TuleapTestCase
+{
+    private $original_session;
 
-    public function setUp() {
-        $this->codendi_session = new Codendi_Session();
+    public function setUp()
+    {
+        parent::setUp();
+        $this->codendi_session           = new Codendi_Session();
+        $this->original_session          = $_SESSION;
+        $_SESSION                        = array();
         $_SESSION['Codendi_SessionTest'] = array();
         $this->codendi_session->setSessionNamespace($_SESSION['Codendi_SessionTest']);
         $this->codendi_session->setSessionNamespacePath('.Codendi_SessionTest');
     }
 
-    public function tearDown() {
-        unset($_SESSION['Codendi_SessionTest']);
-        unset($this->codendi_session);
+    public function tearDown()
+    {
+        parent::tearDown();
+        $_SESSION = $this->original_session;
     }
 
     public function test_getNamespace_HappyPath() {
