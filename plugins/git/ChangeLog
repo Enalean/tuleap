@@ -1,3 +1,6 @@
+Version 4.299 - Tuleap 9.2
+    * story #9525: Inherit during project creation
+
 Version 4.298 - Tuleap 9.2
     * story #9525: Inherit regexp permission during repository creation
 
