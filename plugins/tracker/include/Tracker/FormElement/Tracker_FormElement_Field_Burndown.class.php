@@ -253,8 +253,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
 
-        if (! $this->isCacheCompleteForBurndown($burndown_data, $artifact)
-            && ! $this->isCacheBurndownAlreadyAsked($artifact)
+        if ($this->isCacheCompleteForBurndown($burndown_data, $artifact, $user) === false
+            && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
             $this->forceBurndownCacheGeneration($artifact->getId());
         }
@@ -286,7 +286,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function isCacheCompleteForBurndown(
         Tracker_Chart_Data_Burndown $burndown_data,
-        Tracker_Artifact $artifact
+        Tracker_Artifact $artifact,
+        PFUser $user
     ) {
         $timestamps = array();
         foreach ($burndown_data->getTimePeriod()->getDayOffsets() as $day) {
@@ -295,12 +296,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $timestamps[] = $calculate_day;
             }
         }
-        $cached_days = $this->getComputedDao()->getCachedDays(
-            $artifact->getId(),
-            $this->id
-        );
 
-        return (int)$cached_days['cached_days'] === count($timestamps);
+        if ($this->hasRemainingEffort($artifact->getTracker())) {
+            $cached_days = $this->getComputedDao()->getCachedDays(
+                $artifact->getId(),
+                $this->getBurndownRemainingEffortField($artifact, $user)->getId()
+            );
+
+            return (int)$cached_days['cached_days'] !== count($timestamps);
+        }
+
+        return true;
     }
 
     private function addRemainingEffortData(

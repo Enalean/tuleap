@@ -105,7 +105,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
                 $this->logger->debug("Caching value $value for artifact #" . $burndown['id']);
                 $this->cache_dao->saveCachedFieldValueAtTimestamp(
                     $burndown['id'],
-                    $burndown['burndown_field_id'],
+                    $burndown['remaining_effort_field_id'],
                     $yesterday,
                     $value
                 );

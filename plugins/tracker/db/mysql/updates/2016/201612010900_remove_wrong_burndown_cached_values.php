@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201611250934_remove_inconsistent_burndown_cache_values extends ForgeUpgrade_Bucket
+class b201612010900_remove_wrong_burndown_cached_values extends ForgeUpgrade_Bucket
 {
-
     public function description()
     {
-        return 'Remove cache burndown with wrong field id and wrong timestamp';
+        return 'Remove cache burndown with wrong field id';
     }
 
     public function preUp()
@@ -37,12 +36,12 @@ class b201611250934_remove_inconsistent_burndown_cache_values extends ForgeUpgra
                 FROM tracker_field
                 INNER JOIN tracker_field_computed_cache
                 ON tracker_field.id = tracker_field_computed_cache.field_id
-                WHERE formElement_type <> 'burndown'";
+                WHERE formElement_type = 'burndown'";
 
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing wrong cache values');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing wrong cache values');
         }
     }
 }
