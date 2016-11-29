@@ -1,3 +1,6 @@
+Version 5.1046 - Tuleap 9.2
+    * request #9683: FLOAT(10,4) is not precise enough for big floats
+
 Version 5.1045 - Tuleap 9.2
     * request #9684: Deleted linked artifacts still appears in the tracker report
 
