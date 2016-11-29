@@ -13,6 +13,7 @@ Version 9.2 (Not release yet)
 	* request #9551: Burndown improvement
 	* request #9677: Bad escaping of Markdown in Tuleap
 	* request #9676: XML xsd:int only deals with 32bits int
+	* Fix the CI (yet another time)
 
 	== Plugins ==
 	* tracker: 5.1043
