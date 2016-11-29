@@ -83,6 +83,23 @@ class DiskUsageSearchFieldsPresenterBuilder
         );
     }
 
+    public function buildSearchFieldsForUserDetails(
+        $user_name_value,
+        $group_by_value,
+        $start_date_value,
+        $end_date_value
+    ) {
+
+        $group_by_options = $this->getListOfGroupByValuePresenter($group_by_value);
+
+        return new DiskUsageUserDetailsSearchFieldsPresenter(
+            $user_name_value,
+            $group_by_options,
+            $start_date_value,
+            $end_date_value
+        );
+    }
+
     private function buildUrlParamsForServices(
         array $service_values,
         $start_date_value,
@@ -142,5 +159,32 @@ class DiskUsageSearchFieldsPresenterBuilder
         }
 
         return $group_by_values[0]['key'];
+    }
+
+    private function getListOfGroupByValuePresenter($group_by_value)
+    {
+        $all_group_by = array(
+            'day'   => $GLOBALS['Language']->getText('plugin_statistics', 'day'),
+            'week'  => $GLOBALS['Language']->getText('plugin_statistics', 'week'),
+            'month' => $GLOBALS['Language']->getText('plugin_statistics', 'month'),
+            'year'  => $GLOBALS['Language']->getText('plugin_statistics', 'year')
+        );
+
+        $group_by_options = array();
+
+        foreach ($all_group_by as $group_by => $label) {
+            $group_by_options[] = $this->getValuePresenter($group_by, array($group_by_value), $label);
+        }
+
+        return $group_by_options;
+    }
+
+    private function getValuePresenter($value, array $selected_values, $label)
+    {
+        return array(
+            'value'       => $value,
+            'is_selected' => in_array($value, $selected_values),
+            'label'       => $label
+        );
     }
 }

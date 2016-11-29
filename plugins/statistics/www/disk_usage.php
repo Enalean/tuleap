@@ -28,6 +28,7 @@ use Tuleap\Statistics\DiskUsageSearchFieldsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
 use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
 use Tuleap\Statistics\DiskUsageProjectsPresenterBuilder;
+use Tuleap\Statistics\DiskUsageUserDetailsPresenterBuilder;
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
@@ -89,14 +90,6 @@ if ($request->valid($vGroupId)) {
     $groupId = '';
 }
 
-$vUserId = new Valid_UInt('user_id');
-$vUserId->required();
-if ($request->valid($vUserId)) {
-    $userId = $request->get('user_id');
-} else {
-    $userId = '';
-}
-
 $selectedGroupByDate = $request->get('group_by');
 
 $vRelative = new Valid_WhiteList('relative', array('true'));
@@ -154,68 +147,23 @@ $top_users_builder = new DiskUsageTopUsersPresenterBuilder(
     $disk_usage_output
 );
 
+$user_details_builder = new DiskUsageUserDetailsPresenterBuilder(
+    $duMgr,
+    $disk_usage_output,
+    $disk_usage_search_fields_builder,
+    UserManager::instance()
+);
+
 $disk_usage_router = new DiskUsageRouter(
     $duMgr,
     $disk_usage_services_builder,
     $disk_usage_projects_builder,
     $top_users_builder,
-    $disk_usage_global_builder
+    $disk_usage_global_builder,
+    $user_details_builder
 );
 
 $disk_usage_router->route($request);
-
-switch ($menu) {
-    case 'one_user_details':
-
-        // Prepare params
-        $urlParam    = '';
-
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_growth').'</h2>';
-
-        echo '<form name="progress_by_user" method="get" action="?">';
-        echo '<input type="hidden" name="menu" value="one_user_details" />';
-
-        echo '<label>User: </label>';
-        echo '<input type="text" name="user_id" id="plugin_statistics_project" value="'.$userId.'" />';
-
-        echo '<label>Group by:</label>';
-        echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
-
-        echo '<label>Start: </label>';
-        list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
-
-        echo '<label>End: </label>';
-        list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
-
-        $sel = '';
-        if ($relative) {
-            $sel = ' checked="checked"';
-            $urlParam .= '&relative=true';
-        }
-        echo '<input type="checkbox" name="relative" value="true" '.$sel.'/>';
-        echo '<label>Relative Y-axis (depend of data set values):</label><br/>';
-
-        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
-        echo '</form>';
-
-        if (($userId) && ($startDate) && ($endDate)) {
-            echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_detail').'</h3>';
-            $duHtml->getUserDetails($userId);
-
-            $urlParam .= 'start_date='.$startDate.'&end_date='.$endDate;
-            $urlParam .= '&group_by='.$selectedGroupByDate;
-            $urlParam .= '&user_id='.$userId;
-            $urlParam .= '&graph_type=graph_user';
-
-            echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
-            $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
-        }
-        break;
-
-    default:
-}
 
 $GLOBALS['HTML']->footer(array());
 

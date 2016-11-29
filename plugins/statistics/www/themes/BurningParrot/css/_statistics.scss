@@ -20,7 +20,8 @@
 .siteadmin-statistics-project-quota,
 #siteadmin-statistics-frequencies,
 #siteadmin-statistics-disk-usage,
-#siteadmin-statistics-disk-usage-top-users {
+#siteadmin-statistics-disk-usage-top-users,
+#siteadmin-statistics-disk-usage-user-details {
     display: flex;
     align-items: flex-start;
 }
@@ -28,7 +29,8 @@
 .siteadmin-statistics-project-quota-filter,
 #siteadmin-statistics-disk-usage-search,
 #siteadmin-statistics-frequencies-search,
-#siteadmin-statistics-disk-usage-top-users-search {
+#siteadmin-statistics-disk-usage-top-users-search,
+#siteadmin-statistics-disk-usage-user-details-search {
     width: 300px;
     margin: 0 $tlp-spacing 0 0;
 }
@@ -36,7 +38,8 @@
 .siteadmin-statistics-project-quota-results,
 #siteadmin-statistics-disk-usage-data,
 #siteadmin-statistics-frequencies-graph,
-#siteadmin-statistics-disk-usage-top-users-data {
+#siteadmin-statistics-disk-usage-top-users-data,
+#siteadmin-statistics-disk-usage-user-details-data {
     width: 100%;
 }
 
@@ -106,14 +109,16 @@
 
 @media screen and (max-width: 1200px) {
     .siteadmin-statistics-project-quota,
-    #siteadmin-statistics-disk-usage-top-users {
+    #siteadmin-statistics-disk-usage-top-users,
+    #siteadmin-statistics-disk-usage-user-details {
         display: flex;
         flex-direction: column;
         align-items: stretch;
     }
 
     .siteadmin-statistics-project-quota-filter,
-    #siteadmin-statistics-disk-usage-top-users-search {
+    #siteadmin-statistics-disk-usage-top-users-search,
+    #siteadmin-statistics-disk-usage-user-details-search {
         width: 100%;
         margin: 0 0 $tlp-spacing;
     }
@@ -134,6 +139,14 @@
 
 .siteadmin-statistics-disk-usage-top-users-end-size-cell {
     white-space: nowrap;
+}
+
+#siteadmin-statistics-disk-usage-user-details-data-row {
+    display: flex;
+}
+
+.siteadmin-statistics-disk-usage-user-details-data-property {
+    margin: 0 $tlp-double-spacing 0 0;
 }
 
 #siteadmin-export-data {

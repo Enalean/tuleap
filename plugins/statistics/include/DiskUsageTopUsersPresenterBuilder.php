@@ -57,15 +57,14 @@ class DiskUsageTopUsersPresenterBuilder
         $data_top_users = array();
         $rank = 0;
         foreach ($users as $row) {
-            $user_id = $row['user_id'];
-
             $user_details_query = http_build_query(array(
-                'user_id' => $user_id
+                'user_id' => $row['user_id']
             ));
+
             $disk_usage_user_details_query = http_build_query(array(
                 'menu'     => 'one_user_details',
                 'end_date' => $end_date,
-                'user_id'  => $user_id
+                'user'     => $row['user_name']
             ));
 
             $data_user = array(

@@ -29,7 +29,7 @@ class Statistics_DiskUsageManager {
     private $_dao = null;
 
     private $_services = array();
-    
+
     const SVN = 'svn';
     const CVS = 'cvs';
     const FRS = 'frs';
@@ -51,9 +51,9 @@ class Statistics_DiskUsageManager {
     /**
      * The SVN/Webdav statistics is dedicated just to the site admin
      * We do not display it in case of project admin
-     * 
+     *
      * @param Boolean $siteAdminView
-     * 
+     *
      * @return Array
      */
     public function getProjectServices($siteAdminView = true) {
@@ -194,7 +194,7 @@ class Statistics_DiskUsageManager {
             return $res;
          }
          return false;
-         
+
     }
 
     public function getUsagePerProject($startDate, $endDate, $service, $order, $offset, $limit) {
@@ -203,7 +203,7 @@ class Statistics_DiskUsageManager {
         $nbPrj = $dao->foundRows();
         return array($dar, $nbPrj);
     }
-   
+
     public function returnServiceWeeklyEvolution(){
         $dao = $this->_getDao();
         //the Collect date
@@ -216,7 +216,7 @@ class Statistics_DiskUsageManager {
                 }
             }
             $timestamp = strtotime($endDate);
-            //a week ago 
+            //a week ago
             $startDate = date('Y-m-d h:i:s', strtotime('-1 week',$timestamp));
             $rowStart = $dao->searchSizePerService($startDate);
             if ($rowStart && !$rowStart->isError()) {
@@ -231,11 +231,11 @@ class Statistics_DiskUsageManager {
 
     /**
      * Retrieve data for the two given dates and compute some statistics
-     * 
+     *
      * @param String  $startDate
      * @param String  $endDate
      * @param Integer $groupId
-     * 
+     *
      * @return Array
      */
     public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId=null) {
@@ -247,7 +247,7 @@ class Statistics_DiskUsageManager {
                                 'end_size'       => 0,
                                 'evolution'      => 0,
                                 'evolution_rate' => 0);
-             
+
         }
 
         // Start values
@@ -294,14 +294,14 @@ class Statistics_DiskUsageManager {
         if ($dateEnd){
             $rowEnd = $dao->returnTotalSizeProject($group_id,$dateEnd);
             $timestamp = strtotime($dateEnd);
-            //a week ago 
+            //a week ago
             $dateStart = date('Y-m-d h:i:s', strtotime('-1 week',$timestamp));
             $rowStart = $dao->returnTotalSizeProject($group_id,$dateStart);
             if ($rowEnd && !$rowEnd->isError()) {
-                $end = $rowEnd->getRow(); 
+                $end = $rowEnd->getRow();
             }
             if ($rowStart && !$rowStart->isError()) {
-                $start = $rowStart->getRow(); 
+                $start = $rowStart->getRow();
             }
            $evolution = array();
            $evolution['size'] = $end['size']-$start['size'];
@@ -310,29 +310,33 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
-    
-    public function returnUserEvolutionForPeriod($userId, $startDate ,$endDate ){
+
+
+    public function returnUserEvolutionForPeriod($userId, $startDate, $endDate )
+    {
         $dao = $this->_getDao();
         $res = array();
-        $dar = $dao->returnUserEvolutionForPeriod($userId, $startDate ,$endDate);
-        if ($dar && !$dar->isError()) {
-            $res = $dar->getRow();
-            if (isset($res['start_size'])) {
-                if ($res['start_size'] != 0) {
-                    $res['evolution_rate'] = ($res['end_size'] / $res['start_size'])-1;
-                } else {
-                    $res['evolution_rate'] = 1;
-                }
-            }
-            else {
-                $res['start_size']     = 0;
-                $res['evolution']      = $res['end_size'];
+        $dar = $dao->returnUserEvolutionForPeriod($userId, $startDate, $endDate);
+        if (! $dar || $dar->isError()) {
+            return false;
+        }
+        $res = $dar->getRow();
+        if (! $res) {
+            return false;
+        }
+
+        if (isset($res['start_size'])) {
+            if ($res['start_size'] != 0) {
+                $res['evolution_rate'] = ($res['end_size'] / $res['start_size'])-1;
+            } else {
                 $res['evolution_rate'] = 1;
             }
-            return $res;
+        } else {
+            $res['start_size']     = 0;
+            $res['evolution']      = $res['end_size'];
+            $res['evolution_rate'] = 1;
         }
-        return false;
+        return $res;
     }
 
     public function returnTotalProjectSize($group_id){
@@ -403,19 +407,10 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
+
     public function getTopUsers($endDate, $order) {
         $dao = $this->_getDao();
         return $dao->searchTopUsers($endDate, $order);
-    }
-    
-    public function getUserDetails($userId) {
-        $dao = $this->_getDao();
-        $date = $dao->searchMostRecentDate();
-        if ($date) {
-            return $dao->returnUserDetails($userId , $date);
-        }
-        return false;
     }
 
     public function getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate){
@@ -429,7 +424,7 @@ class Statistics_DiskUsageManager {
             return $res;
         }
         return false;
-         
+
     }
 
     public function getWeeklyEvolutionUserData($userId,$groupBy, $startDate, $endDate){
@@ -443,9 +438,9 @@ class Statistics_DiskUsageManager {
             return $res;
         }
         return false;
-         
+
     }
-    
+
     public function getWeeklyEvolutionProjectData($services, $groupId,$groupBy, $startDate, $endDate){
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
@@ -461,7 +456,7 @@ class Statistics_DiskUsageManager {
             return $res;
         }
         return false;
-         
+
     }
 
     public function getProject($groupId) {
@@ -484,7 +479,7 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
+
     public function storeForGroup($groupId, $service, $path) {
         $size = $this->getDirSize($path.'/');
         if ($size) {
@@ -500,7 +495,7 @@ class Statistics_DiskUsageManager {
             $dao->addUser($userId, $service, $size, $_SERVER['REQUEST_TIME']);
         }
     }
-    
+
     public function storeForSite($service, $path) {
         $size = $this->getDirSize($path.'/');
         if ($size) {
@@ -519,14 +514,14 @@ class Statistics_DiskUsageManager {
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
     public function collectProjects() {
-        
+
         $em  = EventManager::instance();
 
         $dao = $this->_getDao();
         $dar = $dao->searchAllGroups();
         foreach($dar as $row) {
             //We start the transaction, it is not stored in the DB unless we COMMIT
-            //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK. 
+            //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK.
             $sql = db_query('START TRANSACTION');
             $this->storeForGroup($row['group_id'], 'svn', $GLOBALS['svn_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'cvs', $GLOBALS['cvs_prefix']."/".$row['unix_group_name']);
@@ -536,10 +531,10 @@ class Statistics_DiskUsageManager {
             $this->storeForGroup($row['group_id'], 'wiki', $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id']);
             // Fake plugin for webdav/subversion
             $this->storeForGroup($row['group_id'], 'plugin_webdav', '/var/lib/codendi/webdav'."/".$row['unix_group_name']);
-            
+
             $params = array('DiskUsageManager' => $this, 'project_row' => $row);
             $em->processEvent('plugin_statistics_disk_usage_collect_project', $params);
-            
+
             $sql = db_query('COMMIT');
         }
         $this->collectMailingLists();
@@ -570,7 +565,7 @@ class Statistics_DiskUsageManager {
         }
         //We commit all the DB modification
         $sql = db_query('COMMIT');
-        
+
     }
 
     public function collectUsers() {
@@ -592,7 +587,7 @@ class Statistics_DiskUsageManager {
         $this->storeForSite('backup_old', '/var/lib/codendi/backup/old');
         $this->storeDf();
         $sql = db_query('COMMIT');
-        
+
     }
 
     public function storeDf() {
@@ -615,7 +610,7 @@ class Statistics_DiskUsageManager {
             }
         }
     }
-       
+
     /**
      */
     public function _getDao() {
@@ -624,12 +619,12 @@ class Statistics_DiskUsageManager {
         }
         return $this->_dao;
     }
- 
+
     /**
      * Retreive a param config giving its name
-     * 
+     *
      * @param String $name
-     * 
+     *
      * @return String
      */
     public function getProperty($name) {

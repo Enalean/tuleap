@@ -40,6 +40,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
     public function getUserDetails($userId){
         $res = $this->_dum->getUserDetails($userId);
+
         if ($res) {
             echo '<table border="1">';
             echo '<thead>';
@@ -127,29 +128,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 echo '<td>'.sprintf('%01.2f %%', (($totalEndSize/$totalStartSize)-1)*100).'</td>';
             }
             echo '</tr>';
-            echo '</tbody>';
-            echo '</table>';
-        }
-    }
-
-    public function getUserEvolutionForPeriod($userId, $startDate , $endDate) {
-        $res = $this->_dum->returnUserEvolutionForPeriod($userId, $startDate, $endDate);
-        if ($res) {
-            echo '<table border="1">';
-            echo '<thead>';
-            echo '<tr>';
-            echo "<th>User Id</th>";
-            echo "<th>Start size</th>";
-            echo "<th>End size</th>";
-            echo "<th>Size Evolution</th>";
-            echo "<th>Rate Evolution (%)</th>";
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-                echo '<tr>';
-                echo '<td>'.$userId.'</td>';
-                $this->_displayEvolutionData($res);
-                echo '</tr>';
             echo '</tbody>';
             echo '</table>';
         }

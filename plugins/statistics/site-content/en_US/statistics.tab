@@ -6,7 +6,7 @@ plugin_statistics_show_service	service_growth	Service growth over the time
 
 plugin_statistics_show_one_project	usage_per_project	Usage per project
 
-plugin_statistics_show_one_user	user_growth	User growth over the time
+plugin_statistics_show_one_user	user_growth	User growth over time
 plugin_statistics_show_one_user	user_detail	User details
 
 widget_categ_label	plugin_statistics	Project statistics
@@ -55,7 +55,9 @@ plugin_statistics_admin_page	graph_y_axis_title	Size
 plugin_statistics_admin_page	graph_image_title	Results
 plugin_statistics_admin_page	top_users_pane_title	Top 10 users
 plugin_statistics_admin_page	no_top_users_data	No matching user data
-plugin_statistics_admin_page	disk_usage_user_details_btn	User details
+plugin_statistics_admin_page	no_user_details_data	No matching data for this user
+plugin_statistics_admin_page	no_user_selected	No user selected
+plugin_statistics_admin_page	disk_usage_user_details_btn	User statistics
 
 plugin_statistics	scm_title	SCM statistics
 plugin_statistics	scm_description	Display SCM statistics of the platform.
@@ -146,7 +148,7 @@ plugin_statistics	frequencies_filter_group_day	Group by day
 plugin_statistics	frequencies_filter_group_hour	Group by hour
 plugin_statistics	frequencies_filter_month	Month
 plugin_statistics	frequencies_filter_day	Day
-plugin_statistics	frequencies_date_choice_error	The end date should not be before the start date
+plugin_statistics	date_choice_error	The end date should not be before the start date
 
 plugin_statistics	services_label	Services
 plugin_statistics	group_by_label	Group by
@@ -175,3 +177,4 @@ plugin_statistics	users	Users
 plugin_statistics	codendi_logs	Codendi Logs
 plugin_statistics	backup	Backup
 plugin_statistics	backup_old	Backup old
+plugin_statistics	user_id_label	User

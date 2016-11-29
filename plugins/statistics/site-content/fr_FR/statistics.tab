@@ -55,7 +55,9 @@ plugin_statistics_admin_page	graph_y_axis_title	Taille
 plugin_statistics_admin_page	graph_image_title	Résultats
 plugin_statistics_admin_page	top_users_pane_title	Top 10 des utilisateurs
 plugin_statistics_admin_page	no_top_users_data	Aucune données utilisateur correspondantes
-plugin_statistics_admin_page	disk_usage_user_details_btn	Détail utilisateur
+plugin_statistics_admin_page	no_user_details_data	Aucune données correspondantes pour cet utilisateur
+plugin_statistics_admin_page	no_user_selected	Aucun utilisateur sélectionné
+plugin_statistics_admin_page	disk_usage_user_details_btn	Statistiques de l'utilisateur
 
 plugin_statistics	scm_title	Statistiques des SCM
 plugin_statistics	scm_description	Affiche les statistiques des outils SCM de la plateforme.
@@ -146,7 +148,7 @@ plugin_statistics	frequencies_filter_group_day	Grouper par jour
 plugin_statistics	frequencies_filter_group_hour	Grouper par heure
 plugin_statistics	frequencies_filter_month	Mois
 plugin_statistics	frequencies_filter_day	Jour
-plugin_statistics	frequencies_date_choice_error	La date de fin ne devrait pas être antérieure à la date de début
+plugin_statistics	date_choice_error	La date de fin ne devrait pas être antérieure à la date de début
 
 
 plugin_statistics	services_label	Services
@@ -176,3 +178,4 @@ plugin_statistics	users	Utilisateurs
 plugin_statistics	codendi_logs	Logs Codendi
 plugin_statistics	backup	Sauvegarde
 plugin_statistics	backup_old	Ancienne sauvegarde
+plugin_statistics	user_id_label	Utilisateur
