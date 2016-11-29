@@ -1,0 +1,26 @@
+<section class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        {{ usage_progress_label }}
+                    </div>
+                </div>
+                <form action="usage_stat.php" method="GET" class="tlp-pane-section">
+                    <p>{{ usage_progress_help }}</p>
+
+                    <div class="tlp-pane-section-submit">
+                        <button type="submit" class="tlp-button-primary" name="export">
+                            <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</section>

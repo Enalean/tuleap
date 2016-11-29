@@ -31,15 +31,14 @@ class AdminHeaderPresenter
     public $project_quota_tab_label;
     public $service_usage_tab_label;
     public $scm_statistics_tab_label;
+    public $usage_progress_tab_label;
 
     public $frequencies_tab_active;
     public $disk_usage_tab_active;
     public $project_quota_tab_active;
     public $service_usage_tab_active;
     public $scm_statistics_tab_active;
-
-    public $usage_progress_btn;
-    public $usage_progress_help;
+    public $usage_progress_tab_active;
 
     public $disk_usage_services_menu_span_label;
     public $disk_usage_services_menu_label;
@@ -59,14 +58,14 @@ class AdminHeaderPresenter
         $this->project_quota_tab_active  = ($active_tab === 'project_quota');
         $this->service_usage_tab_active  = ($active_tab === 'service_usage');
         $this->scm_statistics_tab_active = ($active_tab === 'scm_statistics');
+        $this->usage_progress_tab_active = ($active_tab === 'usage_progress');
 
         $this->frequencies_tab_label    = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
         $this->disk_usage_tab_label     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
         $this->project_quota_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
         $this->service_usage_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
         $this->scm_statistics_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
-        $this->usage_progress_btn       = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_btn');
-        $this->usage_progress_help      = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_help');
+        $this->usage_progress_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_title');
 
         $this->disk_usage_services_menu_span_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_span_label');
         $this->disk_usage_services_menu_label        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_label');

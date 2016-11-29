@@ -1,15 +1,4 @@
-<div id="siteadmin-statistics-header" class="tlp-framed-horizontally">
-    <h1 id="siteadmin-statistics-header-title">{{ title }}</h1>
-
-    <a
-        href="usage_stat.php"
-        id="siteadmin-statistics-header-usage-progress"
-        class="tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
-        data-tlp-tooltip="{{ usage_progress_help }}"
-    >
-        <i class="fa fa-download tlp-button-icon"></i>{{ usage_progress_btn }}
-    </a>
-</div>
+<h1 class="tlp-framed-horizontally">{{ title }}</h1>
 
 <nav class="tlp-tabs">
     <a
@@ -39,4 +28,8 @@
         href="scm_stats.php"
         class="tlp-tab {{# scm_statistics_tab_active }}tlp-tab-active{{/ scm_statistics_tab_active }}"
     >{{ scm_statistics_tab_label }}</a>
+    <a
+        href="usage_progress.php"
+        class="tlp-tab {{# usage_progress_tab_active }}tlp-tab-active{{/ usage_progress_tab_active }}"
+    >{{ usage_progress_tab_label }}</a>
 </nav>
