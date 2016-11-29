@@ -1478,7 +1478,8 @@ class GitPlugin extends Plugin {
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
             $this->getPatternValidator(),
-            $this->getFineGrainedPermissionSorter()
+            $this->getFineGrainedPermissionSorter(),
+            $this->getRegexpFineGrainedRetriever()
         );
     }
 
@@ -1732,7 +1733,10 @@ class GitPlugin extends Plugin {
         return new DefaultFineGrainedPermissionReplicator(
             new FineGrainedDao(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            $this->getDefaultFineGrainedPermissionSaver()
+            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getPatternValidator()
         );
     }
 
