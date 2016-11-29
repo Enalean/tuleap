@@ -1556,6 +1556,7 @@ plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouv�
 plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
 plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
 plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
+plugin_tracker	burndown_cache_generating	Le burndown est en cours de calcul. Il sera disponible dans quelques minutes.
 plugin_tracker	unsufficient_permissions_for_ranking	Vous n'êtes pas autorisé à prioriser sur ce planning. Vos changements n'ont pas été pris en compte. Veuillez recharger la page.
 
 # DateReminder

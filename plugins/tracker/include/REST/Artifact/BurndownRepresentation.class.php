@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\REST\JsonCast;
 
-class BurndownRepresentation {
+class BurndownRepresentation
+{
     const ROUTE = 'burndown';
 
     /**
@@ -40,10 +41,18 @@ class BurndownRepresentation {
      */
     public $points = array();
 
-    public function build($duration, $capacity, array $points) {
-        $this->duration = JsonCast::toInt($duration);
-        $this->capacity = JsonCast::toFloat($capacity);
-        $this->points   = array_map(array('\Tuleap\REST\JsonCast', 'toFloat'), $points);
+    /**
+     * @var boolean Is cache calcul asked
+     */
+    public $is_under_calculation;
+
+    public function build($duration, $capacity, array $points, $is_under_calculation)
+    {
+        $this->duration             = JsonCast::toInt($duration);
+        $this->capacity             = JsonCast::toFloat($capacity);
+        $this->points               = array_map(array('\Tuleap\REST\JsonCast', 'toFloat'), $points);
+        $this->is_under_calculation = JsonCast::toBoolean($is_under_calculation);
+
         return $this;
     }
 }
