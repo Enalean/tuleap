@@ -6,8 +6,6 @@ plugin_statistics_show_service	service_growth	Service growth over the time
 
 plugin_statistics_show_one_project	usage_per_project	Usage per project
 
-plugin_statistics_show_top_user	top_users	Top Users
-
 plugin_statistics_show_one_user	user_growth	User growth over the time
 plugin_statistics_show_one_user	user_detail	User details
 
@@ -30,14 +28,13 @@ plugin_statistics_admin_page	disk_usage_services_menu_span_label	Services/Projec
 plugin_statistics_admin_page	disk_usage_services_menu_label	Services
 plugin_statistics_admin_page	disk_usage_top_projects_menu_label	Top projects
 plugin_statistics_admin_page	disk_usage_users_menu_span_label	Users
-plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top users
+plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top 10 users
 plugin_statistics_admin_page	disk_usage_users_user_details_label	One user details
 plugin_statistics_admin_page	data_services_pane_title	Service growth
 plugin_statistics_admin_page	data_top_projects_pane_title	Usage par projet
 plugin_statistics_admin_page	data_services_no_data	There is no matching services data
 plugin_statistics_admin_page	data_top_projects_no_data	There is no matching data per project
 plugin_statistics_admin_page	table_service_title	Service
-plugin_statistics_admin_page	table_id_title	Id
 plugin_statistics_admin_page	table_rank_title	Rank
 plugin_statistics_admin_page	table_name_title	Name
 plugin_statistics_admin_page	table_start_size_title	Start size
@@ -52,6 +49,9 @@ plugin_statistics_admin_page	graph_title	Services growth over time
 plugin_statistics_admin_page	graph_project_title	Project by service growth over time
 plugin_statistics_admin_page	graph_y_axis_title	Size
 plugin_statistics_admin_page	graph_image_title	Results
+plugin_statistics_admin_page	top_users_pane_title	Top 10 users
+plugin_statistics_admin_page	no_top_users_data	No matching user data
+plugin_statistics_admin_page	disk_usage_user_details_btn	User details
 
 plugin_statistics	scm_title	SCM statistics
 plugin_statistics	scm_description	Display SCM statistics of the platform.

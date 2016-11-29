@@ -6,8 +6,6 @@ plugin_statistics_show_service	service_growth	Croissance des services
 
 plugin_statistics_show_one_project	usage_per_project	Utilisation par projet
 
-plugin_statistics_show_top_user	top_users	Top des utilisateurs
-
 plugin_statistics_show_one_user	user_growth	Croissance de l'utilisateur
 plugin_statistics_show_one_user	user_detail	Les details de l'utilisateur
 
@@ -30,14 +28,13 @@ plugin_statistics_admin_page	disk_usage_services_menu_span_label	Services/Projet
 plugin_statistics_admin_page	disk_usage_services_menu_label	Services
 plugin_statistics_admin_page	disk_usage_top_projects_menu_label	Top projets
 plugin_statistics_admin_page	disk_usage_users_menu_span_label	Utilisateurs
-plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top utilisateurs
+plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top 10 des utilisateurs
 plugin_statistics_admin_page	disk_usage_users_user_details_label	Détails par utilisateur
 plugin_statistics_admin_page	data_services_pane_title	Croissance des services
 plugin_statistics_admin_page	data_top_projects_pane_title	Usage par projet
 plugin_statistics_admin_page	data_services_no_data	Il n'y a pas de données sur les services
 plugin_statistics_admin_page	data_top_projects_no_data	Il n'y a pas de données par projet
 plugin_statistics_admin_page	table_service_title	Service
-plugin_statistics_admin_page	table_id_title	Id
 plugin_statistics_admin_page	table_rank_title	Rang
 plugin_statistics_admin_page	table_name_title	Nom
 plugin_statistics_admin_page	table_start_size_title	Taille de départ
@@ -52,6 +49,9 @@ plugin_statistics_admin_page	graph_title	Croissance des services en fonction du 
 plugin_statistics_admin_page	graph_project_title	Croissance du project par service en fonction du temps
 plugin_statistics_admin_page	graph_y_axis_title	Taille
 plugin_statistics_admin_page	graph_image_title	Résultats
+plugin_statistics_admin_page	top_users_pane_title	Top 10 des utilisateurs
+plugin_statistics_admin_page	no_top_users_data	Aucune données utilisateur correspondantes
+plugin_statistics_admin_page	disk_usage_user_details_btn	Détail utilisateur
 
 plugin_statistics	scm_title	Statistiques des SCM
 plugin_statistics	scm_description	Affiche les statistiques des outils SCM de la plateforme.

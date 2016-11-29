@@ -26,6 +26,7 @@ use Tuleap\Statistics\DiskUsageRouter;
 use Tuleap\Statistics\DiskUsageSearchFieldsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
 use Tuleap\Statistics\DiskUsageTopProjectsPresenterBuilder;
+use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
@@ -160,10 +161,16 @@ $disk_usage_top_projects_builder = new DiskUsageTopProjectsPresenterBuilder(
     $disk_usage_services_builder
 );
 
+$top_users_builder = new DiskUsageTopUsersPresenterBuilder(
+    $duMgr,
+    $disk_usage_output
+);
+
 $disk_usage_router = new DiskUsageRouter(
     $duMgr,
     $disk_usage_services_builder,
-    $disk_usage_top_projects_builder
+    $disk_usage_top_projects_builder,
+    $top_users_builder
 );
 
 $disk_usage_router->route($request);
@@ -255,24 +262,6 @@ switch ($menu) {
         if (($groupId) && ($startDate) && ($endDate)) {
             $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
         }
-        break;
-
-    case 'top_users':
-        $urlParam = '';
-        $urlParam .= '?menu=top_users&start_date='.$startDate.'&end_date='.$endDate;
-
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_top_user', 'top_users').'</h2>';
-        echo '<form name="top_users" method="get" action="?">';
-        echo '<input type="hidden" name="menu" value="show_top_users" />';
-
-        echo '<label>End: </label>';
-        list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
-
-        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
-        echo '</form>';
-
-        $duHtml->getTopUsers($endDate, $order, $urlParam);
         break;
 
     case 'one_user_details':

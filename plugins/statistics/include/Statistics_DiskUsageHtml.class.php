@@ -1,24 +1,24 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2009
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'Statistics_DiskUsageOutput.class.php';
@@ -37,7 +37,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate']))*100).'</td>';
         }
     }
-    
+
     public function getDataPerService($groupId = NULL) {
         $res = $this->_dum->getLatestData($groupId);
 
@@ -45,7 +45,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '<thead>';
         echo '<tr>';
         echo "<th>Date</th>";
-        
+
         if (isset($res['service'][Statistics_DiskUsageManager::USR_HOME])) {
             echo "<th>Users</th>";
         }
@@ -100,7 +100,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
-            
+
             // Paginate
             $url .= '&order='.$order;
             echo '<tr>';
@@ -143,8 +143,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-    
-    
+
+
     public function getUserDetails($userId){
         $res = $this->_dum->getUserDetails($userId);
         if ($res) {
@@ -186,10 +186,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     }
 
     /**
-     * 
+     *
      * Displays the table of service evolution for a given period
      * for a specific project if the group_id is given else for all projects
-     * 
+     *
      * @param Date $startDate
      * @param Date $endDate
      * @param Integer $groupId
@@ -238,7 +238,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-    
+
     public function getUserEvolutionForPeriod($userId, $startDate , $endDate) {
         $res = $this->_dum->returnUserEvolutionForPeriod($userId, $startDate, $endDate);
         if ($res) {
@@ -262,32 +262,12 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
 
-    public function getTopUsers($endDate, $order, $url) {
-        $res = $this->_dum->getTopUsers($endDate, $order);
-        if ($res) {
-            $titles = array('Rank', 'Id', 'Name', 'End size');
-            $links  = array('', '', '', $url.'&order=start_size', $url.'&order=end_size', $url.'&order=evolution', $url.'&order=evolution_rate');
-            echo html_build_list_table_top($titles, $links);
-            $url = str_replace('func=show_top_users', 'func=show_one_user', $url);
-            $i = 1;
-            foreach ($res as $row) {
-                echo '<tr>';
-                echo '<td>'.$i++.'</td>';
-                echo '<td><a href="'.$url.'&user_id='.$row['user_id'].'">'.$row['user_id'].'</a></td>';
-                echo '<td>'.$row['user_name'].'</td>';
-                echo '<td>'.$this->sizeReadable($row['end_size']).'</td>';
-                echo '</tr>';
-            }
-            echo '</table>';
-        }
-    }
-
     /**
      *
      * Displays the disk usage for a given project
-     * 
+     *
      * @param Integer $groupId Id of the project we want retrieve its disk usage
-     * 
+     *
      */
     public function getTotalProjectSize($groupId) {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
@@ -326,7 +306,4 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
         return '';
     }
-
 }
-
-?>

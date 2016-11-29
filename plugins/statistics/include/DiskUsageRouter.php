@@ -40,14 +40,21 @@ class DiskUsageRouter
      */
     private $top_projects_builder;
 
+    /**
+     * @var DiskUsageTopUsersPresenterBuilder
+     */
+    private $top_users_builder;
+
     public function __construct(
         Statistics_DiskUsageManager $usage_manager,
         DiskUsageServicesPresenterBuilder $services_builder,
-        DiskUsageTopProjectsPresenterBuilder $top_projects_builder
+        DiskUsageTopProjectsPresenterBuilder $top_projects_builder,
+        DiskUsageTopUsersPresenterBuilder $top_users_builder
     ) {
         $this->usage_manager        = $usage_manager;
         $this->services_builder     = $services_builder;
         $this->top_projects_builder = $top_projects_builder;
+        $this->top_users_builder    = $top_users_builder;
     }
 
     public function route(HTTPRequest $request)
@@ -61,6 +68,9 @@ class DiskUsageRouter
                     break;
                 case 'top_projects':
                     $this->displayTopProjects($request);
+                    break;
+                case 'top_users':
+                    $this->displayTopUsers($request);
                     break;
             }
         }
@@ -126,6 +136,26 @@ class DiskUsageRouter
             ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
             'disk-usage-top-projects',
             $disk_usage_top_projects_presenter
+        );
+    }
+
+    public function displayTopUsers(HTTPRequest $request)
+    {
+        $end_date = $request->get('end_date');
+
+        $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+
+        $top_users_presenter = $this->top_users_builder->build(
+            $title,
+            $end_date
+        );
+
+        $admin_page_renderer = new AdminPageRenderer();
+        $admin_page_renderer->renderANoFramedPresenter(
+            $title,
+            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            'disk-usage-top-users',
+            $top_users_presenter
         );
     }
 }
