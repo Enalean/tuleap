@@ -1436,7 +1436,10 @@ class GitPlugin extends Plugin {
             $dao,
             $default_factory,
             $saver,
-            $factory
+            $factory,
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getPatternValidator()
         );
     }
 

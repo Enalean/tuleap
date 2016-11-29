@@ -69,4 +69,9 @@ class RegexpFineGrainedRetriever
     {
         return ($this->areRegexpActivatedAtSiteLevel() === false && $this->areRegexpActivatedForRepository($repository));
     }
+
+    public function areDefaultRegexpConflitingWithPlateform(Project $project)
+    {
+        return ($this->areRegexpActivatedAtSiteLevel() === false && $this->areRegexpActivatedForDefault($project));
+    }
 }

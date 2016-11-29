@@ -47,16 +47,35 @@ class FineGrainedPermissionReplicator
      */
     private $default_factory;
 
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_updater;
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+    /**
+     * @var PatternValidator
+     */
+    private $validator;
+
     public function __construct(
         FineGrainedDao $fine_grained_dao,
         DefaultFineGrainedPermissionFactory $default_factory,
         FineGrainedPermissionSaver $saver,
-        FineGrainedPermissionFactory $factory
+        FineGrainedPermissionFactory $factory,
+        RegexpFineGrainedEnabler $regexp_updater,
+        RegexpFineGrainedRetriever $regexp_retriever,
+        PatternValidator $validator
     ) {
         $this->fine_grained_dao = $fine_grained_dao;
         $this->default_factory  = $default_factory;
         $this->saver            = $saver;
         $this->factory          = $factory;
+        $this->regexp_updater   = $regexp_updater;
+        $this->regexp_retriever = $regexp_retriever;
+        $this->validator        = $validator;
     }
 
     public function replicateDefaultPermissions(
@@ -70,6 +89,7 @@ class FineGrainedPermissionReplicator
         Project $project,
         GitRepository $repository
     ) {
+        $warnings           = array();
         $branch_permissions = $this->default_factory->getBranchesFineGrainedPermissionsForProject($project);
         $tags_permissions   = $this->default_factory->getTagsFineGrainedPermissionsForProject($project);
 
@@ -79,25 +99,37 @@ class FineGrainedPermissionReplicator
         );
 
         foreach ($branch_permissions as $default_permission) {
-            $replicated_permission = new FineGrainedPermission(
-                0,
-                $repository->getId(),
-                $default_permission->getPatternWithoutPrefix(),
-                $default_permission->getWritersUgroup(),
-                $default_permission->getRewindersUgroup()
-            );
-            $this->saver->saveBranchPermission($replicated_permission);
+            if ($this->validator->isValidForDefault($repository->getProject(), $default_permission->getPatternWithoutPrefix(), false)) {
+                $replicated_permission = new FineGrainedPermission(
+                    0,
+                    $repository->getId(),
+                    $default_permission->getPatternWithoutPrefix(),
+                    $default_permission->getWritersUgroup(),
+                    $default_permission->getRewindersUgroup()
+                );
+                $this->saver->saveBranchPermission($replicated_permission);
+            } else {
+                $warnings[] = $default_permission->getPatternWithoutPrefix();
+            }
         }
 
         foreach ($tags_permissions as $default_permission) {
-            $replicated_permission = new FineGrainedPermission(
-                0,
-                $repository->getId(),
-                $default_permission->getPatternWithoutPrefix(),
-                $default_permission->getWritersUgroup(),
-                $default_permission->getRewindersUgroup()
-            );
-            $this->saver->saveTagPermission($replicated_permission);
+            if ($this->validator->isValidForDefault($repository->getProject(), $default_permission->getPatternWithoutPrefix(), false)) {
+                $replicated_permission = new FineGrainedPermission(
+                    0,
+                    $repository->getId(),
+                    $default_permission->getPatternWithoutPrefix(),
+                    $default_permission->getWritersUgroup(),
+                    $default_permission->getRewindersUgroup()
+                );
+                $this->saver->saveTagPermission($replicated_permission);
+            } else {
+                $warnings[] = $default_permission->getPatternWithoutPrefix();
+            }
+        }
+
+        if (count($warnings) > 0) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'feedback_permissions_not_duplicated', implode(',', $warnings)));
         }
     }
 
@@ -105,6 +137,7 @@ class FineGrainedPermissionReplicator
         GitRepository $source_repository,
         GitRepository $repository
     ) {
+        $warnings           = array();
         $branch_permissions = $this->factory->getBranchesFineGrainedPermissionsForRepository($source_repository);
         $tags_permissions   = $this->factory->getTagsFineGrainedPermissionsForRepository($source_repository);
 
@@ -114,25 +147,44 @@ class FineGrainedPermissionReplicator
         );
 
         foreach ($branch_permissions as $repository_permission) {
-            $replicated_permission = new FineGrainedPermission(
-                0,
-                $repository->getId(),
-                $repository_permission->getPatternWithoutPrefix(),
-                $repository_permission->getWritersUgroup(),
-                $repository_permission->getRewindersUgroup()
-            );
-            $this->saver->saveBranchPermission($replicated_permission);
+            if ($this->validator->isValidForRepository($repository, $repository_permission->getPatternWithoutPrefix(), false)) {
+                $replicated_permission = new FineGrainedPermission(
+                    0,
+                    $repository->getId(),
+                    $repository_permission->getPatternWithoutPrefix(),
+                    $repository_permission->getWritersUgroup(),
+                    $repository_permission->getRewindersUgroup()
+                );
+                $this->saver->saveBranchPermission($replicated_permission);
+            } else {
+                $warnings[] = $repository_permission->getPatternWithoutPrefix();
+            }
         }
 
         foreach ($tags_permissions as $repository_permission) {
-            $replicated_permission = new FineGrainedPermission(
-                0,
-                $repository->getId(),
-                $repository_permission->getPatternWithoutPrefix(),
-                $repository_permission->getWritersUgroup(),
-                $repository_permission->getRewindersUgroup()
-            );
-            $this->saver->saveTagPermission($replicated_permission);
+            if ($this->validator->isValidForRepository($repository, $repository_permission->getPatternWithoutPrefix(), false)) {
+                $replicated_permission = new FineGrainedPermission(
+                    0,
+                    $repository->getId(),
+                    $repository_permission->getPatternWithoutPrefix(),
+                    $repository_permission->getWritersUgroup(),
+                    $repository_permission->getRewindersUgroup()
+                );
+                $this->saver->saveTagPermission($replicated_permission);
+            } else {
+                $warnings[] = $repository_permission->getPatternWithoutPrefix();
+            }
+        }
+
+        if (count($warnings) > 0) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'feedback_permissions_not_duplicated', implode(',', $warnings)));
+        }
+    }
+
+    public function replicateDefaultRegexpUsage(GitRepository $repository)
+    {
+        if ($this->regexp_retriever->areRegexpActivatedForDefault($repository->getProject())) {
+            $this->regexp_updater->enableForRepository($repository);
         }
     }
 }

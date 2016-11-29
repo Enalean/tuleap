@@ -313,6 +313,7 @@ class GitActions extends PluginActions
                 $this->git_permissions_manager->getDefaultPermissions($project)
             );
 
+            $this->fine_grained_replicator->replicateDefaultRegexpUsage($repository);
             $this->fine_grained_replicator->replicateDefaultPermissions(
                 $repository
             );
