@@ -25,10 +25,13 @@ use Codendi_HTMLPurifier;
 
 class ContentInterpretor {
 
-    public function getInterpretedContent($markdown_content) {
-        $escaped_content = Codendi_HTMLPurifier::instance()->purify($markdown_content);
+    public function getInterpretedContent($markdown_content)
+    {
 
-        return MarkdownExtra::defaultTransform($escaped_content);
+        return Codendi_HTMLPurifier::instance()->purify(
+            MarkdownExtra::defaultTransform($markdown_content),
+            CODENDI_PURIFIER_FULL
+        );
     }
 
 }

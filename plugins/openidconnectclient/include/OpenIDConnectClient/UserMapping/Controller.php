@@ -77,6 +77,17 @@ class Controller {
             );
         }
 
+        if ($provider->isUniqueAuthenticationEndpoint()) {
+            $this->redirectToAccountPage(
+                $GLOBALS['Language']->getText(
+                    'plugin_openidconnectclient',
+                    'delete_user_mapping_error',
+                    array($provider->getName())
+                ),
+                Feedback::ERROR
+            );
+        }
+
         try {
             $this->user_mapping_manager->remove($user_mapping);
             $this->redirectToAccountPage(

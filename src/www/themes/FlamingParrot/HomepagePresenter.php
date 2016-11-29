@@ -62,7 +62,10 @@ class FlamingParrot_HomepagePresenter {
     /** @var string html */
     public $awesomeness;
 
-    public $toto = false;
+    /**
+     * @var boolean
+     */
+    public $display_homepage_login_form;
 
     public function __construct(
         $headline,
@@ -71,21 +74,23 @@ class FlamingParrot_HomepagePresenter {
         $most_secure_url,
         User_LoginPresenter $login,
         $display_homepage_news,
+        $display_homepage_login_form,
         $news,
         $user,
         $awesomeness
     ) {
-        $this->news                  = $news;
-        $this->login                 = $login;
-        $this->nb_users              = $nb_users;
-        $this->headline              = $headline;
-        $this->path_logo             = Admin_Homepage_LogoFinder::getCurrentUrl();
-        $this->awesomeness           = $awesomeness;
-        $this->nb_projects           = $nb_projects;
-        $this->user                  = $user;
-        $this->user_is_anonymous     = $user->isAnonymous();
-        $this->most_secure_url       = $most_secure_url;
-        $this->display_homepage_news = $display_homepage_news && $news;
+        $this->news                        = $news;
+        $this->login                       = $login;
+        $this->nb_users                    = $nb_users;
+        $this->headline                    = $headline;
+        $this->path_logo                   = Admin_Homepage_LogoFinder::getCurrentUrl();
+        $this->awesomeness                 = $awesomeness;
+        $this->nb_projects                 = $nb_projects;
+        $this->user                        = $user;
+        $this->user_is_anonymous           = $user->isAnonymous();
+        $this->most_secure_url             = $most_secure_url;
+        $this->display_homepage_news       = $display_homepage_news && $news;
+        $this->display_homepage_login_form = $display_homepage_login_form;
     }
 
     public function discover_tuleap_awesomeness() {

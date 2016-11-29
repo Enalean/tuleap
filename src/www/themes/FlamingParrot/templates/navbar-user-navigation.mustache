@@ -24,7 +24,7 @@
     {{/ user_is_logged_in }}
     {{^ user_is_logged_in }}
         <li>
-            <a id="navbar-user-login" href="/account/login.php{{# return_to }}?return_to={{ return_to }}{{/ return_to }}">
+            <a id="navbar-user-login" href="{{ login_url }}">
                 {{ include_menu_login_text }}
             </a>
         </li>

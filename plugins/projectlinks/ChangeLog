@@ -1,3 +1,6 @@
+Version 2.12 - Tuleap 9.2
+    * request #9202: Remove  as function parameter
+
 Version 2.11 - Tuleap 8.18
     * request #9375 Gulpify sass
 

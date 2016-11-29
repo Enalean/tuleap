@@ -237,6 +237,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
             $projects_presenters
         );
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
+        $url_redirect          = new URLRedirect(EventManager::instance());
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
@@ -250,7 +251,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
                 $this->getMOTD(),
                 $navbar_items_builder->buildNavBarItemPresentersCollection(),
                 $this->getUserActions($current_user),
-                $csrf_logout_token
+                $csrf_logout_token,
+                $url_redirect
             )
         );
 
@@ -385,7 +387,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return $dao->isStandardHomepageUsed();
     }
 
-    public function displayStandardHomepage($display_homepage_news, $is_secure) {
+    public function displayStandardHomepage($display_homepage_news, $display_homepage_login_form, $is_secure) {
         $dao          = new Admin_Homepage_Dao();
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -424,6 +426,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
             $most_secure_url,
             $login_presenter,
             $display_homepage_news,
+            $display_homepage_login_form,
             $news,
             $current_user,
             $awesomeness

@@ -86,7 +86,7 @@ class Controller {
         try {
             $flow_response = $this->flow->process();
         } catch (Exception $ex) {
-            $this->redirectToLoginPageAfterFailure(
+            $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
         }
@@ -117,11 +117,11 @@ class Controller {
         try {
             $this->user_manager->openSessionForUser($user);
         } catch (User_LoginException $ex) {
-            $this->redirectToLoginPageAfterFailure($ex->getMessage());
+            $this->redirectAfterFailure($ex->getMessage());
         } catch (UserNotActiveException $ex) {
-            $this->redirectToLoginPageAfterFailure($ex->getMessage());
+            $this->redirectAfterFailure($ex->getMessage());
         } catch (SessionNotCreatedException $ex) {
-            $this->redirectToLoginPageAfterFailure($ex->getMessage());
+            $this->redirectAfterFailure($ex->getMessage());
         }
         try {
             $this->user_mapping_manager->updateLastUsed($user_mapping, $login_time);
@@ -134,12 +134,12 @@ class Controller {
         \account_redirect_after_login($return_to);
     }
 
-    private function redirectToLoginPageAfterFailure($message) {
+    private function redirectAfterFailure($message) {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
         );
-        $GLOBALS['Response']->redirect('/account/login.php');
+        $GLOBALS['Response']->redirect('/');
     }
 
     private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response) {
@@ -148,7 +148,7 @@ class Controller {
         try {
             $unlinked_account  = $this->unlinked_account_manager->create($provider->getId(), $user_identifier);
         } catch (UnlinkedAccountDataAccessException $ex) {
-            $this->redirectToLoginPageAfterFailure(
+            $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
             );
         }

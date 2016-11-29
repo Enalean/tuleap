@@ -98,6 +98,8 @@ class frsPlugin extends \Plugin
 
         $presenter                 = new AdditionalInformationPresenter($linked_artifact_id);
         $params['additional_info'] = $renderer->renderToString('additional-information', $presenter);
+
+        $params['notes_in_markdown'] = true;
     }
 
     public function frs_process_edit_form($params)

@@ -7,9 +7,9 @@ cardwall = element trackers  {
             element column {
                 attribute id { xsd:string }?,
                 attribute label { xsd:string },
-                attribute bg_red { xsd:int }?,
-                attribute bg_green { xsd:int }?,
-                attribute bg_blue { xsd:int }?
+                attribute bg_red { xsd:long }?,
+                attribute bg_green { xsd:long }?,
+                attribute bg_blue { xsd:long }?
             }*
         }?,
 

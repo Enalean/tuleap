@@ -10,7 +10,9 @@
                 </div>
                 <div class="provider-content">
                     <p class="provider-last-login-date">{{ last_login }} {{ last_usage }}</p>
+                    {{^ provider_unique_authentication_endpoint }}
                     <button type="submit" class="btn btn-small"><i class="icon-unlink"></i> {{ unlink }}</button>
+                    {{/ provider_unique_authentication_endpoint }}
                 </div>
 
                 {{{ csrf_token }}}

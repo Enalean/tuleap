@@ -251,6 +251,7 @@ plugin_tracker_admin_index	modify_fieldset	 - Modify Field Set
 plugin_tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
 plugin_tracker_admin_index	field_type_changed	Field type successfully changed
 plugin_tracker_admin_index	field_type_not_changed	Field type could not be changed
+plugin_tracker_admin_index	used_in_triggers	You cannot remove a field used in a trigger. Please update trigger rules before deleting field.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -1171,6 +1172,7 @@ plugin_tracker_formelement_admin	switch_rb	Radio button
 plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of this field?
 plugin_tracker_formelement_admin	field_used_in_semantics	Impossible to delete this field (used in semantics)
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible to delete this field (used in workflow)
+plugin_tracker_formelement_admin	field_used_in_triggers	Impossible to delete this field (used in triggers)
 plugin_tracker_formelement_admin	field_used_in_field_dependencies	Impossible to delete this field (field dependencies)
 plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
 plugin_tracker_formelement_admin	hide_value	Show/hide this value
@@ -1754,6 +1756,7 @@ plugin_tracker_artifact_links_natures	cannot_format	Cannot be formatted because 
 plugin_tracker_artifact_links_natures	unsupported_field	A field needed for the format cannot be formatted.
 plugin_tracker_artifact_links_natures	no_child	As per config (hierarchy), the type _is_child cannot be used for the link to artifact #$1
 plugin_tracker_artifact_links_natures	force_child	As per config (hierarchy), force use of _is_child type for the link to artifact #$1
+plugin_tracker_artifact_links_natures	cancel_modal	Cancel
 plugin_tracker	pending_tv5_removal	Trackers Pending for Deletion
 plugin_tracker	no_pending	No Tracker pending for Deletion
 

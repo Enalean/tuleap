@@ -74,6 +74,7 @@ class ProviderManagerTest extends TuleapTestCase {
             'https://example.com/userinfo',
             'ID',
             'Secret',
+            false,
             'github',
             'fiesta_red'
         );
@@ -100,6 +101,7 @@ class ProviderManagerTest extends TuleapTestCase {
             'ID',
             'Secret',
             'github',
+            false,
             'fiesta_red'
         );
 

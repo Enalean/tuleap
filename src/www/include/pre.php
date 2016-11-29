@@ -35,6 +35,9 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
 }
 ForgeConfig::loadFromDatabase();
 
+bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
+textdomain('tuleap-core');
+
 // Fix path if needed
 if (isset($GLOBALS['htmlpurifier_dir'])) {
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['htmlpurifier_dir']);
@@ -168,6 +171,10 @@ require_once('session.php');
 require_once('user.php');
 $user_manager = UserManager::instance();
 $current_user = $user_manager->getCurrentUser();
+
+$current_locale = $current_user->getLocale();
+setlocale(LC_CTYPE, "$current_locale.UTF-8");
+setlocale(LC_MESSAGES, "$current_locale.UTF-8");
 
 //Pass username in order to be written in Apache access_log
 if(!IS_SCRIPT && function_exists('apache_note')) {

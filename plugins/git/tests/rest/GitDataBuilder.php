@@ -23,6 +23,7 @@ require_once __DIR__.'/DatabaseInitialization.php';
 
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\PatternValidator;
+use Tuleap\Git\Permissions\RegexpDefaultDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpRepositoryDao;
@@ -36,6 +37,7 @@ use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Gitolite\VersionDetector;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -226,7 +228,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
         Git_SystemEventManager $git_system_event_manager
     ) {
         $mirror_dao         = new Git_Mirror_MirrorDao();
-        $rc_reader          = new Git_Gitolite_GitoliteRCReader();
+        $version_detector   = new VersionDetector();
+        $rc_reader          = new Git_Gitolite_GitoliteRCReader($version_detector);
         $default_mirror_dao = new DefaultProjectMirrorDao();
 
         $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
@@ -244,7 +247,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             new FineGrainedRegexpValidator(),
             new RegexpFineGrainedRetriever(
                 new RegexpFineGrainedDao(),
-                new RegexpRepositoryDao()
+                new RegexpRepositoryDao(),
+                new RegexpDefaultDao()
             )
         );
 

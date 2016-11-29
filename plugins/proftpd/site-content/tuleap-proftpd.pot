@@ -1,0 +1,62 @@
+msgid "(S)FTP administration"
+msgstr ""
+
+msgid "Cannot open project"
+msgstr ""
+
+msgid "Control and interfact with Proftpd as FTP server"
+msgstr ""
+
+msgid "Date Added"
+msgstr ""
+
+msgid "FTP access"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Filepath"
+msgstr ""
+
+#, php-format
+msgid ""
+"No user group defined yet ! You should <a href=\"%1$s\">create</a> some in "
+"project administration."
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Permissions will be propagated on filesystem shortly"
+msgstr ""
+
+msgid "Proftpd"
+msgstr ""
+
+msgid "Readers"
+msgstr ""
+
+msgid ""
+"Select the user group that will be allowed to access and/or modify content "
+"in the FTP area. Please note that Writers will automatically have read "
+"access as well."
+msgstr ""
+
+msgid "Size (Bytes)"
+msgstr ""
+
+msgid "Writers"
+msgstr ""
+
+#, php-format
+msgid ""
+"You can also <a href=\"%1$s\">create</a> or <a href=\"%2$s\">modify</a>\n"
+"                user groups in project administration."
+msgstr ""
+
+msgid "You must be granted Project Administrator permission to access this"
+msgstr ""
+
+msgid "You're not granted sufficient rights to browse the (S)FTP repository"
+msgstr ""

@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 use HTTPRequest;
 use PFUser;
 use CSRFSynchronizerToken;
+use URLRedirect;
 
 class UserNavPresenter
 {
@@ -34,25 +35,26 @@ class UserNavPresenter
 
     /** @var boolean */
     public $display_new_user_menu_item;
+    /**
+     * @var URLRedirect
+     */
+    private $url_redirect;
 
     public function __construct(
         HTTPRequest $request,
         PFUser $current_user,
-        $display_new_user_menu_item
+        $display_new_user_menu_item,
+        URLRedirect $url_redirect
     ) {
         $this->request                    = $request;
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
+        $this->url_redirect               = $url_redirect;
     }
 
     public function is_user_logged_in()
     {
         return $this->current_user->isLoggedIn();
-    }
-
-    private function isUserTryingToLogin($request_uri)
-    {
-        return strpos($request_uri, '/account/login.php') === 0;
     }
 
     public function user_real_name()
@@ -82,15 +84,9 @@ class UserNavPresenter
 
     public function login_menu_item()
     {
-        $return_to = '';
-
-        if ($this->isUserTryingToLogin($_SERVER['REQUEST_URI'])) {
-            $return_to = '?return_to=' . urlencode($this->request->get('return_to'));
-        }
-
         return new GlobalMenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'login'),
-            '/account/login.php' . $return_to,
+            $this->url_redirect->buildReturnToLogin($_SERVER),
             '',
             ''
         );

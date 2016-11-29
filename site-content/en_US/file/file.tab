@@ -192,6 +192,7 @@ file_admin_editreleases	fileforge_error	An error occured while moving file to de
 file_admin_editreleases	db_error	An error occured while adding file into the database
 file_admin_editreleases	comment	Comment
 file_admin_editreleases	move_event	The file is in the queue for being moved. Please wait a few minutes for it to become available again.
+file_admin_editreleases	notes_in_markdown	Release notes and change log will be interpreted in Markdown format.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php

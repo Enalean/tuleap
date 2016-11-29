@@ -1,3 +1,21 @@
+Version 0.38 - Tuleap 9.2
+    * story #9668: Reorder columns
+
+Version 0.37 - Tuleap 9.2
+    * story #9668: Only display name in current folder selectbox
+
+Version 0.36 - Tuleap 9.2
+    * story #9668: Update tab title
+
+Version 0.35 - Tuleap 9.2
+    * request #9654 artifactfolder fatal error on cardwall
+
+Version 0.34 - Tuleap 9.2
+    * request #9593: Folders doesn't list things that are not directly connected to it
+
+Version 0.33 - Tuleap 9.2
+    * request #9594: Folders display artifact twice when it also a child
+
 Version 0.32 - Tuleap 9.0
     * story #9514: Go directly to the Folder tab
 

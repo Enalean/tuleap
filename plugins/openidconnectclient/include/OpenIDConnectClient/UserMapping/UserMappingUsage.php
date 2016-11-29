@@ -27,17 +27,27 @@ class UserMappingUsage {
     private $provider_icon;
     private $provider_id;
     private $provider_name;
+    private $is_unique_authentication_endpoint;
     private $user_id;
     private $last_used;
 
-    public function __construct($user_mapping_id, $provider_id, $provider_name, $provider_icon, $user_id, $last_used)
+    public function __construct(
+        $user_mapping_id,
+        $provider_id,
+        $provider_name,
+        $provider_icon,
+        $is_unique_authentication_endpoint,
+        $user_id,
+        $last_used
+    )
     {
-        $this->user_mapping_id = $user_mapping_id;
-        $this->provider_id     = $provider_id;
-        $this->provider_name   = $provider_name;
-        $this->user_id         = $user_id;
-        $this->last_used       = $last_used;
-        $this->provider_icon   = $provider_icon;
+        $this->user_mapping_id                   = $user_mapping_id;
+        $this->provider_id                       = $provider_id;
+        $this->provider_name                     = $provider_name;
+        $this->user_id                           = $user_id;
+        $this->last_used                         = $last_used;
+        $this->provider_icon                     = $provider_icon;
+        $this->is_unique_authentication_endpoint = $is_unique_authentication_endpoint;
     }
 
     public function getUserMappingId()
@@ -63,5 +73,10 @@ class UserMappingUsage {
 
     public function getLastUsage() {
         return $this->last_used;
+    }
+
+    public function isUsedAsUniqueAuthenticationEndpoint()
+    {
+        return $this->is_unique_authentication_endpoint;
     }
 }

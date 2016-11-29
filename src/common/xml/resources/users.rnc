@@ -3,7 +3,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 grammar {
     start = element users {
         element user {
-            element id { xsd:int },
+            element id { xsd:long },
             element username { xsd:string },
             element realname { xsd:string },
             element email { xsd:string },

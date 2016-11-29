@@ -646,8 +646,13 @@ class ArtifactReport {
 	 *
 	 * @return string
 	 */
-	function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids) {
-        
+	public function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids)
+	{
+        $select   = null;
+        $from     = null;
+        $where    = null;
+        $order_by = null;
+
 		$this->getResultQueryElements($prefs,$morder,$advsrch,$aids,$select,$from,$where,$order_by);
 		$limit ="";
 		// Final query
@@ -661,7 +666,6 @@ class ArtifactReport {
          //echo "<DBG> query=".$sql."<br>";
 		
 		return $sql;
-	
 	}
 
 	/**

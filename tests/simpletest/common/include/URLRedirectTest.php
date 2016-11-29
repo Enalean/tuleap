@@ -24,7 +24,8 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     private $url_redirect;
 
     public function setUp() {
-        $this->url_redirect = new URLRedirect();
+        $event_manager      = mock('EventManager');
+        $this->url_redirect = new URLRedirect($event_manager);
         $this->request = mock('HTTPRequest');
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 'example.com';
@@ -37,6 +38,28 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         unset($GLOBALS['sys_https_host']);
         unset($GLOBALS['sys_default_domain']);
         parent::tearDown();
+    }
+
+    public function itCreatesALoginURLReturningToTheCurrentPage()
+    {
+        $login_url = $this->url_redirect->buildReturnToLogin(array('REQUEST_URI' => '/some_tuleap_page'));
+        $this->assertEqual('/account/login.php?return_to=%2Fsome_tuleap_page', $login_url);
+    }
+
+    public function itCreatesALoginURLToTheUserProfileIfHomepageOrLoginOrRegisterPage()
+    {
+        $login_url_from_homepage = $this->url_redirect->buildReturnToLogin(array('REQUEST_URI' => '/'));
+        $this->assertEqual('/account/login.php?return_to=%2Fmy%2F', $login_url_from_homepage);
+
+        $login_url_from_login_page = $this->url_redirect->buildReturnToLogin(
+            array('REQUEST_URI' => '/account/login.php?return_to=some_page')
+        );
+        $this->assertEqual('/account/login.php?return_to=%2Fmy%2F', $login_url_from_login_page);
+
+        $login_url_from_register_page = $this->url_redirect->buildReturnToLogin(
+            array('REQUEST_URI' => '/account/register.php')
+        );
+        $this->assertEqual('/account/login.php?return_to=%2Fmy%2F', $login_url_from_register_page);
     }
 
     public function itStayInSSLWhenForceSSLIsOn() {

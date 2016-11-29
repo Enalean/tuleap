@@ -26,6 +26,7 @@ use EventManager;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownItemsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenterBuilder;
+use URLRedirect;
 
 class PresenterBuilder
 {
@@ -41,7 +42,8 @@ class PresenterBuilder
     public function build(
         HTTPRequest $request,
         PFUser $current_user,
-        array $extra_tabs
+        array $extra_tabs,
+        URLRedirect $url_redirect
     ) {
         $this->request      = $request;
         $this->current_user = $current_user;
@@ -56,7 +58,8 @@ class PresenterBuilder
             new UserNavPresenter(
                 $this->request,
                 $this->current_user,
-                $this->displayNewAccountMenuItem()
+                $this->displayNewAccountMenuItem(),
+                $url_redirect
             )
         );
     }

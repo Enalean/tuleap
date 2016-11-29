@@ -300,12 +300,13 @@ class DefaultFineGrainedPermissionFactory
 
     private function buildRepresentationFromRequest(Codendi_Request $request, Project $project, $prefix)
     {
-        $permissions = array();
-        $patterns    = $request->get("$prefix-name");
+        $permissions              = array();
+        $patterns                 = $request->get("$prefix-name");
+        $are_we_activating_regexp = $request->get("use-regexp");
 
         if ($patterns) {
             foreach ($patterns as $index => $pattern) {
-                if (! $this->validator->isValid($pattern)) {
+                if (! $this->validator->isValidForDefault($project, $pattern, $are_we_activating_regexp)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::WARN,
                         $GLOBALS['Language']->getText(

@@ -1,4 +1,45 @@
-Version 9.1 (Not Released Yet)
+Version 9.2 (Not release yet)
+
+	== Enhancement ==
+	* story #9586: Get rid of Bootstrap in site admin / configuration
+		- Disable F5 possibility when deleting tracker
+	* request #9202: Make Tuleap PHPWiki database access compatible with PHP 5.6
+	* story #9658: log in into a Tuleap instance using only an OpenID Connect provider (Disable register a user page when registration is not possible)
+
+	== Bug Fix ==
+	* request #9666: New siteadmin is slow
+	* request #9667: SVN cache do not remove properly the oldest entry of the cache
+	* request #9673: Correct the name of scss file for Git in Siteadmin
+	* request #9551: Burndown improvement
+	* request #9677: Bad escaping of Markdown in Tuleap
+	* request #9676: XML xsd:int only deals with 32bits int
+	* Fix the CI (yet another time)
+
+	== Plugins ==
+	* tracker: 5.1043
+	* proftpd: 0.29
+	* graphontrackers: 1.18
+	* statistics: 0.69
+	* projectlinks: 2.12
+	* agiledashboard: 1.436
+	* artifactsfolders: 0.38
+	* svn: 0.106
+	* openidconnectclient: 0.42
+	* git: 4.297
+	* mediawiki: 0.127
+	* cardwall: 1.71
+	* frs: 0.22
+
+	== Themes ==
+	* FlamingParrot: 1.166
+	* BurningParrot: 0.18
+
+	== Development ==
+	* request #9657: Tuleap goes gettext
+	* request #9202: Make Tuleap compatible with PHP 5.6
+		- Remove call-time pass-by-reference in graphontracker (v3)
+
+Version 9.1 (Thursday, November 10th 2016)
 
 	== Enhancement ==
 	* request #9592: Lint new .scss files using scss-lint
@@ -30,6 +71,7 @@ Version 9.1 (Not Released Yet)
 	* request #9636: SVN viewer can not be accessed if EPEL viewvc is not installed
 	* request #9640: Missing Python dependencies
 	* request #9638: prevent browser to autofill login field in user details page in siteadmin
+	* request #9648: BurningParrot package is not updated for each version of Tuleap
 
 	== Plugins ==
 	* svn: 0.104

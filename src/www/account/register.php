@@ -26,6 +26,17 @@ if($page == "admin_creation"){
    session_require(array('group'=>'1','admin_flags'=>'A'));
 }
 
+$is_register_page_accessible = true;
+$event_manager = EventManager::instance();
+$event_manager->processEvent('display_newaccount', array('allow' => &$is_register_page_accessible));
+
+if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible) {
+    exit_error(
+        $GLOBALS['Language']->getText('include_session','insufficient_access'),
+        $GLOBALS['Language']->getText('include_session','no_access')
+    );
+}
+
 function register_valid($mail_confirm_code, array &$errors)	{
     global $Language;
 

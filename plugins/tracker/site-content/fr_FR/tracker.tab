@@ -242,6 +242,7 @@ plugin_tracker_admin_index	modify_fieldset	 - Modifier le groupe de champs
 plugin_tracker_admin_index	modify_fieldset_for	 - Modifier le groupe de champs '$1'
 plugin_tracker_admin_index	field_type_changed	Type du champ modifié avec succès
 plugin_tracker_admin_index	field_type_not_changed	Le type du champ n'a pas pu être modifié
+plugin_tracker_admin_index	used_in_triggers	Il est interdit de supprimer un champs utilisé dans un déclancheur. Merci de mettre le déclancheur à jour avant de supprimer le champs.
 
 #
 #-----------------------------------------------
@@ -1170,6 +1171,7 @@ plugin_tracker_formelement_admin	switch_rb	boutons radio
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	field_used_in_semantics	Impossible de supprimer ce champ (utilisé en sémantique)
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible de supprimer ce champ (utilisé pour le workflow)
+plugin_tracker_formelement_admin	field_used_in_triggers	Impossible de supprimer ce champ (utilisé pour dans les déclancheurs)
 plugin_tracker_formelement_admin	field_used_in_field_dependencies	Impossible de supprimer ce champ (utilisé pour une dépendance entre champs)
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
@@ -1753,6 +1755,7 @@ plugin_tracker_artifact_links_natures	cannot_format	Ne peut pas être formaté c
 plugin_tracker_artifact_links_natures	unsupported_field	Un des champs requis pour le format ne peut pas être formaté.
 plugin_tracker_artifact_links_natures	no_child	Tel que définit par la hiérarchie, la nature "_is_child" ne peut être utilisée pour le lien vers l'artéfact #$1
 plugin_tracker_artifact_links_natures	force_child	Tel que définit par la hiérarchie, la nature "_is_child" a été forcée pour le lien vers l'artéfact #$1
+plugin_tracker_artifact_links_natures	cancel_modal	Annuler
 plugin_tracker	pending_tv5_removal	Outils de suivi en attente de suppression
 plugin_tracker	no_pending	Aucun outil de suivi en attente de suppression
 

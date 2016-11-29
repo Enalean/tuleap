@@ -1,3 +1,33 @@
+Version 5.1043 - Tuleap 9.2
+    * request #9551: When start date has changed, burndown always ask to generate cache
+
+Version 5.1042 - Tuleap 9.2
+    * request #9551: Generate full burndown at first display or when missing cached data
+
+Version 5.1041 - Tuleap 9.2
+    * request #9551: Correct field_id saved in database and correct timestamp saved
+
+Version 5.1040 - Tuleap 9.2
+    * request #9626 Fatal error when deleting a field used in a trigger
+
+Version 5.1039 - Tuleap 9.2
+    * request #9676: XML xsd:int only deals with 32bits int
+
+Version 5.1038 - Tuleap 9.2
+    * request #9551: Cache yesterday values at root daily
+
+Version 5.1037 - Tuleap 9.2
+    * request #9551: Refactoring, Add a computed field calculator for burndown
+
+Version 5.1036 - Tuleap 9.2
+    * request #9662 Tracker imported form XML import cannot add attachement
+
+Version 5.1035 - Tuleap 9.2
+    * request #9654 artifactfolder fatal error on cardwall
+
+Version 5.1034 - Tuleap 9.2
+    * request #9650: Correct label for modal in artifact links types administration
+
 Version 5.1033 - Tuleap 9.1
     * story #9586 Get rid of Bootstrap in site admin / configuration (Trackers pending removal)
 

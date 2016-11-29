@@ -1,24 +1,23 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Tracker\ArtifactPendingDeletionPresenter;
@@ -43,34 +42,10 @@ switch ($func) {
                 $feedback = $GLOBALS['Language']->getText('tracker_admin_restore', 'tracker_restored');
             }
         }
+        $GLOBALS['Response']->redirect('/tracker/admin/restore.php');
         break;
 
-    case 'delay':
-        if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {
-            $ath = new ArtifactType($group, $request->getValidated('atid', 'uint'));
-            // just check date >= today
-
-            if (! $ath->delay($delay_date)) {
-                if ($ath->isError()) {
-                    exit_error(
-                        $GLOBALS['Language']->getText('global', 'error'),
-                        $ath->getErrorMessage() . " | " . $GLOBALS['Language']->getText(
-                            'tracker_admin_restore', 'delay_failed'
-                        )
-                    );
-                }
-                exit_error(
-                    $GLOBALS['Language']->getText('global', 'error'),
-                    $GLOBALS['Language']->getText('tracker_admin_restore', 'delay_failed')
-                );
-            } else {
-                $feedback = $GLOBALS['Language']->getText('tracker_admin_restore', 'delayed_deletion');
-            }
-        }
-        break;
-
-
-    case 'delete':
+        case 'delete':
         // Create field factory
         if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {
             $atid           = $request->getValidated('atid', 'uint');
@@ -101,6 +76,7 @@ switch ($func) {
             }
             $feedback = $GLOBALS['Language']->getText('tracker_admin_restore', 'tracker_deleted');
         }
+        $GLOBALS['Response']->redirect('/tracker/admin/restore.php');
         break;
 
 
@@ -124,11 +100,11 @@ if (TrackerV3::instance()->available()) {
 
     while ($tracker = db_fetch_array($trackers)) {
         $tracker_list[] = array(
-            'group_artifact_id' => $tracker['group_artifact_id'],
-            'project_name' => $tracker['project_name'],
-            'name' => $tracker['name'],
-            'deletion_date' => date("Y-m-d", $tracker['deletion_date']),
-            'group_id' => $tracker['group_id'],
+           'group_artifact_id' => $tracker['group_artifact_id'],
+           'project_name'      => $tracker['project_name'],
+           'name'              => $tracker['name'],
+           'deletion_date'     => date("Y-m-d", $tracker['deletion_date']),
+           'group_id'          => $tracker['group_id'],
         );
     }
 

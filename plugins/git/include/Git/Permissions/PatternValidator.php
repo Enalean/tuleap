@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
+use Project;
 
 class PatternValidator
 {
@@ -52,6 +53,15 @@ class PatternValidator
     public function isValidForRepository(GitRepository $repository, $pattern, $are_we_activating_regexp)
     {
         if ($this->regexp_retriever->areRegexpActivatedForRepository($repository) || $are_we_activating_regexp) {
+            return $this->regexp_validator->isPatternValid($pattern);
+        }
+
+        return $this->validator->isPatternValid($pattern);
+    }
+
+    public function isValidForDefault(Project $project, $pattern, $are_we_activating_regexp)
+    {
+        if ($this->regexp_retriever->areRegexpActivatedForDefault($project) || $are_we_activating_regexp) {
             return $this->regexp_validator->isPatternValid($pattern);
         }
 

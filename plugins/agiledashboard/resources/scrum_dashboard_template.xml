@@ -2,82 +2,82 @@
 <project>
   <agiledashboard>
     <plannings>
-      <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T32" backlog_title="Product Backlog">
+      <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T815" backlog_title="Product Backlog">
         <backlogs>
-          <backlog>T30</backlog>
-          <backlog>T35</backlog>
+          <backlog>T812</backlog>
+          <backlog>T818</backlog>
         </backlogs>
       </planning>
-      <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T33" backlog_title="Epic Backlog">
+      <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T816" backlog_title="Epic Backlog">
         <backlogs>
-          <backlog>T30</backlog>
-          <backlog>T35</backlog>
+          <backlog>T812</backlog>
+          <backlog>T818</backlog>
         </backlogs>
       </planning>
     </plannings>
   </agiledashboard>
   <trackers>
-    <tracker id="T30" parent_id="0" instantiate_for_new_projects="1">
+    <tracker id="T812" parent_id="0" instantiate_for_new_projects="1">
       <name><![CDATA[Bug]]></name>
       <item_name>bugs</item_name>
       <description><![CDATA[Incident, anomalies]]></description>
       <color>fiesta_red</color>
       <cannedResponses/>
       <formElements>
-        <formElement type="fieldset" ID="F817" rank="297" required="1">
+        <formElement type="fieldset" ID="F14836" rank="315" required="1">
           <name>fieldset_1</name>
           <label><![CDATA[fieldset_default_bugs_lbl_key]]></label>
           <description><![CDATA[fieldset_default_bugs_desc_key]]></description>
           <formElements>
-            <formElement type="column" ID="F818" rank="0">
+            <formElement type="column" ID="F14837" rank="0">
               <name>column_0</name>
               <label><![CDATA[c0]]></label>
               <formElements>
-                <formElement type="subby" ID="F819" rank="0" notifications="1">
+                <formElement type="subby" ID="F14838" rank="0" notifications="1">
                   <name>submitted_by</name>
                   <label><![CDATA[Submitted by]]></label>
                   <description><![CDATA[User who originally submitted the artifact]]></description>
                 </formElement>
-                <formElement type="aid" ID="F820" rank="2">
+                <formElement type="aid" ID="F14839" rank="2">
                   <name>artifact_id</name>
                   <label><![CDATA[Artifact ID]]></label>
                   <description><![CDATA[Unique artifact identifier]]></description>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F821" rank="2">
+            <formElement type="column" ID="F14840" rank="2">
               <name>column_1</name>
               <label><![CDATA[c1]]></label>
               <formElements>
-                <formElement type="subon" ID="F822" rank="0">
+                <formElement type="subon" ID="F14841" rank="0">
                   <name>open_date</name>
                   <label><![CDATA[Submitted on]]></label>
                   <description><![CDATA[Date and time for the initial artifact submission]]></description>
                 </formElement>
-                <formElement type="lud" ID="F823" rank="2">
+                <formElement type="lud" ID="F14842" rank="2">
                   <name>last_update_date</name>
                   <label><![CDATA[Last Modified On]]></label>
                   <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="string" ID="F824" rank="3" required="1">
+            <formElement type="string" ID="F14843" rank="3" required="1">
               <name>summary</name>
               <label><![CDATA[Summary]]></label>
               <description><![CDATA[One line description of the artifact]]></description>
               <properties maxchars="150" size="60"/>
             </formElement>
-            <formElement type="text" ID="F825" rank="4">
+            <formElement type="text" ID="F14844" rank="4">
               <name>details</name>
               <label><![CDATA[Original Submission]]></label>
               <description><![CDATA[A full description of the artifact]]></description>
               <properties rows="7" cols="60"/>
             </formElement>
-            <formElement type="file" ID="F826" rank="5">
+            <formElement type="file" ID="F14845" rank="5">
               <name>attachment</name>
               <label><![CDATA[Attachments]]></label>
             </formElement>
-            <formElement type="tbl" ID="F827" rank="6" notifications="1">
+            <formElement type="tbl" ID="F14846" rank="6" notifications="1">
               <name>cc</name>
               <label><![CDATA[CC]]></label>
               <properties hint="Type in a search term"/>
@@ -89,65 +89,65 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F828" rank="316" required="1">
+        <formElement type="fieldset" ID="F14847" rank="334" required="1">
           <name>fieldset_2</name>
           <label><![CDATA[fieldset_status_bugs_lbl_key]]></label>
           <description><![CDATA[fieldset_status_bugs_desc_key]]></description>
           <formElements>
-            <formElement type="column" ID="F829" rank="0">
+            <formElement type="column" ID="F14848" rank="0">
               <name>column_0_1</name>
               <label><![CDATA[c0]]></label>
               <formElements>
-                <formElement type="sb" ID="F830" rank="0" required="1">
+                <formElement type="sb" ID="F14849" rank="0" required="1">
                   <name>stage</name>
                   <label><![CDATA[Stage]]></label>
                   <description><![CDATA[How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)]]></description>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V712" label="New" is_hidden="0">
+                      <item ID="V11410" label="New" is_hidden="0">
                         <description><![CDATA[New entry, no progress done so far]]></description>
                       </item>
-                      <item ID="V713" label="On going" is_hidden="0">
+                      <item ID="V11411" label="On going" is_hidden="0">
                         <description><![CDATA[The team is working on the subject]]></description>
                       </item>
-                      <item ID="V714" label="Fixed" is_hidden="0">
+                      <item ID="V11412" label="Fixed" is_hidden="0">
                         <description><![CDATA[The bug was resolved]]></description>
                       </item>
-                      <item ID="V715" label="Invalid" is_hidden="0">
+                      <item ID="V11413" label="Invalid" is_hidden="0">
                         <description><![CDATA[The submitted bug is not valid for some reason (wrong description, using incorrect software version,...)]]></description>
                       </item>
-                      <item ID="V716" label="Wont Fix" is_hidden="0">
+                      <item ID="V11414" label="Wont Fix" is_hidden="0">
                         <description><![CDATA[The bug won't be fixed (probably because it is very minor)]]></description>
                       </item>
-                      <item ID="V717" label="Works for me" is_hidden="0">
+                      <item ID="V11415" label="Works for me" is_hidden="0">
                         <description><![CDATA[The project team was unable to reproduce the bug]]></description>
                       </item>
-                      <item ID="V718" label="Duplicate" is_hidden="0">
+                      <item ID="V11416" label="Duplicate" is_hidden="0">
                         <description><![CDATA[This bug is already covered by another bug description (see related bugs list)]]></description>
                       </item>
                     </items>
                     <default_values>
-                      <value REF="V712"/>
+                      <value REF="V11410"/>
                     </default_values>
                   </bind>
                 </formElement>
-                <formElement type="float" ID="F831" rank="1">
+                <formElement type="float" ID="F14850" rank="1">
                   <name>initial_effort</name>
                   <label><![CDATA[Initial effort]]></label>
                   <properties size="5"/>
                 </formElement>
-                <formElement type="float" ID="F832" rank="2">
+                <formElement type="float" ID="F14851" rank="2">
                   <name>remaining_effort</name>
                   <label><![CDATA[Remaining effort]]></label>
                   <properties size="5"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F833" rank="2">
+            <formElement type="column" ID="F14852" rank="2">
               <name>column_1_1</name>
               <label><![CDATA[c1]]></label>
               <formElements>
-                <formElement type="sb" ID="F834" rank="0" notifications="1">
+                <formElement type="sb" ID="F14853" rank="0" notifications="1">
                   <name>assigned_to</name>
                   <label><![CDATA[Assigned to]]></label>
                   <description><![CDATA[Who is in charge of solving the artifact]]></description>
@@ -157,23 +157,23 @@
                     </items>
                   </bind>
                 </formElement>
-                <formElement type="sb" ID="F835" rank="1" required="1">
+                <formElement type="sb" ID="F14854" rank="1" required="1">
                   <name>severity</name>
                   <label><![CDATA[Severity]]></label>
                   <description><![CDATA[Impact of the artifact on the system (Critical, Major,...)]]></description>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V719" label="Low impact" is_hidden="0"/>
-                      <item ID="V720" label="Major impact" is_hidden="0"/>
-                      <item ID="V721" label="Critical impact" is_hidden="0"/>
+                      <item ID="V11417" label="Low impact" is_hidden="0"/>
+                      <item ID="V11418" label="Major impact" is_hidden="0"/>
+                      <item ID="V11419" label="Critical impact" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V719" r="218" g="218" b="218"/>
-                      <decorator REF="V720" r="255" g="204" b="102"/>
-                      <decorator REF="V721" r="255" g="51" b="0"/>
+                      <decorator REF="V11417" r="218" g="218" b="218"/>
+                      <decorator REF="V11418" r="255" g="204" b="102"/>
+                      <decorator REF="V11419" r="255" g="51" b="0"/>
                     </decorators>
                     <default_values>
-                      <value REF="V719"/>
+                      <value REF="V11417"/>
                     </default_values>
                   </bind>
                 </formElement>
@@ -181,31 +181,31 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F836" rank="328" required="1">
+        <formElement type="fieldset" ID="F14855" rank="346" required="1">
           <name>fieldset_5</name>
           <label><![CDATA[Links]]></label>
           <description><![CDATA[Establish a dependency link from an artifact to one or several other artifacts belonging to any of the tracker of any project]]></description>
           <formElements>
-            <formElement type="art_link" ID="F837" rank="0">
+            <formElement type="art_link" ID="F14856" rank="0">
               <name>links</name>
               <label><![CDATA[Links]]></label>
             </formElement>
-            <formElement type="cross" ID="F838" rank="1">
+            <formElement type="cross" ID="F14857" rank="1">
               <name>references</name>
               <label><![CDATA[References]]></label>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F839" rank="340" required="1">
+        <formElement type="fieldset" ID="F14858" rank="358" required="1">
           <name>fieldset_7</name>
           <label><![CDATA[Permissions]]></label>
           <description><![CDATA[Restrict access to artifact]]></description>
           <formElements>
-            <formElement type="column" ID="F840" rank="0">
+            <formElement type="column" ID="F14859" rank="0">
               <name>column_0_11111</name>
               <label><![CDATA[c0]]></label>
               <formElements>
-                <formElement type="perm" ID="F841" rank="0">
+                <formElement type="perm" ID="F14860" rank="0">
                   <name>permissions_on_artifact</name>
                   <label><![CDATA[Permissions on Artifact]]></label>
                 </formElement>
@@ -219,45 +219,45 @@
           <shortname>title</shortname>
           <label>Title</label>
           <description>Define the title of an artifact</description>
-          <field REF="F824"/>
+          <field REF="F14843"/>
         </semantic>
         <semantic type="description">
           <shortname>description</shortname>
           <label>Description</label>
           <description>Define the description of an artifact</description>
-          <field REF="F825"/>
+          <field REF="F14844"/>
         </semantic>
         <semantic type="status">
           <shortname>status</shortname>
           <label>Status</label>
           <description>Define the status of an artifact</description>
-          <field REF="F830"/>
+          <field REF="F14849"/>
           <open_values>
-            <open_value REF="V712"/>
-            <open_value REF="V713"/>
-            <open_value REF="V717"/>
+            <open_value REF="V11410"/>
+            <open_value REF="V11411"/>
+            <open_value REF="V11415"/>
           </open_values>
         </semantic>
         <semantic type="contributor">
           <shortname>contributor</shortname>
           <label>Contributor/assignee</label>
           <description>Define the contributor/assignee of an artifact</description>
-          <field REF="F834"/>
+          <field REF="F14853"/>
         </semantic>
         <semantic type="tooltip">
-          <field REF="F824"/>
-          <field REF="F825"/>
-          <field REF="F830"/>
+          <field REF="F14843"/>
+          <field REF="F14844"/>
+          <field REF="F14849"/>
         </semantic>
         <semantic type="plugin_cardwall_card_fields">
-          <field REF="F834"/>
-          <field REF="F832"/>
+          <field REF="F14853"/>
+          <field REF="F14851"/>
         </semantic>
         <semantic type="initial_effort">
           <shortname>initial_effort</shortname>
           <label>Initial Effort</label>
           <description>Define the initial effort of an artifact.</description>
-          <field REF="F831"/>
+          <field REF="F14850"/>
         </semantic>
       </semantics>
       <rules>
@@ -270,46 +270,46 @@
           <description>Bugs Report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F834"/>
+              <field REF="F14853"/>
             </criteria>
             <criteria rank="1">
-              <field REF="F830"/>
+              <field REF="F14849"/>
             </criteria>
             <criteria rank="2">
-              <field REF="F824"/>
+              <field REF="F14843"/>
             </criteria>
             <criteria rank="3">
-              <field REF="F835"/>
+              <field REF="F14854"/>
             </criteria>
           </criterias>
           <renderers>
             <renderer type="table" rank="0" chunksz="15">
               <name>Results</name>
               <columns>
-                <field REF="F820"/>
-                <field REF="F824"/>
-                <field REF="F822"/>
-                <field REF="F834"/>
-                <field REF="F819"/>
-                <field REF="F830"/>
-                <field REF="F835"/>
+                <field REF="F14839"/>
+                <field REF="F14843"/>
+                <field REF="F14841"/>
+                <field REF="F14853"/>
+                <field REF="F14838"/>
+                <field REF="F14849"/>
+                <field REF="F14854"/>
               </columns>
             </renderer>
             <renderer type="plugin_graphontrackersv5" rank="1">
               <name>Default</name>
               <description>Graphic Report By Default For Bugs</description>
               <charts>
-                <chart type="bar" width="600" height="400" rank="0" base="F835" group="F830">
-                  <title>Severity</title>
-                  <description>Number of Artifacts by severity level</description>
+                <chart type="pie" width="600" height="400" rank="0" base="F14853">
+                  <title>Assignment</title>
+                  <description>Number of Artifacts by Assignee</description>
                 </chart>
-                <chart type="pie" width="600" height="400" rank="0" base="F830">
+                <chart type="pie" width="600" height="400" rank="0" base="F14849">
                   <title>Status</title>
                   <description>Number of Artifacts by Status</description>
                 </chart>
-                <chart type="pie" width="600" height="400" rank="0" base="F834">
-                  <title>Assignment</title>
-                  <description>Number of Artifacts by Assignee</description>
+                <chart type="bar" width="600" height="400" rank="0" base="F14854" group="F14849">
+                  <title>Severity</title>
+                  <description>Number of Artifacts by severity level</description>
                 </chart>
               </charts>
             </renderer>
@@ -320,41 +320,41 @@
           <description>The system default artifact report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F834"/>
+              <field REF="F14853"/>
             </criteria>
             <criteria rank="1">
-              <field REF="F822"/>
+              <field REF="F14841"/>
             </criteria>
             <criteria rank="2">
-              <field REF="F820"/>
+              <field REF="F14839"/>
             </criteria>
           </criterias>
           <renderers>
             <renderer type="table" rank="0" chunksz="15">
               <name>Results</name>
               <columns>
-                <field REF="F820"/>
-                <field REF="F824"/>
-                <field REF="F822"/>
-                <field REF="F834"/>
-                <field REF="F819"/>
+                <field REF="F14839"/>
+                <field REF="F14843"/>
+                <field REF="F14841"/>
+                <field REF="F14853"/>
+                <field REF="F14838"/>
               </columns>
             </renderer>
             <renderer type="plugin_graphontrackersv5" rank="1">
               <name>Default</name>
               <description>Graphic Report By Default For Bugs</description>
               <charts>
-                <chart type="pie" width="600" height="400" rank="0" base="F834">
-                  <title>Assignment</title>
-                  <description>Number of Artifacts by Assignee</description>
-                </chart>
-                <chart type="bar" width="600" height="400" rank="0" base="F835">
-                  <title>Severity</title>
-                  <description>Number of Artifacts by severity level</description>
-                </chart>
                 <chart type="pie" width="600" height="400" rank="0">
                   <title>Status</title>
                   <description>Number of Artifacts by Status</description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0" base="F14854">
+                  <title>Severity</title>
+                  <description>Number of Artifacts by severity level</description>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0" base="F14853">
+                  <title>Assignment</title>
+                  <description>Number of Artifacts by Assignee</description>
                 </chart>
               </charts>
             </renderer>
@@ -362,12 +362,12 @@
         </report>
       </reports>
       <workflow>
-        <field_id REF="F830"/>
+        <field_id REF="F14849"/>
         <is_used>0</is_used>
         <transitions>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V712"/>
+            <to_id REF="V11410"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -378,7 +378,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V713"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -389,7 +389,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V714"/>
+            <to_id REF="V11412"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -400,7 +400,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V715"/>
+            <to_id REF="V11413"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -411,7 +411,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V716"/>
+            <to_id REF="V11414"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -422,7 +422,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V717"/>
+            <to_id REF="V11415"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -433,7 +433,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V718"/>
+            <to_id REF="V11416"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -443,8 +443,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V712"/>
-            <to_id REF="V713"/>
+            <from_id REF="V11410"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -454,8 +454,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V712"/>
-            <to_id REF="V714"/>
+            <from_id REF="V11410"/>
+            <to_id REF="V11412"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -465,8 +465,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V712"/>
-            <to_id REF="V715"/>
+            <from_id REF="V11410"/>
+            <to_id REF="V11413"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -476,8 +476,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V712"/>
-            <to_id REF="V716"/>
+            <from_id REF="V11410"/>
+            <to_id REF="V11414"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -487,8 +487,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V712"/>
-            <to_id REF="V717"/>
+            <from_id REF="V11410"/>
+            <to_id REF="V11415"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -498,8 +498,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V712"/>
-            <to_id REF="V718"/>
+            <from_id REF="V11410"/>
+            <to_id REF="V11416"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -509,8 +509,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V713"/>
-            <to_id REF="V714"/>
+            <from_id REF="V11411"/>
+            <to_id REF="V11412"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -520,8 +520,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V713"/>
-            <to_id REF="V715"/>
+            <from_id REF="V11411"/>
+            <to_id REF="V11413"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -531,8 +531,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V713"/>
-            <to_id REF="V716"/>
+            <from_id REF="V11411"/>
+            <to_id REF="V11414"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -542,8 +542,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V713"/>
-            <to_id REF="V717"/>
+            <from_id REF="V11411"/>
+            <to_id REF="V11415"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -553,8 +553,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V714"/>
-            <to_id REF="V712"/>
+            <from_id REF="V11412"/>
+            <to_id REF="V11410"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -564,8 +564,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V714"/>
-            <to_id REF="V713"/>
+            <from_id REF="V11412"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -575,8 +575,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V715"/>
-            <to_id REF="V712"/>
+            <from_id REF="V11413"/>
+            <to_id REF="V11410"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -586,8 +586,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V715"/>
-            <to_id REF="V713"/>
+            <from_id REF="V11413"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -597,8 +597,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V716"/>
-            <to_id REF="V712"/>
+            <from_id REF="V11414"/>
+            <to_id REF="V11410"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -608,8 +608,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V716"/>
-            <to_id REF="V713"/>
+            <from_id REF="V11414"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -619,8 +619,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V717"/>
-            <to_id REF="V712"/>
+            <from_id REF="V11415"/>
+            <to_id REF="V11410"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -630,8 +630,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V717"/>
-            <to_id REF="V713"/>
+            <from_id REF="V11415"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -641,8 +641,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V718"/>
-            <to_id REF="V712"/>
+            <from_id REF="V11416"/>
+            <to_id REF="V11410"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -652,8 +652,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V718"/>
-            <to_id REF="V713"/>
+            <from_id REF="V11416"/>
+            <to_id REF="V11411"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -666,100 +666,513 @@
       </workflow>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
-        <permission scope="field" REF="F819" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F820" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F822" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F823" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F824" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F824" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F824" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F825" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F825" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F825" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F826" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F826" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F827" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F827" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F830" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F830" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F831" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F831" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F831" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F832" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F832" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F832" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F834" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F834" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F834" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F835" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F835" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F835" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F837" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F837" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F837" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F838" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F841" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F841" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14838" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14839" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14841" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14842" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14843" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14843" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14843" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14844" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14844" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14844" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14845" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14845" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14846" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14846" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14849" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14849" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14850" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14850" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14850" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14851" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14851" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14851" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14853" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14853" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14853" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14854" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14854" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14854" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14856" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14856" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14856" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14857" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14860" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14860" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
-    <tracker id="T31" parent_id="0" instantiate_for_new_projects="1">
+    <tracker id="T813" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[Change Requests]]></name>
+      <item_name>ChangeRequest</item_name>
+      <description><![CDATA[Project change request tracker]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F14861" rank="1194">
+          <name>fieldset1</name>
+          <label><![CDATA[Identification]]></label>
+          <formElements>
+            <formElement type="column" ID="F14862" rank="0">
+              <name>column10</name>
+              <label><![CDATA[c1]]></label>
+              <formElements>
+                <formElement type="aid" ID="F14863" rank="0">
+                  <name>artifact_id</name>
+                  <label><![CDATA[Change request number]]></label>
+                  <description><![CDATA[Unique artifact identifier]]></description>
+                </formElement>
+                <formElement type="sb" ID="F14864" rank="3" required="1">
+                  <name>product</name>
+                  <label><![CDATA[Product]]></label>
+                  <description><![CDATA[Product impacted by the change request]]></description>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V11420" label="Product 1" is_hidden="0"/>
+                      <item ID="V11421" label="Product 2" is_hidden="0"/>
+                    </items>
+                  </bind>
+                </formElement>
+                <formElement type="subby" ID="F14865" rank="4">
+                  <name>requester</name>
+                  <label><![CDATA[Requester]]></label>
+                  <description><![CDATA[User who originally submitted the change request]]></description>
+                </formElement>
+                <formElement type="sb" ID="F14866" rank="5" notifications="1">
+                  <name>approved_by</name>
+                  <label><![CDATA[Approved by]]></label>
+                  <description><![CDATA[Who is in charge of approving the change request]]></description>
+                  <bind type="users">
+                    <items>
+                      <item label="group_members"/>
+                    </items>
+                  </bind>
+                </formElement>
+                <formElement type="date" ID="F14867" rank="6">
+                  <name>close_date</name>
+                  <label><![CDATA[Close date]]></label>
+                  <properties display_time="0"/>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F14868" rank="1">
+              <name>column10_1</name>
+              <label><![CDATA[c2]]></label>
+              <formElements>
+                <formElement type="subon" ID="F14869" rank="0">
+                  <name>open_date</name>
+                  <label><![CDATA[Submitted on]]></label>
+                  <description><![CDATA[Date and time for the initial artifact submission]]></description>
+                </formElement>
+                <formElement type="string" ID="F14870" rank="1" required="1">
+                  <name>version</name>
+                  <label><![CDATA[Version]]></label>
+                  <description><![CDATA[Impacted product version for the change request]]></description>
+                  <properties size="3"/>
+                </formElement>
+                <formElement type="sb" ID="F14871" rank="2">
+                  <name>disposal</name>
+                  <label><![CDATA[Disposal]]></label>
+                  <description><![CDATA[Disposal for this change request]]></description>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V11422" label="Approved" is_hidden="0"/>
+                      <item ID="V11423" label="Denied" is_hidden="0"/>
+                      <item ID="V11424" label="Postponed" is_hidden="0"/>
+                      <item ID="V11425" label="Need more info" is_hidden="0"/>
+                    </items>
+                  </bind>
+                </formElement>
+                <formElement type="lud" ID="F14872" rank="4">
+                  <name>last_update_date</name>
+                  <label><![CDATA[Last Modified On]]></label>
+                  <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F14873" rank="1195" required="1">
+          <name>fieldset_1</name>
+          <label><![CDATA[Change request description]]></label>
+          <description><![CDATA[fieldset_default_desc_key]]></description>
+          <formElements>
+            <formElement type="string" ID="F14874" rank="0" required="1">
+              <name>description</name>
+              <label><![CDATA[Description]]></label>
+              <description><![CDATA[One line description of the artifact]]></description>
+              <properties maxchars="150" size="61"/>
+            </formElement>
+            <formElement type="text" ID="F14875" rank="1">
+              <name>justification</name>
+              <label><![CDATA[Justification]]></label>
+              <description><![CDATA[Describe why implementing this change is important, from business or technical point of view]]></description>
+              <properties rows="7" cols="80"/>
+            </formElement>
+            <formElement type="sb" ID="F14876" rank="2">
+              <name>priority</name>
+              <label><![CDATA[Priority]]></label>
+              <description><![CDATA[Priority for the change request]]></description>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V11426" label="1 - Low" is_hidden="0"/>
+                  <item ID="V11427" label="2" is_hidden="0"/>
+                  <item ID="V11428" label="3" is_hidden="0"/>
+                  <item ID="V11429" label="4" is_hidden="0"/>
+                  <item ID="V11430" label="5 - Medium" is_hidden="0"/>
+                  <item ID="V11431" label="6" is_hidden="0"/>
+                  <item ID="V11432" label="7" is_hidden="0"/>
+                  <item ID="V11433" label="8" is_hidden="0"/>
+                  <item ID="V11434" label="9 - Top" is_hidden="0"/>
+                </items>
+                <decorators>
+                  <decorator REF="V11426" r="255" g="255" b="102"/>
+                  <decorator REF="V11427" r="255" g="204" b="51"/>
+                  <decorator REF="V11428" r="255" g="153" b="0"/>
+                  <decorator REF="V11429" r="255" g="102" b="0"/>
+                  <decorator REF="V11430" r="255" g="51" b="0"/>
+                  <decorator REF="V11431" r="204" g="0" b="0"/>
+                  <decorator REF="V11432" r="153" g="0" b="0"/>
+                  <decorator REF="V11433" r="102" g="0" b="0"/>
+                  <decorator REF="V11434" r="51" g="0" b="0"/>
+                </decorators>
+              </bind>
+            </formElement>
+            <formElement type="text" ID="F14877" rank="4">
+              <name>impact</name>
+              <label><![CDATA[Impact if not making the change]]></label>
+              <properties rows="10" cols="80"/>
+            </formElement>
+            <formElement type="date" ID="F14878" rank="32" use_it="0">
+              <name>close_date_1</name>
+              <label><![CDATA[End Date]]></label>
+              <description><![CDATA[End Date]]></description>
+              <properties default_value="today" display_time="0"/>
+            </formElement>
+            <formElement type="msb" ID="F14879" rank="43" use_it="0">
+              <name>multi_assigned_to</name>
+              <label><![CDATA[Assigned to (multiple)]]></label>
+              <description><![CDATA[Who is in charge of this artifact]]></description>
+              <properties size="7"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F14880" rank="1196">
+          <name>fieldset1_1</name>
+          <label><![CDATA[Change impact analysis]]></label>
+          <formElements>
+            <formElement type="sb" ID="F14881" rank="0">
+              <name>impact_on_requirements</name>
+              <label><![CDATA[Impact on project requirements]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V11435" label="In scope" is_hidden="0"/>
+                  <item ID="V11436" label="Out of scope" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="text" ID="F14882" rank="2">
+              <name>impact_on_objectives</name>
+              <label><![CDATA[Impact on Project Objectives]]></label>
+              <properties rows="10" cols="70"/>
+            </formElement>
+            <formElement type="text" ID="F14883" rank="3">
+              <name>impact_on_deliverables</name>
+              <label><![CDATA[Impact on Project Deliverables]]></label>
+              <properties rows="10" cols="70"/>
+            </formElement>
+            <formElement type="text" ID="F14884" rank="4">
+              <name>impact_on_risks</name>
+              <label><![CDATA[Impact on Project Risks]]></label>
+              <properties rows="10" cols="70"/>
+            </formElement>
+            <formElement type="text" ID="F14885" rank="5">
+              <name>impact_on_schedule</name>
+              <label><![CDATA[Impact on Project Schedule]]></label>
+              <properties rows="10" cols="70"/>
+            </formElement>
+            <formElement type="text" ID="F14886" rank="6">
+              <name>impact_on_budget</name>
+              <label><![CDATA[Impact on Project Budget Projection]]></label>
+              <properties rows="10" cols="70"/>
+            </formElement>
+            <formElement type="text" ID="F14887" rank="7">
+              <name>recommendation</name>
+              <label><![CDATA[Recommendation]]></label>
+              <properties rows="10" cols="70"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F14888" rank="1197">
+          <name>fieldset1_11</name>
+          <label><![CDATA[Attachments]]></label>
+          <formElements>
+            <formElement type="file" ID="F14889" rank="0">
+              <name>attachments</name>
+              <label><![CDATA[File attachments]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F14890" rank="1453">
+          <name>fieldset1_111</name>
+          <label><![CDATA[References]]></label>
+          <formElements>
+            <formElement type="cross" ID="F14891" rank="0">
+              <name>cross_references</name>
+              <label><![CDATA[Cross references]]></label>
+              <description><![CDATA[List of items referenced by or referencing this item.]]></description>
+            </formElement>
+            <formElement type="art_link" ID="F14892" rank="1" use_it="0">
+              <name>references</name>
+              <label><![CDATA[References]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F14893" rank="1454">
+          <name>fieldset1_1111</name>
+          <label><![CDATA[Permissions]]></label>
+          <formElements>
+            <formElement type="perm" ID="F14894" rank="0">
+              <name>permissions_on_artifact</name>
+              <label><![CDATA[Permissions on artifact]]></label>
+              <description><![CDATA[Let users groups to define who can access an artifact.]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname>title</shortname>
+          <label>Title</label>
+          <description>Define the title of an artifact</description>
+          <field REF="F14874"/>
+        </semantic>
+        <semantic type="status">
+          <shortname>status</shortname>
+          <label>Status</label>
+          <description>Define the status of an artifact</description>
+          <field REF="F14871"/>
+          <open_values>
+            <open_value REF="V11422"/>
+            <open_value REF="V11425"/>
+          </open_values>
+        </semantic>
+        <semantic type="contributor">
+          <shortname>contributor</shortname>
+          <label>Contributor/assignee</label>
+          <description>Define the contributor/assignee of an artifact</description>
+          <field REF="F14866"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F14863"/>
+          <field REF="F14874"/>
+          <field REF="F14871"/>
+        </semantic>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Change request</name>
+          <description>Change request report</description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F14871"/>
+            </criteria>
+            <criteria rank="1">
+              <field REF="F14863"/>
+            </criteria>
+            <criteria rank="2">
+              <field REF="F14864"/>
+            </criteria>
+            <criteria rank="3">
+              <field REF="F14869"/>
+            </criteria>
+            <criteria rank="4">
+              <field REF="F14870"/>
+            </criteria>
+            <criteria rank="5">
+              <field REF="F14865"/>
+            </criteria>
+            <criteria rank="6">
+              <field REF="F14872"/>
+            </criteria>
+            <criteria rank="7">
+              <field REF="F14876"/>
+            </criteria>
+            <criteria rank="8">
+              <field REF="F14881"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F14863"/>
+                <field REF="F14865"/>
+                <field REF="F14866"/>
+                <field REF="F14869"/>
+                <field REF="F14874"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F14866"/>
+            </criteria>
+            <criteria rank="1">
+              <field REF="F14869"/>
+            </criteria>
+            <criteria rank="2">
+              <field REF="F14863"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F14863"/>
+                <field REF="F14865"/>
+                <field REF="F14866"/>
+                <field REF="F14869"/>
+                <field REF="F14874"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F14863" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14864" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14864" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14864" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14865" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14866" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14866" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14866" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14867" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14867" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14867" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14869" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14870" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14870" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14870" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14871" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14871" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14871" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14872" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14874" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14874" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14874" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14875" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14875" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14875" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14876" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14876" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14876" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14877" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14877" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14877" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14881" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14881" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14881" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14882" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14882" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14882" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14883" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14883" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14883" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14884" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14884" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14884" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14885" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14885" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14885" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14886" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14886" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14886" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14887" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14887" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14887" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14889" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14889" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14889" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14891" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14894" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+    <tracker id="T814" parent_id="0" instantiate_for_new_projects="1">
       <name><![CDATA[Epics]]></name>
       <item_name>epic</item_name>
       <description><![CDATA[Epics]]></description>
       <color>deep_blue</color>
       <cannedResponses/>
       <formElements>
-        <formElement type="fieldset" ID="F842" rank="9">
+        <formElement type="fieldset" ID="F14895" rank="13">
           <name>details</name>
           <label><![CDATA[Details]]></label>
           <formElements>
-            <formElement type="column" ID="F843" rank="0">
+            <formElement type="column" ID="F14896" rank="0">
               <name>c1</name>
               <label><![CDATA[C1]]></label>
               <formElements>
-                <formElement type="string" ID="F844" rank="0" required="1">
+                <formElement type="string" ID="F14897" rank="0" required="1">
                   <name>epic</name>
                   <label><![CDATA[Epic]]></label>
                   <properties size="70"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F845" rank="1">
+            <formElement type="column" ID="F14898" rank="1">
               <name>c2</name>
               <label><![CDATA[C2]]></label>
               <formElements>
-                <formElement type="sb" ID="F846" rank="0">
+                <formElement type="sb" ID="F14899" rank="0">
                   <name>progress</name>
                   <label><![CDATA[Progress]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V722" label="Open" is_hidden="0"/>
-                      <item ID="V723" label="Closed" is_hidden="0"/>
+                      <item ID="V11437" label="Open" is_hidden="0"/>
+                      <item ID="V11438" label="Closed" is_hidden="0"/>
                     </items>
                     <default_values>
-                      <value REF="V722"/>
+                      <value REF="V11437"/>
                     </default_values>
                   </bind>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="text" ID="F847" rank="2">
+            <formElement type="text" ID="F14900" rank="2">
               <name>description</name>
               <label><![CDATA[Description]]></label>
               <properties rows="10" cols="50"/>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F848" rank="10">
+        <formElement type="fieldset" ID="F14901" rank="14">
           <name>links_1</name>
           <label><![CDATA[Links]]></label>
           <formElements>
-            <formElement type="art_link" ID="F849" rank="0">
+            <formElement type="art_link" ID="F14902" rank="0">
               <name>links</name>
               <label><![CDATA[Links]]></label>
               <description><![CDATA[Links]]></description>
             </formElement>
-            <formElement type="cross" ID="F850" rank="1">
+            <formElement type="cross" ID="F14903" rank="1">
               <name>cross_ref</name>
               <label><![CDATA[Cross ref]]></label>
             </formElement>
@@ -771,21 +1184,21 @@
           <shortname>title</shortname>
           <label>Title</label>
           <description>Define the title of an artifact</description>
-          <field REF="F844"/>
+          <field REF="F14897"/>
         </semantic>
         <semantic type="description">
           <shortname>description</shortname>
           <label>Description</label>
           <description>Define the description of an artifact</description>
-          <field REF="F847"/>
+          <field REF="F14900"/>
         </semantic>
         <semantic type="status">
           <shortname>status</shortname>
           <label>Status</label>
           <description>Define the status of an artifact</description>
-          <field REF="F846"/>
+          <field REF="F14899"/>
           <open_values>
-            <open_value REF="V722"/>
+            <open_value REF="V11437"/>
           </open_values>
         </semantic>
         <semantic type="tooltip"/>
@@ -801,19 +1214,19 @@
           <description>The system default artifact report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F844"/>
+              <field REF="F14897"/>
             </criteria>
             <criteria rank="1">
-              <field REF="F846"/>
+              <field REF="F14899"/>
             </criteria>
           </criterias>
           <renderers>
             <renderer type="table" rank="0" chunksz="15">
               <name>Results</name>
               <columns>
-                <field REF="F846"/>
-                <field REF="F844"/>
-                <field REF="F849"/>
+                <field REF="F14899"/>
+                <field REF="F14897"/>
+                <field REF="F14902"/>
               </columns>
             </renderer>
           </renderers>
@@ -822,33 +1235,33 @@
       <workflow/>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
-        <permission scope="field" REF="F844" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F844" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F844" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F846" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F846" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F846" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F847" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F847" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F847" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F849" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F849" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F849" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F850" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14897" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14897" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14897" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14899" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14899" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14899" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14900" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14900" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14900" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14902" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14902" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14902" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14903" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
-    <tracker id="T32" parent_id="0" instantiate_for_new_projects="1" stop_notification="1">
+    <tracker id="T815" parent_id="0" instantiate_for_new_projects="1" stop_notification="1">
       <name><![CDATA[Releases]]></name>
       <item_name>rel</item_name>
       <description><![CDATA[releases]]></description>
       <color>clockwork_orange</color>
       <cannedResponses/>
       <formElements>
-        <formElement type="fieldset" ID="F851" rank="16">
+        <formElement type="fieldset" ID="F14904" rank="20">
           <name>informations</name>
           <label><![CDATA[Informations]]></label>
           <formElements>
-            <formElement type="string" ID="F852" rank="0" required="1">
+            <formElement type="string" ID="F14905" rank="0" required="1">
               <name>release_number</name>
               <label><![CDATA[Release Number]]></label>
               <description><![CDATA[E.g. 1.4.12 or v0.2]]></description>
@@ -856,50 +1269,50 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F853" rank="17">
+        <formElement type="fieldset" ID="F14906" rank="21">
           <name>status</name>
           <label><![CDATA[Status]]></label>
           <formElements>
-            <formElement type="column" ID="F854" rank="0">
+            <formElement type="column" ID="F14907" rank="0">
               <name>c1</name>
               <label><![CDATA[C1]]></label>
               <formElements>
-                <formElement type="date" ID="F855" rank="0">
+                <formElement type="date" ID="F14908" rank="0">
                   <name>start_date</name>
                   <label><![CDATA[Start Date]]></label>
                   <properties display_time="0"/>
                 </formElement>
-                <formElement type="int" ID="F856" rank="1">
+                <formElement type="int" ID="F14909" rank="1">
                   <name>duration</name>
                   <label><![CDATA[Duration -in days-]]></label>
                   <properties size="5"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F857" rank="1">
+            <formElement type="column" ID="F14910" rank="1">
               <name>c2</name>
               <label><![CDATA[C2]]></label>
               <formElements>
-                <formElement type="sb" ID="F858" rank="0" required="1">
+                <formElement type="sb" ID="F14911" rank="0" required="1">
                   <name>progress</name>
                   <label><![CDATA[Progress]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V724" label="Planned" is_hidden="0"/>
-                      <item ID="V725" label="In development" is_hidden="0"/>
-                      <item ID="V726" label="Delivered to customer" is_hidden="0"/>
-                      <item ID="V727" label="End of life" is_hidden="0"/>
+                      <item ID="V11439" label="Planned" is_hidden="0"/>
+                      <item ID="V11440" label="In development" is_hidden="0"/>
+                      <item ID="V11441" label="Delivered to customer" is_hidden="0"/>
+                      <item ID="V11442" label="End of life" is_hidden="0"/>
                     </items>
                     <default_values>
-                      <value REF="V724"/>
+                      <value REF="V11439"/>
                     </default_values>
                   </bind>
                 </formElement>
-                <formElement type="computed" ID="F859" rank="1">
+                <formElement type="computed" ID="F14912" rank="1">
                   <name>capacity</name>
                   <label><![CDATA[Capacity]]></label>
                 </formElement>
-                <formElement type="computed" ID="F860" rank="2">
+                <formElement type="computed" ID="F14913" rank="2">
                   <name>remaining_effort</name>
                   <label><![CDATA[Remaining effort]]></label>
                 </formElement>
@@ -907,26 +1320,26 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F861" rank="18">
+        <formElement type="fieldset" ID="F14914" rank="22">
           <name>fieldset_burndown</name>
           <label><![CDATA[Burndown]]></label>
           <formElements>
-            <formElement type="burndown" ID="F862" rank="0">
+            <formElement type="burndown" ID="F14915" rank="0">
               <name>burndown</name>
               <label><![CDATA[Burndown]]></label>
               <properties use_cache="1"/>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F863" rank="20">
+        <formElement type="fieldset" ID="F14916" rank="24">
           <name>content</name>
           <label><![CDATA[Content]]></label>
           <formElements>
-            <formElement type="art_link" ID="F864" rank="0">
+            <formElement type="art_link" ID="F14917" rank="0">
               <name>links</name>
               <label><![CDATA[Links]]></label>
             </formElement>
-            <formElement type="cross" ID="F865" rank="1">
+            <formElement type="cross" ID="F14918" rank="1">
               <name>references</name>
               <label><![CDATA[References]]></label>
             </formElement>
@@ -938,16 +1351,16 @@
           <shortname>title</shortname>
           <label>Title</label>
           <description>Define the title of an artifact</description>
-          <field REF="F852"/>
+          <field REF="F14905"/>
         </semantic>
         <semantic type="status">
           <shortname>status</shortname>
           <label>Status</label>
           <description>Define the status of an artifact</description>
-          <field REF="F858"/>
+          <field REF="F14911"/>
           <open_values>
-            <open_value REF="V724"/>
-            <open_value REF="V725"/>
+            <open_value REF="V11439"/>
+            <open_value REF="V11440"/>
           </open_values>
         </semantic>
         <semantic type="tooltip"/>
@@ -966,12 +1379,12 @@
             <renderer type="table" rank="0" chunksz="15">
               <name>Results</name>
               <columns>
-                <field REF="F852"/>
-                <field REF="F858"/>
-                <field REF="F864"/>
+                <field REF="F14905"/>
+                <field REF="F14911"/>
+                <field REF="F14917"/>
               </columns>
               <sort>
-                <field REF="F852"/>
+                <field REF="F14905"/>
               </sort>
             </renderer>
           </renderers>
@@ -980,69 +1393,69 @@
       <workflow/>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
-        <permission scope="field" REF="F852" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F852" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F852" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F855" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F855" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F855" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F856" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F856" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F856" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F858" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F858" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F858" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F859" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F860" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F862" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F864" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F864" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F864" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F865" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14905" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14905" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14905" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14908" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14908" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14908" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14909" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14909" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14909" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14911" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14911" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14911" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14912" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14913" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14915" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14917" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14917" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14917" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14918" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
-    <tracker id="T33" parent_id="T32" instantiate_for_new_projects="1" stop_notification="1">
+    <tracker id="T816" parent_id="T815" instantiate_for_new_projects="1" stop_notification="1">
       <name><![CDATA[Sprints]]></name>
       <item_name>sprint</item_name>
       <description><![CDATA[sprints]]></description>
       <color>acid_green</color>
       <cannedResponses/>
       <formElements>
-        <formElement type="fieldset" ID="F866" rank="31">
+        <formElement type="fieldset" ID="F14919" rank="35">
           <name>sprint_info</name>
           <label><![CDATA[Sprint info]]></label>
           <formElements>
-            <formElement type="column" ID="F867" rank="0">
+            <formElement type="column" ID="F14920" rank="0">
               <name>general_1</name>
               <label><![CDATA[general 1]]></label>
               <formElements>
-                <formElement type="string" ID="F868" rank="0" required="1">
+                <formElement type="string" ID="F14921" rank="0" required="1">
                   <name>sprint_name</name>
                   <label><![CDATA[Sprint Name]]></label>
                   <properties size="30"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F869" rank="2">
+            <formElement type="column" ID="F14922" rank="2">
               <name>general_2</name>
               <label><![CDATA[general 2]]></label>
               <formElements>
-                <formElement type="sb" ID="F870" rank="0">
+                <formElement type="sb" ID="F14923" rank="0">
                   <name>status</name>
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V728" label="planned" is_hidden="0"/>
-                      <item ID="V729" label="current" is_hidden="0"/>
-                      <item ID="V730" label="close" is_hidden="0"/>
+                      <item ID="V11443" label="planned" is_hidden="0"/>
+                      <item ID="V11444" label="current" is_hidden="0"/>
+                      <item ID="V11445" label="close" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V728" r="255" g="102" b="0"/>
-                      <decorator REF="V729" r="0" g="204" b="0"/>
-                      <decorator REF="V730" r="153" g="51" b="0"/>
+                      <decorator REF="V11443" r="255" g="102" b="0"/>
+                      <decorator REF="V11444" r="0" g="204" b="0"/>
+                      <decorator REF="V11445" r="153" g="51" b="0"/>
                     </decorators>
                     <default_values>
-                      <value REF="V728"/>
+                      <value REF="V11443"/>
                     </default_values>
                   </bind>
                 </formElement>
@@ -1050,42 +1463,42 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F871" rank="782">
+        <formElement type="fieldset" ID="F14924" rank="790">
           <name>sprint_details</name>
           <label><![CDATA[Sprint details]]></label>
           <formElements>
-            <formElement type="column" ID="F872" rank="0">
+            <formElement type="column" ID="F14925" rank="0">
               <name>column_general_1</name>
               <label><![CDATA[details 1]]></label>
               <formElements>
-                <formElement type="date" ID="F873" rank="0" required="1">
+                <formElement type="date" ID="F14926" rank="0" required="1">
                   <name>start_date</name>
                   <label><![CDATA[Start Date]]></label>
                   <properties default_value="today" display_time="0"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F874" rank="1">
+            <formElement type="column" ID="F14927" rank="1">
               <name>details2</name>
               <label><![CDATA[details 2]]></label>
               <formElements>
-                <formElement type="int" ID="F875" rank="0">
+                <formElement type="int" ID="F14928" rank="0">
                   <name>capacity</name>
                   <label><![CDATA[Capacity -in story points-]]></label>
                   <properties size="5"/>
                 </formElement>
-                <formElement type="computed" ID="F876" rank="2">
+                <formElement type="computed" ID="F14929" rank="2">
                   <name>remaining_effort</name>
                   <label><![CDATA[Total Remaining Effort]]></label>
                   <description><![CDATA[Sum of the remaining efforts of sprint's artifacts]]></description>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F877" rank="2">
+            <formElement type="column" ID="F14930" rank="2">
               <name>details4</name>
               <label><![CDATA[details 3]]></label>
               <formElements>
-                <formElement type="int" ID="F878" rank="0" required="1">
+                <formElement type="int" ID="F14931" rank="0" required="1">
                   <name>duration</name>
                   <label><![CDATA[Duration - in working days-]]></label>
                   <description><![CDATA[do not included week ends]]></description>
@@ -1095,15 +1508,15 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F879" rank="788">
+        <formElement type="fieldset" ID="F14932" rank="796">
           <name>content</name>
           <label><![CDATA[Content]]></label>
           <formElements>
-            <formElement type="art_link" ID="F880" rank="0">
+            <formElement type="art_link" ID="F14933" rank="0">
               <name>links</name>
               <label><![CDATA[Links]]></label>
             </formElement>
-            <formElement type="burndown" ID="F881" rank="4">
+            <formElement type="burndown" ID="F14934" rank="4">
               <name>sprint_burndown</name>
               <label><![CDATA[Sprint Burndown]]></label>
               <properties use_cache="1"/>
@@ -1116,30 +1529,30 @@
           <shortname>title</shortname>
           <label>Title</label>
           <description>Define the title of an artifact</description>
-          <field REF="F868"/>
+          <field REF="F14921"/>
         </semantic>
         <semantic type="status">
           <shortname>status</shortname>
           <label>Status</label>
           <description>Define the status of an artifact</description>
-          <field REF="F870"/>
+          <field REF="F14923"/>
           <open_values>
-            <open_value REF="V728"/>
-            <open_value REF="V729"/>
+            <open_value REF="V11443"/>
+            <open_value REF="V11444"/>
           </open_values>
         </semantic>
         <semantic type="tooltip">
-          <field REF="F868"/>
-          <field REF="F873"/>
+          <field REF="F14921"/>
+          <field REF="F14926"/>
         </semantic>
         <semantic type="plugin_cardwall_card_fields">
-          <field REF="F876"/>
+          <field REF="F14929"/>
         </semantic>
         <semantic type="initial_effort">
           <shortname>initial_effort</shortname>
           <label>Initial Effort</label>
           <description>Define the initial effort of an artifact.</description>
-          <field REF="F875"/>
+          <field REF="F14928"/>
         </semantic>
       </semantics>
       <rules>
@@ -1152,30 +1565,30 @@
           <description>The system default artifact report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F868"/>
+              <field REF="F14921"/>
             </criteria>
             <criteria rank="1">
-              <field REF="F873"/>
+              <field REF="F14926"/>
             </criteria>
             <criteria rank="2">
-              <field REF="F878"/>
+              <field REF="F14931"/>
             </criteria>
             <criteria rank="3">
-              <field REF="F880"/>
+              <field REF="F14933"/>
             </criteria>
           </criterias>
           <renderers>
             <renderer type="table" rank="0" chunksz="15">
               <name>Sprints</name>
               <columns>
-                <field REF="F870"/>
-                <field REF="F868"/>
-                <field REF="F875"/>
-                <field REF="F873"/>
-                <field REF="F880"/>
+                <field REF="F14923"/>
+                <field REF="F14921"/>
+                <field REF="F14928"/>
+                <field REF="F14926"/>
+                <field REF="F14933"/>
               </columns>
               <sort>
-                <field REF="F868"/>
+                <field REF="F14921"/>
               </sort>
             </renderer>
           </renderers>
@@ -1185,65 +1598,65 @@
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="tracker" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_ADMIN"/>
-        <permission scope="field" REF="F868" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F868" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F868" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F870" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F870" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F870" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F873" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F873" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F873" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F875" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F875" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F875" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F876" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F878" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F878" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F878" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F880" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F880" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F880" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F881" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14921" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14921" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14921" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14923" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14923" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14923" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14926" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14926" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14926" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14928" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14928" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14928" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14929" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14931" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14931" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14931" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14933" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14933" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14933" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14934" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
-    <tracker id="T34" parent_id="T35" instantiate_for_new_projects="1" stop_notification="1">
+    <tracker id="T817" parent_id="T818" instantiate_for_new_projects="1" stop_notification="1">
       <name><![CDATA[Tasks]]></name>
       <item_name>tasks</item_name>
       <description><![CDATA[tasks]]></description>
       <color>daphne_blue</color>
       <cannedResponses/>
       <formElements>
-        <formElement type="fieldset" ID="F882" rank="7">
+        <formElement type="fieldset" ID="F14935" rank="9">
           <name>metadata</name>
           <label><![CDATA[Metadata]]></label>
           <formElements>
-            <formElement type="column" ID="F883" rank="0">
+            <formElement type="column" ID="F14936" rank="0">
               <name>column1</name>
               <label><![CDATA[Column Top 1]]></label>
               <formElements>
-                <formElement type="aid" ID="F884" rank="0">
+                <formElement type="aid" ID="F14937" rank="0">
                   <name>number</name>
                   <label><![CDATA[N°]]></label>
                   <description><![CDATA[Unique artifact identifier]]></description>
                 </formElement>
-                <formElement type="subby" ID="F885" rank="1">
+                <formElement type="subby" ID="F14938" rank="1">
                   <name>submitted_by</name>
                   <label><![CDATA[Submitted by]]></label>
                   <description><![CDATA[User who originally submitted the artifact]]></description>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F886" rank="1">
+            <formElement type="column" ID="F14939" rank="1">
               <name>column2</name>
               <label><![CDATA[Column Top 2]]></label>
               <formElements>
-                <formElement type="subon" ID="F887" rank="0">
+                <formElement type="subon" ID="F14940" rank="0">
                   <name>open_date</name>
                   <label><![CDATA[Submitted on]]></label>
                   <description><![CDATA[Date and time for the initial artifact submission]]></description>
                 </formElement>
-                <formElement type="lud" ID="F888" rank="2">
+                <formElement type="lud" ID="F14941" rank="2">
                   <name>last_update_date</name>
                   <label><![CDATA[Last Modified On]]></label>
                   <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
@@ -1252,27 +1665,27 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F889" rank="2607" required="1">
+        <formElement type="fieldset" ID="F14942" rank="2615" required="1">
           <name>fieldset_1</name>
           <label><![CDATA[fieldset_default_tasks_lbl_key]]></label>
           <description><![CDATA[fieldset_default_tasks_desc_key]]></description>
           <formElements>
-            <formElement type="string" ID="F890" rank="0" required="1">
+            <formElement type="string" ID="F14943" rank="0" required="1">
               <name>title</name>
               <label><![CDATA[Task title]]></label>
               <description><![CDATA[Task title]]></description>
               <properties maxchars="150" size="80"/>
             </formElement>
-            <formElement type="text" ID="F891" rank="3">
+            <formElement type="text" ID="F14944" rank="3">
               <name>details</name>
               <label><![CDATA[Details]]></label>
               <properties rows="4" cols="103"/>
             </formElement>
-            <formElement type="column" ID="F892" rank="4">
+            <formElement type="column" ID="F14945" rank="4">
               <name>c1</name>
               <label><![CDATA[C1]]></label>
               <formElements>
-                <formElement type="sb" ID="F893" rank="0">
+                <formElement type="sb" ID="F14946" rank="0">
                   <name>assigned_to</name>
                   <label><![CDATA[Assigned to]]></label>
                   <bind type="users">
@@ -1283,22 +1696,22 @@
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F894" rank="5">
+            <formElement type="column" ID="F14947" rank="5">
               <name>c2</name>
               <label><![CDATA[C2]]></label>
               <formElements>
-                <formElement type="sb" ID="F895" rank="0">
+                <formElement type="sb" ID="F14948" rank="0" required="1">
                   <name>status</name>
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V731" label="Todo" is_hidden="0"/>
-                      <item ID="V732" label="On going" is_hidden="0"/>
-                      <item ID="V733" label="Review" is_hidden="0"/>
-                      <item ID="V734" label="Done" is_hidden="0"/>
+                      <item ID="V11446" label="Todo" is_hidden="0"/>
+                      <item ID="V11447" label="On going" is_hidden="0"/>
+                      <item ID="V11448" label="Review" is_hidden="0"/>
+                      <item ID="V11449" label="Done" is_hidden="0"/>
                     </items>
                     <default_values>
-                      <value REF="V731"/>
+                      <value REF="V11446"/>
                     </default_values>
                   </bind>
                 </formElement>
@@ -1306,15 +1719,15 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F896" rank="2608">
+        <formElement type="fieldset" ID="F14949" rank="2616">
           <name>fieldset1_1</name>
           <label><![CDATA[Links]]></label>
           <formElements>
-            <formElement type="art_link" ID="F897" rank="0">
+            <formElement type="art_link" ID="F14950" rank="0">
               <name>links</name>
               <label><![CDATA[Links]]></label>
             </formElement>
-            <formElement type="cross" ID="F898" rank="1">
+            <formElement type="cross" ID="F14951" rank="1">
               <name>cross_references</name>
               <label><![CDATA[Cross references]]></label>
             </formElement>
@@ -1326,20 +1739,20 @@
           <shortname>title</shortname>
           <label>Title</label>
           <description>Define the title of an artifact</description>
-          <field REF="F890"/>
+          <field REF="F14943"/>
         </semantic>
         <semantic type="contributor">
           <shortname>contributor</shortname>
           <label>Contributor/assignee</label>
           <description>Define the contributor/assignee of an artifact</description>
-          <field REF="F893"/>
+          <field REF="F14946"/>
         </semantic>
         <semantic type="tooltip">
-          <field REF="F884"/>
-          <field REF="F890"/>
+          <field REF="F14937"/>
+          <field REF="F14943"/>
         </semantic>
         <semantic type="plugin_cardwall_card_fields">
-          <field REF="F893"/>
+          <field REF="F14946"/>
         </semantic>
       </semantics>
       <rules>
@@ -1352,23 +1765,23 @@
           <description>Tasks Report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F890"/>
+              <field REF="F14943"/>
             </criteria>
             <criteria rank="1">
-              <field REF="F891"/>
+              <field REF="F14944"/>
             </criteria>
             <criteria rank="2" is_advanced="1">
-              <field REF="F895"/>
+              <field REF="F14948"/>
             </criteria>
           </criterias>
           <renderers>
             <renderer type="table" rank="0" chunksz="15">
               <name>Tasks</name>
               <columns>
-                <field REF="F884"/>
-                <field REF="F890"/>
-                <field REF="F898"/>
-                <field REF="F895"/>
+                <field REF="F14937"/>
+                <field REF="F14943"/>
+                <field REF="F14951"/>
+                <field REF="F14948"/>
               </columns>
             </renderer>
             <renderer type="plugin_cardwall" rank="1">
@@ -1389,7 +1802,7 @@
           <description>Tasks Report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F890"/>
+              <field REF="F14943"/>
             </criteria>
           </criterias>
           <renderers>
@@ -1403,7 +1816,7 @@
             <renderer type="plugin_graphontrackersv5" rank="2">
               <name>Gantt</name>
               <charts>
-                <chart type="gantt" width="0" height="0" rank="0" scale="day" as_of_date="2012-06-02" summary="F890">
+                <chart type="gantt" width="0" height="0" rank="0" scale="day" as_of_date="2012-06-02" summary="F14943">
                   <title>Gantt</title>
                 </chart>
               </charts>
@@ -1499,62 +1912,62 @@
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
-        <permission scope="field" REF="F884" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F885" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F887" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F888" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F890" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F890" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F890" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F891" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F891" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F891" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F893" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F893" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F893" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F895" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F895" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F895" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F897" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F897" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F897" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F898" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14937" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14938" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14940" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14941" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14943" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14943" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14943" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14944" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14944" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14944" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14946" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14946" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14946" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14948" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14948" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14948" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14950" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14950" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14950" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14951" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
-    <tracker id="T35" parent_id="T31" instantiate_for_new_projects="1" stop_notification="1">
+    <tracker id="T818" parent_id="T814" instantiate_for_new_projects="1" stop_notification="1">
       <name><![CDATA[User Stories]]></name>
       <item_name>story</item_name>
       <description><![CDATA[User Stories]]></description>
       <color>lake_placid_blue</color>
       <cannedResponses/>
       <formElements>
-        <formElement type="fieldset" ID="F918" rank="6">
+        <formElement type="fieldset" ID="F14952" rank="6">
           <name>access_information</name>
           <label><![CDATA[Access Information]]></label>
           <formElements>
-            <formElement type="column" ID="F919" rank="0">
+            <formElement type="column" ID="F14953" rank="0">
               <name>column1</name>
               <label><![CDATA[Access information left column]]></label>
               <formElements>
-                <formElement type="subby" ID="F920" rank="0">
+                <formElement type="subby" ID="F14954" rank="0">
                   <name>submitted_by</name>
                   <label><![CDATA[Submitted By]]></label>
                 </formElement>
-                <formElement type="aid" ID="F925" rank="1">
+                <formElement type="aid" ID="F14955" rank="1">
                   <name>id</name>
                   <label><![CDATA[ID]]></label>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F921" rank="1">
+            <formElement type="column" ID="F14956" rank="1">
               <name>column2</name>
               <label><![CDATA[Access information middle column]]></label>
               <formElements>
-                <formElement type="subon" ID="F922" rank="0">
+                <formElement type="subon" ID="F14957" rank="0">
                   <name>submitted_on</name>
                   <label><![CDATA[Submitted On]]></label>
                 </formElement>
-                <formElement type="lud" ID="F924" rank="1">
+                <formElement type="lud" ID="F14958" rank="1">
                   <name>last_update_date</name>
                   <label><![CDATA[Last Modified On]]></label>
                   <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
@@ -1563,117 +1976,117 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F899" rank="714" required="1">
+        <formElement type="fieldset" ID="F14959" rank="714" required="1">
           <name>fieldset_1</name>
           <label><![CDATA[Summary]]></label>
           <formElements>
-            <formElement type="column" ID="F900" rank="0">
+            <formElement type="column" ID="F14960" rank="0">
               <name>summary_left_column</name>
               <label><![CDATA[summary left column]]></label>
               <formElements>
-                <formElement type="sb" ID="F901" rank="0">
+                <formElement type="sb" ID="F14961" rank="0">
                   <name>as_a</name>
                   <label><![CDATA[As a]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V735" label="New User" is_hidden="0"/>
-                      <item ID="V736" label="Regular User" is_hidden="0"/>
-                      <item ID="V737" label="Advanced User" is_hidden="0"/>
+                      <item ID="V11450" label="New User" is_hidden="0"/>
+                      <item ID="V11451" label="Regular User" is_hidden="0"/>
+                      <item ID="V11452" label="Advanced User" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V735" r="0" g="102" b="204"/>
-                      <decorator REF="V736" r="153" g="255" b="102"/>
-                      <decorator REF="V737" r="255" g="51" b="255"/>
+                      <decorator REF="V11450" r="0" g="102" b="204"/>
+                      <decorator REF="V11451" r="153" g="255" b="102"/>
+                      <decorator REF="V11452" r="255" g="51" b="255"/>
                     </decorators>
                   </bind>
                 </formElement>
-                <formElement type="string" ID="F902" rank="3" required="1">
+                <formElement type="string" ID="F14962" rank="3" required="1">
                   <name>i_want_to</name>
                   <label><![CDATA[I want to]]></label>
                   <description><![CDATA[One line description of the artifact]]></description>
                   <properties size="50"/>
                 </formElement>
-                <formElement type="string" ID="F903" rank="4">
+                <formElement type="string" ID="F14963" rank="4">
                   <name>in_order_to_1</name>
                   <label><![CDATA[In order to]]></label>
                   <properties size="30"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F904" rank="2">
+            <formElement type="column" ID="F14964" rank="2">
               <name>summary_right_column</name>
               <label><![CDATA[summary right column]]></label>
               <formElements>
-                <formElement type="int" ID="F905" rank="0">
+                <formElement type="int" ID="F14965" rank="0">
                   <name>initial_effort</name>
                   <label><![CDATA[Initial effort - in Story Points-]]></label>
                   <properties size="5"/>
                 </formElement>
-                <formElement type="float" ID="F910" rank="1">
+                <formElement type="float" ID="F14966" rank="1">
                   <name>remaining_effort</name>
                   <label><![CDATA[Remaining effort -in Story Points-]]></label>
                   <properties size="5"/>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="text" ID="F912" rank="3">
+            <formElement type="text" ID="F14967" rank="3">
               <name>acceptance_criteria_1</name>
               <label><![CDATA[Acceptance Criteria]]></label>
               <properties rows="5" cols="70"/>
             </formElement>
-            <formElement type="file" ID="F915" rank="4">
+            <formElement type="file" ID="F14968" rank="4">
               <name>attachment</name>
               <label><![CDATA[Attachments]]></label>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F906" rank="715" required="1">
+        <formElement type="fieldset" ID="F14969" rank="715" required="1">
           <name>fieldset_2</name>
           <label><![CDATA[Progress]]></label>
           <formElements>
-            <formElement type="column" ID="F907" rank="0">
+            <formElement type="column" ID="F14970" rank="0">
               <name>column3</name>
               <label><![CDATA[Column Details 1]]></label>
               <formElements>
-                <formElement type="sb" ID="F908" rank="0" required="1">
+                <formElement type="sb" ID="F14971" rank="0" required="1">
                   <name>status_1</name>
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="V738" label="Todo" is_hidden="0"/>
-                      <item ID="V739" label="On Going" is_hidden="0"/>
-                      <item ID="V740" label="Review" is_hidden="0"/>
-                      <item ID="V741" label="Done" is_hidden="0"/>
+                      <item ID="V11453" label="Todo" is_hidden="0"/>
+                      <item ID="V11454" label="On Going" is_hidden="0"/>
+                      <item ID="V11455" label="Review" is_hidden="0"/>
+                      <item ID="V11456" label="Done" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V738" r="204" g="0" b="204"/>
-                      <decorator REF="V739" r="51" g="153" b="153"/>
-                      <decorator REF="V740" r="0" g="204" b="255"/>
-                      <decorator REF="V741" r="0" g="51" b="255"/>
+                      <decorator REF="V11453" r="204" g="0" b="204"/>
+                      <decorator REF="V11454" r="51" g="153" b="153"/>
+                      <decorator REF="V11455" r="0" g="204" b="255"/>
+                      <decorator REF="V11456" r="0" g="51" b="255"/>
                     </decorators>
                     <default_values>
-                      <value REF="V738"/>
+                      <value REF="V11453"/>
                     </default_values>
                   </bind>
                 </formElement>
               </formElements>
             </formElement>
-            <formElement type="column" ID="F909" rank="2">
+            <formElement type="column" ID="F14972" rank="2">
               <name>column4</name>
               <label><![CDATA[Column Details 2]]></label>
               <formElements/>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="fieldset" ID="F916" rank="1955">
+        <formElement type="fieldset" ID="F14973" rank="1955">
           <name>fieldset1_1</name>
           <label><![CDATA[References]]></label>
           <formElements>
-            <formElement type="art_link" ID="F914" rank="0">
+            <formElement type="art_link" ID="F14974" rank="0">
               <name>links</name>
               <label><![CDATA[Links]]></label>
             </formElement>
-            <formElement type="cross" ID="F917" rank="1">
+            <formElement type="cross" ID="F14975" rank="1">
               <name>cross_references</name>
               <label><![CDATA[Cross References]]></label>
             </formElement>
@@ -1685,31 +2098,31 @@
           <shortname>title</shortname>
           <label>Title</label>
           <description>Define the title of an artifact</description>
-          <field REF="F902"/>
+          <field REF="F14962"/>
         </semantic>
         <semantic type="status">
           <shortname>status</shortname>
           <label>Status</label>
           <description>Define the status of an artifact</description>
-          <field REF="F908"/>
+          <field REF="F14971"/>
           <open_values>
-            <open_value REF="V738"/>
-            <open_value REF="V739"/>
-            <open_value REF="V740"/>
+            <open_value REF="V11453"/>
+            <open_value REF="V11454"/>
+            <open_value REF="V11455"/>
           </open_values>
         </semantic>
         <semantic type="tooltip">
-          <field REF="F902"/>
+          <field REF="F14962"/>
         </semantic>
         <semantic type="plugin_cardwall_card_fields">
-          <field REF="F910"/>
-          <field REF="F908"/>
+          <field REF="F14966"/>
+          <field REF="F14971"/>
         </semantic>
         <semantic type="initial_effort">
           <shortname>initial_effort</shortname>
           <label>Initial Effort</label>
           <description>Define the initial effort of an artifact.</description>
-          <field REF="F905"/>
+          <field REF="F14965"/>
         </semantic>
       </semantics>
       <rules>
@@ -1722,22 +2135,22 @@
           <description>The system default artifact report</description>
           <criterias>
             <criteria rank="0">
-              <field REF="F901"/>
+              <field REF="F14961"/>
             </criteria>
             <criteria rank="1">
-              <field REF="F902"/>
+              <field REF="F14962"/>
             </criteria>
           </criterias>
           <renderers>
             <renderer type="table" rank="0" chunksz="15">
               <name>User Stories</name>
               <columns>
-                <field REF="F901"/>
-                <field REF="F902"/>
-                <field REF="F908"/>
-                <field REF="F914"/>
-                <field REF="F905"/>
-                <field REF="F910"/>
+                <field REF="F14961"/>
+                <field REF="F14962"/>
+                <field REF="F14971"/>
+                <field REF="F14974"/>
+                <field REF="F14965"/>
+                <field REF="F14966"/>
               </columns>
             </renderer>
             <renderer type="plugin_cardwall" rank="1">
@@ -1747,12 +2160,12 @@
         </report>
       </reports>
       <workflow>
-        <field_id REF="F908"/>
+        <field_id REF="F14971"/>
         <is_used>1</is_used>
         <transitions>
           <transition>
-            <from_id REF="V738"/>
-            <to_id REF="V739"/>
+            <from_id REF="V11453"/>
+            <to_id REF="V11454"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1762,8 +2175,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V738"/>
-            <to_id REF="V740"/>
+            <from_id REF="V11453"/>
+            <to_id REF="V11455"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1773,8 +2186,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V738"/>
-            <to_id REF="V741"/>
+            <from_id REF="V11453"/>
+            <to_id REF="V11456"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1784,8 +2197,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V739"/>
-            <to_id REF="V740"/>
+            <from_id REF="V11454"/>
+            <to_id REF="V11455"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1795,8 +2208,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V739"/>
-            <to_id REF="V741"/>
+            <from_id REF="V11454"/>
+            <to_id REF="V11456"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1806,19 +2219,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V740"/>
-            <to_id REF="V741"/>
-            <conditions>
-              <condition type="perms">
-                <permissions>
-                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
-                </permissions>
-              </condition>
-            </conditions>
-          </transition>
-          <transition>
-            <from_id REF="null"/>
-            <to_id REF="V738"/>
+            <from_id REF="V11455"/>
+            <to_id REF="V11456"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1829,7 +2231,7 @@
           </transition>
           <transition>
             <from_id REF="null"/>
-            <to_id REF="V739"/>
+            <to_id REF="V11453"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1839,8 +2241,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V739"/>
-            <to_id REF="V738"/>
+            <from_id REF="null"/>
+            <to_id REF="V11454"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1850,8 +2252,8 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V740"/>
-            <to_id REF="V738"/>
+            <from_id REF="V11454"/>
+            <to_id REF="V11453"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1861,8 +2263,19 @@
             </conditions>
           </transition>
           <transition>
-            <from_id REF="V740"/>
-            <to_id REF="V739"/>
+            <from_id REF="V11455"/>
+            <to_id REF="V11453"/>
+            <conditions>
+              <condition type="perms">
+                <permissions>
+                  <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                </permissions>
+              </condition>
+            </conditions>
+          </transition>
+          <transition>
+            <from_id REF="V11455"/>
+            <to_id REF="V11454"/>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1875,102 +2288,132 @@
       </workflow>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
-        <permission scope="field" REF="F920" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F925" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F922" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F924" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F901" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F901" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F901" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F902" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F902" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F902" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F903" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F903" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F903" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F905" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F905" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F905" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F910" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F910" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F910" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F912" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F912" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F912" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F915" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F915" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F915" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F908" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F908" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F908" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F914" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F914" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F914" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F917" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14954" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14955" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14957" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14958" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14961" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14961" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14961" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14962" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14962" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14962" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14963" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14963" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14963" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14965" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14965" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14965" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14966" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14966" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14966" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14967" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14967" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14967" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14968" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14968" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14968" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14971" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14971" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14971" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14974" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14974" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14974" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F14975" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
     <triggers>
       <trigger_rule>
         <triggers>
           <trigger>
-            <field_id REF="F895"/>
-            <field_value_id REF="V732"/>
+            <field_id REF="F14948"/>
+            <field_value_id REF="V11447"/>
           </trigger>
         </triggers>
         <condition>at_least_one</condition>
         <target>
-          <field_id REF="F908"/>
-          <field_value_id REF="V739"/>
+          <field_id REF="F14971"/>
+          <field_value_id REF="V11454"/>
         </target>
       </trigger_rule>
       <trigger_rule>
         <triggers>
           <trigger>
-            <field_id REF="F895"/>
-            <field_value_id REF="V734"/>
+            <field_id REF="F14948"/>
+            <field_value_id REF="V11449"/>
           </trigger>
         </triggers>
         <condition>all_of</condition>
         <target>
-          <field_id REF="F908"/>
-          <field_value_id REF="V741"/>
+          <field_id REF="F14971"/>
+          <field_value_id REF="V11456"/>
         </target>
       </trigger_rule>
     </triggers>
   </trackers>
+  <natures/>
   <cardwall>
     <trackers>
-      <tracker id="T31"/>
-      <tracker id="T33">
+      <tracker id="T814"/>
+      <tracker id="T815">
         <columns>
-          <column label="Todo" id="C9" bg_red="153" bg_green="204" bg_blue="255"/>
-          <column label="On Going" id="C10" bg_red="51" bg_green="153" bg_blue="255"/>
-          <column label="Review" id="C11" bg_red="0" bg_green="51" bg_blue="102"/>
-          <column label="Done" id="C12" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="Todo" id="C221" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="On Going" id="C222" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="Review" id="C223" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="Done" id="C224" bg_red="248" bg_green="248" bg_blue="248"/>
         </columns>
         <mappings>
-          <mapping tracker_id="T30" field_id="F830">
+          <mapping tracker_id="T812" field_id="F14849">
             <values>
-              <value value_id="V712" column_id="C9"/>
-              <value value_id="V713" column_id="C10"/>
-              <value value_id="V714" column_id="C12"/>
-              <value value_id="V715" column_id="C12"/>
-              <value value_id="V716" column_id="C12"/>
-              <value value_id="V717" column_id="C12"/>
-              <value value_id="V718" column_id="C12"/>
+              <value value_id="V11410" column_id="C221"/>
+              <value value_id="V11411" column_id="C222"/>
+              <value value_id="V11412" column_id="C224"/>
+              <value value_id="V11413" column_id="C224"/>
+              <value value_id="V11414" column_id="C224"/>
+              <value value_id="V11415" column_id="C224"/>
+              <value value_id="V11416" column_id="C224"/>
             </values>
           </mapping>
-          <mapping tracker_id="T34" field_id="F895">
+          <mapping tracker_id="T817" field_id="F14948">
             <values>
-              <value value_id="V731" column_id="C9"/>
-              <value value_id="V732" column_id="C10"/>
-              <value value_id="V733" column_id="C11"/>
-              <value value_id="V734" column_id="C12"/>
+              <value value_id="V11446" column_id="C221"/>
+              <value value_id="V11447" column_id="C222"/>
+              <value value_id="V11448" column_id="C223"/>
+              <value value_id="V11449" column_id="C224"/>
             </values>
           </mapping>
         </mappings>
       </tracker>
-      <tracker id="T35"/>
+      <tracker id="T816">
+        <columns>
+          <column label="Todo" id="C225" bg_red="153" bg_green="204" bg_blue="255"/>
+          <column label="On Going" id="C226" bg_red="51" bg_green="153" bg_blue="255"/>
+          <column label="Review" id="C227" bg_red="0" bg_green="51" bg_blue="102"/>
+          <column label="Done" id="C228" bg_red="248" bg_green="248" bg_blue="248"/>
+        </columns>
+        <mappings>
+          <mapping tracker_id="T812" field_id="F14849">
+            <values>
+              <value value_id="V11410" column_id="C225"/>
+              <value value_id="V11411" column_id="C226"/>
+              <value value_id="V11412" column_id="C228"/>
+              <value value_id="V11413" column_id="C228"/>
+              <value value_id="V11414" column_id="C228"/>
+              <value value_id="V11415" column_id="C228"/>
+              <value value_id="V11416" column_id="C228"/>
+            </values>
+          </mapping>
+          <mapping tracker_id="T817" field_id="F14948">
+            <values>
+              <value value_id="V11446" column_id="C225"/>
+              <value value_id="V11447" column_id="C226"/>
+              <value value_id="V11448" column_id="C227"/>
+              <value value_id="V11449" column_id="C228"/>
+            </values>
+          </mapping>
+        </mappings>
+      </tracker>
+      <tracker id="T818"/>
     </trackers>
   </cardwall>
 </project>

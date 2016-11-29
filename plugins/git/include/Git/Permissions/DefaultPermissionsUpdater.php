@@ -72,6 +72,10 @@ class DefaultPermissionsUpdater
      * @var ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_enabler;
 
     public function __construct(
         PermissionsManager $permissions_manager,
@@ -81,7 +85,8 @@ class DefaultPermissionsUpdater
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         FineGrainedUpdater $fine_grained_updater,
         DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
-        PermissionChangesDetector $permission_changes_detector
+        PermissionChangesDetector $permission_changes_detector,
+        RegexpFineGrainedEnabler $regexp_enabler
     ) {
         $this->permissions_manager          = $permissions_manager;
         $this->history_dao                  = $history_dao;
@@ -91,6 +96,7 @@ class DefaultPermissionsUpdater
         $this->fine_grained_updater         = $fine_grained_updater;
         $this->default_fine_grained_saver   = $default_fine_grained_saver;
         $this->permission_changes_detector  = $permission_changes_detector;
+        $this->regexp_enabler               = $regexp_enabler;
     }
 
     public function updateProjectDefaultPermissions(Codendi_Request $request)
@@ -106,6 +112,7 @@ class DefaultPermissionsUpdater
         $rewind_ugroup_ids               = array();
         $ugroup_ids                      = $request->get(self::REQUEST_KEY);
         $enable_fine_grained_permissions = $request->get('use-fine-grained-permissions');
+        $enable_regexp                   = $request->get('use-regexp');
 
         if ($ugroup_ids) {
             $read_ugroup_ids   = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_READ);
@@ -129,7 +136,8 @@ class DefaultPermissionsUpdater
             $read_ugroup_ids,
             $write_ugroup_ids,
             $rewind_ugroup_ids,
-            $enable_fine_grained_permissions
+            $enable_fine_grained_permissions,
+            $enable_regexp
         );
 
         if ($are_there_changes) {
@@ -153,7 +161,8 @@ class DefaultPermissionsUpdater
         array $read_ugroup_ids,
         array $write_ugroup_ids,
         array $rewind_ugroup_ids,
-        $enable_fine_grained_permissions
+        $enable_fine_grained_permissions,
+        $enable_regexp
     ) {
         $current_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project)
             + $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
@@ -227,6 +236,10 @@ class DefaultPermissionsUpdater
                 $rewind_ugroup_ids,
                 Git::DEFAULT_PERM_WPLUS
             );
+        }
+
+        if ($enable_regexp) {
+            $this->regexp_enabler->enableForDefault($project);
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {

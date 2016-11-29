@@ -1,3 +1,27 @@
+Version 0.42 - Tuleap 9.2
+    * Do not display the login form on the homepage if a provider is configured as unique authentication endpoint
+
+Version 0.41 - Tuleap 9.2
+    * Only a login link to the provider is displayed in the navbar when this provider is configured as unique authentication endpoint.
+
+Version 0.40 - Tuleap 9.2
+    * Users should not be redirect to the login page when they are not authenticated
+
+Version 0.39 - Tuleap 9.2
+    * A user can change his password without knowing the previous one if a provider is set as unique authentication provider
+
+Version 0.38 - Tuleap 9.2
+    * story #9658: You can not unlink a provider defined has unique authentication endpoint from your user account
+
+Version 0.37 - Tuleap 9.2
+    * story #9658: Request the scopes email and profile when the provider is the unique authentication endpoint
+
+Version 0.36 - Tuleap 9.2
+    * story #9658: We can set an OpenID Connect provider as the unique authentication endpoint in the database
+
+Version 0.35 - Tuleap 9.2
+    * request #9649: Add provider button in OpenId Connect when there is no provider should be large
+
 Version 0.34 - Tuleap 9.1
     * story #9585: fix openid providers pane & userlog media query
 

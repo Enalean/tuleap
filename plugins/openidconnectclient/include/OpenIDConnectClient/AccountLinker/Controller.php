@@ -70,7 +70,7 @@ class Controller {
             $unlinked_account = $this->unlinked_account_manager->getbyId($link_id);
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
         } catch (Exception $ex) {
-            $this->redirectToLoginPageAfterFailure(
+            $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
         }
@@ -110,7 +110,7 @@ class Controller {
             $unlinked_account = $this->unlinked_account_manager->getbyId($request->get('link_id'));
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
         } catch (Exception $ex) {
-            $this->redirectToLoginPageAfterFailure(
+            $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
         }
@@ -161,17 +161,17 @@ class Controller {
             );
             $this->unlinked_account_manager->removeById($unlinked_account->getId());
         } catch (Exception $ex) {
-            $this->redirectToLoginPageAfterFailure(
+            $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
             );
         }
     }
 
-    private function redirectToLoginPageAfterFailure($message) {
+    private function redirectAfterFailure($message) {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
         );
-        $GLOBALS['Response']->redirect('/account/login.php');
+        $GLOBALS['Response']->redirect('/');
     }
 }

@@ -65,7 +65,7 @@ class StatisticsPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $queue->getLogger(),
                     $this->getConfigurationManager(),
-                    $this->getDiskUsagePurger()
+                    $this->getDiskUsagePurger($queue->getLogger())
                 );
                 break;
             default:
@@ -115,9 +115,10 @@ class StatisticsPlugin extends Plugin {
         );
     }
 
-    private function getDiskUsagePurger() {
+    private function getDiskUsagePurger(Logger $logger) {
         return new Statistics_DiskUsagePurger(
-            new Statistics_DiskUsageDao(CodendiDataAccess::instance())
+            new Statistics_DiskUsageDao(),
+            $logger
         );
     }
 

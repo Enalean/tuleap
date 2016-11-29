@@ -97,6 +97,10 @@ $(RPM_TMP):
 
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
+mo:
+	cd $(BASE_DIR) &&\
+		tools/utils/generate-mo.sh $(BASE_DIR)
+
 node:
 	cd $(BASE_DIR) &&\
 	    npm install &&\
@@ -111,7 +115,7 @@ node:
 	    npm run build; \
 	done
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \

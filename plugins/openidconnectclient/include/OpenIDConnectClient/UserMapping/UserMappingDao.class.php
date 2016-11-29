@@ -74,7 +74,8 @@ class UserMappingDao extends DataAccessObject {
     public function searchUsageByUserId($user_id) {
         $user_id = $this->getDa()->escapeInt($user_id);
 
-        $sql = "SELECT mapping.id AS user_mapping_id, mapping.provider_id, provider.name, provider.icon, mapping.user_id, mapping.last_used
+        $sql = "SELECT mapping.id AS user_mapping_id, mapping.provider_id, provider.name, provider.icon,
+                  provider.unique_authentication_endpoint, mapping.user_id, mapping.last_used
                 FROM plugin_openidconnectclient_user_mapping AS mapping
                 JOIN plugin_openidconnectclient_provider AS provider ON provider.id = mapping.provider_id
                 WHERE mapping.user_id = $user_id";

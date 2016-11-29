@@ -41,6 +41,9 @@ class PendingUserPresenter
         $this->email             = $email;
         $this->registration_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $registration_date);
         $this->purpose           = $purpose;
+        if ($purpose === null) {
+            $this->purpose = '';
+        }
         $this->expiry_date       = '';
         if ($expiry_date) {
             $this->expiry_date = format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $expiry_date);

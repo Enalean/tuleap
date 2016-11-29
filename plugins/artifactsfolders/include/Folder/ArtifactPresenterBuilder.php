@@ -26,6 +26,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactPresenterBuilder
 {
@@ -44,18 +45,52 @@ class ArtifactPresenterBuilder
      */
     private $hierarchy_builder;
 
+    /**
+     * @var NatureIsChildLinkRetriever
+     */
+    private $child_link_retriever;
+
     public function __construct(
         HierarchyOfFolderBuilder $hierarchy_builder,
         NatureDao $nature_dao,
+        NatureIsChildLinkRetriever $child_link_retriever,
         Tracker_ArtifactFactory $artifact_factory
     ) {
-        $this->nature_dao        = $nature_dao;
-        $this->artifact_factory  = $artifact_factory;
-        $this->hierarchy_builder = $hierarchy_builder;
+        $this->nature_dao           = $nature_dao;
+        $this->artifact_factory     = $artifact_factory;
+        $this->hierarchy_builder    = $hierarchy_builder;
+        $this->child_link_retriever = $child_link_retriever;
     }
 
     /** @return ArtifactPresenter[] */
     public function buildInFolder(PFUser $user, Tracker_Artifact $folder)
+    {
+        $list_artifact_representation = $this->buildInFolderWithNoFilter($user, $folder);
+
+        $linked_folders_ids = array();
+        foreach ($list_artifact_representation as $artifact_representation) {
+            $linked_folders_ids[] = $artifact_representation->id;
+        }
+
+        $children_ids = array();
+        foreach ($linked_folders_ids as $artifact_id) {
+            $children_ids = array_merge($children_ids, $this->collectChildrenIds($artifact_id, $linked_folders_ids));
+        }
+
+        $list_artifact_representation = array_filter(
+            $list_artifact_representation,
+            function ($artifact_representation) use ($children_ids) {
+                return ! in_array($artifact_representation->id, $children_ids);
+            }
+        );
+
+        return array_values($list_artifact_representation);
+    }
+
+    /**
+     * @return ArtifactPresenter[]
+     */
+    private function buildInFolderWithNoFilter(PFUser $user, Tracker_Artifact $folder)
     {
         $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
             $folder->getId(),
@@ -66,7 +101,39 @@ class ArtifactPresenterBuilder
 
         $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolder($folder);
 
-        return $this->getListOfArtifactRepresentation($user, $linked_artifacts_ids, $folder_hierarchy);
+        $list_artifact_representation = $this->getListOfArtifactRepresentation($user, $linked_artifacts_ids, $folder_hierarchy);
+
+        $children_folder = $this->child_link_retriever->getChildren($folder);
+        foreach ($children_folder as $child_folder) {
+            $list_artifact_representation = array_merge(
+                $list_artifact_representation,
+                $this->buildInFolderWithNoFilter($user, $child_folder)
+            );
+        }
+
+        return $list_artifact_representation;
+    }
+
+    /**
+     * @return array
+     */
+    private function collectChildrenIds($artifact_id, array $already_visited)
+    {
+        $children_ids_for_current_artifact = $this->nature_dao->getForwardLinkedArtifactIds(
+            $artifact_id,
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            PHP_INT_MAX,
+            0
+        );
+        $already_visited[] = $artifact_id;
+        $children_ids      = $children_ids_for_current_artifact;
+        foreach ($children_ids_for_current_artifact as $child_id) {
+            if (! in_array($child_id, $already_visited)) {
+                $children_ids = array_merge($children_ids, $this->collectChildrenIds($child_id, $already_visited));
+            }
+        }
+
+        return $children_ids;
     }
 
     /** @return ArtifactPresenter[] */

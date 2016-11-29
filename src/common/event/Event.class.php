@@ -733,6 +733,14 @@ class Event {
     const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
 
     /**
+     * Check if the old password is required to change the current password
+     *
+     * Parameters:
+     *   'old_password_required' => Boolean (OUT)
+     */
+    const IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE = 'old_password_required_for_password_change';
+
+    /**
      * Allow plugin to deal with authentication
      *
      * Parameters:
@@ -760,6 +768,23 @@ class Event {
      * 'login_additional_connector' => string
      */
     const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
+
+    /**
+     * Get the login, can be used to redirect a non logged user for example
+     *
+     * Parameters:
+     *   'return_to' => string (IN)
+     *   'login_url' => string (OUT)
+     */
+    const GET_LOGIN_URL = 'get_login_url';
+
+    /**
+     * Determine if the homepage login form should be displayed
+     *
+     * Parameters:
+     *   'is_displayed' => boolean (OUT)
+     */
+    const DISPLAY_HOMEPAGE_LOGIN_FORM = 'display_homepage_login_form';
 
     /**
      * Allow plugin to add fields in the user register form

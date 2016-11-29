@@ -40,6 +40,24 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchTriggersByFieldId($field_id)
+    {
+        $field_id = $this->da->escapeInt($field_id);
+
+        $sql     = "SELECT rule_tracker_child.field_id AS field_id
+                    FROM tracker_workflow_trigger_rule_trg_field_static_value AS triggering_field
+                    INNER JOIN tracker_field_list_bind_static_value AS rule_tracker_child
+                      ON (rule_tracker_child.id = triggering_field.value_id)
+                    WHERE rule_tracker_child.field_id = $field_id
+                    UNION SELECT field_father.field_id AS field_id
+                    FROM tracker_workflow_trigger_rule_static_value AS rule_tracker_father
+                    INNER JOIN tracker_field_list_bind_static_value AS field_father
+                    ON field_father.id = rule_tracker_father.value_id
+                    WHERE field_father.field_id = $field_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchForTriggeringFieldByRuleId($rule_id) {
         $rule_id = $this->da->escapeInt($rule_id);
         $sql = "SELECT lbsv.field_id, triggering_field.*

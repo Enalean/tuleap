@@ -22,9 +22,9 @@ class ProftpdPluginDescriptor extends PluginDescriptor {
 
     function __construct() {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_proftpd', 'descriptor_name'),
+            dgettext('tuleap-proftpd', 'Proftpd'),
             false,
-            $GLOBALS['Language']->getText('plugin_proftpd', 'descriptor_description')
+            dgettext('tuleap-proftpd', 'Control and interfact with Proftpd as FTP server')
         );
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }

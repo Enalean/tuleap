@@ -57,6 +57,10 @@ class FlamingParrot_NavBarPresenter {
      * @var CSRFSynchronizerToken
      */
     public $logout_csrf;
+    /**
+     * @var URLRedirect
+     */
+    private $url_redirect;
 
     public function __construct(
         $imgroot,
@@ -70,7 +74,8 @@ class FlamingParrot_NavBarPresenter {
         $motd,
         FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection,
         array $user_actions,
-        CSRFSynchronizerToken $logout_csrf
+        CSRFSynchronizerToken $logout_csrf,
+        URLRedirect $url_redirect
     ) {
         $this->imgroot                = $imgroot;
         $this->user                   = $user;
@@ -86,6 +91,7 @@ class FlamingParrot_NavBarPresenter {
         $this->navbar_items           = $navbar_items_collection->getItems();
         $this->user_actions           = $user_actions;
         $this->logout_csrf            = $logout_csrf;
+        $this->url_redirect           = $url_redirect;
     }
 
     public function imgroot() {
@@ -192,25 +198,8 @@ class FlamingParrot_NavBarPresenter {
         return $class;
     }
 
-    public function return_to() {
-        $request_uri = $_SERVER['REQUEST_URI'];
-
-        if ($this->isUserTryingToLogIn($request_uri)) {
-            return urlencode($this->request->get('return_to'));
-        }
-
-        if ($this->isUserTryingToRegister($request_uri)) {
-            return false;
-        }
-
-        return $request_uri;
-    }
-
-    private function isUserTryingToLogIn($request_uri) {
-        return strpos($request_uri, '/account/login.php') === 0;
-    }
-
-    private function isUserTryingToRegister($request_uri) {
-        return strpos($request_uri, '/account/register.php') === 0;
+    public function login_url()
+    {
+        return $this->url_redirect->buildReturnToLogin($_SERVER);
     }
 }

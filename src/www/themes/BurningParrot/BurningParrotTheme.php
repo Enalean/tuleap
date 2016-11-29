@@ -21,6 +21,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Event;
 use EventManager;
 use Layout;
+use URLRedirect;
 use Widget_Static;
 use TemplateRendererFactory;
 use HTTPRequest;
@@ -59,6 +60,7 @@ class BurningParrotTheme extends Layout
 
     public function header(array $params)
     {
+        $url_redirect             = new URLRedirect(EventManager::instance());
         $header_presenter_builder = new HeaderPresenterBuilder();
         $main_classes             = isset($params['main_classes']) ? $params['main_classes'] : array();
         $sidebar                  = isset($params['sidebar']) ? $params['sidebar'] : array();
@@ -71,7 +73,8 @@ class BurningParrotTheme extends Layout
             $params['title'],
             $this->_feedback->logs,
             $main_classes,
-            $sidebar
+            $sidebar,
+            $url_redirect
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

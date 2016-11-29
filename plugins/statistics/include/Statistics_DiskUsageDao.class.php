@@ -23,17 +23,6 @@
 
 class Statistics_DiskUsageDao extends DataAccessObject {
 
-    /**
-     * Constructor
-     *
-     * @param DataAccess $da Data access details
-     * 
-     * @return Statistics_DiskUsageDao
-     */
-    public function __construct(DataAccess $da) {
-        parent::__construct($da);
-    }
-
     // A day spreads From 00:00:00 ---> 23:59:59
     public function returnDateStatement($date) {
         $dateList    = split(" ", $date, 2);
