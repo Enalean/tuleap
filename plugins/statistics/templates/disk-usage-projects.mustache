@@ -12,7 +12,7 @@
                     </div>
                     <section class="tlp-pane-section">
                         <form method="GET" action="" name="progress_by_service">
-                            <input type="hidden" name="menu" value="top_projects" />
+                            <input type="hidden" name="menu" value="projects" />
                             <div class="tlp-form-element">
                                 <label for="type" class="tlp-label">{{ services_label }}</label>
                                 <select
@@ -76,7 +76,6 @@
                     <table class="tlp-table">
                         <thead>
                         <tr>
-                            <th class="tlp-table-cell-numeric">{{ table_rank_title }}</th>
                             <th>{{ table_name_title }}</th>
                             <th class="tlp-table-cell-numeric">
                                 <a href="{{ start_size_url }}" class="tlp-table-sort">
@@ -102,9 +101,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{# data_top_projects }}
+                        {{# data_projects }}
                             <tr>
-                                <td class="tlp-table-cell-numeric">{{ rank }}</td>
                                 <td>
                                     <a href="{{ project_url }}">
                                         {{ group_name }}
@@ -120,14 +118,14 @@
                                     </a>
                                 </td>
                             </tr>
-                        {{/ data_top_projects }}
-                        {{^ data_top_projects }}
+                        {{/ data_projects }}
+                        {{^ data_projects }}
                             <tr>
                                 <td colspan="7" class="tlp-table-cell-empty">
                                     {{ no_data }}
                                 </td>
                             </tr>
-                        {{/ data_top_projects }}
+                        {{/ data_projects }}
                         </tbody>
                     </table>
                     {{# pagination }}

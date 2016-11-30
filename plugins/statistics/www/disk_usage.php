@@ -25,8 +25,8 @@
 use Tuleap\Statistics\DiskUsageRouter;
 use Tuleap\Statistics\DiskUsageSearchFieldsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
-use Tuleap\Statistics\DiskUsageTopProjectsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
+use Tuleap\Statistics\DiskUsageProjectsPresenterBuilder;
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
@@ -46,7 +46,7 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $duMgr  = new Statistics_DiskUsageManager();
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
-$valid_menu = new Valid_WhiteList('menu', array('one_project_details', 'top_projects', 'services', 'top_users', 'one_user_details'));
+$valid_menu = new Valid_WhiteList('menu', array('one_project_details', 'projects', 'services', 'top_users', 'one_user_details'));
 $valid_menu->required();
 if ($request->valid($valid_menu)) {
     $menu = $request->get('menu');
@@ -96,24 +96,6 @@ if ($request->valid($vUserId)) {
     $userId = '';
 }
 
-$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
-$vServices->required();
-if ($request->validArray($vServices)) {
-    $selectedServices = $request->get('services');
-} else {
-    switch ($menu) {
-        case 'services':
-        case 'one_project_details':
-            $selectedServices = array(Statistics_DiskUsageManager::SVN);
-            break;
-        case 'top_projects':
-            $selectedServices = array_keys($duMgr->getProjectServices());
-            break;
-        default:
-    }
-
-}
-
 $selectedGroupByDate = $request->get('group_by');
 
 $vRelative = new Valid_WhiteList('relative', array('true'));
@@ -154,7 +136,7 @@ $disk_usage_services_builder      = new DiskUsageServicesPresenterBuilder(
     $disk_usage_graph,
     $disk_usage_search_fields_builder
 );
-$disk_usage_top_projects_builder = new DiskUsageTopProjectsPresenterBuilder(
+$disk_usage_projects_builder = new DiskUsageProjectsPresenterBuilder(
     $duMgr,
     $disk_usage_output,
     $disk_usage_search_fields_builder,
@@ -169,101 +151,14 @@ $top_users_builder = new DiskUsageTopUsersPresenterBuilder(
 $disk_usage_router = new DiskUsageRouter(
     $duMgr,
     $disk_usage_services_builder,
-    $disk_usage_top_projects_builder,
-    $top_users_builder
+    $disk_usage_projects_builder,
+    $top_users_builder,
+    $disk_usage_projects_builder
 );
 
 $disk_usage_router->route($request);
 
 switch ($menu) {
-    case 'one_project_details':
-        $project = ProjectManager::instance()->getProject($groupId);
-        if ($project && !$project->isError()) {
-            $projectName = $project->getPublicName().' ('.$project->getUnixName().')';
-        } else {
-            $projectName = '';
-        }
-
-        // Prepare params
-        $urlParam    = '';
-        $first    = true;
-        foreach ($selectedServices as $serv) {
-            if ($first != true) {
-                $urlParam .= '&';
-            }
-            $urlParam .= 'services[]='.$serv;
-            $first     = false;
-        }
-
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').$projectName.'</h2>';
-
-        echo '<form name="progress_by_project" method="get" action="?">';
-        echo '<input type="hidden" name="menu" value="one_project_details" />';
-        echo '<label>Project: </label>';
-        echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" size="4" />';
-        echo ' <a href="/admin/groupedit.php?group_id='.$groupId.'">'.$projectName.'</a><br/>';
-
-        echo '<table>';
-        echo '<tr>';
-        echo '<th>Services</th>';
-        echo '<th>Group by</th>';
-        echo '<th>Start date</th>';
-        echo '<th>End date</th>';
-        echo '<th>Options</th>';
-        echo '</tr>';
-
-        echo '<tr>';
-
-        $services = array();
-        foreach ($duMgr->getProjectServices() as $service => $label) {
-            $services[] = array('value' => $service, 'text' => $label);
-        }
-        echo '<td valign="top">';
-        echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false).' ';
-        echo '</td>';
-
-        echo '<td valign="top">';
-        echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
-        echo '</td>';
-
-        echo '<td valign="top">';
-        list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
-        echo '</td>';
-
-        echo '<td valign="top">';
-        list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
-        echo '</td>';
-
-        $sel = '';
-        if ($relative) {
-            $sel = ' checked="checked"';
-            $urlParam .= '&relative=true';
-        }
-        echo '<td valign="top">';
-        echo '<input type="checkbox" name="relative" value="true" '.$sel.' id="statistics_graph_relative" />';
-        echo '<label for="statistics_graph_relative">Relative Y-axis (depend of data set values)</label><br/>';
-        echo '</td>';
-
-        echo '</tr>';
-        echo '</table>';
-
-        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
-
-        echo '</form>';
-
-        $urlParam .= '&start_date='.$startDate.'&end_date='.$endDate;
-        $urlParam .= '&group_by='.$selectedGroupByDate;
-        $urlParam .= '&group_id='.$groupId;
-        $urlParam .= '&graph_type=graph_project';
-        echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
-
-        if (($groupId) && ($startDate) && ($endDate)) {
-            $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
-        }
-        break;
-
     case 'one_user_details':
 
         // Prepare params

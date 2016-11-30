@@ -36,9 +36,9 @@ class DiskUsageRouter
      */
     private $services_builder;
     /**
-     * @var DiskUsageTopProjectsPresenterBuilder
+     * @var DiskUsageProjectsPresenterBuilder
      */
-    private $top_projects_builder;
+    private $projects_builder;
 
     /**
      * @var DiskUsageTopUsersPresenterBuilder
@@ -48,13 +48,13 @@ class DiskUsageRouter
     public function __construct(
         Statistics_DiskUsageManager $usage_manager,
         DiskUsageServicesPresenterBuilder $services_builder,
-        DiskUsageTopProjectsPresenterBuilder $top_projects_builder,
+        DiskUsageProjectsPresenterBuilder $projects_builder,
         DiskUsageTopUsersPresenterBuilder $top_users_builder
     ) {
-        $this->usage_manager        = $usage_manager;
-        $this->services_builder     = $services_builder;
-        $this->top_projects_builder = $top_projects_builder;
-        $this->top_users_builder    = $top_users_builder;
+        $this->usage_manager     = $usage_manager;
+        $this->services_builder  = $services_builder;
+        $this->projects_builder  = $projects_builder;
+        $this->top_users_builder = $top_users_builder;
     }
 
     public function route(HTTPRequest $request)
@@ -66,8 +66,8 @@ class DiskUsageRouter
                 case 'services':
                     $this->displayServices($request);
                     break;
-                case 'top_projects':
-                    $this->displayTopProjects($request);
+                case 'projects':
+                    $this->displayProjects($request);
                     break;
                 case 'top_users':
                     $this->displayTopUsers($request);
@@ -108,7 +108,7 @@ class DiskUsageRouter
         );
     }
 
-    private function displayTopProjects($request)
+    private function displayProjects($request)
     {
         $limit = 25;
 
@@ -120,7 +120,7 @@ class DiskUsageRouter
 
         $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
 
-        $disk_usage_top_projects_presenter = $this->top_projects_builder->buildTopProjects(
+        $disk_usage_projects_presenter = $this->projects_builder->buildProjects(
             $title,
             $selected_services,
             $start_date,
@@ -134,8 +134,8 @@ class DiskUsageRouter
         $admin_page_renderer->renderANoFramedPresenter(
             $title,
             ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
-            'disk-usage-top-projects',
-            $disk_usage_top_projects_presenter
+            'disk-usage-projects',
+            $disk_usage_projects_presenter
         );
     }
 

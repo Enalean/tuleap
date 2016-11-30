@@ -20,7 +20,7 @@
 
 namespace Tuleap\Statistics;
 
-class DiskUsageTopProjectsSearchFieldsPresenter extends DiskUsageSearchFieldsPresenter
+class DiskUsageProjectsSearchFieldsPresenter extends DiskUsageSearchFieldsPresenter
 {
     public function __construct(
         array $service_values,

@@ -60,7 +60,7 @@ class DiskUsageSearchFieldsPresenterBuilder
         );
     }
 
-    public function buildSearchFieldsForTopProjects(
+    public function buildSearchFieldsForProjects(
         $services_with_selected,
         $start_date_value,
         $end_date_value
@@ -75,9 +75,9 @@ class DiskUsageSearchFieldsPresenterBuilder
             $end_date_value = $end_date->format('Y-m-d');
         }
 
-        return new DiskUsageTopProjectsSearchFieldsPresenter(
+        return new DiskUsageProjectsSearchFieldsPresenter(
             $services_with_selected,
-            $this->buildUrlParamsForTopProjects($services_with_selected, $start_date_value, $end_date_value),
+            $this->buildUrlParamsForProjects($services_with_selected, $start_date_value, $end_date_value),
             $start_date_value,
             $end_date_value
         );
@@ -112,7 +112,7 @@ class DiskUsageSearchFieldsPresenterBuilder
         return $params;
     }
 
-    private function buildUrlParamsForTopProjects(
+    private function buildUrlParamsForProjects(
         array $service_values,
         $start_date_value,
         $end_date_value

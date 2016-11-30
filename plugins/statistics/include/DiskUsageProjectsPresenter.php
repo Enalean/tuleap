@@ -22,12 +22,12 @@ namespace Tuleap\Statistics;
 
 use Tuleap\Layout\PaginationPresenter;
 
-class DiskUsageTopProjectsPresenter
+class DiskUsageProjectsPresenter
 {
     public $header;
 
     public $search_fields;
-    public $data_top_projects;
+    public $data_projects;
     public $nb_projects;
     public $start_size_url;
     public $end_size_url;
@@ -48,27 +48,27 @@ class DiskUsageTopProjectsPresenter
 
     public function __construct(
         AdminHeaderPresenter $header,
-        DiskUsageTopProjectsSearchFieldsPresenter $search_fields,
-        array $data_top_projects,
+        DiskUsageProjectsSearchFieldsPresenter $search_fields,
+        array $data_projects,
         $nb_projects,
         $order,
         $offset,
         $limit
     ) {
         $page = '/plugins/statistics/disk_usage.php';
-        $menu = 'top_projects';
+        $menu = 'projects';
 
-        $this->header             = $header;
-        $this->search_fields      = $search_fields;
-        $this->data_top_projects  = $data_top_projects;
-        $this->nb_projects        = $nb_projects;
+        $this->header        = $header;
+        $this->search_fields = $search_fields;
+        $this->data_projects = $data_projects;
+        $this->nb_projects   = $nb_projects;
 
         $this->start_size_url     = $page.'?'.http_build_query($this->buildUrlParams($menu, 'start_size'));
         $this->end_size_url       = $page.'?'.http_build_query($this->buildUrlParams($menu, 'end_size'));
         $this->evolution_url      = $page.'?'.http_build_query($this->buildUrlParams($menu, 'evolution'));
         $this->evolution_rate_url = $page.'?'.http_build_query($this->buildUrlParams($menu, 'evolution_rate'));
 
-        $this->pane_title                      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_top_projects_pane_title');
+        $this->pane_title                      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_projects_pane_title');
         $this->table_rank_title                = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_rank_title');
         $this->table_name_title                = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_name_title');
         $this->table_start_size_title          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_start_size_title');
@@ -76,7 +76,7 @@ class DiskUsageTopProjectsPresenter
         $this->table_evolution_size_title      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_title');
         $this->table_evolution_rate_size_title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_rate_title');
         $this->table_project_details_title     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_project_details_title');
-        $this->no_data                         = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_top_projects_no_data');
+        $this->no_data                         = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_projects_no_data');
 
         $this->order_is_start_size     = $order === 'start_size';
         $this->order_is_end_size       = $order === 'end_size';

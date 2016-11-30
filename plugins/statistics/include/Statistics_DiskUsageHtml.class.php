@@ -83,47 +83,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '</table>';
     }
 
-    public function getTopProjects($startDate, $endDate, $service, $order, $url, $offset) {
-        $limit  = 100;
-        list($res, $nbRows) = $this->_dum->getTopProjects($startDate, $endDate, $service, $order, $offset, $limit);
-        if ($res) {
-            $titles = array('Rank', 'Id', 'Name', 'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');
-            $links  = array('', '', '', $url.'&order=start_size', $url.'&order=end_size', $url.'&order=evolution', $url.'&order=evolution_rate');
-            echo html_build_list_table_top($titles, $links);
-            $i = 1;
-            $onProjectUrl = str_replace('func=show_top_projects', 'func=show_one_project', $url);
-            foreach ($res as $row) {
-                echo '<tr>';
-                echo '<td>'.($offset+$i++).'</td>';
-                echo '<td><a href="'.$onProjectUrl.'&group_id='.$row['group_id'].'">'.$row['group_id'].'</a></td>';
-                echo '<td>'.$row['group_name'].'</td>';
-                $this->_displayEvolutionData($row);
-                echo '</tr>';
-            }
-
-            // Paginate
-            $url .= '&order='.$order;
-            echo '<tr>';
-            echo '<td colspan="7" align="center">';
-            if ($offset > 0) {
-                echo '<a href="'.$url.'&offset='.($offset-$limit).'">[ Previous ]</a>';
-            } else {
-                echo '[ Previous ]';
-            }
-            echo '&nbsp;';
-            echo ($offset+$limit).'/'.$nbRows;
-            echo '&nbsp;';
-            if (($offset + $limit) < $nbRows) {
-                echo '<a href="'.$url.'&offset='.($offset+$limit).'">[ Next ]</a>';
-            } else {
-                echo '[ Next ]';
-            }
-            echo '</td>';
-            echo '</tr>';
-            echo '</table>';
-        }
-    }
-
     public function getProject($groupId) {
         $res = $this->_dum->getProject($groupId);
         if ($res) {
@@ -143,7 +102,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-
 
     public function getUserDetails($userId){
         $res = $this->_dum->getUserDetails($userId);

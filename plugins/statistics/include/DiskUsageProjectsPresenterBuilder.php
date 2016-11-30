@@ -20,12 +20,10 @@
 
 namespace Tuleap\Statistics;
 
-use DateInterval;
-use DateTime;
 use Statistics_DiskUsageManager;
 use Statistics_DiskUsageOutput;
 
-class DiskUsageTopProjectsPresenterBuilder
+class DiskUsageProjectsPresenterBuilder
 {
     /**
      * @var Statistics_DiskUsageManager
@@ -56,7 +54,7 @@ class DiskUsageTopProjectsPresenterBuilder
         $this->services_builder      = $services_builder;
     }
 
-    public function buildTopProjects(
+    public function buildProjects(
         $title,
         $selected_services,
         $start_date,
@@ -75,7 +73,7 @@ class DiskUsageTopProjectsPresenterBuilder
 
         $services_with_selected = $this->services_builder->getServiceValues($selected_services);
 
-        $search_fields = $this->search_fields_builder->buildSearchFieldsForTopProjects(
+        $search_fields = $this->search_fields_builder->buildSearchFieldsForProjects(
             $services_with_selected,
             $start_date,
             $end_date
@@ -88,7 +86,7 @@ class DiskUsageTopProjectsPresenterBuilder
             $limit
         );
 
-        return new DiskUsageTopProjectsPresenter(
+        return new DiskUsageProjectsPresenter(
             $this->getHeaderPresenter($title),
             $search_fields,
             $data_projects,
@@ -100,14 +98,14 @@ class DiskUsageTopProjectsPresenterBuilder
     }
 
     private function buildDataProjects(
-        DiskUsageTopProjectsSearchFieldsPresenter $search_fields,
+        DiskUsageProjectsSearchFieldsPresenter $search_fields,
         $order,
         $offset,
         $limit
     ) {
         $services = $this->getServiceKeys($search_fields->service_values);
 
-        list($projects, $total_projects) = $this->usage_manager->getTopProjects(
+        list($projects, $total_projects) = $this->usage_manager->getUsagePerProject(
             $search_fields->start_date_value,
             $search_fields->end_date_value,
             $services,
@@ -117,10 +115,8 @@ class DiskUsageTopProjectsPresenterBuilder
         );
 
         $data_projects = array();
-        $rank          = $offset;
         foreach ($projects as $value) {
             $data_project = array(
-                'rank'                => $rank + 1,
                 'project_id'          => $value['group_id'],
                 'group_name'          => util_unconvert_htmlspecialchars($value['group_name']),
                 'start_size'          => $this->usage_output->sizeReadable($value['start_size']),
@@ -132,7 +128,6 @@ class DiskUsageTopProjectsPresenterBuilder
             );
 
             $data_projects[] = $data_project;
-            $rank++;
         }
 
         return array($data_projects, $total_projects);

@@ -204,7 +204,7 @@ class Statistics_DiskUsageManager {
          
     }
 
-    public function getTopProjects($startDate, $endDate, $service, $order, $offset, $limit) {
+    public function getUsagePerProject($startDate, $endDate, $service, $order, $offset, $limit) {
         $dao   = $this->_getDao();
         $dar   = $dao->getProjectContributionForService($startDate, $endDate, $service, $order, $offset, $limit);
         $nbPrj = $dao->foundRows();
