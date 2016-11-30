@@ -1562,6 +1562,9 @@ plugin_tracker	burndown_empty_duration_warning	"duration" field is empty or inva
 plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or those artifacts have no 'remaining_effort' field.
 plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
 plugin_tracker	unable_to_render_the_chart	Unable to render the chart
+plugin_tracker	burndown_generate	Force cache regeneration
+plugin_tracker	burndown_cancel	Cancel
+plugin_tracker	force_cache_generation_info	Do you really want to force burndown cache generation? Cache generation will end up on a non availability of burndown for few minutes.
 plugin_tracker	burndown_permission_denied	You are not allowed to access this field.
 plugin_tracker	burndown_cache_generating	Burndown is under calculation. It will be available in few minutes.
 plugin_tracker	unsufficient_permissions_for_ranking	You are not allowed to rank on this planning. Your action was not taken into account. Please reload the page.

@@ -1561,6 +1561,9 @@ plugin_tracker	burndown_empty_duration_warning	Le champ "duration" est vide ou i
 plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouvé ou le champ "remaining_effort" n'existe pas sur ces artefacts.
 plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
 plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
+plugin_tracker	burndown_generate	Reconstruire le cache
+plugin_tracker	burndown_cancel	Annuler
+plugin_tracker	force_cache_generation_info	Voulez-vous vraiment reconstruire le cache du burdown dans son intégralité? La reconstruction du cache entrainera une indisponibilité du champ durant quelques minutes.
 plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
 plugin_tracker	burndown_cache_generating	Le burndown est en cours de calcul. Il sera disponible dans quelques minutes.
 plugin_tracker	unsufficient_permissions_for_ranking	Vous n'êtes pas autorisé à prioriser sur ce planning. Vos changements n'ont pas été pris en compte. Veuillez recharger la page.

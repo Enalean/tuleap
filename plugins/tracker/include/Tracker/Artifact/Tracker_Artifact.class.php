@@ -730,6 +730,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 );
                 $action->process($layout, $request, $current_user);
                 break;
+            case 'burndown-cache-generate':
+                $ff = Tracker_FormElementFactory::instance();
+                if ($field = $ff->getFormElementByid($request->get('field'))) {
+                    if ( $field->isCacheBurndownAlreadyAsked($this) === false) {
+                        $field->forceBurndownCacheGeneration($this->getId());
+                    }
+                }
+                $GLOBALS['Response']->redirect('?aid='. $this->id);
+                break;
             case 'check-user-can-link-and-unlink':
                 $source_artifact      = (int)$request->get('from-artifact');
                 $destination_artifact = (int)$request->get('to-artifact');

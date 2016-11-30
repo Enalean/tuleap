@@ -100,23 +100,95 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Tracker_Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $html    .= '<img src="'.$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="640" height="480" />';
+    public function fetchArtifactValueReadOnly(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null
+    ) {
+        $html = $this->fetchBurndownReadOnly($artifact);
+        $html .= $this->fetchBurndownCacheGenerationButton($artifact);
+
         return $html;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchBurndownReadOnly(Tracker_Artifact $artifact)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
-        $html    .= '<img src="'.$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="390" height="400" />';
+        $html .= '<img src="' . $this->getBurndownImageUrl($artifact) . '" alt="' .
+            $purifier->purify($this->getLabel()) . '" width="640" height="480" />';
+
         return $html;
+    }
+
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= '<img src="' . $this->getBurndownImageUrl($artifact) . '" alt="' .
+            $purifier->purify($this->getLabel()) . '" width="390" height="400" />';
+
+        return $html;
+    }
+
+    private function fetchBurndownCacheGenerationButton(Tracker_Artifact $artifact)
+    {
+        $html = "";
+        if ($this->getCurrentUser()->isAdmin($artifact->getTracker()->getGroupId())
+            && $this->isCacheBurndownAlreadyAsked($artifact) === false
+            && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
+        ) {
+            $html .= '<a class="btn burndown-button-generate" data-toggle="modal" href="#burndown-generate">' .
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker',
+                    'burndown_generate'
+                ) . '</a>';
+
+            $html .= $this->fetchBurndownGenerationModal($artifact);
+        }
+
+        return $html;
+    }
+
+    private function fetchBurndownGenerationModal(Tracker_Artifact $artifact)
+    {
+        $header = $GLOBALS['Language']->getText(
+            'plugin_tracker',
+            'burndown_generate'
+        );
+
+        $body = $GLOBALS['Language']->getText(
+            'plugin_tracker',
+            'force_cache_generation_info'
+        );
+
+        $cancel = $GLOBALS['Language']->getText(
+            'plugin_tracker',
+            'burndown_cancel'
+        );
+
+        $generate = $GLOBALS['Language']->getText(
+            'plugin_tracker',
+            'burndown_generate'
+        );
+
+        return '<div id="burndown-generate" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <h3>' . $header . '</h3>
+                </div>
+                <div class="modal-body">
+                   ' . $body . '
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">' . $cancel . '</button>
+                    <a href="?aid='.$artifact->getId().'&func=burndown-cache-generate&field='.$this->getId().'"
+                        class="btn btn-primary force-burndown-generation" name="add-keys">' . $generate . '</a>
+                </div>
+            </div>';
     }
 
     /**
@@ -262,7 +334,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $burndown_data;
     }
 
-    private function forceBurndownCacheGeneration($artifact_id)
+    public function forceBurndownCacheGeneration($artifact_id)
     {
         $this->getSystemEventManager()->createEvent(
             'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
@@ -406,6 +478,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $html .= $this->fetchErrors();
         $html .= $this->fetchWarnings();
         $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
+        $html .= '<a class="btn burndown-button-generate" disabled="disabled">'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate').'</a>';
         return $html;
     }
 
