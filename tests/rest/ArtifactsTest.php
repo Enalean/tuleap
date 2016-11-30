@@ -173,6 +173,81 @@ class ArtifactsTest extends RestBase {
         }
     }
 
+    public function testGETBurndownForParentArtifact()
+    {
+        $response     = $this->getResponse(
+            $this->client->get("artifacts/" . REST_TestDataBuilder::BURNDOWN_FATHER_ARTIFACT_ID)
+        );
+
+        $burndown     = $response->json();
+
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+        $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $expected_burndown_chart = array(
+            55,
+            43,
+            48,
+            37,
+            37,
+            37
+        );
+
+        $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
+    }
+
+    public function testGETBurndownForAChildrenArtifact()
+    {
+        $response     = $this->getResponse(
+            $this->client->get("artifacts/" . REST_TestDataBuilder::BURNDOWN_CHILD_ARTIFACT_ID)
+        );
+
+        $burndown     = $response->json();
+
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+        $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $expected_burndown_chart = array(
+            32,
+            20,
+            25,
+            20,
+            20,
+            20,
+        );
+
+        $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
+    }
+
+    public function testGETBurndownForAnotherChildrenArtifact()
+    {
+        $response     = $this->getResponse(
+            $this->client->get("artifacts/" . REST_TestDataBuilder::BURNDOWN_CHILD_2_ARTIFACT_ID)
+        );
+
+        $burndown     = $response->json();
+
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+        $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $expected_burndown_chart = array(
+            25,
+            20,
+            40,
+            20,
+            20,
+            20,
+        );
+
+        $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
+    }
+
     /**
      * @depends testPostArtifact
      */

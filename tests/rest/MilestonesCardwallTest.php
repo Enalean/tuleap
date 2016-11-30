@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -63,10 +63,10 @@ class MilestonesCardwallTest extends RestBase {
         $first_swimlane = $swimlanes[0];
 
         $first_swimlane_card = $first_swimlane['cards'][0];
-        $this->assertEquals(REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card['id']);
+        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID.'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card['id']);
         $this->assertEquals("Believe", $first_swimlane_card['label']);
-        $this->assertEquals("cards/".REST_TestDataBuilder::SPRINT_ARTIFACT_ID."_".REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card['uri']);
-        $this->assertEquals(REST_TestDataBuilder::SPRINT_ARTIFACT_ID, $first_swimlane_card['planning_id']);
+        $this->assertEquals("cards/".REST_TestDataBuilder::PLANNING_ID."_".REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card['uri']);
+        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID, $first_swimlane_card['planning_id']);
         $this->assertEquals("Open", $first_swimlane_card['status']);
         $this->assertEquals(null, $first_swimlane_card['accent_color']);
         $this->assertEquals("2", $first_swimlane_card['column_id']);

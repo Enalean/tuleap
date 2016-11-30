@@ -1,0 +1,1334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="burndown-generation" full-name="Burndown Tests" description="projet_origin" access="public">
+  <long-description></long-description>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers>
+    <tracker id="T1374" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[niveau1]]></name>
+      <item_name>niveau1</item_name>
+      <description><![CDATA[niveau1]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F23443" rank="27">
+          <name>name</name>
+          <label><![CDATA[Name]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F23444" rank="28">
+          <name>start_date</name>
+          <label><![CDATA[start_date]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="int" ID="F23445" rank="29">
+          <name>duration</name>
+          <label><![CDATA[duration]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="computed" ID="F23446" rank="30">
+          <name>remaining_effort</name>
+          <label><![CDATA[remaining_effort]]></label>
+        </formElement>
+        <formElement type="int" ID="F23447" rank="53">
+          <name>capacity</name>
+          <label><![CDATA[capacity]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="art_link" ID="F23448" rank="55">
+          <name>link</name>
+          <label><![CDATA[link]]></label>
+        </formElement>
+        <formElement type="burndown" ID="F23449" rank="56">
+          <name>burndown</name>
+          <label><![CDATA[burndown]]></label>
+          <properties use_cache="0"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F23443"/>
+                <field REF="F23444"/>
+                <field REF="F23445"/>
+                <field REF="F23446"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F23443" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23443" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23443" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23444" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23444" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23444" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23445" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23445" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23445" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23446" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23446" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23446" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23447" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23447" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23447" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23448" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23448" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23448" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23449" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2887">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[tortank]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>6</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>35</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:40:44+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:40:44+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2893</value>
+              <value nature="">2894</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-21T16:51:49+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:23:24+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[25]]></manual_value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-22T16:51:49+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:23:32+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2888">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:22+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[sulfura]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[3]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:40:20+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:40:20+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2889">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:40+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[megatortank]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>15</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:42:52+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:42:52+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2896</value>
+              <value nature="">2897</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2890">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:57+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[pikachu]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>10</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:41:00+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:41:00+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2895</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2891">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:35:10+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[yvetail]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="2892">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:35:32+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[artikodin]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[4]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T1375" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[niveau2]]></name>
+      <item_name>niveau2</item_name>
+      <description><![CDATA[niveau2]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F23450" rank="20">
+          <name>name</name>
+          <label><![CDATA[Name]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F23451" rank="21">
+          <name>start_date</name>
+          <label><![CDATA[start_date]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="int" ID="F23452" rank="23">
+          <name>duration</name>
+          <label><![CDATA[duration]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="computed" ID="F23453" rank="24">
+          <name>remaining_effort</name>
+          <label><![CDATA[remaining_effort]]></label>
+        </formElement>
+        <formElement type="int" ID="F23454" rank="46">
+          <name>capacity</name>
+          <label><![CDATA[capacity]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="art_link" ID="F23455" rank="48">
+          <name>link</name>
+          <label><![CDATA[link]]></label>
+        </formElement>
+        <formElement type="burndown" ID="F23456" rank="49">
+          <name>burndown</name>
+          <label><![CDATA[burndown]]></label>
+          <properties use_cache="0"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F23450"/>
+                <field REF="F23451"/>
+                <field REF="F23452"/>
+                <field REF="F23453"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F23450" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23450" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23450" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23451" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23451" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23451" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23452" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23452" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23452" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23453" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23453" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23453" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23454" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23454" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23454" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23455" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23455" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23455" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23456" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2893">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:39:29+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[carapuce]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[7]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>9</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-18T16:51:49+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:22:17+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[5]]></manual_value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2894">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:39:46+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[carabaffe]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>6</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>30</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:45:05+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:45:05+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2899</value>
+              <value nature="">2900</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-18T15:47:53+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-18T15:47:53+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2887</value>
+              <value nature="">2899</value>
+              <value nature="">2900</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-21T10:57:37+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-21T10:57:37+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2899</value>
+              <value nature="">2900</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-21T12:20:52+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-21T12:20:52+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2887</value>
+              <value nature="">2899</value>
+              <value nature="">2900</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2895">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:40:01+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[raichu]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[9]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T1376" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[niveau3]]></name>
+      <item_name>niveau3</item_name>
+      <description><![CDATA[niveau3]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F23457" rank="16">
+          <name>name</name>
+          <label><![CDATA[Name]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F23458" rank="17">
+          <name>start_date</name>
+          <label><![CDATA[start_date]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="int" ID="F23459" rank="18">
+          <name>duration</name>
+          <label><![CDATA[duration]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="computed" ID="F23460" rank="19">
+          <name>remaining_effort</name>
+          <label><![CDATA[remaining_effort]]></label>
+        </formElement>
+        <formElement type="int" ID="F23461" rank="39">
+          <name>capacity</name>
+          <label><![CDATA[capacity]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="art_link" ID="F23462" rank="41">
+          <name>link</name>
+          <label><![CDATA[link]]></label>
+        </formElement>
+        <formElement type="burndown" ID="F23463" rank="42">
+          <name>burndown</name>
+          <label><![CDATA[burndown]]></label>
+          <properties use_cache="0"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F23457"/>
+                <field REF="F23458"/>
+                <field REF="F23459"/>
+                <field REF="F23460"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F23457" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23457" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23457" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23458" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23458" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23458" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23459" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23459" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23459" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23460" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23460" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23460" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23461" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23461" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23461" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23462" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23462" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23462" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23463" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2896">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:42:09+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[bulbizzare]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[6]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="2897">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:42:27+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[herbizarre]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[6]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value>7</value>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T1377" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[pokemon]]></name>
+      <item_name>pokemon</item_name>
+      <description><![CDATA[pokemon]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F23464" rank="12">
+          <name>name</name>
+          <label><![CDATA[Name]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F23465" rank="13">
+          <name>start_date</name>
+          <label><![CDATA[start_date]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="int" ID="F23466" rank="14">
+          <name>duration</name>
+          <label><![CDATA[duration]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="computed" ID="F23467" rank="15">
+          <name>remaining_effort</name>
+          <label><![CDATA[remaining_effort]]></label>
+        </formElement>
+        <formElement type="int" ID="F23468" rank="32">
+          <name>capacity</name>
+          <label><![CDATA[capacity]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="art_link" ID="F23469" rank="34">
+          <name>link</name>
+          <label><![CDATA[link]]></label>
+        </formElement>
+        <formElement type="burndown" ID="F23470" rank="35">
+          <name>burndown</name>
+          <label><![CDATA[burndown]]></label>
+          <properties use_cache="0"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F23464"/>
+                <field REF="F23465"/>
+                <field REF="F23466"/>
+                <field REF="F23467"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F23464" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23464" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23464" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23465" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23465" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23465" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23466" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23466" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23466" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23467" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23467" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23467" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23468" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23468" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23468" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23469" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23469" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23469" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23470" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2898">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:26:10+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[pokemon]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>6</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:29:45+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:29:45+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2902</value>
+              <value nature="">2903</value>
+              <value nature="">2904</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:30:30+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:30:30+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="capacity" type="int">
+              <value>60</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:38:18+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:38:18+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2892</value>
+              <value nature="">2902</value>
+              <value nature="">2903</value>
+              <value nature="">2904</value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T1378" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[type]]></name>
+      <item_name>type</item_name>
+      <description><![CDATA[type]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F23471" rank="3">
+          <name>name</name>
+          <label><![CDATA[name]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="int" ID="F23472" rank="4">
+          <name>remaining_effort</name>
+          <label><![CDATA[remaining_effort]]></label>
+          <properties size="5"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F23471"/>
+                <field REF="F23472"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F23471" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23471" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23471" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23472" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23472" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23472" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2899">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:44:12+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[eau]]></value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="int">
+              <value>10</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-18T16:51:49+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:21:51+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="int">
+              <value>5</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2900">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:44:19+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[glace]]></value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="int">
+              <value>15</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-18T16:51:49+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:21:56+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="int">
+              <value>10</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2901">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:44:28+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[vol]]></value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="int">
+              <value/>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T1379" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[version]]></name>
+      <item_name>Ver2</item_name>
+      <description><![CDATA[version]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F23473" rank="6">
+          <name>name</name>
+          <label><![CDATA[Name]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F23474" rank="7">
+          <name>start_date</name>
+          <label><![CDATA[start_date]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="int" ID="F23475" rank="8">
+          <name>duration</name>
+          <label><![CDATA[duration]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="computed" ID="F23476" rank="9">
+          <name>remaining_effort</name>
+          <label><![CDATA[remaining_effort]]></label>
+        </formElement>
+        <formElement type="int" ID="F23477" rank="22">
+          <name>capacity</name>
+          <label><![CDATA[capacity]]></label>
+          <description><![CDATA[capacity]]></description>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="art_link" ID="F23478" rank="25">
+          <name>link</name>
+          <label><![CDATA[link]]></label>
+        </formElement>
+        <formElement type="burndown" ID="F23479" rank="26">
+          <name>burndown</name>
+          <label><![CDATA[burndown]]></label>
+          <properties use_cache="0"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F23473"/>
+                <field REF="F23474"/>
+                <field REF="F23475"/>
+                <field REF="F23476"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F23473" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23473" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23473" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23474" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23474" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23474" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23475" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23475" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23475" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23476" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23476" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23476" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23477" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23477" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23477" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23478" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F23478" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F23478" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F23479" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2902">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:28:27+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[rubis]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:32:19+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:32:19+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="capacity" type="int">
+              <value>35</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:36:16+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:36:16+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2887</value>
+              <value nature="">2888</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-30T16:22:42+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:22:42+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[25]]></manual_value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-30T16:22:51+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:22:51+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2903">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:28:36+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[lune]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:29:00+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:29:00+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[7]]></manual_value>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:32:34+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:32:34+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="capacity" type="int">
+              <value>15</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:37:03+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:37:03+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2888</value>
+              <value nature="">2889</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-30T16:23:56+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:23:56+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2904">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:28:50+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="name" type="string">
+              <value><![CDATA[saphir]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2016-11-17T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="capacity" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:32:43+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:32:43+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="capacity" type="int">
+              <value>9</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:37:42+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-17T11:37:42+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="link" type="art_link">
+              <value nature="">2890</value>
+              <value nature="">2891</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-22T16:51:49+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2016-11-30T16:24:12+01:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="remaining_effort" type="computed">
+              <manual_value><![CDATA[3]]></manual_value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+  </trackers>
+</project>

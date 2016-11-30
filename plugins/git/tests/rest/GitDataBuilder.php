@@ -44,7 +44,7 @@ use Tuleap\Git\Gitolite\VersionDetector;
 class GitDataBuilder extends REST_TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
-    const PROJECT_TEST_GIT_ID        = 111;
+    const PROJECT_TEST_GIT_ID        = 112;
     const REPOSITORY_GIT_ID          = 1;
 
     /** @var SystemEventManager */
