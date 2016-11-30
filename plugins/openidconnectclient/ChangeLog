@@ -1,3 +1,6 @@
+Version 0.44 - Tuleap 9.2
+    * story #9658: log in into a Tuleap instance using only an OpenID Connect provider (Administrators can see if a provider is the unique authentication endpoint)
+
 Version 0.43 - Tuleap 9.2
     * story #9658: log in into a Tuleap instance using only an OpenID Connect provider
 
