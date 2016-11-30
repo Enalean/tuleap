@@ -1,3 +1,6 @@
+Version 4.300 - Tuleap 9.2
+    * story #9525: Regexp checkbox can be unchecked at global level
+
 Version 4.299 - Tuleap 9.2
     * story #9525: Inherit during project creation
 
