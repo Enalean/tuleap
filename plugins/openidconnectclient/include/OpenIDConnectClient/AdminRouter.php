@@ -55,10 +55,10 @@ class AdminRouter {
                 $this->controller->updateProvider($this->csrf_token, $request);
                 break;
             case 'delete-provider':
-                $this->controller->removeProvider($this->csrf_token, $request->get('provider_id'));
+                $this->controller->removeProvider($this->csrf_token, $request->get('provider_id'), $current_user);
                 break;
             default:
-                $this->controller->showAdministration($this->csrf_token);
+                $this->controller->showAdministration($this->csrf_token, $current_user);
         }
     }
 

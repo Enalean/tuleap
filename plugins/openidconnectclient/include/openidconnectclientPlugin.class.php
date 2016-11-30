@@ -35,6 +35,7 @@ use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
+use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
@@ -382,17 +383,24 @@ class openidconnectclientPlugin extends Plugin {
 
     public function processAdmin(HTTPRequest $request)
     {
-        $provider_manager        = $this->getProviderManager();
-        $icon_presenter_factory  = new IconPresenterFactory();
-        $color_presenter_factory = new ColorPresenterFactory();
-        $admin_page_renderer     = new AdminPageRenderer();
-        $controller              = new Administration\Controller(
+        $provider_manager                               = $this->getProviderManager();
+        $user_mapping_manager                           = new UserMappingManager(new UserMappingDao());
+        $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
+            $user_mapping_manager
+        );
+        $icon_presenter_factory                         = new IconPresenterFactory();
+        $color_presenter_factory                        = new ColorPresenterFactory();
+        $admin_page_renderer                            = new AdminPageRenderer();
+        $controller                                     = new Administration\Controller(
             $provider_manager,
+            $enable_unique_authentication_endpoint_verifier,
             $icon_presenter_factory,
             $color_presenter_factory,
             $admin_page_renderer
         );
-        $csrf_token              = new CSRFSynchronizerToken(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
+        $csrf_token                                     = new CSRFSynchronizerToken(
+            OPENIDCONNECTCLIENT_BASE_URL . '/admin'
+        );
 
         $router = new AdminRouter($controller, $csrf_token);
         $router->route($request);

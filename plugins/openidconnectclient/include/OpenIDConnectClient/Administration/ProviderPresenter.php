@@ -35,15 +35,26 @@ class ProviderPresenter {
     public $icons_presenters;
 
     /**
-     * @var ColorsPresenter[]
+     * @var ColorPresenter[]
      */
-    public $colors_presenters;
+    public  $colors_presenters;
+
+    /**
+     * @var boolean
+     */
+    public $can_user_enable_unique_authentication_endpoint;
 
 
-    public function __construct(Provider $provider, array $icons_presenters, array $colors_presenters) {
-        $this->provider          = $provider;
-        $this->icons_presenters  = $icons_presenters;
-        $this->colors_presenters = $colors_presenters;
+    public function __construct(
+        Provider $provider,
+        $can_user_enable_unique_authentication_endpoint,
+        array $icons_presenters,
+        array $colors_presenters
+    ) {
+        $this->provider                                       = $provider;
+        $this->can_user_enable_unique_authentication_endpoint = $can_user_enable_unique_authentication_endpoint;
+        $this->icons_presenters                               = $icons_presenters;
+        $this->colors_presenters                              = $colors_presenters;
     }
 
     public function getId() {
@@ -82,4 +93,8 @@ class ProviderPresenter {
         return $this->provider->getColor();
     }
 
+    public function isUniqueAuthenticationEndpoint()
+    {
+        return $this->provider->isUniqueAuthenticationEndpoint();
+    }
 }

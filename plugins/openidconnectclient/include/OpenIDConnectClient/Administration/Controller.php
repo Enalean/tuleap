@@ -24,7 +24,8 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
-use TemplateRendererFactory;
+use PFUser;
+use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDataAccessException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
@@ -38,17 +39,18 @@ class Controller {
      * @var ProviderManager
      */
     private $provider_manager;
-
+    /**
+     * @var EnableUniqueAuthenticationEndpointVerifier
+     */
+    private $enable_unique_authentication_endpoint_verifier;
     /**
      * @var IconPresenterFactory
      */
     private $icon_presenter_factory;
-
     /**
      * @var ColorPresenterFactory
      */
     private $color_presenter_factory;
-
     /**
      * @var AdminPageRenderer
      */
@@ -56,17 +58,19 @@ class Controller {
 
     public function __construct(
         ProviderManager $provider_manager,
+        EnableUniqueAuthenticationEndpointVerifier $enable_unique_authentication_endpoint_verifier,
         IconPresenterFactory $icon_presenter_factory,
         ColorPresenterFactory $color_presenter_factory,
         AdminPageRenderer $admin_page_renderer
     ) {
-        $this->provider_manager        = $provider_manager;
-        $this->icon_presenter_factory  = $icon_presenter_factory;
-        $this->color_presenter_factory = $color_presenter_factory;
-        $this->admin_page_renderer     = $admin_page_renderer;
+        $this->provider_manager                               = $provider_manager;
+        $this->enable_unique_authentication_endpoint_verifier = $enable_unique_authentication_endpoint_verifier;
+        $this->icon_presenter_factory                         = $icon_presenter_factory;
+        $this->color_presenter_factory                        = $color_presenter_factory;
+        $this->admin_page_renderer                            = $admin_page_renderer;
     }
 
-    public function showAdministration(CSRFSynchronizerToken $csrf_token)
+    public function showAdministration(CSRFSynchronizerToken $csrf_token, PFUser $user)
     {
         $providers            = $this->provider_manager->getProviders();
         $providers_presenters = array();
@@ -74,6 +78,7 @@ class Controller {
         foreach ($providers as $provider) {
             $providers_presenters[] = new ProviderPresenter(
                 $provider,
+                $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user),
                 $this->icon_presenter_factory->getIconsPresentersForProvider($provider),
                 $this->color_presenter_factory->getColorsPresentersForProvider($provider)
             );
@@ -183,10 +188,11 @@ class Controller {
                 array($provider->getName())
             )
         );
-        $this->showAdministration($csrf_token);
+        $this->showAdministration($csrf_token, $request->getCurrentUser());
     }
 
-    public function removeProvider(CSRFSynchronizerToken $csrf_token, $provider_id) {
+    public function removeProvider(CSRFSynchronizerToken $csrf_token, $provider_id, PFUser $user)
+    {
         $csrf_token->check();
 
         try {
@@ -213,7 +219,7 @@ class Controller {
                 array($provider->getName())
             )
         );
-        $this->showAdministration($csrf_token);
+        $this->showAdministration($csrf_token, $user);
     }
 
     private function redirectAfterFailure($message) {
