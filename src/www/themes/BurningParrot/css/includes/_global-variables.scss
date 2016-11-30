@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'vendor/smooth-scrollbar.min';
-
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/sidebar-collapsed';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/svn';
+$navbar-height: 45px;
+$sidebar-width: 50px;
+$sidebar-expanded-width: 250px;
+$sidebar-fully-collapsed-width: 10px;

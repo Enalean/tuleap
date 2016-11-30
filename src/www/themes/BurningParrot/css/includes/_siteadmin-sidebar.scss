@@ -29,6 +29,48 @@
     z-index: 10000;
 }
 
+.sidebar-collapser-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: $sidebar-fully-collapsed-width;
+    height: 100%;
+    transition: background 100ms;
+    z-index: 10001;
+
+    &:hover {
+        background: darken($tlp-theme-sidebar-background-color, 6%);
+        cursor: w-resize;
+    }
+}
+
+.sidebar-collapser-icon {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    transition: background 100ms;
+    border-radius: 50px;
+    color: transparentize(#ffffff, .65);
+    font-size: 12px;
+    z-index: 10001;
+
+    // scss-lint:disable PseudoElement
+    &:before {
+        position: relative;
+        left: -1.5px;
+    }
+
+    &:hover {
+        background: darken($tlp-theme-sidebar-background-color, 6%);
+        cursor: pointer;
+    }
+}
+
 .admin-sidebar-section {
     flex: 0 0 auto;
     padding: $tlp-spacing;
