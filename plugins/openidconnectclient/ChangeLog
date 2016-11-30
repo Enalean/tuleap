@@ -1,3 +1,6 @@
+Version 0.43 - Tuleap 9.2
+    * story #9658: log in into a Tuleap instance using only an OpenID Connect provider
+
 Version 0.42 - Tuleap 9.2
     * Do not display the login form on the homepage if a provider is configured as unique authentication endpoint
 
