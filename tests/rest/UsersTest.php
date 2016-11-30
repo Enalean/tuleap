@@ -46,7 +46,7 @@ class UsersTest extends RestBase {
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $json['username']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_LDAPID, $json['ldap_id']);
-        $this->assertEquals('/themes/common/images/avatar_default.png', $json['avatar_url']);
+        $this->assertEquals('http://localhost/themes/common/images/avatar_default.png', $json['avatar_url']);
         $this->assertFalse(isset($json['email']));
         $this->assertFalse(isset($json['status']));
     }
@@ -62,7 +62,7 @@ class UsersTest extends RestBase {
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $json['username']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_LDAPID, $json['ldap_id']);
-        $this->assertEquals('/themes/common/images/avatar_default.png', $json['avatar_url']);
+        $this->assertEquals('http://localhost/themes/common/images/avatar_default.png', $json['avatar_url']);
     }
 
     public function testGETIdDoesNotWorkIfUserDoesNotExist() {
