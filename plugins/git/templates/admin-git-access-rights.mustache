@@ -6,12 +6,17 @@
       action="{{ default_access_rights_form_action }}"
 >
 
-    {{{ csrf_token }}}
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
     {{> access-control }}
 
     <input type="submit"
            name="save"
-           class="btn btn-primary"
+           class="btn btn-primary save-permissions-with-regexp"
+           data-are-regexp-enabled="{{ is_regexp_enabled }}"
+           data-are-regexp-confliting="{{ are_regexp_permission_conflicting_at_site_level }}"
            value="{{ submit_default_access_rights }}" />
 
 </form>

@@ -528,7 +528,7 @@ plugin_git	add_permission_duplicate_pattern	L'expression $1 est déjà existante
 plugin_git	regexp_permission_label	Activer les expressions régulières dans les branches et les étiquettes.
 plugin_git	title_warning_regexp_uncheck	Certaines règles peuvent être supprimées
 plugin_git	warning_regexp_uncheck	L'ensemble des règles contenant des expressions régulières vont être supprimées. Merci de confirmer la désactivation de cette option.
-plugin_git	regexp_incoherence_label	Pour l'instant il n'est pas possible de désactiver la fonctionnalité une fois qu'elle a été activée. Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
+plugin_git	regexp_incoherence_label	Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
 plugin_git	history_regexp	Expression régulières $1 pour le dépôt $2.
 plugin_git	enabled	activées
 plugin_git	disabled	désactivées

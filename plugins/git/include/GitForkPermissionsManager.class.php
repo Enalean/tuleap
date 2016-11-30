@@ -365,6 +365,5 @@ class GitForkPermissionsManager {
         }
 
         return $warning;
-
     }
 }

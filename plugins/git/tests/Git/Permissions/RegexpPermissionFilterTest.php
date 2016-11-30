@@ -64,7 +64,8 @@ class RegexpPermissionFilterTest extends TuleapTestCase
                 mock('Tuleap\Git\Permissions\FineGrainedRegexpValidator'),
                 mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
             ),
-            $this->permission_destructor
+            $this->permission_destructor,
+            mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory')
         );
     }
 

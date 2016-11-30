@@ -748,7 +748,8 @@ class GitViews extends PluginViews {
             $delete_url,
             $csrf_delete,
             $this->areRegexpActivatedAtSiteLevel(),
-            $this->isRegexpActivatedForDefault()
+            $this->isRegexpActivatedForDefault(),
+            $this->areRegexpConflictingForDefault()
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
@@ -765,6 +766,11 @@ class GitViews extends PluginViews {
     private function isRegexpActivatedForDefault()
     {
         return $this->regexp_retriever->areRegexpActivatedForDefault($this->project);
+    }
+
+    private function areRegexpConflictingForDefault()
+    {
+        return $this->regexp_retriever->areDefaultRegexpConflitingWithPlateform($this->project);
     }
 
     private function getMirrorPresentersForGitAdmin() {

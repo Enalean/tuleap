@@ -22,6 +22,7 @@
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
+use Project;
 
 class RegexpFineGrainedDisabler
 {
@@ -34,16 +35,29 @@ class RegexpFineGrainedDisabler
      * @var RegexpFineGrainedDao
      */
     private $regexp_dao;
+    /**
+     * @var RegexpDefaultDao
+     */
+    private $regexp_default_dao;
 
-    public function __construct(RegexpRepositoryDao $regexp_repository_dao, RegexpFineGrainedDao $regexp_dao)
-    {
+    public function __construct(
+        RegexpRepositoryDao $regexp_repository_dao,
+        RegexpFineGrainedDao $regexp_dao,
+        RegexpDefaultDao $regexp_default_dao
+    ) {
         $this->regexp_repository_dao = $regexp_repository_dao;
         $this->regexp_dao            = $regexp_dao;
+        $this->regexp_default_dao    = $regexp_default_dao;
     }
 
     public function disableForRepository(GitRepository $repository)
     {
         $this->regexp_repository_dao->disable($repository->getId());
+    }
+
+    public function disableForDefault(Project $project)
+    {
+        $this->regexp_default_dao->disable($project->getId());
     }
 
     public function disableAtSiteLevel()
