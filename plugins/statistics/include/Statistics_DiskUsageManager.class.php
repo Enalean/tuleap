@@ -120,18 +120,11 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    public function getGeneralData($date, $groupId = NULL) {
+    public function getGeneralData($date) {
         $res = array();
         $dao  = $this->_getDao();
         if ($date) {
             $res['date'] = $date;
-
-            $dar = $dao->searchSizePerService($date, $groupId);
-            if ($dar && !$dar->isError()) {
-                foreach ($dar as $row) {
-                    $res['service'][$row['service']] = $row['size'];
-                }
-            }
 
             $dar = $dao->searchTotalUserSize($date);
             if ($dar && !$dar->isError()) {
@@ -153,10 +146,10 @@ class Statistics_DiskUsageManager {
         }
         return $res;
     }
-    public function getLatestData($groupId = NULL) {
+    public function getLatestData() {
         $dao  = $this->_getDao();
         $date = $dao->searchMostRecentDate();
-        return  $this->getGeneralData($date, $groupId);
+        return  $this->getGeneralData($date);
     }
 
     function getKeyFromGroupBy($row, $groupBy) {

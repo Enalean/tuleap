@@ -28,6 +28,10 @@ use Tuleap\Admin\AdminPageRenderer;
 class DiskUsageRouter
 {
     /**
+     * @var DiskUsageGlobalPresenterBuilder
+     */
+    public $global_builder;
+    /**
      * @var Statistics_DiskUsageManager
      */
     private $usage_manager;
@@ -49,12 +53,14 @@ class DiskUsageRouter
         Statistics_DiskUsageManager $usage_manager,
         DiskUsageServicesPresenterBuilder $services_builder,
         DiskUsageProjectsPresenterBuilder $projects_builder,
-        DiskUsageTopUsersPresenterBuilder $top_users_builder
+        DiskUsageTopUsersPresenterBuilder $top_users_builder,
+        DiskUsageGlobalPresenterBuilder $global_builder
     ) {
         $this->usage_manager     = $usage_manager;
         $this->services_builder  = $services_builder;
         $this->projects_builder  = $projects_builder;
         $this->top_users_builder = $top_users_builder;
+        $this->global_builder    = $global_builder;
     }
 
     public function route(HTTPRequest $request)
@@ -71,6 +77,9 @@ class DiskUsageRouter
                     break;
                 case 'top_users':
                     $this->displayTopUsers($request);
+                    break;
+                case 'global':
+                    $this->displayGlobalData();
                     break;
             }
         }
@@ -156,6 +165,21 @@ class DiskUsageRouter
             ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
             'disk-usage-top-users',
             $top_users_presenter
+        );
+    }
+
+    private function displayGlobalData()
+    {
+        $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+
+        $disk_usage_global_presenter = $this->global_builder->build($title);
+
+        $admin_page_renderer = new AdminPageRenderer();
+        $admin_page_renderer->renderANoFramedPresenter(
+            $title,
+            ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+            'disk-usage-global',
+            $disk_usage_global_presenter
         );
     }
 }

@@ -30,10 +30,14 @@ plugin_statistics_admin_page	disk_usage_projects_menu_label	Utilisation par proj
 plugin_statistics_admin_page	disk_usage_users_menu_span_label	Utilisateurs
 plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top 10 des utilisateurs
 plugin_statistics_admin_page	disk_usage_users_user_details_label	Détails par utilisateur
+plugin_statistics_admin_page	disk_usage_global_menu_span_label	Global
+plugin_statistics_admin_page	disk_usage_global_menu_label	Utilisation globale
 plugin_statistics_admin_page	data_services_pane_title	Utilisation par service
 plugin_statistics_admin_page	data_projects_pane_title	Utilisation par projet
+plugin_statistics_admin_page	data_global_pane_title	Utilisation globale du $1
 plugin_statistics_admin_page	data_services_no_data	Il n'y a pas de données sur les services
 plugin_statistics_admin_page	data_projects_no_data	Il n'y a pas de données par projet
+plugin_statistics_admin_page	data_global_no_data	Il n'y a pas de données globale
 plugin_statistics_admin_page	table_service_title	Service
 plugin_statistics_admin_page	table_rank_title	Rang
 plugin_statistics_admin_page	table_name_title	Nom
@@ -153,6 +157,7 @@ plugin_statistics	month	Mois
 plugin_statistics	year	Année
 
 plugin_statistics	search	Chercher
+plugin_statistics	search_title	Recherche
 plugin_statistics	project_placeholder	MonProjet
 plugin_statistics	project_label	Projet
 plugin_statistics	delete_confirm	Hop, hop, hop ! Attendez un instant. Vous êtes en train de supprimer le quota pour le projet <b>$1</b>. Merci de confirmer votre action.
@@ -165,3 +170,8 @@ plugin_statistics	details	Détails
 plugin_statistics	project_quota	Quota du projet
 plugin_statistics	comment	Commentaire…
 plugin_statistics	empty_filter_results	Il n'y a pas de quota défini pour le projet sélectionné
+
+plugin_statistics	users	Utilisateurs
+plugin_statistics	codendi_logs	Logs Codendi
+plugin_statistics	backup	Sauvegarde
+plugin_statistics	backup_old	Ancienne sauvegarde

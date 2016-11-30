@@ -43,9 +43,9 @@ class DiskUsageTopUsersPresenter
         $this->end_date_value = $end_date_value;
         $this->data_top_users = $data_top_users;
 
-        $this->search_title                = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->search_title                = $GLOBALS['Language']->getText('plugin_statistics', 'search_title');
         $this->end_date_label              = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->search                      = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->search                      = $GLOBALS['Language']->getText('plugin_statistics', 'search');
         $this->top_users_pane_title        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'top_users_pane_title');
         $this->table_rank_title            = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_rank_title');
         $this->table_name_title            = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_name_title');

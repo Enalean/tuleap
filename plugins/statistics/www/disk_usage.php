@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Statistics\DiskUsageGlobalPresenterBuilder;
 use Tuleap\Statistics\DiskUsageRouter;
 use Tuleap\Statistics\DiskUsageSearchFieldsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
@@ -143,6 +144,11 @@ $disk_usage_projects_builder = new DiskUsageProjectsPresenterBuilder(
     $disk_usage_services_builder
 );
 
+$disk_usage_global_builder = new DiskUsageGlobalPresenterBuilder(
+    $duMgr,
+    $disk_usage_output
+);
+
 $top_users_builder = new DiskUsageTopUsersPresenterBuilder(
     $duMgr,
     $disk_usage_output
@@ -153,7 +159,7 @@ $disk_usage_router = new DiskUsageRouter(
     $disk_usage_services_builder,
     $disk_usage_projects_builder,
     $top_users_builder,
-    $disk_usage_projects_builder
+    $disk_usage_global_builder
 );
 
 $disk_usage_router->route($request);

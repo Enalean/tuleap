@@ -1,0 +1,30 @@
+<div class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        {{ pane_title }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="siteadmin-statistics-disk-usage-data-global">
+                        {{# data_global }}
+                            <div class="tlp-property siteadmin-statistics-disk-usage-data-global-property">
+                                <label class="tlp-label">{{ title }}</label>
+                                <span>{{ size }}</span>
+                            </div>
+                        {{/ data_global }}
+                        {{^ data_global }}
+                            <span>{{ no_data }}</span>
+                        {{/ data_global }}
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

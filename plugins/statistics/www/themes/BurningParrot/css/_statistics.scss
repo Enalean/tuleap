@@ -80,6 +80,15 @@
     border-radius: 50%;
 }
 
+.siteadmin-statistics-disk-usage-data-global {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.siteadmin-statistics-disk-usage-data-global-property {
+    margin: 0 $tlp-double-spacing $tlp-spacing 0;
+}
+
 @media screen and (max-width: 1400px) {
     #siteadmin-statistics-frequencies,
     #siteadmin-statistics-disk-usage {

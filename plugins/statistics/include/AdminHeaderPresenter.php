@@ -46,6 +46,8 @@ class AdminHeaderPresenter
     public $disk_usage_users_menu_span_label;
     public $disk_usage_users_top_users_menu_label;
     public $disk_usage_users_user_details_label;
+    public $disk_usage_global_menu_span_label;
+    public $disk_usage_global_menu_label;
 
     public function __construct(
         $title,
@@ -73,5 +75,7 @@ class AdminHeaderPresenter
         $this->disk_usage_users_menu_span_label      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_menu_span_label');
         $this->disk_usage_users_top_users_menu_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_top_users_menu_label');
         $this->disk_usage_users_user_details_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_user_details_label');
+        $this->disk_usage_global_menu_span_label     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_global_menu_span_label');
+        $this->disk_usage_global_menu_label          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_global_menu_label');
     }
 }
