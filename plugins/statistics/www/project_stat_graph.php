@@ -24,8 +24,8 @@ require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php'
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
-if (!$p || !$pluginManager->isPluginAvailable($p)) {
-    header('Location: '.get_server_url());
+if (! $p || ! $pluginManager->isPluginAvailable($p)) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 $vGroupId = new Valid_GroupId();
@@ -34,13 +34,13 @@ if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
     $project = ProjectManager::instance()->getProject($groupId);
 } else {
-    header('Location: '.get_server_url());
+    $GLOBALS['Response']->redirect('/');
 }
 
 // Grant access only to project admins
 $user = UserManager::instance()->getCurrentUser();
-if (!$project->userIsAdmin($user)) {
-    header('Location: '.get_server_url());
+if (! ! $user->isAdmin($groupId)) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 $duMgr  = new Statistics_DiskUsageManager();

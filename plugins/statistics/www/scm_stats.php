@@ -24,13 +24,13 @@ require_once('www/project/export/project_export_utils.php');
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
-if (!$p || !$pluginManager->isPluginAvailable($p)) {
-    header('Location: '.get_server_url());
+if (! $p || ! $pluginManager->isPluginAvailable($p)) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 // Grant access only to site admin
-if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
-    header('Location: '.get_server_url());
+if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 $request = HTTPRequest::instance();
