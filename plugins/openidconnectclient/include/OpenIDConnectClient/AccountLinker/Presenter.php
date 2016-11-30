@@ -23,18 +23,21 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use ForgeConfig;
 
-class Presenter {
-
+class Presenter
+{
     private $link_id;
     private $return_to;
     private $provider_name;
     private $link_to_register_page;
+    private $is_registering_possible;
 
-    public function __construct($link_id, $return_to, $provider_name, $link_to_register_page) {
-        $this->link_id               = $link_id;
-        $this->return_to             = $return_to;
-        $this->provider_name         = $provider_name;
-        $this->link_to_register_page = $link_to_register_page;
+    public function __construct($link_id, $return_to, $provider_name, $link_to_register_page, $is_registering_possible)
+    {
+        $this->link_id                 = $link_id;
+        $this->return_to               = $return_to;
+        $this->provider_name           = $provider_name;
+        $this->link_to_register_page   = $link_to_register_page;
+        $this->is_registering_possible = $is_registering_possible;
     }
 
     public function link_id() {
@@ -69,10 +72,23 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account_to');
     }
 
-    public function link_page_header() {
+    public function link_page_header_with_registration()
+    {
         return $GLOBALS['Language']->getText(
             'plugin_openidconnectclient',
-            'link_page_header',
+            'link_page_header_with_registration',
+            array(
+                $this->provider_name,
+                ForgeConfig::get('sys_name')
+            )
+        );
+    }
+
+    public function link_page_header_without_registration()
+    {
+        return $GLOBALS['Language']->getText(
+            'plugin_openidconnectclient',
+            'link_page_header_without_registration',
             array(
                 $this->provider_name,
                 ForgeConfig::get('sys_name')
@@ -98,5 +114,10 @@ class Presenter {
 
     public function link_to_register_page() {
         return $this->link_to_register_page;
+    }
+
+    public function is_registering_possible()
+    {
+        return $this->is_registering_possible;
     }
 }

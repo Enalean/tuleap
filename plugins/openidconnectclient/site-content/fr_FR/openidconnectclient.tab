@@ -8,7 +8,8 @@ plugin_openidconnectclient	or_label	ou connectez-vous avec
 plugin_openidconnectclient	link_account	Liez un compte $1
 plugin_openidconnectclient	link_account_to	à OpenID Connect
 plugin_openidconnectclient	successfully_linked	Votre compte a bien été lié à $1
-plugin_openidconnectclient	link_page_header	Vous avez été authentifié avec succès par $1. Vous devez maintenant créer un lien avec un compte $2 existant ou en créer un nouveau.
+plugin_openidconnectclient	link_page_header_with_registration	Vous avez été authentifié avec succès par $1. Vous devez maintenant créer un lien avec un compte $2 existant ou en créer un nouveau.
+plugin_openidconnectclient	link_page_header_without_registration	Vous avez été authentifié avec succès par $1. Vous devez maintenant créer un lien avec un compte $2 existant.
 
 plugin_openidconnectclient	title_user_preferences	Fournisseurs OpenID Connect
 plugin_openidconnectclient	unlink	Supprimer le lien
@@ -20,6 +21,8 @@ plugin_openidconnectclient	register	Créer un nouveau compte $1
 plugin_openidconnectclient	or_register_label	ou
 plugin_openidconnectclient	info_registration	Votre nouveau compte utilisateur sera lié avec $1. Vous devez fournir un mot de passe pour vous authentifier avec les services de $2 (CVS, SVN, Git, FTP…)
 plugin_openidconnectclient	link_registration_error	Une erreur est survenue lors de la création du lien avec le fournisseur OpenID Connect
+
+plugin_openidconnectclient	registered_waiting_for_admin	Votre compte a été créé mais doit être approuvé par un administrateur
 
 plugin_openidconnectclient_admin	title	OpenID Connect
 plugin_openidconnectclient_admin	title_provider_configuration	Fournisseurs OpenID Connect

@@ -74,10 +74,17 @@ class Controller {
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
         }
-        $return_to             = $request->get('return_to');
-        $link_to_register_page = $this->generateLinkToRegisterPage($request);
-        $presenter             = new Presenter($link_id, $return_to, $provider->getName(), $link_to_register_page);
-        $renderer              = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+        $return_to               = $request->get('return_to');
+        $link_to_register_page   = $this->generateLinkToRegisterPage($request);
+        $is_registering_possible = !$provider->isUniqueAuthenticationEndpoint();
+        $presenter               = new Presenter(
+            $link_id,
+            $return_to,
+            $provider->getName(),
+            $link_to_register_page,
+            $is_registering_possible
+        );
+        $renderer                = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
             array('title' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account'), 'body_class' => array('openid-connect-link'))

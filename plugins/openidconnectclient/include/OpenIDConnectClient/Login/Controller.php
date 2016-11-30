@@ -20,14 +20,13 @@
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-use BackendLogger;
 use Feedback;
-use ForgeConfig;
-use HTTPRequest;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDataAccessException;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\FlowResponse;
+use Tuleap\OpenIDConnectClient\Login\Registration\AutomaticUserRegistration;
+use Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMapping;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDataAccessException;
@@ -61,6 +60,11 @@ class Controller {
     private $unlinked_account_manager;
 
     /**
+     * @var AutomaticUserRegistration
+     */
+    private $automatic_user_registration;
+
+    /**
      * @var Flow
      */
     private $flow;
@@ -70,13 +74,15 @@ class Controller {
         ProviderManager $provider_manager,
         UserMappingManager $user_mapping_manager,
         UnlinkedAccountManager $unlinked_account_manager,
+        AutomaticUserRegistration $automatic_user_registration,
         Flow $flow
     ) {
-        $this->user_manager             = $user_manager;
-        $this->provider_manager         = $provider_manager;
-        $this->user_mapping_manager     = $user_mapping_manager;
-        $this->unlinked_account_manager = $unlinked_account_manager;
-        $this->flow                     = $flow;
+        $this->user_manager                = $user_manager;
+        $this->provider_manager            = $provider_manager;
+        $this->user_mapping_manager        = $user_mapping_manager;
+        $this->unlinked_account_manager    = $unlinked_account_manager;
+        $this->automatic_user_registration = $automatic_user_registration;
+        $this->flow                        = $flow;
     }
 
     public function login($return_to, $login_time) {
@@ -101,7 +107,7 @@ class Controller {
             );
             $this->openSession($user_mapping, $flow_response->getReturnTo(), $login_time);
         } catch (UserMappingNotFoundException $ex) {
-            $this->redirectToLinkAnUnknowAccount($flow_response);
+            $this->dealWithUnregisteredUser($flow_response, $login_time);
         }
     }
 
@@ -138,6 +144,40 @@ class Controller {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
+        );
+        $GLOBALS['Response']->redirect('/');
+    }
+
+    private function dealWithUnregisteredUser(FlowResponse $flow_response, $login_time)
+    {
+        $provider = $flow_response->getProvider();
+        if (! $provider->isUniqueAuthenticationEndpoint()) {
+            $this->redirectToLinkAnUnknowAccount($flow_response);
+        }
+
+        $user_information = $flow_response->getUserInformations();
+        if (count($this->user_manager->getAllUsersByEmail($user_information['email'])) > 0) {
+            $this->redirectToLinkAnUnknowAccount($flow_response);
+        }
+
+        $user_identifier = $flow_response->getUserIdentifier();
+        try {
+            $user = $this->automatic_user_registration->register($user_information);
+            $this->user_mapping_manager->create($user->getId(), $provider->getId(), $user_identifier, $login_time);
+        } catch (Exception $ex) {
+            $this->redirectAfterFailure(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+            );
+        }
+
+        if ($user->isAlive()) {
+            $user_mapping = $this->user_mapping_manager->getByProviderAndIdentifier($provider, $user_identifier);
+            $this->openSession($user_mapping, $flow_response->getReturnTo(), $login_time);
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('plugin_openidconnectclient', 'registered_waiting_for_admin')
         );
         $GLOBALS['Response']->redirect('/');
     }
