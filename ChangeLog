@@ -17,7 +17,7 @@ Version 9.2 (Not release yet)
 	* Fix the CI (yet another time)
 
 	== Plugins ==
-	* tracker: 5.1046
+	* tracker: 5.1047
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.69

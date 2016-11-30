@@ -1,3 +1,6 @@
+Version 5.1047 - Tuleap 9.2
+    * request #9551: Force burndown generation when update duration or start_date
+
 Version 5.1046 - Tuleap 9.2
     * request #9683: FLOAT(10,4) is not precise enough for big floats
 
