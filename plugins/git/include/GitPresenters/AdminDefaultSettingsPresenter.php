@@ -198,9 +198,9 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         return false;
     }
 
-    public function default_git_access_rights()
+    public function template_git_access_rights()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_access_rights');
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_template_access_rights');
     }
 
     public function csrf_token()

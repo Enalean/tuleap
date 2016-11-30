@@ -333,8 +333,8 @@ plugin_git	view_admin_title	Git Administration
 plugin_git	view_admin_tab_gerrit_templates	Gerrit Templates
 plugin_git	view_admin_tab_git_admins	Git administrators
 plugin_git	view_admin_tab_mass_update	Mass update of repositories
-plugin_git	view_admin_tab_default_settings	Default git settings
-plugin_git	view_admin_tab_default_access_rights	Default git access control
+plugin_git	view_admin_tab_template_settings	Git settings template
+plugin_git	view_admin_tab_template_access_rights	Git access control template
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Templates
 plugin_git	view_admin_edit_configuration_label	You can edit the template. The <b>%projectname%</b> variable is available; it will be replaced by the project's name during the migration process:
@@ -515,8 +515,8 @@ plugin_git	admin_gitolite_config_description	This section allows you to regenera
 plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git Plugin</a>.
 
 plugin_git	save_access_control	Save permissions
-plugin_git	default_access_control_saved	Default access control successfully saved.
-plugin_git	default_access_control_missing	Please define Write permissions.
+plugin_git	template_access_control_saved	Access control template successfully saved.
+plugin_git	template_access_control_missing	Please define Write permissions.
 
 plugin_git	default_permissions_title	Default permissions
 plugin_git	fine_grained_permissions_title	Fine-grained permissions

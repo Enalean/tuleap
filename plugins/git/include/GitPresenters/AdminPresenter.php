@@ -52,8 +52,8 @@ abstract class GitPresenters_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_mass_update');
     }
 
-    public function tab_default_settings() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_settings');
+    public function tab_template_settings() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_template_settings');
     }
 
     public function manage_mass_update_active() {

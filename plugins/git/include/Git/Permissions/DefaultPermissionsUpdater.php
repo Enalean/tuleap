@@ -145,7 +145,7 @@ class DefaultPermissionsUpdater
         ) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'default_access_control_missing')
+                $GLOBALS['Language']->getText('plugin_git', 'template_access_control_missing')
             );
             return false;
         }
@@ -171,7 +171,7 @@ class DefaultPermissionsUpdater
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText('plugin_git', 'default_access_control_saved')
+            $GLOBALS['Language']->getText('plugin_git', 'template_access_control_saved')
         );
     }
 
