@@ -258,11 +258,14 @@ class DefaultPermissionsUpdater
             );
         }
 
+        $regexp_activation = '';
         if ($enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === false) {
             $this->regexp_enabler->enableForDefault($project);
+            $regexp_activation = $GLOBALS['Language']->getText('plugin_git', 'enabled');
         } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === true) {
             $this->regexp_disabler->disableForDefault($project);
             $this->permission_filter->filterNonRegexpPermissionsForDefault($project);
+            $regexp_activation = $GLOBALS['Language']->getText('plugin_git', 'disabled');
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {
@@ -275,6 +278,15 @@ class DefaultPermissionsUpdater
 
         foreach ($updated_permissions as $permission) {
             $this->default_fine_grained_saver->updateDefaultPermission($permission);
+        }
+
+        if ($regexp_activation !== '') {
+            $this->history_dao->groupAddHistory(
+                'regexp_activated_for_git_template',
+                $GLOBALS['Language']->getText('plugin_git', 'history_regexp_template', array($regexp_activation, $project->getPublicName())),
+                $project->getID(),
+                array($regexp_activation, $project->getUnixNameMixedCase())
+            );
         }
 
         return $are_there_changes;
