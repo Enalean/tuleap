@@ -96,6 +96,12 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
         $yesterday->setTime(0, 0, 0);
 
         $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
+
+        $this->cache_dao->deleteArtifactCacheValue(
+            $burndown_informations['id'],
+            $burndown_informations['burndown_field_id']
+        );
+
         while ($start_date->getTimestamp() <= $end_date->getTimestamp()
             && $start_date->getTimestamp() <= $yesterday->getTimestamp()
         ) {

@@ -164,8 +164,7 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
               AND tracker_artifact.id = $artifact_id
               GROUP BY tracker_artifact.id
               HAVING start_date IS NOT NULL
-              AND duration IS NOT NULL
-              AND end_date >= CURRENT_DATE() - INTERVAL 1 DAY";
+              AND duration IS NOT NULL";
 
         return $this->retrieveFirstRow($sql);
     }

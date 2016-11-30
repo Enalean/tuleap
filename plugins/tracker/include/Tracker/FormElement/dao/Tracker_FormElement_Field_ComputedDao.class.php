@@ -489,4 +489,15 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function deleteArtifactCacheValue($artifact_id, $field_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $field_id    = $this->da->escapeInt($field_id);
+        $sql         = "DELETE FROM tracker_field_computed_cache
+                          WHERE artifact_id = $artifact_id
+                          AND field_id      = $field_id";
+
+        return $this->update($sql);
+    }
 }
