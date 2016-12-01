@@ -810,20 +810,22 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact_Changeset $previous_changeset = null
     ) {
 
-        $start_date_field = $this->getBurndownStartDateField($artifact, $submitter);
-        $duration_field   = $this->getBurndownDurationField($artifact, $submitter);
+        try {
+            $start_date_field = $this->getBurndownStartDateField($artifact, $submitter);
+            $duration_field   = $this->getBurndownDurationField($artifact, $submitter);
 
-        if (
-            $start_date_field &&
-            $duration_field &&
-            $previous_changeset !== null &&
-            $this->isCacheBurndownAlreadyAsked($artifact) === false
-        ) {
-            if ($this->hasFieldChanged($new_changeset, $start_date_field)
-                || $this->hasFieldChanged($new_changeset, $duration_field)
+            if (
+                $previous_changeset !== null &&
+                $this->isCacheBurndownAlreadyAsked($artifact) === false &&
+                $this->getBurndownRemainingEffortField($artifact, $submitter)
             ) {
-                $this->forceBurndownCacheGeneration($artifact->getId());
+                if ($this->hasFieldChanged($new_changeset, $start_date_field)
+                    || $this->hasFieldChanged($new_changeset, $duration_field)
+                ) {
+                    $this->forceBurndownCacheGeneration($artifact->getId());
+                }
             }
+        } catch (Tracker_FormElement_Field_BurndownException $e) {
         }
     }
 
