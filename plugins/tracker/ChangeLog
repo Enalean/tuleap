@@ -1,3 +1,6 @@
+Version 5.1053 - Tuleap 9.2
+    * request #9551: Computed cache should be base on remaining effort_field instead of burndown field
+
 Version 5.1052 - Tuleap 9.2
     * request #9682: Sorting a report stops working with more than 17 columns
 
