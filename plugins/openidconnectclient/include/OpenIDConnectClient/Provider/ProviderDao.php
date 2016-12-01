@@ -104,20 +104,26 @@ class ProviderDao  extends DataAccessObject {
         return $this->foundRows() > 0;
     }
 
-    public function searchProvidersUsableToLogIn() {
+    public function searchProvidersUsableToLogIn()
+    {
         $sql = "SELECT *
                 FROM plugin_openidconnectclient_provider
-                WHERE client_id != '' AND client_secret != ''";
+                WHERE client_id != '' AND client_secret != ''
+                ORDER BY unique_authentication_endpoint DESC, name ASC";
         if ($this->isAProviderConfiguredAsUniqueEndPointProvider()) {
             $sql = "SELECT *
                     FROM plugin_openidconnectclient_provider
-                    WHERE client_id != '' AND client_secret != '' AND unique_authentication_endpoint = TRUE";
+                    WHERE client_id != '' AND client_secret != '' AND unique_authentication_endpoint = TRUE
+                    ORDER BY unique_authentication_endpoint DESC, name ASC";
         }
         return $this->retrieve($sql);
     }
 
-    public function searchProviders() {
-        $sql = "SELECT * FROM plugin_openidconnectclient_provider";
+    public function searchProviders()
+    {
+        $sql = "SELECT *
+                FROM plugin_openidconnectclient_provider
+                ORDER BY unique_authentication_endpoint DESC, name ASC";
         return $this->retrieve($sql);
     }
 }

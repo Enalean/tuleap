@@ -38,8 +38,7 @@ plugin_openidconnectclient_admin	icon	Icône
 plugin_openidconnectclient_admin	color	Couleur
 plugin_openidconnectclient_admin	preview	Aperçu du bouton de la page de connexion
 plugin_openidconnectclient_admin	unique_authentication_source	Source d'authentification unique
-plugin_openidconnectclient_admin	active	Actif
-plugin_openidconnectclient_admin	inactive	Inactif
+plugin_openidconnectclient_admin	unique_authentication_source_disabled	Désactivé
 plugin_openidconnectclient_admin	unique_authentication_source_form	Ce fournisseur est le seul moyen d'authentification.
 plugin_openidconnectclient_admin	unique_authentication_source_prerequisites	Soyez certains que ce fournisseur est capable de fournir les scopes profile et email sans quoi les comptes utilisateur ne pourront pas être créés.
 plugin_openidconnectclient_admin	unique_authentication_source_user_must_be_linked	Vous ne pouvez activer ce fourniseur comme seul moyen d'authentification que si vous y êtes vous même lié.
