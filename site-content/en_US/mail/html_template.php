@@ -356,11 +356,12 @@ height:auto;
     background-color: #f0f0f0;
 }
 .bodyContent div.avatar {
-    background: transparent url(<?php echo $img_path ?>/avatar_default.png) 1px 1px no-repeat;
+    background: transparent url(<?php echo $img_path ?>/avatar_default.png) 0 0 no-repeat;
     width:50px;
     height:50px;
-    border:1px solid #ccc;
-    padding: 1px;
+}
+.bodyContent div.avatar img {
+    border-radius: 50%;
 }
 .bodyContent span.cta a,
 .bodyContent span.cta a:link,

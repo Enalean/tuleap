@@ -1,0 +1,124 @@
+<style>
+    .inbox {
+        height: 600px;
+    }
+    .tlp-pane-container.messages-list {
+        width: 400px;
+    }
+    .messages-list-header {
+        white-space: nowrap;
+    }
+    .messages-list-count {
+        margin: 0 0 0 10px;
+    }
+    .messages-list-message {
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 60px;
+    }
+    .messages-list-message.active,
+    .messages-list-message:hover {
+        background: rgba(21,147,196,0.05);
+    }
+    .messages-list-footer {
+        text-align: center;
+        border-top: 1px solid #f3f3f3;
+        padding: 20px;
+    }
+    .messages-list-list {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    .message {
+        width: 100%;
+    }
+    .message-content {
+        width: 100%;
+        height: calc(600px - 2 * 20px - 90px)
+    }
+    .message-header:not(.active) {
+        display: none;
+    }
+    .message-header {
+        display: flex;
+    }
+    .message-header-date,
+    .message-header-to {
+        width: calc(50% - 10px);
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .message-header-to {
+        margin: 0 10px 0 0;
+    }
+    .message-header-date.tlp-property {
+        margin: 0 0 0 10px;
+    }
+</style>
+<h1>Maillog</h1>
+<section class="tlp-pane inbox">
+    <div class="tlp-pane-container messages-list">
+        <div class="tlp-pane-header messages-list-header">
+            <h1 class="tlp-pane-title">
+                Emails sent by Tuleap
+                <span class="tlp-badge-secondary tlp-badge-outline messages-list-count">{{ nb }}</span>
+            </h1>
+        </div>
+        <div class="messages-list-list">
+            {{# messages }}
+                <a class="tlp-pane-section messages-list-message"
+                   href="javascript:;"
+                   data-id="{{ id }}"
+                   data-date="{{ date }}"
+                   data-to="{{ to }}"
+                >
+                    {{ subject }}
+                </a>
+            {{/ messages }}
+        </div>
+        <form method="POST" action="" class="messages-list-footer">
+            <button type="submit" name="delete" value="1" class="tlp-button-danger tlp-button-outline tlp-button-small">
+                <i class="fa fa-trash-o tlp-button-icon"></i> Delete all
+            </button>
+        </form>
+    </div>
+    <div class="tlp-pane-container message">
+        <section class="tlp-pane-section message-header" id="header">
+            <div class="tlp-property message-header-to">
+                <label class="tlp-label">To</label>
+                <p id="to"></p>
+            </div>
+            <div class="tlp-property message-header-date">
+                <label class="tlp-label">Date</label>
+                <p id="date"></p>
+            </div>
+        </section>
+        <section class="tlp-pane-section">
+            <iframe id="la_frame" class="message-content"></iframe>
+        </section>
+    </div>
+</section>
+<script>
+    var to       = document.getElementById('to'),
+        date     = document.getElementById('date'),
+        header   = document.getElementById('header'),
+        la_frame = document.getElementById('la_frame'),
+        messages = document.querySelectorAll('.messages-list-message');
+
+    [].forEach.call(messages, function (message) {
+        message.addEventListener('click', function () {
+            [].forEach.call(messages, function (message) {
+                message.classList.remove('active');
+            });
+            message.classList.add('active');
+            to.innerText   = message.dataset.to;
+            date.innerText = message.dataset.date;
+            header.classList.add('active');
+            la_frame.src = document.location.href + '?id=' + message.dataset.id;
+        });
+    });
+</script>

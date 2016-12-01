@@ -28,7 +28,8 @@ class maillogPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->_addHook('mail_sendmail', 'sendmail', false);
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook('site_admin_option_hook');
+        $this->addHook(Event::IS_IN_SITEADMIN);
     }
 
     function getPluginInfo() {
@@ -39,9 +40,20 @@ class maillogPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    public function site_admin_option_hook() {
-        $name = $GLOBALS['Language']->getText('plugin_maillog', 'descriptor_name');
-        echo '<li><a href="'.$this->getPluginPath().'/">'.$name.'</a></li>';
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
+    }
+
+    public function site_admin_option_hook(array $params)
+    {
+        $params['plugins'][] = array(
+            'label' => $GLOBALS['Language']->getText('plugin_maillog', 'descriptor_name'),
+            'href'  => $this->getPluginPath() . '/'
+        );
     }
 
     //$params['mail'] Mail
@@ -59,7 +71,7 @@ class maillogPlugin extends Plugin {
 
     function actions() {
         $request = HTTPRequest::instance();
-        if($request->isPost() && $request->get("delete") == "Delete") {
+        if($request->isPost() && $request->exist("delete")) {
             include_once('MaillogDao.class.php');
             $dao = new MaillogDao(CodendiDataAccess::instance());
             $dao->deleteAllMessages();
@@ -67,49 +79,70 @@ class maillogPlugin extends Plugin {
         }
     }
 
-    function display() {
-        $params['title'] = "Maillog";
-        $GLOBALS['HTML']->header($params);
-        $this->listMessages();
-        $GLOBALS['HTML']->footer($params);
+    private function displayMessage($id)
+    {
+        include_once('MaillogDao.class.php');
+        $dao = new MaillogDao();
+        $message = $dao->searchMessageById($id)->getRow();
+        if ($message) {
+            if (! $message['html_body']) {
+                header('Content-Type: text/plain');
+                echo $message['body'];
+            } else {
+                $input = preg_replace("/=\r?\n/", '', $message['html_body']);
+                $input = preg_replace('/=([a-f0-9]{2})/ie', "chr(hexdec('\\1'))", $input);
+
+                echo '<base href="https://gmail.example.com/">';
+                echo $input;
+            }
+        } else {
+            echo 'Not found';
+        }
     }
 
-    function listMessages() {
+    function display() {
+        $request = HTTPRequest::instance();
+        $id = $request->get('id');
+        if ($id) {
+            $this->displayMessage($id);
+            exit;
+        }
+
         include_once('MaillogDao.class.php');
-        $dao = new MaillogDao(CodendiDataAccess::instance());
+        $dao = new MaillogDao();
+
         $dar = $dao->getAllMessages();
         $nb = $dao->getNbMessages();
+        $messages = array();
+        foreach ($dar as $row) {
+            $message = array(
+                'id' => $row['id_message'],
+            );
 
-        echo "<h1>List of emails sent by ".$GLOBALS['sys_name']."</h1>\n";
-        echo "<div style=\"text-align: center;\">Nb messages: ".$nb."</div>\n";
-        echo "<form name=\"maillog\" method=\"post\" action=\"?\">\n";
-        echo "<p>\n";
-        echo "<input type=\"submit\" name=\"delete\" value=\"Delete\" />\n";
-        echo "</p>\n";
-
-        $hp = Codendi_HTMLPurifier::instance();
-        while($dar->valid()) {
-            $row = $dar->current();
-
-            $dar2 = $dao->getAllHeaders($row['id_message']);
-            echo '<table class="table table-bordered table-striped"><tbody>';
-            while($dar2->valid()) {
-                $row2 = $dar2->current();
-                echo "<tr><th>".$hp->purify($row2['name']).":</th><td>".$hp->purify($row2['value'])."</td></tr>";
-                $dar2->next();
+            foreach ($dao->getAllHeaders($row['id_message']) as $header) {
+                if ($header['name'] === 'subject') {
+                    $message['subject'] = $header['value'];
+                }
+                if ($header['name'] === 'to') {
+                    $message['to'] = $header['value'];
+                }
+                if ($header['name'] === 'date') {
+                    $message['date'] = $header['value'];
+                }
             }
-            $input = preg_replace("/=\r?\n/", '', $row['html_body']);
-            $input = preg_replace('/=([a-f0-9]{2})/ie', "chr(hexdec('\\1'))", $input);
-            echo '<tr><th></th><td>';
-            var_dump(substr($input, 0, 400));
-            echo '</td></tr>';
-            echo "</table>\n";
 
-            $dar->next();
+            $messages[] = $message;
         }
-        echo "</form>";
+
+        $renderer = new \Tuleap\Admin\AdminPageRenderer();
+        $renderer->renderAPresenter(
+            'Maillog',
+            __DIR__ .'/../templates',
+            'maillog',
+            array(
+                'nb' => $nb,
+                'messages' => $messages
+            )
+        );
     }
-
 }
-
-?>
