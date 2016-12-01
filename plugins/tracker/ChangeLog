@@ -1,3 +1,6 @@
+Version 5.1051 - Tuleap 9.2
+    * request #9551: When an artifact is updated it should not raise exception
+
 Version 5.1050 - Tuleap 9.2
     * request #9669: Field changes not displayed in last changeset comment
 
