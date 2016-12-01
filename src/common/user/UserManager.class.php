@@ -365,7 +365,9 @@ class UserManager {
             if ($session_hash === false) {
                 $session_hash = $this->getCookieManager()->getCookie('session_hash');
             }
-            if ($dar = $this->getDao()->searchBySessionHash($session_hash)) {
+            $now              = $_SERVER['REQUEST_TIME'];
+            $session_lifetime = $this->getSessionLifetime();
+            if ($dar = $this->getDao()->searchBySessionHash($session_hash, $now, $session_lifetime)) {
                 if ($row = $dar->getRow()) {
                     $this->_currentuser = $this->_getUserInstanceFromRow($row);
                     if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
@@ -374,7 +376,6 @@ class UserManager {
                     } else {
                         $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                         $this->_currentuser->setSessionHash($session_hash);
-                        $now = $_SERVER['REQUEST_TIME'];
                         $break_time = $now - $accessInfo['last_access_date'];
                         //if the access is not later than 6 hours, it is not necessary to log it
                         if ($break_time > 21600){
@@ -528,7 +529,7 @@ class UserManager {
         $expire = 0;
 
         if ($user->getStickyLogin()) {
-            $expire = $_SERVER['REQUEST_TIME'] + $this->_getSessionLifetime();
+            $expire = $_SERVER['REQUEST_TIME'] + $this->getSessionLifetime();
         }
 
         return $expire;
@@ -699,8 +700,9 @@ class UserManager {
         return EventManager::instance();
     }
 
-    function _getSessionLifetime() {
-        return $GLOBALS['sys_session_lifetime'];
+    private function getSessionLifetime()
+    {
+        return ForgeConfig::get('sys_session_lifetime');
     }
 
     function _getPasswordLifetime() {
