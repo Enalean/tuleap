@@ -15,12 +15,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Statistics\AdminHeaderPresenter;
+use Tuleap\Statistics\DataExportPresenterBuilder;
+use Tuleap\Statistics\DataExportRouter;
 
 require_once 'pre.php';
 
@@ -34,17 +33,10 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['HTML']->redirect('/');
 }
 
-$title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+$request = HTTPRequest::instance();
 
-$header_presenter = new AdminHeaderPresenter(
-    $title,
-    'usage_progress'
+$data_export_router = new DataExportRouter(
+    new DataExportPresenterBuilder()
 );
 
-$admin_page_renderer = new AdminPageRenderer();
-$admin_page_renderer->renderANoFramedPresenter(
-    $title,
-    ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
-    'usage-progress',
-    new \Tuleap\Statistics\UsageProgressPresenter($header_presenter)
-);
+$data_export_router->route($request);

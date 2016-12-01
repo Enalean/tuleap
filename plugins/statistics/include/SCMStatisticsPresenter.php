@@ -24,35 +24,32 @@ class SCMStatisticsPresenter
 {
     const TEMPLATE = 'scm-statistics';
 
-    public $header;
     public $scm_statistics_label;
     public $start_date_label;
     public $end_date_label;
-    public $project_id_label;
+    public $project_label;
     public $project_placeholder;
     public $csv_export_button;
-    public $start_date;
-    public $end_date;
-    public $project_id;
+
+    public $scm_statistics_selected_project;
+    public $scm_statistics_start_date;
+    public $scm_statistics_end_date;
 
     public function __construct(
-        AdminHeaderPresenter $header,
+        $selected_project,
         $start_date,
-        $end_date,
-        $project_id
+        $end_date
     ) {
-        $this->header = $header;
+        $this->scm_statistics_start_date       = $start_date;
+        $this->scm_statistics_end_date         = $end_date;
+        $this->scm_statistics_selected_project = $selected_project;
 
         $this->scm_statistics_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
         $this->start_date_label     = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
         $this->end_date_label       = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->project_id_label     = $GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id');
+        $this->project_label        = $GLOBALS['Language']->getText('plugin_statistics', 'project_label');
+        $this->project_placeholder  = $GLOBALS['Language']->getText('plugin_statistics', 'project_placeholder');
         $this->project_help         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id_info');
-        $this->project_placeholder  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_project_selection');
         $this->csv_export_button    = $GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button');
-
-        $this->start_date = $start_date;
-        $this->end_date   = $end_date;
-        $this->project_id = $project_id;
     }
 }

@@ -1,0 +1,50 @@
+{{# services_usage_presenter }}
+    <form action="services_usage.php" method="GET" class="tlp-pane-section">
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="data-export-content" value="siteadmin-export-data-services-usage" checked /> {{ services_usage_label }}
+        </label>
+        <div class="siteadmin-export-data-content-border">
+            <div class="siteadmin-export-data-content">
+                <div class="tlp-form-element">
+                    <label for="date-picker-services-usage-start" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
+                    <div class="tlp-form-element tlp-form-element-prepend">
+                        <input type="text"
+                               name="services_usage_start_date"
+                               id="date-picker-services-usage-start"
+                               class="tlp-input tlp-input-date"
+                               size="11"
+                               required
+                               value="{{ services_usage_start_date }}" />
+                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+
+                <div class="tlp-form-element">
+                    <label for="date-picker-services-usage-end" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
+                    <div class="tlp-form-element tlp-form-element-prepend">
+                        <input type="text"
+                               name="services_usage_end_date"
+                               id="date-picker-services-usage-end"
+                               class="tlp-input tlp-input-date"
+                               size="11"
+                               required
+                               value="{{ services_usage_end_date }}" />
+                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="data-export-content" value="siteadmin-export-data-scm-statistics" /> {{ scm_statistics_label }}
+        </label>
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="data-export-content" value="siteadmin-export-data-usage-progress" /> {{ usage_progress_label }}
+        </label>
+
+        <div class="tlp-pane-section-submit">
+            <button type="submit" class="tlp-button-primary" name="export">
+                <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
+            </button>
+        </div>
+    </form>
+{{/ services_usage_presenter }}

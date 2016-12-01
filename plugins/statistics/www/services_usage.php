@@ -46,22 +46,22 @@ $request = HTTPRequest::instance();
 
 $error = false;
 
-$vStartDate = new Valid('start');
+$vStartDate = new Valid('services_usage_start_date');
 $vStartDate->addRule(new Rule_Date());
 $vStartDate->required();
-$startDate = $request->get('start');
+$startDate = $request->get('services_usage_start_date');
 if ($request->valid($vStartDate)) {
-    $startDate = $request->get('start');
+    $startDate = $request->get('services_usage_start_date');
 } else {
     $startDate = date('Y-m-d', strtotime('-1 month'));
 }
 
-$vEndDate = new Valid('end');
+$vEndDate = new Valid('services_usage_end_date');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
-$endDate = $request->get('end');
+$endDate = $request->get('services_usage_end_date');
 if ($request->valid($vEndDate)) {
-    $endDate = $request->get('end');
+    $endDate = $request->get('services_usage_end_date');
 } else {
     $endDate = date('Y-m-d');
 }
@@ -69,13 +69,6 @@ if ($request->valid($vEndDate)) {
 if ($startDate >= $endDate) {
     $error = true;
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
-}
-
-$groupId  = null;
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if ($request->valid($vGroupId)) {
-    $groupId = $request->get('group_id');
 }
 
 if (!$error && $request->exist('export') && $startDate && $endDate) {
@@ -190,21 +183,6 @@ if (!$error && $request->exist('export') && $startDate && $endDate) {
 
     echo $csv_exporter->exportCSV();
 
-} else {
-    $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
-
-    $header_presenter = new AdminHeaderPresenter(
-        $title,
-        'service_usage'
-    );
-
-    $admin_page_renderer = new AdminPageRenderer();
-    $admin_page_renderer->renderANoFramedPresenter(
-        $title,
-        ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
-        'service-usage',
-        new \Tuleap\Statistics\ServiceUsagePresenter($header_presenter, $startDate, $endDate)
-    );
 }
 
 function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name) {

@@ -1,62 +1,64 @@
-<section class="tlp-framed-vertically">
-    {{# header }}
-        {{> admin-header }}
-    {{/ header }}
-
-    <div class="tlp-framed-horizontally">
-        <section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">{{ scm_statistics_label }}</h1>
+{{# scm_statistics_presenter }}
+    <form method="GET" action="scm_stats.php" class="tlp-pane-section">
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="data-export-content" value="siteadmin-export-data-services-usage" /> {{ services_usage_label }}
+        </label>
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="data-export-content" value="siteadmin-export-data-scm-statistics" checked /> {{ scm_statistics_label }}
+        </label>
+        <div class="siteadmin-export-data-content-border">
+            <div class="siteadmin-export-data-content">
+                <div class="tlp-form-element">
+                    <label for="date-picker-scm-statistics-start" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
+                    <div class="tlp-form-element tlp-form-element-prepend">
+                        <input type="text"
+                               name="scm_statistics_start_date"
+                               id="date-picker-scm-statistics-start"
+                               class="tlp-input tlp-input-date"
+                               size="11"
+                               required
+                               value="{{ scm_statistics_start_date }}">
+                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
-                <form method="GET" action="scm_stats.php" class="tlp-pane-section">
-                    <div class="tlp-form-element">
-                        <label for="date-picker-start" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
-                        <div class="tlp-form-element tlp-form-element-prepend">
-                            <input type="text"
-                                   name="start"
-                                   id="date-picker-start"
-                                   class="tlp-input tlp-input-date"
-                                   size="11"
-                                   required
-                                   value="{{ start_date }}">
-                            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                        </div>
-                    </div>
 
-                    <div class="tlp-form-element">
-                        <label for="date-picker-end" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
-                        <div class="tlp-form-element tlp-form-element-prepend">
-                            <input type="text"
-                                   name="end"
-                                   id="date-picker-end"
-                                   class="tlp-input tlp-input-date"
-                                   size="11"
-                                   required
-                                   value="{{ end_date }}">
-                            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                        </div>
+                <div class="tlp-form-element">
+                    <label for="date-picker-scm-statistics-end" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
+                    <div class="tlp-form-element tlp-form-element-prepend">
+                        <input type="text"
+                               name="scm_statistics_end_date"
+                               id="date-picker-scm-statistics-end"
+                               class="tlp-input tlp-input-date"
+                               size="11"
+                               required
+                               value="{{ scm_statistics_end_date }}">
+                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                     </div>
+                </div>
 
-                    <div class="tlp-form-element">
-                        <label for="group_name" class="tlp-label">{{ project_id_label }}</label>
-                        <select
-                            class="tlp-select"
-                            id="project-filter"
-                            name="group_name"
+                <div class="tlp-form-element scm-statistics-project-form">
+                    <label class="tlp-label" for="project-filter">{{ project_label }}</label>
+                    <select class="tlp-select project-autocompleter"
+                            id="scm-statistics-project-select"
+                            name="scm_statistics_project_select"
                             style="width: 100%"
-                            data-placeholder="{{ project_placeholder }}"
-                        ></select>
-                        <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{ project_help }}</p>
-                    </div>
-
-                    <div class="tlp-pane-section-submit">
-                        <button type="submit" class="tlp-button-primary" name="export">
-                            <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
-                        </button>
-                    </div>
-                </form>
+                            data-placeholder="{{ project_placeholder }}">
+                        {{# scm_statistics_selected_project }}
+                            <option value="{{ scm_statistics_selected_project }}">{{ scm_statistics_selected_project }}</option>
+                        {{/ scm_statistics_selected_project }}
+                    </select>
+                    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{ project_help }}</p>
+                </div>
             </div>
-        </section>
-    </div>
-</section>
+        </div>
+        <label class="tlp-label tlp-radio">
+            <input type="radio" name="data-export-content" value="siteadmin-export-data-usage-progress" /> {{ usage_progress_label }}
+        </label>
+
+        <div class="tlp-pane-section-submit">
+            <button type="submit" class="tlp-button-primary" name="export">
+                <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
+            </button>
+        </div>
+    </form>
+{{/ scm_statistics_presenter }}

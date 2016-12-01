@@ -1,0 +1,21 @@
+<section class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div id="siteadmin-export-data" class="tlp-form-element">
+                <div id="siteadmin-export-data-services-usage" class="siteadmin-export-data">
+                    {{> services-usage }}
+                </div>
+                <div id="siteadmin-export-data-scm-statistics" class="siteadmin-export-data siteadmin-export-data-disappear">
+                    {{> scm-statistics }}
+                </div>
+                <div id="siteadmin-export-data-usage-progress" class="siteadmin-export-data siteadmin-export-data-disappear">
+                    {{> usage-progress }}
+                </div>
+            </div>
+        </section>
+    </div>
+</section>

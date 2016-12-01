@@ -22,14 +22,11 @@ namespace Tuleap\Statistics;
 
 class UsageProgressPresenter
 {
-    public $header;
     public $csv_export_button;
     public $usage_progress_help;
 
-    public function __construct(AdminHeaderPresenter $header)
+    public function __construct()
     {
-        $this->header = $header;
-
         $this->usage_progress_label = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_title');
         $this->csv_export_button    = $GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button');
         $this->usage_progress_help  = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_help');

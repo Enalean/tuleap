@@ -138,6 +138,7 @@ plugin_statistics	oartifact_type	Artéfacts ouverts (V3)
 plugin_statistics	cartifact_type	Artéfacts fermés (ou date de fin souhaitée) (V3)
 plugin_statistics	usage_progress_title	Progression de l'utilisation
 plugin_statistics	usage_progress_help	Génére un fichier CSV qui contient la progression de quelques chiffres de données (nombre d'utilisateurs, nombre de projets) dans le temps. Pour chaque mois, il génère le nombre de projets et de comptes d'utilisateur créés.
+plugin_statistics	data_export_title	Export de données
 
 plugin_statistics	filter_label	Filtrer
 plugin_statistics	frequencies_filter_group_month	Grouper par mois

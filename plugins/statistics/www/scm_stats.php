@@ -44,22 +44,22 @@ $request = HTTPRequest::instance();
 
 $error = false;
 
-$vStartDate = new Valid('start');
+$vStartDate = new Valid('scm_statistics_start_date');
 $vStartDate->addRule(new Rule_Date());
 $vStartDate->required();
-$startDate = $request->get('start');
+$startDate = $request->get('scm_statistics_start_date');
 if ($request->valid($vStartDate)) {
-    $startDate = $request->get('start');
+    $startDate = $request->get('scm_statistics_start_date');
 } else {
     $startDate = date('Y-m-d', strtotime('-1 year'));
 }
 
-$vEndDate = new Valid('end');
+$vEndDate = new Valid('scm_statistics_end_date');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
-$endDate = $request->get('end');
+$endDate = $request->get('scm_statistics_end_date');
 if ($request->valid($vEndDate)) {
-    $endDate = $request->get('end');
+    $endDate = $request->get('scm_statistics_end_date');
 } else {
     $endDate = date('Y-m-d');
 }
@@ -69,46 +69,23 @@ if ($startDate >= $endDate) {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
 }
 
-$groupId  = null;
-if ($request->exist('group_name')) {
-    $group_name = $request->get('group_name');
-
+$project_id  = null;
+if ($request->exist('scm_statistics_project_select')) {
+    $project_name    = $request->get('scm_statistics_project_select');
     $project_manager = ProjectManager::instance();
-    $project         = $project_manager->getProjectFromAutocompleter($group_name);
-    $groupId         = $project->getId();
+    $project         = $project_manager->getProjectFromAutocompleter($project_name);
+    $project_id      = $project->getId();
 }
 
 if (! $error && $request->exist('export')) {
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=scm_stats_' . $startDate . '_' . $endDate . '.csv');
-    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
+    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $project_id);
     echo $statsSvn->getStats();
-    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
+    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $project_id);
     echo $statsCvs->getStats();
     $em                  = EventManager::instance();
-    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, get_csv_separator(), $groupId);
+    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, get_csv_separator(), $project_id);
     $em->processEvent('statistics_collector', $params);
     exit;
-} else {
-    $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
-
-    $header_presenter = new AdminHeaderPresenter(
-        $title,
-        'scm_statistics'
-    );
-
-    $scm_statistics_presenter = new SCMStatisticsPresenter(
-        $header_presenter,
-        $startDate,
-        $endDate,
-        $groupId
-    );
-
-    $admin_page_renderer = new AdminPageRenderer();
-    $admin_page_renderer->renderANoFramedPresenter(
-        $title,
-        ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
-        SCMStatisticsPresenter::TEMPLATE,
-        $scm_statistics_presenter
-    );
 }

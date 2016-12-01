@@ -135,3 +135,24 @@
 .siteadmin-statistics-disk-usage-top-users-end-size-cell {
     white-space: nowrap;
 }
+
+#siteadmin-export-data {
+    width: 100%;
+}
+
+.siteadmin-export-data-disappear {
+    display: none;
+}
+
+.siteadmin-export-data-content-border {
+    margin: $tlp-spacing;
+    border-left: 5px solid #cccccc;
+}
+
+.siteadmin-export-data-content {
+    margin-left: $tlp-half-spacing;
+}
+
+.scm-statistics-project-form {
+    max-width: 300px;
+}

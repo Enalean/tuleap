@@ -20,25 +20,22 @@
 
 namespace Tuleap\Statistics;
 
-class ServiceUsagePresenter
+class ServicesUsagePresenter
 {
-    public $header;
     public $start_date_label;
     public $end_date_label;
     public $csv_export_button;
-    public $start_date;
-    public $end_date;
+    public $services_usage_start_date;
+    public $services_usage_end_date;
 
-    public function __construct(AdminHeaderPresenter $header, $start_date, $end_date)
+    public function __construct($start_date, $end_date)
     {
-        $this->header = $header;
-
         $this->service_usage_label = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
         $this->start_date_label    = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
         $this->end_date_label      = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
         $this->csv_export_button   = $GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button');
 
-        $this->start_date = $start_date;
-        $this->end_date   = $end_date;
+        $this->services_usage_start_date = $start_date;
+        $this->services_usage_end_date   = $end_date;
     }
 }
