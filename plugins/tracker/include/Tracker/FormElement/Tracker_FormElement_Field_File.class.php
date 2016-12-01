@@ -1157,12 +1157,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return new Tracker_Artifact_Attachment_TemporaryFileManagerDao();
     }
 
-    public function deleteChangesetValue($changeset_value_id) {
-        $values = $this->getChangesetValue(null, $changeset_value_id, false);
+    public function deleteChangesetValue(Tracker_Artifact_Changeset $changeset, $changeset_value_id) {
+        $values = $this->getChangesetValue($changeset, $changeset_value_id, false);
         foreach($values as $fileinfo) {
             $fileinfo->delete();
         }
-        parent::deleteChangesetValue($changeset_value_id);
+        parent::deleteChangesetValue($changeset, $changeset_value_id);
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
