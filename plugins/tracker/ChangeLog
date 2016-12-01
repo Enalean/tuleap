@@ -1,3 +1,6 @@
+Version 5.1052 - Tuleap 9.2
+    * request #9682: Sorting a report stops working with more than 17 columns
+
 Version 5.1051 - Tuleap 9.2
     * request #9551: When an artifact is updated it should not raise exception
 
