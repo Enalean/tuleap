@@ -150,16 +150,16 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $value2_current->setReturnValue('hasChanged', false);
         $value2_current->expectNever('diff');
 
-
-
         $current_changeset->setReturnValue('getId', 66);
         $current_changeset->setReturnReference('getValueDao', $dao);
         $current_changeset->setReturnReference('getFormElementFactory', $fact);
         $current_changeset->setReturnReference('getArtifact', $artifact);
         $current_changeset->setReturnReference('getUserManager', $um);
 
-        $this->assertPattern('/field1/', $current_changeset->diffToprevious());
-        $this->assertNoPattern('/field2/', $current_changeset->diffToprevious());
+        $result = $current_changeset->diffToprevious();
+
+        $this->assertPattern('/field1/', $result);
+        $this->assertNoPattern('/field2/', $result);
     }
 
     function testNotify() {

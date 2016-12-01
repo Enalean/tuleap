@@ -602,6 +602,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             return $result;
         }
 
+        $this->forceFetchAllValues();
         foreach ($this->getValues() as $field_id => $current_changeset_value) {
             $field = $factory->getFieldById($field_id);
             if (! $field) {
