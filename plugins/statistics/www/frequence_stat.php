@@ -27,13 +27,13 @@ require_once 'html.php';
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
-if (!$p || !$pluginManager->isPluginAvailable($p)) {
-    header('Location: '.get_server_url());
+if (! $p || ! $pluginManager->isPluginAvailable($p)) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 // Grant access only to site admin
-if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
-    header('Location: '.get_server_url());
+if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 // Ajax response needed to fill the list of days per month used in simple search
