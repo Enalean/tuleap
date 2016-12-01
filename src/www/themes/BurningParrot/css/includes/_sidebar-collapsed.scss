@@ -17,13 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'vendor/smooth-scrollbar.min';
+// scss-lint:disable QualifyingElement
+body.sidebar-fully-collpased {
+    padding: $navbar-height 0 0 $sidebar-fully-collapsed-width;
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/sidebar-collapsed';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/svn';
+    .siteadmin-sidebar {
+        width: $sidebar-fully-collapsed-width;
+        cursor: e-resize;
+
+        > .scroll-content,
+        > .scrollbar-track {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+}

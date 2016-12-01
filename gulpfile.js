@@ -110,6 +110,7 @@ var fat_combined_files = [
         'src/www/scripts/tuleap/listFilter.js',
         'src/www/themes/BurningParrot/js/navbar-dropdown.js',
         'src/www/themes/BurningParrot/js/navbar-dropdown-projects.js',
+        'src/www/themes/BurningParrot/js/sidebar.js',
         'src/www/themes/BurningParrot/js/scrollbar.js',
         'src/www/scripts/tuleap/autocomplete-for-select2.js'
     ],
