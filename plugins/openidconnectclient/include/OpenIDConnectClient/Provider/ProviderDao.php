@@ -63,20 +63,30 @@ class ProviderDao  extends DataAccessObject {
         $authorization_endpoint,
         $token_endpoint,
         $user_info_endpoint,
+        $is_unique_authentication_endpoint,
         $client_id,
         $client_secret,
         $icon,
         $color
     ) {
-        $id                     = $this->getDa()->escapeInt($id);
-        $name                   = $this->getDa()->quoteSmart($name);
-        $authorization_endpoint = $this->getDa()->quoteSmart($authorization_endpoint);
-        $token_endpoint         = $this->getDa()->quoteSmart($token_endpoint);
-        $user_info_endpoint     = $this->getDa()->quoteSmart($user_info_endpoint);
-        $client_id              = $this->getDa()->quoteSmart($client_id);
-        $client_secret          = $this->getDa()->quoteSmart($client_secret);
-        $icon                   = $this->getDa()->quoteSmart($icon);
-        $color                  = $this->getDa()->quoteSmart($color);
+        $id                                = $this->getDa()->escapeInt($id);
+        $name                              = $this->getDa()->quoteSmart($name);
+        $authorization_endpoint            = $this->getDa()->quoteSmart($authorization_endpoint);
+        $token_endpoint                    = $this->getDa()->quoteSmart($token_endpoint);
+        $user_info_endpoint                = $this->getDa()->quoteSmart($user_info_endpoint);
+        $is_unique_authentication_endpoint = $this->getDa()->escapeInt($is_unique_authentication_endpoint);
+        $client_id                         = $this->getDa()->quoteSmart($client_id);
+        $client_secret                     = $this->getDa()->quoteSmart($client_secret);
+        $icon                              = $this->getDa()->quoteSmart($icon);
+        $color                             = $this->getDa()->quoteSmart($color);
+
+        $this->getDa()->startTransaction();
+
+        $has_been_updated = true;
+
+        if ($is_unique_authentication_endpoint) {
+            $has_been_updated = $this->disableUniqueAuthenticationProvider();
+        }
 
         $sql = "UPDATE plugin_openidconnectclient_provider SET
                   name = $name, authorization_endpoint = $authorization_endpoint,
@@ -84,10 +94,26 @@ class ProviderDao  extends DataAccessObject {
                   user_info_endpoint = $user_info_endpoint,
                   client_id = $client_id,
                   client_secret = $client_secret,
+                  unique_authentication_endpoint = $is_unique_authentication_endpoint,
                   icon = $icon,
                   color = $color
                 WHERE id = $id";
 
+        $has_been_updated = $has_been_updated && $this->update($sql);
+        if(! $has_been_updated) {
+            $this->getDa()->rollback();
+            return false;
+        }
+
+        return $this->getDa()->commit();
+    }
+
+    /**
+     * @return boolean
+     */
+    private function disableUniqueAuthenticationProvider()
+    {
+        $sql = "UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE";
         return $this->update($sql);
     }
 
