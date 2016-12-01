@@ -17,6 +17,9 @@ Version 9.2 (Not release yet)
 	* request #9676: XML xsd:int only deals with 32bits int
 	* Fix the CI (yet another time)
 
+	== Security ==
+	* request #9448: User's session lifetime is only verified once each 24 hours
+
 	== Plugins ==
 	* tracker: 5.1052
 	* proftpd: 0.29
