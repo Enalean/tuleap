@@ -6,6 +6,7 @@ Version 9.2 (Not release yet)
 	* request #9202: Make Tuleap PHPWiki database access compatible with PHP 5.6
 	* story #9658: log in into a Tuleap instance using only an OpenID Connect provider (Disable register a user page when registration is not possible)
 	* request #9686: Enable Apache's KeepAlive option for performance reason
+	* request #9691: Plugins in site administration should be alphabetically ordered
 
 	== Bug Fix ==
 	* request #9666: New siteadmin is slow
