@@ -44,6 +44,10 @@
     margin: 0 0 0 ($tlp-spacing / 2);
 }
 
+.provider-configuration-unique-authentication-source {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
 @media screen and (max-width: 1300px) {
     .tlp-pane {
         flex-direction: column;

@@ -86,6 +86,7 @@ class Controller {
 
         $presenter = new Presenter(
             $providers_presenters,
+            $this->provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint(),
             $this->icon_presenter_factory->getIconsPresenters(),
             $this->color_presenter_factory->getColorsPresenters(),
             $csrf_token

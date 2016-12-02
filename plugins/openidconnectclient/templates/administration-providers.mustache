@@ -14,6 +14,18 @@
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
                     {{# getIcon }}<i class="fa fa-{{ getIcon }} tlp-pane-title-icon"></i>{{/ getIcon }} {{ getName }}
+                    {{# is_a_provider_configured_as_unique_authentication_endpoint }}
+                        {{# isUniqueAuthenticationEndpoint }}
+                            <span class="tlp-badge-success provider-configuration-unique-authentication-source">
+                                {{ unique_authentication_source }}
+                            </span>
+                        {{/ isUniqueAuthenticationEndpoint }}
+                        {{^ isUniqueAuthenticationEndpoint }}
+                            <span class="tlp-badge-secondary tlp-badge-outline provider-configuration-unique-authentication-source">
+                                {{ unique_authentication_source_disabled }}
+                            </span>
+                        {{/ isUniqueAuthenticationEndpoint }}
+                    {{/ is_a_provider_configured_as_unique_authentication_endpoint }}
                 </h1>
             </div>
             <section class="tlp-pane-section provider-info">
@@ -64,21 +76,6 @@
                         {{^ getClientSecret }}
                         <p class="tlp-property-empty">{{ empty_content }}</p>
                         {{/ getClientSecret }}
-                    </div>
-                    <div class="tlp-property">
-                        <label class="tlp-label">
-                            {{  unique_authentication_source }}
-                        </label>
-                        {{# isUniqueAuthenticationEndpoint }}
-                            <span class="tlp-badge-success">
-                                {{ active }}
-                            </span>
-                        {{/isUniqueAuthenticationEndpoint}}
-                        {{^ isUniqueAuthenticationEndpoint }}
-                            <span class="tlp-badge-secondary tlp-badge-outline">
-                                {{ inactive }}
-                            </span>
-                        {{/ isUniqueAuthenticationEndpoint }}
                     </div>
                 </div>
             </section>

@@ -29,6 +29,11 @@ class Presenter {
     public $providers_presenters;
 
     /**
+     * @var boolean
+     */
+    public $is_a_provider_configured_as_unique_authentication_endpoint;
+
+    /**
      * @var IconPresenter[]
      */
     public $icons_presenters;
@@ -42,19 +47,20 @@ class Presenter {
      * @var string
      */
     public $csrf_token;
-
     const TEMPLATE = 'administration-providers';
 
     public function __construct(
         array $providers_presenters,
+        $is_a_provider_configured_as_unique_authentication_endpoint,
         array $icons_presenters,
         array $colors_presenters,
         $csrf_token
     ) {
-        $this->providers_presenters = $providers_presenters;
-        $this->icons_presenters     = $icons_presenters;
-        $this->colors_presenters    = $colors_presenters;
-        $this->csrf_token           = $csrf_token;
+        $this->providers_presenters                                       = $providers_presenters;
+        $this->is_a_provider_configured_as_unique_authentication_endpoint = $is_a_provider_configured_as_unique_authentication_endpoint;
+        $this->icons_presenters                                           = $icons_presenters;
+        $this->colors_presenters                                          = $colors_presenters;
+        $this->csrf_token                                                 = $csrf_token;
     }
 
     public function title() {
@@ -116,14 +122,9 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'unique_authentication_source');
     }
 
-    public function active()
+    public function unique_authentication_source_disabled()
     {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'active');
-    }
-
-    public function inactive()
-    {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'inactive');
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'unique_authentication_source_disabled');
     }
 
     public function unique_authentication_source_form_description()
