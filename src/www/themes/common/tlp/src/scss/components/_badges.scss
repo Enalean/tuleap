@@ -26,8 +26,8 @@ $tlp-badge-padding: 6px 9px 6px;
 
 $tlp-badge-secondary-background: #e9e9e9;
 $tlp-badge-secondary-color: #444444;
-$tlp-badge-secondary-outline-border: #aaaaaa;
-$tlp-badge-secondary-outline-color: #888888;
+$tlp-badge-secondary-outline-border: #999999;
+$tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 
 %tlp-badge {
     display: inline-block;
