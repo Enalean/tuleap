@@ -1,3 +1,6 @@
+Version 0.46 - Tuleap 9.2
+    * story #9658: log in into a Tuleap instance using only an OpenID Connect provider (Only show to administrators information when the provider is set as unique authentication provider)
+
 Version 0.45 - Tuleap 9.2
     * story #9658: log in into a Tuleap instance using only an OpenID Connect provider (Administrators can define a provider as unique authentication method)
 
