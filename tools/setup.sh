@@ -87,19 +87,13 @@ then
     else
         RH_VERSION=($(${AWK} '{print $1$2, $7}' ${RH_RELEASE}))
     fi
-    RH_MAJOR_VERSION=$(echo ${RH_VERSION[1]: 0:1})
     RH_MINOR_VERSION=$(echo ${RH_VERSION[1]: 2:1})
 else
     echo -e "\033[31mSorry, Tuleap is running only on RedHat/CentOS.\033[0m"
     exit 1
 fi
 
-if [ "${RH_MAJOR_VERSION}" -eq 6 ]
-then
-    PROJECT_NAME="tuleap"
-else
-    PROJECT_NAME="codendi"
-fi
+PROJECT_NAME="tuleap"
 INSTALL_DIR="/usr/share/${PROJECT_NAME}"
 
 ###############################################################################
@@ -635,18 +629,10 @@ setup_apache() {
     echo "Installing Apache configuration files..."
     make_backup ${httpdconf}/httpd.conf
 
-    if [ "${RH_MAJOR_VERSION}" = 5 ]
-    then
-        for i in ${filesconf[@]}
-        do
-            install_dist_conf ${httpdconf}/${filesconf[@]}
-        done
-    else
-        for i in ${filesconf[@]}
-        do
-            install_dist_conf ${httpdconf}/${i} ${i}.rhel6.dist
-        done
-    fi
+    for i in ${filesconf[@]}
+    do
+        install_dist_conf ${httpdconf}/${i} ${i}.rhel6.dist
+    done
 
     for f in ${filesconfd[@]}
     do
@@ -951,12 +937,7 @@ done
 ##############################################
 # Check release
 #
-if [ "$RH_MAJOR_VERSION" = "5" ]; then
-    RH_UPDATE="6"
-else
-    RH_UPDATE="3"
-fi
-
+RH_UPDATE="3"
 if [ "x$RH_MINOR_VERSION" != x ] && [ "$RH_MINOR_VERSION" -ge "$RH_UPDATE" ]; then
     echo "Good! You are running ${RH_VERSION[@]}"
 else
@@ -1158,10 +1139,6 @@ build_dir /var/lib/$PROJECT_NAME/backup/mysql/old root root 700
 build_dir /var/lib/$PROJECT_NAME/backup/subversion root root 700
 build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
 # log dirs
-if [ "$RH_MAJOR_VERSION" != "6" ] ; then #if rhel6, built in rpm
-    build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
-    build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
-fi
 build_dir $TULEAP_CACHE_DIR $PROJECT_ADMIN $PROJECT_ADMIN 755
 # config dirs
 build_dir /etc/skel_$PROJECT_NAME root root 755
@@ -1412,12 +1389,7 @@ fi
 
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
-if [ "z$RH_MAJOR_VERSION" = "z5" ]; then
-    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist
-else
-    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
-fi
-$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $forge_upgrade_config_dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
+$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
 substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"
 
 ##############################################

@@ -1,3 +1,0 @@
-[core]
-dbdriver="/usr/share/%project_name%/src/forgeupgrade/ForgeUpgrade_Db_Driver_Codendi.php"
-path[]="/usr/share/%project_name%/src/db/mysql/updates"
