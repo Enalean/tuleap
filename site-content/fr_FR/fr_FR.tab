@@ -51,7 +51,7 @@ global	btn_close	Fermer
 global	btn_reset	Réinitialiser
 global	btn_edit	Éditer
 global	btn_restrict	Restreindre
-global	search_title	Rechercher
+global	search_title	Recherche
 global	save_change	Sauvegarder vos modifications
 global	reset	réinitialiser
 global	delete	Supprimer

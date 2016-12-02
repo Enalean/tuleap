@@ -45,8 +45,8 @@ class SystemEventSearchPresenter
         $this->buildStatus($selected_status);
         $this->buildTypesByQueue($selected_queue_name, $selected_types, $types_by_queue);
 
-        $this->filter_label = $GLOBALS['Language']->getText('admin_system_events', 'filter_label');
-        $this->search_label = $GLOBALS['Language']->getText('admin_system_events', 'search_label');
+        $this->filter_label = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->search_label = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->types_label  = $GLOBALS['Language']->getText('admin_system_events', 'types_label');
         $this->status_label = $GLOBALS['Language']->getText('admin_system_events', 'all_status_label');
         $this->queue_label  = $GLOBALS['Language']->getText('admin_system_events', 'queue_label');

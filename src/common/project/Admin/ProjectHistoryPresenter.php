@@ -60,8 +60,8 @@ class ProjectHistoryPresenter
         $this->information_label = $GLOBALS['Language']->getText('admin_project', 'information_label');
         $this->history_label     = $GLOBALS['Language']->getText('admin_project', 'history_label');
         $this->pending_label     = $GLOBALS['Language']->getText('admin_project', 'pending_label');
-        $this->filter_label      = $GLOBALS['Language']->getText('admin_project', 'filter_label');
-        $this->search_label      = $GLOBALS['Language']->getText('admin_project', 'search_label');
+        $this->filter_label      = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->search_label      = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->change_label      = $GLOBALS['Language']->getText('admin_project', 'change_label');
         $this->empty_state       = $GLOBALS['Language']->getText('admin_project', 'history_empty_state');
         $this->empty_results     = $GLOBALS['Language']->getText('admin_project', 'history_empty_results');

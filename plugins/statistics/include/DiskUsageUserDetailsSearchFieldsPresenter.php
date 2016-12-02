@@ -45,11 +45,11 @@ class DiskUsageUserDetailsSearchFieldsPresenter
         $this->end_date_value   = $end_date_value;
         $this->group_by_values  = $group_by_values;
 
-        $this->title                 = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->title                 = $GLOBALS['Language']->getText('global', 'search_title');
         $this->user_id_label         = $GLOBALS['Language']->getText('plugin_statistics', 'user_id_label');
         $this->start_date_label      = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
         $this->end_date_label        = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->search                = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->search                = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->group_by_label        = $GLOBALS['Language']->getText('plugin_statistics', 'group_by_label');
     }
 }

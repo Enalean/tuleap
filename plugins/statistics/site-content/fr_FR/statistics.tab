@@ -6,7 +6,7 @@ plugin_statistics_show_service	service_growth	Croissance des services
 
 plugin_statistics_show_one_project	usage_per_project	Utilisation par projet
 
-plugin_statistics_show_one_user	user_growth	Croissance de l'utilisateur
+plugin_statistics_show_one_user	user_growth	Utilisation par utilisateur
 plugin_statistics_show_one_user	user_detail	Les details de l'utilisateur
 
 widget_categ_label	plugin_statistics	Statistiques du projet
@@ -29,7 +29,7 @@ plugin_statistics_admin_page	disk_usage_services_menu_label	Utilisation par serv
 plugin_statistics_admin_page	disk_usage_projects_menu_label	Utilisation par projet
 plugin_statistics_admin_page	disk_usage_users_menu_span_label	Utilisateurs
 plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top 10 des utilisateurs
-plugin_statistics_admin_page	disk_usage_users_user_details_label	Détails par utilisateur
+plugin_statistics_admin_page	disk_usage_users_user_details_label	Utilisation par utilisateur
 plugin_statistics_admin_page	disk_usage_global_menu_span_label	Global
 plugin_statistics_admin_page	disk_usage_global_menu_label	Utilisation globale
 plugin_statistics_admin_page	data_services_pane_title	Utilisation par service
@@ -159,8 +159,6 @@ plugin_statistics	week	Semaine
 plugin_statistics	month	Mois
 plugin_statistics	year	Année
 
-plugin_statistics	search	Chercher
-plugin_statistics	search_title	Recherche
 plugin_statistics	project_placeholder	MonProjet
 plugin_statistics	project_label	Projet
 plugin_statistics	delete_confirm	Hop, hop, hop ! Attendez un instant. Vous êtes en train de supprimer le quota pour le projet <b>$1</b>. Merci de confirmer votre action.

@@ -80,8 +80,8 @@ class ProjectQuotaPresenter
         $this->disk_usage_tab_label    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
         $this->project_quota_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
         $this->service_usage_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
-        $this->filter_label            = $GLOBALS['Language']->getText('plugin_statistics', 'filter_label');
-        $this->search_label            = $GLOBALS['Language']->getText('plugin_statistics', 'search');
+        $this->filter_label            = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->search_label            = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->project_label           = $GLOBALS['Language']->getText('plugin_statistics', 'project_label');
         $this->motivation_label        = $GLOBALS['Language']->getText('plugin_statistics', 'motivation');
         $this->quota_label             = $GLOBALS['Language']->getText('plugin_statistics', 'quota');

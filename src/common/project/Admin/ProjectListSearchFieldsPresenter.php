@@ -38,7 +38,7 @@ class ProjectListSearchFieldsPresenter
         $this->status_label  = $GLOBALS['Language']->getText('admin_projectlist', 'status');
         $this->status_values = $status_values;
 
-        $this->title  = $GLOBALS['Language']->getText('admin_projectlist', 'filter');
-        $this->search = $GLOBALS['Language']->getText('admin_main', 'search');
+        $this->title  = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->search = $GLOBALS['Language']->getText('global', 'btn_search');
     }
 }

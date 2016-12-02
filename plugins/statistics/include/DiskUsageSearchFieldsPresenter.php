@@ -44,10 +44,10 @@ class DiskUsageSearchFieldsPresenter
         $this->start_date_value   = $start_date_value;
         $this->end_date_value     = $end_date_value;
 
-        $this->title            = $GLOBALS['Language']->getText('plugin_statistics', 'search_title');
+        $this->title            = $GLOBALS['Language']->getText('global', 'search_title');
         $this->services_label   = $GLOBALS['Language']->getText('plugin_statistics', 'services_label');
         $this->start_date_label = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
         $this->end_date_label   = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->search           = $GLOBALS['Language']->getText('plugin_statistics', 'search');
+        $this->search           = $GLOBALS['Language']->getText('global', 'btn_search');
     }
 }
