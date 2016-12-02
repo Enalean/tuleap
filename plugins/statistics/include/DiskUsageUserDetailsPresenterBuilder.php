@@ -75,6 +75,10 @@ class DiskUsageUserDetailsPresenterBuilder
             $end_date_value = $end_date->format('Y-m-d');
         }
 
+        if ($start_date_value > $end_date_value) {
+            throw new StartDateGreaterThanEndDateException();
+        }
+
         if (! $group_by_value) {
             $group_by_value = 'week';
         }

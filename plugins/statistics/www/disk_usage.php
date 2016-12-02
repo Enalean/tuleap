@@ -48,74 +48,6 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $duMgr  = new Statistics_DiskUsageManager();
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
-$valid_menu = new Valid_WhiteList('menu', array('one_project_details', 'projects', 'services', 'top_users', 'one_user_details'));
-$valid_menu->required();
-if ($request->valid($valid_menu)) {
-    $menu = $request->get('menu');
-} else {
-    $menu = 'services';
-}
-
-$vStartDate = new Valid('start_date');
-$vStartDate->addRule(new Rule_Date());
-$vStartDate->required();
-if ($request->valid($vStartDate)) {
-    $startDate = $request->get('start_date');
-} else {
-    $startDate = date('Y-m-d', strtotime('-1 week'));
-}
-
-if (strtotime($startDate) < strtotime('-3 months')) {
-    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'querying_purged_data'));
-}
-
-$vEndDate = new Valid('end_date');
-$vEndDate->addRule(new Rule_Date());
-$vEndDate->required();
-if ($request->valid($vStartDate)) {
-    $endDate = $request->get('end_date');
-} else {
-    $endDate = date('Y-m-d');
-}
-
-if (strtotime($startDate) >= strtotime($endDate)) {
-    $GLOBALS['Response']->addFeedback('error', 'You made a mistake in selecting period. Please try again!');
-}
-
-$vGroupId = new Valid_UInt('group_id');
-$vGroupId->required();
-if ($request->valid($vGroupId)) {
-    $groupId = $request->get('group_id');
-} else {
-    $groupId = '';
-}
-
-$selectedGroupByDate = $request->get('group_by');
-
-$vRelative = new Valid_WhiteList('relative', array('true'));
-$vRelative->required();
-if ($request->valid($vRelative)) {
-    $relative = true;
-} else {
-    $relative = false;
-}
-
-$vOrder = new Valid_WhiteList('order', array('start_size', 'end_size', 'evolution', 'evolution_rate'));
-$vOrder->required();
-if ($request->valid($vOrder)) {
-    $order = $request->get('order');
-} else {
-    $order = 'end_size';
-}
-
-$vOffset = new Valid_UInt('offset');
-$vOffset->required();
-if ($request->valid($vOffset)) {
-    $offset = $request->get('offset');
-} else {
-    $offset = 0;
-}
-
 $disk_usage_output = new Statistics_DiskUsageOutput(
     $duMgr
 );
@@ -164,7 +96,3 @@ $disk_usage_router = new DiskUsageRouter(
 );
 
 $disk_usage_router->route($request);
-
-$GLOBALS['HTML']->footer(array());
-
-?>

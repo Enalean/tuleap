@@ -6,7 +6,7 @@ plugin_statistics_show_service	service_growth	Service growth over the time
 
 plugin_statistics_show_one_project	usage_per_project	Usage per project
 
-plugin_statistics_show_one_user	user_growth	User growth over time
+plugin_statistics_show_one_user	user_growth	User consumption over time
 plugin_statistics_show_one_user	user_detail	User details
 
 widget_categ_label	plugin_statistics	Project statistics
@@ -50,6 +50,7 @@ plugin_statistics_admin_page	total_end_size_tooltip	Sum of end sizes
 plugin_statistics_admin_page	total_evolution_tooltip	Sum of size evolution
 plugin_statistics_admin_page	table_project_details_title	Statistics
 plugin_statistics_admin_page	graph_title	Services growth over time
+plugin_statistics_admin_page	graph_user_title	User consumption over time
 plugin_statistics_admin_page	graph_project_title	Project by service growth over time
 plugin_statistics_admin_page	graph_y_axis_title	Size
 plugin_statistics_admin_page	graph_image_title	Results
@@ -148,7 +149,6 @@ plugin_statistics	frequencies_filter_group_day	Group by day
 plugin_statistics	frequencies_filter_group_hour	Group by hour
 plugin_statistics	frequencies_filter_month	Month
 plugin_statistics	frequencies_filter_day	Day
-plugin_statistics	date_choice_error	The end date should not be before the start date
 
 plugin_statistics	services_label	Services
 plugin_statistics	group_by_label	Group by

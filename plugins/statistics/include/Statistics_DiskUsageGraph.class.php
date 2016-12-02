@@ -106,9 +106,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
     function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute=true){
         $graph = new Chart(750,450,"auto");
         $graph->SetScale("textlin");
-        $graph->title->Set("User growth over the time");
+        $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_user_title'));
 
-        $graph->yaxis->title->Set("Size");
+        $graph->yaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_y_axis_title'));
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
         if ($absolute) {
@@ -131,7 +131,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
             $graph->Add($lineplot);
 
-            $graph->xaxis->title->Set($groupBy."s");
+            $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
 

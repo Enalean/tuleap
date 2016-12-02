@@ -20,9 +20,9 @@
 
 namespace Tuleap\Statistics;
 
+use Feedback;
 use ForgeConfig;
 use HttpRequest;
-use Statistics_DiskUsageManager;
 use Tuleap\Admin\AdminPageRenderer;
 
 class DataExportRouter
@@ -40,17 +40,14 @@ class DataExportRouter
 
     public function route(HTTPRequest $request)
     {
-        $this->displayExportData($request);
-        if ($request->get('action')) {
-            $action = $request->get('action');
-
-            switch ($action) {
-                case 'services':
-                    $this->displayExportData($request);
-                    break;
-                default:
-                    $this->displayExportData($request);
-            }
+        try {
+            $this->displayExportData($request);
+        } catch (StartDateGreaterThanEndDateException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+            );
+            $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
         }
     }
 

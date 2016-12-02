@@ -6,7 +6,7 @@ plugin_statistics_show_service	service_growth	Croissance des services
 
 plugin_statistics_show_one_project	usage_per_project	Utilisation par projet
 
-plugin_statistics_show_one_user	user_growth	Utilisation par utilisateur
+plugin_statistics_show_one_user	user_growth	Consommation de l'utilisateur
 plugin_statistics_show_one_user	user_detail	Les details de l'utilisateur
 
 widget_categ_label	plugin_statistics	Statistiques du projet
@@ -14,8 +14,8 @@ plugin_statistics	widget_title_projectstatistics	Statistiques du projet
 plugin_statistics	widget_desc_projectstatistics	Affiche les statistiques disque du projet
 plugin_statistics	widget_total_project_size	Taille totale du Projet:
 
-plugin_statistics	period_error	Vous avez fait une erreur en selectionnant la période. veuillez réessayer!
-plugin_statistics	no_data_error	Il n'y a pas de données a afficher
+plugin_statistics	period_error	Vous avez fait une erreur en selectionnant la période. Veuillez réessayer!
+plugin_statistics	no_data_error	Il n'y a pas de données à afficher
 
 plugin_statistics_admin_page	show_statistics	Utilisation disque
 plugin_statistics_admin_page	disk_usage_period_months	Utilisation du disque pour les $1 derniers mois
@@ -50,6 +50,7 @@ plugin_statistics_admin_page	total_end_size_tooltip	Somme des tailles de fin
 plugin_statistics_admin_page	total_evolution_tooltip	Somme des évolutions des tailles
 plugin_statistics_admin_page	table_project_details_title	Statistiques
 plugin_statistics_admin_page	graph_title	Croissance des services en fonction du temps
+plugin_statistics_admin_page	graph_user_title	Consommation de l'utilisateur en fonction du temps
 plugin_statistics_admin_page	graph_project_title	Croissance du project par service en fonction du temps
 plugin_statistics_admin_page	graph_y_axis_title	Taille
 plugin_statistics_admin_page	graph_image_title	Résultats
@@ -148,8 +149,6 @@ plugin_statistics	frequencies_filter_group_day	Grouper par jour
 plugin_statistics	frequencies_filter_group_hour	Grouper par heure
 plugin_statistics	frequencies_filter_month	Mois
 plugin_statistics	frequencies_filter_day	Jour
-plugin_statistics	date_choice_error	La date de fin ne devrait pas être antérieure à la date de début
-
 
 plugin_statistics	services_label	Services
 plugin_statistics	group_by_label	Grouper par

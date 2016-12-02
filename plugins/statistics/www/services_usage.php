@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Statistics\AdminHeaderPresenter;
-
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.class.php';
@@ -44,8 +41,6 @@ set_time_limit(180);
 
 $request = HTTPRequest::instance();
 
-$error = false;
-
 $vStartDate = new Valid('services_usage_start_date');
 $vStartDate->addRule(new Rule_Date());
 $vStartDate->required();
@@ -66,12 +61,15 @@ if ($request->valid($vEndDate)) {
     $endDate = date('Y-m-d');
 }
 
-if ($startDate >= $endDate) {
-    $error = true;
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
+if ($startDate > $endDate) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+    );
+    $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
 }
 
-if (!$error && $request->exist('export') && $startDate && $endDate) {
+if ($request->exist('export') && $startDate && $endDate) {
 
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');

@@ -50,6 +50,10 @@ class DataExportPresenterBuilder
             $scm_statistics_end_date = $scm_statistics_end_date_time->format('Y-m-d');
         }
 
+        if ($scm_statistics_start_date > $scm_statistics_end_date || $services_usage_start_date > $scm_statistics_end_date) {
+            throw new StartDateGreaterThanEndDateException();
+        }
+
         $header_presenter = new AdminHeaderPresenter(
             $title,
             'data_export'

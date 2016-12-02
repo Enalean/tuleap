@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Statistics\AdminHeaderPresenter;
-use Tuleap\Statistics\SCMStatisticsPresenter;
-
 require_once 'pre.php';
 require_once dirname(__FILE__) . '/../include/Statistics_Formatter.class.php';
 require_once dirname(__FILE__) . '/../include/Statistics_Formatter_Cvs.class.php';
@@ -41,8 +37,6 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 }
 
 $request = HTTPRequest::instance();
-
-$error = false;
 
 $vStartDate = new Valid('scm_statistics_start_date');
 $vStartDate->addRule(new Rule_Date());
@@ -64,9 +58,12 @@ if ($request->valid($vEndDate)) {
     $endDate = date('Y-m-d');
 }
 
-if ($startDate >= $endDate) {
-    $error = true;
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
+if ($startDate > $endDate) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+    );
+    $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
 }
 
 $project_id  = null;
@@ -77,7 +74,7 @@ if ($request->exist('scm_statistics_project_select')) {
     $project_id      = $project->getId();
 }
 
-if (! $error && $request->exist('export')) {
+if ($request->exist('export')) {
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=scm_stats_' . $startDate . '_' . $endDate . '.csv');
     $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $project_id);

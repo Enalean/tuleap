@@ -59,9 +59,9 @@ if ($request->exist('type_values')) {
 
 if (isset($_REQUEST['start'])
     && isset($_REQUEST['end'])
-    && strtotime($_REQUEST['start']) >= strtotime($_REQUEST['end'])
+    && strtotime($_REQUEST['start']) > strtotime($_REQUEST['end'])
 ) {
-    $date_error_message = $GLOBALS['Language']->getText('plugin_statistics', 'date_choice_error');
+    $date_error_message = $GLOBALS['Language']->getText('plugin_statistics', 'period_error');
     $GLOBALS['Response']->addFeedback('error', $date_error_message);
 }
 

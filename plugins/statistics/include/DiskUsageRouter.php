@@ -20,6 +20,7 @@
 
 namespace Tuleap\Statistics;
 
+use Feedback;
 use ForgeConfig;
 use HttpRequest;
 use Statistics_DiskUsageManager;
@@ -75,22 +76,30 @@ class DiskUsageRouter
         if ($request->get('menu')) {
             $menu = $request->get('menu');
 
-            switch ($menu) {
-                case 'services':
-                    $this->displayServices($request);
-                    break;
-                case 'projects':
-                    $this->displayProjects($request);
-                    break;
-                case 'top_users':
-                    $this->displayTopUsers($request);
-                    break;
-                case 'global':
-                    $this->displayGlobalData();
-                    break;
-                case 'one_user_details':
-                    $this->displayUserDetails($request);
-                    break;
+            try {
+                switch ($menu) {
+                    case 'services':
+                        $this->displayServices($request);
+                        break;
+                    case 'projects':
+                        $this->displayProjects($request);
+                        break;
+                    case 'top_users':
+                        $this->displayTopUsers($request);
+                        break;
+                    case 'global':
+                        $this->displayGlobalData();
+                        break;
+                    case 'one_user_details':
+                        $this->displayUserDetails($request);
+                        break;
+                }
+            } catch (StartDateGreaterThanEndDateException $exception) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+                );
+                $GLOBALS['Response']->redirect('/plugins/statistics/disk_usage.php?menu='.$menu);
             }
         }
     }

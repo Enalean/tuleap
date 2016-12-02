@@ -55,6 +55,10 @@ class SearchFieldsPresenterBuilder
         $this->checkDate($start_date_value, 'Y-m-d', 'P5W');
         $this->checkDate($end_date_value, 'Y-m-d');
 
+        if ($start_date_value > $end_date_value) {
+            throw new StartDateGreaterThanEndDateException();
+        }
+
         return new DiskUsageServicesSearchFieldsPresenter(
             $selected_project,
             $services_with_selected,
@@ -79,6 +83,10 @@ class SearchFieldsPresenterBuilder
     ) {
         $this->checkDate($start_date_value, 'Y-m-d', 'P1W');
         $this->checkDate($end_date_value, 'Y-m-d');
+
+        if ($start_date_value > $end_date_value) {
+            throw new StartDateGreaterThanEndDateException();
+        }
 
         return new DiskUsageProjectsSearchFieldsPresenter(
             $services_with_selected,
