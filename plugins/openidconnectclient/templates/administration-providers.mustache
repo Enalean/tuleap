@@ -65,6 +65,21 @@
                         <p class="tlp-property-empty">{{ empty_content }}</p>
                         {{/ getClientSecret }}
                     </div>
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{  unique_authentication_source }}
+                        </label>
+                        {{# isUniqueAuthenticationEndpoint }}
+                            <span class="tlp-badge-success">
+                                {{ active }}
+                            </span>
+                        {{/isUniqueAuthenticationEndpoint}}
+                        {{^ isUniqueAuthenticationEndpoint }}
+                            <span class="tlp-badge-secondary tlp-badge-outline">
+                                {{ inactive }}
+                            </span>
+                        {{/ isUniqueAuthenticationEndpoint }}
+                    </div>
                 </div>
             </section>
         </div>

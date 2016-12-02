@@ -1,3 +1,33 @@
+Version 5.1053 - Tuleap 9.2
+    * request #9551: Computed cache should be base on remaining effort_field instead of burndown field
+
+Version 5.1052 - Tuleap 9.2
+    * request #9682: Sorting a report stops working with more than 17 columns
+
+Version 5.1051 - Tuleap 9.2
+    * request #9551: When an artifact is updated it should not raise exception
+
+Version 5.1050 - Tuleap 9.2
+    * request #9669: Field changes not displayed in last changeset comment
+
+Version 5.1049 - Tuleap 9.2
+    * request #9690: Fatal error while deleting an artifact
+
+Version 5.1048 - Tuleap 9.2
+    * request #9689: Link to avatar or added attachment is wrong
+
+Version 5.1047 - Tuleap 9.2
+    * request #9551: Force burndown generation when update duration or start_date
+
+Version 5.1046 - Tuleap 9.2
+    * request #9683: FLOAT(10,4) is not precise enough for big floats
+
+Version 5.1045 - Tuleap 9.2
+    * request #9684: Deleted linked artifacts still appears in the tracker report
+
+Version 5.1044 - Tuleap 9.2
+    * request #9551: End date for burndown calculation is wrong
+
 Version 5.1043 - Tuleap 9.2
     * request #9551: When start date has changed, burndown always ask to generate cache
 

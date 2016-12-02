@@ -526,17 +526,25 @@ extends Rule {
      * @return Boolean
      */
     public function isValid($val) {
-        return $this->noSpaces($val)
-            && $this->atLeastOneChar($val)
+        return $this->isUnixValid($val)
             && !$this->isReservedName($val)
             && !$this->isCvsAccount($val)
-            && !$this->lessThanMin($val)
-            && !$this->greaterThanMax($val)
-            && !$this->containsIllegalChars($val)
             && !$this->isAlreadyUserName($val)
             && !$this->isAlreadyProjectName($val)
             && !$this->isSystemName($val)
             && $this->getPendingUserRename($val);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnixValid($val)
+    {
+        return $this->noSpaces($val)
+            && $this->atLeastOneChar($val)
+            && !$this->lessThanMin($val)
+            && !$this->greaterThanMax($val)
+            && !$this->containsIllegalChars($val);
     }
 
     /**

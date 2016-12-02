@@ -115,6 +115,21 @@
                 >
             </div>
 
+            <div class="tlp-form-element {{^ can_user_enable_unique_authentication_endpoint }}tlp-form-element-disabled{{/ can_user_enable_unique_authentication_endpoint }}">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="unique_authentication_endpoint"
+                        {{# isUniqueAuthenticationEndpoint }}checked{{/ isUniqueAuthenticationEndpoint }}
+                        {{^ can_user_enable_unique_authentication_endpoint }}disabled{{/ can_user_enable_unique_authentication_endpoint }}>
+                    {{ unique_authentication_source_form_description }}
+                </label>
+                {{# can_user_enable_unique_authentication_endpoint }}
+                    <p class="tlp-text-warning">{{ unique_authentication_source_prerequisites }}</p>
+                {{/ can_user_enable_unique_authentication_endpoint }}
+                {{^ can_user_enable_unique_authentication_endpoint }}
+                    <p class="tlp-text-info">{{ unique_authentication_source_user_must_be_linked }}</p>
+                {{/ can_user_enable_unique_authentication_endpoint }}
+            </div>
+
             <div class="tlp-property">
                 <p class="tlp-text-info">
                     <i class="fa fa-info-circle"></i> {{ client_help }} <br/>

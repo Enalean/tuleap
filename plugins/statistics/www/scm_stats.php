@@ -30,14 +30,14 @@ require_once dirname(__FILE__) . '/../include/Statistics_Formatter_Svn.class.php
 require_once 'www/project/export/project_export_utils.php';
 
 $pluginManager = PluginManager::instance();
-$p             = $pluginManager->getPluginByName('statistics');
+$p = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
-    header('Location: ' . get_server_url());
+    $GLOBALS['Response']->redirect('/');
 }
 
 // Grant access only to site admin
 if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
-    header('Location: ' . get_server_url());
+    $GLOBALS['Response']->redirect('/');
 }
 
 $request = HTTPRequest::instance();

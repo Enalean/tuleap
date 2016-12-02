@@ -61,11 +61,13 @@ class ProviderManager {
         $icon,
         $color
     ) {
-        $is_data_valid = $this->isDataValid(
+        $is_unique_authentication_endpoint = false;
+        $is_data_valid                     = $this->isDataValid(
             $name,
             $authorization_endpoint,
             $token_endpoint,
             $user_info_endpoint,
+            $is_unique_authentication_endpoint,
             $client_id,
             $client_secret,
             $icon,
@@ -99,7 +101,7 @@ class ProviderManager {
             $user_info_endpoint,
             $client_id,
             $client_secret,
-            false,
+            $is_unique_authentication_endpoint,
             $icon,
             $color
         );
@@ -109,12 +111,14 @@ class ProviderManager {
      * @throws ProviderDataAccessException
      * @throws ProviderMalformedDataException
      */
-    public function update(Provider $provider) {
+    public function update(Provider $provider)
+    {
         $is_data_valid = $this->isDataValid(
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),
             $provider->getUserInfoEndpoint(),
+            $provider->isUniqueAuthenticationEndpoint(),
             $provider->getClientId(),
             $provider->getClientSecret(),
             $provider->getIcon(),
@@ -131,6 +135,7 @@ class ProviderManager {
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),
             $provider->getUserInfoEndpoint(),
+            $provider->isUniqueAuthenticationEndpoint(),
             $provider->getClientId(),
             $provider->getClientSecret(),
             $provider->getIcon(),
@@ -220,6 +225,7 @@ class ProviderManager {
         $authorization_endpoint,
         $token_endpoint,
         $userinfo_endpoint,
+        $is_unique_authentication_endpoint,
         $client_id,
         $client_secret,
         $icon,
@@ -234,6 +240,7 @@ class ProviderManager {
             $string_validator->validate($client_secret) && $http_uri_validator->validate($authorization_endpoint) &&
             $http_uri_validator->validate($token_endpoint) &&
             $userinfo_endpoint_validator->validate($userinfo_endpoint) &&
+            is_bool($is_unique_authentication_endpoint) &&
             $string_validator->validate($icon) && $string_validator->validate($color);
     }
 

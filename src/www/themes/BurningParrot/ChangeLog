@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 9.2
+    * request #9685: Be able to collapse the new site admin sidebar
+
 Version 0.18 - Tuleap 9.2
     * Only a login link to the provider is displayed in the navbar when this provider is configured as unique authentication endpoint.
 

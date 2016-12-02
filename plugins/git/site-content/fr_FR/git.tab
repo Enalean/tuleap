@@ -241,6 +241,7 @@ plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier
 plugin_git	feedback_event_create	Un événement est en attente pour la création du dépôt $1. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_git	feedback_permissions_not_duplicated	Votre plateforme ne semble pas autoriser les expressions régulières, les permissions $1 n'ont pas été dupliquées.
 
 plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépôts Git
 plugin_git	gitolite_lab_feature_description	Permet de positionner des permissions distinctes en lecture ou écriture sur chaque dépôt
@@ -274,6 +275,7 @@ plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	regexp_activated_for_git_repository	Modification dans l'utilisation des expressions régulières pour le dépôt git $1
+project_admin_utils	regexp_activated_for_git_template	Modification dans l'utilisation des expressions régulières pour le projet $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
 project_admin_utils	default_git_perms_granted_for_project	Permissions git par défaut définies pour le projet $1
 
@@ -526,8 +528,9 @@ plugin_git	add_permission_duplicate_pattern	L'expression $1 est déjà existante
 plugin_git	regexp_permission_label	Activer les expressions régulières dans les branches et les étiquettes.
 plugin_git	title_warning_regexp_uncheck	Certaines règles peuvent être supprimées
 plugin_git	warning_regexp_uncheck	L'ensemble des règles contenant des expressions régulières vont être supprimées. Merci de confirmer la désactivation de cette option.
-plugin_git	regexp_incoherence_label	Pour l'instant il n'est pas possible de désactiver la fonctionnalité une fois qu'elle a été activée. Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
+plugin_git	regexp_incoherence_label	Activer cette option peut aboutir à des résultats incorrects. Les expressions régulières invalides seront ignorées sans erreur.
 plugin_git	history_regexp	Expression régulières $1 pour le dépôt $2.
+plugin_git	history_regexp_template	Expression régulières $1 pour le projet $2.
 plugin_git	enabled	activées
 plugin_git	disabled	désactivées
 

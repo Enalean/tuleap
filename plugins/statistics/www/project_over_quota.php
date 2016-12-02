@@ -23,11 +23,11 @@ require_once dirname(__FILE__).'/../include/ProjectQuotaHtml.class.php';
 $pluginManager    = PluginManager::instance();
 $statisticsPlugin = $pluginManager->getPluginByName('statistics');
 if (! $statisticsPlugin || ! $pluginManager->isPluginAvailable($statisticsPlugin)) {
-    header('Location: '.get_server_url());
+    $GLOBALS['Response']->redirect('/');
 }
 
 if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
-    header('Location: '.get_server_url());
+    $GLOBALS['Response']->redirect('/');
 }
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');

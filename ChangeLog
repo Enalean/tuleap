@@ -5,6 +5,8 @@ Version 9.2 (Not release yet)
 		- Disable F5 possibility when deleting tracker
 	* request #9202: Make Tuleap PHPWiki database access compatible with PHP 5.6
 	* story #9658: log in into a Tuleap instance using only an OpenID Connect provider (Disable register a user page when registration is not possible)
+	* request #9686: Enable Apache's KeepAlive option for performance reason
+	* request #9691: Plugins in site administration should be alphabetically ordered
 
 	== Bug Fix ==
 	* request #9666: New siteadmin is slow
@@ -15,24 +17,27 @@ Version 9.2 (Not release yet)
 	* request #9676: XML xsd:int only deals with 32bits int
 	* Fix the CI (yet another time)
 
+	== Security ==
+	* request #9448: User's session lifetime is only verified once each 24 hours
+
 	== Plugins ==
-	* tracker: 5.1043
+	* tracker: 5.1053
 	* proftpd: 0.29
 	* graphontrackers: 1.18
-	* statistics: 0.69
+	* statistics: 0.70
 	* projectlinks: 2.12
 	* agiledashboard: 1.436
 	* artifactsfolders: 0.38
 	* svn: 0.106
-	* openidconnectclient: 0.42
-	* git: 4.297
+	* openidconnectclient: 0.45
+	* git: 4.301
 	* mediawiki: 0.127
 	* cardwall: 1.71
 	* frs: 0.22
 
 	== Themes ==
 	* FlamingParrot: 1.166
-	* BurningParrot: 0.18
+	* BurningParrot: 0.19
 
 	== Development ==
 	* request #9657: Tuleap goes gettext

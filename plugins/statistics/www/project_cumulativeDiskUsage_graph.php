@@ -25,8 +25,8 @@ require_once dirname(__FILE__).'/../include/ProjectQuotaManager.class.php';
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
-if (!$p || !$pluginManager->isPluginAvailable($p)) {
-    header('Location: '.get_server_url());
+if (! $p || ! $pluginManager->isPluginAvailable($p)) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 $vGroupId = new Valid_GroupId();
@@ -35,7 +35,12 @@ if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
     $project = ProjectManager::instance()->getProject($groupId);
 } else {
-    header('Location: '.get_server_url());
+    $GLOBALS['Response']->redirect('/');
+}
+
+$current_user = UserManager::instance()->getCurrentUser();
+if (! $current_user->isAdmin($groupId)) {
+    $GLOBALS['Response']->redirect('/');
 }
 
 $func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');

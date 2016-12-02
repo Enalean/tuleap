@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
   id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
   transition_id int(11) NOT NULL,
   field_id int(11) UNSIGNED default NULL,
-  value FLOAT(10,4) default NULL,
+  value DOUBLE default NULL,
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
@@ -146,7 +146,7 @@ CREATE TABLE tracker_field_int(
 DROP TABLE IF EXISTS tracker_field_float;
 CREATE TABLE tracker_field_float(
     field_id INT(11) NOT NULL PRIMARY KEY,
-    default_value FLOAT(10,4) NULL,
+    default_value DOUBLE NULL,
     maxchars INT(11) NOT NULL,
     size INT(11) NOT NULL
 ) ENGINE=InnoDB;
@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS tracker_field_computed_cache (
     artifact_id INT(11) NOT NULL,
     field_id    INT(11) NOT NULL,
     timestamp   INT(11) NOT NULL,
-    value       FLOAT(10,4) NULL,
+    value       DOUBLE NULL,
     UNIQUE KEY time_at_field (artifact_id, field_id, timestamp)
 ) ENGINE=InnoDB;
 
@@ -319,7 +319,7 @@ CREATE TABLE tracker_changeset_value_int(
 DROP TABLE IF EXISTS tracker_changeset_value_float;
 CREATE TABLE tracker_changeset_value_float(
     changeset_value_id INT(11) NOT NULL PRIMARY KEY,
-    value FLOAT(10,4) NULL
+    value DOUBLE NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_text;
@@ -373,7 +373,7 @@ CREATE TABLE tracker_changeset_value_permissionsonartifact(
 DROP TABLE IF EXISTS tracker_changeset_value_computedfield_manual_value;
 CREATE TABLE tracker_changeset_value_computedfield_manual_value (
     changeset_value_id INT(11) NOT NULL,
-    value FLOAT(10,4),
+    value DOUBLE,
     PRIMARY KEY(changeset_value_id)
 ) ENGINE=InnoDB;
 

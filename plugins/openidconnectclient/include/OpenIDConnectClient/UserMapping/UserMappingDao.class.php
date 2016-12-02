@@ -71,6 +71,16 @@ class UserMappingDao extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
+    public function searchByProviderIdAndUserId($provider_id, $user_id)
+    {
+        $provider_id = $this->getDa()->escapeInt($provider_id);
+        $user_id     = $this->getDa()->escapeInt($user_id);
+
+        $sql = "SELECT * FROM plugin_openidconnectclient_user_mapping
+                WHERE user_id = $user_id AND provider_id = $provider_id";
+        return $this->retrieveFirstRow($sql);
+    }
+
     public function searchUsageByUserId($user_id) {
         $user_id = $this->getDa()->escapeInt($user_id);
 

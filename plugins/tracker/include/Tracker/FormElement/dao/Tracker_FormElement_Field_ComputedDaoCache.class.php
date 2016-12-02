@@ -66,4 +66,9 @@ class Tracker_FormElement_Field_ComputedDaoCache {
     public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value) {
         return $this->dao->saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value);
     }
+
+    public function deleteArtifactCacheValue($artifact_id, $field_id)
+    {
+        return $this->dao->deleteArtifactCacheValue($artifact_id, $field_id);
+    }
 }

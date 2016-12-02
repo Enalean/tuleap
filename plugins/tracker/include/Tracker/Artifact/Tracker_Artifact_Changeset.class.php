@@ -158,7 +158,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $factory = $this->getFormElementFactory();
         foreach ($value_dao->searchById($this->id) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
-                $field->deleteChangesetValue($row['id']);
+                $field->deleteChangesetValue($this, $row['id']);
             }
         }
         $value_dao->delete($this->id);
@@ -602,6 +602,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             return $result;
         }
 
+        $this->forceFetchAllValues();
         foreach ($this->getValues() as $field_id => $current_changeset_value) {
             $field = $factory->getFieldById($field_id);
             if (! $field) {

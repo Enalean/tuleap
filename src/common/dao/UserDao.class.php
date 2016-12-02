@@ -333,10 +333,15 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchBySessionHash($session_hash) {
+    public function searchBySessionHash($session_hash, $current_time, $session_lifetime)
+    {
+        $session_hash     = $this->da->quoteSmart($session_hash);
+        $current_time     = $this->da->escapeInt($current_time);
+        $session_lifetime = $this->da->escapeInt($session_lifetime);
+
         $sql = "SELECT user.*, session_hash, session.ip_addr AS session_ip_addr, session.time AS session_time
                 FROM user INNER JOIN session USING (user_id)
-                WHERE session_hash = ". $this->da->quoteSmart($session_hash);
+                WHERE session_hash = $session_hash AND session.time + $session_lifetime > $current_time";
         return $this->retrieve($sql);
     }
 

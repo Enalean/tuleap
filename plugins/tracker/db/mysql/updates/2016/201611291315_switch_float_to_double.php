@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201611250934_remove_inconsistent_burndown_cache_values extends ForgeUpgrade_Bucket
+class b201611291315_switch_float_to_double extends ForgeUpgrade_Bucket
 {
 
     public function description()
     {
-        return 'Remove cache burndown with wrong field id and wrong timestamp';
+        return 'Convert float columns to double';
     }
 
     public function preUp()
@@ -33,16 +33,23 @@ class b201611250934_remove_inconsistent_burndown_cache_values extends ForgeUpgra
 
     public function up()
     {
-        $sql = "DELETE tracker_field_computed_cache
-                FROM tracker_field
-                INNER JOIN tracker_field_computed_cache
-                ON tracker_field.id = tracker_field_computed_cache.field_id
-                WHERE formElement_type <> 'burndown'";
+        $this->switchFloatToDouble('tracker_workflow_transition_postactions_field_float', 'value');
+        $this->switchFloatToDouble('tracker_field_float', 'default_value');
+        $this->switchFloatToDouble('tracker_field_computed_cache', 'value');
+        $this->switchFloatToDouble('tracker_changeset_value_float', 'value');
+        $this->switchFloatToDouble('tracker_changeset_value_computedfield_manual_value', 'value');
+    }
+
+    private function switchFloatToDouble($table, $column)
+    {
+        $sql = "ALTER TABLE $table CHANGE $column $column DOUBLE default NULL";
 
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing wrong cache values');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                "An error occured while converting float column '$column' to double in $table"
+            );
         }
     }
 }

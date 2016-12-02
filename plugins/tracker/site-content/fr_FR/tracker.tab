@@ -1396,6 +1396,7 @@ plugin_tracker_report	search	Rechercher
 plugin_tracker_report	non_displayable	N/A
 plugin_tracker_report	non_displayable_tooltip	Le rang de l'artifact n'ayant du sens que dans le cadre d'un jalon, vous devez sélectionner un jalon pour connaître son rang.
 plugin_tracker_report	no_public_reports	Aucun des rapports de ce tracker n'est publique, veuillez créer au moins un rapport publique ! Les droits d'accès d'un tracker doivent être gérés via la configuration des permissions.
+plugin_tracker_report	too_many_columns_sort	La table contient trop de colonnes, le tri ne fonctionnera pas. Veuillez supprimer des colonnes (et rafraichir la page) pour pouvoir trier.
 
 plugin_tracker_report_widget	go_to_report	Voir le rapport
 

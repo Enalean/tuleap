@@ -111,6 +111,42 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'preview');
     }
 
+    public function unique_authentication_source()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'unique_authentication_source');
+    }
+
+    public function active()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'active');
+    }
+
+    public function inactive()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'inactive');
+    }
+
+    public function unique_authentication_source_form_description()
+    {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'unique_authentication_source_form');
+    }
+
+    public function unique_authentication_source_prerequisites()
+    {
+        return $GLOBALS['Language']->getText(
+            'plugin_openidconnectclient_admin',
+            'unique_authentication_source_prerequisites'
+        );
+    }
+
+    public function unique_authentication_source_user_must_be_linked()
+    {
+        return $GLOBALS['Language']->getText(
+            'plugin_openidconnectclient_admin',
+            'unique_authentication_source_user_must_be_linked'
+        );
+    }
+
     public function add_new_provider() {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'add_new_provider');
     }
@@ -162,7 +198,6 @@ class Presenter {
     {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'delete_modal_submit');
     }
-
 
     public function there_are_providers()
     {

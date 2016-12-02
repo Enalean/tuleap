@@ -68,7 +68,6 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
                   tracker_field_for_start_date.id              AS start_date_field_id,
                   tracker_field_for_duration.id                AS duration_field_id,
                   tracker_field_for_remaining_effort.id        AS remaining_effort_field_id,
-                  burndown_field.id                            AS burndown_field_id,
                   DATE_ADD(
                     DATE_FORMAT(FROM_UNIXTIME(SUM(tracker_changeset_value_date.value)), '%Y-%m-%d 00:00:00'),
                     INTERVAL SUM(tracker_changeset_value_int.value) +1 DAY
@@ -122,7 +121,6 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
                   tracker_field_for_start_date.id              AS start_date_field_id,
                   tracker_field_for_duration.id                AS duration_field_id,
                   tracker_field_for_remaining_effort.id        AS remaining_effort_field_id,
-                  burndown_field.id                            AS burndown_field_id,
                   DATE_ADD(
                     DATE_FORMAT(FROM_UNIXTIME(SUM(tracker_changeset_value_date.value)), '%Y-%m-%d 00:00:00'),
                     INTERVAL SUM(tracker_changeset_value_int.value) +1 DAY
@@ -164,8 +162,7 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
               AND tracker_artifact.id = $artifact_id
               GROUP BY tracker_artifact.id
               HAVING start_date IS NOT NULL
-              AND duration IS NOT NULL
-              AND end_date >= CURRENT_DATE() - INTERVAL 1 DAY";
+              AND duration IS NOT NULL";
 
         return $this->retrieveFirstRow($sql);
     }

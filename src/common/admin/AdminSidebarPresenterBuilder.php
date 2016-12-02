@@ -79,6 +79,10 @@ class AdminSidebarPresenterBuilder
             )
         );
 
+        usort($plugins, function ($plugin_a, $plugin_b) {
+            return strnatcasecmp($plugin_a['label'], $plugin_b['label']);
+        });
+
         return $plugins;
     }
 

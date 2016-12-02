@@ -72,10 +72,24 @@ class DefaultPermissionsUpdater
      * @var ProjectHistoryDao
      */
     private $history_dao;
+
     /**
      * @var RegexpFineGrainedEnabler
      */
     private $regexp_enabler;
+
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+    /**
+     * @var RegexpPermissionFilter
+     */
+    private $permission_filter;
+    /**
+     * @var RegexpFineGrainedDisabler
+     */
+    private $regexp_disabler;
 
     public function __construct(
         PermissionsManager $permissions_manager,
@@ -86,7 +100,10 @@ class DefaultPermissionsUpdater
         FineGrainedUpdater $fine_grained_updater,
         DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
         PermissionChangesDetector $permission_changes_detector,
-        RegexpFineGrainedEnabler $regexp_enabler
+        RegexpFineGrainedEnabler $regexp_enabler,
+        RegexpFineGrainedRetriever $regexp_retriever,
+        RegexpPermissionFilter $permission_filter,
+        RegexpFineGrainedDisabler $regexp_disabler
     ) {
         $this->permissions_manager          = $permissions_manager;
         $this->history_dao                  = $history_dao;
@@ -97,6 +114,9 @@ class DefaultPermissionsUpdater
         $this->default_fine_grained_saver   = $default_fine_grained_saver;
         $this->permission_changes_detector  = $permission_changes_detector;
         $this->regexp_enabler               = $regexp_enabler;
+        $this->regexp_retriever             = $regexp_retriever;
+        $this->permission_filter            = $permission_filter;
+        $this->regexp_disabler              = $regexp_disabler;
     }
 
     public function updateProjectDefaultPermissions(Codendi_Request $request)
@@ -238,8 +258,14 @@ class DefaultPermissionsUpdater
             );
         }
 
-        if ($enable_regexp) {
+        $regexp_activation = '';
+        if ($enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === false) {
             $this->regexp_enabler->enableForDefault($project);
+            $regexp_activation = $GLOBALS['Language']->getText('plugin_git', 'enabled');
+        } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === true) {
+            $this->regexp_disabler->disableForDefault($project);
+            $this->permission_filter->filterNonRegexpPermissionsForDefault($project);
+            $regexp_activation = $GLOBALS['Language']->getText('plugin_git', 'disabled');
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {
@@ -252,6 +278,15 @@ class DefaultPermissionsUpdater
 
         foreach ($updated_permissions as $permission) {
             $this->default_fine_grained_saver->updateDefaultPermission($permission);
+        }
+
+        if ($regexp_activation !== '') {
+            $this->history_dao->groupAddHistory(
+                'regexp_activated_for_git_template',
+                $GLOBALS['Language']->getText('plugin_git', 'history_regexp_template', array($regexp_activation, $project->getPublicName())),
+                $project->getID(),
+                array($regexp_activation, $project->getUnixNameMixedCase())
+            );
         }
 
         return $are_there_changes;

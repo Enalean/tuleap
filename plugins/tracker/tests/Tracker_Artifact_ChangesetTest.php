@@ -150,16 +150,16 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $value2_current->setReturnValue('hasChanged', false);
         $value2_current->expectNever('diff');
 
-
-
         $current_changeset->setReturnValue('getId', 66);
         $current_changeset->setReturnReference('getValueDao', $dao);
         $current_changeset->setReturnReference('getFormElementFactory', $fact);
         $current_changeset->setReturnReference('getArtifact', $artifact);
         $current_changeset->setReturnReference('getUserManager', $um);
 
-        $this->assertPattern('/field1/', $current_changeset->diffToprevious());
-        $this->assertNoPattern('/field2/', $current_changeset->diffToprevious());
+        $result = $current_changeset->diffToprevious();
+
+        $this->assertPattern('/field1/', $result);
+        $this->assertNoPattern('/field2/', $result);
     }
 
     function testNotify() {
@@ -587,10 +587,10 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
 
         $formelement_factory = mock('Tracker_FormElementFactory');
         $field_text = mock('Tracker_FormElement_Field_Text');
-        $field_text->expectOnce('deleteChangesetValue', array(1025));
+        $field_text->expectOnce('deleteChangesetValue', array('*', 1025));
         stub($formelement_factory)->getFieldById(125)->returns($field_text);
         $field_float = mock('Tracker_FormElement_Field_Float');
-        $field_float->expectOnce('deleteChangesetValue', array(1026));
+        $field_float->expectOnce('deleteChangesetValue', array('*', 1026));
         stub($formelement_factory)->getFieldById(126)->returns($field_float);
 
         stub($this->changeset)->getFormElementFactory()->returns($formelement_factory);

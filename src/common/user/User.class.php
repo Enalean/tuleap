@@ -1348,13 +1348,15 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * @return string url
       */
      public function getAvatarUrl() {
-         $purifier = Codendi_HTMLPurifier::instance();
+         $purifier   = Codendi_HTMLPurifier::instance();
+         $request    = HTTPRequest::instance();
+         $avatar_url = self::DEFAULT_AVATAR_URL;
 
          if (! $this->isAnonymous() && $this->hasAvatar()) {
-             return '/users/'. $purifier->purify($this->getUserName()) .'/avatar.png';
+             $avatar_url = '/users/'. $purifier->purify($this->getUserName()) .'/avatar.png';
          }
 
-         return self::DEFAULT_AVATAR_URL;
+         return $request->getServerUrl() . $avatar_url;
      }
 
      /**

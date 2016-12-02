@@ -44,4 +44,14 @@ class RegexpDefaultDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function disable($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "DELETE FROM plugin_git_default_fine_grained_regexp_enabled
+                  WHERE project_id = $project_id";
+
+        return $this->update($sql);
+    }
 }

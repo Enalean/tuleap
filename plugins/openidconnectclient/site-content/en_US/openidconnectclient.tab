@@ -8,7 +8,8 @@ plugin_openidconnectclient	or_label	or login with
 plugin_openidconnectclient	link_account	Link a $1 account
 plugin_openidconnectclient	link_account_to	to OpenID Connect
 plugin_openidconnectclient	successfully_linked	Your account has been successfully linked to $1
-plugin_openidconnectclient	link_page_header	You have successfully been authenticated by $1. The only remaining step is to create a link with an existing $2 account or a new one.
+plugin_openidconnectclient	link_page_header_with_registration	You have successfully been authenticated by $1. The only remaining step is to create a link with an existing $2 account or register a new one.
+plugin_openidconnectclient	link_page_header_without_registration	You have successfully been authenticated by $1. The only remaining step is to create a link with an existing $2 account.
 
 plugin_openidconnectclient	title_user_preferences	OpenID Connect providers
 plugin_openidconnectclient	unlink	Unlink
@@ -20,6 +21,8 @@ plugin_openidconnectclient	register	Register a new $1 account
 plugin_openidconnectclient	or_register_label	or
 plugin_openidconnectclient	info_registration	Your new user account will be linked with $1. You must provide a password to use $2 services (CVS, SVN, Git, FTP…).
 plugin_openidconnectclient	link_registration_error	An error occurred while creating the link with OpenID Connect provider
+
+plugin_openidconnectclient	registered_waiting_for_admin	Your account have been created but needs to be approved by an administrator
 
 plugin_openidconnectclient_admin	title	OpenID Connect
 plugin_openidconnectclient_admin	title_provider_configuration	OpenID Connect providers
@@ -34,6 +37,12 @@ plugin_openidconnectclient_admin	client_help	Following information have to be ge
 plugin_openidconnectclient_admin	icon	Icon
 plugin_openidconnectclient_admin	color	Color
 plugin_openidconnectclient_admin	preview	Preview of the login page button
+plugin_openidconnectclient_admin	unique_authentication_source	Unique authentication source
+plugin_openidconnectclient_admin	active	Active
+plugin_openidconnectclient_admin	inactive	Inactive
+plugin_openidconnectclient_admin	unique_authentication_source_form	This provider is the only authentication method.
+plugin_openidconnectclient_admin	unique_authentication_source_prerequisites	Be sure that your provider can provide the profile and email scopes otherwise users will not have an account created automatically.
+plugin_openidconnectclient_admin	unique_authentication_source_user_must_be_linked	You can only enable this provider as unique authentication method if you are yourself linked to it.
 plugin_openidconnectclient_admin	btn_create	Create the provider
 plugin_openidconnectclient_admin	btn_cancel	Cancel
 plugin_openidconnectclient_admin	btn_delete	Delete

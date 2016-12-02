@@ -27,6 +27,7 @@
 #    to allow Python scripts to handle user session stuff
 
 import os
+import time
 import string
 import Cookie
 import MySQLdb
@@ -67,9 +68,12 @@ def session_set():
     # if hash value given by browser then check to see if it is OK.
     cookie_name=include.get_cookie_prefix()+'_session_hash'
     if c.has_key(cookie_name):
-
+        current_time = time.time()
         cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT user_id,session_hash,ip_addr,time FROM session WHERE session_hash=%s", c[cookie_name].value)
+        cursor.execute(
+            "SELECT user_id,session_hash,ip_addr,time FROM session WHERE session_hash=%s AND time + %s > %s ",
+            (c[cookie_name].value, include.sys_session_lifetime, current_time)
+        )
         row = cursor.fetchone()
         cursor.close()
 

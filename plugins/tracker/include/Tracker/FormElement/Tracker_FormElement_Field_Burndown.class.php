@@ -253,18 +253,23 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
 
-        if (! $this->isCacheCompleteForBurndown($burndown_data, $artifact)
-            && ! $this->isCacheBurndownAlreadyAsked($artifact)
+        if ($this->isCacheCompleteForBurndown($burndown_data, $artifact, $user) === false
+            && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
-            $this->getSystemEventManager()->createEvent(
-                'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
-                $artifact->getId().SystemEvent::PARAMETER_SEPARATOR ,
-                SystemEvent::PRIORITY_MEDIUM,
-                SystemEvent::OWNER_APP
-            );
+            $this->forceBurndownCacheGeneration($artifact->getId());
         }
 
         return $burndown_data;
+    }
+
+    private function forceBurndownCacheGeneration($artifact_id)
+    {
+        $this->getSystemEventManager()->createEvent(
+            'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
+            $artifact_id.SystemEvent::PARAMETER_SEPARATOR ,
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
     }
 
     public function isCacheBurndownAlreadyAsked(Tracker_Artifact $artifact)
@@ -281,7 +286,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function isCacheCompleteForBurndown(
         Tracker_Chart_Data_Burndown $burndown_data,
-        Tracker_Artifact $artifact
+        Tracker_Artifact $artifact,
+        PFUser $user
     ) {
         $timestamps = array();
         foreach ($burndown_data->getTimePeriod()->getDayOffsets() as $day) {
@@ -290,12 +296,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $timestamps[] = $calculate_day;
             }
         }
-        $cached_days = $this->getComputedDao()->getCachedDays(
-            $artifact->getId(),
-            $this->id
-        );
 
-        return (int)$cached_days['cached_days'] === count($timestamps);
+        if ($this->hasRemainingEffort($artifact->getTracker())) {
+            $cached_days = $this->getComputedDao()->getCachedDays(
+                $artifact->getId(),
+                $this->getBurndownRemainingEffortField($artifact, $user)->getId()
+            );
+
+            return (int)$cached_days['cached_days'] !== count($timestamps);
+        }
+
+        return true;
     }
 
     private function addRemainingEffortData(
@@ -793,5 +804,41 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function canBeUsedAsReportCriterion() {
         return false;
+    }
+
+    /**
+     * @see Tracker_FormElement_Field::postSaveNewChangeset()
+     */
+    public function postSaveNewChangeset(
+        Tracker_Artifact $artifact,
+        PFUser $submitter,
+        Tracker_Artifact_Changeset $new_changeset,
+        Tracker_Artifact_Changeset $previous_changeset = null
+    ) {
+
+        try {
+            $start_date_field = $this->getBurndownStartDateField($artifact, $submitter);
+            $duration_field   = $this->getBurndownDurationField($artifact, $submitter);
+
+            if (
+                $previous_changeset !== null &&
+                $this->isCacheBurndownAlreadyAsked($artifact) === false &&
+                $this->getBurndownRemainingEffortField($artifact, $submitter)
+            ) {
+                if ($this->hasFieldChanged($new_changeset, $start_date_field)
+                    || $this->hasFieldChanged($new_changeset, $duration_field)
+                ) {
+                    $this->forceBurndownCacheGeneration($artifact->getId());
+                }
+            }
+        } catch (Tracker_FormElement_Field_BurndownException $e) {
+        }
+    }
+
+    private function hasFieldChanged(
+        Tracker_Artifact_Changeset $new_changeset,
+        Tracker_FormElement_Field $field
+    ) {
+        return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
     }
 }

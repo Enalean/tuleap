@@ -206,7 +206,12 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         // TODO : implement
         return false;
     }
-    
+
+    public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id)
+    {
+        return $this->formatDiff($changeset_value, $format, true);
+    }
+
     /**
      * Returns a diff between this changeset value and the one passed in param
      *
@@ -215,7 +220,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    {
+        return $this->formatDiff($changeset_value, $format, false);
+    }
+
+    private function formatDiff($changeset_value, $format, $is_for_mail)
+    {
         if ($this->files !== $changeset_value->getFiles()) {
             $result = '';
             $removed = array();
@@ -226,7 +237,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $result .= $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
             }
 
-            $added = $this->fetchAddedFiles(array_diff($this->files, $changeset_value->getFiles()), $format);
+            $added = $this->fetchAddedFiles(array_diff($this->files, $changeset_value->getFiles()), $format, $is_for_mail);
             if ($added && $result) {
                 $result .= $format === 'html' ? '; ' : PHP_EOL;
             }
@@ -248,10 +259,10 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
             return '';
         }
 
-        return $this->fetchAddedFiles($this->files, $format);
+        return $this->fetchAddedFiles($this->files, $format, false);
     }
 
-    private function fetchAddedFiles(array $files, $format)
+    private function fetchAddedFiles(array $files, $format, $is_for_mail)
     {
         $artifact = $this->changeset->getArtifact();
 
@@ -269,7 +280,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
             $result .= implode(', ', $added) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
         }
 
-        if ($previews) {
+        if ($previews && ! $is_for_mail) {
             $result .= '<div>'. $this->field->fetchAllAttachment(
                 $artifact->getId(),
                 $previews,
@@ -303,8 +314,9 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     private function addFileForHTMLFormat($still_existing_files_ids, &$added, &$previews, $file)
     {
         $purifier = Codendi_HTMLPurifier::instance();
+        $request  = HTTPRequest::instance();
         if (isset($still_existing_files_ids[$file->getId()])) {
-            $added[] = '<a href="' . $purifier->purify($this->field->getFileHTMLUrl($file)) . '">' .
+            $added[] = '<a href="' . $request->getServerUrl() . $purifier->purify($this->field->getFileHTMLUrl($file)) . '">' .
                 $purifier->purify($file->getFilename())
                 . '</a>';
 

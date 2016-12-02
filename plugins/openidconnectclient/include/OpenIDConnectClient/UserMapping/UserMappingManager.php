@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-use DateTime;
 use PFUser;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
@@ -68,6 +67,19 @@ class UserMappingManager {
      */
     public function getByProviderAndIdentifier(Provider $provider, $identifier) {
         $row = $this->dao->searchByIdentifierAndProviderId($identifier, $provider->getId());
+        if ($row === false) {
+            throw new UserMappingNotFoundException();
+        }
+        return $this->instantiateUserMappingFromRow($row);
+    }
+
+    /**
+     * @return UserMapping
+     * @throws UserMappingNotFoundException
+     */
+    public function getByProviderAndUser(Provider $provider, PFUser $user)
+    {
+        $row = $this->dao->searchByProviderIdAndUserId($provider->getId(), $user->getId());
         if ($row === false) {
             throw new UserMappingNotFoundException();
         }

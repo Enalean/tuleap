@@ -1397,6 +1397,7 @@ plugin_tracker_report	search	Search
 plugin_tracker_report	non_displayable	N/A
 plugin_tracker_report	non_displayable_tooltip	The rank of an artifact only exists in the context of a milestone. You must filter by milestone to view artifact ranks.
 plugin_tracker_report	no_public_reports	None of the reports for this tracker are public, please ensure that at least one report is public! Tracker access should be managed via the permission settings.
+plugin_tracker_report	too_many_columns_sort	You have too many columns, the sort won't work. Please remove some columns (and refresh the page) to be able to sort.
 
 plugin_tracker_report_widget	go_to_report	Go to report
 

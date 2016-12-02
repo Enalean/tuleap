@@ -40,14 +40,35 @@ class DefaultFineGrainedPermissionReplicator
      */
     private $saver;
 
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_enabler;
+
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_retriever;
+
+    /**
+     * @var PatternValidator
+     */
+    private $pattern_validator;
+
     public function __construct(
         FineGrainedDao $fine_grained_dao,
         DefaultFineGrainedPermissionFactory $factory,
-        DefaultFineGrainedPermissionSaver $saver
+        DefaultFineGrainedPermissionSaver $saver,
+        RegexpFineGrainedEnabler $regexp_enabler,
+        RegexpFineGrainedRetriever $regexp_retriever,
+        PatternValidator $pattern_validator
     ) {
-        $this->fine_grained_dao = $fine_grained_dao;
-        $this->factory          = $factory;
-        $this->saver            = $saver;
+        $this->fine_grained_dao  = $fine_grained_dao;
+        $this->factory           = $factory;
+        $this->saver             = $saver;
+        $this->regexp_enabler    = $regexp_enabler;
+        $this->regexp_retriever  = $regexp_retriever;
+        $this->pattern_validator = $pattern_validator;
     }
 
     public function replicate(
@@ -55,6 +76,8 @@ class DefaultFineGrainedPermissionReplicator
         $new_project_id,
         array $ugroups_mapping
     ) {
+        $this->replicateDefaultRegexpUsage($template_project, $new_project_id);
+
         $this->fine_grained_dao->duplicateDefaultFineGrainedPermissionsEnabled(
             $template_project->getId(),
             $new_project_id
@@ -66,8 +89,13 @@ class DefaultFineGrainedPermissionReplicator
             $ugroups_mapping
         );
 
+        $warnings = array();
         foreach ($replicated_branch_permissions as $permission) {
-            $this->saver->saveBranchPermission($permission);
+            if ($this->pattern_validator->isValidForDefault($template_project, $permission->getPattern(), false)) {
+                $this->saver->saveBranchPermission($permission);
+            } else {
+                $warnings[] =  $permission->getPattern();
+            }
         }
 
         $replicated_tag_permissions = $this->factory->mapTagPermissionsForProject(
@@ -77,7 +105,20 @@ class DefaultFineGrainedPermissionReplicator
         );
 
         foreach ($replicated_tag_permissions as $permission) {
-            $this->saver->saveTagPermission($permission);
+            if ($this->pattern_validator->isValidForDefault($template_project, $permission->getPattern(), false)) {
+                $this->saver->saveTagPermission($permission);
+            }
+        }
+
+        if (count($warnings) > 0) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'feedback_permissions_not_duplicated', implode(',', $warnings)));
+        }
+    }
+
+    public function replicateDefaultRegexpUsage(Project $template_project, $new_project_id)
+    {
+        if ($this->regexp_retriever->areRegexpActivatedForDefault($template_project)) {
+            $this->regexp_enabler->enableForDefaultWithProjectId($new_project_id);
         }
     }
 }

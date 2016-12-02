@@ -1393,13 +1393,18 @@ class GitPlugin extends Plugin {
         return new RegexpPermissionFilter(
             $this->getFineGrainedFactory(),
             $this->getPatternValidator(),
-            $this->getFineGrainedPermissionDestructor()
+            $this->getFineGrainedPermissionDestructor(),
+            $this->getDefaultFineGrainedPermissionFactory()
         );
     }
 
     private function getRegexpFineGrainedDisabler()
     {
-        return new RegexpFineGrainedDisabler(new RegexpRepositoryDao(), new RegexpFineGrainedDao());
+        return new RegexpFineGrainedDisabler(
+            new RegexpRepositoryDao(),
+            new RegexpFineGrainedDao(),
+            new RegexpDefaultDao()
+        );
     }
 
     private function getDefaultPermissionsUpdater()
@@ -1413,7 +1418,10 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedUpdater(),
             $this->getDefaultFineGrainedPermissionSaver(),
             $this->getPermissionChangesDetector(),
-            $this->getRegexpFineGrainedEnabler()
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getRegexpPermissionFilter(),
+            $this->getRegexpFineGrainedDisabler()
         );
     }
 
@@ -1436,7 +1444,10 @@ class GitPlugin extends Plugin {
             $dao,
             $default_factory,
             $saver,
-            $factory
+            $factory,
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getPatternValidator()
         );
     }
 
@@ -1475,7 +1486,8 @@ class GitPlugin extends Plugin {
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
             $this->getPatternValidator(),
-            $this->getFineGrainedPermissionSorter()
+            $this->getFineGrainedPermissionSorter(),
+            $this->getRegexpFineGrainedRetriever()
         );
     }
 
@@ -1729,7 +1741,10 @@ class GitPlugin extends Plugin {
         return new DefaultFineGrainedPermissionReplicator(
             new FineGrainedDao(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            $this->getDefaultFineGrainedPermissionSaver()
+            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getPatternValidator()
         );
     }
 
