@@ -37,6 +37,15 @@ class MaillogDao extends DataAccessObject {
         return $this->retrieve($qry);
     }
 
+    public function searchMessageById($id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM plugin_maillog_message WHERE id_message = $id";
+
+        return $this->retrieve($sql);
+    }
+
     function getNbMessages() {
         $dar = $this->retrieve('SELECT FOUND_ROWS() as nb');
         if(!$this->da->isError() && $dar->rowCount() == 1) {
@@ -66,7 +75,7 @@ class MaillogDao extends DataAccessObject {
 
     function insertBody($mail) {
         if (is_a($mail, 'Codendi_Mail')) {
-            $body = $mail->getBodyText()."\n".$mail->getBodyHTML();
+            $body      = $mail->getBodyText();
             $html_body = $mail->getBodyHTML();
         } else {
             $body      = $mail->getBody();
@@ -76,8 +85,8 @@ class MaillogDao extends DataAccessObject {
         $qry = sprintf('INSERT INTO plugin_maillog_message'.
                        ' (body, html_body)'.
                        ' VALUES ("%s", "%s")',
-                       db_escape_string($html_body),
-                       db_escape_string($body));
+                       db_escape_string($body),
+                       db_escape_string($html_body));
         $this->update($qry);
         if(!$this->da->isError()) {
             $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');

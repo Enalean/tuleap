@@ -218,9 +218,9 @@ class Tracker_Artifact_Changeset_Comment {
                         min-height:50px;
                         border: 1px solid #f6f6f6;
                         border-top: none;
-                        -webkit-border-radius:20px;
-                        border-radius:20px;
-                        -moz-border-radius:20px;
+                        -webkit-border-radius:4px;
+                        border-radius:4px;
+                        -moz-border-radius:4px;
                         background-color:#F6F6F6;"
                     >
                         <table style="width:100%; background-color:#F6F6F6;">
