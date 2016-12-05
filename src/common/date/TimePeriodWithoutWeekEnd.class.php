@@ -33,6 +33,15 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
         }
     }
 
+    public function getCountDayUntilDate($date)
+    {
+        if ($date < $this->getEndDate()) {
+            return $this->getNumberOfDaysWithoutWeekEnd($this->getStartDate(), $date);
+        } else {
+            return $this->getNumberOfDaysWithoutWeekEnd($this->getStartDate(), $this->getEndDate());
+        }
+    }
+
     /**
      * @return array
      */

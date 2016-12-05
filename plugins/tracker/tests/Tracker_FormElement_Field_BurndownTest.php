@@ -247,7 +247,7 @@ class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends Tulea
         $warning_message = 'Foo';
         $this->setText($warning_message, array('plugin_tracker', 'burndown_missing_remaining_effort_warning'));
         
-        $stories = aMockTracker()->withName('Stories')->havingFormElementWithNameAndType('remaining_effort', array('int', 'float'))->build();
+        $stories = aMockTracker()->withName('Stories')->havingFormElementWithNameAndType('remaining_effort', array('int', 'float', 'computed'))->build();
         $bugs    = aMockTracker()->withName('Bugs')->havingNoFormElement('remaining_effort')->build();
         $chores  = aMockTracker()->withName('Chores')->havingFormElementWithNameAndType('remaining_effort', array('int', 'date'))->build();
         

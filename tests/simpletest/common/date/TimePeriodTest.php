@@ -61,7 +61,25 @@ class TimePeriodWithoutWeekEndTest extends TuleapTestCase {
         $this->assertEqual(date('D d', $this->time_period->getEndDate()), 'Tue 10');
     }
 
-    
+    public function itProvidesTheCorrectNumberOfDayWhenStartDateIsAtMidnight()
+    {
+        $start_date  = mktime(23, 59, 59, 11, 5, 2016);
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+
+        $timestamps = $time_period->getCountDayUntilDate(1481356800);
+
+        $this->assertEqual($timestamps, 4);
+    }
+
+    public function itProvidesTheCorrectNumberOfDayWhenStartDateIsBeforeMidnight()
+    {
+        $start_date  = mktime(23, 0, 0, 11, 5, 2016);
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+
+        $timestamps = $time_period->getCountDayUntilDate(1481356800);
+
+        $this->assertEqual($timestamps, 4);
+    }
 }
 
 class TimePeriodWithoutWeekEnd_getNumberOfDaysSinceStartTest extends TuleapTestCase {

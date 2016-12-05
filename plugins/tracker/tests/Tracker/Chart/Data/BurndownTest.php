@@ -161,6 +161,25 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
 
+    public function itReturnsAnEmptyArrayWhenBurndownIsUnderCalculation() {
+        $capacity = 7;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data->addEffortAt(0, 5);
+        $burndown_data->addEffortAt(1, 4);
+        $burndown_data->addEffortAt(2, 3);
+        $burndown_data->addEffortAt(3, 1);
+
+        $burndown_data->setIsBeingCalculated(true);
+
+        $results = json_decode($burndown_data->getJsonRepresentation());
+
+        $expected_points = array();
+
+        $this->assertEqual($results->duration, 5);
+        $this->assertEqual($results->capacity, 7);
+        $this->assertEqual($results->points, $expected_points);
+    }
+
     public function itReturnsBurndownDataInJson() {
         $capacity = 7;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownDateRetriever;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
@@ -144,6 +145,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                     $this->fetchBurndownImage($artifact, $current_user);
                 } catch (Tracker_FormElement_Field_BurndownException $e) {
                     $this->displayErrorImage($e->getMessage());
+                } catch (BurndownCacheIsCurrentlyCalculatedException $e) {
+                    $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', 'burndown_cache_generating'));
                 }
                 break;
             default:
@@ -160,7 +163,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, PFUser $user) {
         if ($this->userCanRead($user)) {
-            $this->getBurndown($this->buildBurndownData($user, $artifact))->display();
+            $burndown_data = $this->buildBurndownData($user, $artifact);
+            if ($burndown_data->isBeingCalculated() === true) {
+                throw new BurndownCacheIsCurrentlyCalculatedException();
+            } else {
+                $this->getBurndown($burndown_data)->display();
+            }
         } else {
             throw new Tracker_FormElement_Field_BurndownException(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
@@ -241,6 +249,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param int $duration
      *
      * @return Tracker_Chart_Data_Burndown
+     * @throws BurndownCacheIsCurrentlyCalculatedException
      */
     public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
     {
@@ -248,7 +257,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if ($this->doesCapacityFieldExist()) {
             $capacity = $this->getCapacity($artifact);
         }
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
         $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
@@ -257,6 +266,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
             $this->forceBurndownCacheGeneration($artifact->getId());
+            $burndown_data->setIsBeingCalculated(true);
+        } else if ($this->isCacheBurndownAlreadyAsked($artifact)) {
+            $burndown_data->setIsBeingCalculated(true);
         }
 
         return $burndown_data;
@@ -289,13 +301,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $timestamps = array();
-        foreach ($burndown_data->getTimePeriod()->getDayOffsets() as $day) {
-            $calculate_day = strtotime("+" . $day . " day", $burndown_data->getTimePeriod()->getStartDate());
-            if ($calculate_day <= $_SERVER['REQUEST_TIME']) {
-                $timestamps[] = $calculate_day;
-            }
-        }
+        $days = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
 
         if ($this->hasRemainingEffort($artifact->getTracker())) {
             $cached_days = $this->getComputedDao()->getCachedDays(
@@ -303,7 +309,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $this->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            return (int)$cached_days['cached_days'] !== count($timestamps);
+            return (int)$cached_days['cached_days'] === $days;
         }
 
         return true;
@@ -780,7 +786,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Boolean
      */
     private function hasRemainingEffort(Tracker $tracker) {
-        return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float'));
+        return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float', 'computed'));
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {

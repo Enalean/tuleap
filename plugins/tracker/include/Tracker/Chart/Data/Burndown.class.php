@@ -23,20 +23,25 @@ require_once 'common/date/TimePeriod.class.php';
 /**
  * Storage data for Burndown display via JPgraph
  */
-class Tracker_Chart_Data_Burndown {
-
+class Tracker_Chart_Data_Burndown
+{
     /**
      * @var TimePeriod
      */
     private $time_period;
 
-    private $remaining_effort = array();
-    private $ideal_effort     = array();
-    private $capacity         = null;
+    private $remaining_effort;
+    private $ideal_effort;
+    private $capacity;
+    private $is_under_calcul;
 
-    public function __construct(TimePeriod $time_period, $capacity = null) {
-        $this->time_period = $time_period;
-        $this->capacity    = $capacity;
+    public function __construct(TimePeriod $time_period, $capacity = null, $is_under_calcul = false)
+    {
+        $this->time_period      = $time_period;
+        $this->capacity         = $capacity;
+        $this->is_under_calcul  = $is_under_calcul;
+        $this->remaining_effort = array();
+        $this->ideal_effort     = array();
     }
 
     /**
@@ -47,6 +52,16 @@ class Tracker_Chart_Data_Burndown {
      */
     public function addEffortAt($day_offset, $remaining_effort) {
         $this->remaining_effort[$day_offset] = $remaining_effort;
+    }
+
+    public function setIsBeingCalculated($is_under_calcul)
+    {
+        $this->is_under_calcul = $is_under_calcul;
+    }
+
+    public function isBeingCalculated()
+    {
+        return $this->is_under_calcul;
     }
 
     /**
@@ -123,7 +138,8 @@ class Tracker_Chart_Data_Burndown {
         return $burndown->build(
             $this->getDuration(),
             $this->capacity,
-            $this->getRemainingEffortWithoutNullValues()
+            $this->getRemainingEffortWithoutNullValues(),
+            $this->is_under_calcul
         );
     }
 
@@ -142,6 +158,10 @@ class Tracker_Chart_Data_Burndown {
     }
 
     private function getRemainingEffortWithoutNullValues() {
+        if ($this->is_under_calcul === true) {
+            return array();
+        }
+
         return array_filter($this->getRemainingEffort(), array($this, 'isValueNotNull'));
     }
 
