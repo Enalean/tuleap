@@ -23,8 +23,8 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Statistics\AdminHeaderPresenter;
+use Tuleap\Statistics\SearchFieldsPresenterBuilder;
 use Tuleap\Statistics\FrequenciesPresenter;
-use Tuleap\Statistics\FrequenciesSearchFieldsPresenterBuilder;
 
 require 'pre.php';
 
@@ -91,8 +91,8 @@ if ($request->exist('filter')) {
     $filter = 'month';
 }
 
-$search_fields_builder = new FrequenciesSearchFieldsPresenterBuilder();
-$search_fields_presenter = $search_fields_builder->build(
+$search_fields_builder = new SearchFieldsPresenterBuilder();
+$search_fields_presenter = $search_fields_builder->buildSearchFieldsForFrequencies(
     $type_values,
     $filter,
     $start_date,

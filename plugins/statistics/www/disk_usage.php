@@ -24,7 +24,7 @@
 
 use Tuleap\Statistics\DiskUsageGlobalPresenterBuilder;
 use Tuleap\Statistics\DiskUsageRouter;
-use Tuleap\Statistics\DiskUsageSearchFieldsPresenterBuilder;
+use Tuleap\Statistics\SearchFieldsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
 use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
 use Tuleap\Statistics\DiskUsageProjectsPresenterBuilder;
@@ -122,7 +122,7 @@ $disk_usage_output = new Statistics_DiskUsageOutput(
 $disk_usage_graph = new Statistics_DiskUsageGraph(
     $duMgr
 );
-$disk_usage_search_fields_builder = new DiskUsageSearchFieldsPresenterBuilder();
+$disk_usage_search_fields_builder = new SearchFieldsPresenterBuilder();
 $disk_usage_services_builder      = new DiskUsageServicesPresenterBuilder(
     ProjectManager::instance(),
     $duMgr,

@@ -34,7 +34,7 @@ class DiskUsageProjectsPresenterBuilder
      */
     private $usage_output;
     /**
-     * @var DiskUsageSearchFieldsPresenterBuilder
+     * @var SearchFieldsPresenterBuilder
      */
     private $search_fields_builder;
     /**
@@ -45,7 +45,7 @@ class DiskUsageProjectsPresenterBuilder
     public function __construct(
         Statistics_DiskUsageManager $usage_manager,
         Statistics_DiskUsageOutput $usage_output,
-        DiskUsageSearchFieldsPresenterBuilder $search_fields_builder,
+        SearchFieldsPresenterBuilder $search_fields_builder,
         DiskUsageServicesPresenterBuilder $services_builder
     ) {
         $this->usage_manager         = $usage_manager;
