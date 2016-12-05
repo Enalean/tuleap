@@ -328,8 +328,8 @@ plugin_git	view_admin_title	Administration de Git
 plugin_git	view_admin_tab_gerrit_templates	Modèles Gerrit
 plugin_git	view_admin_tab_git_admins	Administrateurs Git
 plugin_git	view_admin_tab_mass_update	Mise à jour massive des dépôts
-plugin_git	view_admin_tab_default_settings	Paramètres git par défaut
-plugin_git	view_admin_tab_default_access_rights	Permissions par défaut
+plugin_git	view_admin_tab_template_settings	Modèle des dépôts Git
+plugin_git	view_admin_tab_template_access_rights	Modèles de permissions
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Modèles
 plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
@@ -510,8 +510,8 @@ plugin_git	admin_gitolite_config_description	Cette section vous premet de regén
 plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "polling". Merci de consulter <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git</a>
 
 plugin_git	save_access_control	Sauvegarder les permissions
-plugin_git	default_access_control_saved	Permissions par défaut sauvegardées.
-plugin_git	default_access_control_missing	Veuillez définir les permissions d'Écriture.
+plugin_git	template_access_control_saved	Modèle de permission sauvegardé.
+plugin_git	template_access_control_missing	Veuillez définir les permissions d'Écriture.
 
 plugin_git	default_permissions_title	Permissions par défaut
 plugin_git	fine_grained_permissions_title	Permissions fines
