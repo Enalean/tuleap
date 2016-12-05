@@ -95,7 +95,25 @@
         {{# csrf }}
             {{> csrf_token_input }}
         {{/ csrf }}
+        {{# search }}
+            {{# status }}
+                {{# checked }}
+                    <input type="hidden" name="filter_status[]" value="{{ value }}">
+                {{/ checked }}
+            {{/ status }}
+            {{# types_by_queue }}
+                {{# types }}
+                    {{# checked }}
+                        <input type="hidden" name="filter_type[]" value="{{ value }}">
+                    {{/ checked }}
+                {{/ types }}
+            {{/ types_by_queue }}
+        {{/ search }}
+        {{# pagination }}
+            <input type="hidden" name="offset" value="{{ offset }}">
+        {{/ pagination }}
         <input type="hidden" name="queue" value="{{ queue }}">
+
         {{# can_be_replayed }}
             <button type="submit"
                     name="replay"

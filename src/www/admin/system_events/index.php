@@ -31,13 +31,6 @@ $se     = SystemEventManager::instance();
 
 $request_queue = $request->get('queue');
 
-$id_to_replay = $request->get('replay');
-if ($id_to_replay) {
-    $token->check();
-    $se->replay($id_to_replay);
-    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
-}
-
 $purifier = Codendi_HTMLPurifier::instance();
 
 $available_queues = array(
@@ -128,6 +121,13 @@ $search = new Tuleap\SystemEvent\SystemEventSearchPresenter(
     $all_types_by_queue,
     $filter_type
 );
+
+$id_to_replay = $request->get('replay');
+if ($id_to_replay) {
+    $token->check();
+    $se->replay($id_to_replay);
+    $GLOBALS['Response']->redirect('/admin/system_events/?' . http_build_query(array('offset' => $offset) + $default_params));
+}
 
 $title = $Language->getText('admin_system_events', 'title');
 
