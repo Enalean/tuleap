@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
+use Tuleap\project\Admin\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\Admin\ProjectAccessPresenter;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 
