@@ -31,9 +31,9 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         $sql = "SELECT cv.*, a.tracker_id, a.last_changeset_id
                 FROM tracker_changeset_value_artifactlink AS cv
                     INNER JOIN tracker_artifact AS a ON (a.id = cv.artifact_id)
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = a.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = a.id)
                 WHERE changeset_value_id = $changeset_value_id
-                ORDER BY tracker_artifact_priority.rank";
+                ORDER BY tracker_artifact_priority_rank.rank";
 
         return $this->retrieve($sql);
     }

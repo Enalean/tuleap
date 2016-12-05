@@ -157,7 +157,7 @@ class Tracker_Artifact_PriorityManager {
         $rows  = $this->priority_dao->getGlobalRanks($list_of_artifact_ids);
         $ranks = array();
         foreach ($rows as $row) {
-            $ranks[$row['curr_id']] = $row['rank'];
+            $ranks[$row['artifact_id']] = $row['rank'];
         }
         return $ranks;
     }

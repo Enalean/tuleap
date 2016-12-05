@@ -549,9 +549,9 @@ class Tracker_ArtifactDao extends DataAccessObject {
 
     private function getSortedFromStatementForChildrenOfArtifacts($artifact_ids) {
         return $this->getFromStatementForChildrenOfArtifacts().
-                "INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = child_art.id)
+                "INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
                  WHERE parent_art.id IN ($artifact_ids)
-                 ORDER BY tracker_artifact_priority.rank ASC ";
+                 ORDER BY tracker_artifact_priority_rank.rank ASC ";
     }
 
     private function getFromStatementForChildrenOfArtifacts() {
@@ -693,7 +693,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                     $exclude
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
@@ -718,7 +718,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     $submile_null
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -744,7 +744,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                     -- exlude all those linked to wrong artifacts
                     LEFT JOIN (
                         tracker_artifact as submile
@@ -765,7 +765,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     AND submile.id IS NULL
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -786,11 +786,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                 WHERE parent_art.id = $artifact_id
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -811,10 +811,10 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                 WHERE parent_art.id = $artifact_id
                     AND linked_art.tracker_id IN ($tracker_ids)
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -877,10 +877,10 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                 WHERE parent_art.id = $artifact_id
                     AND linked_art.tracker_id IN ($tracker_ids)
-                ORDER BY tracker_artifact_priority.rank ASC
+                ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -928,7 +928,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                      $exclude
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
@@ -943,7 +943,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     $submile_null
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority.rank ASC
+                ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -972,7 +972,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
                     -- exlude all those linked to wrong artifacts
                     LEFT JOIN (
                         tracker_artifact as submile
@@ -1003,7 +1003,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     AND submile.id IS NULL
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority.rank ASC
+                ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -1072,11 +1072,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
         $this->setGroupConcatLimit();
-        $sql = "SELECT GROUP_CONCAT(curr_id) as sorted_ids
+        $sql = "SELECT GROUP_CONCAT(artifact_id) as sorted_ids
                 FROM (
-                    SELECT curr_id
-                    FROM tracker_artifact_priority
-                    WHERE curr_id IN ($artifact_ids)
+                    SELECT artifact_id
+                    FROM tracker_artifact_priority_rank
+                    WHERE artifact_id IN ($artifact_ids)
                     ORDER BY rank ASC
                     ) AS R";
         $row = $this->retrieve($sql)->getRow();
