@@ -58,6 +58,8 @@ plugin_pluginsadministration	error_install_dependency	There are unmet dependenci
 plugin_pluginsadministration	error_uninstall_dependency	You can't uninstall this plugin since at least another plugin depends on it:
 plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restrict
 plugin_pluginsadministration	cant_restrict	Can't restrict this plugin because of its system scope
+plugin_pluginsadministration	no_local_plugins	All locally available plugins have been installed.
+plugin_pluginsadministration	filter_empty_state	There isn't any matching plugins.
 plugin_pluginsadministration	install_modal_title	Install plugin
 plugin_pluginsadministration	install_modal_content	Your about to install a plugin. Please confirm your action.
 plugin_pluginsadministration	install_modal_cancel	Cancel

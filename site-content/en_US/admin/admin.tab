@@ -86,7 +86,8 @@ admin_main	servers	Servers
 admin_main	servers_admin	Servers administration
 admin_main	sstat_reg_u	Registered active or restricted site users
 admin_main	sstat_reg_g	registered
-admin_main	sstat_reg_act_g	registered active
+admin_main	sstat_reg_act_g	active
+admin_main	sstat_deleted	deleted
 admin_main	sstat_pend_g	pending
 admin_main	sstat_pend_u	Pending users
 admin_main	site_news	Site news
@@ -110,10 +111,10 @@ admin_main	stat_users	Users statistics
 admin_main	status_user	Per status
 admin_main	statusactif_user	active
 admin_main	statusrestricted_user	restricted
-admin_main	statushold_user	hold
+admin_main	statushold_user	suspended
 admin_main	statusdeleted_user	deleted
 admin_main	statusvalidated_user	validated
-admin_main	statuspending_user	pending
+admin_main	statuspending_user	waiting
 admin_main	statustotal_user	total
 admin_main	desc_fields	Project Description fields
 admin_main	desc_fields_edit	Project description fields edition
@@ -330,15 +331,22 @@ admin_grouplist	id_group	Id group
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
 #
-admin_lastlogins	title	Last Logins
-admin_lastlogins	recent	Most Recent Logins
+admin_lastlogins	title	Most recent logins
+admin_lastlogins	pane_title	Most recent logins
+admin_lastlogins	no_result	There isn't any recent login
+admin_lastlogins	username_column_header	Username
+admin_lastlogins	ip_column_header	IP address
+admin_lastlogins	date_column_header	Date
+admin_lastlogins	filter_placeholder	Username, IP, date
+admin_lastlogins	filter_no_matching_result	There isn't any matching recent login
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php
 #
 admin_massmail_execute	post_recvd	Received Post. Making Query
 admin_massmail_execute	mailing	Beginning mailings to $1 distinct email addresses
-admin_massmail_execute	sending	sending to
+admin_massmail_execute	sending	Preview sent
+admin_massmail_execute	no_sending	Preview could not be sent
 admin_massmail_execute	done	Done!
 admin_massmail_execute	no_user_mail	The added user $1 have no mail address.
 admin_massmail_execute	no_user	No user corresponding to entry $1.
@@ -346,19 +354,28 @@ admin_massmail_execute	no_user	No user corresponding to entry $1.
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php
 #
-admin_massmail	title	Administrative Mass Mail Engine
-admin_massmail	header	Mail Engine for $1 Subscribers
-admin_massmail	warning	Be <b>very</b> careful with this form, because submitting it <b>will</b> send email to lots of users.
-admin_massmail	to_preview	Send preview to
-admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
-admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"
-admin_massmail	to_devel	Send only to project developers
-admin_massmail	to_proj_admin	Send only to project administrators
-admin_massmail	to_site_admin	Send only to site administrators
-admin_massmail	to_all	Send to all users, regardless of their preferences
+admin_massmail	title	Mass emailing
+admin_massmail	header	Email
+admin_massmail	warning	$1 users will receive this email.
+admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings" ($1 users)
+admin_massmail	to_update	Users that agreed to receive "Site Updates" ($1 users)
+admin_massmail	to_devel	Project developers ($1 users)
+admin_massmail	to_proj_admin	Project administrators ($1 users)
+admin_massmail	to_site_admin	Site administrators ($1 users)
+admin_massmail	to_all	All users, regardless of their preferences ($1 users)
 admin_massmail	subject	Subject
-admin_massmail	text	Text of Message
-admin_massmail	footer	Your message here...\n\n---------------------\nThis email was sent from $1'. To change your email receipt preferences, please visit the site and edit your account via the "Account Maintenance" link.\n\nDirect any question to $2 or reply to this e-mail.
+admin_massmail	send_email_label	Send email
+admin_massmail	destination_label	Send to
+admin_massmail	subject_label	Subject
+admin_massmail	subject_placeholder	Catchy email subject line
+admin_massmail	content_label	Content
+admin_massmail	content_placeholder	Message…
+admin_massmail	preview_label	Preview
+admin_massmail	send_preview_label	Send preview
+admin_massmail	massmail_queued	The sending of the mail has been <a href="$1">put in the queue</a>
+admin_massmail	confirmation_title	Massmail sending
+admin_massmail	confirmation_body	Please confirm your action.
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php
@@ -470,7 +487,6 @@ admin_userlist	error_uid	Error - Can't find user with ID $1
 admin_userlist	error_noadd	Error - Can't add user to group
 admin_userlist	user_list	Users
 admin_userlist	all_groups	All Projects
-admin_userlist	group	in $1
 admin_userlist	uid_toadd	User ID to add
 admin_userlist	active	Active
 admin_userlist	validated	Validated
@@ -507,46 +523,50 @@ admin_userlist	pending_users_text	For your information, there are <a href="$1">$
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
 #
-admin_trove_cat_add	title	Trove - Add Category
-admin_trove_cat_add	header	Add a Trove Category
+admin_trove_cat_add	add_trove_cat	Add project category
+admin_trove_cat_add	add	Add category
 admin_trove_cat_add	short_name	Category short name
-admin_trove_cat_add	short_name_note	(no spaces)
 admin_trove_cat_add	full_name	Category full name
-admin_trove_cat_add	full_name_note	(80 chars max)
 admin_trove_cat_add	description	Category description
-admin_trove_cat_add	description_note	(255 chars max)
-admin_trove_cat_add	parent	Parent Category
-admin_trove_cat_add	mandatory	Mandatory
-admin_trove_cat_add	mandatory_note	Can be selected if the parent is "Root"
-admin_trove_cat_add	display_at_project_creation	Display at project creation
-admin_trove_cat_add	display_note	Can be selected if the parent is a top level parent
-
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
 #
-admin_trove_cat_delete	title	Trove - Delete Category
-admin_trove_cat_delete	header	Delete a Trove Category
-admin_trove_cat_delete	warning	<span class="feedback">**WARNING**</span> You are about to delete a trove category of the software map.
-admin_trove_cat_delete	caution_child	<span class="feedback">**CAUTION**</span> This category has <b>$1 child</b> categorie(s). Deleting the category will also delete all the child categories recursively!!
-admin_trove_cat_delete	no_child	This category has NO child category
-admin_trove_cat_delete	caution_proj	<span class="feedback">**CAUTION**</span> This category and its children (if any) are being used by <b>$1 project(s)</b>. Deleting this category will reset existing project categories to the parent category (or 'None' if the parent is a root category)
-admin_trove_cat_delete	no_proj	This category is NOT used by any project
-admin_trove_cat_delete	error_nocat	That trove category does not exist
+admin_trove_cat_delete	delete_trove_cat	Delete project category
+admin_trove_cat_delete	alert_description_delete_modal	Wow, wait a minute. You're about to delete the <b>$1</b> category. Please confirm your action.
+admin_trove_cat_delete	parent_is_root	Cannot delete a parent category.
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
-admin_trove_cat_edit	title	Trove - Edit Category
-admin_trove_cat_edit	header	Edit a Trove Category
+admin_trove_cat_edit	header	Edit project category
 admin_trove_cat_edit	root	Root
+admin_trove_cat_edit	edit	Update category
+admin_trove_cat_edit	label_fullname	Full name
+admin_trove_cat_edit	label_shortname	Short name
+admin_trove_cat_edit	label_mandatory	Mandatory
+admin_trove_cat_edit	mandatory_info	Can be selected if the parent is "Root"
+admin_trove_cat_edit	label_display	Display at project creation
+admin_trove_cat_edit	display_info	Can be selected if the parent is a mandatory top level parent
+admin_trove_cat_edit	label_description	Description
+admin_trove_cat_edit	description_placeholder	Type category description
+admin_trove_cat_edit	parent_category_label	Parent category
+admin_trove_cat_edit	missing_fullname	Fullname is required
+admin_trove_cat_edit	missing_shortname	Shortname is required
+admin_trove_cat_edit	update_forbidden	Cannot move a project category under its own child or in itself.
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Trove - Category List
-admin_trove_cat_list	header	Trove categories
+admin_trove_cat_list	title	Project categories
+admin_trove_cat_list	header_name	Full name
+admin_trove_cat_list	header_description	Description
+admin_trove_cat_list	header	Project categories
 admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
 admin_trove_cat_list	add	Add a trove category
+admin_trove_cat_list	deletion_forbidden_label	Cannot delete a hierarchy, please remove all children before.
+admin_trove_cat_list	cancel	Cancel
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #
@@ -577,37 +597,116 @@ admin_servers	info_notupdated	Server <em>$1</em> has not been updated
 #-----------------------------------------------
 # Script: src/www/admin/descfields/desc_fields_edit.php
 #
-admin_desc_fields	title	Description Fields Edition
-admin_desc_fields	header	Description Fields Edition
-admin_desc_fields	header_add	Add a Description Field
-admin_desc_fields	desc_name	Field Name
-admin_desc_fields	desc_description	Field Description
-admin_desc_fields	desc_required	Is Required
-admin_desc_fields	desc_type	Description Type
-admin_desc_fields	desc_yes	Yes
-admin_desc_fields	desc_no	No
-admin_desc_fields	desc_line	Line
-admin_desc_fields	desc_text	Text Area
-admin_desc_fields	rank_on_screen	Rank On Screen
-admin_desc_fields	del?	Delete ?
-admin_desc_fields	ins_desc_field_fail	INSERTING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
-admin_desc_fields	del_desc_field_fail	DELETING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
-admin_desc_fields	update_required_desc_field_fail	UPDATING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
-admin_desc_fields	update_desc_field_fail	UPDATE FAILED OR NO DATA CHANGED!
-admin_desc_fields	info_missed	Missing Information. PLEASE fill in all required information.
-admin_desc_fields	info_rank_noint	Rank must be an integer value!
-admin_desc_fields	add_success	Description Field Successfully added !
-admin_desc_fields	update_success	Description Field Successfully updated !
-admin_desc_fields	remove_success	Description Field Successfully deleted !
+admin_desc_fields	title	Custom project fields
+admin_desc_fields	header_add	Add field
+admin_desc_fields	desc_name	Name
+admin_desc_fields	desc_description	Description
+admin_desc_fields	desc_required	Required?
+admin_desc_fields	desc_type	Type
+admin_desc_fields	desc_yes	Required field
+admin_desc_fields	desc_no	Optional field
+admin_desc_fields	desc_line	String
+admin_desc_fields	desc_text	Text area
+admin_desc_fields	rank	Rank
+admin_desc_fields	rank_on_screen	Rank on screen
+admin_desc_fields	ins_desc_field_fail	Inserting description failed. Please report to admin@$1 $2.
+admin_desc_fields	del_desc_field_fail	Deleting description failed. Please report to admin@$1 $2.
+admin_desc_fields	update_required_desc_field_fail	Updating description failed. Please report to admin@$1 $2.
+admin_desc_fields	update_desc_field_fail	Update failed or no data changed.
+admin_desc_fields	info_missed	Missing Information. Please fill in all required information.
+admin_desc_fields	info_rank_noint	Rank must be an integer value.
+admin_desc_fields	add_success	Custom project field has been successfully added.
+admin_desc_fields	update_success	Custom project field has been successfully updated.
+admin_desc_fields	remove_success	Custom project field has been successfully deleted.
+admin_desc_fields	edit_btn	Edit
+admin_desc_fields	delete_btn	Delete
+admin_desc_fields	description_fields_header	Custom project fields
+admin_desc_fields	no_description_fields	No custom project fields
+admin_desc_fields	add_modal_title	Add field
+admin_desc_fields	add_modal_cancel	Cancel
+admin_desc_fields	add_modal_submit	Add field
+admin_desc_fields	edit_modal_title	Edit field
+admin_desc_fields	edit_modal_cancel	Cancel
+admin_desc_fields	edit_modal_submit	Update field
+admin_desc_fields	modal_field_form_name_label	Name
+admin_desc_fields	modal_field_form_name_placeholder	Project description
+admin_desc_fields	modal_field_form_rank_label	Rank on screen
+admin_desc_fields	modal_field_form_required_label	This field is mandatory
+admin_desc_fields	modal_field_form_type_label	Type
+admin_desc_fields	modal_field_form_description_label	Description
+admin_desc_fields	modal_field_form_description_placeholder	Project description will be used by managers to…
+admin_desc_fields	modal_field_form_description_info	This text will be displayed under the field and will help end user to fill it.
+admin_desc_fields	modal_field_form_type_label_line	String
+admin_desc_fields	modal_field_form_type_label_text	Text area
+admin_desc_fields	delete_modal_title	Delete field
+admin_desc_fields	delete_modal_content	You are about to delete a custom project field. Please confirm your action.
+admin_desc_fields	delete_modal_cancel	Cancel
+admin_desc_fields	delete_modal_submit	Delete field
 
-
-admin_system_events	title	System Events
+admin_system_events	title	System events
 admin_system_events	notifications	Notifications
 admin_system_events	send_email	Send an email to:
 admin_system_events	nobody	Nobody
 admin_system_events	default_queue	Main queue
 admin_system_events	fts_queue	Full Text Search
 admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration
+admin_system_events	empty_state	No system event matches your criteria.
+admin_system_events	filter_label	Filter
+admin_system_events	search_label	Search
+admin_system_events	types_label	Types
+admin_system_events	type_label	Type
+admin_system_events	all_status_label	Status
+admin_system_events	status_label	Status
+admin_system_events	queue_label	Queue
+admin_system_events	parameters_label	Parameters
+admin_system_events	time_taken_label	Time taken
+admin_system_events	details_label	Details
+admin_system_events	replay_label	Relaunch
+admin_system_events	id_label	Id
+admin_system_events	created_label	Created date
+admin_system_events	created_at	Created at
+admin_system_events	owner_label	Owner
+admin_system_events	priority_label	Priority
+admin_system_events	start_label	Start date
+admin_system_events	start_at	Started at
+admin_system_events	end_label	End date
+admin_system_events	end_at	Ended at
+admin_system_events	log_label	Log
+admin_system_events	replayed_label	relaunched
+admin_system_events	details_title	System event details
+admin_system_events	duration_years	%y years %m months %d days %h h %i m %s s
+admin_system_events	duration_months	%m months %d days %h h %i m %s s
+admin_system_events	duration_days	%d days %h h %i m %s s
+admin_system_events	duration_hours	%h h %i m %s s
+admin_system_events	duration_minutes	%i m %s s
+admin_system_events	duration_seconds	%s s
+admin_system_events	section_date_format	%h %e, %Y
+admin_system_events	priority_1	High
+admin_system_events	priority_2	Medium
+admin_system_events	priority_3	Low
+admin_system_events	not_ended_yet	Not ended yet
+admin_system_events	not_started_yet	Not started yet
+admin_system_events	events	Events
+admin_system_events	add_notification	Add notification
+admin_system_events	emails	Emails
+admin_system_events	listen	Level
+admin_system_events	edit	Edit
+admin_system_events	delete	Delete
+admin_system_events	delete_confirm	You are about to delete permanently this notification. Please confirm your action.
+admin_system_events	delete_notif_label	Delete notification
+admin_system_events	edit_notif_label	Edit the notification
+admin_system_events	save_notif_label	Save changes
+admin_system_events	notifs_empty	There isn't any notifications.
+admin_system_events	notified_label	People to be notified
+admin_system_events	status_to_listen	Event status to listen
+admin_system_events	emails_instructions	Type logins, emails or mailing lists. Multiple values separated by coma.
+
+admin_system_events	save_success	Notification successfully saved
+admin_system_events	save_error	Error while saving the notification
+admin_system_events	delete_success	Notification successfully deleted
+admin_system_events	delete_error	Error while deleting the notification
+admin_system_events	at_least_one_status	People must listen to at least one status
+admin_system_events	people_not_empty	People to be notified cannot be empty
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
@@ -747,3 +846,5 @@ admin_projectlist	private	Private
 admin_projectlist	public_unrestricted	Public Unrestricted
 admin_projectlist	public	Public
 admin_projectlist	pending_projects_text	For your information, there are <a href="$1">$2 projects waiting for validation</a>.
+
+admin	allowed_projects_filter_empty	There isn't any projects matching your filter.

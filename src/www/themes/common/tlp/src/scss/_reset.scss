@@ -68,3 +68,12 @@ q:before, q:after {
 blockquote, q {
   quotes: "" "";
 }
+
+input[type=number] {
+  -moz-appearance: textfield;
+
+  &:hover,
+  &:focus {
+    -moz-appearance: number-input;
+  }
+}

@@ -83,6 +83,8 @@ class ThemeManager
                 '`(
                     ^/admin/
                     |
+                    ^/admin/news.php
+                    |
                     ^/stats/
                     |
                     ^/tracker/admin/restore.php
@@ -92,17 +94,7 @@ class ThemeManager
                 '`(
                     ^/admin/register_admin.php
                     |
-                    ^/admin/trove
-                    |
-                    ^/admin/descfields/desc_fields_edit.php
-                    |
-                    ^/admin/massmail.php
-                    |
                     ^/stats
-                    |
-                    ^/admin/lastlogins.php
-                    |
-                    ^/admin/system_events
                 )`x',
                 $_SERVER['REQUEST_URI']
             );

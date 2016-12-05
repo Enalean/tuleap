@@ -43,6 +43,7 @@ class ProjectHistoryPresenter
     public $user_label;
     public $search;
     public $is_active;
+    public $members_label;
 
     public function __construct(
         Project $project,
@@ -59,16 +60,17 @@ class ProjectHistoryPresenter
         $this->information_label = $GLOBALS['Language']->getText('admin_project', 'information_label');
         $this->history_label     = $GLOBALS['Language']->getText('admin_project', 'history_label');
         $this->pending_label     = $GLOBALS['Language']->getText('admin_project', 'pending_label');
-        $this->filter_label      = $GLOBALS['Language']->getText('admin_project', 'filter_label');
-        $this->search_label      = $GLOBALS['Language']->getText('admin_project', 'search_label');
+        $this->filter_label      = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->search_label      = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->change_label      = $GLOBALS['Language']->getText('admin_project', 'change_label');
         $this->empty_state       = $GLOBALS['Language']->getText('admin_project', 'history_empty_state');
         $this->empty_results     = $GLOBALS['Language']->getText('admin_project', 'history_empty_results');
 
-        $this->event_label = $GLOBALS['Language']->getText('project_admin_utils', 'event');
-        $this->value_label = $GLOBALS['Language']->getText('project_admin_utils', 'val');
-        $this->date_label  = $GLOBALS['Language']->getText('project_admin_utils', 'date');
-        $this->user_label  = $GLOBALS['Language']->getText('global', 'by');
+        $this->event_label   = $GLOBALS['Language']->getText('project_admin_utils', 'event');
+        $this->value_label   = $GLOBALS['Language']->getText('project_admin_utils', 'val');
+        $this->date_label    = $GLOBALS['Language']->getText('project_admin_utils', 'date');
+        $this->user_label    = $GLOBALS['Language']->getText('global', 'by');
+        $this->members_label = $GLOBALS['Language']->getText('admin_project', 'members_label');
 
         $this->history = $results->history;
 

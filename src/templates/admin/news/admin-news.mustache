@@ -1,0 +1,63 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
+
+    <nav class="tlp-tabs">
+        <a class="tlp-tab {{# waiting_publication_active }}tlp-tab-active{{/ waiting_publication_active }}" href="/admin/news/?pane=waiting_publication">{{ waiting_publication_tab_name }}</a>
+        <a class="tlp-tab {{# rejected_news_active }}tlp-tab-active{{/ rejected_news_active }}" href="/admin/news/?pane=rejected_news">{{ rejected_news_tab_name }}</a>
+        <a class="tlp-tab {{# published_news_active }}tlp-tab-active{{/ published_news_active }}" href="/admin/news/?pane=published_news">{{ published_news_tab_name }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-newspaper-o tlp-pane-title-icon"></i> {{ pane_name }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                        <tr>
+
+                            <th class="siteadmin-news-table-title">{{ table_title_name }}</th>
+                            <th class="siteadmin-news-table-title">{{ table_content_name }}</th>
+                            {{# waiting_publication_active }}
+                                <th class="siteadmin-news-table-title tlp-tooltip tlp-tooltip-bottom" data-tlp-tooltip="{{ requested_tooltip }}">{{ requested_name }}</th>
+                            {{/ waiting_publication_active }}
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{# news_list }}
+                            <tr>
+                                <td class="siteadmin-news-table-body">{{ title }}</td>
+                                <td class="siteadmin-news-table-body siteadmin-news-table-body-content">
+                                    {{ content }}
+                                </td>
+                                {{# waiting_publication_active }}
+                                    <td class="siteadmin-news-table-body-center">
+                                        {{# is_requested }}<i class="fa fa-check"></i>{{/ is_requested }}
+                                    </td>
+                                {{/ waiting_publication_active }}
+                                <td class="tlp-table-cell-actions">
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                       href="/admin/news/?publish=1&id={{ id }}&current_tab={{ current_tab }}">
+                                       <i class="fa {{# is_table_button_review }}fa-newspaper-o{{/ is_table_button_review}}{{^ is_table_button_review }}fa-list{{/ is_table_button_review }} tlp-button-icon"></i> {{ table_button_name }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {{/ news_list }}
+                        {{^ news_list }}
+                            <tr>
+                                <td colspan="{{# waiting_publication_active }}4{{/ waiting_publication_active }}{{^ waiting_publication_active }}3{{/ waiting_publication_active }}"
+                                   class="tlp-table-cell-empty">
+                                    {{ no_news }}
+                                </td>
+                            </tr>
+                        {{/ news_list }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

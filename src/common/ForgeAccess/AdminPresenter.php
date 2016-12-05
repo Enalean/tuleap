@@ -97,7 +97,7 @@ class ForgeAccess_AdminPresenter {
         $project_admin_can_choose
     ) {
         $this->title                    = $title;
-        $this->csrf_token               = $csrf->fetchHTMLInput();
+        $this->csrf_token               = $csrf;
         $this->localinc_path            = $localinc_path;
         $this->current_access_mode      = $current_access_mode;
         $this->nb_restricted_users      = $nb_restricted_users;

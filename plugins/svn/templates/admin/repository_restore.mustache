@@ -19,7 +19,7 @@
                             <td>{{ getDeletionDateHumanReadable }}</td>
                             <td class="tlp-table-cell-actions">
                                 <a href="/plugins/svn/?action=restore&group_id={{ project_id }}&repo_id={{ getId }}"
-                                    class="tlp-button-small tlp-button-outline tlp-button-primary"
+                                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-outline tlp-button-primary"
                                     onClick="return confirm('{{ restore_confirm }} {{ getName }}.')"
                                 >
                                     <i class="fa fa-repeat tlp-button-icon"></i> Restore

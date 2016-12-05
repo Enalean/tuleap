@@ -1,6 +1,9 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +20,10 @@
  */
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_Formatter_Cvs.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_Formatter_Svn.class.php';
-require_once('www/project/export/project_export_utils.php');
+require_once dirname(__FILE__) . '/../include/Statistics_Formatter.class.php';
+require_once dirname(__FILE__) . '/../include/Statistics_Formatter_Cvs.class.php';
+require_once dirname(__FILE__) . '/../include/Statistics_Formatter_Svn.class.php';
+require_once 'www/project/export/project_export_utils.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -35,86 +38,51 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 
 $request = HTTPRequest::instance();
 
-$error = false;
-
-$vStartDate = new Valid('start');
+$vStartDate = new Valid('scm_statistics_start_date');
 $vStartDate->addRule(new Rule_Date());
 $vStartDate->required();
-$startDate = $request->get('start');
+$startDate = $request->get('scm_statistics_start_date');
 if ($request->valid($vStartDate)) {
-    $startDate = $request->get('start');
+    $startDate = $request->get('scm_statistics_start_date');
 } else {
     $startDate = date('Y-m-d', strtotime('-1 year'));
 }
 
-$vEndDate = new Valid('end');
+$vEndDate = new Valid('scm_statistics_end_date');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
-$endDate = $request->get('end');
+$endDate = $request->get('scm_statistics_end_date');
 if ($request->valid($vEndDate)) {
-    $endDate = $request->get('end');
+    $endDate = $request->get('scm_statistics_end_date');
 } else {
     $endDate = date('Y-m-d');
 }
 
-if ($startDate >= $endDate) {
-    $error = true;
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
+if ($startDate > $endDate) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+    );
+    $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
 }
 
-$groupId  = null;
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if ($request->valid($vGroupId)) {
-    $groupId = $request->get('group_id');
+$project_id  = null;
+if ($request->exist('scm_statistics_project_select')) {
+    $project_name    = $request->get('scm_statistics_project_select');
+    $project_manager = ProjectManager::instance();
+    $project         = $project_manager->getProjectFromAutocompleter($project_name);
+    $project_id      = $project->getId();
 }
 
-if (!$error && $request->exist('export')) {
+if ($request->exist('export')) {
     header('Content-Type: text/csv');
-    header('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
-    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
+    header('Content-Disposition: filename=scm_stats_' . $startDate . '_' . $endDate . '.csv');
+    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $project_id);
     echo $statsSvn->getStats();
-    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
+    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $project_id);
     echo $statsCvs->getStats();
-    $em = EventManager::instance();
-    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, get_csv_separator(), $groupId);
+    $em                  = EventManager::instance();
+    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, get_csv_separator(), $project_id);
     $em->processEvent('statistics_collector', $params);
     exit;
-} else {
-    $title = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
-    $GLOBALS['HTML']->includeCalendarScripts();
-    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
-    echo '<h1>'.$title.'</h1>';
-
-    echo '<form name="form_scm_stats" method="get">';
-    echo '<table>';
-    echo '<tr>';
-    echo '<td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'start_date').'</b>';
-    echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'end_date').'</b>';
-    echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id').' <font color="red">*</font></b>';
-    echo '</td>';
-    echo '</tr><tr>';
-    echo '<td>';
-    list($timestamp,) = util_date_to_unixtime($startDate);
-    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false);
-    echo '</td><td>';
-    list($timestamp,) = util_date_to_unixtime($endDate);
-    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false);
-    echo '</td><td>';
-    echo '<input id="scm_stats_group_id" name="group_id" >';
-    echo '</td><td></tr><tr><td>';
-    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button').'" >';
-    echo '</td>';
-    echo '</tr><tr><td colspan="3">';
-    echo '<font color="red"><b>*</b></font> <font size="-2">'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id_info').'</font>';
-    echo '</td></tr>';
-    echo '</table>';
-    echo '</form>';
-
-    $GLOBALS['HTML']->footer(array());
 }
-
-?>

@@ -1,65 +1,40 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
+/**
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+use Tuleap\Trove\TroveCatHierarchyRetriever;
+use Tuleap\Trove\TroveCatListController;
+use Tuleap\Trove\TroveCatRouter;
+use Tuleap\Admin\AdminPageRenderer;
 
 require_once('pre.php');
-require_once('trove.php');
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/trovecat.js');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+session_require(array('group' => '1', 'admin_flags' => 'A'));
 
-// #######################################################
+$trove_dao = new TroveCatDao();
 
-function printnode($nodeid, $text, $depth = 0, $delete_ok = false) {
-    global $Language;
-    $purifier = Codendi_HTMLPurifier::instance();
-
-    echo '<tr>';
-    echo '<td class="siteadmin-trovecat-list-category">';
-    for ($i = 0; $i < $depth; $i++) {
-        print "&nbsp; &nbsp; ";
-    }
-    echo '<i class="fa fa-folder-o"></i> '. $purifier->purify($text);
-    echo '</td>';
-    echo '<td class="siteadmin-trovecat-list-actions">';
-    if ($nodeid != 0) {
-        echo '<a href="trove_cat_edit.php?trove_cat_id=' . $nodeid . '" class="tlp-button-primary tlp-button-outline tlp-button-mini">';
-        echo '<i class="fa fa-edit"></i> '. $Language->getText('admin_trove_cat_list', 'edit') . '</a> ';
-    }
-    if ($delete_ok) {
-        echo '<a href="trove_cat_delete.php?trove_cat_id=' . $nodeid . '" class="tlp-button-danger tlp-button-outline tlp-button-mini">';
-        echo '<i class="fa fa-remove"></i> '. $Language->getText('admin_trove_cat_list', 'delete') . '</a> ';
-    }
-    echo '</td>';
-    echo '</tr>';
-
-    $res_child = db_query("SELECT trove_cat_id,fullname,parent FROM trove_cat "
-            . "WHERE parent='" . db_ei($nodeid) . "' ORDER BY fullpath");
-    while ($row_child = db_fetch_array($res_child)) {
-        $delete_ok = ($row_child["parent"] != 0);
-        printnode($row_child["trove_cat_id"], $row_child["fullname"], $depth+1, $delete_ok);
-    }
-}
-
-// ########################################################
-
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title'), 'main_classes' => array('tlp-framed', 'tlp-centered')));
-
-echo "<h1>".$Language->getText('admin_trove_cat_list','header')."</h1>";
-
-echo '<p><a href="/admin/trove/trove_cat_add.php" class="tlp-button-primary">';
-echo '<i class="fa fa-plus"></i> '. $GLOBALS['Language']->getText('admin_trove_cat_list', 'add') .'</a>';
-echo '</p>';
-
-echo '<table class="tlp-table">';
-echo '<thead><tr><th>Category</th><th></th></thead>';
-echo '<tbody>';
-printnode(0, $Language->getText('admin_trove_cat_edit','root'));
-echo '</tbody>';
-echo '</table>';
-
-$HTML->footer(array());
+$trove_cat_router = new TroveCatRouter(
+    new TroveCatHierarchyRetriever($trove_dao),
+    new AdminPageRenderer(),
+    new TroveCatListController($trove_dao, new TroveCatFactory($trove_dao), new TroveCatHierarchyRetriever($trove_dao))
+);
+$trove_cat_router->route(HTTPRequest::instance());

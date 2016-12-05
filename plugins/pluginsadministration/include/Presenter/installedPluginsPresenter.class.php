@@ -137,4 +137,9 @@ class PluginsAdministration_Presenter_InstalledPluginsPresenter {
     {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
     }
+
+    public function filter_empty_state()
+    {
+        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_empty_state');
+    }
 }

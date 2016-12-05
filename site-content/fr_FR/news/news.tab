@@ -18,8 +18,9 @@ news_admin_index	if_edit_delete	Si cette annonce figure sur la page d'accueil de
 news_admin_index	no_queued_item_found_for	Aucune annonce en attente pour le projet&nbsp;: $1
 news_admin_index	new_items	Annonce(s) soumise(s) par le projet&nbsp;: $1
 news_admin_index	update_err	ERREUR lors de la mise à jour
-news_admin_index	newsbyte_updated	Annonce mise à jour.
-news_admin_index	newsbyte_deleted	Annonce enlevée de la file d'attente.
+news_admin_index	news_list_updated	Annonces mises à jour.
+news_admin_index	news_updated	Annonce mise à jour.
+news_admin_index	news_rejected	Annonce rejetée.
 news_admin_index	approve	Approuver une annonce
 news_admin_index	submitted_for_group	Soumise par le projet
 news_admin_index	approve_for_front	Approuver pour la page d'accueil
@@ -29,9 +30,8 @@ news_admin_index	delete	Supprimée
 news_admin_index	reject	Rejeter (ne sera plus en attente d'approbation)
 news_admin_index	no_queued_item_found	Aucune annonce en attente d'approbation
 news_admin_index	need_approve	Ces annonces sont en attente d'approbation
-news_admin_index	approve_all	[Approuver toutes les nouvelles annonces en demande de promotion]
 news_admin_index	approved	[Approuvée]
-news_admin_index	approve_legend	Les nouvelles suivies d'un icône ont sollicité une promotion en première page de $1.
+news_admin_index	approve_legend	Les annonces suivies d'un icône ont sollicité une promotion en première page de $1.
 news_admin_index	approve_alt	Promotion en première page de $1 demandée pour cette nouvelle
 news_admin_index	no_deleted_items_this_week	Aucune annonce rejetée cette semaine
 news_admin_index	items_deleted_last_week	Annonces rejetées la semaine passée
@@ -40,12 +40,41 @@ news_admin_index	items_approved_last_week	Annonces approuvées la semaine passé
 news_admin_index	permission_denied	Permission refusée
 news_admin_index	need_to_be_admin	Permission refusée. Vous devez être administrateur du service Annonce.
 news_admin_index	news_admin	Administration des annonces
-news_admin_index	news_row_label	Nouvelles
-news_admin_index	choose_display	Choisir quelles nouvelles afficher sur le widget
+news_admin_index	news_row_label	Annonces
+news_admin_index	choose_display	Choisir quelles annonces afficher sur le widget
 news_admin_index	promoted_row_label	Affichées
-news_admin_index	update_news_list	Afficher les nouvelles sélectionnées dans le widget
-news_admin_index	info_text	Seulement les dix premières nouvelles seront affichées
-news_admin_index	no_news_items	Veuillez ajouter des nouvelles pour pouvoir choisir lesquelles seront affichées
+news_admin_index	update_news_list	Afficher les annonces sélectionnées dans le widget
+news_admin_index	info_text	Seulement les dix premières annonces seront affichées
+news_admin_index	no_news_items	Veuillez ajouter des annonces pour pouvoir choisir lesquelles seront affichées
+news_admin_index	waiting_publication_tab_name	Annonces en attente de publication
+news_admin_index	rejected_news_tab_name	Annonces rejetées
+news_admin_index	published_news_tab_name	Annonces publiées
+news_admin_index	waiting_publication_pane_name	Annonces en attente de publication sur la page d'accueil
+news_admin_index	rejected_news_pane_name	Annonces rejetées de la page d'accueil la semaine dernière
+news_admin_index	published_news_pane_name	Annonces publiées sur la page d'accueil la semaine dernière
+news_admin_index	requested_name	Demandée ?
+news_admin_index	requested_tooltip	Demandée à être publiée sur la page d'accueil
+news_admin_index	table_title_name	Titre
+news_admin_index	table_content_name	Contenu
+news_admin_index	table_details_name	Détails
+news_admin_index	table_review_name	Revoir
+news_admin_index	no_news	Il n'y a aucune annonce
+news_admin_index	waiting_publication_no_news	Il n'y a aucune annonce en attente de publication
+news_admin_index	published_news_no_news	Aucune annonce n'a été publiée la semaine dernière
+news_admin_index	rejected_news_no_news	Aucune annonce n'a été rejetée la semaine dernière
+news_admin_index	title_label	Titre
+news_admin_index	content_label	Contenu
+news_admin_index	submitted_for_group_label	Soumise pour le Projet
+news_admin_index	submitted_by_label	Soumise par
+news_admin_index	submitted_on_label	Soumise le
+news_admin_index	pane_news_title	Annonces
+news_admin_index	pane_information_title	Information
+news_admin_index	publish_button	Publier sur la page d'accueil
+news_admin_index	reject_button	Rejeter de la file d'attente
+news_admin_index	reject_button_from_published	Rejeter de la page d'accueil
+news_admin_index	missing_title	Le titre est obligatoire
+news_admin_index	news_already_published	Cette annonce est déjà publiée
+news_admin_index	news_already_rejected	Cette annonce est déjà rejetée
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

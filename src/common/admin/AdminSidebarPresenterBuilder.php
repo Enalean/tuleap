@@ -20,13 +20,12 @@
 
 namespace Tuleap\Admin;
 
+use Tuleap\News\Admin\AdminNewsDao;
+use Tuleap\News\Admin\NewsRetriever;
 use UserManager;
 use PFUser;
 use ProjectManager;
 use Project;
-use TrackerV3;
-use ForgeConfig;
-use SVN_Apache_SvnrootConf;
 use EventManager;
 use Event;
 
@@ -41,11 +40,15 @@ class AdminSidebarPresenterBuilder
     /** @var EventManager */
     private $event_manager;
 
+    /** @var NewsRetriever */
+    private $news_manager;
+
     public function __construct()
     {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
         $this->event_manager   = EventManager::instance();
+        $this->news_manager    = new NewsRetriever(new AdminNewsDao());
     }
 
     public function build()
@@ -57,6 +60,7 @@ class AdminSidebarPresenterBuilder
             $this->validatedUsersCount(),
             $this->allProjectsCount(),
             $this->pendingProjectsCount(),
+            $this->pendingNewsCount(),
             $this->areTroveCategoriesEnabled(),
             $this->getAdditionalTrackerEntries(),
             $this->getTuleapVersion(),
@@ -120,6 +124,11 @@ class AdminSidebarPresenterBuilder
     private function pendingProjectsCount()
     {
         return $this->project_manager->countProjectsByStatus(Project::STATUS_PENDING);
+    }
+
+    private function pendingNewsCount()
+    {
+        return $this->news_manager->countPendingNews();
     }
 
     private function getAdditionalTrackerEntries()

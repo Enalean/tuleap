@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 
@@ -174,200 +187,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 	}
 	news_footer(array());
 
-} else if (user_ismember($GLOBALS['sys_news_group'],'A')) {
-	/*
-
-		News uber-user admin pages
-		Show all waiting news items except those already rejected.
-		Admin members of project #$sys_news_group (news project)
-                can edit/change/approve news items
-
-	*/
-	if ($request->get('post_changes') && $request->get('approve')) {
-        $validStatus = new Valid_WhiteList('status', array(0, 1, 2));
-        if ($request->valid($validStatus)) {
-            $status = $request->get('status');
-        } else {
-            $status = 0;
-        }
-        $validSummary = new Valid_String('summary');
-        $validSummary->setErrorMessage('Summary is required');
-        $validSummary->required();
-        
-        $validDetails = new Valid_Text('details');
-        
-        if ($request->valid($validSummary) && $request->valid($validDetails)) {
-			if ($status==1) {
-				/*
-					Update the db so the item shows on the home page
-				*/
-				$sql="UPDATE news_bytes SET is_approved='1', date='".time()."', ".
-					"summary='".db_es(htmlspecialchars($request->get('summary')))."', details='".db_es(htmlspecialchars($request->get('details')))."' WHERE id=". db_ei($id);
-				$result=db_query($sql);
-				if (!$result || db_affected_rows($result) < 1) {
-					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
-				} else {
-					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_updated'));
-				}
-			} else if ($status==2) {
-				/*
-					Move msg to deleted status
-				*/
-				$sql="UPDATE news_bytes SET is_approved='2' WHERE id=". db_ei($id);
-				$result=db_query($sql);
-				if (!$result || db_affected_rows($result) < 1) {
-					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err').' '.db_error());
-				} else {
-					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_deleted'));
-				}
-			}
-            $GLOBALS['Response']->redirect('/news/admin');
-        }
-	}
-
-	news_header(array('title'=>$Language->getText('news_admin_index','title')));
-
-	if ($request->get('approve')) {
-		/*
-			Show the submit form
-		*/
-
-		$sql="SELECT groups.unix_group_name,news_bytes.* ".
-			"FROM news_bytes,groups WHERE id=". db_ei($id) ." ".
-			"AND news_bytes.group_id=groups.group_id ";
-		$result=db_query($sql);
-		if (db_numrows($result) < 1) {
-			exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','not_found_err'));
-		}
-
-        $username=user_getname(db_result($result,0,'submitted_by'));
-        $news_date = util_timestamp_to_userdateformat(db_result($result,0,'date'), true);
-
-		echo '
-		<H3>'.$Language->getText('news_admin_index','approve').'</H3>
-		<P>
-		<FORM ACTION="" METHOD="POST">
-		<INPUT TYPE="HIDDEN" NAME="for_group" VALUE="'.db_result($result,0,'group_id').'">
-		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
-		<B>'.$Language->getText('news_admin_index','submitted_for_group').':</B> <a href="/projects/'.strtolower(db_result($result,0,'unix_group_name')).'/">'.$pm->getProject(db_result($result,0,'group_id'))->getPublicName().'</a><BR>
-		<B>'.$Language->getText('news_admin_index','submitted_by').':</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
-        <B>'.$Language->getText('news_admin_index','submitted_on').':</B> '.$news_date.'<BR>        
-		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
-		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-		<INPUT TYPE="RADIO" NAME="status" VALUE="1"> '.$Language->getText('news_admin_index','approve_for_front').'<BR>
-		<INPUT TYPE="RADIO" NAME="status" VALUE="0"> '.$Language->getText('news_admin_index','do_nothing').'<BR>
-		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> '.$Language->getText('news_admin_index','reject').'<BR>
-		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'"><BR>
-		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
-		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><BR>
-		<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
-		</FORM>';
-
-	} else {
-		/*
-			Show list of waiting news items
-		*/
-
-		if ($request->get('approve_all')) {
-		    $sql="UPDATE news_bytes SET is_approved='1' WHERE is_approved='3'";
-		    $res=db_query($sql);
-		    if (!$res) {
-		        $feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
-		    } else {
-		        $feedback .= ' '.$Language->getText('news_admin_index','newsbyte_updated').' ';
-		    }
-		}
-				
-		$sql="SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
-		$result=db_query($sql);
-		$rows=db_numrows($result);
-		if ($rows < 1) {
-			echo '
-				<H4>'.$Language->getText('news_admin_index','no_queued_item_found').'</H4>';
-		} else {
-			echo '
-				<H4>'.$Language->getText('news_admin_index','need_approve').'</H4>
-				<P><ul><li><strong>'.$Language->getText('news_admin_index','approve_legend',$GLOBALS['sys_name']).'
-				</strong></ul><P>';
-				
-			for ($i=0; $i<$rows; $i++) {
-			    //if the news is private, not display it in the list of news to be approved
-			    $forum_id=db_result($result,$i,'forum_id');
-                $res = news_read_permissions($forum_id);
-			    // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
-			    // with ST DB state
-			    if ((db_numrows($res) < 1) || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
-			        $is_approved=db_result($result,$i,'is_approved');
-				    if ($is_approved == '3') {
-				        //the submitter of this news asked to promote it ==>  display an icon
-				        echo '
-				            <IMG SRC="'.util_get_image_theme("ic/p_news.png").'" alt="'.$Language->getText('news_admin_index','approve_alt',$GLOBALS['sys_name']).'" title="'.$Language->getText('news_admin_index','approve_alt',$GLOBALS['sys_name']).'" /> <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
-				    } else {
-				        echo '
-				            <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
-			        }
-			    }
-			}
-		}
-
-		//Display [Approve All] hyper-link when there are news asked for promotion
-		$sql="SELECT * FROM news_bytes WHERE is_approved=3";
-		$res=db_query($sql);
-		if (db_numrows($res) > 0) {
-		    echo '<P>
-			 <A HREF="/news/admin/?approve_all=1">'.$Language->getText('news_admin_index','approve_all').'</A>';   
-		} else {
-		    echo '<P>'.$Language->getText('news_admin_index','approved');   
-		}
-
-		/*
-			Show list of deleted news items for this week
-		*/
-		$old_date=(time()-(86400*7));
-
-		$sql="SELECT * FROM news_bytes WHERE is_approved=2 AND date > '$old_date'";
-		$result=db_query($sql);
-		$rows=db_numrows($result);
-		if ($rows < 1) {
-			echo '
-				<H4>'.$Language->getText('news_admin_index','no_deleted_items_this_week').'</H4>';
-		} else {
-			echo '
-				<H4>'.$Language->getText('news_admin_index','items_deleted_last_week').'</H4>
-				<P>';
-			for ($i=0; $i<$rows; $i++) {
-				echo '
-				<A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
-			}
-		}
-
-		/*
-			Show list of approved news items for this week
-		*/
-
-		$sql="SELECT * FROM news_bytes WHERE is_approved=1 AND date > '$old_date'";
-		$result=db_query($sql);
-		$rows=db_numrows($result);
-		if ($rows < 1) {
-			echo '
-				<H4>'.$Language->getText('news_admin_index','no_approved_items_this_week').'</H4>';
-		} else {
-			echo '
-				<H4>'.$Language->getText('news_admin_index','items_approved_last_week').'</H4>
-				<P>';
-			for ($i=0; $i<$rows; $i++) {
-				echo '
-				<A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
-			}
-		}
-
-	}
-	news_footer(array());
-
 } else {
-
   exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_admin_index','need_to_be_admin'));
-
 }
 ?>

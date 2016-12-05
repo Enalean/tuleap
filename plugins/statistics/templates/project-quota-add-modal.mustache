@@ -1,0 +1,69 @@
+<form action=""
+      method="POST"
+      id="modal-add-quota"
+      class="tlp-modal"
+      role="dialog"
+      aria-labelledby="modal-add-quota-label"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-add-quota-label">
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_quota_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element siteadmin-statistics-project-quota-add-project">
+            <label class="tlp-label" for="new-project">{{ project_label }} <i class="fa fa-asterisk"></i></label>
+            <select class="tlp-select project-autocompleter"
+                    id="new-project"
+                    name="project"
+                    style="width: 100%"
+                    required
+                    data-placeholder="{{ project_placeholder }}"></select>
+        </div>
+        <div class="tlp-form-element siteadmin-statistics-project-quota-add-requester">
+            <label class="tlp-label" for="new-requester">{{ requester_label }}</label>
+            <select class="tlp-select user-autocompleter"
+                    id="new-requester"
+                    name="requester"
+                    style="width: 100%"
+                    data-placeholder="john"></select>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="new-quota">{{ quota_label }} <i class="fa fa-asterisk"></i></label>
+            <div class="tlp-form-element tlp-form-element-append">
+                <input type="number"
+                       required
+                       class="tlp-input"
+                       id="new-quota"
+                       name="quota"
+                       placeholder="{{ default_quota }}"
+                       size="5">
+                <span class="tlp-append">{{ quota_unit }}</span>
+            </div>
+            <p class="tlp-text-info">{{ max_quota_label }}</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="new-motivation">{{ motivation_label }}</label>
+            <textarea class="tlp-textarea"
+                      id="new-motivation"
+                      name="motivation"
+                      placeholder="{{ motivation_placeholder }}"
+                      rows="7"
+            ></textarea>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel_label }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action" name="action" value="add">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_quota_label }}
+        </button>
+    </div>
+</form>

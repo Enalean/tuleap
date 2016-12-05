@@ -3,6 +3,7 @@
 
     <nav class="tlp-tabs">
         <a href="/admin/groupedit.php?group_id={{ id }}" class="tlp-tab tlp-tab-active">{{ information_label }}</a>
+        <a href="/admin/userlist.php?group_id={{ id }}" class="tlp-tab">{{ members_label }}</a>
         <a href="/admin/projecthistory.php?group_id={{ id }}" class="tlp-tab">{{ history_label }}</a>
         {{# is_active }}
             <a href="/admin/show_pending_documents.php?group_id={{ id }}" class="tlp-tab">{{ pending_label }}</a>
@@ -97,7 +98,7 @@
                         </section>
                     {{/ has_custom_fields }}
 
-                    <section class="tlp-pane-section" id="siteadmin-project-save">
+                    <section class="tlp-pane-section tlp-pane-section-submit">
                         <button type="submit" class="tlp-button-primary" name="update">
                             <i class="fa fa-save tlp-button-icon"></i> {{ save_label }}
                         </button>
@@ -115,7 +116,6 @@
                     <section class="tlp-pane-section">
                         <ul>
                             <li><a href="/project/admin/?group_id={{ id }}">{{ admin_label }}</a></li>
-                            <li><a href="/admin/userlist.php?group_id={{ id }}">{{ members_label }}</a></li>
                             {{# links }}
                                 <li><a href="{{ href }}">{{ label }}</a></li>
                             {{/ links }}

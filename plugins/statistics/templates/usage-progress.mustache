@@ -1,0 +1,23 @@
+{{# usage_progress_presenter }}
+<form action="usage_stat.php" method="GET" class="tlp-pane-section">
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="data-export-content" value="siteadmin-export-data-services-usage"> {{ services_usage_label }}
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="data-export-content" value="siteadmin-export-data-scm-statistics"> {{ scm_statistics_label }}
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input type="radio" name="data-export-content" value="siteadmin-export-data-usage-progress" checked /> {{ usage_progress_label }}
+    </label>
+    <div class="siteadmin-export-data-content-border">
+        <div class="siteadmin-export-data-content">
+            <p>{{ usage_progress_help }}</p>
+        </div>
+    </div>
+    <div class="tlp-pane-section-submit">
+        <button type="submit" class="tlp-button-primary" name="export">
+            <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
+        </button>
+    </div>
+</form>
+{{/ usage_progress_presenter }}

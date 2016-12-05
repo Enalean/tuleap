@@ -34,32 +34,10 @@
     }
 
     function bindFilterEvent() {
-        $('#projects-allowed-form').on('keyup', '#filter-projects', function(event) {
-            if (event.keyCode == ESC_KEYCODE) {
-                $(this).val('');
-            }
-
-            search =  $(this).val();
-            table  = document.getElementById("allowed-projects-list");
-            tr     = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                var tds = tr[i].getElementsByTagName("td");
-
-                for (j = 0; j < tds.length; j++) {
-                    var tr_display = "";
-
-                    if (tds[j].classList.contains('resource-restrictor-cell-project-id') || tds[j].classList.contains('resource-restrictor-cell-project-name')) {
-                        if (tds[j].textContent.toUpperCase().indexOf(search.toUpperCase()) === -1) {
-                            tr_display = "none";
-                        } else {
-                            break;
-                        }
-                    }
-                }
-                tr[i].style.display = tr_display;
-            }
-        });
+        var filter = document.getElementById('filter-projects');
+        if (filter) {
+            tlp.filterInlineTable(filter);
+        }
     }
 
     function bindCheckboxesEvent() {

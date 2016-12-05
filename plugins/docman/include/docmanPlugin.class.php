@@ -672,7 +672,7 @@ class DocmanPlugin extends Plugin {
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
                 '<td class="tlp-table-cell-actions">
                         <a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'"
-                            class="tlp-button-small tlp-button-outline tlp-button-primary"
+                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-outline tlp-button-primary"
                             onClick="return confirm(\'Confirm restore of this version\')"
                         >
                             <i class="fa fa-repeat tlp-button-icon"></i> Restore
@@ -751,7 +751,7 @@ class DocmanPlugin extends Plugin {
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
                 '<td class="tlp-table-cell-actions">
                         <a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'"
-                            class="tlp-button-small tlp-button-outline tlp-button-primary"
+                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-outline tlp-button-primary"
                             onClick="return confirm(\'Confirm restore of this item\')"
                         >
                             <i class="fa fa-repeat tlp-button-icon"></i> Restore

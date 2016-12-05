@@ -19,6 +19,8 @@
         <div class="tlp-form-element {{# there_is_no_project }}tlp-form-element-disabled{{/ there_is_no_project }}">
             <input type="search"
                 id="filter-projects"
+                data-target-table-id="allowed-projects-list"
+                autocomplete="off"
                 class="tlp-search"
                 size="28"
                 placeholder="{{ resource_allowed_project_list_filter_placeholder }}"
@@ -44,13 +46,20 @@
             </tr>
             {{/ there_is_no_project }}
             {{^ there_is_no_project }}
+                <tr class="tlp-table-empty-filter">
+                    <td colspan="3" class="tlp-table-cell-empty">{{ resource_allowed_project_filter_empty }}</td>
+                </tr>
                 {{# allowed_projects }}
                 <tr>
                     <td>
                         <input type="checkbox" name="project-ids-to-revoke[]" value="{{ getId }}">
                     </td>
-                    <td class="resource-restrictor-cell-project-id tlp-table-cell-numeric">{{ getId }}</td>
-                    <td class="resource-restrictor-cell-project-name"><a href="/projects/{{ getUnixNameMixedCase }}">{{ getUnconvertedPublicName }}</a></td>
+                    <td class="tlp-table-cell-numeric tlp-table-cell-filterable">
+                        {{ getId }}
+                    </td>
+                    <td class="resource-restrictor-cell-project-name tlp-table-cell-filterable">
+                        <a href="/projects/{{ getUnixNameMixedCase }}">{{ getUnconvertedPublicName }}</a>
+                    </td>
                 </tr>
                 {{/ allowed_projects }}
             {{/ there_is_no_project }}

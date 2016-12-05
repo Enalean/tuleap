@@ -1,0 +1,26 @@
+<form action="" method="POST">
+    <div id="delete-description-field-modal-{{ id }}"
+        class="tlp-modal tlp-modal-danger"
+        role="dialog"
+        aria-labelledby="delete-description-field-modal-label-{{ id }}"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="delete-description-field-modal-label-{{ id }}">
+                <i class="fa fa-trash-o tlp-modal-title-icon"></i > {{ delete_modal_title }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="delete_group_desc_id" value="{{ id }}">
+            {{ delete_modal_content }}
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ delete_modal_cancel }}</button>
+            <button type="submit" class="tlp-button-danger tlp-modal-action">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_modal_submit }}
+            </button>
+        </div>
+    </div>
+</form>

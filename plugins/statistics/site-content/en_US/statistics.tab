@@ -6,9 +6,7 @@ plugin_statistics_show_service	service_growth	Service growth over the time
 
 plugin_statistics_show_one_project	usage_per_project	Usage per project
 
-plugin_statistics_show_top_user	top_users	Top Users
-
-plugin_statistics_show_one_user	user_growth	User growth over the time
+plugin_statistics_show_one_user	user_growth	User consumption over time
 plugin_statistics_show_one_user	user_detail	User details
 
 widget_categ_label	plugin_statistics	Project statistics
@@ -23,9 +21,44 @@ plugin_statistics_admin_page	show_statistics	Disk usage
 plugin_statistics_admin_page	disk_usage_period_months	Disk usage for the $1 last months
 plugin_statistics_admin_page	disk_usage_period_year	Disk usage for the last year
 plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
-plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota. 
+plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota.
 plugin_statistics_admin_page	year	View statistics for the last $1 months
 plugin_statistics_admin_page	months	View statistics for the last year
+plugin_statistics_admin_page	disk_usage_services_menu_span_label	Services/Projects
+plugin_statistics_admin_page	disk_usage_services_menu_label	Usage per service
+plugin_statistics_admin_page	disk_usage_projects_menu_label	Usage per project
+plugin_statistics_admin_page	disk_usage_users_menu_span_label	Users
+plugin_statistics_admin_page	disk_usage_users_top_users_menu_label	Top 10 users
+plugin_statistics_admin_page	disk_usage_users_user_details_label	One user details
+plugin_statistics_admin_page	disk_usage_global_menu_span_label	Global
+plugin_statistics_admin_page	disk_usage_global_menu_label	Global usage
+plugin_statistics_admin_page	data_services_pane_title	Usage per service
+plugin_statistics_admin_page	data_projects_pane_title	Usage per project
+plugin_statistics_admin_page	data_global_pane_title	Usage global on $1
+plugin_statistics_admin_page	data_services_no_data	There is no matching services data
+plugin_statistics_admin_page	data_projects_no_data	There is no matching data per project
+plugin_statistics_admin_page	data_global_no_data	There is no matching global data
+plugin_statistics_admin_page	table_service_title	Service
+plugin_statistics_admin_page	table_rank_title	Rank
+plugin_statistics_admin_page	table_name_title	Name
+plugin_statistics_admin_page	table_start_size_title	Start size
+plugin_statistics_admin_page	table_end_size_title	End size
+plugin_statistics_admin_page	table_size_evolution_title	Size evolution
+plugin_statistics_admin_page	table_size_evolution_rate_title	Evolution rate (%)
+plugin_statistics_admin_page	total_start_size_tooltip	Sum of start sizes
+plugin_statistics_admin_page	total_end_size_tooltip	Sum of end sizes
+plugin_statistics_admin_page	total_evolution_tooltip	Sum of size evolution
+plugin_statistics_admin_page	table_project_details_title	Statistics
+plugin_statistics_admin_page	graph_title	Services growth over time
+plugin_statistics_admin_page	graph_user_title	User consumption over time
+plugin_statistics_admin_page	graph_project_title	Project by service growth over time
+plugin_statistics_admin_page	graph_y_axis_title	Size
+plugin_statistics_admin_page	graph_image_title	Results
+plugin_statistics_admin_page	top_users_pane_title	Top 10 users
+plugin_statistics_admin_page	no_top_users_data	No matching user data
+plugin_statistics_admin_page	no_user_details_data	No matching data for this user
+plugin_statistics_admin_page	no_user_selected	No user selected
+plugin_statistics_admin_page	disk_usage_user_details_btn	User statistics
 
 plugin_statistics	scm_title	SCM statistics
 plugin_statistics	scm_description	Display SCM statistics of the platform.
@@ -33,6 +66,7 @@ plugin_statistics	start_date	Start date
 plugin_statistics	end_date	End date
 plugin_statistics	scm_project_id	Project Id
 plugin_statistics	scm_project_id_info	Project Id is optional, you can leave it empty to calculate statistics for the whole platform.
+plugin_statistics	scm_project_selection	Select projects…
 plugin_statistics	csv_export_button	Export CSV
 plugin_statistics	scm_month	Month
 plugin_statistics	scm_svn_total_read	Total number of SVN read access
@@ -61,7 +95,7 @@ plugin_statistics	scm_repo_evolution	Number of repositories containing commits
 plugin_statistics	quota_title	Project quota
 plugin_statistics	quota_description	Custom quota for each project
 plugin_statistics	search_projects	Filter projects
-plugin_statistics	no_projects	All projects have the default quota ($1 GB).
+plugin_statistics	no_projects	There isn't any projects with a custom quota. All projects have the default quota ($1 GB).
 plugin_statistics	quota	Quota
 plugin_statistics	max_quota	Maximum quota is $1 GB
 plugin_statistics	requester	Requester
@@ -71,7 +105,6 @@ plugin_statistics	set_quota	Set custom quota for a project
 plugin_statistics	invalid_action	Invalid Action
 plugin_statistics	invalid_project	Invalid project
 plugin_statistics	invalid_quota	Quota must be between 1 and $1 Gb
-plugin_statistics	invalid_motivation	You have exceeded  the maximal size of the Motivation
 plugin_statistics	nothing_to_delete	Nothing to delete
 plugin_statistics	delete_error	An error occured when deleting entries
 plugin_statistics	add_error	Anerror occured when adding the entry
@@ -79,7 +112,7 @@ plugin_statistics	no_project	Project not found
 plugin_statistics	quota_added	Quota for project "$1" is now $2 GB
 plugin_statistics	quota_deleted	Quota deleted for $1
 plugin_statistics	no_search_result	No result correspond to the search
-plugin_statistics	services_usage	Services usage statistics
+plugin_statistics	services_usage	Service usage
 plugin_statistics	current_size	Current project size
 plugin_statistics	project_name	Project name
 plugin_statistics	exceeding_size	Exceeding size
@@ -88,8 +121,58 @@ plugin_statistics	projects_over_quota_title	Projects exceeding their disk quota
 plugin_statistics	disk_quota_warning_subject	[Disk quota] [Warning] Project $1 is exceeding allowed disk quota
 plugin_statistics	disk_quota_warning_body	Dear project administrator,<br><br>The size of the project <A href="/projects/$1" >$1</A> is: "$2".<br>We advise you to delete unneeded data in order to decrease the project size growth. <br>(please note that deleting items from a subversion repository has no effect on the disk size, on the contrary, it may increase your server repository size).<br>We advise you to avoid storing binaries into your Subversion repository.<br>For Documents, you can remove oldest versions in order to decrease the project's size.<br><br>--<br>Please note that without any actions from you, for the safety of the entire platform, your project may be suspended until we find a solution.
 plugin_statistics	disk_usage_report	Disk Usage <a href="$1">Report</a>
-plugin_statistics	add_disk_quota	<a href="$1">Add disk quota</a>
+plugin_statistics	add_disk_quota	Add quota
 plugin_statistics	projects_over_quota	<a href="$1">Projects over quota</a>
 plugin_statistics	querying_purged_data	The chart displayed uses old data which has been purged in order to display it quickly. The purge operation keeps one day's worth of data for each week ended more than 3 months ago. Beyond 2 years ago, one day of each month is kept.
 
 plugin_statistics	sysevents_queue	Statistics
+plugin_statistics	index_page_title	Statistics
+plugin_statistics	frequencies_title	Frequencies
+plugin_statistics	type_label	Type
+plugin_statistics	session_type	Sessions
+plugin_statistics	user_type	Users
+plugin_statistics	forum_type	Messages in forums
+plugin_statistics	filedl_type	Files downloaded
+plugin_statistics	file_type	Files released
+plugin_statistics	groups_type	Project created
+plugin_statistics	docdl_type	Legacy document viewed
+plugin_statistics	wikidl_type	Wiki pages viewed
+plugin_statistics	oartifact_type	Opened Artifacts (V3)
+plugin_statistics	cartifact_type	Closed (or wished end date) Artifacts (V3)
+plugin_statistics	usage_progress_title	Usage progress
+plugin_statistics	usage_progress_help	Generate a CSV file that contains the progress of some data figures (number of users, number of projects) over the time. For each month, it outputs the number of created projects and user accounts.
+plugin_statistics	data_export_title	Data export
+
+plugin_statistics	filter_label	Filter
+plugin_statistics	frequencies_filter_group_month	Group by month
+plugin_statistics	frequencies_filter_group_day	Group by day
+plugin_statistics	frequencies_filter_group_hour	Group by hour
+plugin_statistics	frequencies_filter_month	Month
+plugin_statistics	frequencies_filter_day	Day
+
+plugin_statistics	services_label	Services
+plugin_statistics	group_by_label	Group by
+plugin_statistics	relative_y_axis_label	Relative Y axis (depends on data set values)
+plugin_statistics	day	Day
+plugin_statistics	week	Week
+plugin_statistics	month	Month
+plugin_statistics	year	Year
+
+plugin_statistics	project_placeholder	MyProject
+plugin_statistics	project_label	Project
+plugin_statistics	delete_confirm	Wow, wait a minute. You are about to delete the quota for <b>$1</b> project. Please confirm your action.
+plugin_statistics	no_motivation	No motivation
+plugin_statistics	quota_size	$1 GB
+plugin_statistics	quota_unit	GB
+plugin_statistics	delete_quota	Delete quota
+plugin_statistics	delete	Delete
+plugin_statistics	details	Details
+plugin_statistics	project_quota	Project quota
+plugin_statistics	comment	Comment…
+plugin_statistics	empty_filter_results	There isn't any quota for the selected project
+
+plugin_statistics	users	Users
+plugin_statistics	codendi_logs	Codendi Logs
+plugin_statistics	backup	Backup
+plugin_statistics	backup_old	Backup old
+plugin_statistics	user_id_label	User

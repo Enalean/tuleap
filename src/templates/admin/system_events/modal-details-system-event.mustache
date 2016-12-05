@@ -1,0 +1,130 @@
+<div class="tlp-modal"
+    role="dialog"
+    aria-labelledby="systemevents-details-modal-label-{{ id }}"
+    id="systemevents-details-modal-{{ id }}"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="systemevents-details-modal-label-{{ id }}">
+            <i class="fa fa-list tlp-modal-title-icon"></i > {{ details_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="systemevents-details-modal-row">
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ id_label }}</label>
+                <p>{{ id }}</p>
+            </div>
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ type_label }}</label>
+                <p>{{ full_type }}</p>
+            </div>
+        </div>
+        <div class="tlp-property">
+            <label class="tlp-label">{{ parameters_label }}</label>
+            <p>{{{ purified_parameters }}}</p>
+        </div>
+        <div class="systemevents-details-modal-row">
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ created_label }}</label>
+                <p>{{ create_date }}</p>
+            </div>
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ owner_label }}</label>
+                <p>{{ owner }}</p>
+            </div>
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ priority_label }}</label>
+                <div class="tlp-badge-secondary tlp-badge-outline">
+                    <i class="fa fa-long-arrow-right tlp-badge-icon
+                        {{# is_high }}systemevents-priority-high-icon{{/ is_high }}
+                        {{# is_low }}systemevents-priority-low-icon{{/ is_low }}"
+                    ></i>
+                    {{ priority }}
+                </div>
+            </div>
+        </div>
+
+        <hr class="tlp-modal-separator">
+
+        <div class="systemevents-details-modal-row">
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ start_label }}</label>
+                {{# is_started }}
+                    <p>{{ start_date }}</p>
+                {{/ is_started }}
+                {{^ is_started }}
+                    <p class="tlp-property-empty">{{ not_started_yet }}</p>
+                {{/ is_started }}
+            </div>
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ end_label }}</label>
+                {{# is_ended }}
+                    <p>{{ end_date }}</p>
+                {{/ is_ended }}
+                {{^ is_ended }}
+                    <p class="tlp-property-empty">{{ not_ended_yet }}</p>
+                {{/ is_ended }}
+            </div>
+            {{# time_taken }}
+                <div class="tlp-property systemevents-details-modal-row-entry">
+                    <label class="tlp-label">{{ time_taken_label }}</label>
+                    <p>{{ time_taken }}</p>
+                </div>
+            {{/ time_taken }}
+            <div class="tlp-property systemevents-details-modal-row-entry">
+                <label class="tlp-label">{{ status_label }}</label>
+                <div class="tlp-badge-{{ badge }}
+                    {{^ status_need_attention }}tlp-badge-outline{{/ status_need_attention }}"
+                >
+                    {{ status }}
+                    {{# is_replayed }}({{ replayed_label }}){{/ is_replayed }}
+                </div>
+            </div>
+        </div>
+        {{# log }}
+            <div class="tlp-property">
+                <label class="tlp-label">{{ log_label }}</label>
+                <pre class="systemevents-details-modal-log">{{ log }}</pre>
+            </div>
+        {{/ log }}
+    </div>
+    <form action="/admin/system_events/" method="POST" class="tlp-modal-footer">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        {{# search }}
+            {{# status }}
+                {{# checked }}
+                    <input type="hidden" name="filter_status[]" value="{{ value }}">
+                {{/ checked }}
+            {{/ status }}
+            {{# types_by_queue }}
+                {{# types }}
+                    {{# checked }}
+                        <input type="hidden" name="filter_type[]" value="{{ value }}">
+                    {{/ checked }}
+                {{/ types }}
+            {{/ types_by_queue }}
+        {{/ search }}
+        {{# pagination }}
+            <input type="hidden" name="offset" value="{{ offset }}">
+        {{/ pagination }}
+        <input type="hidden" name="queue" value="{{ queue }}">
+
+        {{# can_be_replayed }}
+            <button type="submit"
+                    name="replay"
+                    value="{{ id }}"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            >
+                <i class="fa fa-repeat tlp-button-icon"></i> {{ replay_label }}
+            </button>
+        {{/ can_be_replayed }}
+        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+            {{ close_label }}
+        </button>
+    </form>
+</div>

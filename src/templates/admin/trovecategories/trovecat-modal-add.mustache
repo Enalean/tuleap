@@ -1,0 +1,107 @@
+<div class="tlp-modal" id="trove-cat-add" role="dialog">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_trove_cat }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+    </div>
+    <form action="/admin/trove/trove_cat_list.php?action=add" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="id">
+        <div class="tlp-modal-body">
+            <div class="trove-cats-general-properties">
+                <div class="trove-cats-general-property">
+                    <div class="tlp-form-element trove-cats-fullname-property">
+                        <label class="tlp-label" for="fullname">{{ label_fullname }} <i class="fa fa-asterisk"></i></label>
+                        <input
+                            type="text"
+                            class="tlp-input"
+                            id="fullname"
+                            name="fullname"
+                            required
+                            placeholder="{{ label_fullname }}"
+                        >
+                    </div>
+                    <div class="tlp-form-element trove-cats-shortname-property">
+                        <label class="tlp-label" for="shortname">{{ label_shortname }} <i class="fa fa-asterisk"></i></label>
+                        <input
+                            type="text"
+                            class="tlp-input"
+                            id="shortname"
+                            name="shortname"
+                            required
+                            placeholder="{{ label_shortname }}"
+                        >
+                    </div>
+                </div>
+                <div class="trove-cats-general-property">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="parent-0">{{ parent_category_label }}</label>
+                        <select
+                            class="tlp-select trove-cats-modal-select-parent-category"
+                            id="parent-0"
+                            name="parent"
+                            data-parent-trove-id="0"
+                            data-id="0"
+                            data-is-parent-top-level-id="1"
+                            data-is-parent-mandatory="0"
+                        >
+                            <option value="0">{{ root_label }}</option>
+                            {{# trovecats }}
+                            <option
+                                value="{{ trove_cat_id }}"
+                                data-is-top-level-id="{{ is_top_level_id }}"
+                                data-is-parent-mandatory="{{ is_mandatory }}"
+                            >
+                                {{ hierarchy }}
+                            {{/ trovecats }}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <hr class="tlp-modal-separator">
+            <div class="tlp-form-element" id="trove-cats-modal-mandatory-checkbox-0">
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        name="is-mandatory"
+                        value="1"
+                        id="is-mandatory-0"
+                    > {{ label_mandatory }}
+                </label>
+                <p class="tlp-text-info">{{ mandatory_info }}</p>
+            </div>
+            <div class="tlp-form-element" id="trove-cats-modal-disable-checkbox-0">
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        name="display-at-project-creation"
+                        value="1"
+                        id="trove-cats-modal-is-disable-0"
+                    > {{ label_display }}
+                </label>
+                <p class="tlp-text-info">{{ display_info }}</p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="description">{{ label_description }}</label>
+                <textarea
+                    class="tlp-textarea"
+                    id="description"
+                    name="description"
+                    placeholder="{{ description_placeholder }}"
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{ cancel }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ add }}
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,25 +1,30 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Statistics\AdminHeaderPresenter;
+use Tuleap\Statistics\SearchFieldsPresenterBuilder;
+use Tuleap\Statistics\FrequenciesPresenter;
 
 require 'pre.php';
 
@@ -35,35 +40,85 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$title = 'Various statistics';
-$GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
-echo '<h1>'.$title.'</h1>';
-?>
+$datastr = 'session';
+if (is_array($request->get('type_values'))) {
+    foreach ($request->get('type_values') as $k => $v) {
+        $datastr = $v;
+    }
+}
 
-<dl>
-    <dt><a href="frequence_stat.php">Frequencies (Graph)</a></dt>
-    <dd>Display various figures about number of <em>X</em> over a given <em>period</em>.
-    For instance, the numbser of <em>new user account</em> per <em>month</em> within the last
-    two years.</dd>
+$type_values = array();
+if ($request->exist('type_values')) {
+    $type_values = $request->get('type_values');
+    if (! is_array($type_values)) {
+        $type_values = explode(',', $type_values);
+    }
+} else {
+    $type_values = array('session');
+}
 
-    <dt><a href="usage_stat.php">Usage progress (CSV)</a></dt>
-    <dd>Generate a CSV file that contains the progress of some data figures
-    (number of users, number of project) over the time. For each
-    month, it outputs the number of create project and user account.</dd>
+if (isset($_REQUEST['start'])
+    && isset($_REQUEST['end'])
+    && strtotime($_REQUEST['start']) > strtotime($_REQUEST['end'])
+) {
+    $date_error_message = $GLOBALS['Language']->getText('plugin_statistics', 'period_error');
+    $GLOBALS['Response']->addFeedback('error', $date_error_message);
+}
 
-    <dt><a href="disk_usage.php">Disk usage (Data/Graphs)</a></dt>
-    <dd>Display disk usage of the platform.</dd>
+$v_start_date = new Valid('start');
+$v_start_date->addRule(new Rule_Date());
+$v_start_date->required();
+$start_date = $request->get('start');
+if ($request->valid($v_start_date)) {
+    $start_date = $request->get('start');
+} else {
+    $start_date = date('Y-m-d', strtotime('-1 year'));
+}
 
-    <dt><a href="scm_stats.php"><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'scm_title'); ?> (CSV)</a></dt>
-    <dd><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'scm_description'); ?></dd>
+$v_end_date = new Valid('end');
+$v_end_date->addRule(new Rule_Date());
+$v_end_date->required();
+$end_date = $request->get('end');
+if ($request->valid($v_end_date)) {
+    $end_date = $request->get('end');
+} else {
+    $end_date = date('Y-m-d');
+}
 
-    <dt><a href="project_quota.php"><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'quota_title'); ?></a></dt>
-    <dd><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'quota_description'); ?></dd>
+if ($request->exist('filter')) {
+    $filter = $request->get('filter');
+} else {
+    $filter = 'month';
+}
 
-    <dt><a href="services_usage.php">Service usage</a></dt>
-    <dd><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'services_usage'); ?></dd>
-</dl>
+$search_fields_builder = new SearchFieldsPresenterBuilder();
+$search_fields_presenter = $search_fields_builder->buildSearchFieldsForFrequencies(
+    $type_values,
+    $filter,
+    $start_date,
+    $end_date
+);
 
-<?php
-$GLOBALS['HTML']->footer(array());
-?>
+$title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+
+$header_presenter = new AdminHeaderPresenter(
+    $title,
+    'frequencies'
+);
+
+$frequencies_presenter = new FrequenciesPresenter(
+    $header_presenter,
+    $search_fields_presenter,
+    $datastr,
+    $start_date,
+    $end_date,
+    $filter
+);
+
+$admin_page_renderer = new AdminPageRenderer();
+$admin_page_renderer->renderANoFramedPresenter(
+    $title,
+    ForgeConfig::get('codendi_dir') . '/plugins/statistics/templates',
+    FrequenciesPresenter::TEMPLATE,
+    $frequencies_presenter
+);

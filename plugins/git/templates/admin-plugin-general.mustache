@@ -14,18 +14,19 @@
                 <div class="tlp-alert-warning">{{ warning_admin_activation }}</div>
 
                 <div class="tlp-form-element">
-                    <label class="tlp-label tlp-checkbox">
-                        <input type="checkbox"
-                               name="activate-regexp"
-                            {{# is_activated }} checked="checked" {{/ is_activated }}
-                        > {{ allow_regexp_info }}
+                    <label class="tlp-label" for="toggle-activate-regexp">
+                        {{ allow_regexp_info }}
                     </label>
-                </div>
 
-                <div class="general-settings-submit">
-                    <button type="submit" class="tlp-button-primary">
-                        <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
-                    </button>
+                    <div class="tlp-switch">
+                        <input type="checkbox"
+                            id="toggle-activate-regexp"
+                            name="activate-regexp"
+                            class="tlp-switch-checkbox"
+                            {{# is_activated }} checked="checked" {{/ is_activated }}
+                            onchange="this.form.submit()">
+                        <label for="toggle-activate-regexp" class="tlp-switch-button" aria-hidden></label>
+                    </div>
                 </div>
             </form>
         </section>

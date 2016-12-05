@@ -1,0 +1,36 @@
+.trove-cats-general-property {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.tlp-table-cell-actions-button {
+    margin: -5px 0 -3px 5px;
+}
+
+.trove-cats-fullname-property {
+    width: 50%;
+}
+
+.trove-cats-shortname-property {
+    width: 50%;
+
+    &:last-child {
+        margin: 0 $tlp-spacing;
+    }
+}
+
+.trove-cats-modal-edit {
+    text-align: left;
+}
+
+.trove-cats-checkbox-modal-edit {
+    line-height: 14px;
+}
+
+.trove-cats-modal-action {
+    text-align: left;
+}
+
+.trove-cats-option-hidden {
+    display: none;
+}

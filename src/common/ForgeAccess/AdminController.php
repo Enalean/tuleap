@@ -138,6 +138,8 @@ class ForgeAccess_AdminController
                 ForgeAccess::RESTRICTED,
             )
         );
+        $validator->required();
+
         if (! $this->request->valid($validator)) {
             return false;
         }

@@ -17,10 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.tlp-text-info.siteadmin-access-option-desc {
-    margin: 0 0 0 $tlp-spacing;
-}
-
 #siteadmin-access-customize-ugroup-labels {
     display: none;
     margin: $tlp-spacing 0 0 $tlp-spacing;
@@ -30,7 +26,8 @@
 
 #siteadmin-access-submit-panel {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 #siteadmin-access-submit-panel-message {

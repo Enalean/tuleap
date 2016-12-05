@@ -122,14 +122,26 @@ $tlp-table-row-background-empty: #fcfcfc;
             > .tlp-badge-danger {
                 margin: -4px 0 -3px;
             }
-
-            > .tlp-button-small {
-                margin: -5px 0 -3px;
-            }
         }
 
+        > .tlp-table-last-row > td,
         > tr:last-child > td {
             border: 0;
+        }
+
+        > .tlp-table-row-hidden {
+            display: none;
+        }
+
+
+        > .tlp-table-empty-filter {
+            > td {
+                border: 0;
+            }
+
+            &:not(.tlp-table-empty-filter-shown) {
+                display: none;
+            }
         }
     }
 
@@ -146,6 +158,14 @@ $tlp-table-row-background-empty: #fcfcfc;
 .tlp-table-cell-actions {
     text-align: right;
     white-space: nowrap;
+}
+
+.tlp-table-cell-actions-button {
+    margin: -5px 0 -3px;
+
+    + .tlp-table-cell-actions-button {
+        margin: -5px 0 -3px 5px;
+    }
 }
 
 .tlp-table-sort {

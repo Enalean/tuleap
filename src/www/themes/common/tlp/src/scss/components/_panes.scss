@@ -83,3 +83,12 @@
 .tlp-pane-spacer {
     flex: 1 1 auto;
 }
+
+.tlp-pane-section-submit {
+    display: flex;
+    justify-content: center;
+
+    &:not(.tlp-pane-section) {
+        margin: $tlp-double-spacing 0 0;
+    }
+}

@@ -100,6 +100,9 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
         <a href="/admin/groupedit.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
             <?= $GLOBALS['Language']->getText('admin_project', 'information_label') ?>
         </a>
+        <a href="/admin/userlist.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
+            <?= $GLOBALS['Language']->getText('admin_project', 'members_label') ?>
+        </a>
         <a href="/admin/projecthistory.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
             <?= $GLOBALS['Language']->getText('admin_project', 'history_label') ?>
         </a>
@@ -177,7 +180,7 @@ function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray)
                 <a href="?group_id=' . urlencode($group_id) . '&func=confirm_restore_frs_file&id=' . urlencode(
                     $file['file_id']
                 ) . '"
-                    class="tlp-button-small tlp-button-primary tlp-button-outline"
+                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                     onClick="return confirm(\'' . $GLOBALS['Language']->getText(
                     'admin_show_pending_documents', 'frs_confirm_message'
                 ) . '\')"
@@ -350,14 +353,14 @@ function wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlAr
             $tabbed_content .= '<td class="tlp-table-cell-actions">';
             if ($nonRestorableAttachments->rowCount()) {
                 $tabbed_content .= '<button type="button"
-                            class="tlp-button-small tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-left"
+                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-left"
                             data-tlp-tooltip="Non-restorable attachment"
                             disabled>
                         <i class="fa fa-repeat tlp-button-icon"></i> '. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') .'
                     </button>';
             } else {
                 $tabbed_content .= '<a href="?group_id='.urlencode($group_id).'&func=confirm_restore_wiki_attachment&id='.urlencode($wiki_attachment['id']).'"
-                        class="tlp-button-small tlp-button-primary tlp-button-outline"
+                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                         onClick="return confirm(\'Confirm restore of this attachment\')"
                     >
                         <i class="fa fa-repeat tlp-button-icon"></i> '. $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') .'

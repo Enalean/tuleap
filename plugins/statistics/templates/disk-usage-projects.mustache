@@ -1,0 +1,138 @@
+<div class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally" id="siteadmin-statistics-disk-usage">
+        <section class="tlp-pane" id="siteadmin-statistics-disk-usage-search">
+            <div class="tlp-pane-container">
+                {{# search_fields }}
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ title }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <form method="GET" action="" name="progress_by_service">
+                            <input type="hidden" name="menu" value="projects" />
+                            <div class="tlp-form-element">
+                                <label for="type" class="tlp-label">{{ services_label }}</label>
+                                <select
+                                        id="type"
+                                        name="services[]"
+                                        class="tlp-select"
+                                        multiple
+                                >
+                                    {{# service_values }}
+                                        <option value="{{ key }}" {{# is_selected }}selected{{/ is_selected }}>{{ value }}</option>
+                                    {{/ service_values }}
+                                </select>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="date" class="tlp-label">{{ start_date_label }}</label>
+                                <div class="tlp-form-element tlp-form-element-prepend">
+                                    <input
+                                            type="text"
+                                            id="start_date"
+                                            name="start_date"
+                                            class="tlp-input tlp-input-date"
+                                            size="11"
+                                            value="{{ start_date_value }}"
+                                    >
+                                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="tlp-form-element">
+                                <label for="date" class="tlp-label">{{ end_date_label }}</label>
+                                <div class="tlp-form-element tlp-form-element-prepend">
+                                    <input
+                                            type="text"
+                                            id="end_date"
+                                            name="end_date"
+                                            class="tlp-input tlp-input-date"
+                                            size="11"
+                                            value="{{ end_date_value }}"
+                                    >
+                                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="tlp-button-primary tlp-button-wide">
+                                <i class="fa fa-search tlp-button-icon"></i> {{ search }}
+                            </button>
+                        </form>
+                    </section>
+                {{/ search_fields }}
+            </div>
+        </section>
+
+        <section class="tlp-pane" id="siteadmin-statistics-disk-usage-data">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        {{ pane_title }}
+                    </div>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                        <tr>
+                            <th>{{ table_name_title }}</th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ start_size_url }}" class="tlp-table-sort">
+                                    {{ table_start_size_title }} {{# order_is_start_size }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_start_size }}
+                                </a>
+                            </th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ end_size_url }}" class="tlp-table-sort">
+                                    {{ table_end_size_title }} {{# order_is_end_size }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_end_size }}
+                                </a>
+                            </th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ evolution_url }}" class="tlp-table-sort">
+                                    {{ table_evolution_size_title }} {{# order_is_evolution }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_evolution }}
+                                </a>
+                            </th>
+                            <th class="tlp-table-cell-numeric">
+                                <a href="{{ evolution_rate_url }}" class="tlp-table-sort">
+                                    {{ table_evolution_rate_size_title }} {{# order_is_evolution_rate }}<i class="fa fa-caret-down tlp-table-sort-icon"></i>{{/ order_is_evolution_rate }}
+                                </a>
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{# data_projects }}
+                            <tr>
+                                <td>
+                                    <a href="{{ project_url }}">
+                                        {{ group_name }}
+                                    </a>
+                                </td>
+                                <td class="tlp-table-cell-numeric">{{ start_size }}</td>
+                                <td class="tlp-table-cell-numeric">{{ end_size }}</td>
+                                <td class="tlp-table-cell-numeric">{{ evolution }}</td>
+                                <td class="tlp-table-cell-numeric">{{ evolution_rate }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" href="{{ project_details_url }}">
+                                        <i class="fa fa-area-chart tlp-button-icon"></i> {{ table_project_details_title }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {{/ data_projects }}
+                        {{^ data_projects }}
+                            <tr>
+                                <td colspan="7" class="tlp-table-cell-empty">
+                                    {{ no_data }}
+                                </td>
+                            </tr>
+                        {{/ data_projects }}
+                        </tbody>
+                    </table>
+                    {{# pagination }}
+                        {{> pagination }}
+                    {{/ pagination }}
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

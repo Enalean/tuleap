@@ -20,7 +20,7 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use Tuleap\Layout\BaseLayout;
+use Layout;
 use URLRedirect;
 use Widget_Static;
 use TemplateRendererFactory;
@@ -29,7 +29,7 @@ use PFUser;
 use ForgeConfig;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 
-class BurningParrotTheme extends BaseLayout
+class BurningParrotTheme extends Layout
 {
     /** @var \MustacheRenderer */
     private $renderer;

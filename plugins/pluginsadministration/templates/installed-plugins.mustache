@@ -18,7 +18,13 @@
                     <div class="tlp-table-actions">
                         <div class="tlp-table-actions-spacer"></div>
                         <div class="tlp-form-element ">
-                            <input type="search" id="filter-plugins" class="tlp-search" size="28" placeholder="{{ filter_label }}">
+                            <input type="search"
+                                id="filter-plugins"
+                                data-target-table-id="plugins-list"
+                                autocomplete="off"
+                                class="tlp-search"
+                                size="28"
+                                placeholder="{{ filter_label }}">
                         </div>
                     </div>
                     <table class="tlp-table" id="plugins-list">
@@ -33,12 +39,17 @@
                         </tr>
                         </thead>
                         <tbody>
+                            <tr class="tlp-table-empty-filter">
+                                <td colspan="6" class="tlp-table-cell-empty">
+                                    {{ filter_empty_state }}
+                                </td>
+                            </tr>
                             {{# plugins }}
                             <tr>
-                                <td class="pluginsadministration-list-name-cell plugins-list-filterable">{{ name }}</td>
+                                <td class="pluginsadministration-list-name-cell tlp-table-cell-filterable">{{ name }}</td>
                                 <td>{{ version }}</td>
                                 <td>
-                                    <span class="pluginsadministration-list-full-description plugins-list-filterable">{{ description }}</span>
+                                    <span class="pluginsadministration-list-full-description tlp-table-cell-filterable">{{ description }}</span>
                                     <span class="pluginsadministration-list-tooltip-description tlp-tooltip tlp-tooltip-top"
                                         data-tlp-tooltip="{{ description }}"
                                     >
@@ -49,13 +60,14 @@
                                 <td>{{ scope }}</td>
                                 <td class="tlp-table-cell-actions pluginsadministration-list-actions-cell">
                                     <a href="?view=properties&plugin_id={{ plugin_id }}"
-                                        class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                                     >
                                         <i class="fa fa-list tlp-button-icon"></i> {{ icon_label }}
                                     </a>
 
                                     {{# dont_restrict }}
-                                        <a href="javascript:;" class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left disabled"
+                                        <a href="javascript:;"
+                                            class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left disabled"
                                             data-tlp-tooltip="{{ cant_restrict }}"
                                         >
                                             <i class="fa fa-lock tlp-button-icon"></i> {{ restrict_icon_label }}
@@ -63,13 +75,13 @@
                                     {{/ dont_restrict }}
                                     {{^ dont_restrict }}
                                         <a href="?view=restrict&plugin_id={{ plugin_id }}"
-                                            class="tlp-button-primary tlp-button-outline tlp-button-small">
+                                            class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small">
                                             <i class="fa fa-lock tlp-button-icon"></i> {{ restrict_icon_label }}
                                         </a>
                                     {{/ dont_restrict }}
 
                                     {{^ dont_touch }}
-                                        <button class="tlp-button-danger tlp-button-outline tlp-button-small uninstall-plugin-button"
+                                        <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small uninstall-plugin-button"
                                             data-modal-id="uninstall-plugin-{{ plugin_id }}"
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{ uninstall_icon_label }}

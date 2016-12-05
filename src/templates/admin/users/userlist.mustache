@@ -1,16 +1,3 @@
-<div id="siteadmin-userlist-header">
-    <h1 id="siteadmin-userlist-header-title">{{ title }} <small>{{ context }}</small></h1>
-    <a href="/admin/register_admin.php?page=admin_creation" class="tlp-button-primary">
-        <i class="fa fa-plus tlp-button-icon"></i> {{ new_user }}
-    </a>
-</div>
-
-{{# are_there_pending_users }}
-    <div class="tlp-alert-info">
-        {{{ purified_pending_users_text }}}
-    </div>
-{{/ are_there_pending_users}}
-
 <div id="siteadmin-userlist">
     <section class="tlp-pane" id="siteadmin-userlist-filter">
         <div class="tlp-pane-container">
@@ -80,7 +67,7 @@
                         {{/ display_purge_session }}
                     </div>
 
-                    <table class="tlp-table" id="siteadmin-userlist-result-table">
+                    <table class="tlp-table">
                         <thead>
                             <tr>
                                 <th>
@@ -156,7 +143,7 @@
                                         </td>
                                     {{/ display_nb_projects }}
                                     <td class="tlp-table-cell-actions">
-                                        <a class="tlp-button-primary tlp-button-small tlp-button-outline" href="usergroup.php?user_id={{ id }}">
+                                        <a class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline" href="usergroup.php?user_id={{ id }}">
                                             <i class="fa fa-address-card-o tlp-button-icon"></i> {{ detail_button_label }}
                                         </a>
                                     </td>

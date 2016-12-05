@@ -58,6 +58,8 @@ plugin_pluginsadministration	error_install_dependency	Impossible d'installer ce 
 plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller ce plugin tant que ces plugins seront installés :
 plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restreindre
 plugin_pluginsadministration	cant_restrict	Impossible de restreindre ce plugin car il a une portée système
+plugin_pluginsadministration	no_local_plugins	Tous les plugins disponible localement ont été installés.
+plugin_pluginsadministration	filter_empty_state	Il n'y a pas de plugins correspondant à votre filtre.
 plugin_pluginsadministration	install_modal_title	Installer le plugin
 plugin_pluginsadministration	install_modal_content	Vous êtes sur le point d'installer un plugin. Veuillez confirmer votre action.
 plugin_pluginsadministration	install_modal_cancel	Annuler

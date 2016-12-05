@@ -48,6 +48,11 @@
                 tlp.datePicker(datepicker);
             });
 
+            var filters = example.querySelectorAll('.tlp-search[data-target-table-id]');
+            [].forEach.call(filters, function (filter) {
+                tlp.filterInlineTable(filter);
+            });
+
             tlp.select2(document.querySelector('#area-select2'), {
                 placeholder: 'Choose an area',
                 allowClear: true

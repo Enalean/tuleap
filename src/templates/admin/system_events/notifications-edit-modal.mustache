@@ -1,0 +1,53 @@
+<form action=""
+      method="POST"
+      class="tlp-modal"
+      role="dialog"
+      id="edit-notification-modal-{{ id }}"
+      aria-labelledby="edit-notification-modal-label-{{ id }}"
+>
+    {{# csrf }}
+        {{> csrf_token_input }}
+    {{/ csrf }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="edit-notification-modal-label-{{ id }}">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i> {{ edit_notif_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">×</div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="followers-emails-{{ id }}">
+                {{ notified_label }} <i class="fa fa-asterisk"></i>
+            </label>
+            <textarea type="text"
+                      class="tlp-textarea"
+                      id="followers-emails-{{ id }}"
+                      name="followers[{{ id }}][emails]"
+                      rows="3"
+                      required
+                      placeholder="paul, mailing@example.com, …"
+            >{{ emails }}</textarea>
+            <p class="tlp-text-info">{{ emails_instructions }}</p>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label">
+                {{ status_to_listen }}
+            </label>
+            {{# status }}
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="followers[{{ id }}][types][]" value="{{ value }}" {{# checked }}checked{{/ checked }}>
+                    {{ label }}
+                </label>
+            {{/ status }}
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-save tlp-button-icon"></i> {{ save_notif_label }}
+        </button>
+    </div>
+</form>

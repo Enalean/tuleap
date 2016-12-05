@@ -49,29 +49,7 @@
      });
 
      var filter = document.getElementById('filter-plugins');
-     console.log(filter);
      if (filter) {
-         filter.addEventListener('keyup', function (event) {
-             var ESC_KEYCODE = 27;
-
-             if (event.keyCode == ESC_KEYCODE) {
-                 filter.value = '';
-             }
-
-             var search = filter.value,
-                 lines  = document.querySelectorAll('#plugins-list > tbody > tr');
-
-             [].forEach.call(lines, function (line) {
-                 var texts_to_search_into = line.querySelectorAll('.plugins-list-filterable');
-                 [].forEach.call(texts_to_search_into, function (text_to_search_into) {
-                     if (text_to_search_into.textContent.toUpperCase().indexOf(search.toUpperCase()) === -1) {
-                         line.style.display = 'none';
-                     } else {
-                         line.style.display = '';
-                     }
-                 });
-             });
-
-         });
+         tlp.filterInlineTable(filter);
      }
  } ());

@@ -41,43 +41,35 @@ set_time_limit(180);
 
 $request = HTTPRequest::instance();
 
-$error = false;
-
-$vStartDate = new Valid('start');
+$vStartDate = new Valid('services_usage_start_date');
 $vStartDate->addRule(new Rule_Date());
 $vStartDate->required();
-$startDate = $request->get('start');
+$startDate = $request->get('services_usage_start_date');
 if ($request->valid($vStartDate)) {
-    $startDate = $request->get('start');
+    $startDate = $request->get('services_usage_start_date');
 } else {
     $startDate = date('Y-m-d', strtotime('-1 month'));
 }
 
-$vEndDate = new Valid('end');
+$vEndDate = new Valid('services_usage_end_date');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
-$endDate = $request->get('end');
+$endDate = $request->get('services_usage_end_date');
 if ($request->valid($vEndDate)) {
-    $endDate = $request->get('end');
+    $endDate = $request->get('services_usage_end_date');
 } else {
     $endDate = date('Y-m-d');
 }
 
-if ($startDate >= $endDate) {
-    $error = true;
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
+if ($startDate > $endDate) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+    );
+    $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
 }
 
-$groupId  = null;
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if ($request->valid($vGroupId)) {
-    $groupId = $request->get('group_id');
-}
-
-if (!$error && $request->exist('export')) {
-    $startDate = $request->get('start');
-    $endDate   = $request->get('end');
+if ($request->exist('export') && $startDate && $endDate) {
 
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
@@ -189,35 +181,6 @@ if (!$error && $request->exist('export')) {
 
     echo $csv_exporter->exportCSV();
 
-} else {
-    $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
-    $GLOBALS['HTML']->includeCalendarScripts();
-    $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
-    echo '<h1>'.$title.'</h1>';
-
-    echo '<form name="form_service_usage_stats" method="get">';
-    echo '<table>';
-    echo '<tr>';
-    echo '<td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'start_date').'</b>';
-    echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'end_date').'</b>';
-    echo '</td>';
-    echo '</tr><tr>';
-    echo '<td>';
-    list($timestamp,) = util_date_to_unixtime($startDate);
-    echo html_field_date('start', $startDate, false, 10, 10, 'form_service_usage_stats', false);
-    echo '</td><td>';
-    list($timestamp,) = util_date_to_unixtime($endDate);
-    echo html_field_date('end', $endDate, false, 10, 10, 'form_service_usage_stats', false);
-    echo '</td>';
-    echo '</tr><tr><td>';
-    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button').'" >';
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
-    echo '</form>';
-    $GLOBALS['HTML']->footer(array());
 }
 
 function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name) {
@@ -226,5 +189,3 @@ function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter
     $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
     $csv_exporter->buildDatas($disk_usage, $column_name);
 }
-
-?>

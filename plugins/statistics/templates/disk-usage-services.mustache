@@ -1,0 +1,157 @@
+<div class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+
+    <div class="tlp-framed-horizontally" id="siteadmin-statistics-disk-usage">
+        <section class="tlp-pane" id="siteadmin-statistics-disk-usage-search">
+            <div class="tlp-pane-container">
+                {{# search_fields }}
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ title }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <form method="GET" action="" name="progress_by_service">
+                            <input type="hidden" name="menu" value="services" />
+                            <div class="tlp-form-element">
+                                <label class="tlp-label" for="project-filter">{{ project_label }}</label>
+                                <select class="tlp-select project-autocompleter"
+                                        id="project-filter"
+                                        name="project_filter"
+                                        style="width: 100%"
+                                        data-placeholder="{{ project_placeholder }}">
+                                    {{# selected_project }}
+                                        <option value="{{ selected_project }}">{{ selected_project }}</option>
+                                    {{/ selected_project }}
+                                </select>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="type" class="tlp-label">{{ services_label }}</label>
+                                <select
+                                        id="type"
+                                        name="services[]"
+                                        class="tlp-select"
+                                        multiple
+                                >
+                                    {{# service_values }}
+                                        <option value="{{ key }}" {{# is_selected }}selected{{/ is_selected }}>{{ value }}</option>
+                                    {{/ service_values }}
+                                </select>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="type" class="tlp-label">{{ group_by_label }}</label>
+                                <select
+                                        id="type"
+                                        name="group_by[]"
+                                        class="tlp-select"
+                                >
+                                    {{# group_by_values }}
+                                        <option value="{{ key }}" {{# is_selected }}selected{{/ is_selected }}>{{ value }}</option>
+                                    {{/ group_by_values }}
+                                </select>
+                            </div>
+                            <div class="tlp-form-element">
+                                <label for="date" class="tlp-label">{{ start_date_label }}</label>
+                                <div class="tlp-form-element tlp-form-element-prepend">
+                                    <input
+                                            type="text"
+                                            id="start_date"
+                                            name="start_date"
+                                            class="tlp-input tlp-input-date"
+                                            size="11"
+                                            value="{{ start_date_value }}"
+                                    >
+                                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="tlp-form-element">
+                                <label for="date" class="tlp-label">{{ end_date_label }}</label>
+                                <div class="tlp-form-element tlp-form-element-prepend">
+                                    <input
+                                            type="text"
+                                            id="end_date"
+                                            name="end_date"
+                                            class="tlp-input tlp-input-date"
+                                            size="11"
+                                            value="{{ end_date_value }}"
+                                    >
+                                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="tlp-form-element">
+                                <label class="tlp-label tlp-checkbox">
+                                    <input type="checkbox"
+                                           name="relative_y_axis"
+                                           value="true"
+                                           {{# relative_y_axis_value }}checked{{/relative_y_axis_value}}
+                                    /> {{ relative_y_axis_label }}
+                                </label>
+                            </div>
+
+                            <button type="submit" class="tlp-button-primary tlp-button-wide">
+                                <i class="fa fa-search tlp-button-icon"></i> {{ search }}
+                            </button>
+                        </form>
+                    </section>
+                {{/ search_fields }}
+            </div>
+        </section>
+
+        <section class="tlp-pane" id="siteadmin-statistics-disk-usage-data">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <div class="tlp-pane-title">
+                        {{ pane_title }}
+                    </div>
+                </div>
+                <section class="tlp-pane-section">
+                    <img src="{{ graph_url }}" title="{{ graph_image_title }}" />
+                </section>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                        <tr>
+                            <th>{{ table_service_title }}</th>
+                            <th class="tlp-table-cell-numeric">{{ table_start_size_title }}</th>
+                            <th class="tlp-table-cell-numeric">{{ table_end_size_title }}</th>
+                            <th class="tlp-table-cell-numeric">{{ table_size_evolution_title }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{# data_services }}
+                            <tr>
+                                <td class="siteadmin-statistics-disk-usage-data-service">
+                                    <span class="siteadmin-statistics-disk-usage-data-service-color"
+                                          style="background-color: {{ color_rgba }}; border: 3px solid {{ color_rgb }};">
+                                    </span>
+                                    <span>{{ value }}</span>
+                                </td>
+                                <td class="tlp-table-cell-numeric">{{ start_size }}</td>
+                                <td class="tlp-table-cell-numeric">{{ end_size }}</td>
+                                <td class="tlp-table-cell-numeric">{{ evolution }}</td>
+                            </tr>
+                        {{/ data_services }}
+                        {{^ data_services }}
+                            <tr>
+                                <td colspan="6" class="tlp-table-cell-empty">
+                                    {{ no_data }}
+                                </td>
+                            </tr>
+                        {{/ data_services }}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th></th>
+                            <th class="tlp-table-cell-numeric"><span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ total_start_size_tooltip }}">Σ {{ total_start_size }}</span></th>
+                            <th class="tlp-table-cell-numeric"><span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ total_end_size_tooltip }}">Σ {{ total_end_size }}</span></th>
+                            <th class="tlp-table-cell-numeric"><span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ total_evolution_tooltip }}">Σ {{ total_evolution }}</span></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>

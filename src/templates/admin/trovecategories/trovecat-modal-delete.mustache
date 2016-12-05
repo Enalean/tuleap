@@ -1,0 +1,27 @@
+<div class="tlp-modal tlp-modal-danger" id="trove-cat-delete-{{ trove_cat_id }}" role="dialog">
+
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_trove_cat }} {{ fullname }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+    </div>
+    <form action="/admin/trove/trove_cat_list.php?action=delete" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="tlp-modal-body trove-cats-modal-action">
+            <input type="hidden" name="trove_cat_id" value="{{ trove_cat_id }}">
+            <input type="hidden" name="parent" value="{{ parent }}">
+            <p>{{{ purified_delete_message }}} </p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-danger tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal">{{ cancel }}
+            </button>
+            <button type="submit"
+                    class="tlp-button-primary tlp-button-danger tlp-modal-action">{{ delete_button }}</button>
+        </div>
+    </form>
+
+</div>

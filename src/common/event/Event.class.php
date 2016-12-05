@@ -1290,4 +1290,14 @@ class Event {
      *    - javascript_files: String[] js paths to be added
      */
     const BURNING_PARROT_GET_JAVASCRIPT_FILES = 'burning_parrot_get_javascript_files';
+
+    /**
+     * Event raised when site admin wants to send email to the platform
+     *
+     * Parameters:
+     *    'destination' => 'comm' | 'sf' | 'all' | 'admin' | 'sfadmin' | 'devel',
+     *    'message'     => <string>,
+     *    'subject'     => <string>
+     */
+    const MASSMAIL = 'massmail';
 }

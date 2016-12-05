@@ -101,7 +101,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
             }
         }
 
-        $sql = "SELECT *
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_statistics_disk_quota_exception
                 $condition
                 $order
@@ -124,17 +124,10 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    /**
-     * Delete Custom quota for the given projects
-     *
-     * @param Array $projects List of Id of projects
-     *
-     * @return Boolean
-     */
-    public function deleteCustomQuota($projects) {
-        $projects = $this->da->escapeIntImplode($projects);
+    public function deleteCustomQuota($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
         $sql = "DELETE FROM ".$this->getTable()."
-                WHERE ".self::GROUP_ID." IN ($projects)";
+                WHERE ".self::GROUP_ID." = $project_id";
         return $this->update($sql);
     }
 

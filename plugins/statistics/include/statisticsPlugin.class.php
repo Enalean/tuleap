@@ -51,6 +51,9 @@ class StatisticsPlugin extends Plugin {
 
         $this->addHook('aggregate_statistics');
         $this->addHook('get_statistics_aggregation');
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
@@ -102,8 +105,7 @@ class StatisticsPlugin extends Plugin {
     public function is_in_siteadmin($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $did_we_switch_statistics_to_burning_parrot = false;
-            $params['is_in_siteadmin'] = $did_we_switch_statistics_to_burning_parrot;
+            $params['is_in_siteadmin'] = true;
         }
     }
 
@@ -155,8 +157,13 @@ class StatisticsPlugin extends Plugin {
      */
     function usergroup_data($params)
     {
+        $user_url_params = array(
+            'menu' => 'one_user_details',
+            'user' => $params['user']->getRealName().' ('.$params['user']->getUserName() .')'
+        );
+
         $params['links'][] = array(
-            'href'  => $this->getPluginPath() . '/disk_usage.php?func=show_one_user&user_id='.$params['user']->getId(),
+            'href'  => $this->getPluginPath() . '/disk_usage.php?'.http_build_query($user_url_params),
             'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
         );
     }
@@ -167,8 +174,12 @@ class StatisticsPlugin extends Plugin {
             return;
         }
 
+        $project_url_params = array(
+            'menu'           => 'services',
+            'project_filter' => $params['project']->getUnconvertedPublicName().' ('.$params['project']->getUnixName() .')'
+        );
         $params['links'][] = array(
-            'href'  => $this->getPluginPath().'/disk_usage.php?func=show_one_project&group_id='.$params['project']->getID(),
+            'href'  => $this->getPluginPath().'/disk_usage.php?'.http_build_query($project_url_params),
             'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
         );
     }
@@ -277,5 +288,20 @@ class StatisticsPlugin extends Plugin {
             $params['date_start'],
             $params['date_end']
         );
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = $this->getPluginPath() . '/js/admin.js';
+        }
     }
 }

@@ -1,123 +1,183 @@
-<h2>{{{ page_title }}}</h2>
+<section class="tlp-framed-vertically">
+
+<h1 class="tlp-framed-horizontally">{{ title }}</h1>
+
 <div id="admin-system-events">
-    <ul class="nav nav-tabs" id="system-events-tabs">
-    {{# queue_links }}
-        <li {{# active }} class="active" {{/ active }}>
-            <a href="{{ href }}">
-                {{ label }}
-            </a>
-        </li>
-    {{/ queue_links }}
-    </ul>
+    <nav class="tlp-tabs">
+        <a href="/admin/system_events/" class="tlp-tab tlp-tab-active">{{ events_label }}</a>
+        <a href="/admin/system_events/notifications.php" class="tlp-tab">{{ notifications_label }}</a>
+    </nav>
 
-    <form action="" method="POST">
-        {{{ token_input }}}
-        <fieldset>
-            <legend id="system_events_filter" class="{{ system_events_filter_classname }}">Filter:</legend>
-            <strong>Status:</strong>
-            <input type="hidden" name="filter_status[]" value="{{ status_none_label }}" />
-            <br />
+    <section class="tlp-framed-horizontally" id="systemevents">
+        {{# search }}
+            <section class="tlp-pane" id="systemevents-filter">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="fa fa-search tlp-pane-title-icon"></i> {{ filter_label }}
+                        </h1>
+                    </div>
+                    <form action="" method="GET" class="tlp-pane-section">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="status">{{ status_label }}</label>
+                            <select class="tlp-select" id="status" name="filter_status[]" multiple size="6" autocomplete="off">
+                                {{# status }}
+                                    <option value="{{ value }}" {{# checked }}selected{{/ checked }}>
+                                        {{ label }}
+                                    </option>
+                                {{/ status }}
+                            </select>
+                        </div>
 
-            {{# status }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="queue">{{ queue_label }}</label>
+                            <select class="tlp-select" id="queue" name="queue" autocomplete="off">
+                                {{# queues }}
+                                    <option value="{{ value }}" {{# checked }}selected{{/ checked }}>
+                                        {{ label }}
+                                    </option>
+                                {{/ queues }}
+                            </select>
+                        </div>
 
-            <label class="checkbox inline">
-                <input type="checkbox"
-                        name="filter_status[]"
-                        value="{{ label }}"
-                        id="filter_{{ label }}"
-                        {{# checked }} checked="checked" {{/ checked }}
-                         />
-                {{ label }}
-            </label>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="types">{{ types_label }}</label>
+                            {{# types_by_queue }}
+                                <select class="tlp-select systemevents-types {{# is_current }}systemevents-types-for-current-queue{{/ is_current }}"
+                                    id="types"
+                                    name="filter_type[]"
+                                    multiple
+                                    size="10"
+                                    {{^ is_current }}disabled{{/ is_current }}
+                                    data-queue="{{ queue }}"
+                                    autocomplete="off"
+                                >
+                                    {{# types }}
+                                        <option value="{{ value }}" {{# checked }}selected{{/ checked }} title="{{ label }}">
+                                            {{ label }}
+                                        </option>
+                                    {{/ types }}
+                                </select>
+                            {{/ types_by_queue }}
+                        </div>
 
-            {{/ status }}
+                        <button type="submit" class="tlp-button-primary tlp-button-wide">
+                            <i class="fa fa-search tlp-button-icon"></i> {{ search_label }}
+                        </button>
+                    </form>
+                </div>
+            </section>
+        {{/search}}
 
-            <hr/>
-            <strong>Types:</strong>
-            <div class="row-fluid">
-                {{{ selectbox }}}
+        <section class="tlp-pane" id="systemevents-results">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="fa fa-flag tlp-pane-title-icon"></i> {{ title }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>{{ type_label }}</th>
+                                <th>{{ status_label }}</th>
+                                <th>{{ parameters_label }}</th>
+                                <th class="tlp-table-cell-numeric systemevents-time">{{ created_at }}</th>
+                                <th class="tlp-table-cell-numeric systemevents-time">{{ start_at }}</th>
+                                <th class="tlp-table-cell-numeric systemevents-time">{{ end_at }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        {{# sections }}
+                            <tbody>
+                                <tr>
+                                    <td class="tlp-table-cell-section" colspan="7">{{ label }}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                {{# events }}
+                                    <tr>
+                                        <td>
+                                            {{# namespace }}
+                                                <div class="systemevents-namespace">{{ namespace }}</div>
+                                            {{/ namespace }}
+                                            {{ type }}
+                                        </td>
+                                        <td>
+                                            <div class="tlp-badge-{{ badge }}
+                                                {{^ status_need_attention }}tlp-badge-outline{{/ status_need_attention }}"
+                                            >
+                                                {{ status }}
+                                            </div>
+                                        </td>
+                                        <td class="systemevents-parameters">
+                                            {{{ purified_parameters }}}
+                                        </td>
+                                        <td class="tlp-table-cell-numeric">
+                                            <span class="tlp-tooltip tlp-tooltip-top"
+                                                  data-tlp-tooltip="{{ create_date }}"
+                                            >
+                                                {{ create_time }}
+                                            </span>
+                                        </td>
+                                        <td class="tlp-table-cell-numeric {{^ is_started }}systemevents-not-started{{/ is_started }}">
+                                            <span class="tlp-tooltip tlp-tooltip-top"
+                                                  data-tlp-tooltip="{{# is_started }}{{ start_date }}{{/ is_started }}{{^ is_started }}{{ not_started_yet }}{{/ is_started }}"
+                                            >
+                                                {{# is_started }}
+                                                    {{ start_time }}
+                                                {{/ is_started }}
+                                                {{^ is_started }}
+                                                    –
+                                                {{/ is_started }}
+                                            </span>
+                                        </td>
+                                        <td class="tlp-table-cell-numeric {{^ is_ended }}systemevents-not-ended{{/ is_ended }}">
+                                            <span class="tlp-tooltip tlp-tooltip-top"
+                                                  data-tlp-tooltip="{{# is_ended }}{{ end_date }}{{/ is_ended }}{{^ is_ended }}{{ not_ended_yet }}{{/ is_ended }}"
+                                            >
+                                                {{# is_ended }}
+                                                    {{ end_time }}
+                                                {{/ is_ended }}
+                                                {{^ is_ended }}
+                                                    –
+                                                {{/ is_ended }}
+                                            </span>
+                                        </td>
+                                        <td class="tlp-table-cell-actions">
+                                            <button type="button"
+                                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button systemevents-display-edit-modal"
+                                                data-modal-id="systemevents-details-modal-{{ id }}"
+                                            >
+                                                <i class="fa fa-list tlp-button-icon"></i> {{ details_label }}
+                                            </button>
+
+                                            {{> modal-details-system-event }}
+                                        </td>
+                                    </tr>
+                                {{/ events }}
+                            </tbody>
+                        {{/ sections }}
+                        {{^ has_events }}
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="tlp-table-cell-empty">
+                                        {{ empty_state }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        {{/ has_events }}
+                    </table>
+                    {{# has_events }}
+                        {{# pagination }}
+                            {{> pagination }}
+                        {{/ pagination }}
+                    {{/ has_events }}
+                </section>
             </div>
-            <hr/>
-            <p>
-                <input type="submit" name="filter" class="btn" value="{{ btn_submit_label }}" />
-            </p>
-        </fieldset>
-
-        {{{ events }}}
-
-        <h3>{{ notification_title }}</h3>
-
-        {{{ send_mail_section_title }}}
-
-        {{^ has_follower }}
-            <em>{{ nobody_label }}</em>
-        {{/ has_follower }}
-
-        <table class="table table-striped table-bordered">
-            <thead>
-            <tr><th>emails</th><th>listen</th><th>&nbsp;</th></tr>
-            </thead>
-            <tbody>
-
-            {{# system_event_followers }}
-                <tr valign="top"><td>
-                {{# edit }}
-                    <textarea name="followers[{{ id }}][emails]" rows="4" cols="40">
-                        {{ email }}
-                    </textarea>
-                {{/ edit }}
-
-                {{^ edit }}
-                    {{ email }}
-                {{/ edit }}
-
-                </td><td>
-
-                {{# edit }}
-                    <select name="followers[{{ id }}][types][]" size="5" multiple="multiple">
-                    {{# types-selected }}
-                        <option value="{{ label }}" {{# selected }} selected="selected" {{/ selected }}>
-                            {{ label }}
-                        </option>
-                    {{/ types-selected }}
-                    </select>
-                {{/ edit }}
-
-                {{^ edit }}
-                    {{ types }}
-                {{/ edit }}
-
-                </td><td>
-
-                {{# edit }}
-                    <input type="submit" class="btn btn-primary" name="save" value="{{ btn_submit_label }}" />
-                    <input type="submit" class="btn" name="cancel" value="{{ btn_cancel_label }}" />
-                {{/ edit }}
-
-                {{^ edit }}
-                    <a href="?edit={{ id }}&queue={{ queue }}">{{{ edit_icon }}}</a>
-                {{/ edit }}
-
-                <a class="remove_followers" href="?queue={{ queue }}&delete={{ id }}" data-message="{{ js_content }}"> {{{ cross_icon }}} </a>
-                </td></tr>
-
-                {{/ system_event_followers }}
-
-                {{^ request_is_edit }}
-                    <tr valign="top"><td>
-                    <textarea name="new_followers[emails]" id="new_followers_email" rows="4" cols="40" placeholder="{{ default_new_followers_email }}"></textarea>
-                    </td><td>
-                    <select name="new_followers[types][]" size="5" multiple="multiple">
-                        {{# status_new_followers }}
-                            <option value="{{ label }}"> {{ label }} </option>
-                        {{/ status_new_followers }}
-                    </select>
-                    </td><td>
-                    <input type="submit" class="btn" value="{{ btn_submit_label }}" />
-                    </td></tr>'
-                {{/ request_is_edit }}
-
-            </tbody>
-        </table>
-    </form>
+        </section>
+    </section>
 </div>
+
+</section>

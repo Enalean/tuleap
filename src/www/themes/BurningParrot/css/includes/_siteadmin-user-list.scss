@@ -63,14 +63,6 @@
     margin: 0 0 0 ($tlp-spacing / 2);
 }
 
-#siteadmin-userlist-result-table {
-    margin: 0 0 $tlp-spacing;
-
-    + .tlp-pagination {
-        margin: $tlp-double-spacing 0 0;
-    }
-}
-
 .siteadmin-userlist-result-table-adminof {
     margin: 0 $tlp-spacing 0 0;
 }

@@ -2,6 +2,7 @@
   "label": "Tables",
   "children": [
     "tables",
-    "empty"
+    "empty",
+    "filter"
   ]
 }

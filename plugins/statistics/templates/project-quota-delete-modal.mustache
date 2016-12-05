@@ -1,0 +1,28 @@
+<div id="modal-delete-quota-{{ project_id }}"
+     class="tlp-modal tlp-modal-danger"
+     role="dialog"
+     aria-labelledby="modal-delete-quota-{{ project_id }}-label">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-delete-quota-{{ project_id }}-label">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_quota_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{{ purified_delete_confirm }}}</p>
+    </div>
+    <form action="" method="POST" class="tlp-modal-footer">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <input type="hidden" name="action" value="delete">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel_label }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action" name="delete_quota" value="{{ project_id }}">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_quota_label }}
+        </button>
+    </form>
+</div>

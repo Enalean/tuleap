@@ -1,23 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 — 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -44,6 +43,7 @@ class SystemEventManager {
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
+            Event::MASSMAIL,
             Event::SVN_UPDATE_HOOKS,
             Event::SVN_AUTHORIZE_TOKENS,
             Event::SVN_REVOKE_TOKENS,
@@ -263,6 +263,14 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_MEDIUM);
             break;
 
+        case Event::MASSMAIL:
+            $this->createEvent(
+                SystemEvent::TYPE_MASSMAIL,
+                json_encode($params),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            break;
+
         case Event::SVN_UPDATE_HOOKS:
             $this->createEvent(
                 SystemEvent::TYPE_SVN_UPDATE_HOOKS,
@@ -323,9 +331,19 @@ class SystemEventManager {
     private function instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
         $system_event = $this->instanciateSystemEvent($type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
         if ($system_event === null) {
-            $system_event = $this->instanciateSystemEvent('SystemEvent_'.$type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
+            $klass        = $this->getClassForType($type);
+            $system_event = $this->instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
         }
         return $system_event;
+    }
+
+    private function getClassForType($type)
+    {
+        if ($type === SystemEvent::TYPE_MASSMAIL) {
+            return 'Tuleap\SystemEvent\Massmail';
+        }
+
+        return 'SystemEvent_' . $type;
     }
 
     private function instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
@@ -391,14 +409,15 @@ class SystemEventManager {
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
         case SystemEvent::TYPE_ROOT_DAILY:
         case SystemEvent::TYPE_COMPUTE_MD5SUM:
-            $klass = 'SystemEvent_'. $row['type'];
+        case SystemEvent::TYPE_MASSMAIL:
+            $klass = $this->getClassForType($row['type']);
             break;
 
         case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
         case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
         case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
         case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
-            $klass = 'SystemEvent_'. $row['type'];
+            $klass = $this->getClassForType($row['type']);
             $klass_params = array(Backend::instance(Backend::SVN));
             break;
 
@@ -464,76 +483,33 @@ class SystemEventManager {
     }
 
     /**
-     * Compute a html table to display the status of the last n events
-     *
-     * @param int                   $offset        the offset of the pagination
-     * @param int                   $limit         the number of event to includ in the table
-     * @param boolean               $full          display a full table or only a summary
-     * @param array                 $filter_status the filter on status
-     * @param array                 $filter_type   the filter on type
-     * @param CSRFSynchronizerToken $csrf          The token to use to build actions on events
+     * Compute a html table to display the status of the last 10 events,
+     * displayed in my personal page as a widget for site administrators
      *
      * @return string html
      */
-    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, CSRFSynchronizerToken $csrf = null, $queue = null) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+    public function fetchLastTenEventsStatusWidget()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        $classname = 'table table-striped';
-        if ($full) {
-            $classname .= ' table-hover table-bordered';
-        } else {
-            $classname .= ' table-condensed';
-        }
-        $html .= '<table class="'. $classname .'">';
-
-        if ($full) {
-            $html .= '<thead><tr>';
-            $html .= '<th>'. 'id' .'</td>';
-            $html .= '<th>'. 'type' .'</td>';
-            $html .= '<th>'. 'owner' .'</td>';
-            $html .= '<th>'. 'status' .'</th>';
-            $html .= '<th>'. 'priority' .'</th>';
-            $html .= '<th>'. 'parameters' .'</th>';
-            $html .= '<th>'. 'create_date' .'</th>';
-            $html .= '<th>'. 'process_date' .'</th>';
-            $html .= '<th>'. 'end_date' .'</th>';
-            $html .= '<th>'. 'log' .'</th>';
-            $html .= '<th>'. 'actions' .'</th>';
-
-            $html .= '</tr></thead>';
-
-        }
+        $html  = '';
+        $html .= '<table class="table table-striped table-condensed">';
         $html .= '<tbody>';
 
-        $replay_action_params = array();
-        if ($csrf) {
-            $replay_action_params[$csrf->getTokenName()] = $csrf->getToken();
-        }
-        if (!$filter_status) {
-            $filter_status = array(
-                SystemEvent::STATUS_NEW,
-                SystemEvent::STATUS_RUNNING,
-                SystemEvent::STATUS_DONE,
-                SystemEvent::STATUS_WARNING,
-                SystemEvent::STATUS_ERROR,
-            );
-        }
+        $filter_status = array(
+            SystemEvent::STATUS_NEW,
+            SystemEvent::STATUS_RUNNING,
+            SystemEvent::STATUS_DONE,
+            SystemEvent::STATUS_WARNING,
+            SystemEvent::STATUS_ERROR,
+        );
 
-        if ($queue) {
-            $allowed_types = $this->getTypesForQueue($queue);
-        } else {
-            $allowed_types = $this->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
-        }
+        $filter_type = $this->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
 
-        if ($filter_type) {
-            $filter_type = array_intersect($filter_type, $allowed_types);
-        } else {
-            $filter_type = $allowed_types;
-        }
+        $offset = 0;
+        $limit  = 10;
 
         $events = $this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type);
-        list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
         foreach($events as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
                 $html .= '<tr>';
@@ -549,68 +525,16 @@ class SystemEventManager {
                 //status
                 $html .= '<td class="system_event_status_'. $row['status'] .'"';
                 if ($sysevent->getLog()) {
-                    $html .= ' title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+                    $html .= ' title="'. $purifier->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
                 }
                 $html .= '>';
                 $html .= $sysevent->getStatus();
                 $html .= '</td>';
-
-                if ($full) {
-                    $replay_link = '';
-                    if ($sysevent->getStatus() == SystemEvent::STATUS_ERROR) {
-                        $replay_action_params['replay'] = $sysevent->getId();
-                        $replay_link .= '<a href="/admin/system_events/?'.
-                            ($queue !== SystemEvent::DEFAULT_QUEUE ? 'queue='.$queue.'&' : '').
-                            http_build_query($replay_action_params) .'" title="Replay this event">';
-                        $replay_link .= $GLOBALS['HTML']->getImage('ic/arrow-circle.png');
-                        $replay_link .= '</a>';
-                    }
-
-                    $html .= '<td style="text-align:center">'. $sysevent->getPriority() .'</td>';
-                    $html .= '<td>'. $sysevent->verbalizeParameters(true) .'</td>';
-                    $html .= '<td>'. $sysevent->getCreateDate().'</td>';
-                    $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
-                    $html .= '<td>'. $sysevent->getEndDate() .'</td>';
-                    $html .= '<td>'. nl2br($sysevent->getLog()) .'</td>';
-                    $html .= '<td>'. $replay_link .'</td>';
-                }
-
                 $html .= '</tr>';
             }
         }
         $html .= '</tbody></table>';
-        if ($full) {
-            //Pagination
-            $nb_of_pages = ceil($num_total_rows / $limit);
-            $current_page = round($offset / $limit);
-            $html .= '<div class="pagination"><ul>';
-            $width = 10;
-            for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
-                if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                    $class = '';
-                    if ($i == $current_page) {
-                        $class = 'class="active"';
-                    }
-                    $html .= '<li '. $class .'>';
-                    $html .= '<a href="?'. http_build_query(array(
-                            'offset'        => (int)($i * $limit),
-                            'filter_status' => $filter_status,
-                            'filter_type'   => $filter_type,
-                            'queue'         => $queue
-                        )).
-                        '">';
-                    $html .= $i + 1;
-                    $html .= '</a>';
-                    $html .= '</li>';
-                } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
-                    $html .= '<li class="disabled">';
-                    $html .= '<a href="#">...</a>';
-                    $html .= '<li>';
-                }
-            }
-            $html .= '</ul></div>';
 
-        }
         return $html;
     }
 

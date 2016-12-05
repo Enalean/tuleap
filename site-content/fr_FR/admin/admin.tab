@@ -78,7 +78,8 @@ admin_main	servers	Serveurs
 admin_main	servers_admin	Administration des serveurs
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
 admin_main	sstat_reg_g	enregistrés
-admin_main	sstat_reg_act_g	enregistrés actifs
+admin_main	sstat_reg_act_g	actifs
+admin_main	sstat_deleted	supprimés
 admin_main	sstat_pend_g	en attente
 admin_main	sstat_pend_u	Utilisateurs en attente
 admin_main	site_news	Annonces site
@@ -100,11 +101,11 @@ admin_main	stat_projects	Statistiques projets
 admin_main	status_project	Par statut
 admin_main	stat_users	Statistiques utilisateurs
 admin_main	status_user	Par statut
-admin_main	statusactif_user	actif(s)
-admin_main	statusrestricted_user	restreint(s)
-admin_main	statushold_user	suspendu(s)
-admin_main	statusdeleted_user	détruit(s)
-admin_main	statusvalidated_user	validé(s)
+admin_main	statusactif_user	actif
+admin_main	statusrestricted_user	restreint
+admin_main	statushold_user	suspendu
+admin_main	statusdeleted_user	détruit
+admin_main	statusvalidated_user	validé
 admin_main	statuspending_user	en attente
 admin_main	statustotal_user	total
 admin_main	desc_fields	Description des projets
@@ -322,15 +323,22 @@ admin_grouplist	id_group	Identifiant du groupe
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
 #
-admin_lastlogins	title	Dernières connections
-admin_lastlogins	recent	Connections les plus récentes
+admin_lastlogins	title	Connexions récentes
+admin_lastlogins	pane_title	Connexions récentes
+admin_lastlogins	no_result	Il n'y a pas encore de connexion récente
+admin_lastlogins	username_column_header	Nom d'utilisateur
+admin_lastlogins	ip_column_header	Addresse IP
+admin_lastlogins	date_column_header	Date
+admin_lastlogins	filter_placeholder	Nom d'utilisateur, IP, date
+admin_lastlogins	filter_no_matching_result	Il n'y a aucune connexion récente correspondante au filtre
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php
 #
 admin_massmail_execute	post_recvd	Requête Post reçue. Interrogation en cours
 admin_massmail_execute	mailing	Démarrage du mailing vers $1 adresses e-mail distinctes
-admin_massmail_execute	sending	envoi à
+admin_massmail_execute	sending	La prévisualisation a été envoyée
+admin_massmail_execute	no_sending	La prévisualisation n'a pas pu être envoyée
 admin_massmail_execute	done	Terminé !
 admin_massmail_execute	no_user_mail	L'utilisateur ajouté $1 n'a pas d'adresse mail.
 admin_massmail_execute	no_user	Aucun utilisateur ne correspond à votre entrée $1.
@@ -339,18 +347,27 @@ admin_massmail_execute	no_user	Aucun utilisateur ne correspond à votre entrée 
 # Script: SF/www/admin/massmail.php
 #
 admin_massmail	title	Envoi de courrier électronique en masse
-admin_massmail	header	Envoi de courrier électronique en masse aux utilisateurs de $1
-admin_massmail	warning	Soyez <b>très</b> vigilant avec ce formulaire car son utilisation déclenche l'envoie de e-mails à de très nombreux utilisateurs.
-admin_massmail	to_preview	Envoyer un aperçu à
-admin_massmail	to_additional	Envoyer uniquement aux abonnés de l'option "Courrier électronique supplémentaire au sujet de la communauté"
-admin_massmail	to_update	Envoyer uniquement aux abonnés de l'option "Courrier électronique à propos des mises à jour du site"
-admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets
-admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets
-admin_massmail	to_site_admin	Envoyer uniquement aux administrateurs du site
-admin_massmail	to_all	Envoyer à tous les utilisateurs quelles que soient leurs préférences
+admin_massmail	header	Courrier électronique
+admin_massmail	warning	$1 utilisateurs vont recevoir ce courrier électronique.
+admin_massmail	to_additional	Abonnés à l'option "Courrier électronique supplémentaire au sujet de la communauté" ($1 utilisateurs)
+admin_massmail	to_update	Abonnés à l'option "Courrier électronique à propos des mises à jour du site" ($1 utilisateurs)
+admin_massmail	to_devel	Développeurs des projets ($1 utilisateurs)
+admin_massmail	to_proj_admin	Administrateurs des projets ($1 utilisateurs)
+admin_massmail	to_site_admin	Administrateurs du site ($1 utilisateurs)
+admin_massmail	to_all	Tous les utilisateurs quelles que soient leurs préférences ($1 utilisateurs)
 admin_massmail	subject	Objet
-admin_massmail	text	Texte du message
-admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet e-mail est envoyé depuis '$1'. Pour changer vos préférences en matière d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions à $2 ou répondez à ce message.
+admin_massmail	send_email_label	Envoyer le courrier électronique
+admin_massmail	destination_label	Destinataires
+admin_massmail	subject_label	Sujet
+admin_massmail	subject_placeholder	Phrase d'accroche
+admin_massmail	content_label	Contenu
+admin_massmail	content_placeholder	Message…
+admin_massmail	preview_label	Prévisualisation
+admin_massmail	send_preview_label	Envoyer une prévisualisation
+admin_massmail	massmail_queued	L'envoi du message a été <a href="$1">placé en file d'attente</a>
+admin_massmail	confirmation_title	Envoi du courrier
+admin_massmail	confirmation_body	Veuillez confirmer votre action.
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php
@@ -462,7 +479,6 @@ admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
 admin_userlist	error_noadd	Erreur - Impossibilité d'ajouter l'utilisateur au groupe
 admin_userlist	user_list	Utilisateurs
 admin_userlist	all_groups	Tous les projets
-admin_userlist	group	in $1
 admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
 admin_userlist	validated	Validé
@@ -499,45 +515,50 @@ admin_userlist	pending_users_text	Pour votre information, <a href="$1">$2 utilis
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
 #
-admin_trove_cat_add	title	Arbre des projets - Ajouter une catégorie
-admin_trove_cat_add	header	Ajouter une catégorie à l'arbre des projets
+admin_trove_cat_add	add_trove_cat	Ajouter une catégorie de projet
+admin_trove_cat_add	add	Ajouter une catégorie
 admin_trove_cat_add	short_name	Nom court de la catégorie
-admin_trove_cat_add	short_name_note	(pas d'espaces)
 admin_trove_cat_add	full_name	Nom complet de la catégorie
-admin_trove_cat_add	full_name_note	(80 caractères maximum)
 admin_trove_cat_add	description	Description de la catégorie
-admin_trove_cat_add	description_note	(255 caractères maximum)
-admin_trove_cat_add	parent	Catégorie parent
-admin_trove_cat_add	mandatory	Obligatoire
-admin_trove_cat_add	mandatory_note	Selectionnable quand la catégorie parente est "Root"
-admin_trove_cat_add	display_at_project_creation	Afficher lors de la création d'un projet
-admin_trove_cat_add	display_note	Selectionnable quand la catégorie parente est une catégorie de niveau un
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
 #
-admin_trove_cat_delete	title	Arbre des projets - Détruire une catégorie
-admin_trove_cat_delete	header	Détruire une catégorie de l'arbre des projets
-admin_trove_cat_delete	warning	<span class="feedback">**ATTENTION**</span> Vous êtes sur le point de détruire une catégorie de l'arbre des projets.
-admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catégorie possède <b>$1</b> sous-catégorie(s). Sa destruction va aussi entraîner la destruction des sous-catégories de façon récursive !!
-admin_trove_cat_delete	no_child	Cette catégorie n'a pas de sous-catégorie
-admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catégorie et ses sous-catégories (si elle en a) sont utilisées par <b>$1 projet(s)</b>. La destruction de cette catégorie entraînera la réaffectation de tous les projets à la catégorie parent (ou à 'Aucune' si la catégorie parent est la racine de l'arbre)
-admin_trove_cat_delete	no_proj	Cette catégorie n'est utilisée par aucun projet
-admin_trove_cat_delete	error_nocat	Cette catégorie n'existe pas
+admin_trove_cat_delete	delete_trove_cat	Supprimer la catégorie
+admin_trove_cat_delete	alert_description_delete_modal	Wow, attendez une minute. Vous êtes sur le point de supprimer la catégorie de projet <b>$1</b>. Veuillez confirmer votre action.
+admin_trove_cat_delete	parent_is_root	Il est impossible de supprimer une catégorie parente.
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
-admin_trove_cat_edit	title	Arbre des projets - Modification d'une catégorie
 admin_trove_cat_edit	header	Modifier une catégorie
 admin_trove_cat_edit	root	Racine
+admin_trove_cat_edit	edit	Mettre à jour la catégorie
+admin_trove_cat_edit	label_fullname	Nom complet
+admin_trove_cat_edit	label_shortname	Nom court
+admin_trove_cat_edit	label_mandatory	Requis
+admin_trove_cat_edit	mandatory_info	Sélectionnable uniquement si le parent est "Root"
+admin_trove_cat_edit	label_display	Afficher lors de la création d'un projet
+admin_trove_cat_edit	display_info	Sélectionnable si le parent est un parent requis de premier niveau
+admin_trove_cat_edit	label_description	Description
+admin_trove_cat_edit	description_placeholder	Description de la catégorie de projet
+admin_trove_cat_edit	parent_category_label	Catégorie du parent
+admin_trove_cat_edit	missing_fullname	Le nom complet est obligatoire
+admin_trove_cat_edit	missing_shortname	Le nom court est obligatoire
+admin_trove_cat_edit	update_forbidden	Il est impossible de déplacer une catégorie dans sa catégorie fille ou dans elle même.
+
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Arbre des projets - Liste des catégories
-admin_trove_cat_list	header	Catégories de classification de projets
+admin_trove_cat_list	title	Catégories de projets
+admin_trove_cat_list	header_name	Nom complet
+admin_trove_cat_list	header_description	Description
+admin_trove_cat_list	header	Catégories de projets
 admin_trove_cat_list	edit	Modifier
-admin_trove_cat_list	delete	Détruire
+admin_trove_cat_list	delete	Supprimer
 admin_trove_cat_list	add	Ajouter une catégorie
+admin_trove_cat_list	deletion_forbidden_label	Impossible de détruire une hiérarchie, merci de supprimer d'abord ses enfants.
+admin_trove_cat_list	cancel	Annuler
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #
@@ -568,37 +589,116 @@ admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
 #-----------------------------------------------
 # Script: src/www/admin/descfields/desc_fields_edit.php
 #
-admin_desc_fields	title	Edition des Champs de Description
-admin_desc_fields	header	Edition des Champs de Description
-admin_desc_fields	header_add	Ajouter un Champ de Description
-admin_desc_fields	desc_name	Nom du champ de description
-admin_desc_fields	desc_description	Description du champ
-admin_desc_fields	desc_required	Obligatoire
-admin_desc_fields	desc_type	Type du champ
-admin_desc_fields	desc_yes	Oui
-admin_desc_fields	desc_no	Non
-admin_desc_fields	desc_line	Ligne
-admin_desc_fields	desc_text	Zone de Text
+admin_desc_fields	title	Champs de projet personnalisés
+admin_desc_fields	header_add	Ajouter un champ
+admin_desc_fields	desc_name	Nom
+admin_desc_fields	desc_description	Description
+admin_desc_fields	desc_required	Obligatoire ?
+admin_desc_fields	desc_type	Type
+admin_desc_fields	desc_yes	Champ requis
+admin_desc_fields	desc_no	Champ optionnel
+admin_desc_fields	desc_line	Chaîne de caractères
+admin_desc_fields	desc_text	Zone de texte
+admin_desc_fields	rank	Rang
 admin_desc_fields	rank_on_screen	Rang à l'écran
-admin_desc_fields	del?	Détruire ?
-admin_desc_fields	ins_desc_field_fail	L'AJOUT DE LA DESCRIPTION A ECHOUE !  SVP contacter admin@$1 $2
-admin_desc_fields	del_desc_field_fail	LA SUPPRESSION DE LA DESCRIPTION ! SVP contacter admin@$1 $2
-admin_desc_fields	update_required_desc_field_fail	LA MISE A JOUR A ECHOUE ! SVP contacter admin@$1 $2
-admin_desc_fields	update_desc_field_fail	LA MISE A JOUR A ECHOUE OU AUCUNE DONNEE N'A ETE MODIFIEE ! $1
-admin_desc_fields	info_missed	Informations Manquantes. Svp remplissez toutes les champs obligatoires.
-admin_desc_fields	info_rank_noint	Le Rang doit être une valeur numérique !
-admin_desc_fields	add_success	Champ de Description ajouté avec succès !
-admin_desc_fields	update_success	Champ de Description modifié avec succès !
-admin_desc_fields	remove_success	Champ de Description supprimé avec succès !
+admin_desc_fields	ins_desc_field_fail	L'ajout du champ a echoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	del_desc_field_fail	La suppression du champ a échoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	update_required_desc_field_fail	La mise à jour du champ a echoué. Veuillez contacter admin@$1 $2.
+admin_desc_fields	update_desc_field_fail	La mise à jour du champ a echoué ou aucune donnée n'a été modifiée. $1.
+admin_desc_fields	info_missed	Informations manquantes. Veuillez remplir tous les champs obligatoires.
+admin_desc_fields	info_rank_noint	Le rang doit être une valeur numérique.
+admin_desc_fields	add_success	Le champ a été ajouté avec succès.
+admin_desc_fields	update_success	Le champ a été modifié avec succès.
+admin_desc_fields	remove_success	Le champ a été supprimé avec succès.
+admin_desc_fields	edit_btn	Éditer
+admin_desc_fields	delete_btn	Supprimer
+admin_desc_fields	description_fields_header	Champs de projet personnalisés
+admin_desc_fields	no_description_fields	Aucun champ de projet personnalisé
+admin_desc_fields	add_modal_title	Ajouter un champ
+admin_desc_fields	add_modal_cancel	Annuler
+admin_desc_fields	add_modal_submit	Ajouter
+admin_desc_fields	edit_modal_title	Éditer le champ
+admin_desc_fields	edit_modal_cancel	Annuler
+admin_desc_fields	edit_modal_submit	Mettre à jour
+admin_desc_fields	modal_field_form_name_label	Nom
+admin_desc_fields	modal_field_form_name_placeholder	Description du projet
+admin_desc_fields	modal_field_form_rank_label	Rang à l'écran
+admin_desc_fields	modal_field_form_required_label	Ce champ est obligatoire
+admin_desc_fields	modal_field_form_type_label	Type
+admin_desc_fields	modal_field_form_description_label	Description
+admin_desc_fields	modal_field_form_description_placeholder	La description du projet sera utilisé par les managers pour…
+admin_desc_fields	modal_field_form_description_info	Ce texte sera positionné en dessous du champ et doit aider l'utilisateur final à le remplir.
+admin_desc_fields	modal_field_form_type_label_line	Chaîne de caractères
+admin_desc_fields	modal_field_form_type_label_text	Zone de texte
+admin_desc_fields	delete_modal_title	Supprimer le champ
+admin_desc_fields	delete_modal_content	Vous êtes sur le point de supprimer un champ de projet personnalisé. Veuillez confirmer votre action.
+admin_desc_fields	delete_modal_cancel	Annuler
+admin_desc_fields	delete_modal_submit	Supprimer le champ
 
-
-admin_system_events	title	Événements Système
+admin_system_events	title	Événements système
 admin_system_events	notifications	Alertes
 admin_system_events	send_email	Envoyer un email à :
 admin_system_events	nobody	Personne
 admin_system_events	default_queue	Queue principale
 admin_system_events	fts_queue	Full Text Search
 admin_system_events	tv3tv5_queue	Migration TV3 -> TV5
+admin_system_events	empty_state	Aucun événement système ne correspond à votre filtre.
+admin_system_events	filter_label	Filtrer
+admin_system_events	search_label	Chercher
+admin_system_events	types_label	Types
+admin_system_events	type_label	Type
+admin_system_events	all_status_label	Status
+admin_system_events	status_label	Status
+admin_system_events	queue_label	Queue
+admin_system_events	parameters_label	Paramètres
+admin_system_events	time_taken_label	Temps
+admin_system_events	details_label	Détails
+admin_system_events	replay_label	Relancer
+admin_system_events	id_label	Id
+admin_system_events	created_label	Date de création
+admin_system_events	created_at	Créé à
+admin_system_events	owner_label	Propriétaire
+admin_system_events	priority_label	Priorité
+admin_system_events	start_label	Date de début
+admin_system_events	start_at	Débuté à
+admin_system_events	end_label	Date de fin
+admin_system_events	end_at	Fini à
+admin_system_events	log_label	Log
+admin_system_events	replayed_label	relancé
+admin_system_events	details_title	Détails de l'événement système
+admin_system_events	duration_years	%y ans %m mois %d jours %h h %i m %s s
+admin_system_events	duration_months	%m mois %d jours %h h %i m %s s
+admin_system_events	duration_days	%d jours %h h %i m %s s
+admin_system_events	duration_hours	%h h %i m %s s
+admin_system_events	duration_minutes	%i m %s s
+admin_system_events	duration_seconds	%s s
+admin_system_events	section_date_format	%e %h %Y
+admin_system_events	priority_1	Haute
+admin_system_events	priority_2	Moyenne
+admin_system_events	priority_3	Basse
+admin_system_events	not_ended_yet	Pas encore fini
+admin_system_events	not_started_yet	Pas encore démarré
+admin_system_events	events	Événements
+admin_system_events	add_notification	Ajouter une alerte
+admin_system_events	emails	Emails
+admin_system_events	listen	Niveau d'alerte
+admin_system_events	edit	Éditer
+admin_system_events	delete	Supprimer
+admin_system_events	delete_confirm	Vous êtes sur le point du supprimer définitivement cette alerte. Merci de confirmer votre action.
+admin_system_events	delete_notif_label	Supprimer l'alerte
+admin_system_events	edit_notif_label	Éditer l'alerte
+admin_system_events	save_notif_label	Sauvegarder les modifications
+admin_system_events	notifs_empty	Il n'y a pas d'alerte définie.
+admin_system_events	notified_label	Personnes à alerter
+admin_system_events	status_to_listen	Niveaux d'alerte écoutés
+admin_system_events	emails_instructions	Entrez logins, emails ou mailing lists. Séparez-les par une virgule.
+
+admin_system_events	save_success	L'alerte a été sauvegardée
+admin_system_events	save_error	Une erreur est survenue lors de la sauvegarde de l'alerte
+admin_system_events	delete_success	L'alerte a été supprimée
+admin_system_events	delete_error	Une erreur est survenue lors de la suppression de l'alerte
+admin_system_events	at_least_one_status	Les personnes doivent écouter au moins un niveau d'alerte
+admin_system_events	people_not_empty	La liste des personnes à alerter ne peut pas être vide
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
@@ -692,7 +792,7 @@ admin_project	access_label	Accès au projet
 admin_project	description_label	Description
 admin_project	more_label	Plus d'information
 admin_project	admin_label	Administration du projet
-admin_project	members_label	Membre du projet
+admin_project	members_label	Membres du projet
 admin_project	pending_label	Docs supprimés en attente
 admin_project	manage_access_label	Gérer l'accès
 admin_project	incl_restricted_label	incl. les utilisateurs restreints
@@ -738,3 +838,5 @@ admin_projectlist	private	Privé
 admin_projectlist	public_unrestricted	Public incluant les utilisateurs restreints
 admin_projectlist	public	Public
 admin_projectlist	pending_projects_text	Pour votre information, <a href="$1">$2 projets attendent d'être validés</a>.
+
+admin	allowed_projects_filter_empty	Il n'y a pas de projets correspondant au filtre.
