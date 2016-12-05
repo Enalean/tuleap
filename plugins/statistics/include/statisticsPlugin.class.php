@@ -157,8 +157,13 @@ class StatisticsPlugin extends Plugin {
      */
     function usergroup_data($params)
     {
+        $user_url_params = array(
+            'menu' => 'one_user_details',
+            'user' => $params['user']->getRealName().' ('.$params['user']->getUserName() .')'
+        );
+
         $params['links'][] = array(
-            'href'  => $this->getPluginPath() . '/disk_usage.php?func=show_one_user&user_id='.$params['user']->getId(),
+            'href'  => $this->getPluginPath() . '/disk_usage.php?'.http_build_query($user_url_params),
             'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
         );
     }
@@ -169,8 +174,12 @@ class StatisticsPlugin extends Plugin {
             return;
         }
 
+        $project_url_params = array(
+            'menu'           => 'services',
+            'project_filter' => $params['project']->getUnconvertedPublicName().' ('.$params['project']->getUnixName() .')'
+        );
         $params['links'][] = array(
-            'href'  => $this->getPluginPath().'/disk_usage.php?func=show_one_project&group_id='.$params['project']->getID(),
+            'href'  => $this->getPluginPath().'/disk_usage.php?'.http_build_query($project_url_params),
             'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
         );
     }
