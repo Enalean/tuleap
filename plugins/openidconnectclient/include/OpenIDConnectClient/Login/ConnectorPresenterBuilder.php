@@ -41,7 +41,26 @@ class ConnectorPresenterBuilder {
     /**
      * @return ConnectorPresenter
      */
-    public function getLoginConnectorPresenter($return_to) {
+    public function getLoginConnectorPresenter($return_to)
+    {
+        $providers_authorization_request_uri = $this->getProvidersWithRequestUri($return_to);
+        return new ConnectorPresenter($providers_authorization_request_uri);
+    }
+
+    /**
+     * @return SpecificLoginPresenter
+     */
+    public function getLoginSpecificPageConnectorPresenter($return_to)
+    {
+        $providers_authorization_request_uri = $this->getProvidersWithRequestUri($return_to);
+        return new SpecificLoginPresenter($providers_authorization_request_uri);
+    }
+
+    /**
+     * @return array
+     */
+    private function getProvidersWithRequestUri($return_to)
+    {
         $providers                           = $this->provider_manager->getProvidersUsableToLogIn();
         $providers_authorization_request_uri = array();
         foreach($providers as $provider) {
@@ -53,6 +72,6 @@ class ConnectorPresenterBuilder {
             );
         }
 
-        return new ConnectorPresenter($providers_authorization_request_uri);
+        return $providers_authorization_request_uri;
     }
 }

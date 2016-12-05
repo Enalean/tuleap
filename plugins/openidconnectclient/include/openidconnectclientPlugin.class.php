@@ -159,6 +159,13 @@ class openidconnectclientPlugin extends Plugin {
         if (! $this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($provider_manager)) {
             return;
         }
+        if (ForgeConfig::get(ForgeAccess::CONFIG) !== ForgeAccess::ANONYMOUS) {
+            $params['login_url'] = OPENIDCONNECTCLIENT_BASE_URL . '/login.php?' . http_build_query(
+                array('return_to' => $params['return_to'])
+            );
+            return;
+        }
+
         $this->loadLibrary();
 
         $url_generator = new Login\LoginUniqueAuthenticationUrlGenerator(
@@ -404,5 +411,29 @@ class openidconnectclientPlugin extends Plugin {
 
         $router = new AdminRouter($controller, $csrf_token);
         $router->route($request);
+    }
+
+    public function processSpecificLoginPage(HTTPRequest $request)
+    {
+        if (!$this->canPluginAuthenticateUser()) {
+            $GLOBALS['Response']->redirect('/');
+        }
+        $this->loadLibrary();
+
+        $provider_manager        = $this->getProviderManager();
+        $flow                    = $this->getFlow($provider_manager);
+        $login_presenter_builder = new ConnectorPresenterBuilder($provider_manager, $flow);
+
+        $return_to = $request->get('return_to');
+        $presenter = $login_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);
+
+        $GLOBALS['HTML']->header(array(
+            'title' => $GLOBALS['Language']->getText('account_login', 'page_title',
+                array(ForgeConfig::get('sys_name'))),
+            'body_class' => array('login-page')
+        ));
+        $renderer = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+        $renderer->renderToPage('login-page', $presenter);
+        $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 }
