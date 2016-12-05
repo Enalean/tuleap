@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermost\Bot\BotDao;
@@ -33,6 +34,7 @@ use Tuleap\BotMattermost\SenderServices\Sender;
 
 require_once 'autoload.php';
 require_once 'constants.php';
+require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
 
 class botmattermost_agiledashboardPlugin extends Plugin
 {
@@ -99,15 +101,18 @@ class botmattermost_agiledashboardPlugin extends Plugin
             $artifact_factory
         );
         $planning_factory = PlanningFactory::build();
+        $logger = new BotMattermostLogger();
 
         $stand_up_notification_sender = new StandUpNotificationSender(
             new BotAgileDashboardFactory(
                 new BotAgileDashboardDao,
-                new BotFactory(new BotDao())
+                new BotFactory(new BotDao()),
+                $logger
             ),
             new Sender(
                 new EncoderMessage(),
-                new ClientBotMattermost()
+                new ClientBotMattermost(),
+                $logger
             ),
             new StandUpNotificationBuilder(
                 new Planning_MilestoneFactory(
@@ -124,12 +129,12 @@ class botmattermost_agiledashboardPlugin extends Plugin
                 $planning_factory,
                 new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang'))
             ),
-            ProjectManager::instance()
+            ProjectManager::instance(),
+            $logger
         );
 
         $stand_up_notification_sender->send();
     }
-
 
     private function getRenderToString()
     {
@@ -146,7 +151,8 @@ class botmattermost_agiledashboardPlugin extends Plugin
             new CSRFSynchronizerToken(AGILEDASHBOARD_BASE_URL.'/?group_id='.$project_id.'&action=admin&pane=notification'),
             new BotAgileDashboardFactory(
                 new BotAgileDashboardDao(),
-                $bot_factory
+                $bot_factory,
+                new BotMattermostLogger()
             ),
             $bot_factory
         );

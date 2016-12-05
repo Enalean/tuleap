@@ -21,19 +21,23 @@
 namespace Tuleap\BotMattermostAgileDashboard\BotAgileDashboard;
 
 use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 
 class BotAgileDashboardFactory
 {
     private $dao;
     private $bot_factory;
+    private $logger;
 
     public function __construct(
         BotAgileDashboardDao $dao,
-        BotFactory $bot_factory
+        BotFactory $bot_factory,
+        BotMattermostLogger $logger
     ) {
         $this->dao         = $dao;
         $this->bot_factory = $bot_factory;
+        $this->logger      = $logger;
     }
 
     public function saveBotsAgileDashboard(
@@ -77,6 +81,10 @@ class BotAgileDashboardFactory
                 $row['project_id'],
                 $row['send_time']
             );
+        }
+
+        if (empty($bots_agiledashboard)) {
+            $this->logger->warn('No Bots found');
         }
 
         return $bots_agiledashboard;
