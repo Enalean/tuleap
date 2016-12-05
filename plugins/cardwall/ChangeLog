@@ -1,3 +1,6 @@
+Version 1.72 - Tuleap 9.2
+    * request #9699: XSS when editing an artifact with the modal in the cardwall
+
 Version 1.71 - Tuleap 9.2
     * request #9676: XML xsd:int only deals with 32bits int
 
