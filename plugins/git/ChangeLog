@@ -1,3 +1,6 @@
+Version 4.302 - Tuleap 9.2
+    * story #9525: Rename defaut in template in UI
+
 Version 4.301 - Tuleap 9.2
     * story #9525: Add logs when enabling regexp at global level
 
