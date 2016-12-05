@@ -23,23 +23,28 @@ Version 9.2 (Not release yet)
 	* request #9448: User's session lifetime is only verified once each 24 hours
 
 	== Plugins ==
-	* tracker: 5.1056
+	* tracker: 5.1057
 	* proftpd: 0.29
 	* graphontrackers: 1.18
-	* statistics: 0.70
+	* statistics: 0.71
 	* projectlinks: 2.12
 	* agiledashboard: 1.436
 	* artifactsfolders: 0.40
-	* svn: 0.106
+	* svn: 0.107
 	* openidconnectclient: 0.47
-	* git: 4.302
-	* mediawiki: 0.127
+	* git: 4.303
+	* mediawiki: 0.128
 	* cardwall: 1.72
 	* frs: 0.22
+	* docman: 2.26.126
+	* fulltextsearch: 0.138
+	* phpwiki: 0.13
+	* pluginsadministration: 1.24
+	* userlog: 1.14
 
 	== Themes ==
-	* FlamingParrot: 1.167
-	* BurningParrot: 0.19
+	* FlamingParrot: 1.168
+	* BurningParrot: 0.20
 
 	== Development ==
 	* request #9657: Tuleap goes gettext
