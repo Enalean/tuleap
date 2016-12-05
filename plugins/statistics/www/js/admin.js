@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var data_export_contents = document.querySelectorAll('.siteadmin-export-data');
     var data_export_inputs   = document.querySelectorAll('input[name="data-export-content"]');
     [].forEach.call(data_export_inputs, function (data_export_input) {
-        data_export_input.addEventListener('change', function () {
+        data_export_input.addEventListener('change', function (event) {
             var content_value = event.target.value;
 
             [].forEach.call(data_export_contents, function(content_to_disappear) {
