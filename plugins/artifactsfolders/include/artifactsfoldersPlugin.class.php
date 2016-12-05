@@ -133,7 +133,30 @@ class ArtifactsFoldersPlugin extends Plugin
 
         return
             $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
-            && $dao->hasReverseLinkedArtifacts($artifact->getId(), NatureInFolderPresenter::NATURE_IN_FOLDER);
+            && $this->isViewAddableForArtifact($dao, $artifact);
+    }
+
+    private function isViewAddableForArtifact(NatureDao $dao, Tracker_Artifact $artifact)
+    {
+        $linked_artifacts_ids = $dao->getReverseLinkedArtifactIds(
+            $artifact->getId(),
+            NatureInFolderPresenter::NATURE_IN_FOLDER,
+            PHP_INT_MAX,
+            0
+        );
+
+        if (count($linked_artifacts_ids) > 0) {
+            return true;
+        }
+
+        $children_folder = $this->getNatureIsChildLinkRetriever()->getChildren($artifact);
+        foreach ($children_folder as $child_folder) {
+            if ($this->isViewAddableForArtifact($dao, $child_folder)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @see TrackerXmlImport::ADD_PROPERTY_TO_TRACKER */
