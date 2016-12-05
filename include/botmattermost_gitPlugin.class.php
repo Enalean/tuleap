@@ -20,9 +20,11 @@
 
 require_once 'autoload.php';
 require_once 'constants.php';
+require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
 
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
@@ -80,11 +82,13 @@ class botmattermost_gitPlugin extends Plugin
     public function git_hook_post_receive_ref_update(array $params)
     {
         $repository = $params['repository'];
+        $logger = new BotMattermostLogger();
         if ($this->isAllowed($repository->getProjectId())) {
             $git_notification_sender = new GitNotificationSender(
                 new Sender(
                     new EncoderMessage(),
-                    new ClientBotMattermost()
+                    new ClientBotMattermost(),
+                    $logger
                 ),
                 new BotGitFactory(
                     new BotGitDao(),
@@ -92,7 +96,8 @@ class botmattermost_gitPlugin extends Plugin
                 ),
                 $repository,
                 new GitNotificationBuilder(
-                    new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'))
+                    new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git')),
+                    $logger
                 )
             );
 
