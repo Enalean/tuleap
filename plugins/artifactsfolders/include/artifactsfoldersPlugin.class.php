@@ -295,7 +295,7 @@ class ArtifactsFoldersPlugin extends Plugin
     public function after_augment_data_from_request(array $params)
     {
         $request = HTTPRequest::instance();
-        if (! $this->checkRequestConcernsArtifactFoldersWithSetParameters($request, $params['tracker']->getId())) {
+        if (! $this->checkRequestConcernsArtifactFoldersWithSetParameters($request  )) {
             return;
         }
 
@@ -308,10 +308,27 @@ class ArtifactsFoldersPlugin extends Plugin
         $augmentor->augmentDataFromRequest($params['fields_data'][$params['field']->getId()]);
     }
 
-    private function checkRequestConcernsArtifactFoldersWithSetParameters(HTTPRequest $request, $tracker_id)
+    private function checkRequestConcernsArtifactFoldersWithSetParameters(HTTPRequest $request)
     {
-        return $this->getDao()->isTrackerConfiguredToContainFolders($tracker_id)
-            && $request->exist('new-artifact-folder');
+        if (! $request->exist('new-artifact-folder')) {
+            return false;
+        }
+
+        $new_artifact_folder = $request->get('new-artifact-folder');
+
+        if (! $new_artifact_folder) {
+            return false;
+        }
+
+        $selected_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($new_artifact_folder);
+
+        if (! $selected_artifact) {
+            return false;
+        }
+
+        $tracker_id = $selected_artifact->getTrackerId();
+
+        return $this->getDao()->isTrackerConfiguredToContainFolders($tracker_id);
     }
 
     /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
