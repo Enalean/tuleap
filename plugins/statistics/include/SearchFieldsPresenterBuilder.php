@@ -22,9 +22,28 @@ namespace Tuleap\Statistics;
 
 use DateInterval;
 use DateTime;
+use EventManager;
+use Statistics_Event;
 
-class DiskUsageSearchFieldsPresenterBuilder
+class SearchFieldsPresenterBuilder
 {
+    public function buildSearchFieldsForFrequencies(
+        array $type_values,
+        $filter_value,
+        $start_date_value,
+        $end_date_value
+    ) {
+        $type_options   = $this->getListOfTypeValuePresenter($type_values);
+        $filter_options = $this->getListOfFilterValuePresenter($filter_value);
+
+        return new FrequenciesSearchFieldsPresenter(
+            $type_options,
+            $filter_options,
+            $start_date_value,
+            $end_date_value
+        );
+    }
+
     public function buildSearchFieldsForServices(
         $selected_project,
         $services_with_selected,
@@ -33,15 +52,8 @@ class DiskUsageSearchFieldsPresenterBuilder
         $end_date_value,
         $relative_y_axis_value
     ) {
-        if (! $start_date_value) {
-            $start_date = new DateTime();
-            $start_date_value = $start_date->sub(new DateInterval('P5W'))->format('Y-m-d');
-        }
-
-        if (! $end_date_value) {
-            $end_date = new DateTime();
-            $end_date_value = $end_date->format('Y-m-d');
-        }
+        $this->checkDate($start_date_value, 'Y-m-d', 'P5W');
+        $this->checkDate($end_date_value, 'Y-m-d');
 
         return new DiskUsageServicesSearchFieldsPresenter(
             $selected_project,
@@ -65,15 +77,8 @@ class DiskUsageSearchFieldsPresenterBuilder
         $start_date_value,
         $end_date_value
     ) {
-        if (! $start_date_value) {
-            $start_date = new DateTime();
-            $start_date_value = $start_date->sub(new DateInterval('P1W'))->format('Y-m-d');
-        }
-
-        if (! $end_date_value) {
-            $end_date = new DateTime();
-            $end_date_value = $end_date->format('Y-m-d');
-        }
+        $this->checkDate($start_date_value, 'Y-m-d', 'P1W');
+        $this->checkDate($end_date_value, 'Y-m-d');
 
         return new DiskUsageProjectsSearchFieldsPresenter(
             $services_with_selected,
@@ -89,7 +94,6 @@ class DiskUsageSearchFieldsPresenterBuilder
         $start_date_value,
         $end_date_value
     ) {
-
         $group_by_options = $this->getListOfGroupByValuePresenter($group_by_value);
 
         return new DiskUsageUserDetailsSearchFieldsPresenter(
@@ -179,6 +183,54 @@ class DiskUsageSearchFieldsPresenterBuilder
         return $group_by_options;
     }
 
+    private function getListOfTypeValuePresenter(array $type_values)
+    {
+        $all_data = array(
+            'session'   => $GLOBALS['Language']->getText('plugin_statistics', 'session_type'),
+            'user'      => $GLOBALS['Language']->getText('plugin_statistics', 'user_type'),
+            'forum'     => $GLOBALS['Language']->getText('plugin_statistics', 'forum_type'),
+            'filedl'    => $GLOBALS['Language']->getText('plugin_statistics', 'filedl_type'),
+            'file'      => $GLOBALS['Language']->getText('plugin_statistics', 'file_type'),
+            'groups'    => $GLOBALS['Language']->getText('plugin_statistics', 'groups_type'),
+            'docdl'     => $GLOBALS['Language']->getText('plugin_statistics', 'docdl_type'),
+            'wikidl'    => $GLOBALS['Language']->getText('plugin_statistics', 'wikidl_type'),
+            'oartifact' => $GLOBALS['Language']->getText('plugin_statistics', 'oartifact_type'),
+            'cartifact' => $GLOBALS['Language']->getText('plugin_statistics', 'cartifact_type'),
+        );
+
+        EventManager::instance()->processEvent(
+            Statistics_Event::FREQUENCE_STAT_ENTRIES,
+            array('entries' => &$all_data)
+        );
+
+        $type_options = array();
+
+        foreach ($all_data as $type => $label) {
+            $type_options[] = $this->getValuePresenter($type, $type_values, $label);
+        }
+
+        return $type_options;
+    }
+
+    private function getListOfFilterValuePresenter($filter_value)
+    {
+        $all_filter = array(
+            'month'  => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_month'),
+            'day'    => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_day'),
+            'hour'   => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_hour'),
+            'month1' => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_month'),
+            'day1'   => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_day'),
+        );
+
+        $filter_options = array();
+
+        foreach ($all_filter as $filter => $label) {
+            $filter_options[] = $this->getValuePresenter($filter, array($filter_value), $label);
+        }
+
+        return $filter_options;
+    }
+
     private function getValuePresenter($value, array $selected_values, $label)
     {
         return array(
@@ -186,5 +238,18 @@ class DiskUsageSearchFieldsPresenterBuilder
             'is_selected' => in_array($value, $selected_values),
             'label'       => $label
         );
+    }
+
+    private function checkDate($date, $format, $sub_interval = null)
+    {
+        if (! $date) {
+            $date_time = new DateTime();
+            if ($sub_interval) {
+                $date_time = $date_time->sub(new DateInterval($sub_interval));
+            }
+            $date = $date_time->format($format);
+        }
+
+        return $date;
     }
 }

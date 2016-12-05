@@ -42,7 +42,7 @@ class DiskUsageServicesPresenterBuilder
      */
     private $usage_output;
     /**
-     * @var DiskUsageSearchFieldsPresenterBuilder
+     * @var SearchFieldsPresenterBuilder
      */
     private $search_fields_builder;
     /**
@@ -55,7 +55,7 @@ class DiskUsageServicesPresenterBuilder
         Statistics_DiskUsageManager $usage_manager,
         Statistics_DiskUsageOutput $usage_output,
         Statistics_DiskUsageGraph $usage_graph,
-        DiskUsageSearchFieldsPresenterBuilder $search_fields_builder
+        SearchFieldsPresenterBuilder $search_fields_builder
     ) {
         $this->usage_graph           = $usage_graph;
         $this->usage_manager         = $usage_manager;
