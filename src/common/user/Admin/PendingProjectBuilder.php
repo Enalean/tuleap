@@ -18,15 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuealp\user\Admin;
+namespace Tuleap\user\Admin;
 
 use DateHelper;
 use Project;
 use ProjectManager;
-use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
+use Tuleap\project\Admin\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\Admin\ProjectAccessPresenter;
-use Tuleap\Project\DescriptionFieldsDao;
-use Tuleap\Project\DescriptionFieldsFactory;
 use UserManager;
 
 class PendingProjectBuilder

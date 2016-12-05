@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuealp\project\Admin\ProjectDescriptionFieldBuilder;
-use Tuealp\user\Admin\PendingProjectBuilder;
+use Tuleap\project\Admin\ProjectDescriptionFieldBuilder;
+use Tuleap\user\Admin\PendingProjectBuilder;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectPendingPresenter;
 use Tuleap\Project\DescriptionFieldsDao;
