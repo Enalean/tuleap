@@ -118,7 +118,7 @@ class DefaultFineGrainedPermissionReplicator
     public function replicateDefaultRegexpUsage(Project $template_project, $new_project_id)
     {
         if ($this->regexp_retriever->areRegexpActivatedForDefault($template_project)) {
-            $this->regexp_enabler->enableForDefaultWithProjectId($new_project_id);
+            $this->regexp_enabler->enableForTemplateWithProjectId($new_project_id);
         }
     }
 }

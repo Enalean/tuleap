@@ -38,7 +38,7 @@ class RegexpFineGrainedEnabler
     /**
      * @var RegexpDefaultDao
      */
-    private $regexp_default_dao;
+    private $regexp_template_dao;
 
     public function __construct(
         RegexpFineGrainedDao $regexp_dao,
@@ -47,7 +47,7 @@ class RegexpFineGrainedEnabler
     ) {
         $this->regexp_dao            = $regexp_dao;
         $this->regexp_repository_dao = $regexp_repository_dao;
-        $this->regexp_default_dao    = $regexp_default_dao;
+        $this->regexp_template_dao   = $regexp_default_dao;
     }
 
     public function enable()
@@ -60,13 +60,13 @@ class RegexpFineGrainedEnabler
         $this->regexp_repository_dao->enable($repository->getId());
     }
 
-    public function enableForDefault(Project $project)
+    public function enableForTemplate(Project $project)
     {
-        $this->enableForDefaultWithProjectId($project->getID());
+        $this->enableForTemplateWithProjectId($project->getID());
     }
 
-    public function enableForDefaultWithProjectId($project_id)
+    public function enableForTemplateWithProjectId($project_id)
     {
-        $this->regexp_default_dao->enable($project_id);
+        $this->regexp_template_dao->enable($project_id);
     }
 }
