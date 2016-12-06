@@ -2,6 +2,8 @@ Version 9.2 (Not release yet)
 
 	== Enhancement ==
 	* request #9551: Burndown improvement:
+	    - New burndown calculation
+	* request #9551: Burndown improvement:
 		- Display message to inform that burndown is currently under calcul
 	* story #9586: Get rid of Bootstrap in site admin / configuration
 		- Disable F5 possibility when deleting tracker
@@ -23,7 +25,7 @@ Version 9.2 (Not release yet)
 	* request #9448: User's session lifetime is only verified once each 24 hours
 
 	== Plugins ==
-	* tracker: 5.1060
+	* tracker: 5.1061
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.72
