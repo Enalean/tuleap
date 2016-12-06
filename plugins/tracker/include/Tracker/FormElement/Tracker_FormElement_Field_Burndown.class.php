@@ -299,7 +299,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $this->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            return (int)$cached_days['cached_days'] === $days;
+            if ($burndown_data->getTimePeriod()->isTodayWithinTimePeriod()
+                && $burndown_data->getTimePeriod()->isNotWeekendDay($_SERVER['REQUEST_TIME'])
+            ) {
+                return (int)$cached_days['cached_days'] === $days -1;
+            } else {
+                return (int)$cached_days['cached_days'] === $days;
+            }
         }
 
         return true;
@@ -319,44 +325,29 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         $date = new DateTime();
         $date->setTimestamp($start_date);
-        $date->setTime(0, 0, 0);
-        $date->modify('+1 day');
 
         $tonight = new DateTime();
         $tonight->setTime(0, 0, 0);
-        $tonight->modify('+1 day');
 
-        $saved_date = new DateTime();
+        $offset_days = 0;
 
-        $i = 0;
-        foreach($time_period->getDayOffsets() as $day_offset) {
-            if ($time_period->isNotWeekendDay($date->getTimestamp()) && $date <= $tonight) {
-                $saved_date->setTimestamp($date->getTimestamp());
-                $saved_date->modify('-1 second');
+        $artifact_list = array($artifact);
+        while($offset_days <= $time_period->getDuration()) {
+            if ($time_period->isNotWeekendDay($date->getTimestamp()) && $date < $tonight) {
+                $remaining_effort = $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $date->getTimestamp());
+                $burndown_data->addEffortAt($offset_days, $remaining_effort);
+                $offset_days++;
+            }
 
-                $remaining_effort = $this->getCachedValueOrComputeValue($field, $user, $artifact, $saved_date->getTimestamp());
-                $burndown_data->addEffortAt($i, $remaining_effort);
-                $i++;
+            if ($date >= $tonight) {
+                $remaining_effort =  $field->getComputedValue($user, $artifact, $date->getTimestamp(), $artifact_list, true);
+                $burndown_data->addEffortAt($offset_days, $remaining_effort);
+
+                break;
             }
 
             $date->modify('+1 day');
         }
-    }
-
-
-    private function getCachedValueOrComputeValue(Tracker_FormElement_IComputeValues $field, PFUser $user,Tracker_Artifact  $artifact, $timestamp) {
-        $last_night = $this->getBurndownDateRetriever()->getYesterday();
-        if ($timestamp > $last_night) {
-            $artifact_list = array($artifact->getId());
-            return $field->getComputedValue($user, $artifact, $timestamp, $artifact_list, true);
-        }
-
-        return $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $timestamp);
-    }
-
-    private function getBurndownDateRetriever()
-    {
-        return new BurndownDateRetriever();
     }
 
     /**
@@ -364,17 +355,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return string html
      */
-     public function fetchSubmit() {
-         return '';
-     }
+    public function fetchSubmit() {
+        return '';
+    }
 
-     /**
+    /**
      * Fetch the element for the submit masschange form
      *
      * @return string html
      */
-     public function fetchSubmitMasschange() {
-     }
+    public function fetchSubmitMasschange() {
+    }
 
 
     /**
@@ -495,7 +486,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
     }
 
-     /**
+    /**
      * Display a png image with the given error message
      *
      * @param String $msg
@@ -549,12 +540,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getBurndownImageUrl(Tracker_Artifact $artifact) {
         $url_query = http_build_query(array('formElement' => $this->getId(),
-                                            'func'        => self::FUNC_SHOW_BURNDOWN,
-                                            'src_aid'     => $artifact->getId()));
+            'func'        => self::FUNC_SHOW_BURNDOWN,
+            'src_aid'     => $artifact->getId()));
         return TRACKER_BASE_URL .'/?'.$url_query;
     }
 
-     private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user) {
+    private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user) {
         return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
     }
 
@@ -735,7 +726,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getLinksToChildTrackersWithoutRemainingEffort() {
         return array_map(array($this, 'getLinkToTracker'),
-                         $this->getChildTrackersWithoutRemainingEffort());
+            $this->getChildTrackersWithoutRemainingEffort());
     }
 
     /**
@@ -760,7 +751,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getChildTrackersWithoutRemainingEffort() {
         return array_filter($this->getChildTrackers(),
-                            array($this, 'missesRemainingEffort'));
+            array($this, 'missesRemainingEffort'));
     }
 
     /**

@@ -38,7 +38,7 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
         if ($date < $this->getEndDate()) {
             return $this->getNumberOfDaysWithoutWeekEnd($this->getStartDate(), $date);
         } else {
-            return $this->getNumberOfDaysWithoutWeekEnd($this->getStartDate(), $this->getEndDate());
+            return count($this->getDayOffsets());
         }
     }
 
@@ -108,9 +108,9 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
             }
             $day = $this->getNextDay($real_number_of_days_after_start, $start_date);
             $real_number_of_days_after_start++;
-       } while ($day < $end_date);
+        } while ($day < $end_date);
 
-       return $day_offset;
+        return $day_offset;
     }
 
     /**
