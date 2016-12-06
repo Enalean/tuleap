@@ -84,10 +84,6 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
             INNER JOIN tracker_field AS tracker_field_for_remaining_effort
               ON tracker.id = tracker_field_for_remaining_effort.tracker_id
               AND tracker_field_for_remaining_effort.name = 'remaining_effort'
-            INNER JOIN tracker_field_date AS field_start_date
-              ON field_start_date.field_id = tracker_field_for_start_date.id
-            INNER JOIN tracker_field_int AS field_duration
-              ON field_duration.field_id = tracker_field_for_duration.id
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
@@ -141,10 +137,6 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
             INNER JOIN tracker_field AS tracker_field_for_remaining_effort
               ON tracker.id = tracker_field_for_remaining_effort.tracker_id
               AND tracker_field_for_remaining_effort.name = 'remaining_effort'
-            INNER JOIN tracker_field_date AS field_start_date
-              ON field_start_date.field_id = tracker_field_for_start_date.id
-            INNER JOIN tracker_field_int AS field_duration
-              ON field_duration.field_id = tracker_field_for_duration.id
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
