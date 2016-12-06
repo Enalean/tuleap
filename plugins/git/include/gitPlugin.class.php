@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
@@ -138,7 +139,6 @@ class GitPlugin extends Plugin {
         $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
-        $this->_addHook('codendi_daily_start',                              'codendiDaily',                                false);
         $this->_addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
 
         $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
@@ -188,7 +188,7 @@ class GitPlugin extends Plugin {
 
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
-        $this->addHook('root_daily_start');
+        $this->addHook('codendi_daily_start');
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -514,6 +514,12 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getGitoliteDriver(),
                     $this->getProjectManager()
+                );
+                break;
+            case ParseGitolite3Logs::NAME:
+                $params['class'] = '\\Tuleap\\Git\\Events\\ParseGitolite3Logs';
+                $params['dependencies'] = array(
+                    $this->getGitolite3Parser()
                 );
                 break;
             default:
@@ -1820,13 +1826,6 @@ class GitPlugin extends Plugin {
         );
     }
 
-    /**
-     * Hook: called by daily codendi script.
-     */
-    function codendiDaily() {
-        $this->getRepositoryManager()->purgeArchivedRepositories($this->getLogger());
-    }
-
     public function fill_project_history_sub_events($params) {
         array_push(
             $params['subEvents']['event_others'],
@@ -2060,18 +2059,20 @@ class GitPlugin extends Plugin {
         return new GitPhpAccessLogger($dao);
     }
 
-    public function root_daily_start()
+    public function codendi_daily_start()
     {
         $detector = new VersionDetector();
-
         if ($detector->isGitolite3()) {
-            $this->parseCurrentAndPrevisousMonthLogs();
+            SystemEventManager::instance()->createEvent(
+                ParseGitolite3Logs::NAME,
+                null,
+                SystemEvent::PRIORITY_LOW,
+                SystemEvent::OWNER_ROOT,
+                '\\Tuleap\\Git\\Events\\ParseGitolite3Logs'
+            );
         }
-    }
 
-    private function parseCurrentAndPrevisousMonthLogs()
-    {
-        $this->getGitolite3Parser()->parseCurrentAndPreviousMonthLogs(GITOLITE3_LOGS_PATH);
+        $this->getRepositoryManager()->purgeArchivedRepositories($this->getLogger());
     }
 
     private function getGitolite3Parser()

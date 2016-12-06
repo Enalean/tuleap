@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011-2015. All rights reserved.
+ * Copyright Enalean (c) 2011-2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,6 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Git\Events\ParseGitolite3Logs;
 
 /**
  * I'm responsible to create system events with the right parameters
@@ -282,7 +284,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
             SystemEvent_GIT_UPDATE_MIRROR::NAME,
             SystemEvent_GIT_DELETE_MIRROR::NAME,
-            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
+            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME
         );
     }
 
@@ -304,12 +306,20 @@ class Git_SystemEventManager {
      * So it's better to make them run in the default queue like before
      */
     public function getTypesForDefaultQueue() {
+        $types = array(
+            ParseGitolite3Logs::NAME
+        );
+
         if ($this->repository_factory->hasGitShellRepositories()) {
-            return array(
-                SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
-                SystemEvent_GIT_LEGACY_REPO_DELETE::NAME,
+            return array_merge(
+                $types,
+                array(
+                    SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
+                    SystemEvent_GIT_LEGACY_REPO_DELETE::NAME,
+                )
             );
         }
-        return array();
+
+        return $types;
     }
 }

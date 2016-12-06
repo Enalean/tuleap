@@ -315,16 +315,27 @@ class SystemEventManager {
      * Create a new event, store it in the db and send notifications
      * @return SystemEvent or null
      */
-    public function createEvent($type, $parameters, $priority,$owner=SystemEvent::OWNER_ROOT) {
+    public function createEvent($type, $parameters, $priority,$owner = SystemEvent::OWNER_ROOT, $klass = null)
+    {
         if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'],$owner)) {
-            $sysevent = $this->instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority);
+            if ($klass) {
+                $sysevent = $this->instanciateSystemEventOnCreateByClass($id, $type, $owner, $parameters, $priority, $klass);
+            } else {
+                $sysevent = $this->instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority);
+            }
             $sysevent->notify($this->_getFollowersDao());
             return $sysevent;
         }
         return null;
     }
 
-    private function instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority) {
+    private function instanciateSystemEventOnCreateByClass($id, $type, $owner, $parameters, $priority, $klass)
+    {
+        return $this->instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], null, null, null);
+    }
+
+    private function instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority)
+    {
         return $this->instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], null, null, null);
     }
 
