@@ -38,33 +38,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
 
-    public function getUserDetails($userId){
-        $res = $this->_dum->getUserDetails($userId);
-
-        if ($res) {
-            echo '<table border="1">';
-            echo '<thead>';
-            echo '<tr>';
-            echo "<th>User Id</th>";
-            echo "<th>User Name</th>";
-            echo "<th>Service</th>";
-            echo "<th>Size</th>";
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            foreach ($res as $row) {
-                echo '<tr>';
-                echo '<td><A HREF="/admin/usergroup.php?user_id='.$row['user_id'].'">'.$row['user_id'].'</A></td>';
-                echo '<td>'.$row['user_name'].'</td>';
-                echo '<td>'.$row['service'].'</td>';
-                echo '<td>'.$this->sizeReadable($row['size']).'</td>';
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-        }
-    }
-
     /**
      * Apply a jpgraph compliant color modifier on color and return a css rgb() rule
      */
@@ -169,12 +142,5 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         $html .= '</p></div>';
 
         return $html;
-    }
-
-    public function getReadable($result, $key) {
-        if (isset($result['service'][$key])) {
-            return '<td>'.$this->sizeReadable($result['service'][$key]).'</td>';
-        }
-        return '';
     }
 }

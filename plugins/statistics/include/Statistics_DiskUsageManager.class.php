@@ -204,31 +204,6 @@ class Statistics_DiskUsageManager {
         return array($dar, $nbPrj);
     }
 
-    public function returnServiceWeeklyEvolution(){
-        $dao = $this->_getDao();
-        //the Collect date
-        $endDate = $dao->searchMostRecentDate();
-        if ($endDate){
-            $rowEnd = $dao->searchSizePerService($endDate);
-            if ($rowEnd && !$rowEnd->isError()) {
-                foreach ($rowEnd as $end) {
-                    $res[$end['service']] = $end['size'];
-                }
-            }
-            $timestamp = strtotime($endDate);
-            //a week ago
-            $startDate = date('Y-m-d h:i:s', strtotime('-1 week',$timestamp));
-            $rowStart = $dao->searchSizePerService($startDate);
-            if ($rowStart && !$rowStart->isError()) {
-                foreach ($rowStart as $start) {
-                    $res[$start['service']] = $res[$start['service']] - $start['size'];
-                }
-            }
-            return $res;
-        }
-        return false;
-    }
-
     /**
      * Retrieve data for the two given dates and compute some statistics
      *
@@ -286,31 +261,6 @@ class Statistics_DiskUsageManager {
         }
         return $values;
     }
-
-    public function returnProjectWeeklyEvolution($group_id){
-        $dao = $this->_getDao();
-        //the Collect date
-        $dateEnd = $dao->searchMostRecentDate();
-        if ($dateEnd){
-            $rowEnd = $dao->returnTotalSizeProject($group_id,$dateEnd);
-            $timestamp = strtotime($dateEnd);
-            //a week ago
-            $dateStart = date('Y-m-d h:i:s', strtotime('-1 week',$timestamp));
-            $rowStart = $dao->returnTotalSizeProject($group_id,$dateStart);
-            if ($rowEnd && !$rowEnd->isError()) {
-                $end = $rowEnd->getRow();
-            }
-            if ($rowStart && !$rowStart->isError()) {
-                $start = $rowStart->getRow();
-            }
-           $evolution = array();
-           $evolution['size'] = $end['size']-$start['size'];
-           $evolution['rate'] = ($evolution['size']/$end['size'])*100;
-           return ($evolution);
-        }
-        return false;
-    }
-
 
     public function returnUserEvolutionForPeriod($userId, $startDate, $endDate )
     {
@@ -398,16 +348,6 @@ class Statistics_DiskUsageManager {
         return $services;
     }
 
-    public function returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate ){
-        $dao = $this->_getDao();
-        $res = array();
-        $dar = $dao->returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate);
-        if ($dar && !$dar->isError()) {
-            return $dar;
-        }
-        return false;
-    }
-
     public function getTopUsers($endDate, $order) {
         $dao = $this->_getDao();
         return $dao->searchTopUsers($endDate, $order);
@@ -457,15 +397,6 @@ class Statistics_DiskUsageManager {
         }
         return false;
 
-    }
-
-    public function getProject($groupId) {
-        $dao = $this->_getDao();
-        $date = $dao->searchMostRecentDate();
-        if ($date) {
-            return $dao->searchProject($groupId, $date);
-        }
-        return false;
     }
 
     public function getDirSize($dir) {
