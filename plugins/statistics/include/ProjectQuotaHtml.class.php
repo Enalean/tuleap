@@ -116,22 +116,6 @@ class ProjectQuotaHtml {
         return $validRequest;
     }
 
-    /**
-     * Toggler used to sort records in a descending/ascending order.
-     *
-     * @param String $order Current order sens
-     *
-     * @return String
-     */
-    private function toggleOrderBy($order) {
-        if ($order == "ASC") {
-            $order = "DESC";
-        } else {
-            $order = "ASC";
-        }
-        return $order;
-    }
-
     public function getListOfProjectQuotaPresenters(HTTPRequest $request)
     {
         $quotas       = array();
