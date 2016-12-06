@@ -59,6 +59,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
 
     public function verbalizeParameters($with_link)
     {
+        return '-';
     }
 
     public function injectDependencies(
