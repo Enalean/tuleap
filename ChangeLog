@@ -50,6 +50,7 @@ Version 9.2 (Not release yet)
 	* request #9657: Tuleap goes gettext
 	* request #9202: Make Tuleap compatible with PHP 5.6
 		- Remove call-time pass-by-reference in graphontracker (v3)
+	* request #9687: Remove specific CentOS5 configuration files
 
 Version 9.1 (Thursday, November 10th 2016)
 
