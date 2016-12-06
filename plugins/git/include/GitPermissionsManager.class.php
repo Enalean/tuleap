@@ -21,9 +21,6 @@
 
 require_once 'www/project/admin/permissions.php';
 
-use Tuleap\Git\Permissions\FineGrainedUpdater;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 
@@ -42,11 +39,6 @@ class GitPermissionsManager
      * @var FineGrainedDao
      */
     private $fine_grained_dao;
-
-    /**
-     * @var DefaultFineGrainedPermissionSaver
-     */
-    private $default_fine_grained_saver;
 
     /**
      * @var Git_SystemEventManager

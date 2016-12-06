@@ -23,7 +23,7 @@ namespace Tuleap\Git\Permissions;
 
 use Feedback;
 
-class DefaultFineGrainedPermissionSaver
+class TemplateFineGrainedPermissionSaver
 {
     const BRANCH_PATTERN_PREFIX = 'refs/heads/';
     const TAG_PATTERN_PREFIX    = 'refs/tags/';
@@ -97,7 +97,7 @@ class DefaultFineGrainedPermissionSaver
         return $ids;
     }
 
-    public function updateDefaultPermission(DefaultFineGrainedPermission $permission)
+    public function updateTemplatePermission(DefaultFineGrainedPermission $permission)
     {
         return $this->dao->updateDefaultPermission(
             $permission->getId(),

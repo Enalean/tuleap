@@ -36,7 +36,7 @@ class DefaultFineGrainedPermissionReplicator
     private $factory;
 
     /**
-     * @var DefaultFineGrainedPermissionSaver
+     * @var TemplateFineGrainedPermissionSaver
      */
     private $saver;
 
@@ -58,7 +58,7 @@ class DefaultFineGrainedPermissionReplicator
     public function __construct(
         FineGrainedDao $fine_grained_dao,
         DefaultFineGrainedPermissionFactory $factory,
-        DefaultFineGrainedPermissionSaver $saver,
+        TemplateFineGrainedPermissionSaver $saver,
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedRetriever $regexp_retriever,
         PatternValidator $pattern_validator

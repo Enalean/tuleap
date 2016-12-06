@@ -39,9 +39,9 @@ class TemplatePermissionsUpdater
     private $permission_changes_detector;
 
     /**
-     * @var DefaultFineGrainedPermissionSaver
+     * @var TemplateFineGrainedPermissionSaver
      */
-    private $default_fine_grained_saver;
+    private $template_fine_grained_saver;
 
     /**
      * @var FineGrainedUpdater
@@ -98,7 +98,7 @@ class TemplatePermissionsUpdater
         FineGrainedRetriever $fine_grained_retriever,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         FineGrainedUpdater $fine_grained_updater,
-        DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
+        TemplateFineGrainedPermissionSaver $template_fine_grained_saver,
         PermissionChangesDetector $permission_changes_detector,
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedRetriever $regexp_retriever,
@@ -111,7 +111,7 @@ class TemplatePermissionsUpdater
         $this->fine_grained_retriever       = $fine_grained_retriever;
         $this->default_fine_grained_factory = $default_fine_grained_factory;
         $this->fine_grained_updater         = $fine_grained_updater;
-        $this->default_fine_grained_saver   = $default_fine_grained_saver;
+        $this->template_fine_grained_saver  = $template_fine_grained_saver;
         $this->permission_changes_detector  = $permission_changes_detector;
         $this->regexp_enabler               = $regexp_enabler;
         $this->regexp_retriever             = $regexp_retriever;
@@ -269,15 +269,15 @@ class TemplatePermissionsUpdater
         }
 
         foreach ($added_branches_permissions as $added_branch_permission) {
-            $this->default_fine_grained_saver->saveBranchPermission($added_branch_permission);
+            $this->template_fine_grained_saver->saveBranchPermission($added_branch_permission);
         }
 
         foreach ($added_tags_permissions as $added_tag_permission) {
-            $this->default_fine_grained_saver->saveTagPermission($added_tag_permission);
+            $this->template_fine_grained_saver->saveTagPermission($added_tag_permission);
         }
 
         foreach ($updated_permissions as $permission) {
-            $this->default_fine_grained_saver->updateDefaultPermission($permission);
+            $this->template_fine_grained_saver->updateTemplatePermission($permission);
         }
 
         if ($regexp_activation !== '') {

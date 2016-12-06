@@ -42,7 +42,7 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\TemplateFineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
@@ -1416,7 +1416,7 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedRetriever(),
             $this->getDefaultFineGrainedPermissionFactory(),
             $this->getFineGrainedUpdater(),
-            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getTemplateFineGrainedPermissionSaver(),
             $this->getPermissionChangesDetector(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getRegexpFineGrainedRetriever(),
@@ -1471,10 +1471,10 @@ class GitPlugin extends Plugin {
         return new FineGrainedPermissionDestructor($dao);
     }
 
-    private function getDefaultFineGrainedPermissionSaver()
+    private function getTemplateFineGrainedPermissionSaver()
     {
         $dao = $this->getFineGrainedDao();
-        return new DefaultFineGrainedPermissionSaver($dao);
+        return new TemplateFineGrainedPermissionSaver($dao);
     }
 
     private function getDefaultFineGrainedPermissionFactory()
@@ -1741,7 +1741,7 @@ class GitPlugin extends Plugin {
         return new DefaultFineGrainedPermissionReplicator(
             new FineGrainedDao(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getTemplateFineGrainedPermissionSaver(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getPatternValidator()
