@@ -26,7 +26,7 @@ use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\PatternValidator;
-use Tuleap\Git\Permissions\RegexpDefaultDao;
+use Tuleap\Git\Permissions\RegexpTemplateDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
@@ -633,7 +633,7 @@ class GitPlugin extends Plugin {
         return new RegexpFineGrainedEnabler(
             $this->getRegexpFineGrainedDao(),
             $this->getRegexpRepositoryDao(),
-            $this->getRegexpDefaultDao()
+            $this->getRegexpTemplateDao()
         );
     }
 
@@ -642,13 +642,13 @@ class GitPlugin extends Plugin {
         return new RegexpFineGrainedRetriever(
             $this->getRegexpFineGrainedDao(),
             $this->getRegexpRepositoryDao(),
-            $this->getRegexpDefaultDao()
+            $this->getRegexpTemplateDao()
         );
     }
 
-    private function getRegexpDefaultDao()
+    private function getRegexpTemplateDao()
     {
-        return new RegexpDefaultDao();
+        return new RegexpTemplateDao();
     }
 
     private function getRegexpFineGrainedDao()
@@ -1403,7 +1403,7 @@ class GitPlugin extends Plugin {
         return new RegexpFineGrainedDisabler(
             new RegexpRepositoryDao(),
             new RegexpFineGrainedDao(),
-            new RegexpDefaultDao()
+            new RegexpTemplateDao()
         );
     }
 

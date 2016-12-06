@@ -24,7 +24,7 @@ require_once __DIR__.'/DatabaseInitialization.php';
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\PatternValidator;
-use Tuleap\Git\Permissions\RegexpDefaultDao;
+use Tuleap\Git\Permissions\RegexpTemplateDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
@@ -247,7 +247,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $regexp_retriever =  new RegexpFineGrainedRetriever(
             new RegexpFineGrainedDao(),
             new RegexpRepositoryDao(),
-            new RegexpDefaultDao()
+            new RegexpTemplateDao()
         );
 
         $validator        = new PatternValidator(
@@ -286,7 +286,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $default_factory,
             $saver,
             $factory,
-            new RegexpFineGrainedEnabler(new RegexpFineGrainedDao(), new RegexpRepositoryDao(), new RegexpDefaultDao()),
+            new RegexpFineGrainedEnabler(new RegexpFineGrainedDao(), new RegexpRepositoryDao(), new RegexpTemplateDao()),
             $regexp_retriever,
             $validator
         );
