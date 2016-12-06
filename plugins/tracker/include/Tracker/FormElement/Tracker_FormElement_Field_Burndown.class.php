@@ -303,7 +303,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     ) {
         $days = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
 
-        if ($this->hasRemainingEffort($artifact->getTracker())) {
+        if ($this->hasRemainingEffort($artifact->getTracker())
+            && $this->hasStartDate($artifact, $user)) {
             $cached_days = $this->getComputedDao()->getCachedDays(
                 $artifact->getId(),
                 $this->getBurndownRemainingEffortField($artifact, $user)->getId()
@@ -611,6 +612,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         return $timestamp;
+    }
+
+    private function hasStartDate(Tracker_Artifact $artifact, PFUser $user) {
+        $start_date_field = $this->getBurndownStartDateField($artifact, $user);
+        $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
+
+        return $timestamp !== null;
     }
 
     /**
