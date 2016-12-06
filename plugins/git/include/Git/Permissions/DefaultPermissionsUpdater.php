@@ -260,10 +260,10 @@ class DefaultPermissionsUpdater
 
         $regexp_activation = '';
         if ($enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === false) {
-            $this->regexp_enabler->enableForDefault($project);
+            $this->regexp_enabler->enableForTemplate($project);
             $regexp_activation = $GLOBALS['Language']->getText('plugin_git', 'enabled');
         } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === true) {
-            $this->regexp_disabler->disableForDefault($project);
+            $this->regexp_disabler->disableForTemplate($project);
             $this->permission_filter->filterNonRegexpPermissionsForDefault($project);
             $regexp_activation = $GLOBALS['Language']->getText('plugin_git', 'disabled');
         }
