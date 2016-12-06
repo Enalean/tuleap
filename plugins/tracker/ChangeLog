@@ -1,3 +1,6 @@
+Version 5.1059 - Tuleap 9.2
+    * request #9551: Correct burndown request for burndown generation
+
 Version 5.1058 - Tuleap 9.2
     * request #9551: Fatal error while displaying system event BURNDOWN_DAILY
 
