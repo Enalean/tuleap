@@ -1,3 +1,6 @@
+Version 0.48 - Tuleap 9.2
+    * request #9701: Add root editorconfig
+
 Version 0.47 - Tuleap 9.2
     * Do not redirect immediatly if the platform is restricted to the anonymous
 

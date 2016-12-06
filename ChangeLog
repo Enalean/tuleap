@@ -30,10 +30,10 @@ Version 9.2 (Not release yet)
 	* graphontrackers: 1.18
 	* statistics: 0.72
 	* projectlinks: 2.12
-	* agiledashboard: 1.436
+	* agiledashboard: 1.437
 	* artifactsfolders: 0.40
-	* svn: 0.107
-	* openidconnectclient: 0.47
+	* svn: 0.108
+	* openidconnectclient: 0.48
 	* git: 4.306
 	* mediawiki: 0.128
 	* cardwall: 1.72
