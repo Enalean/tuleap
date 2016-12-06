@@ -69,40 +69,24 @@ class Tracker_Chart_Data_Burndown
      *
      * @return Array
      */
-    public function getRemainingEffort() {
+    public function getRemainingEffort()
+    {
         $remaining_effort = array();
-        $previous_value   = null;
-        $x_axis           = 0;
-        foreach($this->time_period->getDayOffsets() as $day_offset) {
-            $current_value = null;
-            if ($this->isNotInTheFutur($day_offset)) {
-                if ($this->hasRemainingEffortAt($day_offset)) {
-                    $current_value = $this->remaining_effort[$day_offset];
-                    $this->fillPreviousNullValues($previous_value, $current_value, $remaining_effort);
-                } else {
-                    $current_value = $previous_value;
-                }
-            }
 
-            $remaining_effort[$x_axis] = $current_value;
-            $previous_value = $current_value;
-            $x_axis++;
+        $number_of_days = $this->time_period->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+
+        for ($day_offset = 0; $day_offset < $number_of_days; $day_offset++) {
+            if (isset($this->remaining_effort[$day_offset])) {
+                $remaining_effort[] = $this->remaining_effort[$day_offset];
+            } else {
+                $remaining_effort[] = null;
+            }
         }
+
         return $remaining_effort;
     }
 
-    private function hasRemainingEffortAt($day_offset) {
-        return array_key_exists($day_offset, $this->remaining_effort);
-    }
 
-    private function fillPreviousNullValues($previous_value, $current_value, array &$remaining_effort) {
-        $last_null_index = count($remaining_effort) - 1;
-        if ($previous_value === null && $current_value !== null) {
-            for ($i = $last_null_index; $i >= 0; $i--) {
-                $remaining_effort[$i] = $current_value;
-            }
-        }
-    }
 
     /**
      * Returns the Burndown dates in a human readable fashion
@@ -200,9 +184,5 @@ class Tracker_Chart_Data_Burndown
         }
         
         return null;
-    }
-
-    private function isNotInTheFutur($day_offset) {
-        return strtotime("+".$day_offset." day", $this->time_period->getStartDate()) <= $_SERVER['REQUEST_TIME'];
     }
 }

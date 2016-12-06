@@ -38,13 +38,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     const START_DATE_FIELD_NAME       = 'start_date';
     const CAPACITY_FIELD_NAME         = 'capacity';
 
-    public $default_properties = array(
-        'use_cache' => array(
-            'value' => 0,
-            'type'  => 'checkbox',
-        ),
-    );
-
     /**
      * @var Tracker_HierarchyFactory
      */
@@ -176,10 +169,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
 
-    private function use_cache() {
-        return ($this->getProperty('use_cache') == 1);
-    }
-
     /**
      * Export form element properties into a SimpleXMLElement
      *
@@ -190,7 +179,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function exportPropertiesToXML(&$root) {
         $child = $root->addChild('properties');
 
-        $child->addAttribute('use_cache', $this->use_cache() ? '1' : '0');
+        $child->addAttribute('use_cache', '1');
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
@@ -318,7 +307,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function addRemainingEffortData(
         Tracker_Chart_Data_Burndown $burndown_data,
-        TimePeriod $time_period,
+        TimePeriodWithoutWeekEnd $time_period,
         Tracker_Artifact $artifact,
         PFUser $user,
         $start_date
@@ -328,22 +317,38 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return;
         }
 
-        $tonight = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+        $date = new DateTime();
+        $date->setTimestamp($start_date);
+        $date->setTime(0, 0, 0);
+        $date->modify('+1 day');
 
+        $tonight = new DateTime();
+        $tonight->setTime(0, 0, 0);
+        $tonight->modify('+1 day');
+
+        $saved_date = new DateTime();
+
+        $i = 0;
         foreach($time_period->getDayOffsets() as $day_offset) {
-            $timestamp = strtotime("+$day_offset day 23 hours 59 minutes 59 seconds", $start_date);
+            if ($time_period->isNotWeekendDay($date->getTimestamp()) && $date <= $tonight) {
+                $saved_date->setTimestamp($date->getTimestamp());
+                $saved_date->modify('-1 second');
 
-            if ($timestamp <= $tonight) {
-                $remaining_effort = $this->getCachedValueOrComputeValue($field, $user, $artifact, $timestamp);
-                $burndown_data->addEffortAt($day_offset, $remaining_effort);
+                $remaining_effort = $this->getCachedValueOrComputeValue($field, $user, $artifact, $saved_date->getTimestamp());
+                $burndown_data->addEffortAt($i, $remaining_effort);
+                $i++;
             }
+
+            $date->modify('+1 day');
         }
     }
 
+
     private function getCachedValueOrComputeValue(Tracker_FormElement_IComputeValues $field, PFUser $user,Tracker_Artifact  $artifact, $timestamp) {
         $last_night = $this->getBurndownDateRetriever()->getYesterday();
-        if (! $this->use_cache() || $timestamp > $last_night) {
-            return $field->getComputedValue($user, $artifact, $timestamp);
+        if ($timestamp > $last_night) {
+            $artifact_list = array($artifact->getId());
+            return $field->getComputedValue($user, $artifact, $timestamp, $artifact_list, true);
         }
 
         return $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $timestamp);
@@ -551,25 +556,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
      private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user) {
         return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
-    }
-    /**
-     * Returns linked artifacts
-     *
-     * @param Tracker_Artifact $artifact
-     *
-     * @return Array of Tracker_Artifact
-     *
-     * @throws Tracker_FormElement_Field_BurndownException
-     */
-    private function getLinkedArtifacts(Tracker_Artifact $artifact, PFUser $user) {
-        $linked_artifacts = $artifact->getLinkedArtifacts($user);
-        if (count($linked_artifacts)) {
-            return $linked_artifacts;
-        }
-
-        throw new Tracker_FormElement_Field_BurndownException(
-            $GLOBALS['Language']->getText('plugin_tracker', 'burndown_no_linked_artifacts')
-        );
     }
 
     /**

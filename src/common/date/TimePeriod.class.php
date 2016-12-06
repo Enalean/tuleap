@@ -83,4 +83,6 @@ abstract class TimePeriod {
      * @return array of int
      */
     public abstract function getDayOffsets();
+
+    public abstract function getCountDayUntilDate($date);
 }

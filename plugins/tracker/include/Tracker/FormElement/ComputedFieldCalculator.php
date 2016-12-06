@@ -48,8 +48,7 @@ class ComputedFieldCalculator
             $timestamp,
             $stop_on_manual_value,
             $target_field_name,
-            $computed_field_id,
-            true
+            $computed_field_id
         );
     }
 
@@ -65,8 +64,7 @@ class ComputedFieldCalculator
             $timestamp,
             $stop_on_manual_value,
             $target_field_name,
-            $computed_field_id,
-            false
+            $computed_field_id
         );
     }
 
@@ -75,19 +73,11 @@ class ComputedFieldCalculator
         $timestamp,
         $stop_on_manual_value,
         $target_field_name,
-        $computed_field_id,
-        $for_computed_field
+        $computed_field_id
     ) {
         $manual_sum = null;
 
-        if ($timestamp !== null && $for_computed_field === true) {
-            $dar = $this->fetchChildrenForComputedFieldWithCache(
-                $artifact_ids_to_fetch,
-                $timestamp,
-                $target_field_name,
-                $computed_field_id
-            );
-        } else if ($timestamp !== null && $for_computed_field === false) {
+        if ($timestamp !== null) {
             $enhanced_dar = $this->getChildrenForBurndownWithComputedValuesAtGivenDate(
                 $artifact_ids_to_fetch,
                 $timestamp
@@ -161,27 +151,12 @@ class ComputedFieldCalculator
         }
     }
 
-    private function fetchChildrenForComputedFieldWithCache(
-        array $artifact_ids_to_fetch,
-        $timestamp,
-        $target_field_name,
-        $computed_field_id
-    ) {
-        return $this->computed_dao->getFieldValuesAtTimestamp(
-            $artifact_ids_to_fetch,
-            $target_field_name,
-            $timestamp,
-            $computed_field_id
-        );
-    }
-
     private function calculate(
         array $artifact_ids_to_fetch,
         $timestamp,
         $stop_on_manual_value,
         $target_field_name,
-        $computed_field_id,
-        $for_computed_field
+        $computed_field_id
     ) {
         $sum          = null;
         $already_seen = array();
@@ -192,8 +167,7 @@ class ComputedFieldCalculator
                 $timestamp,
                 $stop_on_manual_value,
                 $target_field_name,
-                $computed_field_id,
-                $for_computed_field
+                $computed_field_id
             );
 
             $manual_sum = $children_list['manual_sum'];
