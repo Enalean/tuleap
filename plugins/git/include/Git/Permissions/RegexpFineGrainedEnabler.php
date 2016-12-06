@@ -36,18 +36,18 @@ class RegexpFineGrainedEnabler
      */
     private $regexp_repository_dao;
     /**
-     * @var RegexpDefaultDao
+     * @var RegexpTemplateDao
      */
     private $regexp_template_dao;
 
     public function __construct(
         RegexpFineGrainedDao $regexp_dao,
         RegexpRepositoryDao $regexp_repository_dao,
-        RegexpDefaultDao $regexp_default_dao
+        RegexpTemplateDao $regexp_template_dao
     ) {
         $this->regexp_dao            = $regexp_dao;
         $this->regexp_repository_dao = $regexp_repository_dao;
-        $this->regexp_template_dao   = $regexp_default_dao;
+        $this->regexp_template_dao   = $regexp_template_dao;
     }
 
     public function enable()

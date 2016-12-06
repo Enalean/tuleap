@@ -36,18 +36,18 @@ class RegexpFineGrainedRetriever
      */
     private $regexp_repository_dao;
     /**
-     * @var RegexpDefaultDao
+     * @var RegexpTemplateDao
      */
-    private $regexp_default_dao;
+    private $regexp_template_dao;
 
     public function __construct(
         RegexpFineGrainedDao $regexp_dao,
         RegexpRepositoryDao $regexp_repository_dao,
-        RegexpDefaultDao $regexp_default_dao
+        RegexpTemplateDao $regexp_template_dao
     ) {
         $this->regexp_dao            = $regexp_dao;
         $this->regexp_repository_dao = $regexp_repository_dao;
-        $this->regexp_default_dao    = $regexp_default_dao;
+        $this->regexp_template_dao   = $regexp_template_dao;
     }
 
     public function areRegexpActivatedAtSiteLevel()
@@ -57,7 +57,7 @@ class RegexpFineGrainedRetriever
 
     public function areRegexpActivatedForDefault(Project $project)
     {
-        return $this->regexp_default_dao->areRegexpActivatedForDefault($project->getID());
+        return $this->regexp_template_dao->areRegexpActivatedForTemplate($project->getID());
     }
 
     public function areRegexpActivatedForRepository(GitRepository $repository)

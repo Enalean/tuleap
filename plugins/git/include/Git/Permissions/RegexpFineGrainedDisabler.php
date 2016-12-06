@@ -36,18 +36,18 @@ class RegexpFineGrainedDisabler
      */
     private $regexp_dao;
     /**
-     * @var RegexpDefaultDao
+     * @var RegexpTemplateDao
      */
     private $regexp_template_dao;
 
     public function __construct(
         RegexpRepositoryDao $regexp_repository_dao,
         RegexpFineGrainedDao $regexp_dao,
-        RegexpDefaultDao $regexp_default_dao
+        RegexpTemplateDao $regexp_template_dao
     ) {
         $this->regexp_repository_dao = $regexp_repository_dao;
         $this->regexp_dao            = $regexp_dao;
-        $this->regexp_template_dao   = $regexp_default_dao;
+        $this->regexp_template_dao   = $regexp_template_dao;
     }
 
     public function disableForRepository(GitRepository $repository)

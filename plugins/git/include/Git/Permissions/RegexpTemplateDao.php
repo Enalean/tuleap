@@ -23,9 +23,9 @@ namespace Tuleap\Git\Permissions;
 
 use DataAccessObject;
 
-class RegexpDefaultDao extends DataAccessObject
+class RegexpTemplateDao extends DataAccessObject
 {
-    public function areRegexpActivatedForDefault($project_id)
+    public function areRegexpActivatedForTemplate($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
 
