@@ -28,7 +28,7 @@ use PermissionsManager;
 use CSRFSynchronizerToken;
 use Project;
 
-class DefaultPermissionsUpdater
+class TemplatePermissionsUpdater
 {
 
     const REQUEST_KEY = 'default_access_rights';
@@ -119,7 +119,7 @@ class DefaultPermissionsUpdater
         $this->regexp_disabler              = $regexp_disabler;
     }
 
-    public function updateProjectDefaultPermissions(Codendi_Request $request)
+    public function updateProjectTemplatePermissions(Codendi_Request $request)
     {
         $project    = $request->getProject();
         $project_id = $project->getID();
@@ -150,7 +150,7 @@ class DefaultPermissionsUpdater
             return false;
         }
 
-        $are_there_changes = $this->updateDefaultFineGrainedPermissions(
+        $are_there_changes = $this->updateTemplateFineGrainedPermissions(
             $project,
             $request,
             $read_ugroup_ids,
@@ -175,7 +175,7 @@ class DefaultPermissionsUpdater
         );
     }
 
-    private function updateDefaultFineGrainedPermissions(
+    private function updateTemplateFineGrainedPermissions(
         Project $project,
         Codendi_Request $request,
         array $read_ugroup_ids,

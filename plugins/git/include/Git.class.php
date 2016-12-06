@@ -42,7 +42,7 @@ use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
-use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
+use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\History\GitPhpAccessLogger;
@@ -259,9 +259,9 @@ class Git extends PluginController {
     private $permission_changes_detector;
 
     /**
-     * @var DefaultPermissionsUpdater
+     * @var TemplatePermissionsUpdater
      */
-    private $default_permission_updater;
+    private $template_permission_updater;
 
     /**
      * @var ProjectHistoryDao
@@ -301,7 +301,7 @@ class Git extends PluginController {
         FineGrainedPermissionReplicator $fine_grained_replicator,
         HistoryValueFormatter $history_value_formatter,
         PermissionChangesDetector $permission_changes_detector,
-        DefaultPermissionsUpdater $default_permission_updater,
+        TemplatePermissionsUpdater $template_permission_updater,
         ProjectHistoryDao $history_dao,
         DescriptionUpdater $description_updater,
         GitPhpAccessLogger $access_loger,
@@ -384,7 +384,7 @@ class Git extends PluginController {
         $this->fine_grained_builder                    = $fine_grained_builder;
         $this->history_value_formatter                 = $history_value_formatter;
         $this->permission_changes_detector             = $permission_changes_detector;
-        $this->default_permission_updater              = $default_permission_updater;
+        $this->template_permission_updater             = $template_permission_updater;
         $this->history_dao                             = $history_dao;
         $this->description_updater                     = $description_updater;
         $this->regexp_retriever                        = $regexp_retriever;
@@ -981,7 +981,7 @@ class Git extends PluginController {
                 break;
             case 'admin-default-access-rights':
                 if ($this->request->get('save')) {
-                    $this->default_permission_updater->updateProjectDefaultPermissions($this->request);
+                    $this->template_permission_updater->updateProjectTemplatePermissions($this->request);
                 }
 
                 $this->addDefaultSettingsView();

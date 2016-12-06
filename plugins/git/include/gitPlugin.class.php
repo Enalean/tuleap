@@ -54,7 +54,7 @@ use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
-use Tuleap\Git\Permissions\DefaultPermissionsUpdater;
+use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\History\Dao as HistoryDao;
@@ -1376,7 +1376,7 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedPermissionReplicator(),
             $this->getHistoryValueFormatter(),
             $this->getPermissionChangesDetector(),
-            $this->getDefaultPermissionsUpdater(),
+            $this->getTemplatePermissionsUpdater(),
             new ProjectHistoryDao(),
             $this->getDescriptionUpdater(),
             $this->getGitPhpAccessLogger(),
@@ -1407,9 +1407,9 @@ class GitPlugin extends Plugin {
         );
     }
 
-    private function getDefaultPermissionsUpdater()
+    private function getTemplatePermissionsUpdater()
     {
-        return new DefaultPermissionsUpdater(
+        return new TemplatePermissionsUpdater(
             $this->getPermissionsManager(),
             new ProjectHistoryDao(),
             $this->getHistoryValueFormatter(),
