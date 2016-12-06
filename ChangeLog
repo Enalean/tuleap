@@ -23,7 +23,7 @@ Version 9.2 (Not release yet)
 	* request #9448: User's session lifetime is only verified once each 24 hours
 
 	== Plugins ==
-	* tracker: 5.1059
+	* tracker: 5.1060
 	* proftpd: 0.29
 	* graphontrackers: 1.18
 	* statistics: 0.72

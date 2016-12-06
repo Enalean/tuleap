@@ -1,3 +1,6 @@
+Version 5.1060 - Tuleap 9.2
+    * request #9551: When burndown doesn't have a start_date set, it should not ask cache generation
+
 Version 5.1059 - Tuleap 9.2
     * request #9551: Correct burndown request for burndown generation
 
