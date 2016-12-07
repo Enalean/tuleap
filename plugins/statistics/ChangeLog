@@ -1,3 +1,6 @@
+Version 0.73 - Tuleap 9.2
+    * request #9703 BurningParrot leaks into project admin disk usage
+
 Version 0.72 - Tuleap 9.2
     * story #9587: Remove unused methods and files
 
