@@ -88,9 +88,11 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
         $start_date = new DateTime();
         $start_date->setTimestamp((int) $burndown_informations['start_date']);
         $start_date->setTime(0, 0, 0);
+        $start_date->modify('+1 day');
 
         $end_date = new DateTime();
-        $end_date->setTimestamp((int) $burndown_informations['timestamp_end_date']);
+        $end_date->setTimestamp($burndown->getEndDate());
+        $end_date->modify('+1 day');
 
         $yesterday = new DateTime();
         $yesterday->setTime(0, 0, 0);
@@ -102,10 +104,10 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
             $burndown_informations['remaining_effort_field_id']
         );
 
-        while ($start_date->getTimestamp() <= $end_date->getTimestamp()
-            && $start_date->getTimestamp() <= $yesterday->getTimestamp()
+        while ($start_date <= $end_date
+            && $start_date <= $yesterday
         ) {
-            if ($burndown->isNotWeekendDay($start_date->getTimestamp())) {
+            if ($burndown->isNotWeekendDay($start_date->getTimestamp() -1)) {
                 $this->logger->debug("Day " . $start_date->format("Y-m-d H:i:s"));
 
                 $value = $this->burndown_calculator->calculateBurndownValueAtTimestamp(
