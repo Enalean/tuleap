@@ -103,7 +103,9 @@ class StatisticsPlugin extends Plugin {
     /** @see Event::IS_IN_SITEADMIN */
     public function is_in_siteadmin($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
+            && ! strpos($_SERVER['REQUEST_URI'], 'project_stat.php')
+        ) {
             $params['is_in_siteadmin'] = true;
         }
     }
