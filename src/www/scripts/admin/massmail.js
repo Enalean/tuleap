@@ -88,15 +88,20 @@
     }
 
     function previewResponseHandler() {
+        var response;
+
         try {
             response = JSON.parse(this.responseText);
         } catch (e) {
             // ignore SyntaxError
         }
 
-        if (! response || ! response.success) {
+        if (! response) {
             preview_feedback.classList.add('tlp-alert-danger');
-            preview_feedback.innerHTML = response.message || 'Something is wrong with your request';
+            preview_feedback.innerHTML = 'Something is wrong with your request';
+        } else if (! response.success) {
+            preview_feedback.classList.add('tlp-alert-danger');
+            preview_feedback.innerHTML = response.message;
         } else {
             preview_feedback.classList.add('tlp-alert-success');
             preview_feedback.innerHTML = response.message;
