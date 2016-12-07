@@ -24,7 +24,8 @@ Version 9.2 (Not release yet)
 	* request #9677: Bad escaping of Markdown in Tuleap
 	* request #9676: XML xsd:int only deals with 32bits int
 	* Fix the CI (yet another time)
-	* request #9705: Site admin mass mail preview has no content
+    * request #9705: Site admin mass mail preview has no content
+	* request #9704: Site admin mass mail preview email is weird
 
 	== Security ==
 	* request #9448: User's session lifetime is only verified once each 24 hours
