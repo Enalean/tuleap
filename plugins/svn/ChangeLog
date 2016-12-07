@@ -1,3 +1,6 @@
+Version 0.109 - Tuleap 9.2
+    * request #9706: Rename of project doesn't apply to SVN plugin
+
 Version 0.108 - Tuleap 9.2
     * request #9701: Add root editorconfig
 
