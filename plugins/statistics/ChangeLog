@@ -1,3 +1,6 @@
+Version 0.74 - Tuleap 9.2
+    * request #9708: Service growth graph in project statistics not displayed
+
 Version 0.73 - Tuleap 9.2
     * request #9703 BurningParrot leaks into project admin disk usage
 
