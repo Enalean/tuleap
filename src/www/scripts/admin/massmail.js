@@ -25,7 +25,8 @@
         confirm_button      = document.getElementById('massmail-confirm-sending'),
         confirm_modal       = tlp.modal(confirm_element),
         form                = preview_button.form,
-        preview_timeout;
+        preview_timeout,
+        editor;
 
     if (! warning_element || ! destination_element) {
         return;
@@ -55,7 +56,7 @@
     }
 
     function initHTMLEditor() {
-        CKEDITOR.replace('mail_message', {
+        editor = CKEDITOR.replace('mail_message', {
             toolbar: [
                 ['Bold', 'Italic', 'Underline'],
                 ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
@@ -75,6 +76,8 @@
     }
 
     function sendAPreview() {
+        document.getElementById('mail_message').value = editor.getData();
+
         var data = new FormData(form);
 
         clearFeedback();
