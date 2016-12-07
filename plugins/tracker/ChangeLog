@@ -1,4 +1,7 @@
 Version 5.1061 - Tuleap 9.2
+    * When last day of burdown is inferior to today, cache generation should not be always asked
+
+Version 5.1061 - Tuleap 9.2
     * New burndown calculation
 
 Version 5.1060 - Tuleap 9.2

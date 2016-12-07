@@ -1,6 +1,8 @@
 Version 9.2 (Not release yet)
 
 	== Enhancement ==
+    * request #9551: Burndown improvement:
+        - When last day of burdown is inferior to today, cache generation should not be always asked
 	* request #9551: Burndown improvement:
 	    - New burndown calculation
 	* request #9551: Burndown improvement:
