@@ -111,7 +111,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             );
             exit;
         }
-        $mail->setTo($previewDestination, true);
+        $mail->setTo($previewDestination);
 
         if ($mail->send()) {
             $GLOBALS['Response']->sendJSON(
