@@ -15,6 +15,7 @@ Version 9.2 (Not release yet)
 	* request #9691: Plugins in site administration should be alphabetically ordered
 
 	== Bug Fix ==
+    * request #9704: Fix javascript error in massmail
 	* request #9666: New siteadmin is slow
 	* request #9667: SVN cache do not remove properly the oldest entry of the cache
 	* request #9673: Correct the name of scss file for Git in Siteadmin
