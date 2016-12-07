@@ -39,7 +39,7 @@ if ($request->valid($vGroupId)) {
 
 // Grant access only to project admins
 $user = UserManager::instance()->getCurrentUser();
-if (! ! $user->isAdmin($groupId)) {
+if (! $user->isAdmin($groupId)) {
     $GLOBALS['Response']->redirect('/');
 }
 
@@ -77,9 +77,9 @@ if ($duration <= 0) {
     $feedback[] = 'You made a mistake in selecting period. Please try again!';
     $error = true;
 } elseif ($duration < 31536000) {
-    $groupBy = 'Week';
+    $groupBy = 'week';
 } else {
-    $groupBy = 'Month';
+    $groupBy = 'month';
 }
 
 //
