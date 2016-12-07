@@ -111,6 +111,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('logs_daily');
         $this->addHook('statistics_collector');
         $this->addHook('plugin_statistics_service_usage');
+        $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -560,6 +561,17 @@ class SvnPlugin extends Plugin {
         if (! $this->isRestricted()) {
             $activator = new ServiceActivator(ServiceManager::instance());
             $activator->unuseLegacyService($params);
+        }
+    }
+
+    public function systemEventProjectRename(array $params)
+    {
+        $project            = $params['project'];
+        $repository_manager = $this->getRepositoryManager();
+        $repositories       = $repository_manager->getRepositoriesInProject($project);
+
+        if (count($repositories) > 0) {
+            $this->getBackendSVN()->setSVNApacheConfNeedUpdate();
         }
     }
 }
