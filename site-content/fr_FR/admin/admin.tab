@@ -342,6 +342,7 @@ admin_massmail_execute	no_sending	La prévisualisation n'a pas pu être envoyée
 admin_massmail_execute	done	Terminé !
 admin_massmail_execute	no_user_mail	L'utilisateur ajouté $1 n'a pas d'adresse mail.
 admin_massmail_execute	no_user	Aucun utilisateur ne correspond à votre entrée $1.
+admin_massmail_execute	no_mails	Aucune adresse valide à laquelle envoyer le message de prévisualisation.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php

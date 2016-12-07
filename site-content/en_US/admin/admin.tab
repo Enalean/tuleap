@@ -350,6 +350,7 @@ admin_massmail_execute	no_sending	Preview could not be sent
 admin_massmail_execute	done	Done!
 admin_massmail_execute	no_user_mail	The added user $1 have no mail address.
 admin_massmail_execute	no_user	No user corresponding to entry $1.
+admin_massmail_execute	no_mails	No valid email to send the preview.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php

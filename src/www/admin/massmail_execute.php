@@ -77,10 +77,12 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         $addresses  = array_filter(
             array_map('trim', preg_split('/[,;]/', $request->get('preview-destination-external')))
         );
-        foreach ($request->get('preview-destination') as $identity) {
-            $user = $user_manager->findUser($identity);
-            if ($user && $user->getEmail()) {
-                $addresses[] = $user->getEmail();
+        if (is_array($request->get('preview-destination'))) {
+            foreach ($request->get('preview-destination') as $identity) {
+                $user = $user_manager->findUser($identity);
+                if ($user && $user->getEmail()) {
+                    $addresses[] = $user->getEmail();
+                }
             }
         }
 
@@ -100,6 +102,15 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             }
         }
         $previewDestination = implode(', ', $validMails);
+        if (! $previewDestination) {
+            $GLOBALS['Response']->sendJSON(
+                array(
+                    'success' => false,
+                    'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'no_mails')
+                )
+            );
+            exit;
+        }
         $mail->setTo($previewDestination, true);
 
         if ($mail->send()) {
