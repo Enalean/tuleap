@@ -1,11 +1,9 @@
-Version 9.2 (Not release yet)
+Version 9.2 (Thursday, December 8th 2016)
 
 	== Enhancement ==
-    * request #9551: Burndown improvement:
-        - When last day of burdown is inferior to today, cache generation should not be always asked
 	* request #9551: Burndown improvement:
-	    - New burndown calculation
-	* request #9551: Burndown improvement:
+		- When last day of burdown is inferior to today, cache generation should not be always asked
+		- New burndown calculation
 		- Display message to inform that burndown is currently under calcul
 	* story #9586: Get rid of Bootstrap in site admin / configuration
 		- Disable F5 possibility when deleting tracker
@@ -15,8 +13,8 @@ Version 9.2 (Not release yet)
 	* request #9691: Plugins in site administration should be alphabetically ordered
 
 	== Bug Fix ==
-        * request #9704: Do not try to send preview if no email
-        * request #9704: Fix javascript error in massmail
+	* request #9704: Do not try to send preview if no email
+	* request #9704: Fix javascript error in massmail
 	* request #9666: New siteadmin is slow
 	* request #9667: SVN cache do not remove properly the oldest entry of the cache
 	* request #9673: Correct the name of scss file for Git in Siteadmin
@@ -24,7 +22,7 @@ Version 9.2 (Not release yet)
 	* request #9677: Bad escaping of Markdown in Tuleap
 	* request #9676: XML xsd:int only deals with 32bits int
 	* Fix the CI (yet another time)
-    * request #9705: Site admin mass mail preview has no content
+	* request #9705: Site admin mass mail preview has no content
 	* request #9704: Site admin mass mail preview email is weird
 
 	== Security ==
