@@ -189,16 +189,6 @@ admin_utils	title	$1 Site Administration
 admin_utils	menu	Site Admin Home
 #
 #-----------------------------------------------
-# Script: SF/www/admin/approve_license.php
-#
-admin_approve_license	title	$1 License Terms - Agreement
-admin_approve_license	msg_accept	Please indicate whether you accept or do not accept the following software license agreement(s) by choosing either "Accept" or "Decline" and clicking the "Continue" button at the bottom of the page.
-admin_approve_license	accept	Accept
-admin_approve_license	decline	Decline
-admin_approve_license	continue	Continue
-admin_approve_license	error	Only site administrators can browse this page
-#
-#-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
 admin_approve_pending	title	Projects waiting for validation
@@ -397,11 +387,6 @@ admin_search	login	Login Name
 admin_search	user_name	User's Name
 admin_search	unix_grp_name	Unix Group Name
 admin_search	grp_name	Project Name
-#
-#-----------------------------------------------
-# Script: SF/www/admin/show_license.php
-#
-admin_show_license	title	License Terms and Conditions
 #
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php

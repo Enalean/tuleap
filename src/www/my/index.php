@@ -15,12 +15,6 @@ require_once('../admin/admin_utils.php');
 $hp = Codendi_HTMLPurifier::instance();
 if (user_isloggedin()) {
 
-    // If it's super user and license terms have not yet been agreed then redirect
-    // to license agreement page
-    if (user_is_super_user() && !license_already_displayed()) {
-        session_redirect("/admin/approve_license.php");
-    }
-
     // Make sure this page is not cached because
     // it uses the exact same URL for all user's
     // personal page

@@ -120,18 +120,6 @@ include_layout	network_gallery	Galerie réseau
 include_layout	template_warning	Attention ce projet est un patron de projet
 #
 #-----------------------------------------------
-# Script: SF/www/include/license.php
-#
-include_license	cannot_open_acc	Impossible d'ouvrir le fichier d'acceptation de la licence&nbsp;: $1 
-include_license	license_accepted	Licence acceptée le 
-include_license	cannot_write_acc	Impossible d'écrire dans le fichier d'acceptation de la license&nbsp;: $1
-include_license	cannot_open_decl	Impossible d'ouvrir le fichier de refus de la licence&nbsp;: $1
-include_license	license_declined	Licence refusée le 
-include_license	cannot_write_decl	Impossible d'écrire dans le fichier de refus de la licence&nbsp;: $1
-include_license	msg_accept	Merci d'avoir accepter les termes de la Licence. Vous pouvez maintenant utiliser le site
-include_license	msg_declined	Vous avez choisi de refuser les termes de la Licence du logiciel.
-#
-#-----------------------------------------------
 # Script: SF/www/include/logger.php
 #
 include_logger	log_err	Une erreur est survenue dans le logger.\n
@@ -207,7 +195,6 @@ include_menu	add_project	Nouveau projet
 #-----------------------------------------------
 # Script: SF/www/include/pre.php
 #
-include_pre	site_admin_declines_license	Votre administrateur site a décliné la licence logicielle. \nLe site a été arrêté. Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
 include_pre	zend_path_not_set	Le chemin de la librairie zend n'est pas défini.Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
 #
 #-----------------------------------------------
