@@ -38,11 +38,6 @@ if ($request->valid($vGroupId)) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$current_user = UserManager::instance()->getCurrentUser();
-if (! $current_user->isAdmin($groupId)) {
-    $GLOBALS['Response']->redirect('/');
-}
-
 $func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');
 
 //Get dates for start and end period to watch statistics
