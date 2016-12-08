@@ -353,7 +353,7 @@ class ParsedBlock extends Block_HtmlElement {
         // nextBlock == block, both are the same objects. So we have to clone it.
         for ($block = $this->_getBlock($input); 
              $block; 
-             $block = (is_object($nextBlock) ? clone($nextBlock) : $nextBlock))
+             $block = (is_object($nextBlock) ? clone $nextBlock : $nextBlock))
         {
             while ($nextBlock = $this->_getBlock($input)) {
                 // Attempt to merge current with following block.
@@ -401,7 +401,7 @@ class ParsedBlock extends Block_HtmlElement {
         $re_set = &$this->_regexpset;
         //FIXME: php5 fails to advance here!
         for ($m = $re_set->match($line); $m; $m = $re_set->nextMatch($line, $m)) {
-            $block = clone($this->_block_types[$m->regexp_ind]);
+            $block = clone $this->_block_types[$m->regexp_ind];
             if (DEBUG & _DEBUG_PARSER)
                 $input->_debug('>', get_class($block));
             

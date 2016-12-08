@@ -153,10 +153,10 @@ extends _DbPassUser
             }
         }
         if (!empty($this->_authcreate) and 
-            isset($GLOBALS['HTTP_POST_VARS']['auth']) and
-            isset($GLOBALS['HTTP_POST_VARS']['auth']['passwd'])) 
+            isset($_POST['auth']) and
+            isset($_POST['auth']['passwd']))
         {
-            $passwd = $GLOBALS['HTTP_POST_VARS']['auth']['passwd'];
+            $passwd = $_POST['auth']['passwd'];
             try {
                 $this->_authcreate->bindParam("userid", $this->_userid, PDO_PARAM_STR, 48);
                 $this->_authcreate->bindParam("password", $passwd, PDO_PARAM_STR, 48);

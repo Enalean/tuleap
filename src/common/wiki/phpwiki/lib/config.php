@@ -28,25 +28,13 @@ define ('_DEBUG_SQL',     128);
 
 function isCGI() {
     return (substr(php_sapi_name(),0,3) == 'cgi' and 
-            isset($GLOBALS['HTTP_ENV_VARS']['GATEWAY_INTERFACE']) and
-            @preg_match('/CGI/',$GLOBALS['HTTP_ENV_VARS']['GATEWAY_INTERFACE']));
+            isset($_ENV['GATEWAY_INTERFACE']) and
+            @preg_match('/CGI/',$_ENV['GATEWAY_INTERFACE']));
 }
-
-/*
-// copy some $_ENV vars to $_SERVER for CGI compatibility. php does it automatically since when?
-if (isCGI()) {
-    foreach (explode(':','SERVER_SOFTWARE:SERVER_NAME:GATEWAY_INTERFACE:SERVER_PROTOCOL:SERVER_PORT:REQUEST_METHOD:HTTP_ACCEPT:PATH_INFO:PATH_TRANSLATED:SCRIPT_NAME:QUERY_STRING:REMOTE_HOST:REMOTE_ADDR:REMOTE_USER:AUTH_TYPE:CONTENT_TYPE:CONTENT_LENGTH') as $key) {
-        $GLOBALS['HTTP_SERVER_VARS'][$key] = &$GLOBALS['HTTP_ENV_VARS'][$key];
-    }
-}
-*/
 
 // essential internal stuff
 if (check_php_version(5,3)) {
     ini_set('magic_quotes_runtime', 0);
-}
-else {
-    set_magic_quotes_runtime(0);
 }
 
 /** 
@@ -64,9 +52,9 @@ function browserAgent() {
     static $HTTP_USER_AGENT = false;
     if ($HTTP_USER_AGENT !== false) return $HTTP_USER_AGENT;
     if (!$HTTP_USER_AGENT)
-        $HTTP_USER_AGENT = @$GLOBALS['HTTP_SERVER_VARS']['HTTP_USER_AGENT'];
+        $HTTP_USER_AGENT = @$_SERVER['HTTP_USER_AGENT'];
     if (!$HTTP_USER_AGENT) // CGI
-        $HTTP_USER_AGENT = @$GLOBALS['HTTP_ENV_VARS']['HTTP_USER_AGENT'];
+        $HTTP_USER_AGENT = @$_ENV['HTTP_USER_AGENT'];
     if (!$HTTP_USER_AGENT) // local CGI testing
         $HTTP_USER_AGENT = 'none';
     return $HTTP_USER_AGENT;
@@ -396,7 +384,7 @@ function pcre_fix_posix_classes ($regexp) {
 }
 
 function deduce_script_name() {
-    $s = &$GLOBALS['HTTP_SERVER_VARS'];
+    $s = &$_SERVER;
     $script = @$s['SCRIPT_NAME'];
     if (empty($script) or $script[0] != '/') {
         // Some places (e.g. Lycos) only supply a relative name in
@@ -416,9 +404,9 @@ function IsProbablyRedirectToIndex () {
     // $SCRIPT_NAME, since pages appear at
     // e.g. /dir/index.php/HomePage.
 
-    $requri = preg_replace('/\?.*$/','',$GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI']);
+    $requri = preg_replace('/\?.*$/','',$_SERVER['REQUEST_URI']);
     $requri = preg_quote($requri, '%');
-    return preg_match("%^${requri}[^/]*$%", $GLOBALS['HTTP_SERVER_VARS']['SCRIPT_NAME']);
+    return preg_match("%^${requri}[^/]*$%", $_SERVER['SCRIPT_NAME']);
 }
 
 // >= php-4.1.0

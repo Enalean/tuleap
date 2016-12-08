@@ -163,10 +163,10 @@ extends _DbPassUser
                                                 array("userid", "password"));
         }
         if (!empty($this->_authcreate) and 
-            isset($GLOBALS['HTTP_POST_VARS']['auth']) and
-            isset($GLOBALS['HTTP_POST_VARS']['auth']['passwd'])) 
+            isset($_POST['auth']) and
+            isset($_POST['auth']['passwd']))
         {
-            $passwd = $GLOBALS['HTTP_POST_VARS']['auth']['passwd'];
+            $passwd = $_POST['auth']['passwd'];
             $dbh->Execute(sprintf($this->_authcreate,
                                   $dbh->qstr($passwd),
                                   $dbh->qstr($this->_userid)));

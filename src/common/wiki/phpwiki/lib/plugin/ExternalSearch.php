@@ -80,7 +80,7 @@ extends WikiPlugin
 
         extract($args);
 
-        $posted = $GLOBALS['HTTP_POST_VARS'];
+        $posted = $_POST;
         if (in_array('url', array_keys($posted))) {
             $s = $posted['s'];
             $this->_url = $posted['url'];

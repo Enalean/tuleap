@@ -366,11 +366,10 @@ class _PageList_Column_content extends _PageList_Column {
             $this->_heading .= sprintf(_(" ... first %d bytes"),
                                        $this->bytes);
         } elseif ($field == 'hi_content') {
-            global $HTTP_POST_VARS;
-            if (!empty($HTTP_POST_VARS['admin_replace'])) {
-                $search = $HTTP_POST_VARS['admin_replace']['from'];
+            if (!empty($_POST['admin_replace'])) {
+                $search = $_POST['admin_replace']['from'];
                 $this->_heading .= sprintf(_(" ... around %s"),
-                                           '»'.$search.'«');
+                                           'Â»'.$search.'Â«');
             }
         }
     }
@@ -386,9 +385,8 @@ class _PageList_Column_content extends _PageList_Column {
         if (empty($pagelist->_sortby[$this->_field]))
             unset($revision_handle->_data['%content']);
         if ($this->_field == 'hi_content') {
-            global $HTTP_POST_VARS;
             unset($revision_handle->_data['%pagedata']['_cached_html']);
-            $search = $HTTP_POST_VARS['admin_replace']['from'];
+            $search = $_POST['admin_replace']['from'];
             if ($search and ($i = strpos($c,$search))) {
                 $l = strlen($search);
                 $j = max(0,$i - ($this->bytes / 2));
@@ -400,7 +398,7 @@ class _PageList_Column_content extends _PageList_Column {
                                  );
             } else {
                 $c = sprintf(_("%s not found"),
-                             '»'.$search.'«');
+                             'Â»'.$search.'Â«');
                 return HTML::div(array('style' => 'font-size:x-small','align'=>'center'),
                                  $c);
             }

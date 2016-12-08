@@ -139,8 +139,6 @@ extends WikiPlugin
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
     	$request->setArg('nocache','purge');
         $args = $this->getArgs($argstr, $request);
         if (!$args['page'])

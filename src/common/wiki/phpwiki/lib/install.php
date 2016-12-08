@@ -44,7 +44,6 @@ function init_install() {
 function run_install($part = '') {
     static $already = 0;
     if ($part) {
-        if (empty($_GET)) $_GET =& $GLOBALS['HTTP_GET_VARS'];
         $_GET['show'] = $part;
     }
     // setup default settings

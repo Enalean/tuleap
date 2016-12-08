@@ -37,10 +37,10 @@ class Request {
         switch($this->get('REQUEST_METHOD')) {
         case 'GET':
         case 'HEAD':
-            $this->args = &$GLOBALS['HTTP_GET_VARS'];
+            $this->args = &$_GET;
             break;
         case 'POST':
-            $this->args = &$GLOBALS['HTTP_POST_VARS'];
+            $this->args = &$_POST;
             break;
         default:
             $this->args = array();
@@ -58,10 +58,10 @@ class Request {
     }
 
     function get($key) {
-        if (!empty($GLOBALS['HTTP_SERVER_VARS']))
-            $vars = &$GLOBALS['HTTP_SERVER_VARS'];
+        if (!empty($_SERVER))
+            $vars = &$_SERVER;
         else // cgi or other servers than Apache
-            $vars = &$GLOBALS['HTTP_ENV_VARS'];
+            $vars = &$_ENV;
 
         if (isset($vars[$key]))
             return $vars[$key];
@@ -541,7 +541,7 @@ class Request {
     
     function _fix_multipart_form_data () {
         if (preg_match('|^multipart/form-data|', $this->get('CONTENT_TYPE')))
-            $this->_strip_leading_nl($GLOBALS['HTTP_POST_VARS']);
+            $this->_strip_leading_nl($_POST);
     }
     
     function _strip_leading_nl(&$var) {
@@ -590,7 +590,7 @@ class Request_SessionVars {
 class Request_CookieVars {
     
     function get($key) {
-        $vars = &$GLOBALS['HTTP_COOKIE_VARS'];
+        $vars = &$_COOKIE;
         if (isset($vars[$key])) {
             @$val = unserialize(base64_decode($vars[$key]));
             if (!empty($val))
@@ -603,7 +603,7 @@ class Request_CookieVars {
     }
 
     function get_old($key) {
-        $vars = &$GLOBALS['HTTP_COOKIE_VARS'];
+        $vars = &$_COOKIE;
         if (isset($vars[$key])) {
             @$val = unserialize(base64_decode($vars[$key]));
             if (!empty($val))
@@ -623,7 +623,7 @@ class Request_CookieVars {
     	if (defined('MAIN_setUser') and $key = 'WIKI_ID') return;
         if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
 
-        $vars = &$GLOBALS['HTTP_COOKIE_VARS'];
+        $vars = &$_COOKIE;
         if (is_numeric($persist_days)) {
             $expires = time() + (24 * 3600) * $persist_days;
         }
@@ -647,12 +647,12 @@ class Request_CookieVars {
         if (isset($deleted[$key])) return;
         if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
         
-        $vars = &$GLOBALS['HTTP_COOKIE_VARS'];
+        $vars = &$_COOKIE;
         if (!defined('COOKIE_DOMAIN'))
             @setcookie($key, '', 0);
         else    
             @setcookie($key, '', 0, COOKIE_DOMAIN);
-        unset($GLOBALS['HTTP_COOKIE_VARS'][$key]);
+        unset($_COOKIE[$key]);
         unset($_COOKIE[$key]);
         $deleted[$key] = 1;
     }
@@ -667,15 +667,12 @@ class Request_CookieVars {
 */
 class Request_UploadedFile {
     function getUploadedFile($postname) {
-        global $HTTP_POST_FILES;
 
         // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
-        if (empty($HTTP_POST_FILES) and !empty($_FILES))
-            $HTTP_POST_FILES =& $_FILES;
-        if (!isset($HTTP_POST_FILES[$postname]))
+        if (!isset($_FILES[$postname]))
             return false;
         
-        $fileinfo =& $HTTP_POST_FILES[$postname];
+        $fileinfo =& $_FILES[$postname];
         if ($fileinfo['error']) {
             // See https://sourceforge.net/forum/message.php?msg_id=3093651
             $err = (int) $fileinfo['error'];
@@ -1108,11 +1105,8 @@ class Request_AccessLogEntry
         if ($dbh and $dbh->isOpen() and $this->_accesslog->logtable) {
             $log_tbl =& $this->_accesslog->logtable;
             if ($request->get('REQUEST_METHOD') == "POST") {
-                // strangely HTTP_POST_VARS doesn't contain all posted vars.
-          	if (check_php_version(4,2))
-                    $args = $_POST; // copy not ref. clone not needed on hashes
-                else
-                    $args = $GLOBALS['HTTP_POST_VARS'];
+                $args = $_POST;
+
                 // garble passwords
                 if (!empty($args['auth']['passwd']))    $args['auth']['passwd'] = '<not displayed>';
                 if (!empty($args['dbadmin']['passwd'])) $args['dbadmin']['passwd'] = '<not displayed>';

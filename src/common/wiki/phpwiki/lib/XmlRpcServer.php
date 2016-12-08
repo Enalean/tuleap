@@ -55,9 +55,7 @@ Done:
 */
 
 // Intercept GET requests from confused users.  Only POST is allowed here!
-if (empty($GLOBALS['HTTP_SERVER_VARS']))
-    $GLOBALS['HTTP_SERVER_VARS'] =& $_SERVER;
-if ($GLOBALS['HTTP_SERVER_VARS']['REQUEST_METHOD'] != "POST")
+if ($_SERVER['REQUEST_METHOD'] != "POST")
 {
     die('This is the address of the XML-RPC interface.' .
         '  You must use XML-RPC calls to access information here');
@@ -488,10 +486,6 @@ function _getUser($userid='') {
     global $request;
     
     if (! $userid ) {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
-        if (!isset($_ENV))
-            $_ENV =& $GLOBALS['HTTP_ENV_VARS'];
         if (isset($_SERVER['REMOTE_USER']))
             $userid = $_SERVER['REMOTE_USER'];
         elseif (isset($_ENV['REMOTE_USER']))
@@ -801,36 +795,36 @@ Return Value
 Faults
     If an error condition occurs, then the appropriate fault code from
     the following list should be used. Clients can quickly determine
-    the kind of error from bits 5-8. 0×001x fault codes are used for
-    problems with the source URI, 0×002x codes are for problems with
-    the target URI, and 0×003x codes are used when the URIs are fine
+    the kind of error from bits 5-8. 0x001x fault codes are used for
+    problems with the source URI, 0x002x codes are for problems with
+    the target URI, and 0x003x codes are used when the URIs are fine
     but the pingback cannot be acknowledged for some other reaon.
 
     0 
     	A generic fault code. Servers MAY use this error code instead
     	of any of the others if they do not have a way of determining
     	the correct fault code.
-    0×0010 (16)
+    0x0010 (16)
         The source URI does not exist.
-    0×0011 (17)
+    0x0011 (17)
         The source URI does not contain a link to the target URI, and
         so cannot be used as a source.
-    0×0020 (32)
+    0x0020 (32)
         The specified target URI does not exist. This MUST only be
         used when the target definitely does not exist, rather than
         when the target may exist but is not recognised. See the next
         error.
-    0×0021 (33)
+    0x0021 (33)
         The specified target URI cannot be used as a target. It either
         doesn't exist, or it is not a pingback-enabled resource. For
         example, on a blog, typically only permalinks are
         pingback-enabled, and trying to pingback the home page, or a
         set of posts, will fail with this error.
-    0×0030 (48)
+    0x0030 (48)
         The pingback has already been registered.
-    0×0031 (49)
+    0x0031 (49)
         Access denied.
-    0×0032 (50)
+    0x0032 (50)
         The server could not communicate with an upstream server, or
         received an error from an upstream server, and therefore could
         not complete the request. This is similar to HTTP's 402 Bad

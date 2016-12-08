@@ -52,33 +52,30 @@
  * subsequent requests will fail. (POST to save the INI)
  */
 
-global $HTTP_SERVER_VARS, $HTTP_POST_VARS, $tdwidth;
-if (empty($_GET)) $_GET =& $GLOBALS['HTTP_GET_VARS'];
-if (empty($_ENV)) $_ENV =& $GLOBALS['HTTP_ENV_VARS'];
+global $tdwidth;
 
 if (empty($configurator))
     $configurator = "configurator.php";
-if (!strstr($HTTP_SERVER_VARS["SCRIPT_NAME"], $configurator) and defined('DATA_PATH'))
+if (!strstr($_SERVER["SCRIPT_NAME"], $configurator) and defined('DATA_PATH'))
     $configurator = DATA_PATH . "/" . $configurator;
-$scriptname = str_replace('configurator.php', 'index.php', $HTTP_SERVER_VARS["SCRIPT_NAME"]);
+$scriptname = str_replace('configurator.php', 'index.php', $_SERVER["SCRIPT_NAME"]);
 
 $tdwidth = 700;
 $config_file = (substr(PHP_OS,0,3) == 'WIN') ? 'config\\config.ini' : 'config/config.ini';
 $fs_config_file = dirname(__FILE__) . (substr(PHP_OS,0,3) == 'WIN' ? '\\' : '/') . $config_file;
-if (isset($HTTP_POST_VARS['create']))  header('Location: '.$configurator.'?show=_part1&create=1#create');
+if (isset($_POST['create']))  header('Location: '.$configurator.'?show=_part1&create=1#create');
 
 // helpers from lib/WikiUser/HttpAuth.php
 if (!function_exists('_http_user')) {
     function _http_user() {
-        if (!isset($_SERVER))
-            $_SERVER = $GLOBALS['HTTP_SERVER_VARS'];
+
 	if (!empty($_SERVER['PHP_AUTH_USER']))
 	    return array($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 	if (!empty($_SERVER['REMOTE_USER']))
 	    return array($_SERVER['REMOTE_USER'], $_SERVER['PHP_AUTH_PW']);
-        if (!empty($GLOBALS['HTTP_ENV_VARS']['REMOTE_USER']))
-	    return array($GLOBALS['HTTP_ENV_VARS']['REMOTE_USER'], 
-	                 $GLOBALS['HTTP_ENV_VARS']['PHP_AUTH_PW']);
+        if (!empty($_ENV['REMOTE_USER']))
+	    return array($_ENV['REMOTE_USER'],
+            $_ENV['PHP_AUTH_PW']);
 	if (!empty($GLOBALS['REMOTE_USER']))
 	    return array($GLOBALS['REMOTE_USER'], $GLOBALS['PHP_AUTH_PW']);
 	    
@@ -90,8 +87,6 @@ if (!function_exists('_http_user')) {
 	return array('','');
     }
     function _http_logout() {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
         // maybe we should random the realm to really force a logout. but the next login will fail.
         // better_srand(); $realm = microtime().rand();
         header('WWW-Authenticate: Basic realm="'.WIKI_NAME.'"');
@@ -1491,13 +1486,12 @@ URL options -- you can probably skip this section.
 
 For a pretty wiki (no index.php in the url) set a seperate DATA_PATH.");
 
-global $HTTP_SERVER_VARS;
 $properties["Server Name"] =
-new _define_commented_optional('SERVER_NAME', $HTTP_SERVER_VARS['SERVER_NAME'], "
+new _define_commented_optional('SERVER_NAME', $_SERVER['SERVER_NAME'], "
 Canonical name of the server on which this PhpWiki resides.");
 
 $properties["Server Port"] =
-new numeric_define_commented('SERVER_PORT', $HTTP_SERVER_VARS['SERVER_PORT'], "
+new numeric_define_commented('SERVER_PORT', $_SERVER['SERVER_PORT'], "
 Canonical httpd port of the server on which this PhpWiki resides.",
 "onchange=\"validate_ereg('Sorry, \'%s\' is no valid port number.', '^[0-9]+$', 'SERVER_PORT', this);\"");
 
@@ -1764,9 +1758,8 @@ class _variable {
     }
 
     function value() {
-      global $HTTP_POST_VARS;
-      if (isset($HTTP_POST_VARS[$this->config_item_name]))
-          return $HTTP_POST_VARS[$this->config_item_name];
+      if (isset($_POST[$this->config_item_name]))
+          return $_POST[$this->config_item_name];
       else 
           return $this->default_value;
     }
@@ -1879,9 +1872,8 @@ extends unchangeable_variable {
 class _variable_selection
 extends _variable {
     function value() {
-        global $HTTP_POST_VARS;
-        if (!empty($HTTP_POST_VARS[$this->config_item_name]))
-            return $HTTP_POST_VARS[$this->config_item_name];
+        if (!empty($_POST[$this->config_item_name]))
+            return $_POST[$this->config_item_name];
         else {
 	    list($option, $label) = each($this->default_value);
             return $option;
@@ -2130,9 +2122,8 @@ extends _variable {
             $this->jscheck = "onchange=\"validate_ereg('Sorry, \'%s\' cannot be empty.', '^.+$', '" . $this->get_config_item_name() . "', this);\"";
     }
     function get_html() {
-	global $HTTP_POST_VARS, $HTTP_GET_VARS;
 	$s = $this->get_config_item_header();
-        if (isset($HTTP_POST_VARS['create']) or isset($HTTP_GET_VARS['create'])) {
+        if (isset($_POST['create']) or isset($_GET['create'])) {
 	    $new_password = random_good_password();
 	    $this->default_value = $new_password;
 	    $s .= "Created password: <strong>$new_password</strong><br />&nbsp;<br />";
@@ -2253,29 +2244,6 @@ extends _define {
         return $ta;
     }
 }
-
-/*
-class _ini_set
-extends _variable {
-    function value() {
-        global $HTTP_POST_VARS;
-        if ($v = $HTTP_POST_VARS[$this->config_item_name])
-            return $v;
-        else {
-	    return ini_get($this->get_config_item_name);
-        }
-    }
-    function _config_format($value) {
-        return sprintf("ini_set('%s', '%s');", $this->get_config_item_name(), $value);
-    }
-    function _get_config_line($posted_value) {
-        if ($posted_value && ! $posted_value == $this->default_value)
-            return "\n" . $this->_config_format($posted_value);
-        else
-            return "\n;" . $this->_config_format($this->default_value);
-    }
-}
-*/
 
 class boolean_define
 extends _define {
@@ -2472,10 +2440,10 @@ if (!function_exists('is_a')) {
 }
 
 
-if (!empty($HTTP_POST_VARS['action']) 
-    and $HTTP_POST_VARS['action'] == 'make_config'
-    and !empty($HTTP_POST_VARS['ADMIN_USER'])
-    and !empty($HTTP_POST_VARS['ADMIN_PASSWD'])
+if (!empty($_POST['action'])
+    and $_POST['action'] == 'make_config'
+    and !empty($_POST['ADMIN_USER'])
+    and !empty($_POST['ADMIN_PASSWD'])
     )
 {
 
@@ -2489,9 +2457,7 @@ if (!empty($HTTP_POST_VARS['action'])
 ; $preamble
 ";
 
-    $posted = $GLOBALS['HTTP_POST_VARS'];
-    /*if (defined('DEBUG'))
-     printArray($GLOBALS['HTTP_POST_VARS']);*/
+    $posted = $_POST;
 
     foreach ($properties as $option_name => $a) {
         $posted_value = stripslashes($posted[$a->config_item_name]);
@@ -2541,11 +2507,11 @@ if (!empty($HTTP_POST_VARS['action'])
     echo "<p>To make any corrections, <a href=\"configurator.php\">edit the settings again</a>.</p>\n";
 
 } else { // first time or create password
-    $posted = $GLOBALS['HTTP_POST_VARS'];
+    $posted = $_POST;
     // No action has been specified - we make a form.
 
-    if (!empty($GLOBALS['HTTP_GET_VARS']['start_debug'])) 
-    	$configurator .= ("?start_debug=" . $GLOBALS['HTTP_GET_VARS']['start_debug']);
+    if (!empty($_GET['start_debug']))
+    	$configurator .= ("?start_debug=" . $_GET['start_debug']);
     echo '
 <form action="',$configurator,'" method="post">
 <input type="hidden" name="action" value="make_config" />

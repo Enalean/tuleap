@@ -170,7 +170,6 @@ extends WikiPlugin
         $this->oldstring = ini_set('highlight.string', $string);
         $this->oldcomment = ini_set('highlight.comment', $comment);
         $this->oldkeyword = ini_set('highlight.keyword', $keyword);
-        $this->oldbg = ini_set('highlight.bg', $bg);
         $this->olddefault = ini_set('highlight.default', $default);
         $this->oldhtml = ini_set('highlight.html', $html);
     }
@@ -180,7 +179,6 @@ extends WikiPlugin
         ini_set('highlight.string', $this->oldstring);
         ini_set('highlight.comment', $this->oldcomment);
         ini_set('highlight.keyword', $this->oldkeyword);
-        ini_set('highlight.bg', $this->oldbg);
         ini_set('highlight.default', $this->olddefault);
         ini_set('highlight.html', $this->oldhtml);
     }

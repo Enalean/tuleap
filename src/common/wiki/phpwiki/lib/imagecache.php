@@ -48,9 +48,8 @@ function deducePagename ($request) {
         }
     }
     elseif ($this->isPost()) {
-        global $HTTP_GET_VARS;
-        if (isset($HTTP_GET_VARS['pagename'])) { 
-            return $HTTP_GET_VARS['pagename'];
+        if (isset($_GET['pagename'])) {
+            return $_GET['pagename'];
         }
     }
 
@@ -62,13 +61,13 @@ function deducePagename ($request) {
 }
 
 function deduceUsername() {
-    global $request, $HTTP_SERVER_VARS, $HTTP_ENV_VARS;
+    global $request;
     if (!empty($request->args['auth']) and !empty($request->args['auth']['userid']))
         return $request->args['auth']['userid'];
-    if (!empty($HTTP_SERVER_VARS['PHP_AUTH_USER']))
-        return $HTTP_SERVER_VARS['PHP_AUTH_USER'];
-    if (!empty($HTTP_ENV_VARS['REMOTE_USER']))
-        return $HTTP_ENV_VARS['REMOTE_USER'];
+    if (!empty($_SERVER['PHP_AUTH_USER']))
+        return $_SERVER['PHP_AUTH_USER'];
+    if (!empty($_ENV['REMOTE_USER']))
+        return $_ENV['REMOTE_USER'];
     
     if ($user = $request->getSessionVar('wiki_user')) {
         $request->_user = $user;

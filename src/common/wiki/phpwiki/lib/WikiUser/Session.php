@@ -22,10 +22,10 @@ extends _PassUser
                 E_USER_ERROR);
             exit;
         }
-        $sess =& $GLOBALS['HTTP_SESSION_VARS'];
+        $sess =& $_SESSION;
         // user hash: "[user][userid]" or object "user->id"
         if (strstr(AUTH_SESS_USER,"][")) {
-            $sess = $GLOBALS['HTTP_SESSION_VARS'];
+            $sess = $_SESSION;
             // recurse into hashes: "[user][userid]", sess = sess[user] => sess = sess[userid]
             foreach (split("][",AUTH_SESS_USER) as $v) {
                 $v = str_replace(array("[","]"),'',$v);

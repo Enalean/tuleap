@@ -100,9 +100,9 @@ function random_good_password ($minlength = 5, $maxlength = 8) {
     return $newpass;
 }
 
-/** PHP5 deprecated old-style globals if !(bool)ini_get('register_long_arrays'). 
+/** PHP5 deprecated old-style globals if !(bool)ini_get('register_long_arrays').
   *  See Bug #1180115
-  * We want to work with those old ones instead of the new superglobals, 
+  * We want to work with those old ones instead of the new superglobals,
   * for easier coding.
   */
 foreach (array('SERVER','GET','POST','ENV') as $k) {
@@ -111,7 +111,7 @@ foreach (array('SERVER','GET','POST','ENV') as $k) {
 }
 unset($k);
 
-$posted = $GLOBALS['HTTP_POST_VARS'];
+$posted = $_POST;
 if (!empty($posted['create'])) {
     $new_password = random_good_password();
     echo "<p>The newly created random password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
@@ -134,7 +134,7 @@ if (($posted['password'] != "")
                        16 * CRYPT_BLOWFISH);
     // Generate the encrypted password.
     $encrypted_password = crypt($password, rand_ascii($salt_length));
-    $debug = $HTTP_GET_VARS['debug'];
+    $debug = $_GET['debug'];
     if ($debug)
         echo "The password was encrypted using a salt length of: $salt_length<br />\n";
     echo "<p>The encrypted password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
@@ -145,9 +145,9 @@ else if ($posted['password'] != "") {
     echo "The passwords did not match. Please try again.<br />\n";
 }
 if (empty($REQUEST_URI))
-    $REQUEST_URI = $HTTP_ENV_VARS['REQUEST_URI'];
+    $REQUEST_URI = $_ENV['REQUEST_URI'];
 if (empty($REQUEST_URI))
-    $REQUEST_URI = $HTTP_SERVER_VARS['REQUEST_URI'];
+    $REQUEST_URI = $_SERVER['REQUEST_URI'];
 ?>
 
 <form action="<?php echo $REQUEST_URI ?>" method="post">
