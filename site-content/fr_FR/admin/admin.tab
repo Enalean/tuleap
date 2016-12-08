@@ -179,16 +179,6 @@ admin_main	btn_update_information	Mettre à jour les informations
 #
 admin_utils	title	Administration du site $1
 admin_utils	menu	Accueil admin. site
-#
-#-----------------------------------------------
-# Script: SF/www/admin/approve_license.php
-#
-admin_approve_license	title	Termes de la licence $1 - Approbation
-admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'option "Décliner" et en cliquant sur le bouton "Continuer" en bas de page. Vous pouvez aussi accéder à une <a href="http://fsffrance.org/gpl/gpl-fr.fr.html">traduction en français de la licence GPL v2</a>
-admin_approve_license	accept	Accepter
-admin_approve_license	decline	Décliner
-admin_approve_license	continue	Continuer
-admin_approve_license	error	Seuls les administrateurs du site ont accès à cette page
 
 #
 #-----------------------------------------------
@@ -389,11 +379,6 @@ admin_search	login	Nom de login
 admin_search	user_name	Nom d'utilisateur
 admin_search	unix_grp_name	Nom du groupe unix
 admin_search	grp_name	Nom du projet
-#
-#-----------------------------------------------
-# Script: SF/www/admin/show_license.php
-#
-admin_show_license	title	Termes et conditions de la licence
 #
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php

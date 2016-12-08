@@ -209,16 +209,6 @@ if ($current_user->isLoggedIn()) {
 $theme_manager = new ThemeManager();
 $HTML = $theme_manager->getTheme($current_user);
 
-// If the Software license was declined by the site admin
-// so stop all accesses to the site. Use exlicit path to avoid
-// loading the license.php file in the register directory when
-// invoking project/register.php
-if(!IS_SCRIPT) {
-require_once(dirname(__FILE__).'/license.php');
-if (license_already_declined()) {
-    exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
-}
-}
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:
 // a) all scripts where you are not logged in by definition
