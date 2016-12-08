@@ -8,7 +8,7 @@
     "angular-ui-bootstrap-bower": "~0.8.0",
     "angular-ui-router": "~0.2.15",
     "ng-lodash": "0.5.0",
-    "codemirror": "CodeMirror#^5.14.2",
+    "codemirror": "CodeMirror#> 5.14.2 < 5.20.0",
     "ui-select": "angular-ui-select#~0.13.2",
     "angular-moment": "^0.10.3"
   },
