@@ -698,7 +698,7 @@ class Mustache {
 			$partial = preg_replace('/(\\r?\\n)(?!$)/s', "\\1" . $whitespace, $partial);
 		}
 
-		$view = clone($this);
+		$view = clone $this;
 
 		if ($leading !== null && $trailing !== null) {
 			return $leading . $view->render($partial);

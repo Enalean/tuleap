@@ -813,7 +813,7 @@ class Artifact {
      *  @return boolean
      */
     function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false){
-    	global $art_field_fact,$HTTP_POST_VARS,$Language;
+        global $art_field_fact,$Language;
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
 	    if (!$import) {
@@ -1022,9 +1022,9 @@ class Artifact {
 		$request = HTTPRequest::instance();
 	    //for masschange look at the special case of changing the submitted_by param
 	    if ($masschange) {
-			reset($HTTP_POST_VARS);
-			while ( list($key, $val) = each($HTTP_POST_VARS)) {
-	            $val = $request->get($key); //Don't use HTTP_POST_VARS
+			reset($_POST);
+			while ( list($key, $val) = each($_POST)) {
+	            $val = $request->get($key); //Don't use _POST value
 				if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
 					$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
 					$res = db_query($sql);
