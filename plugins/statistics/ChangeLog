@@ -1,3 +1,6 @@
+Version 0.75 - Tuleap 9.2
+    * request #9709: Disk statistics per project are not visible to the project members
+
 Version 0.74 - Tuleap 9.2
     * request #9708: Service growth graph in project statistics not displayed
 
