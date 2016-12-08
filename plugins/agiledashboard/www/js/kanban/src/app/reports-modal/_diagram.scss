@@ -1,9 +1,14 @@
 .chart {
     position: relative;
+    overflow: hidden;
 
     .axis line,
     path {
         stroke: #9c9c9c;
+    }
+
+    .grid line {
+        stroke: #d8d8d8;
     }
 
     .axis text {
@@ -66,8 +71,9 @@
 
 
             > .legend-value-color {
-                width: 20px;
+                min-width: 20px;
                 height: 20px;
+                min-height: 20px;
                 margin: 0 8px 0 0;
                 border-radius: 50%;
             }
