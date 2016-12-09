@@ -1,3 +1,6 @@
+Version 0.49 - Tuleap 9.3
+    * request #9717: OpenID Connect plugin can not create 2 authentication links for the same provider in the same request
+
 Version 0.48 - Tuleap 9.2
     * request #9701: Add root editorconfig
 
