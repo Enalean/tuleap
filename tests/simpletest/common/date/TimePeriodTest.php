@@ -355,3 +355,24 @@ class TimePeriodWithWeekEnd_itDealsWithDuration extends TuleapTestCase {
         $this->assertEqual($time_period->getEndDate(), $this->following_day_timestamp);
     }
 }
+
+class TimePeriodTest extends TuleapTestCase
+{
+    public function itReturnsTrueWhenTodayIsBeforeFirstDayOfBurndown()
+    {
+        $day = new DateTime();
+        $day->modify('+5 day');
+
+        $time_period = new TimePeriodWithWeekEnd($day->getTimestamp(), 2);
+        $this->assertTrue($time_period->isTodayBeforeTimePeriod());
+    }
+
+    public function itReturnsFalseWhenTodayIsAfterFirstDayOfBurndown()
+    {
+        $day = new DateTime();
+        $day->modify('-5 day');
+
+        $time_period = new TimePeriodWithWeekEnd($day->getTimestamp(), 2);
+        $this->assertFalse($time_period->isTodayBeforeTimePeriod());
+    }
+}

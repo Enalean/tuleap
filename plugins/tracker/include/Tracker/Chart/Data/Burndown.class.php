@@ -73,8 +73,13 @@ class Tracker_Chart_Data_Burndown
     {
         $remaining_effort = array();
 
-        $number_of_days = $this->time_period->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+        if ($this->time_period->isTodayBeforeTimePeriod()) {
+            $remaining_effort[] = null;
 
+            return $remaining_effort;
+        }
+
+        $number_of_days = $this->time_period->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
         for ($day_offset = 0; $day_offset < $number_of_days; $day_offset++) {
             if (isset($this->remaining_effort[$day_offset])) {
                 $remaining_effort[] = $this->remaining_effort[$day_offset];
