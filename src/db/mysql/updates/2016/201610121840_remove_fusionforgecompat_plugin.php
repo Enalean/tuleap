@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * user_get_object_by_name() - Get User object by username.
- * user_get_object is useful so you can pool user objects/save database queries
- * You should always use this instead of instantiating the object directly
- *
- * @param	string	The unix username - required
- * @param	int	The result set handle ("SELECT * FROM USERS WHERE user_id=xx")
- * @return	a user object or false on failure
- */
-function user_get_object_by_name($user_name, $res = false) {
-    return UserManager::instance()->getUserByIdentifier($user_name);
-}
+class b201610121840_remove_fusionforgecompat_plugin extends ForgeUpgrade_Bucket
+{
+    public function description()
+    {
+        return 'Remove fusionforge_compat plugin';
+    }
 
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+
+    public function up()
+    {
+        $sql = "DELETE FROM plugin WHERE name = 'fusionforge_compat'";
+
+        if (! $this->db->dbh->query($sql)) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                'The plugin fusionforge_compat has not been properly uninstalled'
+            );
+        }
+    }
+}

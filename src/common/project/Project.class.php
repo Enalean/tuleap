@@ -492,59 +492,6 @@ class Project extends Group implements PFO_Project {
     public function getUsers() {
         return $this->getMembers();
     }
-    
-    /**
-     * getRolesId - Get the roles of the group.
-     *
-     * @return      array   Role ids of this group.
-     */
-    function getRolesId() {
-            $role_ids = array();
-
-            /*if (USE_PFO_RBAC) {
-                    $res = db_query_params('SELECT role_id FROM pfo_role WHERE home_group_id=$1',
-                                            array($this->getID()));
-                    while ($arr = db_fetch_array($res)) {
-                            $role_ids[] = $arr['role_id'];
-                    }
-                    $res = db_query_params('SELECT role_id FROM role_project_refs WHERE group_id=$1',
-                                            array($this->getID()));
-                    while ($arr = db_fetch_array($res)) {
-                            $role_ids[] = $arr['role_id'];
-                    }
-            } else {
-                    $res = db_query_params('SELECT role_id FROM role WHERE group_id=$1',
-                                                        array($this->getID()));
-                    while ($arr = db_fetch_array($res)) {
-                            $role_ids[] = $arr['role_id'];
-                    }
-            }*/
-
-            return array_unique($role_ids);
-    }
-
-    /**
-     * getRoles - Get the roles of the group.
-     *
-     * @return      array   Roles of this group.
-     */
-    function getRoles() {
-            $result = array();
-
-            /*$roles = $this->getRolesId();
-            if (USE_PFO_RBAC) {
-                    $engine = RBACEngine::getInstance();
-                    foreach ($roles as $role_id) {
-                            $result[] = $engine->getRoleById ($role_id);
-                    }
-            } else {
-                    foreach ($roles as $role_id) {
-                            $result[] = new Role ($this, $role_id);
-                    }
-            }*/
-
-            return $result;
-    }
 
     public function projectsMustBeApprovedByAdmin() {
         return ForgeConfig::get('sys_project_approval', 1) === 1;

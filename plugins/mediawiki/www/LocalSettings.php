@@ -39,7 +39,6 @@ $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 require_once('common/include/Codendi_Request.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once 'pre.php';
-require_once __DIR__.'/../../fusionforge_compat/include/include/plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/Group.class.php';
 require_once __DIR__.'/../include/MediawikiFusionForgeProjectNameRetriever.php';
@@ -54,9 +53,8 @@ require_once MEDIAWIKI_BASE_DIR.'/MediawikiMLEBExtensionManagerLoader.php';
 /**
  * HACK
  */
-require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
-$ff_plugin = new fusionforge_compatPlugin();
-$ff_plugin->loaded();
+require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
+
 $manager                = new MediawikiManager(new MediawikiDao());
 $language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
 $project_name_retriever = new MediawikiFusionForgeProjectNameRetriever();
@@ -86,8 +84,6 @@ $write_permissions = array(
 //Trust Mediawiki security
 $xml_security = new XML_Security();
 $xml_security->enableExternalLoadOfEntities();
-
-sysdebug_lazymode(true);
 
 $wgServer = HTTPRequest::instance()->getServerUrl();
 
@@ -222,10 +218,10 @@ if ($is_tuleap_mediawiki_123) {
 function TuleapMediawikiAuthentication($user, &$result) {
     global $fusionforgeproject, $wgGroupPermissions ;
 
-    session_set();
+    $user_manager = UserManager::instance();
+    $tuleap_user  = $user_manager->getCurrentUser();
 
-    if (session_loggedin()) {
-            $tuleap_user    = session_get_user();
+    if ($tuleap_user->isLoggedIn()) {
             $group          = group_get_object_by_name($fusionforgeproject);
             $madiawiki_name = ucfirst($tuleap_user->getUnixName()) ;
             $mediawiki_user = User::newFromName($madiawiki_name);
@@ -280,7 +276,8 @@ function customizeMediawikiGroupsRights(
     array $read_permissions,
     array $write_permissions
 ) {
-    $tuleap_user = session_get_user();
+    $user_manager = UserManager::instance();
+    $tuleap_user  = $user_manager->getCurrentUser();
 
     $wgGroupPermissions = removeUnwantedRights($wgGroupPermissions, $forbidden_permissions);
     $wgGroupPermissions = removeAllGroupsReadWriteRights($wgGroupPermissions, $read_permissions, $write_permissions);

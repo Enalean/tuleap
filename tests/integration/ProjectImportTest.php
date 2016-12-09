@@ -68,9 +68,7 @@ class ProjectImportTest extends TuleapDbTestCase
         /**
          * HACK
          */
-        require_once dirname(__FILE__) . '/../../plugins/fusionforge_compat/include/fusionforge_compatPlugin.class.php';
-        $ff_plugin = new fusionforge_compatPlugin();
-        $ff_plugin->loaded();
+        require_once dirname(__FILE__) . '/../../plugins/mediawiki/fusionforge/compat/load_compatibilities_method.php';
 
         PluginManager::instance()->installAndActivate('mediawiki');
 

@@ -14,7 +14,8 @@ require_once $gfcommon.'include/pre.php';
 $group_id = getIntFromRequest('group_id');
 $pluginname = 'mediawiki' ;
 
-$group = group_get_object($group_id);
+$project_manager = ProjectManager::instance();
+$group = $project_manager->getProject($group_id);
 if (!$group) {
 	exit_error ("Invalid Project", "Invalid Project");
 }

@@ -19,33 +19,6 @@
  */
 
 /**
- * Create URL for user's profile page
- *
- * @param string $username
- * @param int $user_id
- * @return string URL
- */
-function util_make_url_u ($username, $user_id) {
-    return util_make_url ("/users/$username/");
-}
-
-
-/**
- * Create URL for a project's page
- *
- * @param string $groupame
- * @param int $group_id
- * @return string
- */
-function util_make_url_g ($groupame, $group_id) {
-	if (isset ($GLOBALS['sys_noforcetype']) && $GLOBALS['sys_noforcetype']) {
-		return util_make_url ("/project/?group_id=$group_id");
-	} else {
-		return util_make_url ("/projects/$groupame/");
-	}
-}
-
-/**
  * Constructs the forge's URL prefix out of forge_get_config('url_prefix')
  *
  * @return string
@@ -107,45 +80,6 @@ function util_make_url($path = '', $prefix = '') {
 }
 
 /**
- * Create a HTML link to a project's page
- * @param string $groupame
- * @param int $group_id
- * @param string $text
- * @return string
- */
-function util_make_link_g ($groupname, $group_id,$text) {
-	$hook_params =array();
-	$hook_params['resource_type']  = 'group';
-	$hook_params['group_name'] = $groupname;
-	$hook_params['group_id'] = $group_id;
-	$hook_params['link_text'] = $text;
-	$hook_params['group_link'] = '';
-	plugin_hook_by_reference('project_link_with_tooltip', $hook_params);
-	if($hook_params['group_link'] != '') {
-		return $hook_params['group_link'];
-	}
-
-	return '<a href="' . util_make_url_g ($groupname, $group_id) . '">' . $text . '</a>' ;
-}
-
-/**
- * Find the relative URL from full URL, removing http[s]://forge_name[:port]
- *
- * @param	string	URL
- */
-function util_find_relative_referer($url) {
-	$relative_url = str_replace(util_make_base_url(), '', $url);
-	//now remove previous feedback, error_msg or warning_msg
-	$relative_url = preg_replace('/&error_msg=.*&/', '&', $relative_url);
-	$relative_url = preg_replace('/&warning_msg=.*&/', '&', $relative_url);
-	$relative_url = preg_replace('/&feedback=.*&/', '&', $relative_url);
-	$relative_url = preg_replace('/&error_msg=.*/', '', $relative_url);
-	$relative_url = preg_replace('/&warning_msg=.*/', '', $relative_url);
-	$relative_url = preg_replace('/&feedback=.*/', '', $relative_url);
-	return $relative_url;
-}
-
-/**
  * Construct proper (relative) URI (prepending prefix)
  *
  * @param string $path
@@ -157,4 +91,3 @@ function util_make_uri($path) {
 	$uri .= $path;
 	return $uri;
 }
-
