@@ -22,22 +22,38 @@ use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-class StateFactoryTest extends TuleapTestCase {
+class StateFactoryTest extends TuleapTestCase
+{
+    public function itKeepsSameKey()
+    {
+        $random_number_generator = new RandomNumberGenerator();
 
-    public function itKeepsSameKeyBetweenGeneration() {
-        $key                     = 'Tuleap';
-        $random_number_generator = mock('RandomNumberGenerator');
-        $random_number_generator->setReturnValue('getNumber', $key);
+        $state_factory_1 = new StateFactory($random_number_generator);
+        $state_factory_2 = new StateFactory($random_number_generator);
+        $state_1_1       = $state_factory_1->createState(1);
+        $state_1_2       = $state_factory_1->createState(2);
+        $state_2         = $state_factory_2->createState(1);
 
-        $state_factory = new StateFactory($random_number_generator);
-        $state_1       = $state_factory->createState(1);
-        $state_2       = $state_factory->createState(2);
-
-        $this->assertEqual($key, $state_1->getSecretKey());
-        $this->assertEqual($key, $state_2->getSecretKey());
+        $this->assertEqual($state_1_1->getSecretKey(), $state_1_2->getSecretKey());
+        $this->assertEqual($state_1_1->getSecretKey(), $state_2->getSecretKey());
     }
 
-    public function itCreatesStateWithGivenParameters() {
+    public function itKeepsSameNonce()
+    {
+        $random_number_generator = new RandomNumberGenerator();
+
+        $state_factory_1 = new StateFactory($random_number_generator);
+        $state_factory_2 = new StateFactory($random_number_generator);
+        $state_1_1       = $state_factory_1->createState(1);
+        $state_1_2       = $state_factory_1->createState(2);
+        $state_2         = $state_factory_2->createState(1);
+
+        $this->assertEqual($state_1_1->getNonce(), $state_2->getNonce());
+        $this->assertEqual($state_1_1->getNonce(), $state_1_2->getNonce());
+    }
+
+    public function itCreatesStateWithGivenParameters()
+    {
         $value = 1234;
 
         $random_number_generator = new RandomNumberGenerator();
