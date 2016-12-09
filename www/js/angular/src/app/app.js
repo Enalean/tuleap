@@ -5,6 +5,7 @@ angular.module('tuleap.pull-request', [
     'ngLodash',
     'shared-properties',
     'templates-app',
+    'tuleap.resize',
     'ui.bootstrap',
     'ui.router',
     'ui.select'

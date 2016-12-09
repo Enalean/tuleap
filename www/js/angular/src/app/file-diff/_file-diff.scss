@@ -1,5 +1,4 @@
 #file-diff {
-    margin: 0 0 50px;
     padding: 15px;
     box-sizing: border-box;
 
@@ -49,10 +48,14 @@
         }
     }
 
+    #code-mirror-area {
+        height: 50vh;
+    }
+
     .CodeMirror {
-        height: auto;
         border: 1px solid #dddddd;
         border-radius: 3px;
+        height: 400px;
 
         .CodeMirror-gutters {
             border: 0;

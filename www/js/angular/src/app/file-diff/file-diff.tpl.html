@@ -4,4 +4,8 @@
     <i class="icon-file-alt"></i><br>{{ 'Binary file' | translate }}
 </div>
 
-<textarea ng-if="! diff.isBinaryFile" style="display: none"></textarea>
+<div
+    ng-if="! diff.isBinaryFile"
+    id="code-mirror-area"
+    resize
+></div>

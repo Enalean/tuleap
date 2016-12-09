@@ -1,3 +1,4 @@
+/* eslint-disable angular/document-service */
 angular
     .module('tuleap.pull-request')
     .directive('fileDiff', FileDiffDirective);
@@ -7,7 +8,6 @@ FileDiffDirective.$inject = [
     'lodash',
     '$state',
     '$compile',
-    '$uiViewScroll',
     'SharedPropertiesService',
     'FileDiffRestService',
     'TooltipService'
@@ -18,7 +18,6 @@ function FileDiffDirective(
     _,
     $state,
     $compile,
-    $uiViewScroll,
     SharedPropertiesService,
     FileDiffRestService,
     TooltipService
@@ -48,7 +47,9 @@ function FileDiffDirective(
                     gutters     : ['gutter-oldlines', 'gutter-newlines'],
                     mode        : data.mime_type
                 };
-                var unidiff = $window.CodeMirror.fromTextArea(element.find('textarea')[0], unidiffOptions);
+
+                var unidiff = $window.CodeMirror(document.getElementById('code-mirror-area'), unidiffOptions);
+                scope.$broadcast('code_mirror_initialized');
                 displayUnidiff(unidiff, data.lines);
 
                 data.inline_comments.forEach(function(comment) {
@@ -61,12 +62,10 @@ function FileDiffDirective(
             diffController.is_loading = false;
 
             TooltipService.setupTooltips();
-
-            $uiViewScroll(element);
         });
 
         function showCommentForm(unidiff, lnb) {
-            var elt = document.createElement('div'); // eslint-disable-line angular/document-service
+            var elt = document.createElement('div');
             elt.innerHTML = '<div class="new-inline-comment">'
                 + '<i class="icon-plus-sign"></i>'
                 + '<div class="arrow"></div>'
@@ -105,13 +104,13 @@ function FileDiffDirective(
         fileLines.forEach(function(line, lnb) {
             if (line.old_offset) {
                 unidiff.setGutterMarker(lnb, 'gutter-oldlines',
-                    document.createTextNode(line.old_offset)); // eslint-disable-line angular/document-service
+                    document.createTextNode(line.old_offset));
             } else {
                 unidiff.addLineClass(lnb, 'background', 'added-lines');
             }
             if (line.new_offset) {
                 unidiff.setGutterMarker(lnb, 'gutter-newlines',
-                    document.createTextNode(line.new_offset)); // eslint-disable-line angular/document-service
+                    document.createTextNode(line.new_offset));
             } else {
                 unidiff.addLineClass(lnb, 'background', 'deleted-lines');
             }
