@@ -1,6 +1,7 @@
 Version 9.3 (Not released yet)
 	== Bug Fix ==
 	* request #9720: Release notes are not accessible to not logged users even if permissions allow it
+	* request #9722: JPGraph error when burndown is in the future
 
 	== Enhancement ==
 	- request #9712: empty state in system events is broken
@@ -11,6 +12,7 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.49
+	* tracker: 5.1062
 
 Version 9.2 (Thursday, December 8th 2016)
 
