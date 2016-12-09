@@ -5,6 +5,9 @@ Version 9.3 (Not released yet)
 	- request #9710: Remove license agreement
 	- request #9716: Do not mix traces in tuleap syslog
 
+    == Plugins ==
+	* mediawiki: 0.129
+
 Version 9.2 (Thursday, December 8th 2016)
 
 	== Enhancement ==

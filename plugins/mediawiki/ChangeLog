@@ -1,3 +1,6 @@
+Version 0.129 - Tuleap 9.3
+    * request #9576: Remove fusionforge_compat
+
 Version 0.128 - Tuleap 9.2
     * Site admin is now fully burning parrot
 
