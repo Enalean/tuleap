@@ -41,8 +41,11 @@ class BackendLogger implements Logger {
      *
      * @return boolean true on success or false on failure
      */
-    public function log($message, $level = Feedback::INFO) {
-        return error_log(date('c')." [$level] $message\n", 3, $this->filepath);
+    public function log($message, $level = Feedback::INFO)
+    {
+        $pid = getmypid();
+
+        return error_log(date('c')." [$pid] [$level] $message\n", 3, $this->filepath);
     }
 
     public function debug($message) {
