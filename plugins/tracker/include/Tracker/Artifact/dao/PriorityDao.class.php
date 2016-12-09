@@ -294,7 +294,25 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     public function putArtifactAtTheEndWithoutTransaction($artifact_id) {
         try {
             $predecessor_id = $this->searchPredecessor(null);
-            if ($this->insert($predecessor_id, $artifact_id)) {
+            $artifact_id    = $this->da->escapeInt($artifact_id);
+
+            if ($predecessor_id === null) {
+                $select_predecessor = 'curr_id IS NULL';
+            } else {
+                $select_predecessor = 'curr_id = '. $this->da->escapeInt($predecessor_id);
+            }
+            $sql = "INSERT INTO tracker_artifact_priority(curr_id, succ_id, rank)
+                    SELECT $artifact_id, null, rank + 1
+                    FROM tracker_artifact_priority
+                    WHERE $select_predecessor";
+            if (! $this->update($sql)) {
+                return false;
+            }
+
+            $sql = "UPDATE tracker_artifact_priority
+                    SET succ_id = $artifact_id
+                    WHERE $select_predecessor";
+            if ($this->update($sql)) {
                 return true;
             }
         } catch (Tracker_Artifact_Dao_NoPredecessorException $exception) {
