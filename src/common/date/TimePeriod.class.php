@@ -85,4 +85,28 @@ abstract class TimePeriod {
     public abstract function getDayOffsets();
 
     public abstract function getCountDayUntilDate($date);
+
+    public function isTodayBeforeTimePeriod()
+    {
+        return $this->getStartDate() > $this->getTodayTimestamp();
+    }
+
+    /**
+     * @return int
+     */
+    protected function getTodayTimestamp()
+    {
+        return strtotime($this->getTodayDate());
+    }
+
+    /**
+     * Set to protected because it makes testing possible.
+     */
+    protected function getTodayDate()
+    {
+        if (isset($_SERVER['REQUEST_TIME'])) {
+            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        }
+        return date('Y-m-d');
+    }
 }

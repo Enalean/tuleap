@@ -132,37 +132,12 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
     }
 
     /**
-     * Set to protected because it makes testing possible.
-     */
-    protected function getTodayDate() {
-        if ($_SERVER && isset($_SERVER['REQUEST_TIME'])) {
-            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
-        }
-        return date('Y-m-d');
-    }
-
-    /**
-     * @return int
-     */
-    private function getTodayTimestamp() {
-        return strtotime($this->getTodayDate());
-    }
-
-    /**
      * @return boolean
      */
     public function isTodayWithinTimePeriod() {
         if ($this->getStartDate() <= $this->getTodayTimestamp() &&
             $this->getNumberOfDaysSinceStart() <= $this->getDuration()
         ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isTodayBeforeTimePeriod() {
-        if ($this->getStartDate() > $this->getTodayTimestamp()) {
             return true;
         }
 

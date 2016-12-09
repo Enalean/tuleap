@@ -21,13 +21,15 @@
 /**
  * A time period, starting at a given date, and with a given duration.
  */
-class TimePeriodWithWeekEnd extends TimePeriod {
+class TimePeriodWithWeekEnd extends TimePeriod
+{
     /**
      * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
-    public function getDayOffsets() {
+    public function getDayOffsets()
+    {
         if ($this->getDuration() < 0) {
             return array(0);
         } else {
