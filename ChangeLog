@@ -6,6 +6,7 @@ Version 9.3 (Not released yet)
 	- request #9712: empty state in system events is broken
 	- request #9710: Remove license agreement
 	- request #9716: Do not mix traces in tuleap syslog
+	- request #9202: Make phpwiki compatible with php 5.6
 
 	== Plugins ==
 	* mediawiki: 0.129
