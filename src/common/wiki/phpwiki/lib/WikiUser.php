@@ -327,10 +327,6 @@ class WikiUser {
         if (!($prefs = $this->_request->getCookieVar('WIKI_PREFS2')))
             $prefs = $this->_request->getSessionVar('wiki_prefs');
 
-        //if (!$this->_userid && !empty($GLOBALS['HTTP_COOKIE_VARS']['WIKI_ID'])) {
-        //    $this->_userid = $GLOBALS['HTTP_COOKIE_VARS']['WIKI_ID'];
-        //}
-
         // before we get his prefs we should check if he is signed in
         if (USE_PREFS_IN_PAGE && $this->homePage()) { // in page metadata
             // old array

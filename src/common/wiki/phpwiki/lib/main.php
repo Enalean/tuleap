@@ -316,12 +316,11 @@ class WikiRequest extends Request {
      * request.)
      */
     function getPostURL ($pagename=false) {
-        global $HTTP_GET_VARS;
 
         if ($pagename === false)
             $pagename = $this->getArg('pagename');
         $action = $this->getArg('action');
-        if (!empty($HTTP_GET_VARS['start_debug'])) // zend ide support
+        if (!empty($_GET['start_debug'])) // zend ide support
             return WikiURL($pagename, array('action' => $action, 'start_debug' => 1));
         else
             return WikiURL($pagename, array('action' => $action));
@@ -782,9 +781,8 @@ class WikiRequest extends Request {
              * to communicate the pagename through the URL is via
              * QUERY_ARGS (HTTP_GET_VARS).
              */
-            global $HTTP_GET_VARS;
-            if (isset($HTTP_GET_VARS['pagename']) and trim($HTTP_GET_VARS['pagename'])) { 
-                return fixTitleEncoding(rawurldecode($HTTP_GET_VARS['pagename']));
+            if (isset($_GET['pagename']) and trim($_GET['pagename'])) {
+                return fixTitleEncoding(rawurldecode($_GET['pagename']));
             }
         }
 
@@ -839,56 +837,12 @@ class WikiRequest extends Request {
     }
 
     function _deduceUsername() {
-        global $HTTP_SERVER_VARS, $HTTP_ENV_VARS;
 
         if (!empty($this->args['auth']) and !empty($this->args['auth']['userid']))
             return $this->args['auth']['userid'];
 
-        // Codendi specific
+        // Tuleap specific
         return user_getname();
-
-        if ($user = $this->getSessionVar('wiki_user')) {
-            // switched auth between sessions. 
-            // Note: There's no way to demandload a missing class-definition 
-            // afterwards! (Stupid php)
-            if (isa($user, WikiUserClassname())) {
-                $this->_user = $user;
-                $this->_user->_authhow = 'session';
-                return ENABLE_USER_NEW ? $user->UserName() : $this->_user;
-            }
-        }
-
-	// Sessions override http auth
-        if (!empty($HTTP_SERVER_VARS['PHP_AUTH_USER']))
-            return $HTTP_SERVER_VARS['PHP_AUTH_USER'];
-        // pubcookie et al
-        if (!empty($HTTP_SERVER_VARS['REMOTE_USER']))
-            return $HTTP_SERVER_VARS['REMOTE_USER'];
-        if (!empty($HTTP_ENV_VARS['REMOTE_USER']))
-            return $HTTP_ENV_VARS['REMOTE_USER'];
-
-        if ($userid = $this->getCookieVar('WIKI_ID')) {
-            if (!empty($userid) and substr($userid,0,2) != 's:') {
-                $this->_user->authhow = 'cookie';
-                return $userid;
-            }
-        }
-
-        if ($this->getArg('action') == 'xmlrpc') { // how about SOAP?
-            // wiki.putPage has special otional userid/passwd arguments. check that later.
-            $userid = '';
-            if (isset($HTTP_SERVER_VARS['REMOTE_USER']))
-                $userid = $HTTP_SERVER_VARS['REMOTE_USER'];
-            elseif (isset($HTTP_SERVER_VARS['REMOTE_ADDR']))
-                $userid = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-            elseif (isset($HTTP_ENV_VARS['REMOTE_ADDR']))
-                $userid = $HTTP_ENV_VARS['REMOTE_ADDR'];
-            elseif (isset($GLOBALS['REMOTE_ADDR']))
-                $userid = $GLOBALS['REMOTE_ADDR'];
-            return $userid;
-        }
-
-        return false;
     }
     
     function _isActionPage ($pagename) {

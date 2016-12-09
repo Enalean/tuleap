@@ -1,4 +1,4 @@
-<?php //-*-php-*-
+    <?php //-*-php-*-
 rcs_id('$Id: HttpAuth.php,v 1.5 2005/02/28 20:35:45 rurban Exp $');
 /* Copyright (C) 2004 ReiniUrban
  * This file is part of PhpWiki. Terms and Conditions see LICENSE. (GPL2)
@@ -41,8 +41,7 @@ extends _PassUser
     	
         header('WWW-Authenticate: Basic realm="'.WIKI_NAME.'"');
         header("Authorization: Basic ".base64_encode($userid.":".$passwd));
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
+
         $GLOBALS['REMOTE_USER'] = $userid;
         $_SERVER['PHP_AUTH_USER'] = $userid;
         $_SERVER['PHP_AUTH_PW'] = $passwd;
@@ -50,8 +49,6 @@ extends _PassUser
     }
 
     function logout() {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
         // Maybe we should random the realm to really force a logout. 
         // But the next login will fail.
         // better_srand(); $realm = microtime().rand();
@@ -66,14 +63,12 @@ extends _PassUser
     }
 
     function _http_username() {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
 	if (!empty($_SERVER['PHP_AUTH_USER']))
 	    return $_SERVER['PHP_AUTH_USER'];
 	if (!empty($_SERVER['REMOTE_USER']))
 	    return $_SERVER['REMOTE_USER'];
-        if (!empty($GLOBALS['HTTP_ENV_VARS']['REMOTE_USER']))
-	    return $GLOBALS['HTTP_ENV_VARS']['REMOTE_USER'];
+        if (!empty($_ENV['REMOTE_USER']))
+	    return $_ENV['REMOTE_USER'];
 	if (!empty($GLOBALS['REMOTE_USER']))
 	    return $GLOBALS['REMOTE_USER'];
 	//IIS:

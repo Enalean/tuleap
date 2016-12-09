@@ -1356,7 +1356,7 @@ extends _PassUser
         }
         if ($this->_checkPass($submitted_password, $stored_password)) {
             $this->_level = WIKIAUTH_ADMIN;
-            if (!empty($GLOBALS['HTTP_SERVER_VARS']['PHP_AUTH_USER']) and class_exists("_HttpAuthPassUser")) {
+            if (!empty($_SERVER['PHP_AUTH_USER']) and class_exists("_HttpAuthPassUser")) {
                 // fake http auth
                 _HttpAuthPassUser::_fake_auth($this->_userid, $submitted_password);
             }

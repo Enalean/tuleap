@@ -1829,14 +1829,8 @@ class soap_server extends nusoap_base {
      */
     function service($data){
         // print wsdl
-        global $QUERY_STRING, $HTTP_SERVER_VARS;
-        if(isset($HTTP_SERVER_VARS['QUERY_STRING'])){
-            $qs = $HTTP_SERVER_VARS['QUERY_STRING'];
-        } elseif(isset($GLOBALS['QUERY_STRING'])){
-            $qs = $GLOBALS['QUERY_STRING'];
-        } elseif(isset($QUERY_STRING) && $QUERY_STRING != ''){
-            $qs = $QUERY_STRING;
-        }
+        $qs = $_SERVER['QUERY_STRING'];
+
         // gen wsdl
         if(isset($qs) && ereg('wsdl', $qs) ){
             if($this->externalWSDLURL){
@@ -1890,8 +1884,6 @@ class soap_server extends nusoap_base {
      * @access   private
      */
     function parse_request($data='') {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
         $this->debug('entering parseRequest() on '.date('H:i Y-m-d'));
         $dump = '';
         // get headers
@@ -2259,8 +2251,6 @@ class soap_server extends nusoap_base {
     * @param string $namespace, tns namespace
     */
     function configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http') {
-        if (!isset($_SERVER))
-            $_SERVER =& $GLOBALS['HTTP_SERVER_VARS'];
         $SERVER_NAME = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $GLOBALS['SERVER_NAME'];
         $SCRIPT_NAME = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : $GLOBALS['SCRIPT_NAME'];
         if(false == $namespace) {

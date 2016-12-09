@@ -12,7 +12,7 @@
 // Intercept GET requests from confused users.  Only POST is allowed here!
 // There is some indication that $HTTP_SERVER_VARS is deprecated in php > 4.1.0
 // in favour of $_Server, but as far as I know, it still works.
-if ($HTTP_SERVER_VARS['REQUEST_METHOD'] != "POST")  
+if ($_SERVER['REQUEST_METHOD'] != "POST")
 {
     die('This is the address of the XML-RPC interface.' .
         '  You must use XML-RPC calls to access information here.');
