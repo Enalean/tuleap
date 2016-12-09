@@ -28,21 +28,25 @@ class StateFactory implements StateFactoryInterface
     /**
      * @var string
      */
-    private $key;
+    private static $key;
 
     /**
      * @var string
      */
-    private $nonce;
+    private static $nonce;
 
     public function __construct(RandomNumberGenerator $random_number_generator)
     {
-        $this->key   = $random_number_generator->getNumber();
-        $this->nonce = $random_number_generator->getNumber();
+        if (self::$key === null) {
+            self::$key = $random_number_generator->getNumber();
+        }
+        if (self::$nonce === null) {
+            self::$nonce = $random_number_generator->getNumber();
+        }
     }
 
     public function createState($provider_id = null, $return_to = null)
     {
-        return new State($provider_id, $return_to, $this->key, $this->nonce);
+        return new State($provider_id, $return_to, self::$key, self::$nonce);
     }
 }
