@@ -1,3 +1,6 @@
+Version 5.1063 - Tuleap 9.3
+    * Burdown refactoring - First part
+
 Version 5.1062 - Tuleap 9.3
     * request #9722: JPGraph error when burndown is in the future
 
