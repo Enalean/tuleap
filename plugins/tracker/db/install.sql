@@ -677,15 +677,6 @@ CREATE TABLE tracker_semantic_contributor (
   INDEX filed_id_idx(field_id)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS tracker_perm;
-CREATE TABLE tracker_perm (
-  id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  tracker_id int(11) NOT NULL,
-  user_id int(11) NOT NULL,
-  perm_level int(11) NOT NULL default '0',
-  UNIQUE KEY unique_user(tracker_id, user_id)
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS tracker_rule;
 CREATE TABLE IF NOT EXISTS tracker_rule(
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
