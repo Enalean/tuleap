@@ -27,6 +27,7 @@ use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Field_BurndownDao;
 use Tracker_FormElement_Field_ComputedDaoCache;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 
 class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
 {
@@ -52,6 +53,11 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
      */
     private $cache_dao;
 
+    /**
+     * @var BurndownCacheDateRetriever
+     */
+    private $date_retriever;
+
     private function getArtifactIdFromParameters()
     {
         $parameters = $this->getParametersAsArray();
@@ -68,12 +74,14 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
         Tracker_FormElement_Field_BurndownDao $burndown_dao,
         BurndownCalculator $burndown_calculator,
         Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
-        BackendLogger $logger
+        BackendLogger $logger,
+        BurndownCacheDateRetriever $date_retriever
     ) {
         $this->burndown_dao        = $burndown_dao;
         $this->logger              = $logger;
         $this->burndown_calculator = $burndown_calculator;
         $this->cache_dao           = $cache_dao;
+        $this->date_retriever      = $date_retriever;
     }
 
     public function process()
@@ -85,15 +93,6 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
             $burndown_informations['duration']
         );
 
-        $start_date = new DateTime();
-        $start_date->setTimestamp((int) $burndown_informations['start_date']);
-        $start_date->setTime(0, 0, 0);
-        $start_date->modify('+1 day');
-
-        $end_date = new DateTime();
-        $end_date->setTimestamp($burndown->getEndDate());
-        $end_date->modify('+1 day');
-
         $yesterday = new DateTime();
         $yesterday->setTime(0, 0, 0);
 
@@ -104,27 +103,24 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
             $burndown_informations['remaining_effort_field_id']
         );
 
-        while ($start_date <= $end_date
-            && $start_date <= $yesterday
-        ) {
-            if ($burndown->isNotWeekendDay($start_date->getTimestamp() -1)) {
-                $this->logger->debug("Day " . $start_date->format("Y-m-d H:i:s"));
+        $yesterday = new DateTime();
+        $yesterday->setTime(0, 0, 0);
 
-                $value = $this->burndown_calculator->calculateBurndownValueAtTimestamp(
-                    $burndown_informations,
-                    $start_date->getTimestamp() - 1
-                );
+        foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burndown, $yesterday) as $worked_day) {
+            $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
 
-                $this->logger->debug("Caching value $value for artifact #" . $burndown_informations['id']);
-                $this->cache_dao->saveCachedFieldValueAtTimestamp(
-                    $burndown_informations['id'],
-                    $burndown_informations['remaining_effort_field_id'],
-                    $start_date->getTimestamp() - 1,
-                    $value
-                );
-            }
+            $value = $this->burndown_calculator->calculateBurndownValueAtTimestamp(
+                $burndown_informations,
+                $worked_day
+            );
 
-            $start_date->modify('+1 day');
+            $this->logger->debug("Caching value $value for artifact #" . $burndown_informations['id']);
+            $this->cache_dao->saveCachedFieldValueAtTimestamp(
+                $burndown_informations['id'],
+                $burndown_informations['remaining_effort_field_id'],
+                $worked_day,
+                $value
+            );
         }
 
         $this->logger->debug("End calculs for artifact #" . $artifact_id);

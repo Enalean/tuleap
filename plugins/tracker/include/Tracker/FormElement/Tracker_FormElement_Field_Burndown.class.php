@@ -19,7 +19,6 @@
  */
 
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
-use Tuleap\Tracker\FormElement\BurndownDateRetriever;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 require_once 'common/chart/ErrorChart.class.php';

@@ -20,7 +20,7 @@
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
-use Tuleap\Tracker\FormElement\BurndownDateRetriever;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
@@ -264,7 +264,7 @@ class trackerPlugin extends Plugin {
                     new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
                     new BackendLogger(),
-                    new BurndownDateRetriever()
+                    new BurndownCacheDateRetriever()
                 );
                 break;
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME:
@@ -273,7 +273,8 @@ class trackerPlugin extends Plugin {
                     new Tracker_FormElement_Field_BurndownDao(),
                     new BurndownCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
-                    new BackendLogger()
+                    new BackendLogger(),
+                    new BurndownCacheDateRetriever()
                 );
                 break;
             default:

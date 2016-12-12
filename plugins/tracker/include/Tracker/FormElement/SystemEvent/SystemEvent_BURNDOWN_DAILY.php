@@ -26,7 +26,7 @@ use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Field_BurndownDao;
 use Tracker_FormElement_Field_ComputedDaoCache;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
-use Tuleap\Tracker\FormElement\BurndownDateRetriever;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 
 class SystemEvent_BURNDOWN_DAILY extends SystemEvent
 {
@@ -53,7 +53,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
     private $cache_dao;
 
     /**
-     * @var BurndownDateRetriever
+     * @var BurndownCacheDateRetriever
      */
     private $date_retriever;
 
@@ -67,7 +67,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent
         BurndownCalculator $burndown_calculator,
         Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
         BackendLogger $logger,
-        BurndownDateRetriever $date_retriever
+        BurndownCacheDateRetriever $date_retriever
     ) {
         $this->burndown_dao        = $burndown_dao;
         $this->logger              = $logger;
