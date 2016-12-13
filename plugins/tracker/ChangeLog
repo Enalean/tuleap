@@ -1,3 +1,6 @@
+Version 5.1065 - Tuleap 9.3
+    * request #9730: Simplify artifact priority for artifact creation
+
 Version 5.1064 - Tuleap 9.3
     * Add Unit tests for burndown
 
