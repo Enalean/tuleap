@@ -186,7 +186,7 @@ class pullrequestPlugin extends Plugin
         $repository = $params['repository'];
 
         if (! $repository->isMigratedToGerrit()) {
-            $nb_pull_requests = $this->getPullRequestFactory()->countPullRequestOfRepository($repository);
+            $nb_pull_requests = $this->getPullRequestFactory()->countOpenPullRequestsOfRepository($repository);
 
             $renderer  = $this->getTemplateRenderer();
             $presenter = new AdditionalInfoPresenter($repository, $nb_pull_requests);
@@ -296,7 +296,7 @@ class pullrequestPlugin extends Plugin
         $request    = $params['request'];
 
         if ($request->get('action') === 'pull-requests') {
-            $nb_pull_requests = $this->getPullRequestFactory()->countPullRequestOfRepository($repository);
+            $nb_pull_requests = $this->getPullRequestFactory()->countOpenPullRequestsOfRepository($repository);
             $renderer         = $this->getTemplateRenderer();
             $presenter        = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale(), $nb_pull_requests);
 

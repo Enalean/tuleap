@@ -75,11 +75,11 @@ class Factory
         return $this->getInstancesFromRows($res);
     }
 
-    public function countPullRequestOfRepository(GitRepository $repository)
+    public function countOpenPullRequestsOfRepository(GitRepository $repository)
     {
-        $row = $this->dao->countPullRequestOfRepository($repository->getId())->getRow();
+        $row = $this->dao->countOpenPullRequestsOfRepository($repository->getId())->getRow();
 
-        return (int)$row['nb_pull_requests'];
+        return (int)$row['nb_open_pull_requests'];
     }
 
     /**
