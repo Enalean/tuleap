@@ -13,8 +13,9 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.50
-	* tracker: 5.1065
+	* tracker: 5.1066
 	* git: 4.308
+	* graphontrackersv5: 5.27
 
 Version 9.2 (Thursday, December 8th 2016)
 

@@ -1,3 +1,6 @@
+Version 5.27 - Tuleap 9.3
+    * story #8858: Remove dead code
+
 Version 5.26 - Tuleap 8.18
     * request #9375 Gulpify sass
 
