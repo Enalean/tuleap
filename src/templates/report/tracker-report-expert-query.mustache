@@ -1,0 +1,28 @@
+<div id="tracker-report-expert-query" class="tracker-report-query tracker-report-query-undisplayed" data-report-id="{{ id }}">
+    <form action="" method="post" id="tracker-report-expert-query-form" class="tracker-report-query-form">
+        <input type="hidden" name="report" value="{{ id }}" />
+        <h4 class="backlog-planning-search-title {{ class_toggler }}" id="{{ id }}">{{ title }}</h4>
+        <div class="pull-right">
+            <button id="tracker-report-normal-query-button" type="button" class="btn btn-mini tracker-report-query-button">
+                <i class="icon-random"></i> {{ btn_report_normal_mode }}
+            </button>
+        </div>
+        <div class="tracker-report-expert-content">
+            <div class="tracker-report-expert-content-query">
+                <label for="tracker-query">
+                    {{ query_label }} <i class="icon-question-sign" data-toggle="tooltip" title="{{ query_tooltip }}" id="tracker-report-expert-query-tooltip"></i>
+                </label>
+                <textarea id="tracker-query" name="tracker-query" placeholder="{{ query_placeholder }}" disabled></textarea>
+            </div>
+            <div class="tracker-report-expert-content-fields">
+                <label for="criteria">{{ allowed_fields_label }}</label>
+                <select id="criteria" name="criteria[]" multiple disabled></select>
+            </div>
+        </div>
+        <div class="tracker-report-search">
+            <button type="submit" class="btn btn-primary" disabled>
+                <i class="icon-search"></i> {{ btn_search }}
+            </button>
+        </div>
+    </form>
+</div>

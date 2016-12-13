@@ -70,7 +70,19 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @param bool    $is_default true if the report is the default one
      * @param int     $tracker_id The id of the tracker to which this Tracker_Report is associated.
      */
-    function __construct($id, $name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by, $updated_at) {
+    function __construct(
+        $id,
+        $name,
+        $description,
+        $current_renderer_id,
+        $parent_report_id,
+        $user_id,
+        $is_default,
+        $tracker_id,
+        $is_query_displayed,
+        $updated_by,
+        $updated_at
+    ) {
         $this->id                  = $id;
         $this->name                = $name;
         $this->description         = $description;
@@ -405,11 +417,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user) {
-        $hp              = Codendi_HTMLPurifier::instance();
-
         $html  = '';
-        $html .= '<div id="tracker_report_query" data-report-id="'.$this->id.'">';
-        $html .= '<form action="" method="POST" id="tracker_report_query_form">';
+        $html .= '<div id="tracker-report-normal-query" class="tracker-report-query" data-report-id="'.$this->id.'">';
+        $html .= '<form action="" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id = 'tracker_report_query_' . $this->id;
         $html .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
@@ -433,6 +443,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
         if ($report_can_be_modified && ! $current_user->isAnonymous()) {
             $html .= '<div class="pull-right">';
+            $html .= $this->getExpertModeButton();
             $html .= $this->getAddCriteriaDropdown($used);
             $html .= '</div>';
         }
@@ -460,6 +471,33 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $html .= '</div>';
         $html .= '</form>';
         $html .= '</div>';
+        return $html;
+    }
+
+    public function fetchDisplayQueryExpertMode()
+    {
+        $id = 'tracker_report_expert_query_' . $this->id;
+        $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
+
+        $tracker_report_expert_query_presenter = new TrackerReportExpertModePresenter(
+            $id,
+            $class_toggler
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(
+            ForgeConfig::get('codendi_dir') .'/src/templates/report/'
+        );
+
+        $renderer->renderToPage('tracker-report-expert-query', $tracker_report_expert_query_presenter);
+    }
+
+    private function getExpertModeButton()
+    {
+        $html  = '<button id="tracker-report-expert-query-button" type="button" class="btn btn-mini tracker-report-query-button">';
+        $html .= '<i class="icon-random"></i> ';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'btn_report_expert_mode');
+        $html .= '</button>';
+
         return $html;
     }
 
@@ -678,6 +716,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $additional_criteria = $this->getAdditionalCriteria();
 
             $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
+            $this->fetchDisplayQueryExpertMode();
 
             //Display Renderers
             $html .= '<div>';
