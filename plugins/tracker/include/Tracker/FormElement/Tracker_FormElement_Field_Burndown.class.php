@@ -339,7 +339,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             }
 
             if ($date >= $tonight) {
-                $remaining_effort =  $field->getComputedValue($user, $artifact, $date->getTimestamp(), $artifact_list, true);
+                $remaining_effort =  $field->getComputedValue($user, $artifact, null, $artifact_list, true);
                 $burndown_data->addEffortAt($offset_days, $remaining_effort);
 
                 break;
