@@ -52,48 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $server -> handle();
 } else {
-    $presenter = array('end_points' => array(
-        array(
-            'title'       => 'Core',
-            'wsdl'        => '/soap/?wsdl',
-            'wsdl_viewer' => '/soap/wsdl',
-            'changelog'   => '/soap/ChangeLog',
-            'version'     => CODENDI_WS_API_VERSION,
-            'description' => <<<EOT
-Historically the sole end point, therefore it groups multiple different functions:
-<ul>
-    <li>Session management: login, logout, projects, ...</li>
-    <li>File Release System access (FRS): addPackage, addRelease, addFile, ...</li>
-    <li>Tracker v3 (for historical deployments): get/updateTracker, get/updateArtifact, ...</li>
-    <li>Documentation: get/updateDocman, ...</li>
-</ul>
-EOT
-        ),
-        array(
-            'title'       => 'Subversion',
-            'wsdl'        => '/soap/svn/?wsdl',
-            'wsdl_viewer' => '/soap/svn/wsdl-viewer',
-            'changelog'   => '/soap/svn/ChangeLog',
-            'version'     => file_get_contents(dirname(__FILE__).'/svn/VERSION'),
-            'description' => 'Get informations about Subversion usage in project.',
-        ),
-        array(
-            'title'       => 'Project',
-            'wsdl'        => '/soap/project/?wsdl',
-            'wsdl_viewer' => '/soap/project/wsdl-viewer',
-            'changelog'   => '/soap/project/ChangeLog',
-            'version'     => file_get_contents(dirname(__FILE__).'/project/VERSION'),
-            'description' => 'Create and administrate projects.',
-        ),
-    ));
-
-    $event_manager->processEvent(Event::SOAP_DESCRIPTION, array('end_points' => &$presenter['end_points']));
-
     require_once 'common/templating/mustache/MustacheRenderer.class.php';
     site_header(array('title' => "SOAP API"));
     $renderer = new MustacheRenderer('templates');
-    $renderer->renderToPage('soap_index', $presenter);
+    $renderer->renderToPage('soap_index', array());
     site_footer(array());
 }
-
-?>
