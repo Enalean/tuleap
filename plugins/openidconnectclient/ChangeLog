@@ -1,3 +1,6 @@
+Version 0.50 - Tuleap 9.3
+    * request #9733: Error message about malformed data is not translated in OpenID Connect administration
+
 Version 0.49 - Tuleap 9.3
     * request #9717: OpenID Connect plugin can not create 2 authentication links for the same provider in the same request
 
