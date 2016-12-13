@@ -314,8 +314,6 @@ class URLVerification {
         $forbidden_url = array( 
           '/snippet',     // Code Snippet Library
           '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
-          '/stats',       // Codendi site statistics
-          '/top',         // projects rankings (active, downloads, etc)
           '/project/register.php',    // Register a new project
           '/export',      // Codendi XML feeds
           '/info.php'     // PHP info

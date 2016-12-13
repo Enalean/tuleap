@@ -15,28 +15,6 @@
 #    from and where output goes.
 #
 
-stats_ftp_logparse.pl
----------------------
-Parse daily log files of the FTP daemon (they are in
-$codendi_log). Normally all downloads go through PHP now so there is
-nothing in the log but we keep it in case we reactivate ftp downloads
-some day.
-
-Input: ftp daemon daily log file
-Output: stats_ftp_downloads table
-
-
-stats_http_logparse.pl
----------------------
-Parse daily log files of the HTTP daemon (they are in
-$codendi_log). Normally all downloads go through PHP now so there is
-nothing in the log but we keep it in case we reactivate ftp downloads
-some day.
-
-Input: http daemon daily log file
-Output: stats_http_downloads table
-
-
 stats_agr_filerelease.pl
 ------------------------
 Aggregates downloads of released file and generate the total number of

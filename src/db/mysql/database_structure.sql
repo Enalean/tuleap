@@ -804,146 +804,6 @@ CREATE TABLE snippet_version (
 );
 
 #
-# Table structure for table 'stats_agg_logo_by_day'
-#
-
-CREATE TABLE stats_agg_logo_by_day (
-  day int(11) default NULL,
-  count int(11) default NULL
-);
-
-#
-# Table structure for table 'stats_agg_logo_by_group'
-#
-
-CREATE TABLE stats_agg_logo_by_group (
-  day int(11) default NULL,
-  group_id int(11) default NULL,
-  count int(11) default NULL
-);
-
-#
-# Table structure for table 'stats_agg_pages_by_browser'
-#
-
-CREATE TABLE stats_agg_pages_by_browser (
-  browser varchar(8) default NULL,
-  count int(11) default NULL
-);
-
-#
-# Table structure for table 'stats_agg_pages_by_day'
-#
-
-CREATE TABLE stats_agg_pages_by_day (
-  day int(11) NOT NULL default '0',
-  count int(11) NOT NULL default '0',
-  KEY idx_pages_by_day_day (day)
-);
-
-#
-# Table structure for table 'stats_agg_pages_by_day_old'
-#
-
-CREATE TABLE stats_agg_pages_by_day_old (
-  day int(11) default NULL,
-  count int(11) default NULL
-);
-
-#
-# Table structure for table 'stats_agg_site_by_day'
-#
-
-CREATE TABLE stats_agg_site_by_day (
-  day int(11) NOT NULL default '0',
-  count int(11) NOT NULL default '0'
-);
-
-#
-# Table structure for table 'stats_agg_site_by_group'
-#
-
-CREATE TABLE stats_agg_site_by_group (
-  day int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  count int(11) NOT NULL default '0'
-);
-
-#
-# Table structure for table 'stats_agr_filerelease'
-#
-
-CREATE TABLE stats_agr_filerelease (
-  filerelease_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  KEY idx_stats_agr_tmp_fid (filerelease_id),
-  KEY idx_stats_agr_tmp_gid (group_id)
-);
-
-#
-# Table structure for table 'stats_agr_project'
-#
-
-CREATE TABLE stats_agr_project (
-  group_id int(11) NOT NULL default '0',
-  group_ranking int(11) NOT NULL default '0',
-  group_metric float(8,5) NOT NULL default '0.00000',
-  developers smallint(6) NOT NULL default '0',
-  file_releases smallint(6) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  site_views int(11) NOT NULL default '0',
-  logo_views int(11) NOT NULL default '0',
-  msg_posted smallint(6) NOT NULL default '0',
-  msg_uniq_auth smallint(6) NOT NULL default '0',
-  bugs_opened smallint(6) NOT NULL default '0',
-  bugs_closed smallint(6) NOT NULL default '0',
-  support_opened smallint(6) NOT NULL default '0',
-  support_closed smallint(6) NOT NULL default '0',
-  patches_opened smallint(6) NOT NULL default '0',
-  patches_closed smallint(6) NOT NULL default '0',
-  tasks_opened smallint(6) NOT NULL default '0',
-  tasks_closed smallint(6) NOT NULL default '0',
-  cvs_checkouts smallint(6) NOT NULL default '0',
-  cvs_commits smallint(6) NOT NULL default '0',
-  cvs_adds smallint(6) NOT NULL default '0',
-  svn_commits     smallint(6) DEFAULT '0' NOT NULL,
-  svn_adds        smallint(6) DEFAULT '0' NOT NULL,
-  svn_deletes   smallint(6) DEFAULT '0' NOT NULL,
-  svn_checkouts   smallint(6) DEFAULT '0' NOT NULL,
-  svn_access_count       smallint(6) DEFAULT '0' NOT NULL,
-  KEY idx_project_agr_log_group (group_id)
-);
-
-#
-# Table structure for table 'stats_ftp_downloads'
-#
-
-CREATE TABLE stats_ftp_downloads (
-  day int(11) NOT NULL default '0',
-  filerelease_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  KEY idx_ftpdl_day (day),
-  KEY idx_ftpdl_fid (filerelease_id),
-  KEY idx_ftpdl_group_id (group_id)
-);
-
-#
-# Table structure for table 'stats_http_downloads'
-#
-
-CREATE TABLE stats_http_downloads (
-  day int(11) NOT NULL default '0',
-  filerelease_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  KEY idx_httpdl_day (day),
-  KEY idx_httpdl_fid (filerelease_id),
-  KEY idx_httpdl_group_id (group_id)
-);
-
-#
 # Table structure for table 'stats_project'
 #
 
@@ -1026,28 +886,6 @@ CREATE TABLE stats_project_tmp (
   KEY idx_project_stats_day (day),
   KEY idx_project_stats_week (week),
   KEY idx_project_stats_month (month)
-);
-
-#
-# Table structure for table 'stats_site'
-#
-
-CREATE TABLE stats_site (
-  month int(11) NOT NULL default '0',
-  week int(11) NOT NULL default '0',
-  day int(11) NOT NULL default '0',
-  site_views int(11) NOT NULL default '0',
-  subdomain_views int(11) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  uniq_users int(11) NOT NULL default '0',
-  sessions int(11) NOT NULL default '0',
-  total_users int(11) NOT NULL default '0',
-  new_users int(11) NOT NULL default '0',
-  new_projects int(11) NOT NULL default '0',
-  KEY idx_stats_site_month (month),
-  KEY idx_stats_site_week (week),
-  KEY idx_stats_site_day (day),
-  KEY idx_stats_site_monthday (month,day)
 );
 
 #
@@ -1175,14 +1013,10 @@ CREATE TABLE top_group (
   forumposts_week int(11) NOT NULL default '0',
   rank_forumposts_week int(11) NOT NULL default '0',
   rank_forumposts_week_old int(11) NOT NULL default '0',
-  pageviews_proj int(11) NOT NULL default '0',
-  rank_pageviews_proj int(11) NOT NULL default '0',
-  rank_pageviews_proj_old int(11) NOT NULL default '0',
   KEY rank_downloads_all_idx (rank_downloads_all),
   KEY rank_downloads_week_idx (rank_downloads_week),
   KEY rank_userrank_idx (rank_userrank),
-  KEY rank_forumposts_week_idx (rank_forumposts_week),
-  KEY pageviews_proj_idx (pageviews_proj)
+  KEY rank_forumposts_week_idx (rank_forumposts_week)
 );
 
 #

@@ -18,7 +18,6 @@ common	logout	Log Out
 common	myaccount	My Account
 common	newaccount	New Account
 group	activity	Activity Percentile:&nbsp;
-group	activitystat	View project activity <a href="/project/stats/?group_id=$1">statistics</a>.
 group	developer_info	Developer Info
 group	developers	Developers
 group	long_bugs	Bug Tracking

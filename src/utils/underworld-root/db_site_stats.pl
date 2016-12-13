@@ -62,43 +62,10 @@ $month += 1;
    ## Now format our date nicely for the database.
 $today_formatted = sprintf("%04d%02d%02d", $year, $month, $day);
 
-
    ## Cleanup any spillover, so that the activity log always contains exactly 24 hours worth of data.
 $sql = "INSERT INTO activity_log SELECT * FROM activity_log_old WHERE day='$today_formatted'";
 $rel = $dbh->do($sql);
 $sql = "DELETE FROM activity_log_old WHERE day='$today_formatted'";
-$rel = $dbh->do($sql);
-
-
-
-   ## logo showings by day
-$sql = "DELETE FROM stats_agg_logo_by_day WHERE day='$yesterday_formatted'";
-$rel = $dbh->do($sql);
-$sql = "INSERT INTO stats_agg_logo_by_day SELECT day, count(*) FROM activity_log_old WHERE type=1 AND day='$yesterday_formatted' GROUP BY day";
-$rel = $dbh->do($sql);
-
-   ## logo showings by group
-$sql = "DELETE FROM stats_agg_logo_by_group WHERE day='$yesterday_formatted'";
-$rel = $dbh->do($sql);
-$sql = "INSERT INTO stats_agg_logo_by_group SELECT day,group_id,count(*) FROM activity_log_old WHERE type=1 AND day='$yesterday_formatted' GROUP BY day,group_id";
-$rel = $dbh->do($sql);
-
-   ## site showings by day
-$sql = "DELETE FROM stats_agg_site_by_day WHERE day='$yesterday_formatted'";
-$rel = $dbh->do($sql);
-$sql = "INSERT INTO stats_agg_site_by_day SELECT day,COUNT(*) FROM activity_log_old WHERE type=0 AND day='$yesterday_formatted' GROUP BY day";
-$rel = $dbh->do($sql);
-
-   ## site showings by group
-$sql = "DELETE FROM stats_agg_site_by_group WHERE day='$yesterday_formatted'";
-$rel = $dbh->do($sql);
-$sql = "INSERT INTO stats_agg_site_by_group SELECT day,group_id,COUNT(*) FROM activity_log_old WHERE type=0 AND day='$yesterday_formatted' GROUP BY day,group_id";
-$rel = $dbh->do($sql);
-
-   ## page views by day
-$sql = "DELETE FROM stats_agg_pages_by_day WHERE day='$yesterday_formatted'";
-$rel = $dbh->do($sql);
-$sql = "INSERT INTO stats_agg_pages_by_day SELECT day, count(*) FROM activity_log_old WHERE type=0 AND day='$yesterday_formatted' GROUP BY day";
 $rel = $dbh->do($sql);
 
 exit;

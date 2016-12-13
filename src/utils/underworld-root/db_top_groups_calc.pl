@@ -43,19 +43,16 @@ while(my ($group_id,$group_name) = $rel->fetchrow()) {
 	}
 }
 
-# get old top info 
-my $query = "SELECT group_id,rank_downloads_all,rank_downloads_week,rank_userrank,rank_forumposts_week,"
-	."rank_pageviews_proj "
-	."FROM top_group"; 
+# get old top info
+my $query = "SELECT group_id,rank_downloads_all,rank_downloads_week,rank_userrank,rank_forumposts_week FROM top_group";
 my $rel = $dbh->prepare($query);
 $rel->execute();
-while(my ($group_id,$downloads_all,$downloads_week,$userrank,$forumposts_week,$pageviews_proj,) 
+while(my ($group_id,$downloads_all,$downloads_week,$userrank,$forumposts_week,)
 	= $rel->fetchrow()) {
 	$top[$group_id][1] = $downloads_all;
 	$top[$group_id][2] = $downloads_week;
 	$top[$group_id][3] = $userrank;
 	$top[$group_id][4] = $forumposts_week;
-	$top[$group_id][9] = $pageviews_proj;
 }
 
 # get current download counts 
@@ -80,18 +77,6 @@ $currentrank = 1;
 while(my ($group_id,$count) = $rel->fetchrow()) {
 	$top[$group_id][7] = $count;
 	$top[$group_id][8] = $currentrank;
-	$currentrank++;
-}
-
-# get current project pageview stats
-my $query = "SELECT group_id,SUM(count) AS count FROM stats_agg_logo_by_group WHERE "
-	."day>=$oneweekago_fmt GROUP BY group_id ORDER BY count DESC";
-my $rel = $dbh->prepare($query);
-$rel->execute();
-$currentrank = 1;
-while(my ($group_id,$count) = $rel->fetchrow()) {
-	$top[$group_id][10] = $count;
-	$top[$group_id][11] = $currentrank;
 	$currentrank++;
 }
 
@@ -129,12 +114,10 @@ for ($i=1;$i<$max_group_id;$i++) {
 		."rank_downloads_all,rank_downloads_all_old,downloads_week,"
 		."rank_downloads_week,rank_downloads_week_old,userrank,rank_userrank,"
 		."rank_userrank_old,forumposts_week,rank_forumposts_week,"
-		."rank_forumposts_week_old,pageviews_proj,rank_pageviews_proj,"
-		."rank_pageviews_proj_old) VALUES "
+		."rank_forumposts_week_old) VALUES "
 		."('$i',".$dbh->quote($top[$i][0]).",'$top[$i][5]','$top[$i][6]','$top[$i][1]',"
 		."'$top[$i][7]','$top[$i][8]','$top[$i][2]',"
-		."'0','0','$top[$i][3]','$top[$i][12]','$top[$i][13]','$top[$i][4]',"
-		."'$top[$i][10]','$top[$i][11]','$top[$i][9]')";
+		."'0','0','$top[$i][3]','$top[$i][12]','$top[$i][13]','$top[$i][4]')";
 	my $rel = $dbh->prepare($query);
 	$rel->execute();
 

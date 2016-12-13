@@ -21,7 +21,6 @@
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
-require_once('www/stats/site_stats_utils.php');
 require_once('common/widget/Widget_Static.class.php');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/d3/v4/d3.min.js');
@@ -119,6 +118,19 @@ if ($validated_users + $realpending_users > 0) {
 
 if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
     $statistics_users_graph[] = array( 'key'=> 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'count' => $restricted_users);
+}
+
+function stats_getactiveusers($since) {
+    $time_totest=time()-$since;
+
+    $res_count = db_query("SELECT count(*) AS count FROM user_access WHERE last_access_date> $time_totest ");
+
+    if (db_numrows($res_count) > 0) {
+        $row_count = db_fetch_array($res_count);
+        return $row_count['count'];
+    } else {
+        return "error";
+    }
 }
 
 $user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));

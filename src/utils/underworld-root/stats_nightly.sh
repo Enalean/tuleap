@@ -8,12 +8,7 @@ echo "--- Beginning of $script ---"
 # If arguments are omitted the scripts covers
 # statistics for the day before
 
-# START with specific scripts 
-
-# Compute nb of projects, users, downloads, sessions
-# on a daily basis. Must be run after midnight to compute
-# statistics for the day before
-./db_stats_site_nightly.pl $*
+# START with specific scripts
 
 # Compute the number of reference to the Codendi site
 # through the Codendi logo displayed on other Web pages

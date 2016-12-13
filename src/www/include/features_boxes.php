@@ -8,7 +8,6 @@
 
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
-require_once('www/stats/site_stats_utils.php');
 
 function show_features_boxes() {
     GLOBAL $HTML,$Language;
@@ -66,8 +65,7 @@ function show_top_downloads() {
             $return .= '('. $row_topdown['downloads'] .') <A href="/projects/'. $row_topdown['unix_group_name'] .'/">'
                 .  $hp->purify(util_unconvert_htmlspecialchars($row_topdown['group_name']), CODENDI_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
     }
-    $return .= '<center><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
-	
+
     return $return;
 
 }
@@ -105,28 +103,26 @@ function show_newest_releases() {
     }
 
     $return .= '<center><A href="/new/?func=releases">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
-    
+
     return $return;
 
 }
 
-
-
-function stats_getpageviews_total() {
-    $res_count = db_query("SELECT SUM(site_views) AS site, SUM(subdomain_views) AS subdomain FROM stats_site");
+function stats_getprojects_active() {
+    $res_count = db_query("SELECT count(*) AS count FROM groups WHERE status='A' AND type='1'");
     if (db_numrows($res_count) > 0) {
         $row_count = db_fetch_array($res_count);
-        return ($row_count['site'] + $row_count['subdomain']);
+        return $row_count['count'];
     } else {
         return "error";
     }
 }
 
-function stats_downloads_total() {
-    $res_count = db_query("SELECT SUM(downloads) AS downloads FROM stats_site");
+function stats_getusers() {
+    $res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' OR status='R'");
     if (db_numrows($res_count) > 0) {
         $row_count = db_fetch_array($res_count);
-        return $row_count['downloads'];
+        return $row_count['count'];
     } else {
         return "error";
     }
@@ -137,8 +133,6 @@ function show_sitestats() {
     $return  = "";
     $return .= $Language->getText('include_features_boxes','hosted_projects').': <B>'.number_format(stats_getprojects_active()).'</B>';
     $return .= '<BR>'.$Language->getText('include_features_boxes','registered_users').': <B>'.number_format(stats_getusers()).'</B>';
-    $return .= '<BR>'.$Language->getText('include_features_boxes','files_download').': <B>'.number_format(stats_downloads_total()).'</B>';
-    //$return .= '<BR>'.$Language->getText('include_features_boxes','pages_viewed').': <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
     return $return;
 }
 
@@ -188,7 +182,6 @@ function show_highest_ranked_projects() {
                 '/">'. $hp->purify(util_unconvert_htmlspecialchars($row['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'</A><BR>';
             $rank++;
         }
-        $return .= '<CENTER><A href="/top/mostactive.php?type=week">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
     }
     return $return;
 }

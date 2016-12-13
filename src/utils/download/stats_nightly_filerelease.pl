@@ -42,28 +42,6 @@ print "Running year $year, month $month, day $day.\n" if $verbose;
 ## POPULATE THE frs_dlstats_group_agg TABLE.
 ##
 
-# Normally on Codendi all downloads go through a PHP script and no longer
-# through ftp or Http. So the 2 next queries are useless but we keep them
-# if one day we revert to the initial download process.
-#
-# Count all the downloads through direct HTTP access (group by project)
-$sql	= "SELECT dl.group_id,SUM(dl.downloads) FROM stats_http_downloads as dl ,groups "
-	. "WHERE ( dl.day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY dl.group_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-}
-
-# Count all the downloads through direct HTTP access (group by project)
-$sql	= "SELECT dl.group_id,SUM(dl.downloads) FROM stats_ftp_downloads as dl, groups "
-	. "WHERE ( day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY dl.group_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-}
-
 # Count all the downloads through the Codendi Web Frontend  (group by project)
 # (this used to be counted through HTTP downloads but access is now
 # managed thorugh a PHP script and there is special table storing download information
@@ -102,28 +80,6 @@ $total_xfers = 0;
 ## POPULATE THE frs_dlstats_file_agg TABLE.
 ##
 
-# Normally on Codendi all downloads go through a PHP script and no longer
-# through ftp or Http. So the 2 next queries are useless but we keep them
-# if one day we revert to the initial download process.
-
-## Count all the downloads through direct HTTP access (group by file)
-$sql	= "SELECT dl.filerelease_id,SUM(dl.downloads) FROM stats_http_downloads as dl, groups "
-	. "WHERE ( day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY filerelease_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-}
-
-# Count all the downloads through direct FTP access (group by file)
-$sql	= "SELECT dl.filerelease_id,SUM(dl.downloads) FROM stats_ftp_downloads as dl, groups "
-	. "WHERE ( day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY filerelease_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-}
-
 # Count all the downloads through the Codendi Web Frontend  (group by file)
 # (this used to be counted through HTTP downloads but access is now
 # monitored on Codendi and there is special table storing download information
@@ -148,19 +104,11 @@ foreach $file_id ( keys %downloads ) {
 	$rel = $dbh->do($sql) || die "SQL parse error: $!";
 }
 
-
-##
-## POPULATE THE downloads ROW OF THE stats_site TABLE
-##
-
 if ( $total_xfers != $first_xfers ) {
   # Sanity check: sum by file must equal sum by project because file releases
   # belong to the same project
   print "stats_nightly_filerelease.pl: THE TRANSER STATS DID NOT AGREE!! FIX ME!!\n";
 }
-
-$sql	= "UPDATE stats_site SET downloads='$total_xfers' WHERE (month='" . sprintf("%04d%02d", $year, $month) . "' AND day='$day') ";
-$rel = $dbh->do($sql) || die "SQL parse error: $!";
 
 ##
 ## EOF
