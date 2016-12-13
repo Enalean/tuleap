@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,13 +46,8 @@ class Tracker_Migration_V3_Dao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    private function duplicateTrackerPerms($tv3_id, $tv5_id) {
-        $sql = "INSERT INTO tracker_perm(tracker_id, user_id, perm_level)
-                SELECT $tv5_id, user_id, perm_level
-                FROM artifact_perm
-                WHERE group_artifact_id = $tv3_id";
-        $this->update($sql);
-
+    private function duplicateTrackerPerms($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO permissions(object_id, permission_type, ugroup_id)
                 SELECT $tv5_id, CONCAT('PLUGIN_', permission_type), ugroup_id
                 FROM permissions

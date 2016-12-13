@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -653,19 +653,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         }
         return $output;
-    }
-
-    /**
-     * Returns HTML code to display the artifact history
-     *
-     * @return string The HTML code for artifact history
-     */
-    protected function fetchHistory() {
-        $html = '';
-        $html .= '<h4 class="tracker_artifact_tab">History</h4>';
-        $h = new Tracker_History($this);
-        $html .= $h->fetch();
-        return $html;
     }
 
     /**

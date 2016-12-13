@@ -44,8 +44,6 @@ class Tracker_ReportFactory {
         return self::$_instance;
     }
 
-    // {{{ Public
-    
     /**
      * @param int $id the id of the report to retrieve
      * @return Tracker_Report identified by id (null if not found)
@@ -176,7 +174,6 @@ class Tracker_ReportFactory {
         }
         return $report;
     }
-    // }}}
     
     public function duplicateReportSkeleton($from_report, $to_tracker_id, $current_user_id) {
         $report = null;
@@ -188,8 +185,6 @@ class Tracker_ReportFactory {
     }
     
     
-    
-    // {{{ Protected
     
     protected $dao;
     /**
@@ -330,208 +325,5 @@ class Tracker_ReportFactory {
      */
     public function delete($report_id) {
         return $this->getDao()->delete($report_id);
-    }
-    // }}}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-	
-	/**
-	 * Return a new Tracker_Report object 
-	 *
-	 * @param report_id: the report id to create the new Tracker_Report
-	 *
-	 * @return void
-	 */
-	function getArtifactReportHtml($report_id,$atid) {
-        $sql = "SELECT * FROM tracker_report ".
-			   "WHERE report_id=". db_ei($report_id) ;
-		//echo $sql.'<br>';
-		$res=db_query($sql);
-		if (!$res || db_numrows($res) < 1) {
-			return false;
-		}
-		return new Tracker_ReportHtml($report_id,$atid);
-	}
-
-	/**
-     * 
-	 *  Copy all the reports informations from a tracker to another.
-	 *
-	 *  @param atid_source: source tracker
-	 *  @param atid_dest: destination tracker
-	 *
-	 *	@return	boolean
-	 */
-	function copyReports($atid_source,$atid_dest) {
-	  global $Language;
-        $report_mapping = array(100 => 100); //The system report 'Default' (sic)
-		//
-		// Copy tracker_report records which are not individual/personal
-		//
-	    $sql="SELECT report_id,user_id,name,description,scope,is_default ".
-		"FROM tracker_report ".
-		"WHERE group_artifact_id='". db_ei($atid_source) ."'" .
-	        "AND scope != 'I'";
-		
-		//echo $sql;
-		
-	    $res = db_query($sql);
-	
-	    while ($report_array = db_fetch_array($res)) {
-	    	$sql_insert = 'INSERT INTO tracker_report (group_artifact_id,user_id,name,description,scope,is_default) VALUES ('. db_ei($atid_dest) .','. db_ei($report_array["user_id"]) .
-	    				  ',"'. db_es($report_array["name"]) .'","'. db_es($report_array["description"]) .'","'. db_es($report_array["scope"]) .'","'. db_es($report_array["is_default"]) .'")';
-	    				  
-			$res_insert = db_query($sql_insert);
-			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				return false;
-			}
-			
-			$report_id = db_insertid($res_insert,'tracker_report','report_id');
-            $report_mapping[$report_array["report_id"]] = $report_id;
-			//
-			// Copy tracker_report_field records
-			//
-		    $sql_fields='SELECT field_name,show_on_query,show_on_result,place_query,place_result,col_width '.
-			'FROM tracker_report_field '.
-			'WHERE report_id='. db_ei($report_array["report_id"]) ;
-			
-			//echo $sql_fields;
-			
-		    $res_fields = db_query($sql_fields);
-		
-		    while ($field_array = db_fetch_array($res_fields)) {
-		    	$show_on_query = ($field_array["show_on_query"] == ""?"null":$field_array["show_on_query"]);
-		    	$show_on_result = ($field_array["show_on_result"] == ""?"null":$field_array["show_on_result"]);
-		    	$place_query = ($field_array["place_query"] == ""?"null":$field_array["place_query"]);
-		    	$place_result = ($field_array["place_result"] == ""?"null":$field_array["place_result"]);
-		    	$col_width = ($field_array["col_width"] == ""?"null":$field_array["col_width"]);
-
-		    	$sql_insert = 'INSERT INTO tracker_report_field VALUES ('. db_ei($report_id) .',"'. db_es($field_array["field_name"]) .
-		    				  '",'. db_ei($show_on_query) .','. db_ei($show_on_result) .','. db_ei($place_query) .
-		    				  ','. db_ei($place_result) .','. db_ei($col_width) .')';
-		    				  
-		    	//echo $sql_insert;
-				$res_insert = db_query($sql_insert);
-				if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-					return false;
-				}
-			} // while
-
-		} // while
-			
-		return $report_mapping;
-
-	}
-
-	/**
-     * 
-	 *  Delete all the reports informations for a tracker
-	 *
-	 *  @param atid: the tracker id
-	 *
-	 *	@return	boolean
-	 */
-	function deleteReports($atid) {
-		
-		//
-		// Delete tracker_report_field records
-		//
-	    $sql='SELECT report_id '.
-		'FROM tracker_report '.
-		'WHERE group_artifact_id='. db_ei($atid) ;
-		
-		//echo $sql;
-		
-	    $res = db_query($sql);
-	
-	    while ($report_array = db_fetch_array($res)) {
-
-		    $sql_fields='DELETE '.
-			'FROM tracker_report_field '.
-			'WHERE report_id='. db_ei($report_array["report_id"]) ;
-			
-			//echo $sql_fields;
-			
-		    $res_fields = db_query($sql_fields);
-		
-		} // while
-					
-		//
-		// Delete tracker_report records
-		//
-	    $sql='DELETE '.
-		'FROM tracker_report '.
-		'WHERE group_artifact_id='. db_ei($atid) ;
-		
-		//echo $sql;
-		
-	    $res = db_query($sql);
-	
-		return true;
-
-	}
-	
-	/**
-	 *  getReports - get an array of Tracker_Report objects
-	 *
-	 *	@param $group_artifact_id : the tracker id
-	 *	@param $user_id  : the user id
-	 *
-	 *	@return	array	The array of Tracker_Report objects.
-	 */
-	function getReports($group_artifact_id, $user_id) {
-	
-	    $artifactreports = array();
-	    $sql = 'SELECT report_id,name,description,scope,is_default FROM tracker_report WHERE ';
-	    if (!$user_id || ($user_id == 100)) {
-			$sql .= "(group_artifact_id=".  db_ei($group_artifact_id)  ." AND scope='P') OR scope='S' ".
-			    'ORDER BY report_id';
-	    } else {
-			$sql .= "(group_artifact_id= ". db_ei($group_artifact_id) ." AND (user_id=". db_ei($user_id) ." OR scope='P')) OR ".
-			    "scope='S' ORDER BY scope,report_id";
-	    }
-	    
-	    $result = db_query($sql);
-	    $rows = db_numrows($result);
-	    if (db_error()) {
-			return false;
-	    } else {
-			while ($arr = db_fetch_array($result)) {
-				$artifactreports[$arr['report_id']] = new Tracker_Report($arr['report_id'], $group_artifact_id);
-			}
-	    }
-	    return $artifactreports;
-	    
-	}
-		 
-    /**
-     *  getDefaultReport - get report_id of the default report
-     *
-     *  @param group_artifact_id : the tracker id
-     *  @return int     report_id
-     */
-
-    function getDefaultReport($group_artifact_id) {
-        $report_id = null;
-        $sql = "SELECT report_id FROM tracker_report WHERE group_artifact_id=".db_ei($group_artifact_id)." AND is_default = 1";
-        $result = db_query($sql);
-        while ($arr = db_fetch_array($result)) {
-            $report_id = $arr['report_id'];
-        }
-        return $report_id;
     }
 }

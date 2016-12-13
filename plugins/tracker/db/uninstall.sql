@@ -74,7 +74,6 @@ DROP TABLE IF EXISTS tracker_semantic_title;
 DROP TABLE IF EXISTS tracker_semantic_description;
 DROP TABLE IF EXISTS tracker_semantic_status;
 DROP TABLE IF EXISTS tracker_semantic_contributor;
-DROP TABLE IF EXISTS tracker_perm;
 DROP TABLE IF EXISTS tracker_rule;
 DROP TABLE IF EXISTS tracker_rule_list;
 DROP TABLE IF EXISTS tracker_rule_date;
