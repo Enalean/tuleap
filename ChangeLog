@@ -10,6 +10,7 @@ Version 9.3 (Not released yet)
 	- request #9710: Remove license agreement
 	- request #9716: Do not mix traces in tuleap syslog
 	- request #9202: Make phpwiki compatible with php 5.6
+	- request #9663: Favor REST API in Tuleap interface
 
 	== Plugins ==
 	* mediawiki: 0.129
@@ -17,6 +18,9 @@ Version 9.3 (Not released yet)
 	* tracker: 5.1066
 	* git: 4.308
 	* graphontrackersv5: 5.27
+
+    == Themes ==
+	* FlamingParrot: 1.169
 
 Version 9.2 (Thursday, December 8th 2016)
 
