@@ -1,3 +1,6 @@
+Version 0.51 - Tuleap 9.3
+    * request #9731: Cannot update an OpenID Connect provider when the user is not linked to it
+
 Version 0.50 - Tuleap 9.3
     * request #9733: Error message about malformed data is not translated in OpenID Connect administration
 
