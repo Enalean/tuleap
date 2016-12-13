@@ -3,6 +3,7 @@ Version 9.3 (Not released yet)
 	* request #9702: Parse gitolite logs in a dedicated system event
 	* request #9720: Release notes are not accessible to not logged users even if permissions allow it
 	* request #9722: JPGraph error when burndown is in the future
+	* story #9734: Directly go to an item by searching its reference
 
 	== Enhancement ==
 	- request #9712: empty state in system events is broken
