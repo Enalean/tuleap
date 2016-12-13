@@ -148,17 +148,36 @@ class Controller {
         $csrf_token->check();
 
         $id                                = $request->get('id');
+        $is_unique_authentication_endpoint = $request->existAndNonEmpty('unique_authentication_endpoint');
+        try {
+            $provider = $this->provider_manager->getById($id);
+        } catch (ProviderNotFoundException $ex) {
+            $this->redirectAfterFailure(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+            );
+        }
+
+        if ($is_unique_authentication_endpoint &&
+            ! $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy(
+                $provider,
+                $request->getCurrentUser()
+            )
+        ) {
+            $this->redirectAfterFailure(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+            );
+        }
+
         $name                              = $request->get('name');
         $authorization_endpoint            = $request->get('authorization_endpoint');
         $token_endpoint                    = $request->get('token_endpoint');
         $userinfo_endpoint                 = $request->get('userinfo_endpoint') ? $request->get('userinfo_endpoint') : '';
-        $is_unique_authentication_endpoint = $request->existAndNonEmpty('unique_authentication_endpoint');
         $client_id                         = $request->get('client_id');
         $client_secret                     = $request->get('client_secret');
         $icon                              = $request->get('icon');
         $color                             = $request->get('color');
 
-        $provider = new Provider(
+        $updated_provider = new Provider(
             $id,
             $name,
             $authorization_endpoint,
@@ -171,17 +190,8 @@ class Controller {
             $color
         );
 
-        if (! $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy(
-            $provider,
-            $request->getCurrentUser()
-        )) {
-            $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
-            );
-        }
-
         try {
-            $this->provider_manager->update($provider);
+            $this->provider_manager->update($updated_provider);
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'update_provider_error')
@@ -197,7 +207,7 @@ class Controller {
             $GLOBALS['Language']->getText(
                 'plugin_openidconnectclient_admin',
                 'update_provider_success',
-                array($provider->getName())
+                array($updated_provider->getName())
             )
         );
         $this->showAdministration($csrf_token, $request->getCurrentUser());
