@@ -1,3 +1,6 @@
+Version 0.76 - Tuleap 9.3
+    * request #9739: Remove surveys
+
 Version 0.75 - Tuleap 9.2
     * request #9709: Disk statistics per project are not visible to the project members
 

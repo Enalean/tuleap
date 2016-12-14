@@ -16,6 +16,7 @@ Version 9.3 (Not released yet)
 	* request #9202: Make Tuleap compatible with PHP 5.6
 		- Convert tracker v3, mustache and nusoap to PHP 5.6
 	* request #9738: Remove site wide statistics
+	* request #9739: Remove surveys
 
 	== Plugins ==
 	* mediawiki: 0.129
@@ -23,9 +24,10 @@ Version 9.3 (Not released yet)
 	* tracker: 5.1070
 	* git: 4.308
 	* graphontrackersv5: 5.28
+	* statistics: 0.76
 
     == Themes ==
-	* FlamingParrot: 1.169
+	* FlamingParrot: 1.170
 
 Version 9.2 (Thursday, December 8th 2016)
 
