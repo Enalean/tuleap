@@ -1,3 +1,6 @@
+Version 5.1067 - Tuleap 9.3
+    * request #9732: Burndown calculation : today remaining effort should never be based on timestamp calculation
+
 Version 5.1066 - Tuleap 9.3
     * story #8858: Remove dead code
 
