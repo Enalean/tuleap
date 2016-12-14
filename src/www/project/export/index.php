@@ -79,16 +79,6 @@ switch ($export) {
      require('./artifact_deps_export.php');
      site_project_footer( array() );
      break;
- 
- case 'survey_responses':
-     require('./survey_responses_export.php');
-     break;
-
- case 'survey_responses_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./survey_responses_export.php');
-     site_project_footer( array() );
-     break;
 
  case 'access_logs':     
      require('./access_logs_export.php');     
@@ -111,11 +101,8 @@ switch ($export) {
      break;
      
  case 'project_db':
-        if ($project->usesSurvey() || $project->usesTracker()) {
+        if ($project->usesTracker()) {
             project_admin_header(array('title' => $pg_title));
-            if ($project->usesSurvey()) {
-                require('./survey_responses_export.php');
-            }
             if ($project->usesTracker()) {
                 require('./artifact_export.php');
                 require('./artifact_history_export.php');
@@ -159,16 +146,6 @@ switch ($export) {
                      $Language->getText('project_export_index','history'),
                      $Language->getText('project_export_index','dependencies'));
      echo html_build_list_table_top($titles);
-
-    if ($project->usesSurvey()) {
-        $entry_label['survey']                           = $Language->getText('project_export_index','survey_responses');
-        $entry_data_export_links['survey']               = '?group_id='.$group_id.'&export=survey_responses';
-        $entry_data_export_format_links['survey']        = '?group_id='.$group_id.'&export=survey_responses_format';
-        $history_data_export_links['survey']             = null;
-        $history_data_export_format_links['survey']      = null;
-        $dependencies_data_export_links['survey']        = null;
-        $dependencies_data_export_format_links['survey'] = null;
-    }
 
     if ($project->usesTracker()) {
         // Get the artfact type list
@@ -273,7 +250,7 @@ switch ($export) {
 <br>
 <h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('project-admin.html#direct-database-access').'</h3>';
 
-    if ($project->usesSurvey() || $project->usesTracker()) {
+    if ($project->usesTracker()) {
         echo '<ol>';
 
         echo '<li><b><a href="?group_id='.$group_id.'&export=project_db">'.$Language->getText('project_export_index','generate_full_db')."\n";

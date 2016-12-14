@@ -48,9 +48,6 @@ class ServiceManager {
 
     public function __construct(ServiceDao $dao) {
         $this->dao = $dao;
-        if (ForgeConfig::get('sys_use_surveys')) {
-            $this->list_of_core_services[] = Service::SURVEY;
-        }
     }
 
     /**

@@ -31,7 +31,6 @@ group	long_patch	Gestionnaire de corrections
 group	long_pm	Gestion des tâches
 group	long_scm	Gestion de sources
 group	long_support	Support technique
-group	long_survey	Sondages
 group	long_tracker	Outils de suivi
 group	nodescription	Ce projet n'a pas encore soumis de description.
 group	norelease	Ce projet n'a pas encore publié de fichier
@@ -54,7 +53,6 @@ group	short_pm	Tâches
 group	short_scm	Sources
 group	short_summary	En bref
 group	short_support	Support
-group	short_survey	Sondages
 group	short_tracker	Suivi
 menu	about_gforge	À propos de $1
 menu	account_maintenance	Gestion du compte

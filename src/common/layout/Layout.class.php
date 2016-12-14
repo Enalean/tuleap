@@ -51,7 +51,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         'Lists' => 'ic/mail.png',
         'Tasks' => 'ic/index.png',
         'Docs' => 'ic/docman.png',
-        'Surveys' => 'ic/survey.png',
         'News' => 'ic/news.png',
         'CVS' => 'ic/convert.png',
         'Files' => 'ic/save.png',

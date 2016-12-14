@@ -31,7 +31,6 @@ group	long_news	Latest News
 group	long_patch	Patch Manager
 group	long_pm	Task Manager
 group	long_support	Tech Support Manager
-group	long_survey	Surveys
 group	long_tracker	Tracker
 group	nodescription	This project has not yet submitted a description.
 group	norelease	This Project Has Not Released Any Files
@@ -54,7 +53,6 @@ group	short_patch	Patches
 group	short_pm	Tasks
 group	short_summary	Summary
 group	short_support	Support
-group	short_survey	Surveys
 group	short_tracker	Tracker
 menu	about_gforge	About $1
 menu	account_maintenance	Account Maintenance

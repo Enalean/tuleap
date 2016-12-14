@@ -247,8 +247,6 @@ include_project_home	proj_task_man	Gestionnaire de projet/tâches
 include_project_home	no_public_proj	Aucun projet public disponible
 include_project_home	wiki	Wiki
 include_project_home	nb_wiki_pages	<B>$1</B> pages
-include_project_home	surveys	Sondages
-include_project_home	nb_surveys	<B>$1</B> sondage(s)
 include_project_home	cvs_repo	Dépôt CVS
 include_project_home	commits	<B>$1</B> commits
 include_project_home	adds	<B>$1</B> adds

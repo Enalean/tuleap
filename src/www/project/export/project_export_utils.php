@@ -357,32 +357,6 @@ function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
   return $saltprefix.$salt.$saltsuffix;
 }
 
-
-
-function codendi_crypt($id,$salt,$type=CRYPT_SALT_LENGTH) {
-  return substr(crypt($id,$salt),$type); 
-}
-
-function prepare_survey_responses_record($group_id, &$record, $salt) {
-
-    global $datetime_fmt;
-
-    /*
-           Prepare the column values in the task  record
-           Input: a row from the project_task table (passed by
-                   reference.
-          Output: the same row with values transformed for database export
-       */
-
-    $record['date'] = format_date($datetime_fmt,$record['date']);
-    $record['reponse'] = prepare_textarea($record['response']);
-    
-    //compute encrypted user_id
-    $enc_user_id = codendi_crypt($record['user_id'],$salt);  
-    $record['user_id'] = $enc_user_id;
- 
-}
-
     /**
          *  Prepare the column values in the access logs  record
          *  @param: group_id: group id

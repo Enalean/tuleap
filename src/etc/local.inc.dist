@@ -277,9 +277,6 @@ $sys_default_trove_cat = 1;
 // it will result in a warning in project summary page.
 $sys_trove_cat_mandatory = 1;
 
-// ID of the survey to be referenced in users personal pages ('my page')
-$sys_my_page_survey = 1;
-
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 
@@ -412,10 +409,6 @@ $sys_use_trove = 1;
 // Enable code snippet library
 // (1 to enable, 0 to disable)
 $sys_use_snippet = 1;
-
-// Enable surveys
-// (1 to enable, 0 to disable)
-$sys_use_surveys = 0;
 
 //Enable new project registration
 // (1 to enable, 0 to disable)

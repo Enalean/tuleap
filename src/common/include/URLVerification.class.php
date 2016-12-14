@@ -303,7 +303,6 @@ class URLVerification {
         $user_is_allowed=false;
         /* Examples of input params:
          Script: /projects, Uri=/projects/ljproj/
-         Script: /survey/index.php, Uri=/survey/?group_id=101
          Script: /project/admin/index.php, Uri=/project/admin/?group_id=101
          Script: /tracker/index.php, Uri=/tracker/index.php?group_id=101
          Script: /tracker/index.php, Uri=/tracker/?func=detail&aid=14&atid=101&group_id=101

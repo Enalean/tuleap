@@ -102,17 +102,6 @@ class Widget_ProjectPublicAreas extends Widget {
             echo '</p>';
         }
         
-        // ######################### Surveys (only for Active)
-        
-        if ($project->usesSurvey()) {
-            print '<p><a href="/survey/?group_id='.$group_id.'">';
-            html_image("ic/survey16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','surveys')));
-            print ' '.$GLOBALS['Language']->getText('include_project_home','surveys').'</a>';
-            $sql="SELECT count(*) from surveys where group_id='" . db_ei($group_id) . "' AND is_active='1'";
-            $result=db_query($sql);
-            echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_surveys',db_result($result,0,0)).' )</p>';
-        }
-        
         // ######################### CVS (only for Active)
         
         if ($project->usesCVS()) {
