@@ -23,10 +23,6 @@ echo "--- Beginning of $script ---"
 # computed
 ./db_project_metric.pl
 
-# Compute statitics on survey response (count, average,..)
-# as well as total number of msg per forum
-./db_rating_stats.pl $*
-
 # Compute the top_group table whre all projects
 # are stored with all sorts of ranking. Redirect
 # text output to a file in the dumpt directory

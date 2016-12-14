@@ -28,7 +28,6 @@ class Service {
     const FORUM     = 'forum';
     const HOMEPAGE  = 'homepage';
     const ML        = 'mail';
-    const SURVEY    = 'survey';
     const NEWS      = 'news';
     const CVS       = 'cvs';
     const FILE      = 'file';

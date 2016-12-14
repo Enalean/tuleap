@@ -207,9 +207,6 @@ $sys_default_trove_cat = 18;
 // it will result in a warning in project summary page.
 $sys_trove_cat_mandatory = 1;
 
-// ID of the survey to be referenced in users personal pages ('my page')
-$sys_my_page_survey = 1;
-
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 

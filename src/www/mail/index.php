@@ -126,7 +126,6 @@ if ($group_id) {
                   'help'=>'communication.html#mailing-lists',
                   'pv'   => $pv);
     mail_header($params);
-    require('../mail/mail_nav.php');
     echo '
 		<H1>'.$Language->getText('mail_index','group_err').'</H1>';
 }

@@ -153,10 +153,8 @@ if ($request->exist('export') && $startDate && $endDate) {
     $csv_exporter->buildDatas($dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
     $csv_exporter->buildDatas($dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
 
-    //News and survey
+    //News
     $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
-    $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
-    $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
 
     //CI
     $p = $pluginManager->getPluginByName('hudson');

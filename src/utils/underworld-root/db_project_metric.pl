@@ -136,16 +136,6 @@ $rel = $dbh->prepare($sql);
 $rel->execute();
 
 
-#survey answers
-$sql="INSERT INTO project_counts_tmp
-SELECT group_id, 'survey', log(3*count(user_id)) AS count 
-FROM survey_responses 
-GROUP BY group_id";
-
-$rel = $dbh->prepare($sql);
-$rel->execute();
-
-
 #wiki access
 $sql="INSERT INTO project_counts_tmp
 SELECT group_id, 'wiki', log(count(user_id)) AS count 
@@ -177,28 +167,6 @@ $rel->execute();
 
 
 #insert the rows into the table in order, adding a sequential rank #
-# LJ 
-# LJ In the original SQL query below SourceForge uses the score of
-# projects survey as a ponderation factor in the project counts computed
-# above. I do not understand why they did that: first of all not all survey
-# results deals with the intrisic quality of the project and second when a
-# project has no survey the SQL statement does return an empty result. Since
-# most project does not have surveys we ended up with no result at all
-# causing the "most Active this week" box on the Codendi home page to be empty
-# So I decided to remove survey ponderation.
-# 
-# Rk: the survey_rating_aggregate table is computed in the
-# underworld-root/ db_rating_stats.pl script
-#
-# Original SQL statement
-# $sql="INSERT INTO project_metric_tmp1 (group_id,value) 
-# SELECT project_counts_tmp.group_id,(survey_rating_aggregate.response * sum(project_counts_tmp.count)) AS value 
-#FROM project_counts_tmp,survey_rating_aggregate 
-#WHERE survey_rating_aggregate.id=project_counts_tmp.group_id 
-#AND survey_rating_aggregate.type=1 
-#AND survey_rating_aggregate.response > 0
-#AND project_counts_tmp.count > 0
-#GROUP BY group_id ORDER BY value DESC";
 # 
 # New SQL statement
 $sql="INSERT INTO project_metric_tmp1 (group_id,value) 

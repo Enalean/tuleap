@@ -289,25 +289,6 @@ INSERT INTO frs_processor VALUES ('8000','Any','80','100');
 INSERT INTO frs_processor VALUES ('9999','Other','90','100');
 
 #
-# Default Data for Survey Manager
-#
-
-INSERT INTO survey_question_types (id, type, rank) VALUES (1,'radio_buttons_1_5', '21');
-INSERT INTO survey_question_types (id, type, rank) VALUES (2,'text_area', '30');
-INSERT INTO survey_question_types (id, type, rank) VALUES (3,'radio_buttons_yes_no', '22');
-INSERT INTO survey_question_types (id, type, rank) VALUES (4,'comment_only', '10');
-INSERT INTO survey_question_types (id, type, rank) VALUES (5,'text_field', '31');
-INSERT INTO survey_question_types (id, type, rank) VALUES (6,'radio_buttons', '20');
-INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23');
-INSERT INTO survey_question_types (id, type, rank) VALUES (100,'none', '40');
-
-#
-# Developer survey attached to project #1, default status is inactive
-#
-INSERT INTO surveys (survey_id, group_id, survey_title, is_active) VALUES (1,1,'dev_survey_title_key',0);
- 
-
-#
 # Default data for Software Map
 #
     
@@ -398,7 +379,6 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (3, 100, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://$projectname.$sys_default_domain', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (4, 100, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=$group_id', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (8, 100, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=$group_id', 1, 1, 'system', 80);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (11, 100, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=$group_id', 0, 0, 'system', 110);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 1, 0, 'system', 130);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 1, 'system', 140);
@@ -411,7 +391,6 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://admin._DOMAIN_NAME_', 1, 0, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 1, 0, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 1, 0, 'system', 80);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (37, 1, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=1', 0, 0, 'system', 110);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (38, 1, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=1', 1, 0, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (39, 1, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=1', 1, 0, 'system', 130);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (40, 1, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=1', 1, 0, 'system', 140);
@@ -769,10 +748,6 @@ WHERE plugin.name = 'docman';
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 3
-FROM user;
-
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT user_id, 'u', 1, 1, 'mysurveys', 4
 FROM user;
 
 -- Add myadmin only to current admins

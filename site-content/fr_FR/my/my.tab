@@ -22,8 +22,6 @@ my_index	stop_monitor	Arrêter la surveillance
 my_index	my_tasks	Mes Tâches
 my_index	my_arts	Mes artefacts
 my_index	display_arts	Afficher les artefacts :
-my_index	my_survey	Sondages
-my_index	survey_done	Vous avez déjà répondu aux sondages
 my_index	my_bookmarks	Mes favoris
 my_index	no_bookmark	Vous n'avez pas encore de favori enregistré
 my_index	edit_link	Editer
@@ -44,7 +42,6 @@ my_index	s_info	soumis par moi [S]
 my_index	as_info	assignés à moi ou soumis par moi [AS]
 my_index	my_admin	Utilisateurs, projets et annonces en attente
 my_index	my_admin_non_super	Projets en attente
-my_index	no_survey	Pas de sondage disponible
 my_index	no_bug	Pas encore de bug
 my_index	no_task	Pas encore de tâche
 my_index	no_support	Pas encore de demande de support

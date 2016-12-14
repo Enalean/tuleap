@@ -356,9 +356,6 @@ if ($group->usesDocman()) {
 if ($group->usesWiki()) {
     echo '	<A HREF="/wiki/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','wiki_admin').'</A><BR>';
 }
-if ($group->usesSurvey()) {
-    echo '	<A HREF="/survey/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','survey_admin').'</A><BR>';
-}
 if ($group->usesNews()) {
     echo '	<A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','news_admin').'</A><BR>';
 }

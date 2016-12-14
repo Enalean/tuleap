@@ -380,26 +380,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getActiveSurveys() {
-        $sql = "SELECT g.group_id, COUNT(survey_id) AS result
-                FROM surveys s, groups g
-                WHERE is_active = 1
-                    AND g.group_id = s.group_id
-                GROUP BY  g.group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function getSurveysAnswersBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id, COUNT(*) AS result
-                FROM survey_responses
-                WHERE date >= $this->start_date
-                    AND date <= $this->end_date
-                GROUP BY  group_id";
-
-        return $this->retrieve($sql);
-    }
-
     public function getProjectWithCIActivated() {
         $sql = "SELECT group_id, is_used AS result
                 FROM service

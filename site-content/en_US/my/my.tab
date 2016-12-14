@@ -30,8 +30,6 @@ my_index	stop_monitor	STOP MONITORING
 my_index	my_tasks	My Tasks
 my_index	my_arts	My Artifacts
 my_index	display_arts	Display artifacts:
-my_index	my_survey	Quick Survey
-my_index	survey_done	You have taken your developer survey
 my_index	my_bookmarks	My Bookmarks
 my_index	no_bookmark	You currently do not have any bookmarks saved
 my_index	edit_link	Edit
@@ -52,7 +50,6 @@ my_index	s_info	submitted by me [S]
 my_index	as_info	assigned to or submitted by me [AS]
 my_index	my_admin	Pending users, projects and news
 my_index	my_admin_non_super	Pending projects
-my_index	no_survey	No survey available
 my_index	no_bug	No bug yet
 my_index	no_task	No task yet
 my_index	no_support	No support request yet

@@ -39,7 +39,6 @@ widget_description_my_monitored_forums	description	Affiche la liste les forums q
 widget_description_my_monitored_fp	description	Affiche la liste les fichiers que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de cliquer sur la corbeille à côté de l'item concerné.
 widget_description_my_projects	description	Affiche la liste les projets auxquels vous appartenez. La sélection d'un de ces projets vous amène sur sa page sommaire.
 widget_description_rss	description	Permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques.
-widget_description_my_surveys	description	Affiche la liste des sondages auxquels vous n'avez pas encore participé.
 widget_description_my_system_event	description	Affiche les événements système.
 widget_description_my_tasks	description	Affiche la liste des tâches qui vous ont été assignées.
 widget_description_twitter_follow	description	Permet d'inclure dans votre page personnelle les messages d'un utilisateur de Twitter.

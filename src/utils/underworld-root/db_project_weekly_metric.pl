@@ -147,19 +147,6 @@ $rel = $dbh->prepare($sql);
 $rel->execute();
 
 
-#survey answers
-$sql="INSERT INTO project_counts_tmp
-SELECT group_id, 'survey', log(3*count(user_id)) AS count
-FROM survey_responses
-WHERE date > '$last_week'
-GROUP BY group_id";
-
-#print "\n\n".$sql;
-
-$rel = $dbh->prepare($sql);
-$rel->execute();
-
-
 #wiki access
 $sql="INSERT INTO project_counts_tmp
 SELECT group_id, 'wiki', log(count(user_id)) AS count 
@@ -196,18 +183,6 @@ $rel->execute();
 
 
 #insert the rows into the table in order, adding a sequential rank #
-# LJ
-# LJ Same modification than db_project_metric.pl. Do not use 
-# survey as a ponderation factor (see db_project_metric.pl for more
-# information
-# $sql="INSERT INTO project_metric_weekly_tmp1 (group_id,value) 
-# SELECT project_counts_weekly_tmp.group_id,(survey_rating_aggregate.response * sum(project_counts_weekly_tmp.count)) AS value 
-# FROM project_counts_weekly_tmp,survey_rating_aggregate 
-# WHERE survey_rating_aggregate.id=project_counts_weekly_tmp.group_id 
-# AND survey_rating_aggregate.type=1 
-# AND survey_rating_aggregate.response > 0
-# AND project_counts_weekly_tmp.count > 0
-# GROUP BY group_id ORDER BY value DESC";
 
 $sql="INSERT INTO project_metric_weekly_tmp1 (group_id,value) 
 SELECT project_counts_weekly_tmp.group_id,(sum(project_counts_weekly_tmp.count)) AS value 

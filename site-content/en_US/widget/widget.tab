@@ -46,7 +46,6 @@ widget_description_my_monitored_forums	description	Lists forums that you are cur
 widget_description_my_monitored_fp	description	Lists packages that you are currently monitoring, by project.<br>To cancel any of the monitored items just click on the trash icon next to the item label.
 widget_description_my_projects	description	Lists the projects you belong to. Selecting any of these projects brings you to the corresponding Project Summary page.
 widget_description_rss	description	Allows you to include public rss (or atom) feeds into your personal page.
-widget_description_my_surveys	description	Lists the surveys you have not answered.
 widget_description_my_system_event	description	Lists the system events.
 widget_description_my_tasks	description	Lists the tasks assigned to you.
 widget_description_twitter_follow	description	Lists the information on the twitter you decided to follow.

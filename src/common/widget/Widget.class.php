@@ -131,9 +131,6 @@
     public static function getInstance($widget_name) {
         $o = null;
         switch($widget_name) {
-            case 'mysurveys':
-                $o = new Widget_MySurveys();
-                break;
             case 'myprojects':
                 $o = new Widget_MyProjects();
                 break;
@@ -235,7 +232,7 @@
     /* static */ function getCodendiWidgets($owner_type) {
         switch ($owner_type) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
-                $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
+                $widgets = array('myadmin', 'myprojects', 'mybookmarks',
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
                     'mytasks', 'mysrs', 'myimageviewer', 
                     'mylatestsvncommits', 'mysystemevent', 'myrss',

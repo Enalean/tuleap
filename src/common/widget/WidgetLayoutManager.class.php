@@ -142,7 +142,6 @@ class WidgetLayoutManager {
     * - MyArtifacts
     * - MyProjects
     * - MyBookmarks
-    * - MySurveys
     * - MyMonitoredFP
     * - MyMonitoredForums
     * - and widgets of plugins if they want to listen to the event default_widgets_for_new_owner
@@ -161,11 +160,6 @@ class WidgetLayoutManager {
             $sql .= ",($owner_id, '$owner_type', 1, 1, 'mybookmarks', 1)";
             if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::FORUM)) {
                 $sql .= ",($owner_id, '$owner_type', 1, 1, 'mymonitoredforums', 2)";
-            }
-            if (ForgeConfig::get('sys_use_surveys') &&
-                $service_manager->isServiceAvailableAtSiteLevelByShortName(Service::SURVEY)
-            ) {
-                $sql .= ",($owner_id, '$owner_type', 1, 1, 'mysurveys', 4)";
             }
             if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::TRACKERV3)) {
                 $sql .= ",($owner_id, '$owner_type', 1, 2, 'myartifacts', 10)";

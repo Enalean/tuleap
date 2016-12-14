@@ -96,8 +96,6 @@ project_admin_editservice	service_task_lbl_key	Tasks
 project_admin_editservice	service_task_desc_key	Task Manager
 project_admin_editservice	service_doc_lbl_key	Docs
 project_admin_editservice	service_doc_desc_key	Document Manager
-project_admin_editservice	service_survey_lbl_key	Surveys
-project_admin_editservice	service_survey_desc_key	Project Surveys
 project_admin_editservice	service_news_lbl_key	News
 project_admin_editservice	service_news_desc_key	Project News
 project_admin_editservice	service_cvs_lbl_key	CVS
@@ -217,7 +215,6 @@ project_admin_index	lists_admin	Lists Admin
 project_admin_index	task_admin	Task Manager Admin
 project_admin_index	doc_admin	DocManager Admin
 project_admin_index	wiki_admin	Wiki Admin
-project_admin_index	survey_admin	Survey Admin
 project_admin_index	news_admin	News Admin
 project_admin_index	cvs_admin	CVS Admin
 project_admin_index	svn_admin	Subversion Admin
@@ -717,7 +714,7 @@ project_export_bug_export	depend_on_bugs_desc	List of bugs this bug depends on
 # Script: SF/www/project/export/index.php
 #
 project_export_index	proj_db_success	Your project database has been successfully generated. You can now use your favorite desktop application and access your project database through the MySQL ODBC/JDBC driver installed on your desktop machine. The parameters to configure your ODBC/JDBC database connection are as follows:
-project_export_index	proj_db_no_data	No data to export. Only <strong>Surveys</strong> and <strong>Tracker v3</strong> are exported.
+project_export_index	proj_db_no_data	No data to export. Only <strong>Tracker v3</strong> are exported.
 project_export_index	export_to_csv_or_db	Your project data can either be exported in individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See $1 for more information.
 project_export_index	export_to_csv_hdr	Text File Export $2
 project_export_index	export_to_csv_msg	Click on the links below to generate a text file export (CSV format).
@@ -732,7 +729,6 @@ project_export_index	export	Export
 project_export_index	show_format	Show Format
 project_export_index	export_x	Export $1
 project_export_index	support_request	Support Request
-project_export_index	survey_responses	Survey Responses
 project_export_index	access_logs	Project Access Logs
 project_export_index	user_groups	User groups definition
 project_export_index	direct_db_access	Direct Database Access 
@@ -774,21 +770,6 @@ project_export_support_request_export	open_date_desc	Support request submission 
 project_export_support_request_export	close_date_desc	Support request close date
 project_export_support_request_export	status_desc	Status (Open, Closed&hellip;)
 project_export_support_request_export	follow_up_desc	All follow-up comments in one chunk of text including the original description
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/survey_responses_export.php
-#
-project_export_survey_responses_export	survey_id	Survey ID
-project_export_survey_responses_export	question_id	Question ID
-project_export_survey_responses_export	user_id	User ID
-project_export_survey_responses_export	response	Response
-project_export_survey_responses_export	date_stamp	Date Stamp
-project_export_survey_responses_export	survey_id_desc	Unique survey identifier
-project_export_survey_responses_export	question_id_desc	Unique question identifier
-project_export_survey_responses_export	response_desc	The response to the question
-project_export_survey_responses_export	date_desc	Date/Time the user response was registered
-project_export_survey_responses_export	date_stamp_desc	A unique identifier for the responses that belong to a survey taken by a given user
-project_export_survey_responses_export	user_id_desc	Encrypted user identifier
 #
 #-----------------------------------------------
 # Script: src/www/project/export/access_logs_export.php

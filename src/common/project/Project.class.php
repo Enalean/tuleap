@@ -257,12 +257,7 @@ class Project extends Group implements PFO_Project {
     //whether or not this group has opted to use discussion forums
     function usesForum() {
         return $this->usesService(Service::FORUM);
-    }       
-
-    //whether or not this group has opted to use surveys
-    function usesSurvey() {
-        return ForgeConfig::get('sys_use_surveys') && $this->usesService(Service::SURVEY);
-    }       
+    }
 
     //whether or not this group has opted to use wiki
     function usesWiki() {
