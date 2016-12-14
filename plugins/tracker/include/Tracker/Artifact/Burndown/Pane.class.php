@@ -77,6 +77,6 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent() {
-        return $this->field->fetchArtifactValue($this->artifact);
+        return $this->field->fetchBurndownReadOnly($this->artifact);
     }
 }
