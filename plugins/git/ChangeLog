@@ -1,3 +1,6 @@
+Version 4.309 - Tuleap 9.3
+    * request #9740: Anonymous users should not be allowed to create pull requests
+
 Version 4.308 - Tuleap 9.3
     * request #9702: Parse gitolite logs in a dedicated system event
 
