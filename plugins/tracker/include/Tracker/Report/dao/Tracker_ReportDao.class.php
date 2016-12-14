@@ -79,7 +79,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function create($name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed) {
+    function create($name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $is_in_expert_mode) {
         $name                = $this->da->quoteSmart($name);
         $description         = $this->da->quoteSmart($description);
         $current_renderer_id = $this->da->escapeInt($current_renderer_id);
@@ -88,13 +88,26 @@ class Tracker_ReportDao extends DataAccessObject {
         $is_default          = $this->da->escapeInt($is_default);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         $is_query_displayed  = $this->da->escapeInt($is_query_displayed);
+        $is_in_expert_mode   = $this->da->escapeInt($is_in_expert_mode);
         $sql = "INSERT INTO $this->table_name 
-                (name, description, current_renderer_id, parent_report_id, user_id, is_default, tracker_id, is_query_displayed)
-                VALUES ($name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed)";
+                (name, description, current_renderer_id, parent_report_id, user_id, is_default, tracker_id, is_query_displayed, is_in_expert_mode)
+                VALUES ($name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $is_in_expert_mode)";
         return $this->updateAndGetLastId($sql);
     }
     
-    function save($id, $name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by_id) {
+    function save(
+        $id,
+        $name,
+        $description,
+        $current_renderer_id,
+        $parent_report_id,
+        $user_id,
+        $is_default,
+        $tracker_id,
+        $is_query_displayed,
+        $is_in_expert_mode,
+        $updated_by_id
+    ) {
         $id                  = $this->da->escapeInt($id);
         $name                = $this->da->quoteSmart($name);
         $description         = $this->da->quoteSmart($description);
@@ -104,6 +117,7 @@ class Tracker_ReportDao extends DataAccessObject {
         $is_default          = $this->da->escapeInt($is_default);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         $is_query_displayed  = $this->da->escapeInt($is_query_displayed);
+        $is_in_expert_mode   = $this->da->escapeInt($is_in_expert_mode);
         $updated_by_id       = $this->da->escapeInt($updated_by_id);
         $updated_at          = $_SERVER['REQUEST_TIME'];
         $sql = "UPDATE $this->table_name SET 
@@ -115,6 +129,7 @@ class Tracker_ReportDao extends DataAccessObject {
                    is_default          = $is_default,
                    tracker_id          = $tracker_id,
                    is_query_displayed  = $is_query_displayed,
+                   is_in_expert_mode   = $is_in_expert_mode,
                    updated_by          = $updated_by_id,
                    updated_at          = $updated_at
                 WHERE id = $id ";
@@ -129,8 +144,8 @@ class Tracker_ReportDao extends DataAccessObject {
     function duplicate($from_report_id, $to_tracker_id) {
         $from_report_id = $this->da->escapeInt($from_report_id);
         $to_tracker_id  = $this->da->escapeInt($to_tracker_id);
-        $sql = "INSERT INTO $this->table_name (project_id, user_id, tracker_id, is_default, name, description, current_renderer_id, parent_report_id, is_query_displayed)
-                SELECT project_id, user_id, $to_tracker_id, is_default, name, description, current_renderer_id, $from_report_id, is_query_displayed
+        $sql = "INSERT INTO $this->table_name (project_id, user_id, tracker_id, is_default, name, description, current_renderer_id, parent_report_id, is_query_displayed, is_in_expert_mode)
+                SELECT project_id, user_id, $to_tracker_id, is_default, name, description, current_renderer_id, $from_report_id, is_query_displayed, is_in_expert_mode
                 FROM $this->table_name
                 WHERE id = $from_report_id";
         return $this->updateAndGetLastId($sql);
@@ -190,8 +205,6 @@ class Tracker_ReportDao extends DataAccessObject {
             $this->setGroupConcatLimit();
             $sql = " SELECT GROUP_CONCAT(DISTINCT id) AS id, GROUP_CONCAT(DISTINCT last_changeset_id) AS last_changeset_id ";
             $sql .= " FROM (". implode(' UNION ', $sqls) .") AS R ";
-
-            //var_dump($sql);
 
             return $this->retrieve($sql);
         }

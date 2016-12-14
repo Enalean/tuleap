@@ -56,7 +56,7 @@ class Test_TrackerReport_Builder {
      * @return \Tracker_Report
      */
     public function build() {
-        $tracker_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $is_query_displayed = $updated_by = $updated_at = null;
+        $tracker_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $is_query_displayed = $is_in_expert_mode = $updated_by = $updated_at = null;
         $report = new Tracker_Report(
             $this->id,
             $this->name,
@@ -67,6 +67,7 @@ class Test_TrackerReport_Builder {
             $is_default,
             $tracker_id,
             $is_query_displayed,
+            $is_in_expert_mode,
             $updated_by,
             $updated_at
         );

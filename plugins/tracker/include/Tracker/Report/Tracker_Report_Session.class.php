@@ -38,10 +38,6 @@ class Tracker_Report_Session extends Codendi_Session {
         }
         $this->session_namespace = &$this->session['trackers']['reports'][$this->report_namespace];
         $this->session_namespace_path = ".trackers.reports.$this->report_namespace";
-
-        if (! $this->get('is_in_expert_mode')) {
-            $this->set('is_in_expert_mode', false);
-        }
     }
     
     public function hasChanged() {

@@ -57,8 +57,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
-        $sql = "INSERT INTO tracker_report(old_id, project_id, tracker_id, is_default, user_id, name, description, current_renderer_id, is_query_displayed)
-                SELECT DISTINCT G.report_graphic_id, T.group_id, $tv5_id, 0, G.user_id, G.name, G.description, 0,1
+        $sql = "INSERT INTO tracker_report(old_id, project_id, tracker_id, is_default, user_id, name, description, current_renderer_id, is_query_displayed, is_in_expert_mode)
+                SELECT DISTINCT G.report_graphic_id, T.group_id, $tv5_id, 0, G.user_id, G.name, G.description, 0, 1, 0
                 FROM plugin_graphontrackers_report_graphic AS G, tracker_report AS R, tracker AS T
                 WHERE G.scope <> 'P' AND
                       G.group_artifact_id = $tv3_id AND

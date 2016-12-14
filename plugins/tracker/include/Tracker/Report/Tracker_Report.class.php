@@ -58,6 +58,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     public $renderers;
     public $criteria;
+    public $report_session;
 
     /**
      * Constructor
@@ -81,6 +82,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $is_default,
         $tracker_id,
         $is_query_displayed,
+        $is_in_expert_mode,
         $updated_by,
         $updated_at
     ) {
@@ -93,7 +95,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->is_default          = $is_default;
         $this->tracker_id          = $tracker_id;
         $this->is_query_displayed  = $is_query_displayed;
-        $this->is_in_expert_mode   = false;
+        $this->is_in_expert_mode   = $is_in_expert_mode;
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
     }
@@ -110,8 +112,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     public function registerInSession() {
-        $this->report_session    = new Tracker_Report_Session($this->id);
-        $this->is_in_expert_mode = $this->report_session->get('is_in_expert_mode');
+        $this->report_session = new Tracker_Report_Session($this->id);
+    }
+
+    public function getReportSession() {
+        return $this->report_session;
+    }
+
+    public function setIsInExpertMode($is_in_expert_mode) {
+        $this->is_in_expert_mode = $is_in_expert_mode;
     }
 
     protected function getCriteriaDao() {
@@ -425,7 +434,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $div_class = 'tracker-report-query-undisplayed';
         }
         $html  = '';
-        $html .= '<div id="tracker-report-normal-query" class="tracker-report-query . '. $div_class . '" data-report-id="'.$this->id.'">';
+        $html .= '<div id="tracker-report-normal-query" class="tracker-report-query ' . $div_class . '" data-report-id="'.$this->id.'">';
         $html .= '<form action="" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id = 'tracker_report_query_' . $this->id;
@@ -1207,13 +1216,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 break;
             case self::ACTION_SAVEAS:
                 $redirect_to_report_id = $this->id;
-                $report_copy_name = trim($request->get('report_copy_name'));
+                $report_copy_name      = trim($request->get('report_copy_name'));
                 if ($report_copy_name) {
-                    $new_report = Tracker_ReportFactory::instance()->duplicateReportSkeleton($this, $this->tracker_id, $current_user->getId());
-                    //Set the name
-                    $new_report->name = $report_copy_name;
-                    //The new report is individual
-                    $new_report->user_id = $current_user->getId();
+                    $new_report                    = Tracker_ReportFactory::instance()->duplicateReportSkeleton($this, $this->tracker_id, $current_user->getId());
+                    $new_report->name              = $report_copy_name;
+                    $new_report->user_id           = $current_user->getId();
+                    $new_report->is_in_expert_mode = $this->is_in_expert_mode;
                     Tracker_ReportFactory::instance()->save($new_report);
                     $GLOBALS['Response']->addFeedback('info', '<a href="?report='. $new_report->id .'">'. $hp->purify($new_report->name, CODENDI_PURIFIER_CONVERT_HTML) .'</a> has been created.', CODENDI_PURIFIER_DISABLED);
                     $redirect_to_report_id = $new_report->id;
@@ -1275,6 +1283,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     if ($request->isAjax()) {
                         $this->report_session->storeExpertMode();
                         $this->report_session->setHasChanged();
+                        $this->is_in_expert_mode = true;
                     }
                 }
                 break;
@@ -1283,6 +1292,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     if ($request->isAjax()) {
                         $this->report_session->storeNormalMode();
                         $this->report_session->setHasChanged();
+                        $this->is_in_expert_mode = false;
                     }
                 }
                 break;

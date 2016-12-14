@@ -143,6 +143,7 @@ class Tracker_ReportFactory {
             $report->is_default,
             $report->tracker_id,
             $report->is_query_displayed,
+            $report->is_in_expert_mode,
             $user->getId()
         );
     }
@@ -226,11 +227,13 @@ class Tracker_ReportFactory {
             $row['is_default'],
             $row['tracker_id'],
             $row['is_query_displayed'],
+            $row['is_in_expert_mode'],
             $row['updated_by'],
             $row['updated_at']
         );
         if ($store_in_session) {
             $r->registerInSession();
+            $this->initializeReportFromSession($r);
         }
         
         return $r;
@@ -251,6 +254,7 @@ class Tracker_ReportFactory {
                      'description' => (string)$xml->description);
         $row['is_default'] = isset($att['is_default']) ? (int)$att['is_default'] : 0;
         $row['is_query_displayed'] = isset($att['is_query_displayed']) ? (int)$att['is_query_displayed'] : 1;
+        $row['is_in_expert_mode']  = 0;
         // in case old id values are important modify code here
         if (false) {
             foreach ($xml->attributes() as $key => $value) {
@@ -290,14 +294,17 @@ class Tracker_ReportFactory {
      * @return id of the newly created Report
      */
     public function saveObject($trackerId, $report) { 
-        $reportId = $this->getDao()->create( $report->name,
-                                        $report->description,
-                                        $report->current_renderer_id,
-                                        $report->parent_report_id,
-                                        $report->user_id,
-                                        $report->is_default,
-                                        $trackerId,
-                                        $report->is_query_displayed);
+        $reportId = $this->getDao()->create(
+            $report->name,
+            $report->description,
+            $report->current_renderer_id,
+            $report->parent_report_id,
+            $report->user_id,
+            $report->is_default,
+            $trackerId,
+            $report->is_query_displayed,
+            $report->is_in_expert_mode
+        );
         //create criterias
         $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
         if ($report->criterias) {
@@ -325,5 +332,14 @@ class Tracker_ReportFactory {
      */
     public function delete($report_id) {
         return $this->getDao()->delete($report_id);
+    }
+
+    private function initializeReportFromSession(Tracker_Report $tracker_report)
+    {
+        $report_session = $tracker_report->getReportSession();
+
+        if ($report_session->get('is_in_expert_mode') !== null) {
+            $tracker_report->setIsInExpertMode($report_session->get('is_in_expert_mode'));
+        }
     }
 }
