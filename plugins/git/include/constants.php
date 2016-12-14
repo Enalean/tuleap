@@ -58,6 +58,7 @@ define('GIT_VIEW', 'git_view');
  *
  * Parameters:
  *   'repository' => (Input)  GitRepository Git repository
+ *   'user'       => (Input)  PFUser        Current user
  *   'actions'    => (Output) String        Rendered template of the actions
  */
 define('GIT_ADDITIONAL_ACTIONS', 'git_additional_actions');
