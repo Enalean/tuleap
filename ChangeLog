@@ -15,6 +15,7 @@ Version 9.3 (Not released yet)
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6
 		- Convert tracker v3, mustache and nusoap to PHP 5.6
+	* request #9738: Remove site wide statistics
 
 	== Plugins ==
 	* mediawiki: 0.129
