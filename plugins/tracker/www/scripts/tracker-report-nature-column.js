@@ -36,7 +36,7 @@
         var th_parent   = cog.parents('.tracker_report_table_column'),
             func        = 'renderer',
             renderer_id = $('#tracker_report_renderer_current').attr('data-renderer-id'),
-            report_id   = $('#tracker_report_query').attr('data-report-id'),
+            report_id   = $('#tracker-report-normal-query').attr('data-report-id'),
             column_id   = th_parent.attr('data-column-id'),
             format      = th_parent.attr('data-field-artlink-nature-format'),
             content     = '<div class="nature-column-popover">';

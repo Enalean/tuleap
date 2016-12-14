@@ -157,7 +157,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
             dropdown.setUsed(li);
         } else {
             var url = codendi.tracker.base_url
-                    + '?report=' + $('tracker_report_query').readAttribute('data-report-id')
+                    + '?report=' + $('tracker-report-normal-query').readAttribute('data-report-id')
                     + '&renderer=' + $('tracker_report_renderer_current').readAttribute('data-renderer-id'),
                 parameters = {
                     func     : 'renderer',
@@ -252,7 +252,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                                 '&renderer_table[remove-column]=' + column_id;
             });
         } else {
-            var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + $('tracker_report_query').readAttribute('data-report-id') + '&renderer=' + $('tracker_report_renderer_current').readAttribute('data-renderer-id'), {
+            var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + $('tracker-report-normal-query').readAttribute('data-report-id') + '&renderer=' + $('tracker_report_renderer_current').readAttribute('data-renderer-id'), {
                 parameters: {
                     func                           : 'renderer',
                     renderer                       : $('tracker_report_renderer_current').readAttribute('data-renderer-id'),
@@ -480,51 +480,6 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
 };
 
 document.observe('dom:loaded', function () {
-
-    function inject_data_in_form(form) {
-        //table
-        var columns = $$('.tracker_report_table_column');
-        if (columns.length) {
-            var total_width = columns[0].up('table').offsetWidth;
-            var column_info = columns.collect(
-                function (el) {
-                    //extract the id of the field from the html id of the column
-                    // tracker_report_table_column_5467
-                    return el.id.gsub('tracker_report_table_column_', '') + '|' + Math.round(el.offsetWidth * 100 / total_width);
-                }
-            ).join(',');
-            form.appendChild(new Element('input', {
-                type: 'hidden',
-                name: 'renderer[' + renderer_id + '][columns]',
-                value: column_info
-            }));
-        }
-
-        //chunksz
-        if ($('renderer_table_chunksz_input')) {
-            form.appendChild(new Element('input', {
-                type: 'hidden',
-                name: 'renderer[' + renderer_id + '][chunksz]',
-                value: $('renderer_table_chunksz_input').value
-            }));
-        }
-
-        //Renderers order
-        form.appendChild(
-            new Element('input', {
-                type: 'hidden',
-                name: 'renderers',
-                value: $$('#tracker_report_renderers li')
-                        .collect(
-                            function (li) {
-                                return li.id.replace(/^.*_(\d+)$/, '$1');
-                            })
-                        .without('')
-                        .join(',')
-            })
-        );
-    }
-
     if ($('tracker_query')) {
         $$('img.tracker_report_criteria_advanced_toggle').map(codendi.tracker.report.loadAdvancedCriteria);
 
@@ -652,28 +607,8 @@ document.observe('dom:loaded', function () {
     }
     if ($('tracker_report_query_form')) {
 
-        var report_id   = $('tracker_report_query').readAttribute('data-report-id');
+        var report_id   = $('tracker-report-normal-query').readAttribute('data-report-id');
         var renderer_id = $('tracker_report_renderer_current').readAttribute('data-renderer-id');
-
-        /*var form = $('tracker_report_query_form');
-        if (form) {
-            form.observe('submit', function (evt) {
-                inject_data_in_form(form);
-            });
-        }*/
-
-        //Pager
-        /*if ($('tracker_report_table_pager')) {
-            $$('.tracker_report_table_pager a').each(function (a) {
-                a.observe('click', function (evt) {
-                    var href= a.href;
-                    inject_data_in_form(form);
-                    href += '&' + Form.serializeElements($('tracker_report_query_form').select('[name^=criteria]', '[name^=renderer]'));
-                    location.href = href;
-                    evt.stop();
-                });
-            });
-        }*/
 
         if ($('tracker_report_renderers')) {
             var renderers_sorting = false;
@@ -707,91 +642,6 @@ document.observe('dom:loaded', function () {
         });
     }
 
-
-    /**
-     * Trackers switching goes fast!
-     */
-    /* usability issues. we will comment this until it is fixed.
-    var steps = $$('.breadcrumb-step-trackers');
-    if (steps.length) {
-        var all_trackers = null,
-            timeout      = null;
-        steps[0].observe('mouseover', function (evt) {
-            if (!all_trackers) {
-                var left_top = steps[0].cumulativeOffset();
-                var top  = left_top[1] + steps[0].offsetHeight;
-                var left = left_top[0] + Math.round(steps[0].offsetWidth / 2);
-                var td = new Element('td').setStyle(
-                    {
-                        whiteSpace: 'nowrap',
-                        padding: 0
-                    }
-                );
-                var div = new Element('div').setStyle(
-                    {
-                        overflow: 'auto',
-                        height: '300px'
-                    }
-                );
-                all_trackers = new Element('table')
-                    .update(new Element('tr')
-                        .update(td.update(div)));
-                document.body.appendChild(all_trackers);
-                all_trackers.absolutize().setStyle(
-                    {
-                        top: top + 'px',
-                        left: left + 'px',
-                        background: 'white',
-                        '-webkit-box-shadow': '0px 2px 10px #ccc',
-                        '-moz-box-shadow': '0px 2px 10px #ccc',
-                        boxShadow: '0px 2px 10px #ccc',
-                        border: '1px solid #ccc',
-                        zIndex: 1000
-                    }
-                ).observe('mouseover', function (evt) {
-                        if (timeout) {
-                            clearTimeout(timeout);
-                        }
-                    }).observe('mouseout', function (evt) {
-                        timeout = setTimeout(function () {
-                            all_trackers.hide();
-                        }, 500);
-                    }).hide();
-                var req = new Ajax.Updater(
-                    div,
-                    steps[0].href,
-                    {
-                        onComplete: function () {
-                            all_trackers.show();
-                            if (all_trackers.offsetHeight > 300) {
-                                div.setStyle(
-                                    {
-                                        top: top + 'px',
-                                        left: left + 'px',
-                                        height: '300px',
-                                        width: (div.offsetWidth + 20) + 'px'
-                                    }
-                                );
-                            }
-                        }
-                    }
-                );
-            } else if (!all_trackers.visible()) {
-                if (timeout) {
-                    clearTimeout(timeout);
-                }
-                all_trackers.show();
-            }
-        }).observe('mouseout', function (evt) {
-            if (all_trackers.visible()) {
-                timeout = setTimeout(function () {
-                    all_trackers.hide();
-                }, 500);
-            }
-        });
-    }
-    */
-
     if($('tracker_report_updater_delete')) {
         $('tracker_report_updater_delete').observe('click', function (event) {
             if (! confirm(codendi.locales.tracker_report.delete_report)) {
@@ -800,3 +650,29 @@ document.observe('dom:loaded', function () {
         });
     }
 });
+
+(function(jQuery) {
+    jQuery(document).ready(function() {
+        initializeTooltip();
+        initializeTrackerReportQuery();
+
+        function initializeTooltip() {
+            jQuery('#tracker-report-expert-query-tooltip').tooltip({ placement: 'right'});
+        }
+
+        function initializeTrackerReportQuery() {
+            var tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
+            var tracker_report_normal_query = document.getElementById('tracker-report-normal-query');
+
+            document.getElementById('tracker-report-expert-query-button').addEventListener('click', function(){
+                tracker_report_normal_query.classList.add('tracker-report-query-undisplayed');
+                tracker_report_expert_query.classList.remove('tracker-report-query-undisplayed');
+            });
+
+            document.getElementById('tracker-report-normal-query-button').addEventListener('click', function(){
+                tracker_report_normal_query.classList.remove('tracker-report-query-undisplayed');
+                tracker_report_expert_query.classList.add('tracker-report-query-undisplayed');
+            });
+        }
+    });
+})(window.jQuery);
