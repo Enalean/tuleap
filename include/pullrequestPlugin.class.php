@@ -201,31 +201,37 @@ class pullrequestPlugin extends Plugin
     public function git_additional_actions($params)
     {
         $repository = $params['repository'];
+        $user       = $params['user'];
 
-        if (! $repository->isMigratedToGerrit()) {
-            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
-            $renderer = $this->getTemplateRenderer();
-            $csrf     = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
-
-            $branches = $git_exec->getAllBranchNames();
-
-            $dest_branches   = array();
-            foreach ($branches as $branch) {
-                $dest_branches[] = array('repo_id' => $repository->getId(), 'repo_name' => null, 'branch_name' => $branch);
-            }
-
-            if ($repository->getParentId() != 0) {
-                $parent_repo     = $repository->getParent();
-                $git_exec        = new GitExec($parent_repo->getFullPath(), $parent_repo->getFullPath());
-                $parent_branches = $git_exec->getAllBranchNames();
-                foreach ($parent_branches as $branch) {
-                    $dest_branches[] = array('repo_id' => $parent_repo->getId(), 'repo_name' => $parent_repo->getFullName(), 'branch_name' => $branch);
-                }
-            }
-
-            $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches, $dest_branches);
-            $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+        if (! $repository
+            || $repository->isMigratedToGerrit()
+            || $user->isAnonymous()
+        ) {
+            return;
         }
+
+        $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
+        $renderer = $this->getTemplateRenderer();
+        $csrf     = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
+
+        $branches = $git_exec->getAllBranchNames();
+
+        $dest_branches   = array();
+        foreach ($branches as $branch) {
+            $dest_branches[] = array('repo_id' => $repository->getId(), 'repo_name' => null, 'branch_name' => $branch);
+        }
+
+        if ($repository->getParentId() != 0) {
+            $parent_repo     = $repository->getParent();
+            $git_exec        = new GitExec($parent_repo->getFullPath(), $parent_repo->getFullPath());
+            $parent_branches = $git_exec->getAllBranchNames();
+            foreach ($parent_branches as $branch) {
+                $dest_branches[] = array('repo_id' => $parent_repo->getId(), 'repo_name' => $parent_repo->getFullName(), 'branch_name' => $branch);
+            }
+        }
+
+        $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches, $dest_branches);
+        $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
     }
 
     /**

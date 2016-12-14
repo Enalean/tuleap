@@ -32,6 +32,7 @@ use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
+use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
@@ -439,6 +440,8 @@ class PullRequestsResource extends AuthenticatedResource
         } catch (PullRequestAlreadyExistsException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (PullRequestAnonymousUserException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch(\Exception $exception) {
             throw new RestException(400, $exception->getMessage());

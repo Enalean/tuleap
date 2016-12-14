@@ -26,6 +26,7 @@ use UserManager;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
+use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 
 class PullRequestCreator
 {
@@ -51,10 +52,19 @@ class PullRequestCreator
         $this->pull_request_merger  = $pull_request_merger;
     }
 
-    public function generatePullRequest(GitRepository $repository_src, $branch_src, GitRepository $repository_dest, $branch_dest, \PFUser $creator)
-    {
+    public function generatePullRequest(
+        GitRepository $repository_src,
+        $branch_src,
+        GitRepository $repository_dest,
+        $branch_dest,
+        \PFUser $creator
+    ) {
         if (! $repository_src || ! $repository_dest) {
             return false;
+        }
+
+        if ($creator->isAnonymous()) {
+            throw new PullRequestAnonymousUserException();
         }
 
         if ($repository_src->getId() != $repository_dest->getId() && $repository_src->getParentId() != $repository_dest->getId()) {
