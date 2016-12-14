@@ -18,14 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\XML\PHPCast;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 
-class GitXmlImporter {
+class GitXmlImporter
+{
 
-    const READ_TAG   = 'read';
-    const WRITE_TAG  = 'write';
-    const WPLUS_TAG  = 'wplus';
-    const UGROUP_TAG = 'ugroup';
+    const READ_TAG         = 'read';
+    const WRITE_TAG        = 'write';
+    const WPLUS_TAG        = 'wplus';
+    const UGROUP_TAG       = 'ugroup';
+    const FINE_GRAINED_TAG = 'fine_grained';
 
     const SERVICE_NAME = 'git';
 
@@ -79,6 +85,21 @@ class GitXmlImporter {
      */
     private $event_manager;
 
+    /**
+     * @var FineGrainedUpdater
+     */
+    private $fine_grained_updater;
+
+    /**
+     * @var RegexpFineGrainedRetriever
+     */
+    private $regexp_fine_grained_retriever;
+
+    /**
+     * @var RegexpFineGrainedEnabler
+     */
+    private $regexp_fine_grained_enabler;
+
     public function __construct(
         Logger $logger,
         GitRepositoryManager   $repository_manager,
@@ -87,18 +108,24 @@ class GitXmlImporter {
         Git_SystemEventManager $system_event_manager,
         PermissionsManager $permissions_manager,
         UGroupManager $ugroup_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
+        FineGrainedUpdater $fine_grained_updater,
+        RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
+        RegexpFineGrainedEnabler $regexp_fine_grained_enabler
     ) {
-        $this->logger = new WrapperLogger($logger, "GitXmlImporter");
-        $this->permission_manager = $permissions_manager;
-        $this->repository_manager = $repository_manager;
-        $this->repository_factory = $repository_factory;
-        $this->gitolite_backend = $gitolite_backend;
-        $this->system_event_manager = $system_event_manager;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->xml_validator = new XML_RNGValidator();
-        $this->system_command = new System_Command();
-        $this->event_manager = $event_manager;
+        $this->logger                        = new WrapperLogger($logger, "GitXmlImporter");
+        $this->permission_manager            = $permissions_manager;
+        $this->repository_manager            = $repository_manager;
+        $this->repository_factory            = $repository_factory;
+        $this->gitolite_backend              = $gitolite_backend;
+        $this->system_event_manager          = $system_event_manager;
+        $this->ugroup_manager                = $ugroup_manager;
+        $this->xml_validator                 = new XML_RNGValidator();
+        $this->system_command                = new System_Command();
+        $this->event_manager                 = $event_manager;
+        $this->fine_grained_updater          = $fine_grained_updater;
+        $this->regexp_fine_grained_retriever = $regexp_fine_grained_retriever;
+        $this->regexp_fine_grained_enabler   = $regexp_fine_grained_enabler;
     }
 
     /**
@@ -184,26 +211,50 @@ class GitXmlImporter {
             return;
         }
 
-        foreach($permission_xmlnodes->children() as $permission_xmlnode) {
+        foreach ($permission_xmlnodes->children() as $permission_xmlnode) {
             $permission_type = null;
-            switch($permission_xmlnode->getName()) {
-            case self::READ_TAG:
-                $permission_type = Git::PERM_READ;
-                break;
-            case self::WRITE_TAG:
-                $permission_type = Git::PERM_WRITE;
-                break;
-            case self::WPLUS_TAG:
-                $permission_type = Git::PERM_WPLUS;
-                break;
-            default:
-                $this->logger->debug('Unknown node found ' . $permission_xmlnode->getName());
-                continue;
+            switch ($permission_xmlnode->getName()) {
+                case self::READ_TAG:
+                    $permission_type = Git::PERM_READ;
+                    break;
+                case self::WRITE_TAG:
+                    $permission_type = Git::PERM_WRITE;
+                    break;
+                case self::WPLUS_TAG:
+                    $permission_type = Git::PERM_WPLUS;
+                    break;
+                case self::FINE_GRAINED_TAG:
+                    $this->importFineGrainedPermissions($repository, $permission_xmlnode);
+                    break;
+                default:
+                    $this->logger->debug('Unknown node found ' . $permission_xmlnode->getName());
+                    continue;
             }
 
-            if(isset($permission_type)) {
+            if (isset($permission_type)) {
                 $this->importPermission($project, $permission_xmlnode, $permission_type, $repository);
             }
+        }
+    }
+
+    private function importFineGrainedPermissions(GitRepository $repository, SimpleXMLElement $fine_grained_xmlnode)
+    {
+        $fine_grained_permissions_enabled = PHPCast::toBoolean($fine_grained_xmlnode['enabled']);
+        $this->logger->debug('Fine grained permissions enabled ' . $fine_grained_permissions_enabled);
+
+        if ($fine_grained_permissions_enabled) {
+            $this->fine_grained_updater->enableRepository($repository);
+        }
+
+        if ($this->regexp_fine_grained_retriever->areRegexpActivatedAtSiteLevel()) {
+            $regexp_permissions_enabled = PHPCast::toBoolean($fine_grained_xmlnode['use_regexp']);
+            $this->logger->debug('Regexp permissions enabled in repository ' . $regexp_permissions_enabled);
+
+            if ($regexp_permissions_enabled) {
+                $this->regexp_fine_grained_enabler->enableForRepository($repository);
+            }
+        } else {
+            $this->logger->debug('Regexp permissions disabled at site level');
         }
     }
 

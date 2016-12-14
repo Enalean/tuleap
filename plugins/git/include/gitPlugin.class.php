@@ -2042,7 +2042,10 @@ class GitPlugin extends Plugin {
             $this->getGitSystemEventManager(),
             PermissionsManager::instance(),
             $this->getUGroupManager(),
-            EventManager::instance()
+            EventManager::instance(),
+            $this->getFineGrainedUpdater(),
+            $this->getRegexpFineGrainedRetriever(),
+            $this->getRegexpFineGrainedEnabler()
         );
 
         $importer->import($params['configuration'], $params['project'], UserManager::

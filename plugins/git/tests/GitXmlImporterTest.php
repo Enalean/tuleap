@@ -74,10 +74,13 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->git_plugin = new GitPlugin(1);
         $this->git_factory = new GitRepositoryFactory($this->git_dao, $this->project_manager);
 
-        $this->git_systemeventmanager = mock('Git_SystemEventManager');
-        $this->mirror_updater         = mock('GitRepositoryMirrorUpdater');
-        $this->mirror_data_mapper     = mock('Git_Mirror_MirrorDataMapper');
-        $this->event_manager          = mock('EventManager');
+        $this->git_systemeventmanager        = mock('Git_SystemEventManager');
+        $this->mirror_updater                = mock('GitRepositoryMirrorUpdater');
+        $this->mirror_data_mapper            = mock('Git_Mirror_MirrorDataMapper');
+        $this->event_manager                 = mock('EventManager');
+        $this->fine_grained_updater          = mock('Tuleap\Git\Permissions\FineGrainedUpdater');
+        $this->regexp_fine_grained_retriever = mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever');
+        $this->regexp_fine_grained_enabler   = mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler');
 
         $this->git_manager = new GitRepositoryManager(
             $this->git_factory,
@@ -133,7 +136,10 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->git_systemeventmanager,
             $permissions_manager,
             $this->ugroup_manager,
-            $this->event_manager
+            $this->event_manager,
+            $this->fine_grained_updater,
+            $this->regexp_fine_grained_retriever,
+            $this->regexp_fine_grained_enabler
         );
 
         $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
@@ -352,6 +358,111 @@ XML;
         stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
 
         expect($this->event_manager)->processEvent()->once();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldNotImportFineGrainedPermissionsWhenNoNode()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                    </repository>
+                </git>
+            </project>
+XML;
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+
+        expect($this->fine_grained_updater)->enableRepository()->never();
+        expect($this->regexp_fine_grained_enabler)->enableForRepository()->never();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldImportFineGrainedPermissions()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="1" use_regexp="0" />
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+
+        expect($this->fine_grained_updater)->enableRepository()->once();
+        expect($this->regexp_fine_grained_enabler)->enableForRepository()->never();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldImportRegexpFineGrainedPermissions()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="1" use_regexp="1" />
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+
+        expect($this->fine_grained_updater)->enableRepository()->once();
+        expect($this->regexp_fine_grained_enabler)->enableForRepository()->once();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldNotImportRegexpFineGrainedPermissionsIfNotAvailableAtSiteLevel()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="1" use_regexp="1" />
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(false);
+
+        expect($this->fine_grained_updater)->enableRepository()->once();
+        expect($this->regexp_fine_grained_enabler)->enableForRepository()->never();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldImportRegexpFineGrainedPermissionsEvenWhenFineGrainedAreNotUsed()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="0" use_regexp="1" />
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+
+        expect($this->fine_grained_updater)->enableRepository()->never();
+        expect($this->regexp_fine_grained_enabler)->enableForRepository()->once();
 
         $this->import(new SimpleXMLElement($xml));
     }
