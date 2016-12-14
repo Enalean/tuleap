@@ -338,20 +338,6 @@ include_squal_exit	missing_param	MISSING REQUIRED PARAMETERS
 include_squal_pre	not_connect_db	Could Not Connect to Database
 #
 #-----------------------------------------------
-# Script: SF/www/include/stats_function.php
-#
-include_stats_function	stats_problem	Stats Problem
-include_stats_function	view_by_week	Page Views By Week
-include_stats_function	view_by_hour	Page Views By Hour
-include_stats_function	new_proj_added	New Projects Added Each Week
-include_stats_function	new_user_added	New Users Added Each Week
-include_stats_function	logo_by_day	Logo Showings By Day
-include_stats_function	logo_by_proj	Logo Showings By Project
-include_stats_function	view_by_browser	Page Views By Browser
-include_stats_function	view_by_platform	Page Views By Platform
-include_stats_function	view_by_platform_browser	Page Views By Platform/Browser Version
-#
-#-----------------------------------------------
 # Script: SF/www/include/trove.php
 #
 include_trove	none_selected	None Selected

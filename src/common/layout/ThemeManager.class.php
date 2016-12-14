@@ -85,16 +85,12 @@ class ThemeManager
                     |
                     ^/admin/news.php
                     |
-                    ^/stats/
-                    |
                     ^/tracker/admin/restore.php
                 )`x',
                 $_SERVER['REQUEST_URI']
             ) && ! preg_match(
                 '`(
                     ^/admin/register_admin.php
-                    |
-                    ^/stats
                 )`x',
                 $_SERVER['REQUEST_URI']
             );

@@ -116,11 +116,6 @@ if ( $total_views ) {
 	}
 	print " done.\n" if $verbose;
 
-	print "Inserting/Updating agregate into database: stats_site..." if $verbose;
-	$sql = "UPDATE stats_site SET subdomain_views=$total_views WHERE (month='" . sprintf("%04d%02d", $year, $month) . "' AND day='$day')";
-	$dbh->do( $sql ) || die "SQL error: $!";
-	print " done.\n" if $verbose;
-
 	print "Completed insertion of $total_views subdomain page views into the database.\n" if $verbose;
 } else {
 	print "There were no valid page views found on this day!  (Parse error or no logfile?)\n" if $verbose;

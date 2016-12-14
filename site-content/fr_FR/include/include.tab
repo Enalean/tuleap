@@ -332,20 +332,6 @@ include_squal_exit	missing_param	PARAMÈTRES REQUIS ABSENTS
 include_squal_pre	not_connect_db	Connexion à la base de données impossible
 #
 #-----------------------------------------------
-# Script: SF/www/include/stats_function.php
-#
-include_stats_function	stats_problem	Problème de statistiques
-include_stats_function	view_by_week	Pages vues par semaine
-include_stats_function	view_by_hour	Pages vues par heure
-include_stats_function	new_proj_added	Nouveaux projets créés chaque semaine
-include_stats_function	new_user_added	Nouveaux utilisateurs créés chaque semaine
-include_stats_function	logo_by_day	Affichage du logo par jour
-include_stats_function	logo_by_proj	Affichage du logo par projet
-include_stats_function	view_by_browser	Pages vues par navigateur
-include_stats_function	view_by_platform	Pages vues par plate-forme
-include_stats_function	view_by_platform_browser	Pages vues par plate-forme/version de navigateur
-#
-#-----------------------------------------------
 # Script: SF/www/include/trove.php
 #
 include_trove	none_selected	Aucune sélection

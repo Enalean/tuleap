@@ -88,15 +88,6 @@ $sql = "INSERT INTO stats_project_build_tmp
 $rel = $dbh->prepare($sql)->execute();
 print "Insert downloads from frs_dlstats_group_agg...\n" if $verbose;
 
-## site_views 
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'site_views',count
-	FROM stats_agg_logo_by_group
-	WHERE ( day = '$year$mon$day' )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert site_views from activity_log...\n" if $verbose;
-
 if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
 	## register_time
 	$sql = "INSERT INTO stats_project_build_tmp

@@ -851,42 +851,12 @@ project_export_task_export	start_date_desc	Date when the task was started
 project_export_task_export	end_date_desc	Date when the task was finished
 project_export_task_export	created_by_desc	Project member who created the task
 project_export_task_export	depend_on_task_desc	List of  tasks this task depends on
-#
-#-----------------------------------------------
-# Script: SF/www/project/stats/index.php
-#
-project_stats_index	proj_stats	Project statistics $1
-project_stats_index	usage_stats	Usage Statistics
+
 project_stats_index	months	Months
 project_stats_index	weeks	Weeks
 project_stats_index	days	Days
-project_stats_index	change_stats_view	Change Stats View
-project_stats_index	rank	Rank
-project_stats_index	page_views	Page Views
-project_stats_index	downloads	Downloads
-project_stats_index	bugs	Bugs
-project_stats_index	support	Support
-project_stats_index	tasks	Tasks
-project_stats_index	artifacts	Artifacts
-project_stats_index	patches	Patches
 project_stats_index	cvs	CVS
-project_stats_index	svn	Subversion
-project_stats_index	proj_not_exist_on_date	Project did not exist on this date.
-project_stats_index	stats_for_past_x_days	Statistics for the past $1 days.
-project_stats_index	stats_for_past_x_weeks	Statistics for the past $1 weeks, plus the week-in-progress.
-project_stats_index	week	Week
-project_stats_index	stats_for_past_x_months	Statistics for the past $1 months.
-project_stats_index	month	Month
-project_stats_index	lifespan	Lifespan
-project_stats_index	developers	Members
-project_stats_index	stats_for_all_time	Statistics for All Time
-#
-#-----------------------------------------------
-# Script: SF/www/project/stats/project_stats_utils.php
-#
-project_stats_utils	date_gmt	Date (GMT)
-project_stats_utils	week_gmt	Week (GMT)
-project_stats_utils	month_gmt	Month (GMT)
+
 #
 #-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access.php

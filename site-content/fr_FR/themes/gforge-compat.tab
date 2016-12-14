@@ -18,7 +18,6 @@ common	logout	Se déconnecter
 common	myaccount	Mon compte
 common	newaccount	Nouveau compte
 group	activity	Taux d'activité&nbsp;:&nbsp;
-group	activitystat	Voir les <a href="/project/stats/?group_id=$1">statistiques d'activité du projet</a>.
 group	developer_info	Equipe-Projet
 group	developers	Développeurs&nbsp;
 group	long_bugs	Gestion des bugs

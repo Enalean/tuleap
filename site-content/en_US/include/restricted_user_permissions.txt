@@ -14,8 +14,6 @@
 //          '/new',         // list of the newest releases made on the site
 //          '/search',      // search for people, projects, and artifacts in trackers!
 //          '/people/',      // people skills and profile
-//          '/stats',       // site statistics
-//          '/top',         // projects rankings (active, downloads, etc)
 //          '/project/register.php',    // Register a new project
 //          '/export',      //  XML feeds
 //          '/info.php'      // PHP info

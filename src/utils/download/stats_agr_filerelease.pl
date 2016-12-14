@@ -44,23 +44,6 @@ $sql	= "CREATE TABLE frs_dlstats_grouptotal_agg_tmp ( "
 	. ")";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
 
-# On Codendi - All file downloads are now now tracked directly at the
-# PHP level and an audit trail goes in the filedownload_log table.
-# Downloads no longer go though http or ftp
-#$sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads GROUP BY group_id";
-#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-#$rel->execute() || die "SQL execute error: $!";
-#while ( @tmp_ar = $rel->fetchrow_array() ) {
-#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-#}
-
-#$sql	= "SELECT group_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY group_id";
-#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-#$rel->execute() || die "SQL execute error: $!";
-#while ( @tmp_ar = $rel->fetchrow_array() ) {
-#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-#}
-
 $sql = "SELECT frs_package.group_id AS group_id, COUNT(*) AS downloads "
         ."FROM filedownload_log,frs_file,frs_release,frs_package "
 	."WHERE frs_file.file_id=filedownload_log.filerelease_id AND "
@@ -101,23 +84,6 @@ $sql	= "CREATE TABLE frs_dlstats_filetotal_agg_tmp ( "
 	. "KEY idx_stats_agr_tmp_fid (file_id)"
 	. ")";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
-
-# On Codendi - All file downloads are now tracked directly at the
-# PHP level and an audit trail goes in the filedownload_log table.
-# Downloads no longer go though http or ftp
-#$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads GROUP BY filerelease_id";
-#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-#$rel->execute() || die "SQL execute error: $!";
-#while ( @tmp_ar = $rel->fetchrow_array() ) {
-#	$filedownloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-#}
-
-#$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY filerelease_id";
-#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-#$rel->execute() || die "SQL execute error: $!";
-#while ( @tmp_ar = $rel->fetchrow_array() ) {
-#	$filedownloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-#}
 
 my $sql = "SELECT filerelease_id, COUNT(*) "
 	."FROM filedownload_log GROUP BY filerelease_id";

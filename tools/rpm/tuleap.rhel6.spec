@@ -951,7 +951,6 @@ fi
 %{APP_DIR}/src/www/snippet
 %{APP_DIR}/src/www/soap
 %{APP_DIR}/src/www/softwaremap
-%{APP_DIR}/src/www/stats
 %{APP_DIR}/src/www/survey
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package
@@ -962,7 +961,6 @@ fi
 %{APP_DIR}/src/www/themes/common/images
 %dir %{APP_DIR}/src/www/themes/common/tlp
 %{APP_DIR}/src/www/themes/common/tlp/dist
-%{APP_DIR}/src/www/top
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour
 %{APP_DIR}/src/www/tracker
