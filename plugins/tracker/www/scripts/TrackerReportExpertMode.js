@@ -27,17 +27,27 @@
         }
 
         function initializeTrackerReportQuery() {
-            var tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
-            var tracker_report_normal_query = document.getElementById('tracker-report-normal-query');
+            var tracker_report_expert_query_button = document.getElementById('tracker-report-expert-query-button'),
+                tracker_report_normal_query_button = document.getElementById('tracker-report-normal-query-button'),
+                tracker_report_expert_query        = document.getElementById('tracker-report-expert-query'),
+                tracker_report_normal_query        = document.getElementById('tracker-report-normal-query');
 
-            document.getElementById('tracker-report-expert-query-button').addEventListener('click', function() {
+            if (! tracker_report_expert_query_button
+                || ! tracker_report_normal_query_button
+                || ! tracker_report_expert_query
+                || ! tracker_report_normal_query
+            ) {
+                return;
+            }
+
+            tracker_report_expert_query_button.addEventListener('click', function() {
                 tracker_report_normal_query.classList.add('tracker-report-query-undisplayed');
                 tracker_report_expert_query.classList.remove('tracker-report-query-undisplayed');
 
                 sendRequestNewMode('store-expert-mode');
             });
 
-            document.getElementById('tracker-report-normal-query-button').addEventListener('click', function() {
+            tracker_report_normal_query_button.addEventListener('click', function() {
                 tracker_report_normal_query.classList.remove('tracker-report-query-undisplayed');
                 tracker_report_expert_query.classList.add('tracker-report-query-undisplayed');
 
