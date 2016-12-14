@@ -39,6 +39,7 @@
     },
     "javascript": [
         "www/scripts/TrackerReports.js",
+        "www/scripts/TrackerReportExpertMode.js",
         "www/scripts/TrackerEmailCopyPaste.js",
         "www/scripts/TrackerReportsSaveAsModal.js",
         "www/scripts/TrackerBinds.js",

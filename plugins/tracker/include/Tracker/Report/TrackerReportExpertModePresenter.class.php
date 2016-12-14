@@ -23,6 +23,7 @@ class TrackerReportExpertModePresenter
 {
     public $id;
     public $class_toggler;
+    public $is_in_expert_mode;
     public $allowed_fields_label;
     public $query_label;
     public $query_placeholder;
@@ -33,10 +34,13 @@ class TrackerReportExpertModePresenter
 
     function __construct(
         $id,
-        $class_toggler
+        $class_toggler,
+        $is_in_expert_mode
     ) {
         $this->id                     = $id;
         $this->class_toggler          = $class_toggler;
+        $this->is_in_expert_mode      = $is_in_expert_mode;
+
         $this->allowed_fields_label   = $GLOBALS['Language']->getText('plugin_tracker_report', 'allowed_fields_label');
         $this->query_label            = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_label');
         $this->query_placeholder      = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_placeholder');

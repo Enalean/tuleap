@@ -1,4 +1,4 @@
-<div id="tracker-report-expert-query" class="tracker-report-query tracker-report-query-undisplayed" data-report-id="{{ id }}">
+<div id="tracker-report-expert-query" class="tracker-report-query {{^ is_in_expert_mode }}tracker-report-query-undisplayed{{/ is_in_expert_mode }}" data-report-id="{{ id }}">
     <form action="" method="post" id="tracker-report-expert-query-form" class="tracker-report-query-form">
         <input type="hidden" name="report" value="{{ id }}" />
         <h4 class="backlog-planning-search-title {{ class_toggler }}" id="{{ id }}">{{ title }}</h4>

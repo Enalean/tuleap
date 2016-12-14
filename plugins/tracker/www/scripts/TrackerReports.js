@@ -650,29 +650,3 @@ document.observe('dom:loaded', function () {
         });
     }
 });
-
-(function(jQuery) {
-    jQuery(document).ready(function() {
-        initializeTooltip();
-        initializeTrackerReportQuery();
-
-        function initializeTooltip() {
-            jQuery('#tracker-report-expert-query-tooltip').tooltip({ placement: 'right'});
-        }
-
-        function initializeTrackerReportQuery() {
-            var tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
-            var tracker_report_normal_query = document.getElementById('tracker-report-normal-query');
-
-            document.getElementById('tracker-report-expert-query-button').addEventListener('click', function(){
-                tracker_report_normal_query.classList.add('tracker-report-query-undisplayed');
-                tracker_report_expert_query.classList.remove('tracker-report-query-undisplayed');
-            });
-
-            document.getElementById('tracker-report-normal-query-button').addEventListener('click', function(){
-                tracker_report_normal_query.classList.remove('tracker-report-query-undisplayed');
-                tracker_report_expert_query.classList.add('tracker-report-query-undisplayed');
-            });
-        }
-    });
-})(window.jQuery);
