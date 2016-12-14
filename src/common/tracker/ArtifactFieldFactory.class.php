@@ -189,14 +189,13 @@ class ArtifactFieldFactory {
 	 *	@return	array
 	 */
 	function extractFieldList($post_method=true,$prefix=null) {
-	
-	    global $HTTP_GET_VARS, $HTTP_POST_VARS;
-        $request =& HTTPRequest::instance();
+
+        $request = HTTPRequest::instance();
         
 	    $vfl = array();
 	    if ($post_method) {
-			reset($HTTP_POST_VARS);
-			while ( list($key, $val) = each($HTTP_POST_VARS)) {
+			reset($_POST);
+			while ( list($key, $val) = each($_POST)) {
 			    //verify if the prefix param is given and cut the 
 			    //prefix from the key
 			    if ($prefix != null) {
@@ -224,8 +223,8 @@ class ArtifactFieldFactory {
 			    }
 			}
 	    } else {
-			reset($HTTP_GET_VARS);
-			while ( list($key, $val) = each($HTTP_GET_VARS)) {
+			reset($_GET);
+			while ( list($key, $val) = each($_GET)) {
 			    if (isset($this->USAGE_BY_NAME[$key])) {
 					$vfl[$key] = $request->get($key);
 					//echo "Accepted key = ".$key." val = $val<BR>";
