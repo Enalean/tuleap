@@ -313,6 +313,7 @@ class GitViews_ShowRepo_Content {
         $actions = '';
         $params  = array(
             'repository' => $this->repository,
+            'user'       => $this->current_user,
             'actions'    => &$actions
         );
 
