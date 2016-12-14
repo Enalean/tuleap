@@ -38,6 +38,10 @@ class Tracker_Report_Session extends Codendi_Session {
         }
         $this->session_namespace = &$this->session['trackers']['reports'][$this->report_namespace];
         $this->session_namespace_path = ".trackers.reports.$this->report_namespace";
+
+        if (! $this->get('is_in_expert_mode')) {
+            $this->set('is_in_expert_mode', false);
+        }
     }
     
     public function hasChanged() {
@@ -106,7 +110,6 @@ class Tracker_Report_Session extends Codendi_Session {
      * @param <type> $field_id
      */
     public function removeCriterion($field_id) {
-        //$this->remove('criteria', $field_id);
         $this->set("criteria.$field_id.is_removed", 1);
     }
     
@@ -206,6 +209,16 @@ class Tracker_Report_Session extends Codendi_Session {
     public function storeRenderer($renderer_id, $data, $opts=array() ) {
         $this->set("renderers.{$renderer_id}", $data);
         
+    }
+
+    public function storeExpertMode()
+    {
+        $this->set('is_in_expert_mode', true);
+    }
+
+    public function storeNormalMode()
+    {
+        $this->set('is_in_expert_mode', false);
     }
 }
 

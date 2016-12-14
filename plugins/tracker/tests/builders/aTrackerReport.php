@@ -57,7 +57,19 @@ class Test_TrackerReport_Builder {
      */
     public function build() {
         $tracker_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $is_query_displayed = $updated_by = $updated_at = null;
-        $report = new Tracker_Report($this->id, $this->name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by, $updated_at);
+        $report = new Tracker_Report(
+            $this->id,
+            $this->name,
+            $description,
+            $current_renderer_id,
+            $parent_report_id,
+            $user_id,
+            $is_default,
+            $tracker_id,
+            $is_query_displayed,
+            $updated_by,
+            $updated_at
+        );
         if ($this->tracker) {
             $report->setTracker($this->tracker);
         }

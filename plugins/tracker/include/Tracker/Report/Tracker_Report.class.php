@@ -52,6 +52,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     public $is_default;
     public $tracker_id;
     public $is_query_displayed;
+    public $is_in_expert_mode;
     public $updated_by;
     public $updated_at;
 
@@ -92,6 +93,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->is_default          = $is_default;
         $this->tracker_id          = $tracker_id;
         $this->is_query_displayed  = $is_query_displayed;
+        $this->is_in_expert_mode   = false;
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
     }
@@ -108,7 +110,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     public function registerInSession() {
-        $this->report_session = new Tracker_Report_Session($this->id);
+        $this->report_session    = new Tracker_Report_Session($this->id);
+        $this->is_in_expert_mode = $this->report_session->get('is_in_expert_mode');
     }
 
     protected function getCriteriaDao() {
@@ -417,8 +420,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user) {
+        $div_class = '';
+        if ($this->is_in_expert_mode) {
+            $div_class = 'tracker-report-query-undisplayed';
+        }
         $html  = '';
-        $html .= '<div id="tracker-report-normal-query" class="tracker-report-query" data-report-id="'.$this->id.'">';
+        $html .= '<div id="tracker-report-normal-query" class="tracker-report-query . '. $div_class . '" data-report-id="'.$this->id.'">';
         $html .= '<form action="" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id = 'tracker_report_query_' . $this->id;
@@ -476,12 +483,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     public function fetchDisplayQueryExpertMode()
     {
-        $id = 'tracker_report_expert_query_' . $this->id;
+        $id            = 'tracker-report-expert-query-' . $this->id;
         $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
 
         $tracker_report_expert_query_presenter = new TrackerReportExpertModePresenter(
-            $id,
-            $class_toggler
+            $this->id,
+            $class_toggler,
+            $this->is_in_expert_mode
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -1250,7 +1258,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             case self::ACTION_DEFAULT:
                 if ($this->getTracker()->userIsAdmin($current_user)) {
                     if ($request->exist('report_default')) {
-                        $old_user_id = $this->user_id;
                         if ($request->get('report_default')) {
                             $this->is_default = '1';
                         } else {
@@ -1263,6 +1270,22 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     )));
                     break;
                 }
+            case 'store-expert-mode':
+                if (! $current_user->isAnonymous()) {
+                    if ($request->isAjax()) {
+                        $this->report_session->storeExpertMode();
+                        $this->report_session->setHasChanged();
+                    }
+                }
+                break;
+            case 'store-normal-mode':
+                if (! $current_user->isAnonymous()) {
+                    if ($request->isAjax()) {
+                        $this->report_session->storeNormalMode();
+                        $this->report_session->setHasChanged();
+                    }
+                }
+                break;
             default:
                 if ($request->exist('tracker_query_submit')) {
                     $criteria_values = $request->get('criteria');
