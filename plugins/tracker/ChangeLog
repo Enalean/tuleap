@@ -1,3 +1,6 @@
+Version 5.1072 - Tuleap 9.3
+    * request #9732: Correct burndown values in past
+
 Version 5.1071 - Tuleap 9.3
     * Fix edition of artifact
 
