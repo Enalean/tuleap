@@ -30,7 +30,11 @@ if ( $cl->status == 200) {
     header("location: ".$help_url);
 } else {
     // Display error message ...
-  echo help_header($Language->getText('help_show_help','page_not_found',$GLOBALS['sys_name']));
-  echo $Language->getText('help_show_help','page_not_available',array($section,$GLOBALS['sys_email_admin'],$GLOBALS['sys_name']));
+    echo help_header($Language->getText('help_show_help','page_not_found',$GLOBALS['sys_name']));
+
+    $purifier         = Codendi_HTMLPurifier::instance();
+    $purified_section = $purifier->purify($section);
+    echo $Language->getText('help_show_help','page_not_available',array($purified_section,$GLOBALS['sys_email_admin'],$GLOBALS['sys_name']));
+
     echo help_footer();
 }
