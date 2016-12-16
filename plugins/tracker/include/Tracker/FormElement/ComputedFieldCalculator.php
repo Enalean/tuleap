@@ -128,7 +128,7 @@ class ComputedFieldCalculator
                 $selected_day->getTimestamp()
             );
 
-            if ($manual_value) {
+            if ($manual_value['value'] !== null) {
                 $manual_sum += $manual_value['value'];
             } else {
                 $computed_artifacts[] = $artifact_id;

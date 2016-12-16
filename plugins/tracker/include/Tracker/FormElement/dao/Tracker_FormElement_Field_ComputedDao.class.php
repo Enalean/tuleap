@@ -228,8 +228,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         $timestamp                 = $this->da->escapeInt($timestamp);
 
         $sql = "SELECT
-                    FROM_UNIXTIME(tracker_changeset.submitted_on) AS last_changeset_date,
-                    manual_value.value                            AS value
+                    tracker_changeset.submitted_on           AS last_changeset_date,
+                    manual_value.value                       AS value
                 FROM tracker_artifact artifact
                 INNER JOIN tracker_field AS remaining_effort_field
                     ON (
@@ -248,13 +248,12 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         tracker_changeset_value.changeset_id = tracker_changeset.id
                         AND tracker_changeset_value.field_id = remaining_effort_field.id
                     )
-                INNER JOIN tracker_changeset_value_computedfield_manual_value manual_value
+                LEFT JOIN tracker_changeset_value_computedfield_manual_value manual_value
                     ON (
                         manual_value.changeset_value_id = tracker_changeset_value.id
                         AND tracker_changeset_value.changeset_id = tracker_changeset.id
                     )
                 WHERE artifact.id = $artifact_id
-                AND value IS NOT NULL
                 ORDER BY last_changeset_date DESC
                 LIMIT 1";
 
