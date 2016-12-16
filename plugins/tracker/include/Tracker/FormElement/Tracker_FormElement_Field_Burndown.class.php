@@ -665,7 +665,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function hasStartDate(Tracker_Artifact $artifact, PFUser $user) {
         $start_date_field = $this->getBurndownStartDateField($artifact, $user);
-        $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
+        $artifact_value   = $artifact->getValue($start_date_field);
+
+        if ($artifact_value === null) {
+            return false;
+        }
+
+        $timestamp = $artifact_value->getTimestamp();
 
         return $timestamp !== null;
     }
