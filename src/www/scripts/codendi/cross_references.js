@@ -40,7 +40,7 @@ function hide_references_to() {
     );
     // display 'show link'
     if (references.size() > 0) {
-        $('cross_references_legend').replace('<p id="cross_references_legend">'+ 
+        $('cross_references_legend').replace('<p id="cross_references_legend">'+
             codendi.getText('cross_ref_fact_include','legend_referenced_by') +
             ' <span><a href="#" onclick="show_references_to(); return false;">'+ 
             codendi.getText('cross_ref_fact_include','show_references_to') +
@@ -72,29 +72,21 @@ function show_references_to() {
     }
 }
 
-/**
-*Show the delete icon for items
-*/
-function show_delete_icon(){
-    
-    
-}
-
-function delete_ref( id, message ){
-    if(confirm(message)){
+function delete_ref(id, message) {
+    if (confirm(message)) {
         var opt = {
             method: 'get',
-            onComplete:function(){
-                /*if current id has 1 sibling (the img), we hide the 'cross_reference'
-                *else if current id has no sibling, we hide the reference nature
-                *else we just hide the reference
-                */
-                if($(id).siblings().length==1  && $(id).up().siblings().length > 0){
-                        $(id).up().hide();
-                }else if($(id).up().siblings().length==0){
-                        $(id).up('.nature').hide();
-                }else {
-                    $(id).hide();
+            onComplete: function () {
+                var is_the_deleted_reference_the_last_one          = $(id).siblings().length === 1;
+                var is_the_full_cross_references_section_empty     = $(id).up().siblings().length === 0;
+                var is_the_full_cross_references_section_non_empty = $(id).up().siblings().length > 0;
+
+                if (is_the_deleted_reference_the_last_one && is_the_full_cross_references_section_empty) {
+                    $(id).up().hide();
+                } else if (is_the_deleted_reference_the_last_one && is_the_full_cross_references_section_non_empty) {
+                    $(id).up('.nature').hide();
+                } else {
+                    $(id).remove();
                 }
             }
         }
