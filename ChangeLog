@@ -4,6 +4,7 @@ Version 9.3 (Not released yet)
 	* request #9720: Release notes are not accessible to not logged users even if permissions allow it
 	* request #9722: JPGraph error when burndown is in the future
 	* story #9734: Directly go to an item by searching its reference
+	* request #9741: When user timezone is different from timezone server burndown always ask cache generation
 
 	== Enhancement ==
 	* request #9712: empty state in system events is broken
@@ -21,7 +22,7 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.51
-	* tracker: 5.1074
+	* tracker: 5.1075
 	* git: 4.309
 	* graphontrackersv5: 5.28
 	* statistics: 0.76
