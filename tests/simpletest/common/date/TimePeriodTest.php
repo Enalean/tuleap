@@ -61,7 +61,7 @@ class TimePeriodWithoutWeekEndTest extends TuleapTestCase {
         $this->assertEqual(date('D d', $this->time_period->getEndDate()), 'Tue 10');
     }
 
-    public function itProvidesTheCorrectNumberOfDayWhenLastDateOfBurndwonIsBeforeToday()
+    public function itProvidesTheCorrectNumberOfDayWhenLastDateOfBurndownIsBeforeToday()
     {
         $start_date  = mktime(23, 59, 59, 11, 5, 2016);
         $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
@@ -72,7 +72,7 @@ class TimePeriodWithoutWeekEndTest extends TuleapTestCase {
         $this->assertEqual($timestamps, 5);
     }
 
-    public function itProvidesTheCorrectNumberOfDayWhenLastDateOfBurndwonIsAfterToday()
+    public function itProvidesTheCorrectNumberOfDayWhenLastDateOfBurndownIsAfterToday()
     {
         $start_date  = mktime(23, 59, 59, 11, 5, 2016);
         $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);

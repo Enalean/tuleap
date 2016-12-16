@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
@@ -321,6 +322,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
+        $user_timezone = date_default_timezone_get();
+        date_default_timezone_set(TimezoneRetriever::getServerTimezone());
+
         $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
 
         if ($this->isCacheCompleteForBurndown($burndown_data, $artifact, $user) === false
@@ -331,6 +335,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         } else if ($this->isCacheBurndownAlreadyAsked($artifact)) {
             $burndown_data->setIsBeingCalculated(true);
         }
+
+        date_default_timezone_set($user_timezone);
 
         return $burndown_data;
     }

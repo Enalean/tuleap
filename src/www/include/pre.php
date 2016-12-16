@@ -8,6 +8,7 @@
 //
 //
 
+use Tuleap\TimezoneRetriever;
 
 if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '7', '>=')) {
     die('Tuleap must be run on a PHP 5.3 (or greater) engine.  PHP 7 is not yet supported.');
@@ -17,9 +18,7 @@ require_once('common/constants.php');
 require_once('common/autoload.php');
 require_once('common/autoload_libs.php');
 
-if (!ini_get('date.timezone')) {
-    date_default_timezone_set('Europe/Paris');
-}
+date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
 // Defines all of the settings first (hosts, databases, etc.)
 $locar_inc_finder = new Config_LocalIncFinder();
@@ -202,9 +201,7 @@ if(!IS_SCRIPT) {
 
 
 */
-if ($current_user->isLoggedIn()) {
-    date_default_timezone_set($current_user->getTimezone());
-}
+date_default_timezone_set(TimezoneRetriever::getUserTimezone($current_user));
 
 $theme_manager = new ThemeManager();
 $HTML = $theme_manager->getTheme($current_user);
