@@ -102,6 +102,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
     public function itCreatesANewChangesetEvenIfPlatformIsInInsecureMode() {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
+        stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->incoming_message)->isAFollowUp()->returns(true);
         stub($this->artifact)->userCanUpdate($this->user)->returns(true);
