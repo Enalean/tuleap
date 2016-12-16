@@ -19,6 +19,9 @@ Version 9.3 (Not released yet)
 	* request #9738: Remove site wide statistics
 	* request #9739: Remove surveys
 
+	== Security ==
+	* request #9745: XSS on show_help
+
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.51
