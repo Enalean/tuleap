@@ -1,3 +1,6 @@
+Version 1.73 - Tuleap 9.3
+    * request #9735: Burndown KO when no capacity is set
+
 Version 1.72 - Tuleap 9.2
     * request #9699: XSS when editing an artifact with the modal in the cardwall
 
