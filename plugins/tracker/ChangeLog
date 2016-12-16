@@ -1,3 +1,6 @@
+Version 5.1076 - Tuleap 9.3
+    * request #9743: Emailgateway tracker config is not always taken into account
+
 Version 5.1075 - Tuleap 9.3
     * request #9741: When user timezone is different from timezone server burndown always ask cache generation
 
