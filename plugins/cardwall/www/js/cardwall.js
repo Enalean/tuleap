@@ -591,24 +591,6 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
 });
 
-tuleap.agiledashboard.cardwall.fetchBurndown = function() {
-    new Ajax.Request(
-        '/api/v1/milestones/' + $F('milestone_id') + '/burndown',
-    {
-        method : 'GET',
-        onSuccess: function (response) {
-            if (! tuleap.agiledashboard.cardwall.burndown) {
-                var append_element_selector = d3.select(".milestone-burndown");
-
-                tuleap.agiledashboard.cardwall.burndown = new tuleap.agiledashboard.Burndown(d3, response.responseJSON);
-                tuleap.agiledashboard.cardwall.burndown.display(append_element_selector);
-            } else {
-                tuleap.agiledashboard.cardwall.burndown.update(response.responseJSON);
-            }
-        }
-    });
-};
-
 tuleap.agiledashboard.cardwall.updateBurndown = function() {
     new Ajax.Request(
         '/api/v1/milestones/' + $F('milestone_id') + '/burndown',
