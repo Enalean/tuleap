@@ -1,3 +1,6 @@
+Version 1.74 - Tuleap 9.3
+    * request #9728:wq Burndown display is broken in Cardwall
+
 Version 1.73 - Tuleap 9.3
     * request #9735: Burndown KO when no capacity is set
 
