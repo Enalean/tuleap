@@ -1,3 +1,6 @@
+Version 5.1073 - Tuleap 9.3
+    * request #9742: Fix fatal error into Agiledashboard when start_date is not set
+
 Version 5.1072 - Tuleap 9.3
     * request #9732: Correct burndown values in past
 
