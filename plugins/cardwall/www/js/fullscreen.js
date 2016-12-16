@@ -83,13 +83,11 @@
                 $('.milestone-name').addClass('span3');
                 $('.milestone-days').removeClass('span5').addClass('span3');
                 $('.milestone-capacity').removeClass('span5').addClass('span4');
-                $('.milestone-burndown').show();
 
             } else {
                 $('.milestone-name').removeClass('span3');
                 $('.milestone-days').removeClass('span3').addClass('span5');
                 $('.milestone-capacity').removeClass('span4').addClass('span5');
-                $('.milestone-burndown').hide();
             }
         }
 
@@ -104,13 +102,6 @@
 
         function scrollToTop() {
             $('html, body').scrollTop(0);
-        }
-
-        function fetchBurndown() {
-            var completion_bar = $('#milestone_points_completion_bar');
-            if (completion_bar.attr('data-count-style') == 'effort') {
-                tuleap.agiledashboard.cardwall.fetchBurndown();
-            }
         }
 
         function exitFullScreen() {
@@ -131,7 +122,6 @@
             defineFullscreenClasses();
             defineMilestoneInfoBlockSize();
             updateButtonLabel();
-            fetchBurndown();
         }
 
         function browserIsIE() {
