@@ -99,10 +99,31 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertTrue($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
     }
 
-    public function itUpdatesArtifactInTokenModeWhenMailGatewayIsDisabled() {
+    public function itDoesNotUpdateArtifactInTokenModeWhenMailGatewayIsDisabled()
+    {
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
+
+        $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
+        $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
+    }
+
+    public function itUpdatesArtifactInTokenModeWhenMailGatewayIsInsecure()
+    {
+        stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
+        stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
+        stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
+
+        $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
+        $this->assertTrue($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
+    }
+
+    public function itDoesNotUpdateArtifactInTokenModeWhenMailGatewayIsInsecureAndTrackerDisallowEmailGateway()
+    {
+        stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
+        stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
+        stub($this->tracker)->isEmailgatewayEnabled()->returns(false);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));

@@ -50,7 +50,7 @@ class Tracker_ArtifactByEmailStatus {
      */
     public function canUpdateArtifactInTokenMode(Tracker $tracker) {
         return $this->tracker_plugin_config->isTokenBasedEmailgatewayEnabled() ||
-            $this->tracker_plugin_config->isInsecureEmailgatewayEnabled();
+            $this->canUpdateArtifactInInsecureMode($tracker);
     }
 
     /**
