@@ -224,6 +224,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact
      *
      * @throws Tracker_FormElement_Field_BurndownException
+     * @throws BurndownCacheIsCurrentlyCalculatedException
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, PFUser $user) {
         if ($this->userCanRead($user)) {
@@ -370,16 +371,30 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $this->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            if ($burndown_data->getTimePeriod()->isTodayWithinTimePeriod()
-                && $burndown_data->getTimePeriod()->isNotWeekendDay($_SERVER['REQUEST_TIME'])
-            ) {
-                return (int)$cached_days['cached_days'] === $days -1;
+            if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($burndown_data)) {
+                return $this->compareCachedDaysWhenLastDayIsAComputedValue((int) $cached_days['cached_days'], $days);
             } else {
-                return (int)$cached_days['cached_days'] === $days;
+                return $this->compareCachedDaysWithPeriodDays((int) $cached_days['cached_days'], $days);
             }
         }
 
         return true;
+    }
+
+    private function isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd(Tracker_Chart_Data_Burndown $burndown_data)
+    {
+        return $burndown_data->getTimePeriod()->isTodayWithinTimePeriod()
+            && $burndown_data->getTimePeriod()->isNotWeekendDay($_SERVER['REQUEST_TIME']);
+    }
+
+    private function compareCachedDaysWhenLastDayIsAComputedValue($cache_days, $number_of_days_for_period)
+    {
+        return $cache_days === $number_of_days_for_period -1;
+    }
+
+    private function compareCachedDaysWithPeriodDays($cache_days, $number_of_days_for_period)
+    {
+        return $cache_days === $number_of_days_for_period;
     }
 
     private function addRemainingEffortData(
