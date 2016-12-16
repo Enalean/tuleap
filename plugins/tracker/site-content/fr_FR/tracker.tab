@@ -1775,3 +1775,5 @@ plugin_tracker	tracker_action_restore	Restaurer
 plugin_tracker	tracker_restore_warning	Les outils de suivi suivant ne peuvent être affichés (des données semblent manquantes en base de données) :
 
 plugin_tracker	file_has_been_removed_meantime	Ce fichier a été supprimé entre temps.
+
+project_admin_utils	tracker_formelement_update	Mise à jour du champ
