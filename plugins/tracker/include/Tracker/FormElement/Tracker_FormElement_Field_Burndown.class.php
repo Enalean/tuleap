@@ -755,6 +755,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             throw new Tracker_FormElement_Field_BurndownException($GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning'));
         }
 
+        if ($duration === 1) {
+            throw new Tracker_FormElement_Field_BurndownException($GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short'));
+        }
+
         return $duration;
     }
 
