@@ -29,8 +29,8 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject {
         $tv5_id   = $this->da->escapeInt($tv5_id);
         $group_id = $this->da->escapeInt($group_id);
 
-        $sql = "INSERT INTO tracker_report(old_id, project_id, tracker_id, is_default, user_id, name, description, current_renderer_id, is_query_displayed)
-                SELECT report_id as old_id, G2.group_id as project_id, $tv5_id, is_default, CASE R.scope WHEN 'I' THEN user_id ELSE NULL END AS user_id, R.name, R.description, 0, 1
+        $sql = "INSERT INTO tracker_report(old_id, project_id, tracker_id, is_default, user_id, name, description, current_renderer_id, is_query_displayed, is_in_expert_mode)
+                SELECT report_id as old_id, G2.group_id as project_id, $tv5_id, is_default, CASE R.scope WHEN 'I' THEN user_id ELSE NULL END AS user_id, R.name, R.description, 0, 1, 0
                 FROM artifact_report AS R
                 INNER JOIN artifact_group_list AS G ON (G.group_id = $group_id AND G.group_artifact_id = $tv3_id)
                 INNER JOIN artifact_group_list AS G2  ON (G.group_artifact_id = G2.group_artifact_id)
@@ -38,10 +38,10 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject {
 
         $this->update($sql);
 
-        $sql = "INSERT INTO tracker_report(old_id, project_id, tracker_id, is_default, user_id, name, description, current_renderer_id, is_query_displayed)
+        $sql = "INSERT INTO tracker_report(old_id, project_id, tracker_id, is_default, user_id, name, description, current_renderer_id, is_query_displayed, is_in_expert_mode)
                 SELECT report_id as old_id, group_id as project_id, $tv5_id, is_default, CASE R.scope
                    WHEN 'I' THEN user_id
-                   ELSE NULL END AS user_id, R.name, R.description, 0, 1
+                   ELSE NULL END AS user_id, R.name, R.description, 0, 1, 0
                 FROM artifact_report AS R INNER JOIN artifact_group_list AS G USING (group_artifact_id)
                 WHERE R.report_id <> 100
                   AND R.group_artifact_id = $tv3_id";

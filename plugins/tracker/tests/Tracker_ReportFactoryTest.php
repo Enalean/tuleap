@@ -54,19 +54,19 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
         $repo->setReturnReference('getCriteriaFactory', $crit);
         $rend = new MockTracker_Report_RendererFactory();
         $repo->setReturnReference('getRendererFactory', $rend);
-        
+
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/TestTracker-1.xml');
         $reports = array();
         foreach ($xml->reports->report as $report) {
             $empty_array = array();
             $reports[] = $repo->getInstanceFromXML($report, $empty_array, 0);
         }
-        
+
         //general settings
         $this->assertEqual($reports[0]->name, 'Default');
         $this->assertEqual($reports[0]->description, 'The system default artifact report');
         $this->assertEqual($reports[0]->is_default, 0);
-        
+
         //default values
         $this->assertEqual($reports[0]->is_query_displayed, 1);
     }

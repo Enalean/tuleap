@@ -30,6 +30,7 @@ class Tracker_Report_Test extends TuleapTestCase {
         $is_default = true;
         $tracker_id = 115;
         $is_query_displayed = true;
+        $is_in_expert_mode  = false;
         $updated_by = null;
         $updated_at = null;
         $report  = new Tracker_Report(
@@ -42,6 +43,7 @@ class Tracker_Report_Test extends TuleapTestCase {
                     $is_default,
                     $tracker_id,
                     $is_query_displayed,
+                    $is_in_expert_mode,
                     $updated_by,
                     $updated_at
         );

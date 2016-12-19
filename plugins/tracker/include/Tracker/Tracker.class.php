@@ -829,7 +829,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $hp = Codendi_HTMLPurifier::instance();
                 $hp->purify($name);
 
-                $report = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, 0, $this->getId(), 1, null, 0);
+                $report = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, 0, $this->getId(), 1, false, null, 0);
                 $report->criterias = array();
 
                 $this->getReportFactory()->saveObject($this->id, $report);
