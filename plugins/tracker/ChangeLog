@@ -1,3 +1,6 @@
+Version 5.1077 - Tuleap 9.3
+    * request #9746: Update of tracker field should be recorded in project history
+
 Version 5.1076 - Tuleap 9.3
     * request #9743: Emailgateway tracker config is not always taken into account
 
