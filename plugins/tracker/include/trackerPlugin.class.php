@@ -775,10 +775,13 @@ class trackerPlugin extends Plugin {
      * @return Void
      */
     public function fillProjectHistorySubEvents($params) {
-        array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',
-                                                         'tracker_date_reminder_edit',
-                                                         'tracker_date_reminder_delete',
-                                                         'tracker_date_reminder_sent'
+        array_push(
+            $params['subEvents']['event_others'],
+            'tracker_date_reminder_add',
+            'tracker_date_reminder_edit',
+            'tracker_date_reminder_delete',
+            'tracker_date_reminder_sent',
+            Tracker_FormElement::PROJECT_HISTORY_UPDATE
         );
     }
 

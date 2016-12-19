@@ -33,6 +33,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     const SOAP_PERMISSION_UPDATE = 'update';
     const SOAP_PERMISSION_SUBMIT = 'submit';
 
+    const PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
+
     const XML_ID_PREFIX = 'F';
 
     /**
@@ -252,6 +254,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             if (!isset($formElement_data['specific_properties']) || !is_array($formElement_data['specific_properties']) || $this->storeProperties($formElement_data['specific_properties'])) {
                 //Then store the formElement itself
                 if (Tracker_FormElementFactory::instance()->updateFormElement($this, $formElement_data)) {
+                    $history_dao = new ProjectHistoryDao();
+                    $history_dao->groupAddHistory(
+                        self::PROJECT_HISTORY_UPDATE,
+                        '#'. $this->getId() .' '. $this->getLabel() .' ('. $this->getTracker()->getName() .')',
+                        $this->getTracker()->getProject()->getId()
+                    );
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_updated'));
                     if ($request->isAjax()) {
                         echo $this->fetchAdminFormElement();
