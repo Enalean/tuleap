@@ -1186,7 +1186,7 @@ plugin_tracker_formelement_admin	lastmodifiedby_label	Last Updated By
 plugin_tracker_formelement_admin	lastmodifiedby_description	The last person to update the artifact
 plugin_tracker_formelement_admin	lastmodifiedby_help	The field is automatically set to the last person who modified the artifact
 plugin_tracker_formelement_admin	assignedto_label	Assigned to
-plugin_tracker_formelement_admin	upgrade_computed_field_description	<h5>Please update this computed field</h5><p>The legacy Computed fields will be gone by December 31st 2016.<br/>Upon update, the following changes will take effect:</p><ul><li>The computation will take into account all linked artifacts recursively, regardless of link type.</li><li>The target field will no longer be configurable, the field's name will now be used instead.</li><li>Permissions will not be taken into account.</li></ul><p>For example, a user can see artifact A linked to B and C. Artifact A has a computed field called "Remaining effort".<br/>Even if user cannot access artifacts B or C, the "Remaining effort" field in A will sum the values from the "Remaining Effort" fields in B and C.</p>
+plugin_tracker_formelement_admin	upgrade_computed_field_description	<h5>Please update this computed field</h5><p>The legacy Computed fields will be gone in Tuleap 9.4.<br/>Upon update, the following changes will take effect:</p><ul><li>The computation will take into account all linked artifacts recursively, regardless of link type.</li><li>The target field will no longer be configurable, the field's name will now be used instead.</li><li>Permissions will not be taken into account.</li></ul><p>For example, a user can see artifact A linked to B and C. Artifact A has a computed field called "Remaining effort".<br/>Even if user cannot access artifacts B or C, the "Remaining effort" field in A will sum the values from the "Remaining Effort" fields in B and C.</p>
 plugin_tracker_formelement_admin	upgrade_computed_field_button	Update to overridable computed field
 plugin_tracker_formelement_admin	upgrade_computed_field_set_target_field	We are unable to update the computed field. The target field should be equal to the computed field's name.
 
@@ -1662,13 +1662,13 @@ plugin_tracker	changeset_not_stored_exception	The changeset cannot be stored.
 plugin_tracker_deprecation_panel	title	Trackers
 plugin_tracker_deprecation_panel	deprecation_panel	Deprecation monitoring panel
 plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Deprecated computed fields
-plugin_tracker_deprecation_panel	warning_deprecation	The legacy Computed fields will be gone by December 31st 2016.
-plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	This tracker is based on deprecated computed fields (configuration will be gone by December 31st 2016).
+plugin_tracker_deprecation_panel	warning_deprecation	The legacy Computed fields will be gone in Tuleap 9.4
+plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	This tracker is based on deprecated computed fields (configuration will be gone in Tuleap 9.4).
 plugin_tracker_deprecation_panel	title_project	Project Name
 plugin_tracker_deprecation_panel	title_tracker	Tracker Name
 plugin_tracker_deprecation_panel	title_field	Incriminated field
 plugin_tracker_deprecation_panel	no_deprecated_fields	There is no deprecated fields
-plugin_tracker_deprecation_panel	adapt_message	This project uses trackers that are based on deprecated computed fields (configuration will be gone by December 31st 2016). You should adapt now the configuration of:
+plugin_tracker_deprecation_panel	adapt_message	This project uses trackers that are based on deprecated computed fields (configuration will be gone in Tuleap 9.4). You should adapt now the configuration of:
 
 plugin_tracker_deprecation_field	title_autocompute	Auto-compute
 plugin_tracker_deprecation_field	title_original_value	Computed value:
