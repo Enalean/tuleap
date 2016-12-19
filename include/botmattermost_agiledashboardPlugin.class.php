@@ -34,7 +34,6 @@ use Tuleap\BotMattermost\SenderServices\Sender;
 
 require_once 'autoload.php';
 require_once 'constants.php';
-require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
 
 class botmattermost_agiledashboardPlugin extends Plugin
 {
@@ -43,6 +42,9 @@ class botmattermost_agiledashboardPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
+            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
+        }
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook('cssfile');
             $this->addHook('javascript_file');
