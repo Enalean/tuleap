@@ -30,6 +30,8 @@ use Planning_Milestone;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Project;
 use Tracker_Artifact;
+use Tracker_FormElement_Field_Burndown;
+use Tuleap\TimezoneRetriever;
 
 
 class StandUpNotificationBuilder
@@ -123,13 +125,22 @@ class StandUpNotificationBuilder
         $text .= $this->markdown_formatter->addLineOfText('');
         $text .= $this->markdown_formatter->addLineOfText($milestone_table);
         $text .= $this->buildLinkedArtifactsNotificationTextByMilestone($milestone, $user);
+        $text .= $this->buildBurndownImage($milestone, $user);
 
-        $text .= $this->markdown_formatter->addLineOfText(
+        return $text;
+    }
+
+    private function buildBurndownImage(Planning_Milestone $milestone, PFUser $user) {
+        $user_timezone = date_default_timezone_get();
+
+        date_default_timezone_set(TimezoneRetriever::getServerTimezone());
+        $text = $this->markdown_formatter->addLineOfText(
             $this->markdown_formatter->createImage(
                 'Burndown',
                 $this->getBurndownImageUrl($milestone->getArtifact(), $user)
             )
         );
+        date_default_timezone_set($user_timezone);
 
         return $text;
     }
@@ -139,7 +150,7 @@ class StandUpNotificationBuilder
         $url_query = http_build_query(
             array(
                 'formElement' => $artifact->getABurndownField($user)->getId(),
-                'func'        => \Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
                 'src_aid'     => $artifact->getId()
             )
         );
