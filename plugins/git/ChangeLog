@@ -1,3 +1,6 @@
+Version 4.310 - Tuleap 9.3
+    * Import fine grained and regexp usage
+
 Version 4.309 - Tuleap 9.3
     * request #9740: Anonymous users should not be allowed to create pull requests
 
