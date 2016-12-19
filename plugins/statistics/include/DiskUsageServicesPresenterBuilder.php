@@ -29,6 +29,11 @@ use Statistics_DiskUsageOutput;
 
 class DiskUsageServicesPresenterBuilder
 {
+    const GROUP_BY_DAY_KEY   = 'day';
+    const GROUP_BY_WEEK_KEY  = 'week';
+    const GROUP_BY_MONTH_KEY = 'month';
+    const GROUP_BY_YEAR_KEY  = 'year';
+
     /**
      * @var Statistics_DiskUsageGraph
      */
@@ -187,18 +192,21 @@ class DiskUsageServicesPresenterBuilder
     private function getGroupByDateKeys()
     {
         return array(
-            'day'   => $GLOBALS['Language']->getText('plugin_statistics', 'day'),
-            'week'  => $GLOBALS['Language']->getText('plugin_statistics', 'week'),
-            'month' => $GLOBALS['Language']->getText('plugin_statistics', 'month'),
-            'year'  => $GLOBALS['Language']->getText('plugin_statistics', 'year')
+            self::GROUP_BY_DAY_KEY   => $GLOBALS['Language']->getText('plugin_statistics', 'day'),
+            self::GROUP_BY_WEEK_KEY  => $GLOBALS['Language']->getText('plugin_statistics', 'week'),
+            self::GROUP_BY_MONTH_KEY => $GLOBALS['Language']->getText('plugin_statistics', 'month'),
+            self::GROUP_BY_YEAR_KEY  => $GLOBALS['Language']->getText('plugin_statistics', 'year')
         );
     }
 
     private function getGroupByDateValues($selected_group_by_date)
     {
-        $options = $this->getGroupByDateKeys();
-
+        $options                     = $this->getGroupByDateKeys();
         $group_by_date_with_selected = array();
+
+        if (! $selected_group_by_date) {
+            $selected_group_by_date = self::GROUP_BY_WEEK_KEY;
+        }
 
         foreach ($options as $key => $value) {
             $selected = $key === $selected_group_by_date;
@@ -208,10 +216,6 @@ class DiskUsageServicesPresenterBuilder
                 'value'       => $value,
                 'is_selected' => $selected
             );
-        }
-
-        if (! $selected_group_by_date) {
-            $group_by_date_with_selected[0]['is_selected'] = true;
         }
 
         return $group_by_date_with_selected;

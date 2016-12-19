@@ -52,8 +52,8 @@ class SearchFieldsPresenterBuilder
         $end_date_value,
         $relative_y_axis_value
     ) {
-        $this->checkDate($start_date_value, 'Y-m-d', 'P5W');
-        $this->checkDate($end_date_value, 'Y-m-d');
+        $start_date_value = $this->getDate($start_date_value, 'Y-m-d', 'P1M');
+        $end_date_value   = $this->getDate($end_date_value, 'Y-m-d');
 
         if ($start_date_value > $end_date_value) {
             throw new StartDateGreaterThanEndDateException();
@@ -81,8 +81,8 @@ class SearchFieldsPresenterBuilder
         $start_date_value,
         $end_date_value
     ) {
-        $this->checkDate($start_date_value, 'Y-m-d', 'P1W');
-        $this->checkDate($end_date_value, 'Y-m-d');
+        $start_date_value = $this->getDate($start_date_value, 'Y-m-d', 'P1W');
+        $end_date_value   = $this->getDate($end_date_value, 'Y-m-d');
 
         if ($start_date_value > $end_date_value) {
             throw new StartDateGreaterThanEndDateException();
@@ -248,7 +248,7 @@ class SearchFieldsPresenterBuilder
         );
     }
 
-    private function checkDate($date, $format, $sub_interval = null)
+    private function getDate($date, $format, $sub_interval = null)
     {
         if (! $date) {
             $date_time = new DateTime();
