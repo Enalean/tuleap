@@ -359,7 +359,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         $this->getSystemEventManager()->createEvent(
             'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
-            $artifact_id.SystemEvent::PARAMETER_SEPARATOR ,
+            $artifact_id,
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
@@ -367,7 +367,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function isCacheBurndownAlreadyAsked(Tracker_Artifact $artifact)
     {
-        return $this->getSystemEventManager()->isThereAnEventAlreadyOnGoingMatchingFirstParameter(
+        return $this->getSystemEventManager()->areThereMultipleEventsQueuedMatchingFirstParameter(
             'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME, $artifact->getId()
         );
     }
