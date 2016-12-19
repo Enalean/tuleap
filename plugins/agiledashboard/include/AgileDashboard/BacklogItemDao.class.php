@@ -36,9 +36,9 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                     INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
                     INNER JOIN plugin_agiledashboard_planning_backlog_tracker backlog ON (backlog.planning_id = planning.id AND child_art.tracker_id = backlog.tracker_id)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = child_art.id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
                 WHERE parent_art.id = $milestone_artifact_id
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -48,9 +48,9 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM tracker_artifact
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = tracker_artifact.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = tracker_artifact.id)
                 WHERE tracker_id IN ($backlog_tracker_ids)
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -62,9 +62,9 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM tracker_artifact
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = tracker_artifact.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = tracker_artifact.id)
                 WHERE tracker_id IN ($backlog_tracker_ids)
-                ORDER BY tracker_artifact_priority.rank ASC
+                ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -76,7 +76,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
                 FROM tracker_artifact AS art_1
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = art_1.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                     -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
                     INNER JOIN groups AS G               ON (G.group_id = T.group_id)
@@ -101,7 +101,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                         CVL2.bindvalue_id = SS.open_value_id
                      )
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -111,7 +111,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
                 FROM tracker_artifact AS art_1
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = art_1.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                     -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
                     INNER JOIN groups AS G               ON (G.group_id = T.group_id)
@@ -126,7 +126,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority.rank ASC";
+                ORDER BY tracker_artifact_priority_rank.rank ASC";
 
         return $this->retrieve($sql);
     }
@@ -138,7 +138,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
                 FROM tracker_artifact AS art_1
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = art_1.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                         -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
                     INNER JOIN groups AS G               ON (G.group_id = T.group_id)
@@ -164,7 +164,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                         CVL2.bindvalue_id = SS.open_value_id
                      )
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority.rank ASC
+                ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -177,7 +177,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
                 FROM tracker_artifact AS art_1
-                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = art_1.id)
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
                         -- Open status section
                     INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
                     INNER JOIN groups AS G               ON (G.group_id = T.group_id)
@@ -192,7 +192,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     AND child_art.id IS NULL
-                ORDER BY tracker_artifact_priority.rank ASC
+                ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
@@ -211,7 +211,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                         INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                         INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
                         INNER JOIN plugin_agiledashboard_planning_backlog_tracker backlog ON (backlog.planning_id = planning.id AND child_art.tracker_id = backlog.tracker_id)
-                        INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = child_art.id)
+                        INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
                     WHERE parent_art.id IN ($milestone_artifact_ids)
                     ) AS R";
         $row = $this->retrieve($sql)->getRow();

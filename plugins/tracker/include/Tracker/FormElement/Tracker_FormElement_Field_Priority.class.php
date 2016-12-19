@@ -41,12 +41,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     }
 
     public function getCriteriaFrom($criteria) {
-        return ' INNER JOIN tracker_artifact_priority ON artifact.id = tracker_artifact_priority.curr_id';
+        return ' INNER JOIN tracker_artifact_priority_rank ON artifact.id = tracker_artifact_priority_rank.artifact_id';
     }
 
     public function getCriteriaWhere($criteria) {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            return $this->buildMatchExpression('tracker_artifact_priority.rank', $criteria_value);
+            return $this->buildMatchExpression('tracker_artifact_priority_rank.rank', $criteria_value);
         }
         return '';
     }
@@ -97,7 +97,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @see getQueryFrom
      */
     public function getQuerySelect() {
-        return "tracker_artifact_priority.rank AS `$this->name`";
+        return "tracker_artifact_priority_rank.rank AS `$this->name`";
     }
 
     /**
@@ -107,7 +107,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return string
      */
     public function getQueryFrom() {
-        return "INNER JOIN tracker_artifact_priority ON a.id = tracker_artifact_priority.curr_id";
+        return "INNER JOIN tracker_artifact_priority_rank ON a.id = tracker_artifact_priority_rank.artifact_id";
     }
 
     /**

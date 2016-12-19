@@ -50,7 +50,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         ) AS SS ON (CV2.field_id = SS.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE CVL.bindvalue_id IS NULL
                    OR CVL.bindvalue_id = 100
                 ORDER BY P.rank
@@ -72,7 +72,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         ) AS SS ON (CV2.field_id = SS.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE CVL.bindvalue_id IS NULL
                    OR CVL.bindvalue_id = 100
                 ORDER BY P.rank";
@@ -99,7 +99,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
                     LEFT JOIN tracker_semantic_status SS2 ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE SS2.open_value_id IS NULL
                   AND CVL.bindvalue_id IS NOT NULL
                   AND CVL.bindvalue_id <> 100
@@ -123,7 +123,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
                     LEFT JOIN tracker_semantic_status SS2 ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE SS2.open_value_id IS NULL
                   AND CVL.bindvalue_id IS NOT NULL
                   AND CVL.bindvalue_id <> 100
@@ -148,7 +148,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         ) AS SS ON (CV2.field_id = SS.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE CVL.bindvalue_id = $column_id
                 ORDER BY P.rank
                 LIMIT $limit OFFSET $offset";
@@ -170,7 +170,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         ) AS SS ON (CV2.field_id = SS.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE CVL.bindvalue_id = $column_id
                 ORDER BY P.rank";
 
@@ -190,7 +190,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         ) AS SS ON (CV2.field_id = SS.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
-                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                    INNER JOIN tracker_artifact_priority_rank AS P ON (P.artifact_id = A.id)
                 WHERE CVL.bindvalue_id IN (open_value_id)
                 ORDER BY P.rank";
 

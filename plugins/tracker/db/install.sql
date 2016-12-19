@@ -529,12 +529,10 @@ CREATE TABLE tracker_artifact(
   INDEX idx_changeset_tracker(last_changeset_id, tracker_id)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS tracker_artifact_priority;
-CREATE TABLE tracker_artifact_priority(
-    curr_id int(11) NULL,
-    succ_id int(11) NULL,
-    rank    int(11) NOT NULL,
-    UNIQUE idx(curr_id, succ_id)
+DROP TABLE IF EXISTS tracker_artifact_priority_rank;
+CREATE TABLE tracker_artifact_priority_rank(
+    artifact_id INT(11) PRIMARY KEY,
+    rank INT(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_artifact_priority_history;
@@ -831,8 +829,6 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACK
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',2);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',3,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',4);
-
-INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank) VALUES (NULL, NULL, 0);
 
 -- Special user for workflow management
 INSERT INTO user SET

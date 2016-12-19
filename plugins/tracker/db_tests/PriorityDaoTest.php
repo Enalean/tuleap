@@ -22,6 +22,9 @@ require_once dirname(__FILE__).'/../include/autoload.php';
 
 class PriorityDaoTest extends TuleapDbTestCase {
 
+    /** @var Tracker_Artifact_PriorityDao */
+    private $dao;
+
     public function __construct() {
         parent::__construct();
     }
@@ -29,19 +32,16 @@ class PriorityDaoTest extends TuleapDbTestCase {
     public function setUp() {
         parent::setUp();
         $this->dao = new Tracker_Artifact_PriorityDao();
-        $this->truncateTable('tracker_artifact_priority');
-        $this->mysqli->query('INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank) VALUES (NULL, NULL, 0)');
+        $this->truncateTable('tracker_artifact_priority_rank');
     }
 
     public function tearDown() {
-        $this->truncateTable('tracker_artifact_priority');
+        $this->truncateTable('tracker_artifact_priority_rank');
         parent::tearDown();
     }
 
     public function itStartsWithEmptyTable() {
-        $this->assertEqual($this->getPriorities(), array(
-            array(null)
-        ));
+        $this->assertOrder();
     }
 
     public function itInsertOneElement() {
@@ -163,23 +163,11 @@ class PriorityDaoTest extends TuleapDbTestCase {
     }
 
     private function assertOrder() {
-        $list_of_ids = func_get_args();
+        $expected_order = func_get_args();
         $this->assertEqual(
-            $this->getPriorities(),
-            $this->getExpectedOrder($list_of_ids)
+            $this->getArtifactIdsOrderedByRank(),
+            $expected_order
         );
-    }
-
-    private function getExpectedOrder($list_of_ids) {
-        $order    = array();
-        $previous = null;
-        $rank     = 0;
-        foreach ($list_of_ids as $id) {
-            $order[] = array($previous);
-            $previous = $id;
-        }
-        $order[] = array($id);
-        return $order;
     }
 
     private function setInitialOrder() {
@@ -188,16 +176,17 @@ class PriorityDaoTest extends TuleapDbTestCase {
         }
     }
 
-    private function getPriorities() {
-        $msg = array();
-        $dar = $this->dao->retrieve("SELECT curr_id FROM tracker_artifact_priority ORDER BY rank");
+    private function getArtifactIdsOrderedByRank()
+    {
+        $ids = array();
+        $dar = $this->dao->retrieve(
+            "SELECT artifact_id
+            FROM tracker_artifact_priority_rank
+            ORDER BY rank"
+        );
         foreach ($dar as $row) {
-            $r = array();
-            foreach ($row as $cell) {
-                $r[] = $cell;
-            }
-            $msg[] = $r;
+            $ids[] = $row['artifact_id'];
         }
-        return $msg;
+        return $ids;
     }
 }
