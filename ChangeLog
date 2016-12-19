@@ -25,11 +25,12 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.51
-	* tracker: 5.1078
+	* tracker: 5.1079
 	* git: 4.310
 	* graphontrackersv5: 5.28
 	* statistics: 0.77
 	* cardwall: 1.74
+	* agiledashboard: 1.438
 
     == Themes ==
 	* FlamingParrot: 1.170

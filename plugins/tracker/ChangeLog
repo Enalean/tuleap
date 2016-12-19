@@ -1,3 +1,6 @@
+Version 5.1079 - Tuleap 9.3
+    * request #9729: Do not mix linked list and rank for artifact priority
+
 Version 5.1078 - Tuleap 9.3
     * story #8858 query tracker with expressions (Save in DB)
 
