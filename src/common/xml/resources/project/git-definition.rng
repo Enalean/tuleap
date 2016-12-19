@@ -77,6 +77,18 @@
                           </zeroOrMore>
                         </element>
                       </optional>
+                      <optional>
+                        <element name="fine_grained">
+                          <interleave>
+                            <attribute name="enabled">
+                              <data type="boolean"/>
+                            </attribute>
+                            <attribute name="use_regexp">
+                              <data type="boolean"/>
+                            </attribute>
+                          </interleave>
+                        </element>
+                      </optional>
                     </interleave>
                   </element>
                 </optional>
