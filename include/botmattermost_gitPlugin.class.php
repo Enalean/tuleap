@@ -20,7 +20,6 @@
 
 require_once 'autoload.php';
 require_once 'constants.php';
-require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
 
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Bot\BotDao;
@@ -44,6 +43,9 @@ class botmattermost_gitPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->addHook('cssfile');
+        if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
+            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
+        }
         if (defined('GIT_BASE_URL')) {
             $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
