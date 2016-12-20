@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -101,67 +101,73 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetTrackersIdReports() {
+    public function testGetTrackersIdReports()
+    {
         $report_uri = $this->getReleaseTrackerReportsUri();
         $response   = $this->getResponse($this->client->get($report_uri));
 
-        $reports = $response->json();
+        $reports        = $response->json();
         $default_report = $reports[0];
 
-        $this->assertEquals(102, $default_report['id']);
-        $this->assertEquals('tracker_reports/102', $default_report['uri']);
+        $this->assertEquals(REST_TestDataBuilder::TRACKER_REPORT_ID, $default_report['id']);
+        $this->assertEquals('tracker_reports/' . REST_TestDataBuilder::TRACKER_REPORT_ID, $default_report['uri']);
         $this->assertEquals('Default', $default_report['label']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetReportsId() {
+    public function testGetReportsId()
+    {
         $response = $this->getResponse($this->client->get($this->getReportUri()));
 
         $report = $response->json();
 
-        $this->assertEquals(102, $report['id']);
-        $this->assertEquals('tracker_reports/102', $report['uri']);
+        $this->assertEquals(REST_TestDataBuilder::TRACKER_REPORT_ID, $report['id']);
+        $this->assertEquals('tracker_reports/' . REST_TestDataBuilder::TRACKER_REPORT_ID, $report['uri']);
         $this->assertEquals('Default', $report['label']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetReportsArtifactsId() {
+    public function testGetReportsArtifactsId()
+    {
         $response  = $this->getResponse($this->client->get($this->getReportsArtifactsUri()));
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(1, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/' . REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetTrackerArtifacts() {
+    public function testGetTrackerArtifacts()
+    {
         $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts');
         $response  = $this->getResponse($request);
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(1, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/' . REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetTrackerArtifactsBasicQuery() {
-        $query = json_encode(array(
-            "Name" => "lease"
+    public function testGetTrackerArtifactsBasicQuery()
+    {
+        $query     = json_encode(
+            array(
+                "Name" => "lease"
             )
         );
-        $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?query='.urlencode($query));
+        $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?query=' . urlencode($query));
         $response  = $this->getResponse($request);
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(1, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/' . REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -193,8 +199,8 @@ class TrackersTest extends RestBase {
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(1, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }

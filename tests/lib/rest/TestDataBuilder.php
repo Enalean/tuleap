@@ -29,53 +29,74 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const TEST_USER_4_PASS        = 'welcome0';
     const TEST_USER_4_STATUS      = 'A';
 
-    const EPICS_TRACKER_ID        = 1;
-    const RELEASES_TRACKER_ID     = 2;
-    const SPRINTS_TRACKER_ID      = 3;
-    const TASKS_TRACKER_ID        = 4;
-    const USER_STORIES_TRACKER_ID = 5;
-    const DELETED_TRACKER_ID      = 6;
-    const KANBAN_TRACKER_ID       = 7;
-    const LEVEL_ONE_TRACKER_ID    = 25;
-    const LEVEL_TWO_TRACKER_ID    = 26;
-    const LEVEL_THREE_TRACKER_ID  = 27;
-    const LEVEL_FOUR_TRACKER_ID   = 28;
+    const EPICS_TRACKER_ID        = 7;
+    const RELEASES_TRACKER_ID     = 8;
+    const SPRINTS_TRACKER_ID      = 9;
+    const TASKS_TRACKER_ID        = 10;
+    const USER_STORIES_TRACKER_ID = 11;
+    const DELETED_TRACKER_ID      = 12;
+    const KANBAN_TRACKER_ID       = 13;
+    const LEVEL_ONE_TRACKER_ID    = 31;
+    const LEVEL_TWO_TRACKER_ID    = 32;
+    const LEVEL_THREE_TRACKER_ID  = 33;
+    const LEVEL_FOUR_TRACKER_ID   = 34;
 
-    const KANBAN_ID = 1;
+    const RELEASE_FIELD_NAME_ID     = 171;
+    const RELEASE_FIELD_STATUS_ID   = 173;
+    const RELEASE_STATUS_CURRENT_ID = 126;
 
-    const RELEASE_ARTIFACT_ID       = 1;
-    const SPRINT_ARTIFACT_ID        = 2;
-    const EPIC_1_ARTIFACT_ID        = 3;
-    const EPIC_2_ARTIFACT_ID        = 4;
-    const EPIC_3_ARTIFACT_ID        = 5;
-    const EPIC_4_ARTIFACT_ID        = 6;
-    const STORY_1_ARTIFACT_ID       = 7;
-    const STORY_2_ARTIFACT_ID       = 8;
-    const STORY_3_ARTIFACT_ID       = 9;
-    const STORY_4_ARTIFACT_ID       = 10;
-    const STORY_5_ARTIFACT_ID       = 11;
-    const STORY_6_ARTIFACT_ID       = 12;
-    const EPIC_5_ARTIFACT_ID        = 13;
-    const EPIC_6_ARTIFACT_ID        = 14;
-    const EPIC_7_ARTIFACT_ID        = 15;
-    const LEVEL_ONE_ARTIFACT_A_ID   = 22;
+    const KANBAN_ID            = 1;
+    const KANBAN_ARTIFACT_ID_1 = 34;
+    const KANBAN_ARTIFACT_ID_2 = 35;
+    const KANBAN_ARTIFACT_ID_3 = 36;
+    const KANBAN_ARTIFACT_ID_4 = 37;
+    const KANBAN_ARTIFACT_ID_5 = 38;
+    const KANBAN_ARTIFACT_ID_6 = 39;
 
-    const LEVEL_TWO_ARTIFACT_B_ID   = 23;
-    const LEVEL_TWO_ARTIFACT_C_ID   = 24;
+    const BURNDOWN_FATHER_TRACKER_ID   = 4;
+    const BURNDOWN_CHILD_TRACKER_ID    = 1;
+    const BURNDOWN_FATHER_ARTIFACT_ID  = 12;
+    const BURNDOWN_CHILD_ARTIFACT_ID   = 1;
+    const BURNDOWN_CHILD_2_ARTIFACT_ID = 8;
 
-    const LEVEL_THREE_ARTIFACT_D_ID = 25;
-    const LEVEL_THREE_ARTIFACT_E_ID = 26;
-    const LEVEL_THREE_ARTIFACT_F_ID = 27;
+    const RELEASE_ARTIFACT_ID       = 19;
+    const SPRINT_ARTIFACT_ID        = 20;
+    const EPIC_1_ARTIFACT_ID        = 21;
+    const EPIC_2_ARTIFACT_ID        = 22;
+    const EPIC_3_ARTIFACT_ID        = 23;
+    const EPIC_4_ARTIFACT_ID        = 24;
+    const STORY_1_ARTIFACT_ID       = 25;
+    const STORY_2_ARTIFACT_ID       = 26;
+    const STORY_3_ARTIFACT_ID       = 27;
+    const STORY_4_ARTIFACT_ID       = 28;
+    const STORY_5_ARTIFACT_ID       = 29;
+    const STORY_6_ARTIFACT_ID       = 30;
+    const EPIC_5_ARTIFACT_ID        = 31;
+    const EPIC_6_ARTIFACT_ID        = 32;
+    const EPIC_7_ARTIFACT_ID        = 33;
 
-    const LEVEL_FOUR_ARTIFACT_G_ID  = 28;
-    const LEVEL_FOUR_ARTIFACT_H_ID  = 29;
+    const LEVEL_ONE_ARTIFACT_A_ID   = 40;
 
-    const KANBAN_ITEM_1_ARTIFACT_ID = 16;
+    const LEVEL_TWO_ARTIFACT_B_ID   = 41;
+    const LEVEL_TWO_ARTIFACT_C_ID   = 42;
+
+    const LEVEL_THREE_ARTIFACT_D_ID = 43;
+    const LEVEL_THREE_ARTIFACT_E_ID = 44;
+    const LEVEL_THREE_ARTIFACT_F_ID = 45;
+
+    const LEVEL_FOUR_ARTIFACT_G_ID  = 46;
+    const LEVEL_FOUR_ARTIFACT_H_ID  = 47;
+
+    const KANBAN_ITEM_1_ARTIFACT_ID = 52;
 
     const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
     const KANBAN_ONGOING_COLUMN_ID    = 231;
     const KANBAN_REVIEW_COLUMN_ID     = 232;
     const KANBAN_DONE_VALUE_ID        = 233;
+
+    const TRACKER_REPORT_ID = 108;
+
+    const PLANNING_ID = 2;
 
     const PHPWIKI_PAGE_ID          = 6097;
     const PHPWIKI_SPACE_PAGE_ID    = 6100;
@@ -721,7 +742,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
             '',
             false
         );
-
     }
 
     private function createEpic(PFUser $user, $field_summary_value, $field_status_value) {
@@ -762,7 +782,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
             '',
             false
         );
-
     }
 
     private function createUserStory(PFUser $user, $field_i_want_to_value, $field_status_value) {
@@ -779,5 +798,4 @@ class REST_TestDataBuilder extends TestDataBuilder {
             false
         );
     }
-
 }

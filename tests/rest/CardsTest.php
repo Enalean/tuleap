@@ -38,7 +38,7 @@ class CardsTest extends RestBase {
     }
 
     public function testPUTCardsWithId() {
-        $card_id        = REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
+        $card_id        = REST_TestDataBuilder::PLANNING_ID .'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
         $test_label     = "Ieatlaughingcow";
         $test_column_id = 2;
 

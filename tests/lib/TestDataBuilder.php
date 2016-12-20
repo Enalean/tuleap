@@ -92,6 +92,7 @@ class TestDataBuilder {
     const PROJECT_PBI_SHORTNAME            = 'pbi-6348';
     const PROJECT_BACKLOG_DND              = 'dragndrop';
     const PROJECT_COMPUTED_FIELDS          = 'computedfields';
+    const PROJECT_BURNDOWN                 = 'burndown_tests';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
