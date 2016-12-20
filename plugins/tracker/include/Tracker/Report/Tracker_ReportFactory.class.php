@@ -144,6 +144,7 @@ class Tracker_ReportFactory {
             $report->tracker_id,
             $report->is_query_displayed,
             $report->is_in_expert_mode,
+            $report->expert_query,
             $user->getId()
         );
     }
@@ -228,6 +229,7 @@ class Tracker_ReportFactory {
             $row['tracker_id'],
             $row['is_query_displayed'],
             $row['is_in_expert_mode'],
+            $row['expert_query'],
             $row['updated_by'],
             $row['updated_at']
         );
@@ -255,6 +257,7 @@ class Tracker_ReportFactory {
         $row['is_default'] = isset($att['is_default']) ? (int)$att['is_default'] : 0;
         $row['is_query_displayed'] = isset($att['is_query_displayed']) ? (int)$att['is_query_displayed'] : 1;
         $row['is_in_expert_mode']  = 0;
+        $row['expert_query']       = '';
         // in case old id values are important modify code here
         if (false) {
             foreach ($xml->attributes() as $key => $value) {
@@ -303,7 +306,8 @@ class Tracker_ReportFactory {
             $report->is_default,
             $trackerId,
             $report->is_query_displayed,
-            $report->is_in_expert_mode
+            $report->is_in_expert_mode,
+            $report->expert_query
         );
         //create criterias
         $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
@@ -340,6 +344,10 @@ class Tracker_ReportFactory {
 
         if ($report_session->get('is_in_expert_mode') !== null) {
             $tracker_report->setIsInExpertMode($report_session->get('is_in_expert_mode'));
+        }
+
+        if ($report_session->get('expert_query') !== null) {
+            $tracker_report->setExpertQuery($report_session->get('expert_query'));
         }
     }
 }
