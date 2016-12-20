@@ -38,7 +38,7 @@
                 radius     : pie_chart_element_sizes.radius
             };
 
-            var pie_chart = tuleap.admin.statistictsPieChart(options);
+            var pie_chart = tuleap.charts.statisticsPieChartFactory(options);
             pie_chart();
 
             window.addEventListener('resize', function() {
