@@ -5,6 +5,7 @@ Version 9.3 (Not released yet)
 	* request #9722: JPGraph error when burndown is in the future
 	* story #9734: Directly go to an item by searching its reference
 	* request #9741: When user timezone is different from timezone server burndown always ask cache generation
+	* request #9724: Pie charts sitadmin homepage improvement
 
 	== Enhancement ==
 	* request #9712: empty state in system events is broken
