@@ -62,6 +62,154 @@ class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends Tuleap
     }
 }
 
+class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTestCase
+{
+    /**
+     * @var Tracker_FormElement_Field_Burndown
+     */
+    private $burndown_field;
+
+    /**
+     * @var Tracker_Artifact
+     */
+    private $artifact;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    /**
+     * @var PFUser
+     */
+    private $user;
+
+    /**
+     * @var Tracker_Artifact_ChangesetValue
+     */
+    private $changesetValue;
+
+    private $tracker_id;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $tracker          = mock('Tracker');
+        $this->tracker_id = 101;
+        stub($tracker)->getID()->returns($this->tracker_id);
+
+        $this->artifact = mock('Tracker_Artifact');
+        stub($this->artifact)->getTracker()->returns($tracker);
+
+        $this->form_element_factory = mock('Tracker_FormElementFactory');
+        Tracker_FormElementFactory::setInstance($this->form_element_factory);
+
+        $this->burndown_field = partial_mock(
+            'Tracker_FormElement_Field_Burndown',
+            array(
+                'getCurrentUser',
+                'isCacheBurndownAlreadyAsked'
+            )
+        );
+
+        $this->user = mock('PFUser');
+        stub($this->user)->isAdmin()->returns(true);
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+        stub($this->burndown_field)->isCacheBurndownAlreadyAsked()->returns(false);
+    }
+
+    public function itTestButtonForceCacheGenreationIsNotPresentWhenStartDateIsNotSet()
+    {
+        $timestamp                  = null;
+        $start_date_field           = stub('Tracker_FormElement_Field_Date');
+        $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($timestamp);
+
+        $duration                 = 5;
+        $duration_field           = stub('Tracker_FormElement_Field_Integer');
+        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($duration);
+
+        stub($this->artifact)->getValue($start_date_field)->returns($start_date_changeset_value);
+        stub($this->artifact)->getValue($duration_field)->returns($duration_changeset_value);
+
+        stub($this->form_element_factory)->getUsedFieldByNameForUser(
+            $this->tracker_id, 'start_date', $this->user
+        )->returns(
+            $start_date_field
+        );
+        stub($this->form_element_factory)->getUsedFieldByNameForUser(
+            $this->tracker_id, 'duration', $this->user
+        )->returns($duration_field);
+
+        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact, $this->changesetValue);
+        $this->assertEqual(
+            $result, '<img src="/plugins/tracker/?func=show_burndown" alt="" width="640" height="480" />'
+        );
+    }
+
+    public function itTestButtonForceCacheGenreationIsNotPresentDurationIsNotSet()
+    {
+        $timestamp = mktime(0, 0, 0, 20, 12, 2016);
+        $start_date_field           = stub('Tracker_FormElement_Field_Date');
+        $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($timestamp);
+
+        $duration                 = null;
+        $duration_field           = stub('Tracker_FormElement_Field_Integer');
+        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($duration);
+
+        stub($this->artifact)->getValue($start_date_field)->returns($start_date_changeset_value);
+        stub($this->artifact)->getValue($duration_field)->returns($duration_changeset_value);
+
+        stub($this->form_element_factory)->getUsedFieldByNameForUser(
+            $this->tracker_id, 'start_date', $this->user
+        )->returns(
+            $start_date_field
+        );
+        stub($this->form_element_factory)->getUsedFieldByNameForUser(
+            $this->tracker_id, 'duration', $this->user
+        )->returns($duration_field);
+
+        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact, $this->changesetValue);
+        $this->assertEqual(
+            $result, '<img src="/plugins/tracker/?func=show_burndown" alt="" width="640" height="480" />'
+        );
+    }
+
+    public function itReturnsTrueWhenBurndownHasAStartDateAndADuration()
+    {
+        $timestamp = mktime(0, 0, 0, 20, 12, 2016);
+        $start_date_field           = stub('Tracker_FormElement_Field_Date');
+        $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($timestamp);
+
+        $duration                 = 5;
+        $duration_field           = stub('Tracker_FormElement_Field_Integer');
+        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($duration);
+
+        stub($this->artifact)->getValue($start_date_field)->returns($start_date_changeset_value);
+        stub($this->artifact)->getValue($duration_field)->returns($duration_changeset_value);
+
+        stub($this->form_element_factory)->getUsedFieldByNameForUser(
+            $this->tracker_id, 'start_date', $this->user
+        )->returns(
+            $start_date_field
+        );
+        stub($this->form_element_factory)->getUsedFieldByNameForUser(
+            $this->tracker_id, 'duration', $this->user
+        )->returns($duration_field);
+
+        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact, $this->changesetValue);
+        $this->assertNotEqual(
+            $result, '<img src="/plugins/tracker/?func=show_burndown" alt="" width="640" height="480" />'
+        );
+    }
+
+    public function tearDown()
+    {
+        Tracker_FormElementFactory::clearInstance();
+        parent::tearDown();
+    }
+}
+
 class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTestCase {
 
     protected $sprint_tracker_id;
