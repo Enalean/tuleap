@@ -138,9 +138,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function fetchBurndownCacheGenerationButton(Tracker_Artifact $artifact)
     {
+        $user = $this->getCurrentUser();
+
         $html = "";
-        if ($this->getCurrentUser()->isAdmin($artifact->getTracker()->getGroupId())
+        if ($user->isAdmin($artifact->getTracker()->getGroupId())
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
+            && $this->areBurndownFieldsCorrectlySet($artifact, $user)
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
         ) {
             $html .= '<a class="btn burndown-button-generate" data-toggle="modal" href="#burndown-generate">' .
@@ -153,6 +156,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         return $html;
+    }
+
+    private function areBurndownFieldsCorrectlySet(Tracker_Artifact $artifact, PFUser $user)
+    {
+        try {
+
+            return $this->getBurndownDuration($artifact, $user) !== null
+            && $this->getBurndownStartDate($artifact, $user) !== null;
+        } catch(Tracker_FormElement_Field_BurndownException $e) {
+            return false;
+        }
     }
 
     private function fetchBurndownGenerationModal(Tracker_Artifact $artifact)
