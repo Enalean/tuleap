@@ -1,4 +1,7 @@
 Version 5.1069 - Tuleap 9.3
+    * Burndown button for cache generation should not be displayed if burndown isn't calculable
+
+Version 5.1069 - Tuleap 9.3
     * REST tests for burndown
 
 Version 5.1079 - Tuleap 9.3
