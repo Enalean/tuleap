@@ -1,3 +1,6 @@
+Version 5.1069 - Tuleap 9.3
+    * REST tests for burndown
+
 Version 5.1079 - Tuleap 9.3
     * request #9729: Do not mix linked list and rank for artifact priority
 
