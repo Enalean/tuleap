@@ -88,39 +88,45 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent
     {
         $artifact_id           = $this->getArtifactIdFromParameters();
         $burndown_informations = $this->burndown_dao->getBurndownInformation($artifact_id);
-        $burndown              = new TimePeriodWithoutWeekEnd(
-            $burndown_informations['start_date'],
-            $burndown_informations['duration']
-        );
-
-        $yesterday = new DateTime();
-        $yesterday->setTime(0, 0, 0);
 
         $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
-
-        $this->cache_dao->deleteArtifactCacheValue(
-            $burndown_informations['id'],
-            $burndown_informations['remaining_effort_field_id']
-        );
-
-        $yesterday = new DateTime();
-        $yesterday->setTime(0, 0, 0);
-
-        foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burndown, $yesterday) as $worked_day) {
-            $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
-
-            $value = $this->burndown_calculator->calculateBurndownValueAtTimestamp(
-                $burndown_informations,
-                $worked_day
+        if ($burndown_informations) {
+            $burndown              = new TimePeriodWithoutWeekEnd(
+                $burndown_informations['start_date'],
+                $burndown_informations['duration']
             );
 
-            $this->logger->debug("Caching value $value for artifact #" . $burndown_informations['id']);
-            $this->cache_dao->saveCachedFieldValueAtTimestamp(
+            $yesterday = new DateTime();
+            $yesterday->setTime(0, 0, 0);
+
+
+
+            $this->cache_dao->deleteArtifactCacheValue(
                 $burndown_informations['id'],
-                $burndown_informations['remaining_effort_field_id'],
-                $worked_day,
-                $value
+                $burndown_informations['remaining_effort_field_id']
             );
+
+            $yesterday = new DateTime();
+            $yesterday->setTime(0, 0, 0);
+
+            foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burndown, $yesterday) as $worked_day) {
+                $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
+
+                $value = $this->burndown_calculator->calculateBurndownValueAtTimestamp(
+                    $burndown_informations,
+                    $worked_day
+                );
+
+                $this->logger->debug("Caching value $value for artifact #" . $burndown_informations['id']);
+                $this->cache_dao->saveCachedFieldValueAtTimestamp(
+                    $burndown_informations['id'],
+                    $burndown_informations['remaining_effort_field_id'],
+                    $worked_day,
+                    $value
+                );
+            }
+        } else {
+            $this->logger->debug("Can't generate cache for artifact #" . $artifact_id . ". Please check your burndown configuration");
         }
 
         $this->logger->debug("End calculs for artifact #" . $artifact_id);
