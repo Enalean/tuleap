@@ -1,3 +1,6 @@
+Version 5.1070 - Tuleap 9.3
+    * request #9753 When burndown start_date is empty, cache generation should never lead to a fatal error
+
 Version 5.1069 - Tuleap 9.3
     * Burndown button for cache generation should not be displayed if burndown isn't calculable
 
