@@ -402,6 +402,7 @@ CREATE TABLE tracker_report(
     parent_report_id INT(11) NULL,
     is_query_displayed TINYINT(1) NOT NULL,
     is_in_expert_mode TINYINT(1) NOT NULL DEFAULT 0,
+    expert_query TEXT NOT NULL DEFAULT '',
     updated_by int(11) NULL,
     updated_at int(11) NULL,
     INDEX tracker_idx(tracker_id)

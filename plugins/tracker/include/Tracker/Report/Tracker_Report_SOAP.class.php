@@ -33,7 +33,7 @@ class Tracker_Report_SOAP extends Tracker_Report {
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory
     ) {
-        $id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $is_in_expert_mode = $updated_by = $updated_at = 0;
+        $id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $is_in_expert_mode = $expert_query = $updated_by = $updated_at = 0;
         parent::__construct(
             $id,
             $name,
@@ -45,6 +45,7 @@ class Tracker_Report_SOAP extends Tracker_Report {
             $tracker_id,
             $is_query_displayed,
             $is_in_expert_mode,
+            $expert_query,
             $updated_by,
             $updated_at
         );

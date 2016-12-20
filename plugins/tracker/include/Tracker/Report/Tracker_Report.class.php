@@ -53,6 +53,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     public $tracker_id;
     public $is_query_displayed;
     public $is_in_expert_mode;
+    public $expert_query;
     public $updated_by;
     public $updated_at;
 
@@ -83,6 +84,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $tracker_id,
         $is_query_displayed,
         $is_in_expert_mode,
+        $expert_query,
         $updated_by,
         $updated_at
     ) {
@@ -96,6 +98,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->tracker_id          = $tracker_id;
         $this->is_query_displayed  = $is_query_displayed;
         $this->is_in_expert_mode   = $is_in_expert_mode;
+        $this->expert_query        = $expert_query;
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
     }
@@ -121,6 +124,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     public function setIsInExpertMode($is_in_expert_mode) {
         $this->is_in_expert_mode = $is_in_expert_mode;
+    }
+
+    public function setExpertQuery($expert_query) {
+        $this->expert_query = $expert_query;
     }
 
     protected function getCriteriaDao() {
@@ -498,7 +505,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $tracker_report_expert_query_presenter = new TrackerReportExpertModePresenter(
             $this->id,
             $class_toggler,
-            $this->is_in_expert_mode
+            $this->is_in_expert_mode,
+            $this->expert_query
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -1222,6 +1230,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     $new_report->name              = $report_copy_name;
                     $new_report->user_id           = $current_user->getId();
                     $new_report->is_in_expert_mode = $this->is_in_expert_mode;
+                    $new_report->expert_query      = $this->expert_query;
                     Tracker_ReportFactory::instance()->save($new_report);
                     $GLOBALS['Response']->addFeedback('info', '<a href="?report='. $new_report->id .'">'. $hp->purify($new_report->name, CODENDI_PURIFIER_CONVERT_HTML) .'</a> has been created.', CODENDI_PURIFIER_DISABLED);
                     $redirect_to_report_id = $new_report->id;
@@ -1307,6 +1316,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     if (!empty($additional_criteria_values)) {
                         $this->updateAdditionalCriteriaValues($additional_criteria_values);
                     }
+
+                    $this->report_session->setHasChanged();
+                }
+                if ($request->exist('tracker_expert_query_submit')) {
+                    $expert_query = $request->get('expert_query');
+                    $this->report_session->storeExpertQuery($expert_query);
+                    $this->expert_query = $expert_query;
 
                     $this->report_session->setHasChanged();
                 }

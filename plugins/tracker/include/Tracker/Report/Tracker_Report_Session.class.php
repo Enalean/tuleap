@@ -216,6 +216,11 @@ class Tracker_Report_Session extends Codendi_Session {
     {
         $this->set('is_in_expert_mode', false);
     }
+
+    public function storeExpertQuery($expert_query)
+    {
+        $this->set('expert_query', $expert_query);
+    }
 }
 
 ?>
