@@ -1,3 +1,6 @@
+Version 5.1084 - Tuleap 9.3
+    * request #9752 Burndown generation should be asked if an event is Running
+
 Version 5.1083 - Tuleap 9.3
     * story #8858 query tracker with expressions (Save query)
 
