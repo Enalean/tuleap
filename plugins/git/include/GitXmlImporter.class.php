@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\XmlUgroupRetriever;
 
 class GitXmlImporter
 {
@@ -75,11 +76,6 @@ class GitXmlImporter
     private $xml_validator;
 
     /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-
-    /**
      * @var System_Command
      */
     private $system_command;
@@ -114,36 +110,48 @@ class GitXmlImporter
      */
     private $fine_grained_saver;
 
+    /**
+     * @var XmlUgroupRetriever
+     */
+    private $xml_ugroup_retriever;
+
+    /**
+     * @var XML_RNGValidator
+     */
+    private $rng_validator;
+
     public function __construct(
         Logger $logger,
         GitRepositoryManager   $repository_manager,
         GitRepositoryFactory   $repository_factory,
         Git_Backend_Gitolite   $gitolite_backend,
+        XML_RNGValidator $rng_validator,
+        System_Command $system_command,
         Git_SystemEventManager $system_event_manager,
         PermissionsManager $permissions_manager,
-        UGroupManager $ugroup_manager,
         EventManager $event_manager,
         FineGrainedUpdater $fine_grained_updater,
         RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
         RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
         FineGrainedPermissionFactory $fine_grained_factory,
-        FineGrainedPermissionSaver $fine_grained_saver
+        FineGrainedPermissionSaver $fine_grained_saver,
+        XmlUgroupRetriever $xml_ugroup_retriever
     ) {
-        $this->logger                        = new WrapperLogger($logger, "GitXmlImporter");
+        $this->logger                        = $logger;
         $this->permission_manager            = $permissions_manager;
         $this->repository_manager            = $repository_manager;
         $this->repository_factory            = $repository_factory;
         $this->gitolite_backend              = $gitolite_backend;
+        $this->xml_validator                 = $rng_validator;
+        $this->system_command                = $system_command;
         $this->system_event_manager          = $system_event_manager;
-        $this->ugroup_manager                = $ugroup_manager;
-        $this->xml_validator                 = new XML_RNGValidator();
-        $this->system_command                = new System_Command();
         $this->event_manager                 = $event_manager;
         $this->fine_grained_updater          = $fine_grained_updater;
         $this->regexp_fine_grained_retriever = $regexp_fine_grained_retriever;
         $this->regexp_fine_grained_enabler   = $regexp_fine_grained_enabler;
         $this->fine_grained_factory          = $fine_grained_factory;
         $this->fine_grained_saver            = $fine_grained_saver;
+        $this->xml_ugroup_retriever          = $xml_ugroup_retriever;
     }
 
     /**
@@ -154,7 +162,13 @@ class GitXmlImporter
      * @var String
      * @return boolean
      */
-    public function import(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path) {
+    public function import(
+        ImportConfig $configuration,
+        Project $project,
+        PFUser $creator,
+        SimpleXMLElement $xml_input,
+        $extraction_path
+    ) {
         $xml_git = $xml_input->git;
         if(!$xml_git) {
             $this->logger->debug('No git node found into xml.');
@@ -173,17 +187,26 @@ class GitXmlImporter
         return true;
     }
 
-    private function importAdmins(Project $project, SimpleXMLElement $admins_xmlnode) {
+    private function importAdmins(Project $project, SimpleXMLElement $admins_xmlnode)
+    {
         $ugroup_ids = array();
-        if(!empty($admins_xmlnode)) {
+        if (!empty($admins_xmlnode)) {
             $this->logger->debug($admins_xmlnode->count() . ' ugroups as admins.');
-            $ugroup_ids = $this->getUgroupIdsForPermissions($project, $admins_xmlnode);
+            $ugroup_ids = $this->xml_ugroup_retriever->getUgroupIdsForPermissionNode($project, $admins_xmlnode);
         }
+
         $ugroup_ids = $this->appendProjectAdminUGroup($ugroup_ids);
+
         $this->permission_manager->savePermissions($project, $project->getId(), Git::PERM_ADMIN, $ugroup_ids);
     }
 
-    private function importRepository(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $repository_xmlnode, $extraction_path) {
+    private function importRepository(
+        ImportConfig $configuration,
+        Project $project,
+        PFUser $creator,
+        SimpleXMLElement $repository_xmlnode,
+        $extraction_path
+    ) {
         $repository_info = $repository_xmlnode->attributes();
         $this->logger->debug("Importing {$repository_info['name']} using {$repository_info['bundle-path']}");
         $description = isset($repository_info['description']) ? (string) $repository_info['description'] : GitRepository::DEFAULT_DESCRIPTION;
@@ -305,42 +328,35 @@ class GitXmlImporter
         }
     }
 
-    private function importPermission(Project $project, SimpleXMLElement $permission_xmlnode, $permission_type, GitRepository $repository) {
-        $ugroup_ids = $this->getUgroupIdsForPermissions($project, $permission_xmlnode);
+    private function importPermission(
+        Project $project,
+        SimpleXMLElement $permission_xmlnode,
+        $permission_type,
+        GitRepository $repository
+    ) {
+        $ugroup_ids = $this->xml_ugroup_retriever->getUgroupIdsForPermissionNode($project, $permission_xmlnode);
 
         if(!empty($ugroup_ids)) {
             $this->permission_manager->savePermissions($project, $repository->getId(), $permission_type, $ugroup_ids);
         }
     }
 
-    private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode) {
-        $ugroup_ids = array();
-        foreach($permission_xmlnode->children() as $ugroup) {
-            if($ugroup->getName() === self::UGROUP_TAG) {
-                $ugroup_name = (string)$ugroup;
-                $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
-                if($ugroup === null) {
-                    $this->logger->error("Could not find any ugroup named $ugroup_name");
-                    throw new GitXmlImporterUGroupNotFoundException($ugroup_name);
-                }
-
-                array_push($ugroup_ids, $ugroup->getId());
-            }
-        }
-        return $ugroup_ids;
-    }
-
     /**
      * Append the project administrator ugroup id to the given array
      * @return array
      */
-    private function appendProjectAdminUGroup(array $ugroup_ids) {
+    private function appendProjectAdminUGroup(array $ugroup_ids)
+    {
         $ugroup_ids[] = ProjectUGroup::PROJECT_ADMIN;
         return $ugroup_ids;
     }
 
-    private function importReferences(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_references, GitRepository $repository)
-    {
+    private function importReferences(
+        ImportConfig $configuration,
+        Project $project,
+        SimpleXMLElement $xml_references,
+        GitRepository $repository
+    ) {
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
             array(

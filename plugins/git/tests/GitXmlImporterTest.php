@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ require_once 'bootstrap.php';
 
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
+use Tuleap\Git\XmlUgroupRetriever;
 
 Mock::generate('GitDao', 'MockGitDao');
 
@@ -75,6 +76,9 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->git_plugin = new GitPlugin(1);
         $this->git_factory = new GitRepositoryFactory($this->git_dao, $this->project_manager);
 
+        $this->ugroup_dao     = mock('UGroupDao');
+        $this->ugroup_manager = new UGroupManager($this->ugroup_dao, mock('EventManager'));
+
         $this->git_systemeventmanager        = mock('Git_SystemEventManager');
         $this->mirror_updater                = mock('GitRepositoryMirrorUpdater');
         $this->mirror_data_mapper            = mock('Git_Mirror_MirrorDataMapper');
@@ -84,6 +88,10 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->regexp_fine_grained_enabler   = mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler');
         $this->fine_grained_factory          = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
         $this->fine_grained_saver            = mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver');
+        $this->xml_ugroup_retriever          = new XmlUgroupRetriever(
+            $this->logger,
+            $this->ugroup_manager
+        );
 
         $this->git_manager = new GitRepositoryManager(
             $this->git_factory,
@@ -110,9 +118,6 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         PluginManager::setInstance($plugin_manager);
 
-        $this->ugroup_dao = mock('UGroupDao');
-        $this->ugroup_manager = new UGroupManager($this->ugroup_dao, mock('EventManager'));
-
         $this->permission_dao = mock('PermissionsDAO');
         $permissions_manager  = new PermissionsManager($this->permission_dao);
         $git_mirror_dao       = mock('Git_Mirror_MirrorDao');
@@ -136,15 +141,17 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->git_manager,
             $this->git_factory,
             $gitolite,
+            new XML_RNGValidator(),
+            new System_Command(),
             $this->git_systemeventmanager,
             $permissions_manager,
-            $this->ugroup_manager,
             $this->event_manager,
             $this->fine_grained_updater,
             $this->regexp_fine_grained_retriever,
             $this->regexp_fine_grained_enabler,
             $this->fine_grained_factory,
-            $this->fine_grained_saver
+            $this->fine_grained_saver,
+            $this->xml_ugroup_retriever
         );
 
         $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
