@@ -30,6 +30,7 @@ use Project;
 use PermissionsManager;
 use Git;
 use Feedback;
+use SimpleXMLElement;
 
 class FineGrainedPermissionFactory
 {
@@ -467,6 +468,33 @@ class FineGrainedPermissionFactory
             0,
             $repository->getId(),
             '*',
+            $writers,
+            $rewinders
+        );
+    }
+
+    public function getFineGrainedPermissionFromXML(GitRepository $repository, SimpleXMLElement $xml_pattern)
+    {
+        $pattern = (string) $xml_pattern['value'];
+
+        return $this->buildRepresentationFromXML($repository, $pattern);
+    }
+
+    private function buildRepresentationFromXML(GitRepository $repository, $pattern)
+    {
+        $are_we_activating_regexp = false;
+
+        if (! $this->validator->isValidForRepository($repository, $pattern, $are_we_activating_regexp)) {
+            return null;
+        }
+
+        $writers   = array();
+        $rewinders = array();
+
+        return new FineGrainedPermission(
+            0,
+            $repository->getId(),
+            $pattern,
             $writers,
             $rewinders
         );

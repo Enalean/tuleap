@@ -86,6 +86,21 @@
                             <attribute name="use_regexp">
                               <data type="boolean"/>
                             </attribute>
+                            <zeroOrMore>
+                              <element name="pattern">
+                                <interleave>
+                                  <attribute name="value">
+                                    <data type="string"/>
+                                  </attribute>
+                                  <attribute name="type">
+                                    <choice>
+                                      <value>branch</value>
+                                      <value>tag</value>
+                                    </choice>
+                                  </attribute>
+                                </interleave>
+                              </element>
+                            </zeroOrMore>
                           </interleave>
                         </element>
                       </optional>
