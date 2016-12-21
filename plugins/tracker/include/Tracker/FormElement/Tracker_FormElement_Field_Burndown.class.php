@@ -333,14 +333,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if ($this->doesCapacityFieldExist()) {
             $capacity = $this->getCapacity($artifact);
         }
-        $time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
         $user_timezone = date_default_timezone_get();
         date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
-        $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
+        $start = new  DateTime();
+        $start->setTimestamp($start_date);
+        $start->setTime(0, 0, 0);
 
+        $time_period   = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+
+        $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start->getTimestamp());
         if ($this->isCacheCompleteForBurndown($burndown_data, $artifact, $user) === false
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
