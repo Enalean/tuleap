@@ -24,7 +24,6 @@ use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
-use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Codendi_Request;
 use Feedback;
 use GitRepositoryFactory;
@@ -122,12 +121,6 @@ class Router
                 $repository_id,
                 $project_id,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_cannot_be_created')
-            );
-        } catch (PullRequestAnonymousUserException $exception) {
-            $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
-                $GLOBALS['Language']->getText('plugin_pullrequest', 'generate_pull_request_error')
             );
         } catch (PullRequestAlreadyExistsException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(

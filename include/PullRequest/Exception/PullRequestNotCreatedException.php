@@ -26,6 +26,6 @@ class PullRequestNotCreatedException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("There was an error while creating the pull request");
+        parent::__construct("There was an error while creating the pullrequest");
     }
 }
