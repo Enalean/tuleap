@@ -1,13 +1,13 @@
-Version 5.1071 - Tuleap 9.3
+Version 5.1083 - Tuleap 9.3
     * story #8858 query tracker with expressions (Save query)
 
-Version 5.1070 - Tuleap 9.3
+Version 5.1082 - Tuleap 9.3
     * request #9753 When burndown start_date is empty, cache generation should never lead to a fatal error
 
-Version 5.1069 - Tuleap 9.3
+Version 5.1081 - Tuleap 9.3
     * Burndown button for cache generation should not be displayed if burndown isn't calculable
 
-Version 5.1069 - Tuleap 9.3
+Version 5.1080 - Tuleap 9.3
     * REST tests for burndown
 
 Version 5.1079 - Tuleap 9.3
