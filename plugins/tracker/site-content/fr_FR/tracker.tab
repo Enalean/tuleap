@@ -1558,6 +1558,7 @@ plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de cha
 plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier ou Flottant :
 plugin_tracker	burndown_empty_start_date_warning	Le champ "start date" est vide ou invalide
 plugin_tracker	burndown_empty_duration_warning	Le champ "duration" est vide ou invalide
+plugin_tracker	burndown_duration_too_short	Le champ "duration" doit être suppérieur à 1 pour pouvoir afficher correctement le graphique.
 plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouvé ou le champ "remaining_effort" n'existe pas sur ces artefacts.
 plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
 plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique

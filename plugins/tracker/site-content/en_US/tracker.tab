@@ -1559,6 +1559,7 @@ plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "dur
 plugin_tracker	burndown_missing_remaining_effort_warning	Some child trackers doesn't have a "remaining_effort" Integer or Float field:
 plugin_tracker	burndown_empty_start_date_warning	"start date" field is empty or invalid
 plugin_tracker	burndown_empty_duration_warning	"duration" field is empty or invalid
+plugin_tracker	burndown_duration_too_short	"duration" must be greater than 1 to display burndown graph.
 plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or those artifacts have no 'remaining_effort' field.
 plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
 plugin_tracker	unable_to_render_the_chart	Unable to render the chart

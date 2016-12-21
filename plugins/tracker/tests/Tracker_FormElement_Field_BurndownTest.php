@@ -395,6 +395,25 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($sprint, $this->current_user);
     }
 
+    public function itDisplaysAMessageWhenDurationIsTooShort()
+    {
+        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns(1);
+
+        $sprint = mock('Tracker_Artifact');
+        stub($sprint)->getLinkedArtifacts()->returns($this->GivenOneLinkedArtifact());
+        stub($sprint)->getValue($this->start_date_field)->returns($this->start_date_changeset_value);
+        stub($sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
+        stub($sprint)->getTracker()->returns($this->sprint_tracker);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
+            )
+        );
+
+        $this->field->fetchBurndownImage($sprint, $this->current_user);
+    }
+
     public function itDisplaysAnErrorIfUserDoesntHaveThePermissionToAccessTheBurndownField() {
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead'));
         stub($this->field)->userCanRead($this->current_user)->returns(false);
