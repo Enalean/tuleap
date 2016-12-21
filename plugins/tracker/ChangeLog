@@ -1,3 +1,6 @@
+Version 5.1085 - Tuleap 9.3
+    * request #9749: Burndown JpGraph error when duration is set to 1
+
 Version 5.1084 - Tuleap 9.3
     * request #9752 Burndown generation should be asked if an event is Running
 
