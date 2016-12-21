@@ -23,6 +23,8 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 
 class GitXmlImporter
 {
@@ -32,6 +34,8 @@ class GitXmlImporter
     const WPLUS_TAG        = 'wplus';
     const UGROUP_TAG       = 'ugroup';
     const FINE_GRAINED_TAG = 'fine_grained';
+    const TAG_PATTERN      = 'tag';
+    const BRANCH_PATTERN   = 'branch';
 
     const SERVICE_NAME = 'git';
 
@@ -100,6 +104,16 @@ class GitXmlImporter
      */
     private $regexp_fine_grained_enabler;
 
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+
+    private $fine_grained_factory;
+    /**
+     * @var FineGrainedPermissionSaver
+     */
+    private $fine_grained_saver;
+
     public function __construct(
         Logger $logger,
         GitRepositoryManager   $repository_manager,
@@ -111,7 +125,9 @@ class GitXmlImporter
         EventManager $event_manager,
         FineGrainedUpdater $fine_grained_updater,
         RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
-        RegexpFineGrainedEnabler $regexp_fine_grained_enabler
+        RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
+        FineGrainedPermissionFactory $fine_grained_factory,
+        FineGrainedPermissionSaver $fine_grained_saver
     ) {
         $this->logger                        = new WrapperLogger($logger, "GitXmlImporter");
         $this->permission_manager            = $permissions_manager;
@@ -126,6 +142,8 @@ class GitXmlImporter
         $this->fine_grained_updater          = $fine_grained_updater;
         $this->regexp_fine_grained_retriever = $regexp_fine_grained_retriever;
         $this->regexp_fine_grained_enabler   = $regexp_fine_grained_enabler;
+        $this->fine_grained_factory          = $fine_grained_factory;
+        $this->fine_grained_saver            = $fine_grained_saver;
     }
 
     /**
@@ -254,7 +272,36 @@ class GitXmlImporter
                 $this->regexp_fine_grained_enabler->enableForRepository($repository);
             }
         } else {
-            $this->logger->debug('Regexp permissions disabled at site level');
+            $this->logger->warn('Regexp permissions disabled at site level');
+        }
+
+        $this->importPatterns($repository, $fine_grained_xmlnode);
+    }
+
+    private function importPatterns(GitRepository $repository, SimpleXMLElement $fine_grained_xmlnode)
+    {
+        foreach ($fine_grained_xmlnode->children() as $pattern_node) {
+            $pattern_value = (string) $pattern_node['value'];
+            $pattern_type  = (string) $pattern_node['type'];
+
+            $this->logger->debug("Importing $pattern_type pattern $pattern_value");
+
+            $permission_representation = $this->fine_grained_factory->getFineGrainedPermissionFromXML(
+                $repository,
+                $pattern_node
+            );
+
+            if (! $permission_representation) {
+                $this->logger->warn("The $pattern_type pattern $pattern_value is not valid, skipping.");
+                continue;
+            } elseif ($pattern_type === self::BRANCH_PATTERN) {
+                $this->fine_grained_saver->saveBranchPermission($permission_representation);
+            } elseif ($pattern_type === self::TAG_PATTERN) {
+                $this->fine_grained_saver->saveTagPermission($permission_representation);
+            } else {
+                $this->logger->warn("Unknown type $pattern_type, skipping.");
+                continue;
+            }
         }
     }
 

@@ -21,6 +21,7 @@
 require_once 'bootstrap.php';
 
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Git\Permissions\FineGrainedPermission;
 
 Mock::generate('GitDao', 'MockGitDao');
 
@@ -81,6 +82,8 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->fine_grained_updater          = mock('Tuleap\Git\Permissions\FineGrainedUpdater');
         $this->regexp_fine_grained_retriever = mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever');
         $this->regexp_fine_grained_enabler   = mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler');
+        $this->fine_grained_factory          = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
+        $this->fine_grained_saver            = mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver');
 
         $this->git_manager = new GitRepositoryManager(
             $this->git_factory,
@@ -139,7 +142,9 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->event_manager,
             $this->fine_grained_updater,
             $this->regexp_fine_grained_retriever,
-            $this->regexp_fine_grained_enabler
+            $this->regexp_fine_grained_enabler,
+            $this->fine_grained_factory,
+            $this->fine_grained_saver
         );
 
         $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
@@ -147,7 +152,6 @@ class GitXmlImporterTest extends TuleapTestCase {
         $userManager = mock('UserManager');
         stub($userManager)->getUserById()->returns(new PFUser());
         UserManager::setInstance($userManager);
-
 
         stub($this->permission_dao)->clearPermission()->returns(true);
         stub($this->permission_dao)->addPermission()->returns(true);
@@ -463,6 +467,125 @@ XML;
 
         expect($this->fine_grained_updater)->enableRepository()->never();
         expect($this->regexp_fine_grained_enabler)->enableForRepository()->once();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itImportPatternsWithoutRegexp()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="1" use_regexp="0">
+                                <pattern value="*" type="branch" />
+                                <pattern value="*" type="tag" />
+                            </fine_grained>
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+
+        $representation = new FineGrainedPermission(
+            0,
+            1,
+            '*',
+            array(),
+            array()
+        );
+
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returns($representation);
+
+        expect($this->fine_grained_saver)->saveBranchPermission()->once();
+        expect($this->fine_grained_saver)->saveTagPermission()->once();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itDoesNotImportRegexpWhenNotActivated()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="1" use_regexp="0">
+                                <pattern value="*" type="branch" />
+                                <pattern value="branch[0-9]" type="branch" />
+                                <pattern value="*" type="tag" />
+                            </fine_grained>
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+
+        $representation = new FineGrainedPermission(
+            0,
+            1,
+            '*',
+            array(),
+            array()
+        );
+
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(0, $representation);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(1, false);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(2, $representation);
+
+        expect($this->fine_grained_saver)->saveBranchPermission()->once();
+        expect($this->fine_grained_saver)->saveTagPermission()->once();
+
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itImportsRegexpPatterns()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <fine_grained enabled="1" use_regexp="1">
+                                <pattern value="*" type="branch" />
+                                <pattern value="branch[0-9]" type="branch" />
+                                <pattern value="*" type="tag" />
+                            </fine_grained>
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+
+        $representation_01 = new FineGrainedPermission(
+            0,
+            1,
+            '*',
+            array(),
+            array()
+        );
+
+        $representation_02 = new FineGrainedPermission(
+            0,
+            1,
+            '*',
+            array(),
+            array()
+        );
+
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+        stub($this->regexp_fine_grained_retriever)->areRegexpActivatedAtSiteLevel()->returns(true);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(0, $representation_01);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(1, $representation_02);
+        stub($this->fine_grained_factory)->getFineGrainedPermissionFromXML()->returnsAt(2, $representation_01);
+
+        $this->fine_grained_saver->expectCallCount('saveBranchPermission', 2);
+        expect($this->fine_grained_saver)->saveTagPermission()->once();
 
         $this->import(new SimpleXMLElement($xml));
     }

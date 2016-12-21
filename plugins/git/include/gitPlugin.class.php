@@ -2045,7 +2045,9 @@ class GitPlugin extends Plugin {
             EventManager::instance(),
             $this->getFineGrainedUpdater(),
             $this->getRegexpFineGrainedRetriever(),
-            $this->getRegexpFineGrainedEnabler()
+            $this->getRegexpFineGrainedEnabler(),
+            $this->getFineGrainedFactory(),
+            $this->getFineGrainedPermissionSaver()
         );
 
         $importer->import($params['configuration'], $params['project'], UserManager::

@@ -16,7 +16,11 @@ git = element repository {
                 element wplus { element ugroup { xsd:string }* }? &
                 element fine_grained {
                     attribute enabled { xsd:boolean } &
-                    attribute use_regexp { xsd:boolean }
+                    attribute use_regexp { xsd:boolean } &
+                    element pattern {
+                        attribute value { xsd:string } &
+                        attribute type { "branch" | "tag" }
+                    }*
                 }?
             }? &
             element references {
