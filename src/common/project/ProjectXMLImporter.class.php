@@ -223,7 +223,7 @@ class ProjectXMLImporter {
             $this->xml_validator,
             new FRSPackageFactory(),
             new FRSReleaseFactory(),
-            new FRSFileFactory(),
+            new FRSFileFactory($this->logger),
             $this->user_finder,
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager),
@@ -316,6 +316,7 @@ class ProjectXMLImporter {
             }
 
             $this->cleanProjectMembersFromUserCreator($project, $project_members, $user_creator);
+            $this->logger->debug("Import of ugroups completed");
         }
     }
 

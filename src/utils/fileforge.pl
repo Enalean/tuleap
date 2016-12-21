@@ -70,8 +70,8 @@ if (!move($src_file, $dst_file)) {
 }
 
 # add 'group' read and remove 'other' perms
-system("setfacl -b $dst_file");
+system("setfacl -b \"$dst_file\"");
 chmod(0640, $dst_file);
-system("chgrp ftpadmin $dst_file");
+system("chgrp ftpadmin \"$dst_file\"");
 
 print "OK\n";
