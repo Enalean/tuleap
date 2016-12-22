@@ -19,13 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once('HudsonJobWidget.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('PluginHudsonJobDao.class.php');
-require_once('HudsonJob.class.php');
-
 class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
     
     /**
@@ -66,10 +59,14 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_lastbuilds');
     }
     
-    function loadContent($id) {
+    function loadContent($id)
+    {
         $this->content_id = $id;
+    }
 
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+    private function initContent()
+    {
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $this->content_id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -93,6 +90,8 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
     }
 
     function getContent() {
+        $this->initContent();
+
         $html = '';
         if ($this->job != null) {
             $job = $this->job;

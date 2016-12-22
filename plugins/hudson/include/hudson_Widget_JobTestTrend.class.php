@@ -20,16 +20,9 @@
  */
 
 
-require_once('HudsonJobWidget.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('PluginHudsonJobDao.class.php');
-require_once('HudsonJob.class.php');
-
-require_once('HudsonTestResult.class.php');
-
 class hudson_Widget_JobTestTrend extends HudsonJobWidget {
-    
+    private $test_result;
+
     /**
      * Constructor
      *
@@ -40,7 +33,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
      * @return void
      */
     function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
             $this->widget_id = 'plugin_hudson_my_jobtesttrend';
             $this->group_id = $owner_id;
@@ -68,17 +61,21 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_testtrend');
     }
     
-    function loadContent($id) {
+    function loadContent($id)
+    {
         $this->content_id = $id;
+    }
 
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+    private function initContent()
+    {
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $this->content_id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
             $this->job_id    = $data['job_id'];
-            
+
             $jobs = $this->getAvailableJobs();
-            
+
             if (array_key_exists($this->job_id, $jobs)) {
                 try {
                     $used_job          = $jobs[$this->job_id];
@@ -89,16 +86,18 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
                 } catch (Exception $e) {
                     $this->test_result = null;
                 }
-                
+
             } else {
                 $this->job = null;
                 $this->test_result = null;
             }
-            
+
         }
     }
-    
+
     function getContent() {
+        $this->initContent();
+
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         if ($this->job != null && $this->test_result != null) {
@@ -122,5 +121,3 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
         return $html;
     }
 }
-
-?>

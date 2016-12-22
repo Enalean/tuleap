@@ -5,9 +5,9 @@ require_once('pre.php');
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph.php');
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph_pie.php');
 
-$pass_count = $request->get('p');
-$fail_count = $request->get('f');
-$skip_count = $request->get('s');
+$pass_count = $request->getValidated('p', 'uint', 0);
+$fail_count = $request->getValidated('f', 'uint', 0);
+$skip_count = $request->getValidated('s', 'uint', 0);
 $total_count = $pass_count + $fail_count + $skip_count;
 
 // graph size
