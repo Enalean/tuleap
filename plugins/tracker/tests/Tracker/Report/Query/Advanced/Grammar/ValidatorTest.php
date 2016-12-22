@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use TuleapTestCase;
-use UserManager;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
@@ -51,7 +50,7 @@ class ValidatorTest extends TuleapTestCase
 
         $expr = new Comparison("field", "=", "value");
 
-        $this->validator->validate($this->user, $this->tracker, $expr);
+        $this->validator->visitComparison($expr, $this->user, $this->tracker);
     }
 
     public function itThrowsAnExceptionIfFieldIsUnknown()
@@ -61,6 +60,108 @@ class ValidatorTest extends TuleapTestCase
         $expr = new Comparison("field", "=", "value");
 
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldDoesNotExistException');
-        $this->validator->validate($this->user, $this->tracker, $expr);
+        $this->validator->visitComparison($expr, $this->user, $this->tracker);
+    }
+
+    public function itThrowsAnExceptionIfFieldIsNotText()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
+
+        $expr = new Comparison("field", "=", "value");
+
+        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldIsNotSupportedException');
+        $this->validator->visitComparison($expr, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToSubExpressionAndTailInAndExpression()
+    {
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
+        $expression    = new AndExpression($subexpression, $tail);
+
+        expect($subexpression)->accept($this->validator, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitAndExpression($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToSubExpressionAndTailInOrExpression()
+    {
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
+        $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand');
+        $expression    = new OrExpression($subexpression, $tail);
+
+        expect($subexpression)->accept($this->validator, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitOrExpression($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToOperandAndTailInOrOperand()
+    {
+        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
+        $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand');
+        $expression = new OrOperand($operand, $tail);
+
+        expect($operand)->accept($this->validator, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitOrOperand($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToOperandAndTailInAndOperand()
+    {
+        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
+        $expression = new AndOperand($operand, $tail);
+
+        expect($operand)->accept($this->validator, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitAndOperand($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToSubExpressionInAndExpression()
+    {
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $tail          = null;
+        $expression    = new AndExpression($subexpression, $tail);
+
+        expect($subexpression)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitAndExpression($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToSubExpressionInOrExpression()
+    {
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
+        $tail          = null;
+        $expression    = new OrExpression($subexpression, $tail);
+
+        expect($subexpression)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitOrExpression($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToOperandInOrOperand()
+    {
+        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression');
+        $tail       = null;
+        $expression = new OrOperand($operand, $tail);
+
+        expect($operand)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitOrOperand($expression, $this->user, $this->tracker);
+    }
+
+    public function itDelegatesValidationToOperandInAndOperand()
+    {
+        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $tail       = null;
+        $expression = new AndOperand($operand, $tail);
+
+        expect($operand)->accept($this->validator, $this->user, $this->tracker)->once();
+
+        $this->validator->visitAndOperand($expression, $this->user, $this->tracker);
     }
 }

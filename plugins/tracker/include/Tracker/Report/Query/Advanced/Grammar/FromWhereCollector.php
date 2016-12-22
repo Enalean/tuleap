@@ -19,26 +19,38 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use TuleapTestCase;
+use PFUser;
+use Tracker;
+use Tracker_FormElement_Field_Text;
+use Tracker_FormElementFactory;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
-
-class OrExpressionIntegrationTest extends TuleapTestCase
+class FromWhere
 {
-    public function itValidatesTheWholeExpression()
+    /** @var string */
+    private $from;
+
+    /** @var string */
+    private $where;
+
+    public function __construct($from, $where)
     {
-        $user      = mock('PFUser');
-        $tracker   = mock('Tracker');
-        $validator = stub('Tuleap\Tracker\Report\Query\Advanced\Grammar\Validator')->validate()->returns(true);
+        $this->from  = $from;
+        $this->where = $where;
+    }
 
-        $expr = new OrExpression(
-            new AndExpression(
-                new Comparison("field", "=", "value"),
-                null
-            ),
-            null
-        );
+    /**
+     * @return string
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
 
-        $this->assertTrue($expr->validate($user, $tracker, $validator));
+    /**
+     * @return string
+     */
+    public function getWhere()
+    {
+        return $this->where;
     }
 }

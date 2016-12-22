@@ -24,7 +24,7 @@ use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
-class Validator
+class Validator implements Visitor
 {
     /**
      * @var Tracker_FormElementFactory
@@ -36,7 +36,7 @@ class Validator
         $this->formelement_factory = $formelement_factory;
     }
 
-    public function validate(PFUser $user, Tracker $tracker, Comparison $comparison)
+    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker)
     {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker->getId(),
@@ -49,7 +49,38 @@ class Validator
         }
 
         if (! $field instanceof Tracker_FormElement_Field_Text) {
-            throw new FieldIsNotSupported();
+            throw new FieldIsNotSupportedException();
+        }
+    }
+
+    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker)
+    {
+        $and_expression->getExpression()->accept($this, $user, $tracker);
+        $this->visitTail($and_expression->getTail(), $user, $tracker);
+    }
+
+    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker)
+    {
+        $or_expression->getExpression()->accept($this, $user, $tracker);
+        $this->visitTail($or_expression->getTail(), $user, $tracker);
+    }
+
+    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker)
+    {
+        $or_operand->getOperand()->accept($this, $user, $tracker);
+        $this->visitTail($or_operand->getTail(), $user, $tracker);
+    }
+
+    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker)
+    {
+        $and_operand->getOperand()->accept($this, $user, $tracker);
+        $this->visitTail($and_operand->getTail(), $user, $tracker);
+    }
+
+    private function visitTail($tail, $user, $tracker)
+    {
+        if ($tail) {
+            $tail->accept($this, $user, $tracker);
         }
     }
 }

@@ -1401,7 +1401,7 @@ plugin_tracker_report	btn_report_expert_mode	Mode expert
 plugin_tracker_report	btn_report_normal_mode	Mode normal
 plugin_tracker_report	allowed_fields_label	Champs autorisés
 plugin_tracker_report	query_label	Requête
-plugin_tracker_report	query_tooltip	Aucun opérateur n'est supporté pour le moment.
+plugin_tracker_report	query_tooltip	Vous pouvez utiliser ces opérateurs: AND, OR, parenthèses.
 plugin_tracker_report	query_placeholder	(champ_1='valeur' OR champ_2='valeur') AND champ_3='valeur'
 plugin_tracker_report	parse_expert_query_error	Erreur pendant l'analyse de la requête experte
 plugin_tracker_report	validate_expert_query_field_does_not_exist	Erreur le champ n'existe pas

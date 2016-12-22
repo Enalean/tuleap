@@ -39,13 +39,18 @@ class AndExpression
         $this->tail       = $tail;
     }
 
-    public function validate(PFUser $user, Tracker $tracker, Validator $validator)
+    public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
     {
-        return $this->expression->validate($user, $tracker, $validator);
+        return $visitor->visitAndExpression($this, $user, $tracker);
     }
 
-    public function getFrom(Tracker $tracker)
+    public function getExpression()
     {
-        return $this->expression->getFrom($tracker);
+        return $this->expression;
+    }
+
+    public function getTail()
+    {
+        return $this->tail;
     }
 }

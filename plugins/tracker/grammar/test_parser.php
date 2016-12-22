@@ -24,7 +24,7 @@ include "../include/manual_autoload.php";
 
 $input = <<<EOS
 
-field1_name = "f1"
+field1_name = "f1" and field1_description = "desc1"
 
 EOS;
 

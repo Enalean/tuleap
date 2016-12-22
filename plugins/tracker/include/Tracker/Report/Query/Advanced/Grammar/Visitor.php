@@ -22,35 +22,15 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 use PFUser;
 use Tracker;
 
-class OrExpression implements Term
+interface Visitor
 {
-    /**
-     * @var AndExpression
-     */
-    private $expression;
-    /**
-     * @var OrOperand
-     */
-    private $tail;
+    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker);
 
-    public function __construct(AndExpression $expression, OrOperand $tail = null)
-    {
-        $this->expression = $expression;
-        $this->tail       = $tail;
-    }
+    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker);
 
-    public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
-    {
-        return $visitor->visitOrExpression($this, $user, $tracker);
-    }
+    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker);
 
-    public function getExpression()
-    {
-        return $this->expression;
-    }
+    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker);
 
-    public function getTail()
-    {
-        return $this->tail;
-    }
+    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker);
 }

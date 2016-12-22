@@ -36,20 +36,18 @@ class Comparison implements Term
         $this->value    = $value;
     }
 
-    public function validate(PFUser $user, Tracker $tracker, Validator $validator)
+    public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
     {
-        return $validator->validate($user, $tracker, $this);
-    }
-
-    public function getFrom(Tracker $tracker)
-    {
-        $formelement_factory = Tracker_FormElementFactory::instance();
-        $formelement         = $formelement_factory->getUsedFieldByName($tracker->getId(), $this->field);
-        return $formelement->getExpertFrom($this->value['literal']);
+        return $visitor->visitComparison($this, $user, $tracker);
     }
 
     public function getField()
     {
         return $this->field;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 }
