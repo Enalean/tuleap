@@ -1185,7 +1185,7 @@ plugin_tracker_formelement_admin	lastmodifiedby_label	Dernière Modification Par
 plugin_tracker_formelement_admin	lastmodifiedby_description	La dernière personne à avoir modifié l'artifact
 plugin_tracker_formelement_admin	lastmodifiedby_help	Le champ est automatiquement renseigné avec l'utilisateur qui a mis à jour l'artéfact en dernier
 plugin_tracker_formelement_admin	assignedto_label	Assigné à
-plugin_tracker_formelement_admin	upgrade_computed_field_description	<h5>Veuillez mettre à jour ce champ calculé</h5><p>L'ancien mode de fonctionnement des champs calculés sera indisponible à partir du 31 décembre 2016.<br/>Une fois mis à jour, les changements suivants seront apportés :</p><ul><li>Le calcul prendra en compte récursivement tous les artéfacts liés, sans tenir compte des natures de liens.</li><li>Le champ cible ne sera plus configurable, le nom du champ sera utilisé à la place.</li><li>Les permissions ne seront pas vérifiées sur les artéfacts liés.</li></ul><p>Par exemple, un utilisateur peut voir un artéfact A lié à B et C. L'artéfact A a un champ calculé nommé "Effort restant".<br/>Même si l'utilisateur n'a pas accès aux artéfacts B ou C, le champ "Effort restant" de A sera la somme des champs "Effort restant" de B et C.</p>
+plugin_tracker_formelement_admin	upgrade_computed_field_description	<h5>Veuillez mettre à jour ce champ calculé</h5><p>L'ancien mode de fonctionnement des champs calculés sera indisponible à partir de Tuleap 9.4.<br/>Une fois mis à jour, les changements suivants seront apportés :</p><ul><li>Le calcul prendra en compte récursivement tous les artéfacts liés, sans tenir compte des natures de liens.</li><li>Le champ cible ne sera plus configurable, le nom du champ sera utilisé à la place.</li><li>Les permissions ne seront pas vérifiées sur les artéfacts liés.</li></ul><p>Par exemple, un utilisateur peut voir un artéfact A lié à B et C. L'artéfact A a un champ calculé nommé "Effort restant".<br/>Même si l'utilisateur n'a pas accès aux artéfacts B ou C, le champ "Effort restant" de A sera la somme des champs "Effort restant" de B et C.</p>
 plugin_tracker_formelement_admin	upgrade_computed_field_button	Mettre à jour vers champ calculé modifiable
 plugin_tracker_formelement_admin	upgrade_computed_field_set_target_field	Nous ne pouvons pas mettre à jour ce champ calculé. Le champ cible doit être identique au nom du champ calculé.
 
@@ -1662,13 +1662,13 @@ plugin_tracker	changeset_not_stored_exception	Le changeset n'a pas pu être sauv
 plugin_tracker_deprecation_panel	title	Outils de suivi
 plugin_tracker_deprecation_panel	deprecation_panel	Suivi des éléments en voie d'obsolescence
 plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Suivi des champs calculés en voie d'obsolescence
-plugin_tracker_deprecation_panel	warning_deprecation	L'ancien mode de fonctionnement des champs calculés sera indisponible à partir du 31 décembre 2016.
-plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	Cet outil de suivi est basé sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir du 31 décembre 2016).
+plugin_tracker_deprecation_panel	warning_deprecation	L'ancien mode de fonctionnement des champs calculés sera indisponible à partir de Tuleap 9.4.
+plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	Cet outil de suivi est basé sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir de Tuleap 9.4).
 plugin_tracker_deprecation_panel	title_project	Nom du projet
 plugin_tracker_deprecation_panel	title_tracker	Nom de l'outil de suivi
 plugin_tracker_deprecation_panel	title_field	Champs incriminé
 plugin_tracker_deprecation_panel	no_deprecated_fields	Il n'y a aucun champs en voie d'obsolescence
-plugin_tracker_deprecation_panel	adapt_message	Ce projet utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir du 31 décembre 2016). Merci de mettre à jour la configuration des champs :
+plugin_tracker_deprecation_panel	adapt_message	Ce projet utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (l'ancienne configuration sera indisponible à partir de Tuleap 9.4). Merci de mettre à jour la configuration des champs :
 
 plugin_tracker_deprecation_field	title_autocompute	Calcul automatique
 plugin_tracker_deprecation_field	title_original_value	Valeur calculée :
