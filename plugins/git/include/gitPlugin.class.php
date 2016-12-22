@@ -59,6 +59,7 @@ use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\History\Dao as HistoryDao;
+use Tuleap\Git\XmlUgroupRetriever;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -2034,24 +2035,36 @@ class GitPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT
      */
     public function importXmlProject($params) {
+        $logger = new WrapperLogger($params['logger'], "GitXmlImporter");
+
         $importer = new GitXmlImporter(
-            $params['logger'],
+            $logger,
             $this->getRepositoryManager(),
             $this->getRepositoryFactory(),
             $this->getBackendGitolite(),
+            new XML_RNGValidator(),
+            new System_Command(),
             $this->getGitSystemEventManager(),
             PermissionsManager::instance(),
-            $this->getUGroupManager(),
             EventManager::instance(),
             $this->getFineGrainedUpdater(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getFineGrainedFactory(),
-            $this->getFineGrainedPermissionSaver()
+            $this->getFineGrainedPermissionSaver(),
+            new XmlUgroupRetriever(
+                $logger,
+                $this->getUGroupManager()
+            )
         );
 
-        $importer->import($params['configuration'], $params['project'], UserManager::
-        instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+        $importer->import(
+            $params['configuration'],
+            $params['project'],
+            UserManager::instance()->getCurrentUser(),
+            $params['xml_content'],
+            $params['extraction_path']
+        );
     }
 
     /**
