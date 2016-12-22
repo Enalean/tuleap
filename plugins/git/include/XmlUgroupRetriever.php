@@ -22,6 +22,7 @@ namespace Tuleap\Git;
 
 use GitXmlImporter;
 use GitXmlImporterUGroupNotFoundException;
+use Tuleap\Project\UgroupDuplicator;
 use UGroupManager;
 use Logger;
 use SimpleXMLElement;
@@ -55,20 +56,57 @@ class XmlUgroupRetriever
     {
         $ugroup_ids = array();
 
-        foreach ($permission_xmlnode->children() as $ugroup) {
-            if ($ugroup->getName() === GitXmlImporter::UGROUP_TAG) {
-                $ugroup_name = (string) $ugroup;
-                $ugroup      = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+        foreach ($permission_xmlnode->children() as $ugroup_xml) {
+            if ($ugroup_xml->getName() === GitXmlImporter::UGROUP_TAG) {
+                $ugroup    = $this->getUgroup($project, $ugroup_xml);
+                $ugroup_id = $ugroup->getId();
 
-                if ($ugroup === null) {
-                    $this->logger->error("Could not find any ugroup named $ugroup_name");
-                    throw new GitXmlImporterUGroupNotFoundException($ugroup_name);
+                if (! in_array($ugroup_id, $ugroup_ids)) {
+                    array_push($ugroup_ids, $ugroup_id);
                 }
-
-                array_push($ugroup_ids, $ugroup->getId());
             }
         }
 
         return $ugroup_ids;
+    }
+
+    /**
+     * @return array
+     *
+     * @throws GitXmlImporterUGroupNotFoundException
+     */
+    public function getUgroupsForPermissionNode(Project $project, SimpleXMLElement $permission_xmlnode)
+    {
+        $ugroups = array();
+
+        foreach ($permission_xmlnode->children() as $ugroup_xml) {
+            if ($ugroup_xml->getName() === GitXmlImporter::UGROUP_TAG) {
+                $ugroup = $this->getUgroup($project, $ugroup_xml);
+
+                if (! in_array($ugroup, $ugroups)) {
+                    array_push($ugroups, $ugroup);
+                }
+            }
+        }
+
+        return $ugroups;
+    }
+
+    /**
+     * @return Ugroup
+     *
+     * @throws GitXmlImporterUGroupNotFoundException
+     */
+    private function getUgroup(Project $project, SimpleXMLElement $ugroup)
+    {
+        $ugroup_name = (string) $ugroup;
+        $ugroup      = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+
+        if ($ugroup === null) {
+            $this->logger->error("Could not find any ugroup named $ugroup_name");
+            throw new GitXmlImporterUGroupNotFoundException($ugroup_name);
+        }
+
+        return $ugroup;
     }
 }

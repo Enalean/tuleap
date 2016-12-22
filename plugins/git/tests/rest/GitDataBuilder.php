@@ -40,6 +40,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\XmlUgroupRetriever;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -278,7 +279,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $normalizer,
             PermissionsManager::instance(),
             $validator,
-            $sorter
+            $sorter,
+            new XmlUgroupRetriever(new BackendLogger(), new UGroupManager())
         );
 
         $replicator = new FineGrainedPermissionReplicator(

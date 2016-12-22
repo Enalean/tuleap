@@ -31,6 +31,7 @@ use PermissionsManager;
 use Git;
 use Feedback;
 use SimpleXMLElement;
+use Tuleap\Git\XmlUgroupRetriever;
 
 class FineGrainedPermissionFactory
 {
@@ -69,6 +70,10 @@ class FineGrainedPermissionFactory
      * @var FineGrainedDao
      */
     private $dao;
+    /**
+     * @var XmlUgroupRetriever
+     */
+    private $xml_ugroup_retriever;
 
     public function __construct(
         FineGrainedDao $dao,
@@ -76,14 +81,16 @@ class FineGrainedPermissionFactory
         PermissionsNormalizer $normalizer,
         PermissionsManager $permissions_manager,
         PatternValidator $validator,
-        FineGrainedPermissionSorter $sorter
+        FineGrainedPermissionSorter $sorter,
+        XmlUgroupRetriever $xml_ugroup_retriever
     ) {
-        $this->dao                 = $dao;
-        $this->ugroup_manager      = $ugroup_manager;
-        $this->normalizer          = $normalizer;
-        $this->permissions_manager = $permissions_manager;
-        $this->validator           = $validator;
-        $this->sorter              = $sorter;
+        $this->dao                  = $dao;
+        $this->ugroup_manager       = $ugroup_manager;
+        $this->normalizer           = $normalizer;
+        $this->permissions_manager  = $permissions_manager;
+        $this->validator            = $validator;
+        $this->sorter               = $sorter;
+        $this->xml_ugroup_retriever = $xml_ugroup_retriever;
     }
 
     public function getUpdatedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
@@ -475,21 +482,22 @@ class FineGrainedPermissionFactory
 
     public function getFineGrainedPermissionFromXML(GitRepository $repository, SimpleXMLElement $xml_pattern)
     {
-        $pattern = (string) $xml_pattern['value'];
-
-        return $this->buildRepresentationFromXML($repository, $pattern);
-    }
-
-    private function buildRepresentationFromXML(GitRepository $repository, $pattern)
-    {
+        $pattern                  = (string) $xml_pattern['value'];
         $are_we_activating_regexp = false;
+        $writers                  = array();
+        $rewinders                = array();
 
         if (! $this->validator->isValidForRepository($repository, $pattern, $are_we_activating_regexp)) {
             return null;
         }
 
-        $writers   = array();
-        $rewinders = array();
+        if ($xml_pattern->write) {
+            $writers = $this->xml_ugroup_retriever->getUgroupsForPermissionNode($repository->getProject(), $xml_pattern->write);
+        }
+
+        if ($xml_pattern->wplus) {
+            $rewinders = $this->xml_ugroup_retriever->getUgroupsForPermissionNode($repository->getProject(), $xml_pattern->wplus);
+        }
 
         return new FineGrainedPermission(
             0,

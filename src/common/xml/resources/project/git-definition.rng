@@ -98,6 +98,24 @@
                                       <value>tag</value>
                                     </choice>
                                   </attribute>
+                                  <optional>
+                                    <element name="write">
+                                      <zeroOrMore>
+                                        <element name="ugroup">
+                                          <data type="string"/>
+                                        </element>
+                                      </zeroOrMore>
+                                    </element>
+                                  </optional>
+                                  <optional>
+                                    <element name="wplus">
+                                      <zeroOrMore>
+                                        <element name="ugroup">
+                                          <data type="string"/>
+                                        </element>
+                                      </zeroOrMore>
+                                    </element>
+                                  </optional>
                                 </interleave>
                               </element>
                             </zeroOrMore>
