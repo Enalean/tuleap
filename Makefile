@@ -259,7 +259,7 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 	@$(DOCKER) inspect tuleap_es_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_es_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_reverseproxy_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
-	@$(DOCKER) inspect tuleap_gerrit_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_gerrit_data -v /data busybox true
+	@$(DOCKER) inspect tuleap_gerrit_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_gerrit_data -v /home/gerrit busybox true
 
 show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
