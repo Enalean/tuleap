@@ -1,3 +1,6 @@
+Version 1.440 - Tuleap 9.3
+    * request #9661: remove CR tracker
+
 Version 1.439 - Tuleap 9.3
     * REST tests for burndown
 
