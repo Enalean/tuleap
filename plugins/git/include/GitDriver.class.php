@@ -78,14 +78,6 @@ class GitDriver implements DVCSDriver {
         return $this->cloneRepo($source, $destination, '--branch '.$branch);
     }
 
-    public function changeGitUserInfo($repositoryPath, $email, $name) {
-        $this->checkFileExist($repositoryPath);
-        $cmdEmail = 'cd '. escapeshellarg($repositoryPath).' && git config --local user.email '.escapeshellarg($email).' 2>&1';
-        $cmdName = 'cd '.escapeshellarg($repositoryPath).' && git config --local user.name '.escapeshellarg($name).' 2>&1';
-
-        return $this->execGitAction($cmdEmail, 'change user email').' '.$this->execGitAction($cmdName, 'change user name');
-    }
-
     public function add($repositoryPath, $filePathFromRepository) {
         $this->checkFileExist($repositoryPath);
         $cmd = 'cd '.escapeshellarg($repositoryPath).' && git add '.escapeshellarg($filePathFromRepository).' 2>&1';
