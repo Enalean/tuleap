@@ -1,3 +1,6 @@
+Version 5.1087 - Tuleap 9.3
+    * request #9751: Change EOL date for computed field usage
+
 Version 5.1086 - Tuleap 9.3
     * request #9757: Burndown always ask cache generation
 
