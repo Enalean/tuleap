@@ -43,6 +43,7 @@
 	label-Code-Review = -2..+2 group Project Owners
 	submit = group Administrators
 	submit = group Project Owners
+	forgeCommitter = group Administrators
 [access "refs/tags/*"]
 	pushTag = group Administrators
 	pushTag = group Project Owners
@@ -59,3 +60,4 @@
 	value =  0 No score
 	value = +1 Looks good to me, but someone else must approve
 	value = +2 Looks good to me, approved
+	defaultValue = 0

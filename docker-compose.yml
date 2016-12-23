@@ -34,7 +34,7 @@ es:
 
 gerrit:
   container_name: tuleap-gerrit
-  image: enalean/gerrit-tuleap:2.8
+  image: enalean/gerrit-tuleap:2.12
   volumes_from:
    - tuleap_gerrit_data
   env_file:
