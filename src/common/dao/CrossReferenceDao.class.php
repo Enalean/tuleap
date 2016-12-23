@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -87,32 +88,40 @@ class CrossReferenceDao extends DataAccessObject {
         return (bool) ($res && !$res->isError() && $res->rowCount() >= 1);
     }
 
-    public function deleteCrossReference($cross_ref){
+    public function deleteCrossReference($cross_ref)
+    {
+        $target_group_id = $this->da->escapeInt($cross_ref->refTargetGid);
+        $target_id       = $this->da->escapeInt($cross_ref->refTargetId);
+        $target_ref_type = $this->da->quoteSmart($cross_ref->refTargetType);
+
+        $source_group_id = $this->da->escapeInt($cross_ref->refSourceGid);
+        $source_id       = $this->da->quoteSmart($cross_ref->refSourceId);
+        $source_type     = $this->da->quoteSmart($cross_ref->refSourceType);
+
         $sql = "DELETE FROM {$this->table_name} WHERE
-                ( ( target_gid=" . db_ei($cross_ref->refTargetGid) . " AND
-                    target_id='" . db_ei($cross_ref->refTargetId) . "' AND
-                    target_type='" . db_es($cross_ref->refTargetType) . "'
+                ( ( target_gid  = $target_group_id AND
+                    target_id   = $target_id AND
+                    target_type = $target_ref_type
                   )
                   AND
-                  ( source_gid=" . db_ei($cross_ref->refSourceGid) . " AND
-                    source_id='" . db_ei($cross_ref->refSourceId) . "' AND
-                    source_type='" . db_es($cross_ref->refSourceType) . "'
+                  ( source_gid  = $source_group_id AND
+                    source_id   = $source_id AND
+                    source_type = $source_type
                   )
                 )
                 OR
-                ( ( target_gid=" . db_ei($cross_ref->refSourceGid) . " AND
-                    target_id='" . db_ei($cross_ref->refSourceId) . "' AND
-                    target_type='" . db_es($cross_ref->refSourceType) . "'
+                ( ( target_gid  = $target_group_id AND
+                    target_id   = $target_id AND
+                    target_type = $target_ref_type
                   )
                   AND
-                  ( source_gid=" . db_ei($cross_ref->refTargetGid) . " AND
-                    source_id='" . db_ei($cross_ref->refTargetId)  . "' AND
-                    source_type='" . db_es($cross_ref->refTargetType) . "'
+                  ( source_gid  = $source_group_id AND
+                    source_id   = $source_id AND
+                    source_type = $source_type
                   )
                 )";
         $res = $this->da->query($sql);
+
         return (bool) $res;
     }
-
 }
-?>
