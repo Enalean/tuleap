@@ -1027,7 +1027,7 @@ function util_return_to($url) {
     $event_manager = EventManager::instance();
     $url_redirect  = new URLRedirect($event_manager);
     $return_to     = $request->get('return_to');
-    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url, $return_to));
+    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($url, $return_to));
     exit;
 }
 

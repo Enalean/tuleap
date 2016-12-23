@@ -193,7 +193,6 @@ account_login	resend_btn	Renvoyer le message de confirmation
 account_login	name	Nom d'utilisateur
 account_login	password	Mot de passe
 account_login	need_help	Problème de connexion ? Envoyer un email aux administrateurs
-account_login	stay_ssl	Rester en HTTPS après la connexion
 account_login	login_btn	Se connecter
 account_login	lost_pw	Oups, j'ai perdu mon mot de passe
 account_login	create_acct	<b><A HREF="register.php">[Créer un nouveau compte]</A></b><BR> Si vous visitez le site <b>$1</b> pour la première fois vous pouvez créer votre compte dès maintenant ! La création d'un <a href="register.php">nouveau compte</a> ne prend que quelques secondes et vous pourrez ensuite tirer parti de tous les avantages offerts par le site $1.

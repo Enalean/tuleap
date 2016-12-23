@@ -198,7 +198,6 @@ account_login	need_approval	Your account is currently pending an approval from a
 account_login	resend_btn	Resend Confirmation Email
 account_login	name	Username
 account_login	password	Password
-account_login	stay_ssl	Stay in HTTPS after login
 account_login	need_help	Can't log in? Send an email to administrators
 account_login	login_btn	Login
 account_login	lost_pw	Ooops, I forgot my password

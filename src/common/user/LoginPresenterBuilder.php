@@ -38,7 +38,6 @@ class User_LoginPresenterBuilder {
             $return_to,
             $printer_version,
             $form_loginname,
-            $this->getToggleSSL(),
             $additional_connectors,
             $login_csrf
         );
@@ -64,22 +63,5 @@ class User_LoginPresenterBuilder {
         $form_loginname  = '';
 
         return $this->build($return_to, $printer_version, $form_loginname, $is_secure, $login_csrf);
-    }
-
-    /**
-     * Only show the stay in SSL mode if the server is SSL enabled
-     * and it is not forced to operate in SSL mode
-     */
-    private function getToggleSSL() {
-        $_useHttps = false;
-        if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
-            $_useHttps = true;
-        }
-        $toggle_ssl = false;
-        if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 ) {
-            $toggle_ssl = true;
-        }
-
-        return $toggle_ssl;
     }
 }

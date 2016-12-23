@@ -74,7 +74,8 @@ class URLRedirect
         $GLOBALS['HTML']->redirect($url);
     }
 
-    public function makeReturnToUrl(HTTPRequest $request, $url, $return_to) {
+    public function makeReturnToUrl($url, $return_to)
+    {
         $urlToken = parse_url($url);
 
         $server_url = '';
@@ -82,10 +83,6 @@ class URLRedirect
             $server_url = $urlToken['scheme'].'://'.$urlToken['host'];
             if(array_key_exists('port', $urlToken) && $urlToken['port']) {
                 $server_url .= ':'.$urlToken['port'];
-            }
-        } else {
-            if ($request->isSecure() && $this->shouldRedirectToHTTP($request)) {
-                $server_url = 'http://'.$GLOBALS['sys_default_domain'];
             }
         }
 
@@ -129,17 +126,5 @@ class URLRedirect
         }
 
         return $finaleUrl;
-    }
-
-    private function shouldRedirectToHTTP(HTTPRequest $request) {
-        return $this->SSLIsNotMandatory() && $this->userAskedForHTTP($request);
-    }
-
-    private function SSLIsNotMandatory() {
-        return ! $GLOBALS['sys_force_ssl'];
-    }
-
-    private function userAskedForHTTP(HTTPRequest $request) {
-        return ! $request->get('stay_in_ssl');
     }
 }

@@ -20,13 +20,11 @@
  */
 class URLRedirect_MakeUrlTest extends TuleapTestCase {
 
-    private $request;
     private $url_redirect;
 
     public function setUp() {
         $event_manager      = mock('EventManager');
         $this->url_redirect = new URLRedirect($event_manager);
-        $this->request = mock('HTTPRequest');
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 'example.com';
         $GLOBALS['sys_default_domain'] = 'example.com';
@@ -63,73 +61,33 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     }
 
     public function itStayInSSLWhenForceSSLIsOn() {
-        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 1;
 
         $this->assertEqual(
             '/my/index.php',
-            $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', '')
+            $this->url_redirect->makeReturnToUrl('/my/index.php', '')
         );
-    }
-
-    public function itRedirectToHttpWhenForceSSLIsOffAndNoStayInSSL() {
-        stub($this->request)->isSecure()->returns(true);
-        $GLOBALS['sys_force_ssl'] = 0;
-        stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
-        stub($this->request)->get('stay_in_ssl')->returns(0);
-
-        $this->assertEqual(
-            'http://example.com/my/index.php',
-            $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', '')
-        );
-    }
-
-    public function itRedirectToHttpWhenForceSSLIsOffAndNoStayInSSL2() {
-        stub($this->request)->isSecure()->returns(true);
-        $GLOBALS['sys_force_ssl'] = 0;
-        stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(false);
-        stub($this->request)->get('stay_in_ssl')->returns(false);
-
-        $this->assertEqual('http://example.com/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', ''));
-    }
-
-    public function itStayInSSLWhenForceSSLIsOffAndNoStayInSSL() {
-        stub($this->request)->isSecure()->returns(true);
-        $GLOBALS['sys_force_ssl'] = 0;
-        stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
-        stub($this->request)->get('stay_in_ssl')->returns(1);
-
-        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', ''));
-    }
-
-    public function itStayUnencryptedWhenForceSSLIsOffAndNoStayInSSL() {
-        stub($this->request)->isSecure()->returns(false);
-        $GLOBALS['sys_force_ssl'] = 0;
-        stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
-        stub($this->request)->get('stay_in_ssl')->returns(0);
-
-        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', ''));
     }
 
     public function itNotRedirectToUntrustedWebsite() {
         $this->assertEqual(
             '/my/redirect.php?return_to=/',
-            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'http://evil.example.com/')
+            $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'http://evil.example.com/')
         );
         $this->assertEqual(
             '/my/redirect.php?return_to=/',
-            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'https://evil.example.com/')
+            $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'https://evil.example.com/')
         );
     }
 
     public function itNotRedirectToUntrustedCode() {
         $this->assertEqual(
             '/my/redirect.php?return_to=/',
-            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'javascript:alert(1)')
+            $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'javascript:alert(1)')
         );
         $this->assertEqual(
             '/my/redirect.php?return_to=/',
-            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'vbscript:msgbox(1)')
+            $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'vbscript:msgbox(1)')
         );
     }
 
