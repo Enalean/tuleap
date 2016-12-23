@@ -57,9 +57,9 @@ class TroveCatListController
             $trove_category['fullname'],
             $trove_category['description'],
             $trove_category['parent'],
-            $trove_category['display'],
+            $trove_category['root_parent'],
             $trove_category['mandatory'],
-            $trove_category['trove_cat_id'],
+            $trove_category['display'],
             $trove_category['fullpath'],
             $trove_category['fullpath_ids']
         );
@@ -113,7 +113,7 @@ class TroveCatListController
             $current_trove_category['fullname'],
             $current_trove_category['description'],
             $current_trove_category['parent'],
-            $current_trove_category['display'],
+            $current_trove_category['root_parent'],
             $current_trove_category['mandatory'],
             $current_trove_category['display'],
             $current_trove_category['trove_cat_id'],
@@ -131,20 +131,30 @@ class TroveCatListController
                 $child['fullname'],
                 $child['description'],
                 $child['parent'],
-                $child['display_during_project_creation'],
+                isset($current_trove_category['root_parent']) ? $current_trove_category['root_parent'] : 0,
                 $child['is_top_level_id'],
                 $child['display_during_project_creation'],
                 $child['trove_cat_id'],
                 $current_trove_category['fullpath'] . ' :: ' . $child['hierarchy'],
-                $current_trove_category['fullpath'] . ' :: ' . $child['hierarchy_ids']
+                $current_trove_category['fullpath_ids'] . ' :: ' . $child['trove_cat_id']
             );
         }
 
-        $this->trove_cat_dao->Commit();
+        $this->trove_cat_dao->commit();
     }
 
+    /**
+     * @throws TroveCatMissingFullNameException
+     * @throws TroveCatMissingShortNameException
+     */
     private function formatTroveCategoriesFromRequest(HTTPRequest $request)
     {
+        $trove_cat_id = '';
+        $id_validator = new \Valid_Int('id');
+        if ($request->valid($id_validator)) {
+            $trove_cat_id = $request->get('id');
+        }
+
         if (! $request->get('fullname')) {
             throw new TroveCatMissingFullNameException();
         }
@@ -170,6 +180,11 @@ class TroveCatListController
             $last_parent_ids
         );
 
+        $ids = array(0);
+        if (isset($trove_cat_list['hierarchy_id'])) {
+            $ids = explode(' :: ', $trove_cat_list['hierarchy_id']);
+        }
+
         $trove_categories = array(
             'shortname'    => $request->get('shortname'),
             'fullname'     => $request->get('fullname'),
@@ -178,8 +193,9 @@ class TroveCatListController
             'display'      => $display,
             'mandatory'    => $this->isMandatory($display, $request->get('is-mandatory')),
             'trove_cat_id' => $request->get('id'),
-            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] : '',
-            'fullpath_ids' => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy_id'] : ''
+            'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] .  " :: " .$request->get('fullname') : $request->get('fullname'),
+            'fullpath_ids' => (isset($trove_cat_list['hierarchy_id'])) ? $trove_cat_list['hierarchy_id'] . " :: "  . $trove_cat_id : $trove_cat_id,
+            'root_parent'  => (int) $ids[0]
         );
 
         return $trove_categories;
