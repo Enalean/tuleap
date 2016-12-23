@@ -286,6 +286,10 @@ start: ## Start Tuleap Web + LDAP + DB in Docker Compose environment
 	@grep VIRTUAL_HOST .env | cut -d= -f2
 	@echo "You might want to type 'make show-passwords' to see site default passwords"
 
+start-php56: ## Start Tuleap web with php56 & nginx18 support - EXPERIMENTAL
+	@echo "Start Tuleap in PHP 5.6"
+	@$(DOCKER_COMPOSE) -f docker-compose-php56.yml up -d web
+
 start-es:
 	@$(DOCKER_COMPOSE) up -d es
 
