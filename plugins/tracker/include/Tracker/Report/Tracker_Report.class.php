@@ -1314,9 +1314,23 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     } catch (SyntaxError $e) {
                         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'parse_expert_query_error'));
                     } catch (FieldDoesNotExistException $e) {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'validate_expert_query_field_does_not_exist'));
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $GLOBALS['Language']->getText(
+                                'plugin_tracker_report',
+                                'validate_expert_query_field_does_not_exist',
+                                array($e->getMessage())
+                            )
+                        );
                     } catch (FieldIsNotSupportedException $e) {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'validate_expert_query_field_is_not_supported'));
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $GLOBALS['Language']->getText(
+                                'plugin_tracker_report',
+                                'validate_expert_query_field_is_not_supported',
+                                array($e->getMessage())
+                            )
+                        );
                     }
                 }
                 $this->display($layout, $request, $current_user);
