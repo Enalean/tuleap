@@ -1,3 +1,6 @@
+Version 4.314 - Tuleap 9.3
+    * Import patterns permissions
+
 Version 4.313 - Tuleap 9.3
     * Refactoring: Extract ugroup retriever in a dedicated object
 
