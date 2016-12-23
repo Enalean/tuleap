@@ -1542,7 +1542,31 @@ class GitPlugin extends Plugin {
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
             $this->getPatternValidator(),
-            $this->getFineGrainedPermissionSorter()
+            $this->getFineGrainedPermissionSorter(),
+            new XmlUgroupRetriever(
+                $this->getLogger(),
+                $this->getUGroupManager()
+            )
+        );
+    }
+
+    /**
+     * @return FineGrainedPermissionFactory
+     */
+    private function getFineGrainedFactoryWithLogger(Logger $logger)
+    {
+        $dao = $this->getFineGrainedDao();
+        return new FineGrainedPermissionFactory(
+            $dao,
+            $this->getUGroupManager(),
+            new PermissionsNormalizer(),
+            $this->getPermissionsManager(),
+            $this->getPatternValidator(),
+            $this->getFineGrainedPermissionSorter(),
+            new XmlUgroupRetriever(
+                $logger,
+                $this->getUGroupManager()
+            )
         );
     }
 
@@ -2050,7 +2074,7 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedUpdater(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
-            $this->getFineGrainedFactory(),
+            $this->getFineGrainedFactoryWithLogger($logger),
             $this->getFineGrainedPermissionSaver(),
             new XmlUgroupRetriever(
                 $logger,

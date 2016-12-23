@@ -19,7 +19,9 @@ git = element repository {
                     attribute use_regexp { xsd:boolean } &
                     element pattern {
                         attribute value { xsd:string } &
-                        attribute type { "branch" | "tag" }
+                        attribute type { "branch" | "tag" } &
+                        element write { element ugroup { xsd:string }* }? &
+                        element wplus { element ugroup { xsd:string }* }?
                     }*
                 }?
             }? &

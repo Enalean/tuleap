@@ -45,7 +45,8 @@ class FineGrainedPermissionFactoryTest extends TuleapTestCase
                 new FineGrainedRegexpValidator(),
                 mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
             ),
-            new FineGrainedPermissionSorter()
+            new FineGrainedPermissionSorter(),
+            mock('Tuleap\Git\XmlUgroupRetriever')
         );
 
         $this->repository = aGitRepository()->withId(43)->build();
