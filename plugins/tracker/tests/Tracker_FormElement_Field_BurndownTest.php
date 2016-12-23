@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -210,8 +210,8 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
     }
 }
 
-class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTestCase {
-
+class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTestCase
+{
     protected $sprint_tracker_id;
     protected $sprint;
     protected $sprint_tracker;
@@ -223,7 +223,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     protected $timestamp;
     protected $duration;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->sprint_tracker_id = 113;
@@ -256,11 +257,15 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
                 'displayErrorImage',
                 'userCanRead',
                 'getProperty',
-                'isCacheBurndownAlreadyAsked'
+                'isCacheBurndownAlreadyAsked',
+                'getLogger'
             )
         );
-        
+
         $this->burndown_view = mock('Tracker_Chart_Burndown');
+
+        $logger = mock('Tuleap\Tracker\FormElement\BurndownLogger');
+        stub($this->field)->getLogger()->returns($logger);
         stub($this->field)->getBurndown()->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
     }
@@ -644,9 +649,11 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
                 'getComputedDao',
                 'getBurndownRemainingEffortField',
                 'setIsBeingCalculated',
-                'isCacheBurndownAlreadyAsked'
+                'isCacheBurndownAlreadyAsked',
+                'getLogger'
             )
         );
+        stub($this->field)->getLogger()->returns(mock('Tuleap\Tracker\FormElement\BurndownLogger'));
 
         $this->burndown_view = mock('Tracker_Chart_Burndown');
         stub($this->field)->getBurndown()->returns($this->burndown_view);
