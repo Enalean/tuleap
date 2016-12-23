@@ -1,12 +1,7 @@
 Bot Mattermost-Git plugin
 =========================
 
-The plugin is used to notify git event in Mattermost.
-
-
-**examples of use :**
-
-* Notification about new git push.
+The plugin is used to notify git push in Mattermost.
 
 Installation
 ------------
@@ -16,3 +11,5 @@ References
 ----------
 * [https://www.mattermost.org/](https://www.mattermost.org/)
 * [https://about.mattermost.com/](https://about.mattermost.com/)
+* [https://www.tuleap.org/mattermost-integrated-tuleap-git-notifications-and-scrum-stand-up-report](https://www.tuleap.org/mattermost-integrated-tuleap-git-notifications-and-scrum-stand-up-report)
+
