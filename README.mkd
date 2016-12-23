@@ -1,7 +1,7 @@
 Bot Mattermost-Agile Dashboard
 =========================
 
-The plugin is used to notify stand up release.
+The plugin is used to notify stand up summary.
 
 Installation
 ------------
@@ -11,3 +11,4 @@ References
 ----------
 * [https://www.mattermost.org/](https://www.mattermost.org/)
 * [https://about.mattermost.com/](https://about.mattermost.com/)
+* [https://www.tuleap.org/mattermost-integrated-tuleap-git-notifications-and-scrum-stand-up-report](https://www.tuleap.org/mattermost-integrated-tuleap-git-notifications-and-scrum-stand-up-report)
