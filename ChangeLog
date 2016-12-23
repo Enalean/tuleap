@@ -23,6 +23,7 @@ Version 9.3 (Not released yet)
 	* request #9739: Remove surveys
 	* request #9311: Remove HTML_Graph
 	* request #9759 Developpement environnement uses Gerrit 2.12
+	* request #9202: have a development environment with PHP 5.6
 
 	== Security ==
 	* request #9745: XSS on show_help
