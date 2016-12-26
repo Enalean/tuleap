@@ -7,6 +7,7 @@ Version 9.3 (Not released yet)
 	* request #9741: When user timezone is different from timezone server burndown always ask cache generation
 	* request #9724: Pie charts sitadmin homepage improvement
 	* request #9744: Removing one GIT/SVN commit reference removes all Git/SVN references
+	* request #9765: Characters ', ", \ and NUL are backslashed in PHPWiki
 
 	== Enhancement ==
 	* story #9534: import fine grained permissions - Import patterns
