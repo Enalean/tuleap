@@ -517,11 +517,11 @@ class Request {
     
 
     function _fix_magic_quotes_gpc() {
-        $needs_fix = array('HTTP_POST_VARS',
-                           'HTTP_GET_VARS',
-                           'HTTP_COOKIE_VARS',
-                           'HTTP_SERVER_VARS',
-                           'HTTP_POST_FILES');
+        $needs_fix = array('_POST',
+                           '_GET',
+                           '_COOKIE',
+                           '_SERVER',
+                           '_FILES');
         
         // Fix magic quotes.
         if (get_magic_quotes_gpc()) {

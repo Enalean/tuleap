@@ -27,7 +27,7 @@ AddType application/x-httpd-php .php
 
 # PHP variables
 php_flag register_globals on
-php_flag magic_quotes_gpc on
+php_flag magic_quotes_gpc off
 php_flag short_open_tag on
 # Needed by trackers and phpWiki
 php_flag register_long_arrays on
