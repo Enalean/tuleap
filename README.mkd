@@ -1,20 +1,10 @@
 BotMattermost plugin
 ===============
 
-The plugin is used to notify what you decide in Mattermost.
-
-
-**examples of use :**
-
-* The creation of a new tracker.
-* Notification about new git commit.
-
-Installation
-------------
-You need to install the BotMattermost plugin in the following folder :
-`tuleap/plugins/`
+The plugin is used to managed Mattermost bots.
 
 References
 ----------
 * [https://www.mattermost.org/](https://www.mattermost.org/)
 * [https://about.mattermost.com/](https://about.mattermost.com/)
+* [https://www.tuleap.org/mattermost-integrated-tuleap-git-notifications-and-scrum-stand-up-report](https://www.tuleap.org/mattermost-integrated-tuleap-git-notifications-and-scrum-stand-up-report)
