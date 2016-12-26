@@ -134,4 +134,8 @@ class PluginsAdministration_ManageAllowedProjectsPresenter {
     public function resource_allowed_project_revoke_no() {
         return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_no');
     }
+
+    public function resource_allowed_project_filter_empty() {
+        return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
+    }
 }
