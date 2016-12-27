@@ -1,0 +1,21 @@
+Install
+=======
+
+```bash
+$ npm install
+```
+
+Generate the parser
+===================
+
+```bash
+$ node genereate_parser.js
+```
+
+Test the parser
+===============
+
+```bash
+$ php test_parser.php
+```
+
