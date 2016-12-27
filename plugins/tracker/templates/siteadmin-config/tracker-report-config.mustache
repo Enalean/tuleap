@@ -1,0 +1,50 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
+
+    {{# sections }}
+        <nav class="tlp-tabs">
+            <a class="tlp-tab" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+            <a class="tlp-tab" href="{{ natures_url }}">{{ natures }}</a>
+            <a class="tlp-tab" href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
+            <a class="tlp-tab tlp-tab-active" href="{{ report_config_url }}">{{ report_config_panel }}</a>
+        </nav>
+    {{/ sections }}
+
+    <div class="tlp-framed-horizontally">
+
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="fa fa-file-text-o tlp-pane-title-icon"></i> {{ report_config_pane_title }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>{{ report_config_desc }}</p>
+
+                    <form method="POST" action="">
+                        <input type="hidden" name="action" value="update-report-config" />
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="input-query-limit">{{ query_limit_label }}</label>
+                            <input type="number"
+                                   id="input-query-limit"
+                                   class="tlp-input"
+                                   name="query_limit"
+                                   placeholder="{{ default_query_limit }}"
+                                   size="5"
+                                   value="{{# query_limit }}{{ query_limit }}{{/ query_limit }}"
+                                   min="1"
+                            />
+                        </div>
+
+                        <div class="tlp-pane-section-submit">
+                            <button type="submit" class="tlp-button-primary"><i class="fa fa-save tlp-button-icon"></i> {{ save_conf }}</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>
