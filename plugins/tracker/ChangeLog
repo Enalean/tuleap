@@ -1,3 +1,6 @@
+Version 5.1088 - Tuleap 9.3
+    * story #8858: Parse a simple query
+
 Version 5.1087 - Tuleap 9.3
     * request #9751: Change EOL date for computed field usage
 
