@@ -661,13 +661,17 @@ class ReferenceManager {
      * @param $group_id the group_id of the project
      * @return array of {ReferenceInstance} : an array of project references extracted in the text $html
      */
-    function extractReferences($html,$group_id)
+    function extractReferences($html, $group_id)
     {
-        $referencesInstances=array();
-        $matches = $this->_extractAllMatches($html);
+        $this->tmpGroupIdForCallbackFunction = $group_id;
+        $referencesInstances                 = array();
+        $matches                             = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
             $ref_instance=$this->_getReferenceInstanceFromMatch($match);
-            if (! $ref_instance) continue;
+            if (! $ref_instance) {
+                continue;
+            }
+
             $ref = $ref_instance->getReference();
 
             // Replace description key with real description if needed
@@ -697,6 +701,7 @@ class ReferenceManager {
             }
         }
 
+        $this->tmpGroupIdForCallbackFunction = null;
         return $referencesInstances;
     }
     
