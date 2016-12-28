@@ -1,3 +1,6 @@
+Version 4.316 - Tuleap 9.3
+    * request #9769: Be able to build Docker images running Tuleap unit tests again
+
 Version 4.315 - Tuleap 9.3
     * Remove unused exception
 
