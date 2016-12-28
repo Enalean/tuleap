@@ -1,3 +1,6 @@
+Version 1.36 - Tuleap 9.3
+    * request #9760: Hudson widget should only load data during ajax calls
+
 Version 1.35 - Tuleap 9.0
     * request #9567: Update Hudson/Jenkins plugins to mention Jenkins instead of Hudson
 
