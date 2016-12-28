@@ -10,6 +10,7 @@ Version 9.3 (Not released yet)
 	* request #9765: Characters ', ", \ and NUL are backslashed in PHPWiki
 
 	== Enhancement ==
+	* story #8858 : Handle expert query during export/import XML
 	* story #9534: import fine grained permissions - Import patterns
 	* request #9712: empty state in system events is broken
 	* request #9710: Remove license agreement
@@ -32,7 +33,7 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.51
-	* tracker: 5.1089
+	* tracker: 5.1090
 	* git: 4.315
 	* graphontrackersv5: 5.28
 	* statistics: 0.77
