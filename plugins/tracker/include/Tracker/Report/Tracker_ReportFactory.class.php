@@ -256,8 +256,8 @@ class Tracker_ReportFactory {
                      'description' => (string)$xml->description);
         $row['is_default'] = isset($att['is_default']) ? (int)$att['is_default'] : 0;
         $row['is_query_displayed'] = isset($att['is_query_displayed']) ? (int)$att['is_query_displayed'] : 1;
-        $row['is_in_expert_mode']  = 0;
-        $row['expert_query']       = '';
+        $row['is_in_expert_mode']  = isset($att['is_in_expert_mode']) ? (int)$att['is_in_expert_mode'] : 0;
+        $row['expert_query']       = isset($att['expert_query']) ? (string)$att['expert_query'] : "";
         // in case old id values are important modify code here
         if (false) {
             foreach ($xml->attributes() as $key => $value) {

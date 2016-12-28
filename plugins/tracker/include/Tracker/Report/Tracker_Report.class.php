@@ -1460,6 +1460,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         if (!$this->is_query_displayed) {
             $root->addAttribute('is_query_displayed', $this->is_query_displayed);
         }
+        if ($this->is_in_expert_mode) {
+            $root->addAttribute('is_in_expert_mode', "1");
+        }
+        if ($this->expert_query) {
+            $root->addAttribute('expert_query', $this->expert_query);
+        }
         $root->addChild('name', $this->name);
         // only add if not empty
         if ($this->description) {

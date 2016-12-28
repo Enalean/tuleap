@@ -371,7 +371,9 @@ tracker =
     reportContent =
         # these attributes should be optional and have  default values
         attribute is_default { "0" | "1" }?, # default is false
-        attribute is_query_displayed { "0" | "1" }?, # defaout is true
+        attribute is_query_displayed { "0" | "1" }?, # default is true
+        attribute is_in_expert_mode { "0" | "1" }?, # default is false
+        attribute expert_query { xsd:string }?,
         # these ids are initial ids of the exported report
         attribute id { xsd:long }?,
         attribute tracker_id { xsd:long }?,
