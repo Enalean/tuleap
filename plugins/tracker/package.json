@@ -1,0 +1,17 @@
+{
+  "name": "tracker",
+  "version": "0.1.0",
+  "description": "Tuleap Tracker plugin",
+  "main": " ",
+  "author": "Enalean",
+  "license": "GPL-2.0",
+  "repository": "ssh://gitolite@tuleap.net/tuleap/tuleap/stable.git",
+  "private": true,
+  "dependencies": {
+    "codemirror": "5.22.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "cp node_modules/codemirror/lib/codemirror.css node_modules/codemirror/lib/_codemirror.scss"
+  }
+}

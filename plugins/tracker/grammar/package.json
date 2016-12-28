@@ -1,4 +1,11 @@
 {
+  "name": "TQL-grammar",
+  "version": "0.1.0",
+  "description": "Tuleap Query Language grammar",
+  "main": "generate_parser.js",
+  "author": "Enalean",
+  "license": "GPL-2.0",
+  "private": true,
   "dependencies": {
     "pegjs": "0.8.0",
     "php-pegjs": "0.8.7"

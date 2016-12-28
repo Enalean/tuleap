@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "Tuleap CSS framework",
   "author": "Enalean",
-  "license": "GNU General Public License v2",
+  "license": "GPL-2.0",
   "main": "gulpfile.js",
+  "private": true,
   "dependencies": {},
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",

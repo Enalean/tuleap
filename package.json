@@ -2,8 +2,10 @@
   "author": "Enalean Team",
   "name": "tuleap",
   "homepage": "https://tuleap.org",
-  "licenses": {
-    "type": "GNU General Public License v2"
+  "license": "GPL-2.0",
+  "private": true,
+  "engines": {
+    "node": "> 0.12.18"
   },
   "dependencies": {},
   "devDependencies": {
@@ -15,15 +17,16 @@
     "gulp-sass": "^2.3.2",
     "gulp-scss-lint": "^0.4.0",
     "lodash.map": "4.6.0",
-    "merge2": "1.0.2"
+    "merge2": "1.0.2",
+    "read-pkg": "2.0.0",
+    "run-sequence": "1.2.2"
   },
   "scripts": {
-    "build": "node_modules/.bin/gulp build",
-    "tlp": "node_modules/.bin/gulp tlp",
-    "core": "node_modules/.bin/gulp core",
-    "js": "node_modules/.bin/gulp js",
-    "sass": "node_modules/.bin/gulp sass",
-    "watch": "node_modules/.bin/gulp watch",
-    "scss-lint": "node_modules/.bin/gulp scss-lint"
+    "build": "gulp build",
+    "core": "gulp core",
+    "js": "gulp js",
+    "sass": "gulp sass",
+    "watch": "gulp watch",
+    "scss-lint": "gulp scss-lint"
   }
 }

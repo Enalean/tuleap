@@ -1,15 +1,18 @@
 'use strict';
 
-var gulp      = require('gulp'),
-    merge     = require('merge2'),
-    map       = require('lodash.map'),
-    concat    = require('gulp-concat'),
-    rev       = require('gulp-rev'),
-    del       = require('del'),
-    fs        = require('fs'),
-    path      = require('path'),
-    scss_lint = require('gulp-scss-lint'),
-    sass      = require('gulp-sass');
+var gulp        = require('gulp'),
+    exec        = require('child_process').exec,
+    readPkg     = require('read-pkg'),
+    runSequence = require('run-sequence'),
+    merge       = require('merge2'),
+    map         = require('lodash.map'),
+    concat      = require('gulp-concat'),
+    rev         = require('gulp-rev'),
+    del         = require('del'),
+    fs          = require('fs'),
+    path        = require('path'),
+    scss_lint   = require('gulp-scss-lint'),
+    sass        = require('gulp-sass');
 
 function get_all_plugins_from_manifests() {
     var plugins_path = './plugins';
@@ -47,6 +50,65 @@ function concat_core_js(files_hash, target_dir) {
             merge: true
         }))
         .pipe(gulp.dest(target_dir));
+}
+
+function find_components_with_package_and_build_script(component_paths) {
+    var promises = map(component_paths, function (component_path) {
+        var package_json_path = path.join(component_path, 'package.json');
+
+        return readPkg(package_json_path)
+        .catch(function() {
+            throw new Error("package.json file could not be found at " + package_json_path);
+        })
+        .then(function (pkg) {
+            if (! pkg.name) {
+                throw new Error("package.json file should have a 'name' " + package_json_path);
+            }
+
+            if (! pkg.scripts || ! pkg.scripts.build) {
+                throw new Error("package.json file should have a 'build' script " + package_json_path);
+            }
+
+            return {
+                name: pkg.name,
+                path: component_path
+            };
+        });
+    });
+
+    return Promise.all(promises);
+}
+
+function declare_component_tasks(component_paths) {
+    var install_tasks = [],
+        build_tasks   = [];
+
+    var promise = find_components_with_package_and_build_script(component_paths).then(function (components) {
+        components.forEach(function(component) {
+            gulp.task('install-' + component.name, function (cb) {
+                exec('npm install', {
+                    cwd: component.path
+                }, cb);
+            });
+
+            gulp.task('build-' + component.name, ['install-' + component.name], function (cb) {
+                exec('npm run build', {
+                    cwd: component.path
+                }, cb);
+            });
+
+            install_tasks.push('install-' + component.name);
+            build_tasks.push('build-' + component.name);
+        });
+    });
+
+    gulp.task('components', function(cb) {
+        promise.then(function() {
+            runSequence(install_tasks.concat(build_tasks), cb);
+        }).catch(function (error) {
+            cb(error);
+        });
+    });
 }
 
 function declare_plugin_tasks(asset_dir) {
@@ -181,8 +243,11 @@ function watch_plugins() {
     });
 }
 
-module.exports.sass_clean           = sass_clean;
-module.exports.sass_build           = sass_build;
-module.exports.watch_plugins        = watch_plugins;
-module.exports.concat_core_js       = concat_core_js;
-module.exports.declare_plugin_tasks = declare_plugin_tasks;
+module.exports = {
+    sass_clean             : sass_clean,
+    sass_build             : sass_build,
+    watch_plugins          : watch_plugins,
+    concat_core_js         : concat_core_js,
+    declare_plugin_tasks   : declare_plugin_tasks,
+    declare_component_tasks: declare_component_tasks
+};
