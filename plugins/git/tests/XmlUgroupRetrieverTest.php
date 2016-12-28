@@ -94,7 +94,7 @@ XML;
         $this->assertEqual($this->retriever->getUgroupsForPermissionNode($this->project, $xml_node), $expected);
     }
 
-    public function itThrowsAnExceptionIfUgroupDoesNotExist()
+    public function itSkipsIfUgroupDoesNotExist()
     {
         $xml = <<<XML
             <write>
@@ -105,11 +105,10 @@ XML;
 XML;
 
         $xml_node = new SimpleXMLElement($xml);
+        $expected = array($this->ugroup_01, $this->ugroup_02);
 
-        expect($this->logger)->error()->once();
-        $this->expectException('GitXmlImporterUGroupNotFoundException');
-
-        $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node);
+        expect($this->logger)->warn()->once();
+        $this->assertEqual($this->retriever->getUgroupsForPermissionNode($this->project, $xml_node), $expected);
     }
 
     public function itDoesNotReturnMultipleTimeTheSameUgroup()

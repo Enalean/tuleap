@@ -58,10 +58,15 @@ class XmlUgroupRetriever
 
         foreach ($permission_xmlnode->children() as $ugroup_xml) {
             if ($ugroup_xml->getName() === GitXmlImporter::UGROUP_TAG) {
-                $ugroup    = $this->getUgroup($project, $ugroup_xml);
+                $ugroup = $this->getUgroup($project, $ugroup_xml);
+
+                if (! $ugroup) {
+                    continue;
+                }
+
                 $ugroup_id = $ugroup->getId();
 
-                if (! in_array($ugroup_id, $ugroup_ids)) {
+                if ($ugroup && ! in_array($ugroup_id, $ugroup_ids)) {
                     array_push($ugroup_ids, $ugroup_id);
                 }
             }
@@ -83,7 +88,7 @@ class XmlUgroupRetriever
             if ($ugroup_xml->getName() === GitXmlImporter::UGROUP_TAG) {
                 $ugroup = $this->getUgroup($project, $ugroup_xml);
 
-                if (! in_array($ugroup, $ugroups)) {
+                if ($ugroup && ! in_array($ugroup, $ugroups)) {
                     array_push($ugroups, $ugroup);
                 }
             }
@@ -93,9 +98,7 @@ class XmlUgroupRetriever
     }
 
     /**
-     * @return Ugroup
-     *
-     * @throws GitXmlImporterUGroupNotFoundException
+     * @return mixed Ugroup | null
      */
     private function getUgroup(Project $project, SimpleXMLElement $ugroup)
     {
@@ -103,8 +106,7 @@ class XmlUgroupRetriever
         $ugroup      = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
 
         if ($ugroup === null) {
-            $this->logger->error("Could not find any ugroup named $ugroup_name");
-            throw new GitXmlImporterUGroupNotFoundException($ugroup_name);
+            $this->logger->warn("Could not find any ugroup named $ugroup_name, skipping.");
         }
 
         return $ugroup;
