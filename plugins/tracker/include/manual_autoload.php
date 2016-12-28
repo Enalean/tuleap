@@ -23,6 +23,9 @@ function autoload_tracker_parser($classname)
     if (strtolower($classname) === 'tuleap\\tracker\\report\\query\\advanced\\grammar\\parser') {
         require_once __DIR__ . '/Tracker/Report/Query/Advanced/Grammar/Parser.php';
     }
+    if (strtolower($classname) === 'tuleap\\tracker\\report\\query\\advanced\\grammar\\syntaxerror') {
+        require_once __DIR__ . '/Tracker/Report/Query/Advanced/Grammar/Parser.php';
+    }
 }
 
 spl_autoload_register('autoload_tracker_parser');
