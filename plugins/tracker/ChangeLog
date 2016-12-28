@@ -1,3 +1,6 @@
+Version 5.1089 - Tuleap 9.3
+    * request #9775: "<" and ">" mistreated in comment edition
+
 Version 5.1088 - Tuleap 9.3
     * story #8858: Parse a simple query
 
