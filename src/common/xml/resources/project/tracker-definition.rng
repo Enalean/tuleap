@@ -862,10 +862,22 @@
       </attribute>
     </optional>
     <optional>
-      <!--
-        defaout is true
-        these ids are initial ids of the exported report
-      -->
+      <!-- default is true -->
+      <attribute name="is_in_expert_mode">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <!-- default is false -->
+      <attribute name="expert_query">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
+      <!-- these ids are initial ids of the exported report -->
       <attribute name="id">
         <data type="long"/>
       </attribute>

@@ -69,6 +69,7 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
 
         //default values
         $this->assertEqual($reports[0]->is_query_displayed, 1);
+        $this->assertEqual($reports[0]->is_in_expert_mode, 0);
     }
 }
 
