@@ -45,11 +45,11 @@ class Validator implements Visitor
         );
 
         if (! $field) {
-            throw new FieldDoesNotExistException();
+            throw new FieldDoesNotExistException($comparison->getField());
         }
 
         if (! $field instanceof Tracker_FormElement_Field_Text) {
-            throw new FieldIsNotSupportedException();
+            throw new FieldIsNotSupportedException($comparison->getField());
         }
     }
 
