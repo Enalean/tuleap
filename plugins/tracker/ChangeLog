@@ -1,3 +1,6 @@
+Version 5.1091 - Tuleap 9.3
+    * story #8858: Parse AND/OR queries
+
 Version 5.1090 - Tuleap 9.3
     * Handle expert query during export/import XML
 
