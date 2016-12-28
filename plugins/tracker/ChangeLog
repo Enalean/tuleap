@@ -1,3 +1,6 @@
+Version 5.1094 - Tuleap 9.3
+    * story #8858: Add fields information in errors
+
 Version 5.1093 - Tuleap 9.3
     * story #8858: Add missing generated class in the autoload
 
