@@ -19,6 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
+use PFUser;
+use Tracker;
+
 class AndOperand
 {
     /**
@@ -34,5 +37,20 @@ class AndOperand
     {
         $this->operand = $operand;
         $this->tail    = $tail;
+    }
+
+    public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
+    {
+        return $visitor->visitAndOperand($this, $user, $tracker);
+    }
+
+    public function getOperand()
+    {
+        return $this->operand;
+    }
+
+    public function getTail()
+    {
+        return $this->tail;
     }
 }

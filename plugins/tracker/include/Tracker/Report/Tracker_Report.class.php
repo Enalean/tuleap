@@ -24,9 +24,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldDoesNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldIsNotSupported;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Validator;
 
@@ -76,6 +77,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @var OrExpression
      */
     private $parsed_expert_query;
+    /**
+     * @var QueryBuilder
+     */
+    private $query_builder;
 
     /**
      * Constructor
@@ -118,8 +123,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
 
-        $this->parser          = new Parser();
-        $this->validator       = new Validator(Tracker_FormElementFactory::instance());
+        $this->parser        = new Parser();
+        $this->validator     = new Validator(Tracker_FormElementFactory::instance());
+        $this->query_builder = new QueryBuilder(Tracker_FormElementFactory::instance());
     }
 
     public function setProjectId($id) {
@@ -1304,12 +1310,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $parsed_query = $this->parseExpertQuery();
-                        $parsed_query->validate($this->getCurrentUser(), $this->getTracker(), $this->validator);
+                        $parsed_query->accept($this->validator, $this->getCurrentUser(), $this->getTracker());
                     } catch (SyntaxError $e) {
                         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'parse_expert_query_error'));
                     } catch (FieldDoesNotExistException $e) {
                         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'validate_expert_query_field_does_not_exist'));
-                    } catch (FieldIsNotSupported $e) {
+                    } catch (FieldIsNotSupportedException $e) {
                         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'validate_expert_query_field_is_not_supported'));
                     }
                 }
@@ -1681,13 +1687,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     {
         if (! $this->matching_ids) {
             $additional_from = array();
+            $additional_where = array();
 
             if ($this->expert_query) {
                 try {
                     $expression = $this->parseExpertQuery();
 
                     if ($this->canExecuteExpertQuery($expression)) {
-                        $additional_from = array($expression->getFrom($this->getTracker()));
+                        $from_where = $expression->accept(
+                            $this->query_builder,
+                            $this->getCurrentUser(),
+                            $this->getTracker()
+                        );
+                        $additional_from  = array($from_where->getFrom());
+                        $additional_where = array($from_where->getWhere());
                     }
                 } catch (SyntaxError $e) {
                 }
@@ -1695,7 +1708,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
             $this->matching_ids = $this->getMatchingIdsInDb(
                 $additional_from,
-                array()
+                $additional_where
             );
         }
 
@@ -1741,10 +1754,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function canExecuteExpertQuery($parsed_query)
     {
         try {
-            $parsed_query->validate($this->getCurrentUser(), $this->getTracker(), $this->validator);
+            $parsed_query->accept($this->validator, $this->getCurrentUser(), $this->getTracker());
         } catch (FieldDoesNotExistException $e) {
             return false;
-        } catch (FieldIsNotSupported $e) {
+        } catch (FieldIsNotSupportedException $e) {
             return false;
         }
 

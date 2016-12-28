@@ -22,6 +22,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use Exception;
 
-class FieldIsNotSupported extends Exception
+class FieldIsNotSupportedException extends Exception
 {
 }
