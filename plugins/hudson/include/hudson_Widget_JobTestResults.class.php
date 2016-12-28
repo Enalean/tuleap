@@ -71,10 +71,14 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_testresults');
     }
     
-    function loadContent($id) {
+    function loadContent($id)
+    {
         $this->content_id = $id;
+    }
 
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+    private function initContent()
+    {
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $this->content_id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -102,6 +106,8 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
     }
     
     function getContent() {
+        $this->initContent();
+
         $html = '';
         if ($this->job != null && $this->test_result != null) {
                         

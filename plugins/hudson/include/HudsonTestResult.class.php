@@ -67,15 +67,15 @@ class HudsonTestResult {
             throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_test_result_url))); 
         }
     }
-    
+
     function getFailCount() {
-        return $this->dom_job->failCount;
+        return (int) $this->dom_job->failCount;
     }
     function getPassCount() {
-        return $this->dom_job->passCount;
+        return (int) $this->dom_job->passCount;
     }
     function getSkipCount() {
-        return $this->dom_job->skipCount;
+        return (int) $this->dom_job->skipCount;
     }
     function getTotalCount() {
         return $this->getFailCount() + $this->getPassCount() + $this->getSkipCount();
@@ -90,7 +90,7 @@ class HudsonTestResult {
                     'f' => $this->getFailCount(),
                     's' => $this->getSkipCount()
                 ));
+
         return '<img class="test_result_pie_chart" src="' . $url . '" alt="Test result: ' . $purifier->purify($this->getPassCount() . '/' . $this->getTotalCount()) . '" title="Test result: ' . $purifier->purify($this->getPassCount() . '/' . $this->getTotalCount()) . '" />';
     }
-        
 }
