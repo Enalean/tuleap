@@ -114,18 +114,6 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(strlen($sha1[1]), 40);
     }
 
-    public function testchangeGitUserInfo() {
-            $driver = new GitDriver();
-            $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
-
-            $driver->changeGitUserInfo($this->destinationPath, "test@example.com", "testman");
-            exec('cd '.$this->destinationPath.' && git config --get user.name',$out,$ret);
-            $this->assertEqual(implode($out), "testman");
-
-            exec('cd '.$this->destinationPath.' && git config --get user.email',$out2,$ret2);
-            $this->assertEqual(implode($out2), "test@example.com");
-    }
-
     public function testCommit() {
             $driver = new GitDriver();
             $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
@@ -133,7 +121,6 @@ class GitDriverTest extends TuleapTestCase {
             @exec('cd '.$this->destinationPath.' && touch toto');
 
             $driver->add($this->destinationPath, 'toto');
-            $driver->changeGitUserInfo($this->destinationPath, "test@test.fr", "testman");
             $driver->commit($this->destinationPath, "test commit");
 
             exec('cd '.$this->destinationPath.' && git status --porcelain',$out,$ret);
@@ -155,7 +142,6 @@ class GitDriverTest extends TuleapTestCase {
 
             $driver = new GitDriver();
             $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
-            $driver->changeGitUserInfo($this->destinationPath, "test@test.fr", "testman");
             @exec('cd '.$this->destinationPath.'&& touch test.txt && git add . && git commit -m "add master" && git push --quiet -u '. $this->sourcePath .' master');
 
             $driver->cloneAtSpecifiqBranch($this->sourcePath, $destinationPath2, "master");
@@ -167,7 +153,6 @@ class GitDriverTest extends TuleapTestCase {
 
             @exec('cd '.$destinationPath2.'&& touch titi.txt');
             $driver->add($destinationPath2, 'titi.txt');
-            $driver->changeGitUserInfo($destinationPath2, "test2@test.fr", "testman2");
             $driver->commit($destinationPath2, "test commit");
             $driver->mergeAndPush($destinationPath2, $this->sourcePath);
 
