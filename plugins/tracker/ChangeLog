@@ -1,3 +1,6 @@
+Version 5.1092 - Tuleap 9.3
+    * story #8858: Exclude generated files from the autoload
+
 Version 5.1091 - Tuleap 9.3
     * story #8858: Parse AND/OR queries
 
