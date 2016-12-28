@@ -89,7 +89,6 @@ class TroveCatHierarchyRetriever
                 'description'                     => $row_child['description'],
                 'spacing'                         => (count($last_parent) - 1) * 30,
                 'has_spacing'                     => count($last_parent) > 1,
-                'is_deletable'                    => ! $this->isNodeARootNode($row_child['parent']),
                 'fullname'                        => $row_child['fullname'],
                 'shortname'                       => $row_child['shortname'],
                 'is_mandatory'                    => (boolean) $row_child['mandatory'],
@@ -168,10 +167,5 @@ class TroveCatHierarchyRetriever
                 $last_parent_ids = array();
             }
         }
-    }
-
-    private function isNodeARootNode($parent)
-    {
-        return (int) $parent === 0;
     }
 }

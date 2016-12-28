@@ -543,7 +543,6 @@ admin_trove_cat_list	header	Catégories de projets
 admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Supprimer
 admin_trove_cat_list	add	Ajouter une catégorie
-admin_trove_cat_list	deletion_forbidden_label	Impossible de détruire une hiérarchie, merci de supprimer d'abord ses enfants.
 admin_trove_cat_list	cancel	Annuler
 #-----------------------------------------------
 # Script: src/www/admin/index.php

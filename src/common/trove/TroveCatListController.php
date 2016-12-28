@@ -201,17 +201,8 @@ class TroveCatListController
         return $trove_categories;
     }
 
-    private function isRoot($parent)
-    {
-        return (int) $parent === 0;
-    }
-
     public function delete(HTTPRequest $request)
     {
-        if ($this->isRoot($request->get('parent'))) {
-            throw new TroveCatParentIsRootException();
-        }
-
         $trove_cat_id            = $request->get('trove_cat_id');
         $last_parent             = array();
         $already_seen            = array();

@@ -97,12 +97,6 @@ class TroveCatRouter
                 $GLOBALS['Language']->getText('admin_trove_cat_edit', 'update_forbidden')
             );
             $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
-        } catch (TroveCatParentIsRootException $e) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('admin_trove_cat_delete', 'parent_is_root')
-            );
-            $GLOBALS['Response']->redirect('/admin/trove/trove_cat_list.php');
         }
     }
 

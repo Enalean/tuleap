@@ -551,7 +551,6 @@ admin_trove_cat_list	header	Project categories
 admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
 admin_trove_cat_list	add	Add a trove category
-admin_trove_cat_list	deletion_forbidden_label	Cannot delete a hierarchy, please remove all children before.
 admin_trove_cat_list	cancel	Cancel
 #-----------------------------------------------
 # Script: src/www/admin/index.php
