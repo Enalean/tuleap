@@ -71,8 +71,8 @@ autoload:
 	@echo "Generate tests"
 	@(cd tests/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
-	     echo "Generate plugin $$path"; \
-	     (cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .) \
+		echo "Generate plugin $$path"; \
+		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .) \
         done;
 
 autoload-with-userid:
@@ -82,8 +82,8 @@ autoload-with-userid:
 	@(cd tests/lib; phpab  -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		echo "Generate plugin $$path"; \
-		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php) \
-		done;
+		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .; chown $(USER_ID):$(USER_ID) autoload.php) \
+        done;
 
 autoload-docker: ## Generate autoload files
 	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --autoload
