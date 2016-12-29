@@ -33,6 +33,7 @@ class tracker_encryptionPlugin extends Plugin
         $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
+        $this->addHook('javascript_file');
         $this->renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_ENCRYPTION_TEMPLATE_DIR);
     }
 
@@ -144,5 +145,12 @@ class tracker_encryptionPlugin extends Plugin
         $params = array("tracker_id" => $tracker_id, "key" => $key);
         $this->tracker_encryption_add_key($params);
         $this->displayTrackerKeyForm($tracker_id);
+    }
+
+    public function javascript_file($params)
+    {
+        if ($this->currentRequestIsForPlugin()) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/update_tracker_key_modal.js"></script>'.PHP_EOL;
+        }
     }
 }
