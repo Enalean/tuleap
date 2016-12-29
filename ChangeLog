@@ -8,6 +8,7 @@ Version 9.3 (Not released yet)
 	* request #9724: Pie charts sitadmin homepage improvement
 	* request #9744: Removing one GIT/SVN commit reference removes all Git/SVN references
 	* request #9765: Characters ', ", \ and NUL are backslashed in PHPWiki
+	* request #9754: Cannot use newly created Project Categories
 
 	== Enhancement ==
 	* story #8858 : query tracker with expressions
