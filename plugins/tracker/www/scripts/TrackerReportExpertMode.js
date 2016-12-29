@@ -21,6 +21,7 @@
     $(document).ready(function() {
         initializeTooltip();
         initializeTrackerReportQuery();
+        initializeTrackerReportAllowedFields();
 
         function initializeTooltip() {
             $('#tracker-report-expert-query-tooltip').tooltip({ placement: 'right'});
@@ -52,6 +53,27 @@
                 tracker_report_expert_query.classList.add('tracker-report-query-undisplayed');
 
                 sendRequestNewMode('store-normal-mode');
+            });
+        }
+
+        function initializeTrackerReportAllowedFields() {
+            var tracker_report_expert_allowed_fields = document.getElementsByClassName('tracker-report-expert-allowed-field');
+
+            if (! tracker_report_expert_allowed_fields) {
+                return;
+            }
+
+            [].forEach.call(tracker_report_expert_allowed_fields, function (field) {
+                field.addEventListener('click', function (event) {
+                    var tracker_report_expert_query = document.getElementById('tracker-report-expert-query-textarea');
+
+                    if (! tracker_report_expert_query) {
+                        return;
+                    }
+
+                    tracker_report_expert_query.value = tracker_report_expert_query.value.concat(' ', event.target.value);
+                    event.target.selected = false;
+                });
             });
         }
 

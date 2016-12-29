@@ -25,6 +25,10 @@ class TrackerReportExpertModePresenter
     public $class_toggler;
     public $is_in_expert_mode;
     public $expert_query;
+    /**
+     * @var array
+     */
+    public $allowed_fields;
 
     public $allowed_fields_label;
     public $query_label;
@@ -38,12 +42,14 @@ class TrackerReportExpertModePresenter
         $id,
         $class_toggler,
         $is_in_expert_mode,
-        $expert_query
+        $expert_query,
+        array $allowed_fields
     ) {
-        $this->id                 = $id;
-        $this->class_toggler      = $class_toggler;
-        $this->is_in_expert_mode  = $is_in_expert_mode;
-        $this->expert_query       = $expert_query;
+        $this->id                = $id;
+        $this->class_toggler     = $class_toggler;
+        $this->is_in_expert_mode = $is_in_expert_mode;
+        $this->expert_query      = $expert_query;
+        $this->allowed_fields    = $allowed_fields;
 
         $this->allowed_fields_label   = $GLOBALS['Language']->getText('plugin_tracker_report', 'allowed_fields_label');
         $this->query_label            = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_label');

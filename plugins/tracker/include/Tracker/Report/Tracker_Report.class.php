@@ -124,8 +124,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_at          = $updated_at;
 
         $this->parser        = new Parser();
-        $this->validator     = new Validator(Tracker_FormElementFactory::instance());
-        $this->query_builder = new QueryBuilder(Tracker_FormElementFactory::instance());
+        $this->validator     = new Validator($this->getFormElementFactory());
+        $this->query_builder = new QueryBuilder($this->getFormElementFactory());
     }
 
     public function setProjectId($id) {
@@ -480,12 +480,17 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     {
         $id            = 'tracker-report-expert-query-' . $this->id;
         $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
+        $fields        = $this->getFormElementFactory()->getUsedTextFieldsUserCanRead(
+            $this->getTracker(),
+            $this->getCurrentUser()
+        );
 
         $tracker_report_expert_query_presenter = new TrackerReportExpertModePresenter(
             $this->id,
             $class_toggler,
             $this->is_in_expert_mode,
-            $this->expert_query
+            $this->expert_query,
+            $fields
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
