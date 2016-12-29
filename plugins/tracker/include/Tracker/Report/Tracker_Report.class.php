@@ -23,8 +23,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldDoesNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldIsNotSupportedException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Collector;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilder;
@@ -71,9 +70,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $parser;
     /**
-     * @var Validator
+     * @var Collector
      */
-    private $validator;
+    private $collector;
     /**
      * @var OrExpression
      */
@@ -125,7 +124,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_at          = $updated_at;
 
         $this->parser        = new Parser();
-        $this->validator     = new Validator($this->getFormElementFactory());
+        $this->collector     = new Collector($this->getFormElementFactory());
         $this->query_builder = new QueryBuilder($this->getFormElementFactory());
     }
 
@@ -1316,25 +1315,39 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $parsed_query = $this->parseExpertQuery();
-                        $parsed_query->accept($this->validator, $this->getCurrentUser(), $this->getTracker());
-                    } catch (SyntaxError $e) {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'parse_expert_query_error'));
-                    } catch (FieldDoesNotExistException $e) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_report',
-                                'validate_expert_query_field_does_not_exist',
-                                array($e->getMessage())
-                            )
+                        $invalid_fields_collection = $this->collector->collectErrorsFields(
+                            $parsed_query,
+                            $this->getCurrentUser(),
+                            $this->getTracker()
                         );
-                    } catch (FieldIsNotSupportedException $e) {
+
+                        if ($invalid_fields_collection->hasNonexistentFields()) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                $GLOBALS['Language']->getText(
+                                    'plugin_tracker_report',
+                                    'validate_expert_query_fields_not_exist',
+                                    $invalid_fields_collection->getNonexistentFieldsString()
+                                )
+                            );
+                        }
+
+                        if ($invalid_fields_collection->hasUnsupportedFields()) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                $GLOBALS['Language']->getText(
+                                    'plugin_tracker_report',
+                                    'validate_expert_query_fields_not_supported',
+                                    $invalid_fields_collection->getUnsupportedFieldsString()
+                                )
+                            );
+                        }
+                    } catch (SyntaxError $e) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             $GLOBALS['Language']->getText(
                                 'plugin_tracker_report',
-                                'validate_expert_query_field_is_not_supported',
-                                array($e->getMessage())
+                                'parse_expert_query_error'
                             )
                         );
                     }
@@ -1773,14 +1786,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     private function canExecuteExpertQuery($parsed_query)
     {
-        try {
-            $parsed_query->accept($this->validator, $this->getCurrentUser(), $this->getTracker());
-        } catch (FieldDoesNotExistException $e) {
-            return false;
-        } catch (FieldIsNotSupportedException $e) {
-            return false;
-        }
+        $invalid_fields_collection = $this->collector->collectErrorsFields(
+            $parsed_query,
+            $this->getCurrentUser(),
+            $this->getTracker()
+        );
 
-        return true;
+        return $invalid_fields_collection->hasNoErrors();
     }
 }

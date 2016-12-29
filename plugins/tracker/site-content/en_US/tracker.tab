@@ -1406,8 +1406,8 @@ plugin_tracker_report	query_label	Query
 plugin_tracker_report	query_tooltip	You can use those operators: AND, OR, parenthesis.
 plugin_tracker_report	query_placeholder	(field_1='value' OR field_2='value') AND field_3='value'
 plugin_tracker_report	parse_expert_query_error	Error during parsing expert query
-plugin_tracker_report	validate_expert_query_field_does_not_exist	Error the field '$1' doesn't exist
-plugin_tracker_report	validate_expert_query_field_is_not_supported	Error the field '$1' isn't supported
+plugin_tracker_report	validate_expert_query_fields_not_exist	Fields '$1' don't exist
+plugin_tracker_report	validate_expert_query_fields_not_supported	Fields '$1' aren't supported
 
 plugin_tracker_report_widget	go_to_report	Go to report
 
