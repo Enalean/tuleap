@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
@@ -141,17 +142,19 @@ class TroveCatDao extends DataAccessObject
         $fullpath,
         $fullpath_ids
     ) {
-        $shortname   = $this->da->quoteSmart($shortname);
-        $fullname    = $this->da->quoteSmart($fullname);
-        $description = $this->da->quoteSmart($description);
-        $parent      = $this->da->escapeInt($parent);
-        $root_parent = $this->da->escapeInt($root_parent);
-        $mandatory   = $this->da->escapeInt($mandatory);
-        $display     = $this->da->escapeInt($display);
-        $fullpath     = $this->da->quoteSmart($fullpath);
-        $fullpath_ids = $this->da->quoteSmart($fullpath_ids);
+        $escaped_shortname    = $this->da->quoteSmart($shortname);
+        $escaped_fullname     = $this->da->quoteSmart($fullname);
+        $escaped_description  = $this->da->quoteSmart($description);
+        $escaped_parent       = $this->da->escapeInt($parent);
+        $escaped_root_parent  = $this->da->escapeInt($root_parent);
+        $escaped_mandatory    = $this->da->escapeInt($mandatory);
+        $escaped_display      = $this->da->escapeInt($display);
+        $escaped_fullpath     = $this->da->quoteSmart($fullpath);
+        $escaped_fullpath_ids = $this->da->quoteSmart($fullpath_ids);
 
         $version = date("Ymd", time()) . '01';
+
+        $this->startTransaction();
 
         $sql = "INSERT INTO trove_cat (
                   shortname,
@@ -165,19 +168,35 @@ class TroveCatDao extends DataAccessObject
                   fullpath,
                   fullpath_ids
               ) values (
-                  $shortname,
-                  $fullname,
-                  $description,
-                  $parent,
+                  $escaped_shortname,
+                  $escaped_fullname,
+                  $escaped_description,
+                  $escaped_parent,
                   $version,
-                  $root_parent,
-                  $mandatory,
-                  $display,
-                  $fullpath,
-                  $fullpath_ids
+                  $escaped_root_parent,
+                  $escaped_mandatory,
+                  $escaped_display,
+                  $escaped_fullpath,
+                  $escaped_fullpath_ids
               )";
 
-        return $this->update($sql);
+        $trove_cat_id  = $this->updateAndGetLastId($sql);
+        $fullpath_ids .= $trove_cat_id;
+
+        $this->updateTroveCat(
+            $shortname,
+            $fullname,
+            $description,
+            $parent,
+            $root_parent,
+            $mandatory,
+            $display,
+            $trove_cat_id,
+            $fullpath,
+            $fullpath_ids
+        );
+
+        $this->commit();
     }
 
     public function delete($trove_cat_id)
