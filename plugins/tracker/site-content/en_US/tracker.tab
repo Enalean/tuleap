@@ -716,6 +716,7 @@ plugin_tracker_common_artifact	error_integer_value	is not an integer.
 plugin_tracker_common_artifact	error_float_value	is not a float.
 plugin_tracker_common_artifact	error_string_value	$1 is not a string.
 plugin_tracker_common_artifact	error_string_value_characters	$1 can contain neiher carriage return nor null char.
+plugin_tracker_common_artifact	error_string_max_characters	$1 can not contain more than $2 characters.
 plugin_tracker_common_artifact	error_artifactlink_value	$1: $2 is not an artifact id.
 plugin_tracker_common_artifact	error_artifactlink_nature_value	$1: $2 is not a valid type.
 plugin_tracker_common_artifact	error_artifactlink_nature_missing	Type is missing for artifact #$1.
