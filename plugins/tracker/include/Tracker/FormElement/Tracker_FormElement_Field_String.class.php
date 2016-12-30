@@ -247,15 +247,48 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
-        $r1 = $this->getRuleString();
-        $r2 = $this->getRuleNoCr();
-        if (!($is_valid = $r1->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_string_value', array($this->getLabel())));
-        } else if (!($is_valid = $r2->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_string_value_characters', array($this->getLabel())));
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
+        $rule_is_a_string = $this->getRuleString();
+        if (! $rule_is_a_string->isValid($value)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_common_artifact',
+                    'error_string_value',
+                    array($this->getLabel())
+                )
+            );
+            return false;
         }
-        return $is_valid;
+
+        $maximum_characters_allowed = (int) $this->getProperty('maxchars');
+        if ($maximum_characters_allowed !== 0 && mb_strlen($value) > $maximum_characters_allowed) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_common_artifact',
+                    'error_string_max_characters',
+                    array($this->getLabel(), $maximum_characters_allowed)
+                )
+            );
+            return false;
+        }
+
+        $rule_does_not_contain_carriage_return = $this->getRuleNoCr();
+        if (! $rule_does_not_contain_carriage_return->isValid($value)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_common_artifact',
+                    'error_string_value_characters',
+                    array($this->getLabel())
+                )
+            );
+            return false;
+        }
+
+        return true;
     }
     
     protected function getRuleNoCr() {

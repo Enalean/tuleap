@@ -85,6 +85,60 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
         $this->assertFalse($string->isValid($artifact, "Du texte \n sur plusieurs lignes"));
     }
 
+    public function itAcceptsStringRespectingMaxCharsProperty()
+    {
+        $artifact = new MockTracker_Artifact();
+
+        $rule_string = new MockRule_String();
+        $rule_string->setReturnValue('isValid', true);
+
+        $rule_nocr = new MockRule_NoCr();
+        $rule_nocr->setReturnValue('isValid', true);
+
+        $string = new Tracker_FormElement_Field_StringTestVersion();
+        $string->setReturnReference('getRuleString', $rule_string);
+        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        stub($string)->getProperty('maxchars')->returns(6);
+
+        $this->assertTrue($string->isValid($artifact, 'Tuleap'));
+    }
+
+    public function itAcceptsStringWhenMaxCharsPropertyIsNotDefined()
+    {
+        $artifact = new MockTracker_Artifact();
+
+        $rule_string = new MockRule_String();
+        $rule_string->setReturnValue('isValid', true);
+
+        $rule_nocr = new MockRule_NoCr();
+        $rule_nocr->setReturnValue('isValid', true);
+
+        $string = new Tracker_FormElement_Field_StringTestVersion();
+        $string->setReturnReference('getRuleString', $rule_string);
+        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        stub($string)->getProperty('maxchars')->returns(0);
+
+        $this->assertTrue($string->isValid($artifact, 'Tuleap'));
+    }
+
+    public function itRejectsStringNotRespectingMaxCharsProperty()
+    {
+        $artifact = new MockTracker_Artifact();
+
+        $rule_string = new MockRule_String();
+        $rule_string->setReturnValue('isValid', true);
+
+        $rule_nocr = new MockRule_NoCr();
+        $rule_nocr->setReturnValue('isValid', true);
+
+        $string = new Tracker_FormElement_Field_StringTestVersion();
+        $string->setReturnReference('getRuleString', $rule_string);
+        $string->setReturnReference('getRuleNoCr', $rule_nocr);
+        stub($string)->getProperty('maxchars')->returns(1);
+
+        $this->assertFalse($string->isValid($artifact, 'Tuleap'));
+    }
+
     function testSoapAvailableValues() {
         $f = new Tracker_FormElement_Field_StringTestVersion();
         $this->assertNull($f->getSoapAvailableValues());
