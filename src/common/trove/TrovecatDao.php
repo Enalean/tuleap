@@ -203,7 +203,10 @@ class TroveCatDao extends DataAccessObject
     {
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
 
-        $sql = "DELETE FROM trove_cat WHERE trove_cat_id = $trove_cat_id";
+        $sql = "DELETE trove_cat, trove_group_link
+                FROM trove_cat
+                LEFT JOIN trove_group_link ON trove_cat.trove_cat_id = trove_group_link.trove_cat_id
+                WHERE trove_cat.trove_cat_id = $trove_cat_id";
 
         return $this->update($sql);
     }

@@ -41,7 +41,6 @@ class TroveCatListPresenter
     public $parent_category_label;
     public $label_description;
     public $label_shortname;
-    public $deletion_forbidden_label;
 
     public $delete_trove_cat;
     public $alert_description_delete_modal;
@@ -55,10 +54,6 @@ class TroveCatListPresenter
         $this->header_description       = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_description');
         $this->edit_button              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'edit');
         $this->delete_button            = $GLOBALS['Language']->getText('admin_trove_cat_list', 'delete');
-        $this->deletion_forbidden_label = $GLOBALS['Language']->getText(
-            'admin_trove_cat_list',
-            'deletion_forbidden_label'
-        );
 
         $this->edit_trove_cat        = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'header');
         $this->edit                  = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'edit');
