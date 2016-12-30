@@ -19,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerReportExpertModePresenter
+namespace Tuleap\Tracker\Report;
+
+class ExpertModePresenter
 {
     public $id;
     public $class_toggler;

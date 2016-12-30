@@ -30,6 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Validator;
+use Tuleap\Tracker\Report\ExpertModePresenter;
 
 /**
  * Tracker_ report.
@@ -485,7 +486,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $this->getCurrentUser()
         );
 
-        $tracker_report_expert_query_presenter = new TrackerReportExpertModePresenter(
+        $tracker_report_expert_query_presenter = new ExpertModePresenter(
             $this->id,
             $class_toggler,
             $this->is_in_expert_mode,
@@ -494,7 +495,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') .'/src/templates/report/'
+            TRACKER_TEMPLATE_DIR .'/report/'
         );
 
         $renderer->renderToPage('tracker-report-expert-query', $tracker_report_expert_query_presenter);
