@@ -1,3 +1,6 @@
+Version 5.1099 - Tuleap 9.3
+    * request #9628: Max characters property of a string field is not verified server side
+
 Version 5.1098 - Tuleap 9.3
     * story #8858: Refactoring (namespacing and move template inside tracker plugin)
 
