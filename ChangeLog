@@ -21,6 +21,7 @@ Version 9.3 (Not released yet)
 	* request #9716: Do not mix traces in tuleap syslog
 	* request #9202: Make phpwiki compatible with php 5.6
 	* request #9663: Favor REST API in Tuleap interface
+	* request #9783: Disable snippets
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6
@@ -48,7 +49,8 @@ Version 9.3 (Not released yet)
 	* tracker_encryption: 1.3
 
     == Themes ==
-	* FlamingParrot: 1.170
+	* FlamingParrot: 1.171
+	* BurningParrot: 0.21
 
 Version 9.2 (Thursday, December 8th 2016)
 
