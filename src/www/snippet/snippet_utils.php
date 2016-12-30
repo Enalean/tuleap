@@ -20,7 +20,7 @@ require_once('www/snippet/snippet_data.php');
 function snippet_header($params) {
 	global $is_snippet_page,$HTML,$feedback,$Language;
 
-        if ($GLOBALS['sys_use_snippet'] == 0) {
+        if (ForgeConfig::get('sys_use_snippet') !== 'force') {
             exit_permission_denied();
         }
 

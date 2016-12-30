@@ -195,7 +195,7 @@ class Search_SearchController {
                 $GLOBALS['Language']->getText('search_index', Search_SearchPeople::NAME)
             ),
         );
-        if (ForgeConfig::get('sys_use_snippet') == 1) {
+        if (ForgeConfig::get('sys_use_snippet') === 'force') {
             $search_types []= new Search_SearchTypePresenter(
                 Search_SearchSnippet::NAME,
                 $GLOBALS['Language']->getText('search_index', Search_SearchSnippet::NAME)

@@ -1868,7 +1868,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             );
         }
 
-        if (ForgeConfig::get('sys_use_snippet')) {
+        if (ForgeConfig::get('sys_use_snippet') === 'force') {
             $search_entries[] = array(
                 'value'    => 'snippets',
                 'label'    => $GLOBALS['Language']->getText('include_menu', 'code_snippets'),

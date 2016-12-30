@@ -278,7 +278,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     private function getExtraTabs() {
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
 
-        if ($GLOBALS['sys_use_snippet'] != 0) {
+        if (ForgeConfig::get('sys_use_snippet') === 'force') {
             $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
 
             array_unshift($additional_tabs, array(
@@ -287,7 +287,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
                 'selected'  => $selected,
                 )
             );
-	}
+	    }
 
         return $additional_tabs;
     }
