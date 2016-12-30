@@ -1,12 +1,11 @@
 'use strict';
 
-var gulp               = require('gulp'),
-    exec               = require('child_process').exec,
-    path               = require('path'),
-    del                = require('del'),
-    rename             = require('gulp-rename'),
-    scss_lint          = require('gulp-scss-lint'),
-    tuleap             = require('./tools/utils/tuleap-gulp-build');
+var gulp      = require('gulp'),
+    path      = require('path'),
+    del       = require('del'),
+    rename    = require('gulp-rename'),
+    scss_lint = require('gulp-scss-lint'),
+    tuleap    = require('./tools/utils/tuleap-gulp-build');
 
 var fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
@@ -162,11 +161,15 @@ var fat_combined_files = [
     theme_burningparrot_vendor_css = [
             'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.css'
     ],
-    tracker_grammar_path = 'plugins/tracker/grammar',
-    burning_parrot_path  = 'src/www/themes/common/tlp/',
-    asset_dir            = 'www/assets';
+    components_paths = [
+        'plugins/tracker/',
+        'plugins/tracker/grammar/',
+        'src/www/themes/common/tlp/'
+    ],
+    asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
+tuleap.declare_component_tasks(components_paths);
 
 /**
  * Javascript
@@ -198,7 +201,6 @@ gulp.task('scss-lint-core', function() {
     return gulp.src([].concat(
         common_scss.files,
         select2_scss.files,
-        theme_tuleap_scss.files,
         theme_flamingparrot_scss.files
     ))
         .pipe(scss_lint({
@@ -216,7 +218,7 @@ gulp.task('clean-sass-core', function() {
 });
 
 gulp.task('rename-css-to-scss', function() {
-   gulp.src(theme_burningparrot_vendor_css)
+    gulp.src(theme_burningparrot_vendor_css)
        .pipe(rename({
            prefix: '_',
            extname: '.scss'
@@ -243,7 +245,7 @@ gulp.task('watch', function() {
             .concat(subset_combined_files)
             .concat(subset_combined_flamingparrot_files)
             .concat(flaming_parrot_files)
-            .concat(burning_parrot_files)
+            .concat(burning_parrot_files),
         ['js-core']
     );
 
@@ -259,38 +261,14 @@ gulp.task('watch', function() {
     tuleap.watch_plugins();
 });
 
-gulp.task('tlp-install', function (cb) {
-    exec('npm install', {
-        cwd: burning_parrot_path
-    }, cb);
-});
-
-gulp.task('tlp-build', ['tlp-install'], function (cb) {
-    exec('npm run build', {
-        cwd: burning_parrot_path
-    }, cb);
-});
-
-gulp.task('tracker-grammar-install', function (cb) {
-    exec('npm install', {
-        cwd: tracker_grammar_path
-    }, cb);
-});
-
-gulp.task('tracker-grammar', ['tracker-grammar-install'], function (cb) {
-    exec('npm run build', {
-        cwd: tracker_grammar_path
-    }, cb);
-});
-
-gulp.task('tlp', ['tlp-build']);
-
 gulp.task('clean-core', ['clean-js-core', 'clean-sass-core']);
 
 gulp.task('clean', ['clean-core', 'clean-plugins']);
 
 gulp.task('core', ['js', 'sass']);
 
-gulp.task('build', ['tracker-grammar', 'tlp', 'core']);
+gulp.task('build', ['components'], function() {
+    return gulp.start('core');
+});
 
 gulp.task('default', ['build']);

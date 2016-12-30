@@ -22,6 +22,9 @@
         initializeTooltip();
         initializeTrackerReportQuery();
         initializeTrackerReportAllowedFields();
+        initializeCodeMirror();
+
+        var query_rich_editor;
 
         function initializeTooltip() {
             $('#tracker-report-expert-query-tooltip').tooltip({ placement: 'right'});
@@ -45,6 +48,8 @@
                 tracker_report_normal_query.classList.add('tracker-report-query-undisplayed');
                 tracker_report_expert_query.classList.remove('tracker-report-query-undisplayed');
 
+                codeMirrorifyQueryArea();
+
                 sendRequestNewMode('store-expert-mode');
             });
 
@@ -65,14 +70,11 @@
 
             [].forEach.call(tracker_report_expert_allowed_fields, function (field) {
                 field.addEventListener('click', function (event) {
-                    var tracker_report_expert_query = document.getElementById('tracker-report-expert-query-textarea');
-
-                    if (! tracker_report_expert_query) {
-                        return;
+                    if (query_rich_editor instanceof CodeMirror) {
+                        var text_query = query_rich_editor.getValue();
+                        query_rich_editor.setValue(text_query + ' ' + event.target.value);
+                        event.target.selected = false;
                     }
-
-                    tracker_report_expert_query.value = tracker_report_expert_query.value.concat(' ', event.target.value);
-                    event.target.selected = false;
                 });
             });
         }
@@ -87,6 +89,61 @@
                     codendi.tracker.report.setHasChanged();
                 }
             });
+        }
+
+        function initializeCodeMirror() {
+            CodeMirror.defineSimpleMode("tql", {
+                start: [
+                    {
+                        regex: /"(?:[^\\]|\\.)*?(?:"|$)/, // double quotes
+                        token: "string"
+                    },
+                    {
+                        regex: /'(?:[^\\]|\\.)*?(?:'|$)/, // single quotes
+                        token: "string"
+                    },
+                    {
+                        regex: /(?:and|or)\b/i,
+                        token: "keyword"
+                    },
+                    {
+                        regex: /[=]+/,
+                        token: "operator"
+                    },
+                    {
+                        regex: /[(]/,
+                        indent: true
+                    },
+                    {
+                        regex: /[)]/,
+                        dedent: true
+                    },
+                    {
+                        regex: /[a-zA-Z0-9_]+/,
+                        token: "variable"
+                    }
+                ]
+            });
+
+            var tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
+            if (! tracker_report_expert_query.classList.contains('tracker-report-query-undisplayed')) {
+                codeMirrorifyQueryArea();
+            }
+        }
+
+        function codeMirrorifyQueryArea() {
+            if (query_rich_editor instanceof CodeMirror) {
+                query_rich_editor.refresh();
+            } else {
+                var tracker_query = document.getElementById('tracker-report-expert-query-textarea');
+                query_rich_editor = CodeMirror.fromTextArea(
+                    tracker_query,
+                    {
+                        lineNumbers: true,
+                        mode: "tql"
+                    }
+                );
+            }
         }
     });
 })(window.jQuery);

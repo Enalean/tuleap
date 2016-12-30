@@ -1,3 +1,5 @@
+@import '../../../../node_modules/codemirror/lib/_codemirror';
+
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
     margin-top: 16px;
@@ -242,6 +244,10 @@ h5.artifack_link_subtitle {
 
     > textarea {
         width: 100%;
+    }
+
+    > .CodeMirror {
+        height: 100px;
     }
 }
 

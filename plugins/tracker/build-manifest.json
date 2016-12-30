@@ -39,6 +39,8 @@
     },
     "javascript": [
         "www/scripts/TrackerReports.js",
+        "node_modules/codemirror/lib/codemirror.js",
+        "node_modules/codemirror/addon/mode/simple.js",
         "www/scripts/TrackerReportExpertMode.js",
         "www/scripts/TrackerEmailCopyPaste.js",
         "www/scripts/TrackerReportsSaveAsModal.js",
