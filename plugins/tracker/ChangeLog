@@ -1,3 +1,6 @@
+Version 5.1098 - Tuleap 9.3
+    * story #8858: Refactoring (namespacing and move template inside tracker plugin)
+
 Version 5.1097 - Tuleap 9.3
     * request #9781: Expert query mode throws a notice when an hexadecimal number is escaped
 
