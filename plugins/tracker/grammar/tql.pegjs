@@ -98,8 +98,8 @@ nonascii
   = [\x80-\uFFFF]
 
 unicode
-  = "\\" digits:$(hex hex? hex? hex? hex? hex?) ("\r\n" / [ \t\r\n\f])? {
-      return chr_unicode(intval(digits, 16));
+  = "\\u" digits:$(hex hex? hex? hex? hex? hex?) (nl / _)? {
+      return chr_unicode(intval($digits, 16));
     }
 
 escape
