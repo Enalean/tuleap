@@ -97,12 +97,14 @@ class HeaderPresenterBuilder
 
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
 
-        if ($GLOBALS['sys_use_snippet'] != 0) {
-            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
+        if (ForgeConfig::get('sys_use_snippet') === 'force') {
+            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'), '/snippet/');
 
-            array_unshift($additional_tabs, array(
+            array_unshift(
+                $additional_tabs,
+                array(
                     'link'      => '/snippet/',
-                    'title'     => $GLOBALS['Language']->getText('include_menu','code_snippets'),
+                    'title'     => $GLOBALS['Language']->getText('include_menu', 'code_snippets'),
                     'selected'  => $selected,
                 )
             );

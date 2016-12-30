@@ -246,7 +246,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
 	}
 
 	function outerTabs($params) {
-		global $Language,$sys_use_trove,$sys_use_snippet;
+		global $Language;
 		$selected_top_tab = '';
 		if (isset($params['selected_top_tab'])) {
 		    $selected_top_tab = $params['selected_top_tab'];
@@ -324,7 +324,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
                                                     ,'selected'=>$selected)));
         }
 	}
-	if ($GLOBALS['sys_use_snippet'] != 0) {
+	if (ForgeConfig::get('sys_use_snippet') === 'force') {
         $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
         $sthSelected = ($sthSelected || $selected);
         $menuTree->addChild(new TreeNode(array('link'=>'/snippet/'
