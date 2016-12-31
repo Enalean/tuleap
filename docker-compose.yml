@@ -49,3 +49,9 @@ db:
    - .env
   volumes_from:
    - tuleap_db_data
+
+graphite:
+  container_name: tuleap-graphite
+  image: hopsoft/graphite-statsd
+  volumes:
+   - tuleap-graphite-graphite-storage:/opt/graphite/storage
