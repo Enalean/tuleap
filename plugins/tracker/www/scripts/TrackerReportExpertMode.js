@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016, Enalean. All rights reserved
+ * Copyright (c) 2016-2017, Enalean. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -92,6 +92,11 @@
         }
 
         function initializeCodeMirror() {
+            var tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
+            if (! tracker_report_expert_query) {
+                return;
+            }
+
             CodeMirror.defineSimpleMode("tql", {
                 start: [
                     {
@@ -124,8 +129,6 @@
                     }
                 ]
             });
-
-            var tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
             if (! tracker_report_expert_query.classList.contains('tracker-report-query-undisplayed')) {
                 codeMirrorifyQueryArea();
             }
