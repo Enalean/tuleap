@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,13 +42,7 @@ class ParserTest extends TuleapTestCase
 
         $expected = new OrExpression(
             new AndExpression(
-                new Comparison(
-                    "field",
-                    "=",
-                    array(
-                        'literal' => "value"
-                    )
-                ),
+                new Comparison('field', 'value'),
                 null
             ),
             null

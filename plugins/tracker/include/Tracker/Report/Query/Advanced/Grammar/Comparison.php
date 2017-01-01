@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,19 +21,22 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use PFUser;
 use Tracker;
-use Tracker_FormElementFactory;
 
 class Comparison implements Term
 {
+    /**
+     * @var string
+     */
     private $field;
-    private $operator;
+    /**
+     * @var string
+     */
     private $value;
 
-    public function __construct($field, $operator, $value)
+    public function __construct($field, $value)
     {
-        $this->field    = $field;
-        $this->operator = $operator;
-        $this->value    = $value;
+        $this->field = $field;
+        $this->value = $value;
     }
 
     public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
@@ -41,11 +44,17 @@ class Comparison implements Term
         return $visitor->visitComparison($this, $user, $tracker);
     }
 
+    /**
+     * @return string
+     */
     public function getField()
     {
         return $this->field;
     }
 
+    /**
+     * @return string
+     */
     public function getValue()
     {
         return $this->value;
