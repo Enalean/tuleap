@@ -29,6 +29,7 @@ use ThemeVariantColor;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
+use ForgeConfig;
 
 class HeaderPresenterBuilder
 {
