@@ -1,3 +1,6 @@
+Version 5.1105 - Tuleap 9.3
+    * story #8858: Introduce a limit with the depth of AST
+
 Version 5.1104 - Tuleap 9.3
     * story #8858 query tracker with expressions (Give a complete error feedback with all fields)
 
