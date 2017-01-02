@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
-class InvalidFieldsCollectorVisitor implements Visitor
+class Collector implements Visitor
 {
     /**
      * @var Tracker_FormElementFactory
@@ -46,22 +46,22 @@ class InvalidFieldsCollectorVisitor implements Visitor
         $this->formelement_factory  = $formelement_factory;
     }
 
-    public function collectErrorsFields($parsed_query, InvalidFieldsCollectorParameters $parameters)
+    public function collectErrorsFields($parsed_query, PFUser $user, Tracker $tracker)
     {
         $this->fields_not_exist     = array();
         $this->fields_not_supported = array();
 
-        $parsed_query->accept($this, $parameters);
+        $parsed_query->accept($this, $user, $tracker);
 
         return new InvalidFieldsCollection($this->fields_not_exist, $this->fields_not_supported);
     }
 
-    public function visitComparison(Comparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker)
     {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
-            $parameters->getTracker()->getId(),
+            $tracker->getId(),
             $comparison->getField(),
-            $parameters->getUser()
+            $user
         );
 
         if (! $field) {
@@ -71,34 +71,34 @@ class InvalidFieldsCollectorVisitor implements Visitor
         }
     }
 
-    public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)
+    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker)
     {
-        $and_expression->getExpression()->accept($this, $parameters);
-        $this->visitTail($and_expression->getTail(), $parameters);
+        $and_expression->getExpression()->accept($this, $user, $tracker);
+        $this->visitTail($and_expression->getTail(), $user, $tracker);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, InvalidFieldsCollectorParameters $parameters)
+    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker)
     {
-        $or_expression->getExpression()->accept($this, $parameters);
-        $this->visitTail($or_expression->getTail(), $parameters);
+        $or_expression->getExpression()->accept($this, $user, $tracker);
+        $this->visitTail($or_expression->getTail(), $user, $tracker);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, InvalidFieldsCollectorParameters $parameters)
+    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker)
     {
-        $or_operand->getOperand()->accept($this, $parameters);
-        $this->visitTail($or_operand->getTail(), $parameters);
+        $or_operand->getOperand()->accept($this, $user, $tracker);
+        $this->visitTail($or_operand->getTail(), $user, $tracker);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, InvalidFieldsCollectorParameters $parameters)
+    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker)
     {
-        $and_operand->getOperand()->accept($this, $parameters);
-        $this->visitTail($and_operand->getTail(), $parameters);
+        $and_operand->getOperand()->accept($this, $user, $tracker);
+        $this->visitTail($and_operand->getTail(), $user, $tracker);
     }
 
-    private function visitTail($tail, InvalidFieldsCollectorParameters $parameters)
+    private function visitTail($tail, $user, $tracker)
     {
         if ($tail) {
-            $tail->accept($this, $parameters);
+            $tail->accept($this, $user, $tracker);
         }
     }
 }

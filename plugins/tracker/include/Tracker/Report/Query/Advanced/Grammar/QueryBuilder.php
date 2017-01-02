@@ -24,7 +24,7 @@ use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
-class QueryBuilderVisitor implements Visitor
+class QueryBuilder implements Visitor
 {
     /**
      * @var Tracker_FormElementFactory
@@ -36,13 +36,10 @@ class QueryBuilderVisitor implements Visitor
         $this->formelement_factory = $formelement_factory;
     }
 
-    public function visitComparison(Comparison $comparison, QueryBuilderParameters $parameters)
+    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker)
     {
         $comparison_value = $comparison->getValue();
-        $formelement      = $this->formelement_factory->getUsedFieldByName(
-            $parameters->getTracker()->getId(),
-            $comparison->getField()
-        );
+        $formelement      = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $comparison->getField());
 
         $from  = $formelement->getExpertFrom($comparison_value, spl_object_hash($comparison));
         $where = $formelement->getExpertWhere(spl_object_hash($comparison));
@@ -50,49 +47,49 @@ class QueryBuilderVisitor implements Visitor
         return new FromWhere($from, $where);
     }
 
-    public function visitAndExpression(AndExpression $and_expression, QueryBuilderParameters $parameters)
+    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker)
     {
-        $from_where_expression = $and_expression->getExpression()->accept($this, $parameters);
+        $from_where_expression = $and_expression->getExpression()->accept($this, $user, $tracker);
 
         $tail = $and_expression->getTail();
 
-        return $this->buildAndClause($parameters, $tail, $from_where_expression);
+        return $this->buildAndClause($user, $tracker, $tail, $from_where_expression);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, QueryBuilderParameters $parameters)
+    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker)
     {
-        $from_where_expression = $or_expression->getExpression()->accept($this, $parameters);
+        $from_where_expression = $or_expression->getExpression()->accept($this, $user, $tracker);
 
         $tail = $or_expression->getTail();
 
-        return $this->buildOrClause($parameters, $tail, $from_where_expression);
+        return $this->buildOrClause($user, $tracker, $tail, $from_where_expression);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, QueryBuilderParameters $parameters)
+    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker)
     {
-        $from_where_expression = $or_operand->getOperand()->accept($this, $parameters);
+        $from_where_expression = $or_operand->getOperand()->accept($this, $user, $tracker);
 
         $tail = $or_operand->getTail();
 
-        return $this->buildOrClause($parameters, $tail, $from_where_expression);
+        return $this->buildOrClause($user, $tracker, $tail, $from_where_expression);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, QueryBuilderParameters $parameters)
+    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker)
     {
-        $from_where_expression = $and_operand->getOperand()->accept($this, $parameters);
+        $from_where_expression = $and_operand->getOperand()->accept($this, $user, $tracker);
 
         $tail = $and_operand->getTail();
 
-        return $this->buildAndClause($parameters, $tail, $from_where_expression);
+        return $this->buildAndClause($user, $tracker, $tail, $from_where_expression);
     }
 
-    private function buildAndClause(QueryBuilderParameters $parameters, $tail, $from_where_expression)
+    private function buildAndClause(PFUser $user, Tracker $tracker, $tail, $from_where_expression)
     {
         if (! $tail) {
             return $from_where_expression;
         }
 
-        $from_where_tail = $tail->accept($this, $parameters);
+        $from_where_tail = $tail->accept($this, $user, $tracker);
 
         return new FromWhere(
             $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
@@ -100,13 +97,13 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    private function buildOrClause(QueryBuilderParameters $parameters, $tail, $from_where_expression)
+    private function buildOrClause(PFUser $user, Tracker $tracker, $tail, $from_where_expression)
     {
         if (! $tail) {
             return $from_where_expression;
         }
 
-        $from_where_tail = $tail->accept($this, $parameters);
+        $from_where_tail = $tail->accept($this, $user, $tracker);
 
         return new FromWhere(
             $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),

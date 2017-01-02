@@ -23,7 +23,7 @@ use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
+class CollectorTest extends TuleapTestCase
 {
 
     private $tracker;
@@ -31,7 +31,6 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     private $formelement_factory;
     private $collector;
     private $user;
-    private $parameters;
 
     public function setUp()
     {
@@ -41,9 +40,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->field               = aStringField()->build();
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->user                = aUser()->build();
-        $this->parameters          = new InvalidFieldsCollectorParameters($this->user, $this->tracker);
 
-        $this->collector = new InvalidFieldsCollectorVisitor($this->formelement_factory);
+        $this->collector = new Collector($this->formelement_factory);
     }
 
     public function itDoesNotThrowAnExceptionIfFieldIsUsed()
@@ -52,7 +50,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $this->collector->visitComparison($expr, $this->parameters);
+        $this->collector->visitComparison($expr, $this->user, $this->tracker);
     }
 
     public function itThrowsAnExceptionIfFieldIsUnknown()
@@ -61,7 +59,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $invalid_fields_collection = $this->collector->collectErrorsFields($expr, $this->parameters);
+        $invalid_fields_collection = $this->collector->collectErrorsFields($expr, $this->user, $this->tracker);
 
         $this->assertEqual($invalid_fields_collection->getNonexistentFields(), array('field'));
         $this->assertEqual($invalid_fields_collection->getUnsupportedFields(), array());
@@ -73,7 +71,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $invalid_fields_collection = $this->collector->collectErrorsFields($expr, $this->parameters);
+        $invalid_fields_collection = $this->collector->collectErrorsFields($expr, $this->user, $this->tracker);
 
         $this->assertEqual($invalid_fields_collection->getNonexistentFields(), array());
         $this->assertEqual($invalid_fields_collection->getUnsupportedFields(), array('field'));
@@ -85,10 +83,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
         $expression    = new AndExpression($subexpression, $tail);
 
-        expect($subexpression)->accept($this->collector, $this->parameters)->once();
-        expect($tail)->accept($this->collector, $this->parameters)->once();
+        expect($subexpression)->accept($this->collector, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitAndExpression($expression, $this->parameters);
+        $this->collector->visitAndExpression($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToSubExpressionAndTailInOrExpression()
@@ -97,10 +95,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand');
         $expression    = new OrExpression($subexpression, $tail);
 
-        expect($subexpression)->accept($this->collector, $this->parameters)->once();
-        expect($tail)->accept($this->collector, $this->parameters)->once();
+        expect($subexpression)->accept($this->collector, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitOrExpression($expression, $this->parameters);
+        $this->collector->visitOrExpression($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToOperandAndTailInOrOperand()
@@ -109,10 +107,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand');
         $expression = new OrOperand($operand, $tail);
 
-        expect($operand)->accept($this->collector, $this->parameters)->once();
-        expect($tail)->accept($this->collector, $this->parameters)->once();
+        expect($operand)->accept($this->collector, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitOrOperand($expression, $this->parameters);
+        $this->collector->visitOrOperand($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToOperandAndTailInAndOperand()
@@ -121,10 +119,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
         $expression = new AndOperand($operand, $tail);
 
-        expect($operand)->accept($this->collector, $this->parameters)->once();
-        expect($tail)->accept($this->collector, $this->parameters)->once();
+        expect($operand)->accept($this->collector, $this->user, $this->tracker)->once();
+        expect($tail)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitAndOperand($expression, $this->parameters);
+        $this->collector->visitAndOperand($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToSubExpressionInAndExpression()
@@ -133,9 +131,9 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail          = null;
         $expression    = new AndExpression($subexpression, $tail);
 
-        expect($subexpression)->accept($this->collector, $this->parameters)->once();
+        expect($subexpression)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitAndExpression($expression, $this->parameters);
+        $this->collector->visitAndExpression($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToSubExpressionInOrExpression()
@@ -144,9 +142,9 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail          = null;
         $expression    = new OrExpression($subexpression, $tail);
 
-        expect($subexpression)->accept($this->collector, $this->parameters)->once();
+        expect($subexpression)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitOrExpression($expression, $this->parameters);
+        $this->collector->visitOrExpression($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToOperandInOrOperand()
@@ -155,9 +153,9 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail       = null;
         $expression = new OrOperand($operand, $tail);
 
-        expect($operand)->accept($this->collector, $this->parameters)->once();
+        expect($operand)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitOrOperand($expression, $this->parameters);
+        $this->collector->visitOrOperand($expression, $this->user, $this->tracker);
     }
 
     public function itDelegatesValidationToOperandInAndOperand()
@@ -166,8 +164,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $tail       = null;
         $expression = new AndOperand($operand, $tail);
 
-        expect($operand)->accept($this->collector, $this->parameters)->once();
+        expect($operand)->accept($this->collector, $this->user, $this->tracker)->once();
 
-        $this->collector->visitAndOperand($expression, $this->parameters);
+        $this->collector->visitAndOperand($expression, $this->user, $this->tracker);
     }
 }

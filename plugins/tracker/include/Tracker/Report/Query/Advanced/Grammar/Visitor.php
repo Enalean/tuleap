@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,18 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
+use PFUser;
+use Tracker;
+
 interface Visitor
 {
+    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker);
+
+    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker);
+
+    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker);
+
+    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker);
+
+    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker);
 }
