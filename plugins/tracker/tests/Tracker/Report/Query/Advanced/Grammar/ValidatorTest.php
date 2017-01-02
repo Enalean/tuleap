@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ class ValidatorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field);
 
-        $expr = new Comparison("field", "=", "value");
+        $expr = new Comparison('field', 'value');
 
         $this->validator->visitComparison($expr, $this->user, $this->tracker);
     }
@@ -57,7 +57,7 @@ class ValidatorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(null);
 
-        $expr = new Comparison("field", "=", "value");
+        $expr = new Comparison('field', 'value');
 
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldDoesNotExistException');
         $this->validator->visitComparison($expr, $this->user, $this->tracker);
@@ -67,7 +67,7 @@ class ValidatorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
 
-        $expr = new Comparison("field", "=", "value");
+        $expr = new Comparison('field', 'value');
 
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldIsNotSupportedException');
         $this->validator->visitComparison($expr, $this->user, $this->tracker);

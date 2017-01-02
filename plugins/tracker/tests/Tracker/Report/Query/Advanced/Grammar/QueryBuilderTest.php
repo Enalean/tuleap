@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itPassesTheCurrentObjectInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery()
     {
-        $comparison = new Comparison("field", "=", array("literal" => "value"));
+        $comparison = new Comparison('field', 'value');
 
         expect($this->field)->getExpertFrom("*", spl_object_hash($comparison))->once();
         expect($this->field)->getExpertWhere(spl_object_hash($comparison))->once();
@@ -56,7 +56,7 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itRetrievesInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new Comparison("field", "=", array("literal" => "value"));
+        $comparison = new Comparison('field', 'value');
 
         stub($this->field)->getExpertFrom("value", "*")->returns("le_from");
         stub($this->field)->getExpertWhere("*")->returns("le_where");
