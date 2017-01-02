@@ -24,16 +24,36 @@ use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
-class Validator implements Visitor
+class Collector implements Visitor
 {
     /**
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
+    /**
+     * @var array
+     */
+    private $fields_not_exist;
+    /**
+     * @var array
+     */
+    private $fields_not_supported;
 
     public function __construct(Tracker_FormElementFactory $formelement_factory)
     {
-        $this->formelement_factory = $formelement_factory;
+        $this->fields_not_exist     = array();
+        $this->fields_not_supported = array();
+        $this->formelement_factory  = $formelement_factory;
+    }
+
+    public function collectErrorsFields($parsed_query, PFUser $user, Tracker $tracker)
+    {
+        $this->fields_not_exist     = array();
+        $this->fields_not_supported = array();
+
+        $parsed_query->accept($this, $user, $tracker);
+
+        return new InvalidFieldsCollection($this->fields_not_exist, $this->fields_not_supported);
     }
 
     public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker)
@@ -45,11 +65,9 @@ class Validator implements Visitor
         );
 
         if (! $field) {
-            throw new FieldDoesNotExistException($comparison->getField());
-        }
-
-        if (! $field instanceof Tracker_FormElement_Field_Text) {
-            throw new FieldIsNotSupportedException($comparison->getField());
+            $this->fields_not_exist[] = $comparison->getField();
+        } else if (! $field instanceof Tracker_FormElement_Field_Text) {
+            $this->fields_not_supported[] = $comparison->getField();
         }
     }
 
