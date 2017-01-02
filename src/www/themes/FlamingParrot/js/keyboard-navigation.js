@@ -128,7 +128,7 @@
                 if (help_modal.hasClass('in')) {
                     showOrHideHelpModal(help_modal);
                     return false;
-                } else if ($(document.activeElement).is('textarea, input')) {
+                } else if ($(document.activeElement).is('input')) {
                     $(document.activeElement).blur();
                 }
                 $("body").click();

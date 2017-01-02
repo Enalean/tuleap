@@ -12,6 +12,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "cp node_modules/codemirror/lib/codemirror.css node_modules/codemirror/lib/_codemirror.scss"
+    "build": "true"
   }
 }

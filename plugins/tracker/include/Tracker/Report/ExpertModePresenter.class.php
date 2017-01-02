@@ -21,6 +21,8 @@
 
 namespace Tuleap\Tracker\Report;
 
+use Tracker_FormElement;
+
 class ExpertModePresenter
 {
     public $id;
@@ -39,6 +41,7 @@ class ExpertModePresenter
     public $btn_report_normal_mode;
     public $btn_search;
     public $query_tooltip;
+    public $allowed_fields_names_json_encoded;
 
     public function __construct(
         $id,
@@ -52,6 +55,15 @@ class ExpertModePresenter
         $this->is_in_expert_mode = $is_in_expert_mode;
         $this->expert_query      = $expert_query;
         $this->allowed_fields    = array_values($allowed_fields);
+
+        $this->allowed_fields_names_json_encoded = json_encode(
+            array_map(
+                function (Tracker_FormElement $field) {
+                    return $field->getName();
+                },
+                $this->allowed_fields
+            )
+        );
 
         $this->allowed_fields_label   = $GLOBALS['Language']->getText('plugin_tracker_report', 'allowed_fields_label');
         $this->query_label            = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_label');

@@ -140,14 +140,65 @@
             if (query_rich_editor instanceof CodeMirror) {
                 query_rich_editor.refresh();
             } else {
-                var tracker_query = document.getElementById('tracker-report-expert-query-textarea');
+                var tracker_query      = document.getElementById('tracker-report-expert-query-textarea'),
+                    allowed_fields     = JSON.parse(tracker_query.dataset.allowedFields),
+                    autocomplete_words = ['AND', 'OR'].concat(allowed_fields);
+
+                CodeMirror.commands.autocomplete = autocomplete;
+
                 query_rich_editor = CodeMirror.fromTextArea(
                     tracker_query,
                     {
                         lineNumbers: true,
-                        mode: "tql"
+                        mode: "tql",
+                        extraKeys: {"Ctrl-Space": "autocomplete"}
                     }
                 );
+            }
+
+            function autocomplete(editor) {
+                editor.showHint({
+                    words: autocomplete_words,
+                    hint: getHint
+                });
+            }
+
+            function getHint(editor, options) {
+                var cursor = editor.getCursor(),
+                    token  = editor.getTokenAt(cursor);
+
+                if (token['type'] === null || token['type'] === 'variable') {
+                    return getFieldNamesHint(editor, options, cursor, token);
+                }
+            }
+
+            function getFieldNamesHint(editor, options, cursor, token) {
+                var start = getStartOfToken(editor),
+                    end   = cursor.ch,
+                    from  = CodeMirror.Pos(cursor.line, start),
+                    to    = CodeMirror.Pos(cursor.line, end),
+                    text  = new RegExp(token.string.trim(), 'i');
+
+                return {
+                    list: options.words.filter(function (field_name) {
+                        return text.test(field_name);
+                    }),
+                    from: from,
+                    to: to
+                };
+            }
+
+            function getStartOfToken(editor) {
+                var cursor = editor.getCursor(),
+                    line   = editor.getLine(cursor.line),
+                    start  = cursor.ch,
+                    a_word = /\w+/;
+
+                while (start && a_word.test(line.charAt(start - 1))) {
+                    --start;
+                }
+
+                return start;
             }
         }
     });

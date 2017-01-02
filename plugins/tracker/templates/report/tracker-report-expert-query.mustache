@@ -12,7 +12,11 @@
                 <label for="tracker-report-expert-query-textarea">
                     {{ query_label }} <i class="icon-question-sign" data-toggle="tooltip" title="{{ query_tooltip }}" id="tracker-report-expert-query-tooltip"></i>
                 </label>
-                <textarea id="tracker-report-expert-query-textarea" name="expert_query" placeholder="{{ query_placeholder }}">{{ expert_query }}</textarea>
+                <textarea id="tracker-report-expert-query-textarea"
+                          name="expert_query"
+                          placeholder="{{ query_placeholder }}"
+                          data-allowed-fields="{{ allowed_fields_names_json_encoded }}"
+                >{{ expert_query }}</textarea>
             </div>
             <div class="tracker-report-expert-content-fields">
                 <label for="allowed-fields">{{ allowed_fields_label }}</label>
