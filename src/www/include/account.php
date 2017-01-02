@@ -319,6 +319,5 @@ function account_redirect_after_login($return_to) {
     }
 
     $url_redirect = new URLRedirect($event_manager);
-    $request      = HTTPRequest::instance();
-    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url, $return_to));
+    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($url, $return_to));
 }

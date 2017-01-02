@@ -59,11 +59,6 @@ if($request->valid(new Valid_String('return_to'))) {
     $_rVar['return_to'] = $request->get('return_to');
 }
 
-$_cVar['stay_in_ssl'] = null;
-if($request->valid(new Valid_WhiteList('stay_in_ssl', array(0,1)))) {
-    $_cVar['stay_in_ssl'] = (int) $request->get('stay_in_ssl');
-}
-
 //
 // Application
 //

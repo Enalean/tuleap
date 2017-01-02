@@ -27,7 +27,6 @@ class LDAP_LoginPresenter extends User_LoginPresenter
             $login_presenter->getReturnTo(),
             $login_presenter->getPv(),
             $login_presenter->getFormLoginName(),
-            $login_presenter->getToggleSsl(),
             '',
             $login_presenter->getCSRFToken(),
             false

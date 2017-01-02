@@ -22,7 +22,6 @@ class User_LoginPresenter {
     private $return_to;
     private $pv;
     private $form_loginname;
-    private $toggle_ssl;
     private $allow_password_recovery;
     private $additional_connectors;
     /**
@@ -34,7 +33,6 @@ class User_LoginPresenter {
         $return_to,
         $pv,
         $form_loginname,
-        $toggle_ssl,
         $additional_connectors,
         CSRFSynchronizerToken $csrf_token,
         $allow_password_recovery = true
@@ -42,7 +40,6 @@ class User_LoginPresenter {
         $this->return_to               = $return_to;
         $this->pv                      = $pv;
         $this->form_loginname          = $form_loginname;
-        $this->toggle_ssl              = $toggle_ssl;
         $this->allow_password_recovery = $allow_password_recovery;
         $this->additional_connectors   = $additional_connectors;
         $this->csrf_token              = $csrf_token;
@@ -54,10 +51,6 @@ class User_LoginPresenter {
 
     public function getTemplate() {
         return 'login';
-    }
-
-    public function toggle_ssl() {
-        return $this->toggle_ssl;
     }
 
     public function form_loginname() {
@@ -86,10 +79,6 @@ class User_LoginPresenter {
 
     public function help_subject() {
         return $GLOBALS['Language']->getText('account_login', 'help_subject', array(ForgeConfig::get('sys_name')));
-    }
-
-    public function stay_in_ssl() {
-        return $GLOBALS['Language']->getText('account_login', 'stay_ssl');
     }
 
     public function account_login_page_title() {
@@ -126,10 +115,6 @@ class User_LoginPresenter {
 
     public function getFormLoginName() {
         return $this->form_loginname;
-    }
-
-    public function getToggleSsl() {
-        return $this->toggle_ssl;
     }
 
     public function login_intro() {

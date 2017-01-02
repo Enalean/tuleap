@@ -18,12 +18,6 @@
         <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ account_login_name }}" value="{{ form_loginname }}"  required autofocus>
         <input type="password" id="form_pw" name="form_pw" placeholder="{{ account_login_password }}" value="" required>
 
-        {{# toggle_ssl }}
-            <label id="login-ssl">
-                <input type="checkbox" name="stay_in_ssl" value="1" checked="checked" /> {{{ stay_in_ssl }}}
-            </label>
-        {{/ toggle_ssl }}
-
         <button type="submit" name="login" class="btn btn-primary">{{ account_login_login_btn }}</button>
 
         {{# allow_password_recovery }}
