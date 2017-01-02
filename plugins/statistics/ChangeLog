@@ -1,3 +1,6 @@
+Version 0.78 - Tuleap 9.3
+    * request #9790 Project over quota is not taken into account in Burning Parrot (Refactoring: mustache files)
+
 Version 0.77 - Tuleap 9.3
     * request #9750 New Admin UI : statistics disk usage correct search fields
 
