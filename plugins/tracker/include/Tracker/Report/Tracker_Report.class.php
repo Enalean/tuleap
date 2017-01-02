@@ -23,12 +23,15 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Collector;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidator;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidatorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitDepthIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilderParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
@@ -73,7 +76,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $parser;
     /**
-     * @var Collector
+     * @var InvalidFieldsCollectorVisitor
      */
     private $collector;
     /**
@@ -81,11 +84,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $parsed_expert_query;
     /**
-     * @var QueryBuilder
+     * @var QueryBuilderVisitor
      */
     private $query_builder;
     /**
-     * @var DepthValidator
+     * @var DepthValidatorVisitor
      */
     private $depth_validator;
 
@@ -135,9 +138,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
 
         $this->parser          = new Parser();
-        $this->depth_validator = new DepthValidator($report_config->getExpertQueryLimit());
-        $this->collector       = new Collector($this->getFormElementFactory());
-        $this->query_builder   = new QueryBuilder($this->getFormElementFactory());
+        $this->depth_validator = new DepthValidatorVisitor($report_config->getExpertQueryLimit());
+        $this->collector       = new InvalidFieldsCollectorVisitor($this->getFormElementFactory());
+        $this->query_builder   = new QueryBuilderVisitor($this->getFormElementFactory());
     }
 
     public function setProjectId($id) {
@@ -1327,11 +1330,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $parsed_query = $this->parseExpertQuery();
-                        $parsed_query->accept($this->depth_validator, $this->getCurrentUser(), $this->getTracker());
+                        $parsed_query->accept($this->depth_validator, new DepthValidatorParameters());
                         $invalid_fields_collection = $this->collector->collectErrorsFields(
                             $parsed_query,
-                            $this->getCurrentUser(),
-                            $this->getTracker()
+                            new InvalidFieldsCollectorParameters($this->getCurrentUser(), $this->getTracker())
                         );
 
                         if ($invalid_fields_collection->hasNonexistentFields()) {
@@ -1750,8 +1752,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     if ($this->canExecuteExpertQuery($expression)) {
                         $from_where = $expression->accept(
                             $this->query_builder,
-                            $this->getCurrentUser(),
-                            $this->getTracker()
+                            new QueryBuilderParameters($this->getTracker())
                         );
                         $additional_from  = array($from_where->getFrom());
                         $additional_where = array($from_where->getWhere());
@@ -1808,15 +1809,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function canExecuteExpertQuery($parsed_query)
     {
         try {
-            $parsed_query->accept($this->depth_validator, $this->getCurrentUser(), $this->getTracker());
+            $parsed_query->accept($this->depth_validator, new DepthValidatorParameters());
         } catch (LimitDepthIsExceededException $e) {
             return false;
         }
 
         $invalid_fields_collection = $this->collector->collectErrorsFields(
             $parsed_query,
-            $this->getCurrentUser(),
-            $this->getTracker()
+            new InvalidFieldsCollectorParameters($this->getCurrentUser(), $this->getTracker())
         );
 
         return $invalid_fields_collection->hasNoErrors();

@@ -36,7 +36,7 @@ class DepthValidatorTest extends TuleapTestCase
         $this->tracker = aTracker()->withId(101)->build();
         $this->user    = aUser()->build();
 
-        $this->validator = new DepthValidator(2);
+        $this->validator = new DepthValidatorVisitor(2);
     }
 
     public function itDoesNotThrowAnExceptionIfDeptDoesNotExceedLimit()
@@ -45,7 +45,7 @@ class DepthValidatorTest extends TuleapTestCase
         $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
         $expression    = new AndExpression($subexpression, $tail);
 
-        $expression->accept($this->validator, $this->user, $this->tracker);
+        $expression->accept($this->validator, new DepthValidatorParameters());
     }
 
     public function itThrowsAnExceptionIfDepthExceedLimit()
@@ -55,6 +55,6 @@ class DepthValidatorTest extends TuleapTestCase
         $expression    = new OrExpression($subexpression, null);
 
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitDepthIsExceededException');
-        $expression->accept($this->validator, $this->user, $this->tracker);
+        $expression->accept($this->validator, new DepthValidatorParameters());
     }
 }

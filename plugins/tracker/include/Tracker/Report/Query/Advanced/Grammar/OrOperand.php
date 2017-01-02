@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 use PFUser;
 use Tracker;
 
-class OrOperand
+class OrOperand implements Visitable
 {
     /**
      * @var AndExpression
@@ -39,9 +39,9 @@ class OrOperand
         $this->tail    = $tail;
     }
 
-    public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
+    public function accept(Visitor $visitor, VisitorParameters $parameters)
     {
-        return $visitor->visitOrOperand($this, $user, $tracker);
+        return $visitor->visitOrOperand($this, $parameters);
     }
 
     public function getOperand()

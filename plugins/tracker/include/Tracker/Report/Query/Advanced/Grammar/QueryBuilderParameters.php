@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,38 +19,25 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use PFUser;
 use Tracker;
 
-class AndExpression implements Visitable
+class QueryBuilderParameters implements VisitorParameters
 {
     /**
-     * @var Term
+     * @var Tracker
      */
-    private $expression;
+    private $tracker;
+
+    public function __construct(Tracker $tracker)
+    {
+        $this->tracker = $tracker;
+    }
+
     /**
-     * @var AndOperand
+     * @return Tracker
      */
-    private $tail;
-
-    public function __construct(Term $expression, AndOperand $tail = null)
+    public function getTracker()
     {
-        $this->expression = $expression;
-        $this->tail       = $tail;
-    }
-
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
-    {
-        return $visitor->visitAndExpression($this, $parameters);
-    }
-
-    public function getExpression()
-    {
-        return $this->expression;
-    }
-
-    public function getTail()
-    {
-        return $this->tail;
+        return $this->tracker;
     }
 }
