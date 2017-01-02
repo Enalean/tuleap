@@ -16,6 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+
 require_once 'pre.php';
 
 require_once dirname(__FILE__).'/../include/ProjectQuotaHtml.class.php';
@@ -33,9 +35,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
 $GLOBALS['HTML']->header(array('title' => $title, 'main_classes' => array('tlp-framed')));
 
-$pqHtml = new ProjectQuotaHtml();
-$pqHtml->displayProjectsOverQuota();
+$project_quota_html = new ProjectQuotaHtml();
+$project_quota_html->displayProjectsOverQuota();
 
 $GLOBALS['HTML']->footer(array());
-
-?>
