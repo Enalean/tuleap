@@ -1,3 +1,6 @@
+Version 5.1101 - Tuleap 9.3
+    * request #9785: Can not edit an artifact
+
 Version 5.1100 - Tuleap 9.3
     * story #8858: Enhance query edition with CodeMirror
 
