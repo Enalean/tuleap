@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,40 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Visitor
+use PFUser;
+use Tracker;
+
+class InvalidFieldsCollectorParameters implements VisitorParameters
 {
+    /**
+     * @var PFUser
+     */
+    private $user;
+
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+
+    public function __construct(PFUser $user, Tracker $tracker)
+    {
+        $this->user    = $user;
+        $this->tracker = $tracker;
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return Tracker
+     */
+    public function getTracker()
+    {
+        return $this->tracker;
+    }
 }
