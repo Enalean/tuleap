@@ -1,3 +1,6 @@
+Version 0.22 - Tuleap 9.3
+    * request #9783 Disable snippets (Fix fatal error on statistics)
+
 Version 0.21 - Tuleap 9.3
     * request #9783:wq Disable snippets
 
