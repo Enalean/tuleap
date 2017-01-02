@@ -22,43 +22,48 @@
 # with the right ownership and permissions.
 
 #
+# The launch of the tasks is randomized to avoid high load on servers running multiple Tuleap instances
+# Tasks expected to be launched at specific moment are started within a half four (1799 seconds) of the expected time
+#
+
+#
 # Tuleap root
 #
 
 # Once a minute, process Tuleap system events
-* * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php default)
-* * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php fts)
-* * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php tv3_tv5_migration)
-* * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php git)
-* * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php grokmirror)
-* * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php statistics)
+* * * * * root php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php default)
+* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php fts)
+* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php tv3_tv5_migration)
+* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php git)
+* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php grokmirror)
+* * * * * root php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php statistics)
 
 #
 # Regularly launch a system_check event (e.g. every half-hour)
-0,30 * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
+0,30 * * * * root php -r 'sleep(mt_rand(0,1799));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
 
 #
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
-30 0 * * * root /usr/share/codendi/src/utils/compute_all_daily_stats.sh >/dev/null 2>&1
+30 0 * * * root php -r 'sleep(mt_rand(0,1799));' && /usr/share/codendi/src/utils/compute_all_daily_stats.sh >/dev/null 2>&1
 
 #
 # run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
 # Run on Monday at 1am
-0 1 * * Mon root (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl >/dev/null 2>&1)
+0 1 * * Mon root php -r 'sleep(mt_rand(0,1799));' && (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl >/dev/null 2>&1)
 
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
-0 3 * * * root /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
+0 3 * * * root php -r 'sleep(mt_rand(0,1799));' && /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
 
 # Delete all forumml files older than 24 hours
-45 20 * * * root (test -d /var/run/forumml && /usr/sbin/tmpwatch -f 24 /var/run/forumml)
+45 20 * * * root php -r 'sleep(mt_rand(0,1799));' && (test -d /var/run/forumml && /usr/sbin/tmpwatch -f 24 /var/run/forumml)
 
 #
 # Codendiadm
 #
 
 # Daily Tuleap PHP cron (obsolete documents...)
-10 0 * * * codendiadm /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
+10 0 * * * codendiadm php -r 'sleep(mt_rand(0,1799));' && /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
