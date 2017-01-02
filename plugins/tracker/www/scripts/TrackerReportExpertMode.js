@@ -149,9 +149,10 @@
                 query_rich_editor = CodeMirror.fromTextArea(
                     tracker_query,
                     {
-                        lineNumbers: true,
-                        mode: "tql",
-                        extraKeys: {"Ctrl-Space": "autocomplete"}
+                        extraKeys   : { "Ctrl-Space": "autocomplete" },
+                        lineNumbers : true,
+                        lineWrapping: true,
+                        mode        : "tql"
                     }
                 );
             }
