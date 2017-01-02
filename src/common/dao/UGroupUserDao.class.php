@@ -246,7 +246,7 @@ class UGroupUserDao extends DataAccessObject {
 
     private function getContainsFilter($filters) {
         if ($filters['search']) {
-            $contain = $this->da->quoteSmart("%".$filters['search']."%");
+            $contain = $this->getDa()->quoteLikeValueSurround($filters['search']);
             return "user.realname LIKE $contain
                 OR user.user_name LIKE $contain
                 OR user.email LIKE $contain";
@@ -255,7 +255,7 @@ class UGroupUserDao extends DataAccessObject {
 
     private function getBeginsWithFilter($filters) {
         if ($filters['begin']) {
-            $begin = $this->da->quoteSmart($filters['begin']."%");
+            $begin = $this->getDa()->quoteLikeValueSuffix($filters['begin']);
             return "user.realname LIKE $begin
                 OR user.user_name LIKE $begin
                 OR user.email LIKE $begin";

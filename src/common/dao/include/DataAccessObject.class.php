@@ -364,8 +364,13 @@ class DataAccessObject {
         $this->retrieve("SET SESSION group_concat_max_len = 134217728");
     }
 
-    protected function searchExactMatch($string) {
-        return $this->da->quoteSmart("%$string%");
+    /**
+     * @deprecated Use DataAccess::quoteLikeValueSurround
+     * @return string
+     */
+    protected function searchExactMatch($string)
+    {
+        return $this->da->quoteLikeValueSurround($string);
     }
 
     /**

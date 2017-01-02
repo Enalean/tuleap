@@ -297,6 +297,37 @@ class DataAccess {
     public function escapeIntImplode(array $ints) {
         return implode(',', array_map(array($this, 'escapeInt'), $ints));
     }
+
+    /**
+     * Escape a value that will be used in a LIKE condition
+     *
+     * WARNING: This must be use only before quoteSmart otherwise you are still at risk of SQL injections
+     *
+     * Example escape chain:
+     * $this->getDa()->quoteSmart($this->getDa()->escapeLikeValue($value));
+     *
+     * @return string
+     */
+    public function escapeLikeValue($value)
+    {
+        return addcslashes($value, '_%\\');
+    }
+
+    /**
+     * @return string
+     */
+    public function quoteLikeValueSurround($value)
+    {
+        return $this->quoteSmart('%' . $this->escapeLikeValue($value) . '%');
+    }
+
+    /**
+     * @return string
+     */
+    public function quoteLikeValueSuffix($value)
+    {
+        return $this->quoteSmart($this->escapeLikeValue($value) . '%');
+    }
     
     /**
      * Retrieves the number of rows from a result set.

@@ -448,11 +448,14 @@ class UserDao extends DataAccessObject {
      * You can limit the number of results.
      * This is used by "search users as you type"
      */
-    function searchUserNameLike($name, $limit=0) {
+    public function searchUserNameLike($name, $limit=0)
+    {
+        $name = $this->getDa()->quoteLikeValueSurround($name);
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS realname, user_name, has_avatar".
             " FROM user".
-            " WHERE (realname LIKE '%".db_es($name)."%'".
-            " OR user_name LIKE '%".db_es($name)."%')".
+            " WHERE (realname LIKE $name".
+            " OR user_name LIKE $name)".
             " AND status IN ('A', 'R')";
         $sql .= "ORDER BY realname";
         if($limit > 0) {
@@ -656,7 +659,7 @@ class UserDao extends DataAccessObject {
                      ' WHERE email = '.$this->da->quoteSmart($user->getUserName());
         if ($this->update($sqlArtcc)) {
             $sqlSel = 'SELECT addresses, id FROM artifact_global_notification
-                       WHERE addresses LIKE "%"'.$this->da->quoteSmart($user->getUserName()).'"%"';
+                       WHERE addresses LIKE '. $this->getDa()->quoteLikeValueSurround($user->getUserName());
 
             $dar = $this->retrieve($sqlSel);
             if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
@@ -703,7 +706,7 @@ class UserDao extends DataAccessObject {
             $status =$this->da->quoteSmartImplode(',', $status_values);
         }
         if ($pattern) {
-            $pattern = $this->da->quoteSmart('%'.$pattern.'%');
+            $pattern = $this->getDa()->quoteLikeValueSurround($pattern);
             $where = "WHERE (
                     user.user_name LIKE $pattern
                     OR user.user_id LIKE $pattern
