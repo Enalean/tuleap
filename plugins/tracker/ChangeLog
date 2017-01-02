@@ -1,3 +1,6 @@
+Version 5.1104 - Tuleap 9.3
+    * story #8858 query tracker with expressions (Give a complete error feedback with all fields)
+
 Version 5.1103 - Tuleap 9.3
     * story #8858: Bring the focus back to the editor
 
