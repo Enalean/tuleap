@@ -3,7 +3,6 @@
 var gulp      = require('gulp'),
     path      = require('path'),
     del       = require('del'),
-    rename    = require('gulp-rename'),
     scss_lint = require('gulp-scss-lint'),
     tuleap    = require('./tools/utils/tuleap-gulp-build');
 
@@ -156,11 +155,8 @@ var fat_combined_files = [
         watched_includes: [
             'src/www/themes/BurningParrot/css/**/_*.scss'
         ],
-        'target_dir': 'src/www/themes/BurningParrot/css'
+        target_dir: 'src/www/themes/BurningParrot/css'
     },
-    theme_burningparrot_vendor_css = [
-            'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.css'
-    ],
     components_paths = [
         'plugins/tracker/',
         'plugins/tracker/grammar/',
@@ -217,16 +213,7 @@ gulp.task('clean-sass-core', function() {
     tuleap.sass_clean('.', theme_burningparrot_scss.files);
 });
 
-gulp.task('rename-css-to-scss', function() {
-    gulp.src(theme_burningparrot_vendor_css)
-       .pipe(rename({
-           prefix: '_',
-           extname: '.scss'
-       }))
-       .pipe(gulp.dest(theme_burningparrot_scss.target_dir + '/vendor'));
-});
-
-gulp.task('sass-core', ['clean-sass-core', 'rename-css-to-scss'], function() {
+gulp.task('sass-core', ['clean-sass-core'], function() {
     tuleap.sass_build('.', common_scss);
     tuleap.sass_build('.', select2_scss);
     tuleap.sass_build('.', theme_flamingparrot_scss);

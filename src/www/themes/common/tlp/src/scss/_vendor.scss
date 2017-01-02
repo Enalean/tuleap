@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'reset';
-@import 'variables-blue';
-@import 'components';
-@import 'vendor';
+@import '../vendor/flatpickr-1.9.1/flatpickr.min';
+@import '../vendor/select2-4.0.3/select2.min';
