@@ -72,7 +72,9 @@
                 field.addEventListener('click', function (event) {
                     if (query_rich_editor instanceof CodeMirror) {
                         var text_query = query_rich_editor.getValue();
-                        query_rich_editor.setValue(text_query + ' ' + event.target.value);
+                        query_rich_editor.setValue(text_query + ' ' + event.target.value + ' ');
+                        query_rich_editor.focus();
+                        query_rich_editor.setCursor(query_rich_editor.lineCount(), 0);
                         event.target.selected = false;
                     }
                 });
