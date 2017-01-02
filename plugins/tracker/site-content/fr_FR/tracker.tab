@@ -1407,6 +1407,7 @@ plugin_tracker_report	query_placeholder	(champ_1='valeur' OR champ_2='valeur') A
 plugin_tracker_report	parse_expert_query_error	Erreur pendant l'analyse de la requête experte
 plugin_tracker_report	validate_expert_query_fields_not_exist	Les champs '$1' n'existent pas
 plugin_tracker_report	validate_expert_query_fields_not_supported	Les champs '$1' ne sont pas supportés
+plugin_tracker_report	validate_expert_query_depth_exceed	La requête est estimée trop complexe pour être exécutée par le serveur. Veuillez la simplifier (ex: enlever des comparaisons) pour pouvoir continuer.
 
 plugin_tracker_report_widget	go_to_report	Voir le rapport
 
@@ -1692,6 +1693,13 @@ plugin_tracker_config	insecure	Passerelle NON sécurisée
 plugin_tracker_config	insecure_desc	Les utilisateurs peuvent intéragir avec les outils de suivi par courriel. Il n'y a aucune authentification. <span class="text-error">Avec cette option, nous <strong>ne pouvons pas avoir confiance en l'émetteur du courriel</strong>. Ce qui veut dire que des personnes mal intentionnées peuvent facilement forger un courriel et se faire passer pour quelqu'un d'autre.</span><br />Actuellement, les utilisateurs peuvent créer des artifacts et répondre (ajout d'un commentaire à un artifact) par courriel avec cette option.
 plugin_tracker_config	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer la variable suivante : <code>$sys_enable_reply_by_mail</code>.</p>
 plugin_tracker_config	successfully_updated	Mise à jour effectuée, les modifications seront actives dans quelques minutes.
+
+plugin_tracker_report_config	successfully_updated	Mise à jour effectuée.
+plugin_tracker_report_config	add_error	La configuration est incorrecte.
+plugin_tracker_report_config	report_config_panel	Rapport
+plugin_tracker_report_config	report_config_pane_title	Configuration du rapport
+plugin_tracker_report_config	report_config_desc	Définir une limite sur les requêtes expertes afin d'éviter les trop complexes. Soyez prudent, plus la limite est élevée, plus le temps pour traiter la requête peut être important.
+plugin_tracker_report_config	query_limit_label	Limite
 
 plugin_tracker_emailgateway	creation_error	L'artéfact n'a pas été créé
 plugin_tracker_emailgateway	update_error	L'artéfact n'a pas été mis à jour

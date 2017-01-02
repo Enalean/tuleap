@@ -1408,6 +1408,7 @@ plugin_tracker_report	query_placeholder	(field_1='value' OR field_2='value') AND
 plugin_tracker_report	parse_expert_query_error	Error during parsing expert query
 plugin_tracker_report	validate_expert_query_fields_not_exist	Fields '$1' don't exist
 plugin_tracker_report	validate_expert_query_fields_not_supported	Fields '$1' aren't supported
+plugin_tracker_report	validate_expert_query_depth_exceed	The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.
 
 plugin_tracker_report_widget	go_to_report	Go to report
 
@@ -1693,6 +1694,13 @@ plugin_tracker_config	insecure	Insecure email gateway
 plugin_tracker_config	insecure_desc	Users can interact with trackers by email. Authentication is not done at all.<span class="text-error"><i class="icon-warn"></i> With this option we <strong>cannot trust the sender of the email</strong>. This means that villains can easily forge an email and pretend to be someone they are not.</span><br>As of today, users can create artifacts and reply (add a follow-up comment) by email with this option.
 plugin_tracker_config	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>$1</code> and remove the following variable: <code>$sys_enable_reply_by_mail</code>.</p>
 plugin_tracker_config	successfully_updated	Successfully updated, the modification will be active in a few minutes.
+
+plugin_tracker_report_config	successfully_updated	Successfully updated.
+plugin_tracker_report_config	add_error	The limit value is incorrect.
+plugin_tracker_report_config	report_config_panel	Report
+plugin_tracker_report_config	report_config_pane_title	Report configuration
+plugin_tracker_report_config	report_config_desc	Set a limit on expert queries to avoid too complex ones. Be careful, higher the limit is, higher the time to process the query by the server can be.
+plugin_tracker_report_config	query_limit_label	Limit
 
 plugin_tracker_emailgateway	creation_error	The artifact was not created
 plugin_tracker_emailgateway	update_error	The artifact was not updated

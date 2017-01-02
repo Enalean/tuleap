@@ -36,6 +36,9 @@ use Tuleap\Tracker\Deprecation\DeprecationController;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Tracker\Report\TrackerReportConfig;
+use Tuleap\Tracker\Report\TrackerReportConfigController;
+use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
 require_once('pre.php');
 
@@ -88,6 +91,12 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 ProjectManager::instance(),
                 TrackerFactory::instance(),
                 Tracker_FormElementFactory::instance()
+            ),
+            $admin_page_renderer
+        ),
+        new TrackerReportConfigController(
+            new TrackerReportConfig(
+                new TrackerReportConfigDao()
             ),
             $admin_page_renderer
         )

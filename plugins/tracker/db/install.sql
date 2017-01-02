@@ -388,6 +388,11 @@ CREATE TABLE tracker_fileinfo(
     filetype TEXT NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
+DROP TABLE IF EXISTS tracker_report_config;
+CREATE TABLE tracker_report_config(
+    query_limit INT(1) NOT NULL DEFAULT 15
+);
+
 DROP TABLE IF EXISTS tracker_report;
 CREATE TABLE tracker_report(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -861,3 +866,5 @@ INSERT INTO user SET
 INSERT INTO user_access SET
         user_id = 90,
         last_access_date = '0';
+
+INSERT INTO tracker_report_config (query_limit) VALUES (15)

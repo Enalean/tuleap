@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -24,12 +24,15 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Collector;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidator;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitDepthIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Validator;
 use Tuleap\Tracker\Report\ExpertModePresenter;
+use Tuleap\Tracker\Report\TrackerReportConfig;
+use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
 /**
  * Tracker_ report.
@@ -81,6 +84,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @var QueryBuilder
      */
     private $query_builder;
+    /**
+     * @var DepthValidator
+     */
+    private $depth_validator;
 
     /**
      * Constructor
@@ -123,9 +130,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
 
-        $this->parser        = new Parser();
-        $this->collector     = new Collector($this->getFormElementFactory());
-        $this->query_builder = new QueryBuilder($this->getFormElementFactory());
+        $report_config = new TrackerReportConfig(
+            new TrackerReportConfigDao()
+        );
+
+        $this->parser          = new Parser();
+        $this->depth_validator = new DepthValidator($report_config->getExpertQueryLimit());
+        $this->collector       = new Collector($this->getFormElementFactory());
+        $this->query_builder   = new QueryBuilder($this->getFormElementFactory());
     }
 
     public function setProjectId($id) {
@@ -1315,6 +1327,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $parsed_query = $this->parseExpertQuery();
+                        $parsed_query->accept($this->depth_validator, $this->getCurrentUser(), $this->getTracker());
                         $invalid_fields_collection = $this->collector->collectErrorsFields(
                             $parsed_query,
                             $this->getCurrentUser(),
@@ -1348,6 +1361,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                             $GLOBALS['Language']->getText(
                                 'plugin_tracker_report',
                                 'parse_expert_query_error'
+                            )
+                        );
+                    } catch (LimitDepthIsExceededException $e) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $GLOBALS['Language']->getText(
+                                'plugin_tracker_report',
+                                'validate_expert_query_depth_exceed'
                             )
                         );
                     }
@@ -1786,6 +1807,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     private function canExecuteExpertQuery($parsed_query)
     {
+        try {
+            $parsed_query->accept($this->depth_validator, $this->getCurrentUser(), $this->getTracker());
+        } catch (LimitDepthIsExceededException $e) {
+            return false;
+        }
+
         $invalid_fields_collection = $this->collector->collectErrorsFields(
             $parsed_query,
             $this->getCurrentUser(),

@@ -22,19 +22,21 @@ namespace Tuleap\Tracker\Config;
 
 class SectionsPresenter
 {
-
     public $emailgateway;
     public $natures;
     public $deprecation_panel;
+    public $report_config_panel;
     public $emailgateway_url;
     public $natures_url;
     public $deprecation_url;
+    public $report_config_url;
 
     public function __construct()
     {
-        $this->emailgateway       = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
-        $this->natures            = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
-        $this->deprecation_panel = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'deprecation_panel');
+        $this->emailgateway        = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
+        $this->natures             = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
+        $this->deprecation_panel   = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'deprecation_panel');
+        $this->report_config_panel = $GLOBALS['Language']->getText('plugin_tracker_report_config', 'report_config_panel');
 
         $this->emailgateway_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
             'action'   => 'emailgateway'
@@ -45,5 +47,8 @@ class SectionsPresenter
         $this->deprecation_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
             'action'   => 'deprecation'
         ));
+        $this->report_config_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
+                'action' => 'report-config'
+            ));
     }
 }

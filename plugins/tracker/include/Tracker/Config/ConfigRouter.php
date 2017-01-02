@@ -29,6 +29,7 @@ use Codendi_Request;
 use Response;
 use PFUser;
 use Feedback;
+use Tuleap\Tracker\Report\TrackerReportConfigController;
 
 class ConfigRouter
 {
@@ -44,17 +45,23 @@ class ConfigRouter
 
     /** @var DeprecationController */
     private $deprecation_controller;
+    /**
+     * @var TrackerReportConfigController
+     */
+    private $report_config_controller;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         MailGatewayConfigController $mailgateway_controller,
         NatureConfigController $nature_controller,
-        DeprecationController $deprecation_controller
+        DeprecationController $deprecation_controller,
+        TrackerReportConfigController $report_config_controller
     ) {
-        $this->csrf                    = $csrf;
-        $this->mailgateway_controller  = $mailgateway_controller;
-        $this->nature_controller       = $nature_controller;
-        $this->deprecation_controller = $deprecation_controller;
+        $this->csrf                     = $csrf;
+        $this->mailgateway_controller   = $mailgateway_controller;
+        $this->nature_controller        = $nature_controller;
+        $this->deprecation_controller   = $deprecation_controller;
+        $this->report_config_controller = $report_config_controller;
     }
 
     public function process(Codendi_Request $request, Response $response, PFUser $user)
@@ -93,6 +100,13 @@ class ConfigRouter
             case 'update-emailgateway':
                 $this->csrf->check();
                 $this->mailgateway_controller->update($request, $response);
+                break;
+            case 'report-config':
+                $this->report_config_controller->display($this->csrf);
+                break;
+            case 'update-report-config':
+                $this->csrf->check();
+                $this->report_config_controller->update($request, $response);
                 break;
             case 'emailgateway':
             default:
