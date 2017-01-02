@@ -53,7 +53,7 @@ class AdminPageRenderer
     {
         $this->header($title, false);
         $this->renderToPage($template_path, $template_name, $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->footer();
     }
 
     public function renderToPage($template_path, $template_name, $presenter)

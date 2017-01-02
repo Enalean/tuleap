@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
- * Copyright (c) Enalean, 2015 – 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 – 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Statistics\ProjectsOverQuotaPresenter;
 
 require_once('ProjectQuotaManager.class.php');
 
@@ -263,51 +265,28 @@ class ProjectQuotaHtml {
     }
 
     /**
-     * Display the content of the projects over disk quota table
-     *
-     * @return Void
-     */
-    private function displayProjectsOverQuotaTableContent() {
-        $output            = '';
-        $exceedingProjects = $this->projectQuotaManager->getProjectsOverQuota();
-        foreach ($exceedingProjects as $key => $value) {
-            $output .= '<tr class="'.util_get_alt_row_color($key).'">'.
-                       '<td><b><a href="disk_usage.php?func=show_one_project&group_id='.$value['group_id'].'">'.$value['project_name'].'</a></b></td>'.
-                       '<td ><b>'.$value['current_disk_space'].'</b></td>'.
-                       '<td ><b>'.$value['disk_quota'].'</b></td>'.
-                       '<td ><b>'.$value['exceed'].'</b></td>';
-            $output .= '<td>';
-            $output .= '<a href="#massmail_'.$value['group_id'].'" class="project_home_contact_admins"  data-toggle="modal"><span class="icon-envelope-alt"></span></a>';
-            $output .= $this->fetchMailForm($value['group_id'], $value['project_name'], $value['current_disk_space']);
-            $output .= '</td>';
-            $output .= '</tr>';
-        }
-        $presenter        = new ProjectsOverQuotaTablePresenter($output);
-        $template_factory = TemplateRendererFactory::build();
-        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-        $renderer->renderToPage('projects-over-quota',$presenter);
-    }
-
-    /**
-     * Display the header of the projects over disk quota table
-     *
-     * @return Void
-     */
-    private function displayProjectsOverQuotaTableHeader() {
-        $header_presenter = new ProjectsOverQuotaTableHeaderPresenter();
-        $template_factory = TemplateRendererFactory::build();
-        $renderer         = $template_factory->getRenderer($header_presenter->getTemplateDir());
-        $renderer->renderToPage('projects-over-quota-table-header',$header_presenter);
-    }
-
-    /**
      * Display the list of the projects over disk quota
      *
      * @return Void
      */
     public function displayProjectsOverQuota() {
-        $this->displayProjectsOverQuotaTableHeader();
-        $this->displayProjectsOverQuotaTableContent();
+        $exceeding_projects = $this->projectQuotaManager->getProjectsOverQuota();
+
+        foreach ($exceeding_projects as $key => $value) {
+            $value['mail_form'] = $this->fetchMailForm(
+                $value['group_id'],
+                $value['project_name'],
+                $value['current_disk_space']
+            );
+
+            $exceeding_projects[$key] = $value;
+        }
+
+        $presenter        = new ProjectsOverQuotaPresenter($exceeding_projects);
+        $template_factory = TemplateRendererFactory::build();
+        $renderer         = $template_factory->getRenderer(STATISTICS_TEMPLATE_DIR);
+
+        $renderer->renderToPage('projects-over-quota', $presenter);
     }
 
     /**

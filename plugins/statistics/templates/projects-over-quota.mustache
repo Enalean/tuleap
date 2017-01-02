@@ -1,3 +1,31 @@
-        {{{ table_content }}}
-        </table>
+<div id="plugin_statistics">
+    <h1>{{ title }}</h1>
+    <table width="100%">
+        <thead>
+            {{# table_header }}
+                <th>{{ . }}</th>
+            {{/ table_header }}
+        </thead>
+
+        <tbody>
+            {{# exceeding_projects }}
+                <tr>
+                    <td>
+                        <b>
+                            <a href="disk_usage.php?func=show_one_project&group_id={{ group_id }}">{{ project_name }}</a>
+                        </b>
+                    </td>
+                    <td><b>{{ current_disk_space }}</b></td>
+                    <td><b>{{ disk_quota }}</b></td>
+                    <td><b>{{ exceed }}</b></td>
+                    <td>
+                        <a href="#massmail_{{ group_id }}" class="project_home_contact_admins" data-toggle="modal">
+                            <span class="icon-envelope-alt"></span>
+                        </a>
+                        {{{ mail_form }}}
+                    </td>
+                </tr>
+            {{/ exceeding_projects }}
+        </tbody>
+    </table>
 </div>
