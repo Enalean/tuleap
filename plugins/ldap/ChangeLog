@@ -1,3 +1,6 @@
+Version 3.118 - Tuleap 9.3
+    * request #9772: Remove the option 'Stay in HTTPS after login' on the login page
+
 Version 3.117 - Tuleap 9.1
     * story #9585: Get rid of Bootstrap in site admin / plugins (change avatars & pending users image)
 

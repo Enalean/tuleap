@@ -24,6 +24,7 @@ Version 9.3 (Not released yet)
 	* request #9663: Favor REST API in Tuleap interface
 	* request #9783: Disable snippets
 	* request #9788: Update copyright footers and README file
+	* request #9772: Remove the option 'Stay in HTTPS after login' on the login page
 
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6
@@ -49,6 +50,7 @@ Version 9.3 (Not released yet)
 	* pluginsadministration: 1.25
 	* hudson: 1.36
 	* tracker_encryption: 1.3
+	* ldap: 3.118
 
     == Themes ==
 	* FlamingParrot: 1.172
