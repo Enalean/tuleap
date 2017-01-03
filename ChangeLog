@@ -41,6 +41,7 @@ Version 9.3 (Not released yet)
 
 	== Security ==
 	* request #9745: XSS on show_help
+    * request #9782: Denial of service through non filtered inputs in LIKE SQL queries
 
 	== Plugins ==
 	* mediawiki: 0.129
