@@ -19,6 +19,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
+use PFUser;
+use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
@@ -34,9 +36,13 @@ class InvalidFieldsCollectorVisitor implements Visitor
         $this->formelement_factory  = $formelement_factory;
     }
 
-    public function collectErrorsFields($parsed_query, InvalidFieldsCollectorParameters $parameters)
-    {
-        $parsed_query->accept($this, $parameters);
+    public function collectErrorsFields(
+        Visitable $parsed_query,
+        PFUser $user,
+        Tracker $tracker,
+        InvalidFieldsCollection $invalid_fields_collection
+    ) {
+        $parsed_query->accept($this, new InvalidFieldsCollectorParameters($user, $tracker, $invalid_fields_collection));
     }
 
     public function visitComparison(Comparison $comparison, InvalidFieldsCollectorParameters $parameters)

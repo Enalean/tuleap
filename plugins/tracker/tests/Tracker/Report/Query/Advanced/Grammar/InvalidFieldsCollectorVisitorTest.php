@@ -68,7 +68,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $this->collector->collectErrorsFields($expr, $this->parameters);
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('field'));
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
@@ -80,7 +80,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $this->collector->collectErrorsFields($expr, $this->parameters);
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
