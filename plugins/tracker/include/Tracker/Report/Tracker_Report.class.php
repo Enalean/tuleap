@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidatorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidatorVisitor;
@@ -1331,11 +1332,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     try {
                         $parsed_query = $this->parseExpertQuery();
                         $parsed_query->accept($this->depth_validator, new DepthValidatorParameters());
-                        $invalid_fields_collection = $this->collector->collectErrorsFields(
-                            $parsed_query,
-                            new InvalidFieldsCollectorParameters($this->getCurrentUser(), $this->getTracker())
-                        );
 
+                        $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
                         if ($invalid_fields_collection->hasNonexistentFields()) {
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
@@ -1814,11 +1812,26 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             return false;
         }
 
-        $invalid_fields_collection = $this->collector->collectErrorsFields(
-            $parsed_query,
-            new InvalidFieldsCollectorParameters($this->getCurrentUser(), $this->getTracker())
-        );
+        $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
 
         return $invalid_fields_collection->hasNoErrors();
+    }
+
+    /**
+     * @return InvalidFieldsCollection
+     */
+    private function getInvalidFieldsInExpertQuery($parsed_query)
+    {
+        $invalid_fields_collection = new InvalidFieldsCollection();
+        $this->collector->collectErrorsFields(
+            $parsed_query,
+            new InvalidFieldsCollectorParameters(
+                $this->getCurrentUser(),
+                $this->getTracker(),
+                $invalid_fields_collection
+            )
+        );
+
+        return $invalid_fields_collection;
     }
 }

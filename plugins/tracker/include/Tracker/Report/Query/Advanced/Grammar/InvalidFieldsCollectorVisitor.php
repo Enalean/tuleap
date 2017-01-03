@@ -28,44 +28,31 @@ class InvalidFieldsCollectorVisitor implements Visitor
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
-    /**
-     * @var array
-     */
-    private $fields_not_exist;
-    /**
-     * @var array
-     */
-    private $fields_not_supported;
 
     public function __construct(Tracker_FormElementFactory $formelement_factory)
     {
-        $this->fields_not_exist     = array();
-        $this->fields_not_supported = array();
         $this->formelement_factory  = $formelement_factory;
     }
 
     public function collectErrorsFields($parsed_query, InvalidFieldsCollectorParameters $parameters)
     {
-        $this->fields_not_exist     = array();
-        $this->fields_not_supported = array();
-
         $parsed_query->accept($this, $parameters);
-
-        return new InvalidFieldsCollection($this->fields_not_exist, $this->fields_not_supported);
     }
 
     public function visitComparison(Comparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
+        $field_name = $comparison->getField();
+
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $parameters->getTracker()->getId(),
-            $comparison->getField(),
+            $field_name,
             $parameters->getUser()
         );
 
         if (! $field) {
-            $this->fields_not_exist[] = $comparison->getField();
+            $parameters->getInvalidFieldsCollection()->addNonexistentField($field_name);
         } else if (! $field instanceof Tracker_FormElement_Field_Text) {
-            $this->fields_not_supported[] = $comparison->getField();
+            $parameters->getInvalidFieldsCollection()->addUnsupportedField($field_name);
         }
     }
 

@@ -27,10 +27,20 @@ class InvalidFieldsCollection
     /** @var array */
     private $fields_not_supported;
 
-    public function __construct($fields_not_exist, $fields_not_supported)
+    public function __construct()
     {
-        $this->fields_not_exist     = $fields_not_exist;
-        $this->fields_not_supported = $fields_not_supported;
+        $this->fields_not_exist     = array();
+        $this->fields_not_supported = array();
+    }
+
+    public function addNonexistentField($field_name)
+    {
+        $this->fields_not_exist[] = $field_name;
+    }
+
+    public function addUnsupportedField($field_name)
+    {
+        $this->fields_not_supported[] = $field_name;
     }
 
     /**
