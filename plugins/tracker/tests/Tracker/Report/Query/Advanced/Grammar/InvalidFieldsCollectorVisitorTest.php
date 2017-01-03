@@ -32,6 +32,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     private $collector;
     private $user;
     private $parameters;
+    private $invalid_fields_collection;
 
     public function setUp()
     {
@@ -41,7 +42,13 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->field               = aStringField()->build();
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->user                = aUser()->build();
-        $this->parameters          = new InvalidFieldsCollectorParameters($this->user, $this->tracker);
+
+        $this->invalid_fields_collection = new InvalidFieldsCollection();
+        $this->parameters                = new InvalidFieldsCollectorParameters(
+            $this->user,
+            $this->tracker,
+            $this->invalid_fields_collection
+        );
 
         $this->collector = new InvalidFieldsCollectorVisitor($this->formelement_factory);
     }
@@ -61,10 +68,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $invalid_fields_collection = $this->collector->collectErrorsFields($expr, $this->parameters);
+        $this->collector->collectErrorsFields($expr, $this->parameters);
 
-        $this->assertEqual($invalid_fields_collection->getNonexistentFields(), array('field'));
-        $this->assertEqual($invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
     }
 
     public function itThrowsAnExceptionIfFieldIsNotText()
@@ -73,10 +80,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new Comparison('field', 'value');
 
-        $invalid_fields_collection = $this->collector->collectErrorsFields($expr, $this->parameters);
+        $this->collector->collectErrorsFields($expr, $this->parameters);
 
-        $this->assertEqual($invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
     }
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()

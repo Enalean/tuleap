@@ -34,10 +34,16 @@ class InvalidFieldsCollectorParameters implements VisitorParameters
      */
     private $tracker;
 
-    public function __construct(PFUser $user, Tracker $tracker)
+    /**
+     * @var InvalidFieldsCollection
+     */
+    private $invalid_fields_collection;
+
+    public function __construct(PFUser $user, Tracker $tracker, InvalidFieldsCollection $invalid_fields_collection)
     {
-        $this->user    = $user;
-        $this->tracker = $tracker;
+        $this->user                      = $user;
+        $this->tracker                   = $tracker;
+        $this->invalid_fields_collection = $invalid_fields_collection;
     }
 
     /**
@@ -54,5 +60,13 @@ class InvalidFieldsCollectorParameters implements VisitorParameters
     public function getTracker()
     {
         return $this->tracker;
+    }
+
+    /**
+     * @return InvalidFieldsCollection
+     */
+    public function getInvalidFieldsCollection()
+    {
+        return $this->invalid_fields_collection;
     }
 }
