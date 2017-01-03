@@ -13,6 +13,8 @@ Version 9.3 (Not released yet)
 
 	== Enhancement ==
 	* story #8858 : query tracker with expressions
+		- Autocomplete in expert mode
+	* story #8858 : query tracker with expressions
 		- Handle expert query during export/import XML
 		- Exclude generated files from the autoload
 		- Enhance query edition with CodeMirror
@@ -42,7 +44,7 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.51
-	* tracker: 5.1106
+	* tracker: 5.1107
 	* git: 4.316
 	* graphontrackersv5: 5.28
 	* statistics: 0.78
@@ -54,7 +56,7 @@ Version 9.3 (Not released yet)
 	* ldap: 3.118
 
     == Themes ==
-	* FlamingParrot: 1.172
+	* FlamingParrot: 1.173
 	* BurningParrot: 0.22
 
 Version 9.2 (Thursday, December 8th 2016)
