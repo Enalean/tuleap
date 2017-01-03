@@ -19,16 +19,11 @@
 
 (function($) {
     $(document).ready(function() {
-        initializeTooltip();
         initializeTrackerReportQuery();
         initializeTrackerReportAllowedFields();
         initializeCodeMirror();
 
         var query_rich_editor;
-
-        function initializeTooltip() {
-            $('#tracker-report-expert-query-tooltip').tooltip({ placement: 'right'});
-        }
 
         function initializeTrackerReportQuery() {
             var tracker_report_expert_query_button = document.getElementById('tracker-report-expert-query-button'),
@@ -150,7 +145,7 @@
                     tracker_query,
                     {
                         extraKeys   : { "Ctrl-Space": "autocomplete" },
-                        lineNumbers : true,
+                        lineNumbers : false,
                         lineWrapping: true,
                         mode        : "tql"
                     }

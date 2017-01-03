@@ -42,6 +42,7 @@
         "node_modules/codemirror/lib/codemirror.js",
         "node_modules/codemirror/addon/mode/simple.js",
         "node_modules/codemirror/addon/hint/show-hint.js",
+        "node_modules/codemirror/addon/display/placeholder.js",
         "www/scripts/TrackerReportExpertMode.js",
         "www/scripts/TrackerEmailCopyPaste.js",
         "www/scripts/TrackerReportsSaveAsModal.js",
