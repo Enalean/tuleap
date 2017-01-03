@@ -56,6 +56,7 @@ Version 9.3 (Not released yet)
 	* hudson: 1.36
 	* tracker_encryption: 1.3
 	* ldap: 3.118
+	* docman: 2.26.127
 
     == Themes ==
 	* FlamingParrot: 1.173

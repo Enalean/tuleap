@@ -1,3 +1,6 @@
+Version 2.26.127 - Tuleap 9.3
+    * request #9799: Fatal error when I delete an item that was cut
+
 Version 2.26.126 - Tuleap 9.2
     * Site admin is now fully burning parrot
 
