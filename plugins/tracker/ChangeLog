@@ -1,3 +1,6 @@
+Version 5.1108 - Tuleap 9.3
+    * request #94791: Wrap long lines in Expert query
+
 Version 5.1107 - Tuleap 9.3
     * Autocomplete in expert mode
 
