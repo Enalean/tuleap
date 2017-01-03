@@ -1,3 +1,6 @@
+Version 5.1110 - Tuleap 9.3
+    * request #9789: Introduce instrumentation
+
 Version 5.1109 - Tuleap 9.3
     * Refactoring: do not pass unneeded parameters to visitors
 

@@ -37,6 +37,7 @@ Version 9.3 (Not released yet)
 	* request #9311: Remove HTML_Graph
 	* request #9759 Developpement environnement uses Gerrit 2.12
 	* request #9202: have a development environment with PHP 5.6
+	* request #9789: Introduce code instrumentation
 
 	== Security ==
 	* request #9745: XSS on show_help
@@ -44,7 +45,7 @@ Version 9.3 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.129
 	* openidconnectclient: 0.51
-	* tracker: 5.1107
+	* tracker: 5.1110
 	* git: 4.316
 	* graphontrackersv5: 5.28
 	* statistics: 0.78
