@@ -488,7 +488,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    public function fetchDisplayQueryExpertMode()
+    public function fetchDisplayQueryExpertMode($report_can_be_modified, PFUser $current_user)
     {
         $id            = 'tracker-report-expert-query-' . $this->id;
         $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
@@ -496,13 +496,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $this->getTracker(),
             $this->getCurrentUser()
         );
+        $is_normal_mode_button_displayed = ($report_can_be_modified && ! $current_user->isAnonymous());
 
         $tracker_report_expert_query_presenter = new ExpertModePresenter(
             $this->id,
             $class_toggler,
             $this->is_in_expert_mode,
             $this->expert_query,
-            $fields
+            $fields,
+            $is_normal_mode_button_displayed
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -737,7 +739,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $additional_criteria = $this->getAdditionalCriteria();
 
             $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
-            $this->fetchDisplayQueryExpertMode();
+            $this->fetchDisplayQueryExpertMode($report_can_be_modified, $current_user);
 
             //Display Renderers
             $html .= '<div>';

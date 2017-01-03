@@ -42,19 +42,22 @@ class ExpertModePresenter
     public $btn_search;
     public $query_tooltip;
     public $allowed_fields_names_json_encoded;
+    public $is_normal_mode_button_displayed;
 
     public function __construct(
         $id,
         $class_toggler,
         $is_in_expert_mode,
         $expert_query,
-        array $allowed_fields
+        array $allowed_fields,
+        $is_normal_mode_button_displayed
     ) {
-        $this->id                = $id;
-        $this->class_toggler     = $class_toggler;
-        $this->is_in_expert_mode = $is_in_expert_mode;
-        $this->expert_query      = $expert_query;
-        $this->allowed_fields    = array_values($allowed_fields);
+        $this->id                              = $id;
+        $this->class_toggler                   = $class_toggler;
+        $this->is_in_expert_mode               = $is_in_expert_mode;
+        $this->expert_query                    = $expert_query;
+        $this->is_normal_mode_button_displayed = $is_normal_mode_button_displayed;
+        $this->allowed_fields                  = array_values($allowed_fields);
 
         $this->allowed_fields_names_json_encoded = json_encode(
             array_map(
