@@ -1,3 +1,6 @@
+Version 5.1116 - Tuleap 9.3
+    * story #8858: Anonymous user cannot change the query
+
 Version 5.1115 - Tuleap 9.3
     * request #9787: Ineffective normal mode button when not logged in
 
