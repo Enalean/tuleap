@@ -1,3 +1,6 @@
+Version 5.1111 - Tuleap 9.3
+    * story #8858: query tracker with expressions (Refactoring: move collection in parameters)
+
 Version 5.1110 - Tuleap 9.3
     * request #9789: Introduce instrumentation
 
