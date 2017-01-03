@@ -25,7 +25,7 @@ Mock::generatePartial('DataAccess', 'DataAccessTestVersion', array('connect'));
 /**
  * Tests the class DataAccess
  */
-class DataAccessTest extends UnitTestCase {
+class DataAccessTest extends TuleapTestCase {
 
     function testConnection() {
         
@@ -71,6 +71,14 @@ class DataAccessTest extends UnitTestCase {
    function testEscapeIntImplode() {
        $da = new DataAccessTestVersion($this);
        $this->assertIdentical('12,34,+5,-6,0', $da->escapeIntImplode(array(12, '34', '+5', '-6', 'crap')));
+   }
+
+   public function itQuotesLikeValueSurround()
+   {
+       $data_access             = new DataAccessTestVersion($this);
+       $string_to_escape        = '_%\\';
+       $expected_escaped_string = '\_\%\\\\';
+       $this->assertEqual($data_access->escapeLikeValue($string_to_escape), $expected_escaped_string);
    }
 
     function testIsInteger() {

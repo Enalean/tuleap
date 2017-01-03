@@ -229,7 +229,9 @@ class UserGroupDao extends DataAccessObject {
             return false;
         }
 
-        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name LIKE '$name'";
+        $name = $this->getDa()->quoteSmart($this->getDa()->escapeLikeValue($name));
+
+        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name LIKE $name";
         $row = $this->retrieveFirstRow($sql);
 
         if (! $row) {

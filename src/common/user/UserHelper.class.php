@@ -152,7 +152,7 @@ class UserHelper {
             $user_ids_escaped = $this->_getUserDao()->getDa()->escapeIntImplode($usersIds);
             $filter .= ' AND user.user_id IN ('. $user_ids_escaped .')';
         } else {
-            $by      = $this->_getUserDao()->getDa()->quoteSmart('%' . $by . '%');
+            $by      = $this->_getUserDao()->getDa()->quoteLikeValueSurround($by);
             $filter .= ' AND user.user_name LIKE ' . $by;
         }
         return $filter;
