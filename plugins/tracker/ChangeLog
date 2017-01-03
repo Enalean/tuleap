@@ -1,3 +1,6 @@
+Version 5.1109 - Tuleap 9.3
+    * Refactoring: do not pass unneeded parameters to visitors
+
 Version 5.1108 - Tuleap 9.3
     * request #94791: Wrap long lines in Expert query
 
