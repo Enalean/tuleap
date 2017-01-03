@@ -20,6 +20,7 @@
 
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
+use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 require_once 'common/chart/ErrorChart.class.php';
@@ -317,6 +318,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
     }
 
+    protected function getLogger()
+    {
+        return new BurndownLogger();
+    }
+
     /**
      *
      * @param Tracker_Artifact $artifact
@@ -329,17 +335,28 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
     {
+        $logger = $this->getLogger();
+        $logger->info("Start calculating burndown " . $artifact->getId());
+
         $capacity = null;
         if ($this->doesCapacityFieldExist()) {
             $capacity = $this->getCapacity($artifact);
         }
 
         $user_timezone = date_default_timezone_get();
-        date_default_timezone_set(TimezoneRetriever::getServerTimezone());
+        $server_timezone = TimezoneRetriever::getServerTimezone();
+        date_default_timezone_set($server_timezone);
 
         $start = new  DateTime();
         $start->setTimestamp($start_date);
         $start->setTime(0, 0, 0);
+
+        $logger->debug("Capacity: " . $capacity);
+        $logger->debug("Original start date: " . $start_date);
+        $logger->debug("Start date after updating timezone: " . $start->getTimestamp());
+        $logger->debug("Duration: " . $duration);
+        $logger->debug("User Timezone: " . $user_timezone);
+        $logger->debug("Server timezone: " . $server_timezone);
 
         $time_period   = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
@@ -354,6 +371,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown_data->setIsBeingCalculated(true);
         }
 
+        $logger->info("End calculating burndown " . $artifact->getId());
         date_default_timezone_set($user_timezone);
 
         return $burndown_data;
@@ -386,7 +404,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $days = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+        $days   = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+        $logger = $this->getLogger();
 
         if ($this->hasRemainingEffort($artifact->getTracker())
             && $this->hasStartDate($artifact, $user)) {
@@ -396,8 +415,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             );
 
             if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($burndown_data)) {
+                $logger->debug("Burndown period is current");
+                $logger->debug("Day cached: " . $cached_days['cached_days']);
+                $logger->debug("Period days: " . $days);
+                $logger->debug("Period days without last computed value: " . ($days - 1));
                 return $this->compareCachedDaysWhenLastDayIsAComputedValue((int) $cached_days['cached_days'], $days);
             } else {
+                $logger->debug("Burndown period is in past");
+                $logger->debug("Day cached: " . $cached_days['cached_days']);
+                $logger->debug("Period days: " . $days);
                 return $this->compareCachedDaysWithPeriodDays((int) $cached_days['cached_days'], $days);
             }
         }
