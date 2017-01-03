@@ -3,9 +3,11 @@
         <input type="hidden" name="report" value="{{ id }}" />
         <h4 class="backlog-planning-search-title {{ class_toggler }}" id="{{ id }}">{{ title }}</h4>
         <div class="pull-right">
-            <button id="tracker-report-normal-query-button" type="button" class="btn btn-mini tracker-report-query-button">
-                <i class="icon-random"></i> {{ btn_report_normal_mode }}
-            </button>
+            {{# is_normal_mode_button_displayed }}
+                <button id="tracker-report-normal-query-button" type="button" class="btn btn-mini tracker-report-query-button">
+                    <i class="icon-random"></i> {{ btn_report_normal_mode }}
+                </button>
+            {{/ is_normal_mode_button_displayed }}
         </div>
         <div class="tracker-report-expert-content">
             <div class="tracker-report-expert-content-query">
