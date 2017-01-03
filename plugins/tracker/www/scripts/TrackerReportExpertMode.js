@@ -147,7 +147,8 @@
                         extraKeys   : { "Ctrl-Space": "autocomplete" },
                         lineNumbers : false,
                         lineWrapping: true,
-                        mode        : "tql"
+                        mode        : "tql",
+                        readOnly    : tracker_query.readOnly ? 'nocursor' : false
                     }
                 );
             }
