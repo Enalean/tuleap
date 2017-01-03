@@ -34,6 +34,8 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
 }
 ForgeConfig::loadFromDatabase();
 
+Tuleap\Instrument\Collect::startTiming('pre.'.php_sapi_name());
+
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
 textdomain('tuleap-core');
 
@@ -64,7 +66,6 @@ if (!defined('IS_SCRIPT')) {
         define('IS_SCRIPT', false);
     }
 }
-
 if (!IS_SCRIPT) {
     // Protection against clickjacking
     header('X-Frame-Options: SAMEORIGIN');
@@ -227,3 +228,5 @@ if ($request->exist('postExpected') && !$request->exist('postReceived')) {
 if (ForgeConfig::get('DEBUG_MODE')) {
     $GLOBALS['DEBUG_TIME_IN_PRE'] = microtime(1) - $GLOBALS['debug_time_start'];
 }
+
+Tuleap\Instrument\Collect::endTiming('pre.'.php_sapi_name());

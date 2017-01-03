@@ -1,0 +1,63 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Instrument;
+
+use ForgeConfig;
+
+class Collect
+{
+    const NAME_SPACE = 'tuleap';
+
+    /**
+     * @var \Domnikl\Statsd\Client
+     */
+    private static $statsd;
+
+    public static function startTiming($key)
+    {
+        self::connect();
+        self::$statsd->startTiming($key);
+    }
+
+    public static function endTiming($key)
+    {
+        self::connect();
+        self::$statsd->endTiming($key);
+    }
+
+    private static function connect()
+    {
+        if (self::$statsd === null) {
+            if (file_exists('/usr/share/php/statsd/autoload.php') && ForgeConfig::get('statsd_server') != false) {
+                require_once('/usr/share/php/statsd/autoload.php');
+                $connection = new \Domnikl\Statsd\Connection\UdpSocket(ForgeConfig::get('statsd_server'), ForgeConfig::get('statsd_port'));
+                $namespace = self::NAME_SPACE;
+                $server_id = trim(ForgeConfig::get('statsd_server_id'));
+                if ($server_id) {
+                    $namespace .= '.'.$server_id;
+                }
+                self::$statsd = new \Domnikl\Statsd\Client($connection, $namespace);
+            } else {
+                self::$statsd = new NoopStatsd();
+            }
+        }
+    }
+}

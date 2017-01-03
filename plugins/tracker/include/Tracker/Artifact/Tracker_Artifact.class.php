@@ -857,6 +857,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
 
             default:
+                Tuleap\Instrument\Collect::startTiming('tracker.'.$this->getTrackerId().'.artifact.view');
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
@@ -868,6 +869,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     );
                     $renderer->display($request, $current_user);
                 }
+                Tuleap\Instrument\Collect::endTiming('tracker.'.$this->getTrackerId().'.artifact.view');
                 break;
         }
     }
