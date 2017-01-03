@@ -1331,7 +1331,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $parsed_query = $this->parseExpertQuery();
-                        $parsed_query->accept($this->depth_validator, new DepthValidatorParameters());
+                        $this->depth_validator->checkDepthOfTree($parsed_query);
 
                         $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
                         if ($invalid_fields_collection->hasNonexistentFields()) {
@@ -1748,10 +1748,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     $expression = $this->parseExpertQuery();
 
                     if ($this->canExecuteExpertQuery($expression)) {
-                        $from_where = $expression->accept(
-                            $this->query_builder,
-                            new QueryBuilderParameters($this->getTracker())
-                        );
+                        $from_where = $this->query_builder->buildFromWhere($expression, $this->getTracker());
+
                         $additional_from  = array($from_where->getFrom());
                         $additional_where = array($from_where->getWhere());
                     }
@@ -1807,7 +1805,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function canExecuteExpertQuery($parsed_query)
     {
         try {
-            $parsed_query->accept($this->depth_validator, new DepthValidatorParameters());
+            $this->depth_validator->checkDepthOfTree($parsed_query);
         } catch (LimitDepthIsExceededException $e) {
             return false;
         }
@@ -1825,11 +1823,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $invalid_fields_collection = new InvalidFieldsCollection();
         $this->collector->collectErrorsFields(
             $parsed_query,
-            new InvalidFieldsCollectorParameters(
-                $this->getCurrentUser(),
-                $this->getTracker(),
-                $invalid_fields_collection
-            )
+            $this->getCurrentUser(),
+            $this->getTracker(),
+            $invalid_fields_collection
         );
 
         return $invalid_fields_collection;

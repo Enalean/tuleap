@@ -19,9 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use PFUser;
 use Tracker;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
 class QueryBuilderVisitor implements Visitor
@@ -34,6 +32,11 @@ class QueryBuilderVisitor implements Visitor
     public function __construct(Tracker_FormElementFactory $formelement_factory)
     {
         $this->formelement_factory = $formelement_factory;
+    }
+
+    public function buildFromWhere(Visitable $parsed_query, Tracker $tracker)
+    {
+        return $parsed_query->accept($this, new QueryBuilderParameters($tracker));
     }
 
     public function visitComparison(Comparison $comparison, QueryBuilderParameters $parameters)

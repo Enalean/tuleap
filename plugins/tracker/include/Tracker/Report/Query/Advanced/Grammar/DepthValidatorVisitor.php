@@ -31,6 +31,11 @@ class DepthValidatorVisitor implements Visitor
         $this->limit = $limit;
     }
 
+    public function checkDepthOfTree(Visitable $parsed_query)
+    {
+        $parsed_query->accept($this, new DepthValidatorParameters());
+    }
+
     public function visitComparison(Comparison $comparison, DepthValidatorParameters $parameters)
     {
         return 1;
