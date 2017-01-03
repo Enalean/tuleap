@@ -1,4 +1,5 @@
-@import '../../../../node_modules/codemirror/lib/_codemirror';
+@import '../../../../node_modules/codemirror/lib/codemirror';
+@import '../../../../node_modules/codemirror/addon/hint/show-hint';
 
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
