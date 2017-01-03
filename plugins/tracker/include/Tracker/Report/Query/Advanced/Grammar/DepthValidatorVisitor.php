@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 use PFUser;
 use Tracker;
 
-class DepthValidator implements Visitor
+class DepthValidatorVisitor implements Visitor
 {
     private $limit;
 
@@ -31,44 +31,44 @@ class DepthValidator implements Visitor
         $this->limit = $limit;
     }
 
-    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker)
+    public function visitComparison(Comparison $comparison, DepthValidatorParameters $parameters)
     {
         return 1;
     }
 
-    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker)
+    public function visitAndExpression(AndExpression $and_expression, DepthValidatorParameters $parameters)
     {
-        return $this->visitExpression($and_expression, $user, $tracker);
+        return $this->visitExpression($and_expression, $parameters);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker)
+    public function visitOrExpression(OrExpression $or_expression, DepthValidatorParameters $parameters)
     {
-        return $this->visitExpression($or_expression, $user, $tracker);
+        return $this->visitExpression($or_expression, $parameters);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker)
+    public function visitOrOperand(OrOperand $or_operand, DepthValidatorParameters $parameters)
     {
-        return $this->visitOperand($or_operand, $user, $tracker);
+        return $this->visitOperand($or_operand, $parameters);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker)
+    public function visitAndOperand(AndOperand $and_operand, DepthValidatorParameters $parameters)
     {
-        return $this->visitOperand($and_operand, $user, $tracker);
+        return $this->visitOperand($and_operand, $parameters);
     }
 
-    private function visitTail($tail, PFUser $user, Tracker $tracker)
+    private function visitTail($tail, DepthValidatorParameters $parameters)
     {
         if ($tail) {
-            return $tail->accept($this, $user, $tracker);
+            return $tail->accept($this, $parameters);
         } else {
             return 0;
         }
     }
 
-    private function visitOperand($operand, PFUser $user, Tracker $tracker)
+    private function visitOperand($operand, DepthValidatorParameters $parameters)
     {
-        $left = $operand->getOperand()->accept($this, $user, $tracker);
-        $right = $this->visitTail($operand->getTail(), $user, $tracker);
+        $left = $operand->getOperand()->accept($this, $parameters);
+        $right = $this->visitTail($operand->getTail(), $parameters);
 
         $depth = $left > $right ? $left + 1 : $right + 1;
         if ($this->isDepthExceed($depth)) {
@@ -78,10 +78,10 @@ class DepthValidator implements Visitor
         return $depth;
     }
 
-    private function visitExpression($expression, PFUser $user, Tracker $tracker)
+    private function visitExpression($expression, DepthValidatorParameters $parameters)
     {
-        $left = $expression->getExpression()->accept($this, $user, $tracker);
-        $right = $this->visitTail($expression->getTail(), $user, $tracker);
+        $left = $expression->getExpression()->accept($this, $parameters);
+        $right = $this->visitTail($expression->getTail(), $parameters);
 
         $depth = $left > $right ? $left + 1 : $right + 1;
         if ($this->isDepthExceed($depth)) {

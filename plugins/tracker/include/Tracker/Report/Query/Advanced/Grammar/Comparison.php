@@ -19,10 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use PFUser;
-use Tracker;
-
-class Comparison implements Term
+class Comparison implements Term, Visitable
 {
     /**
      * @var string
@@ -39,9 +36,9 @@ class Comparison implements Term
         $this->value = $value;
     }
 
-    public function accept(Visitor $visitor, PFUser $user, Tracker $tracker)
+    public function accept(Visitor $visitor, VisitorParameters $parameters)
     {
-        return $visitor->visitComparison($this, $user, $tracker);
+        return $visitor->visitComparison($this, $parameters);
     }
 
     /**

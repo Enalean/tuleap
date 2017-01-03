@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,10 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use PFUser;
-use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 
-class Collector implements Visitor
+class InvalidFieldsCollectorVisitor implements Visitor
 {
     /**
      * @var Tracker_FormElementFactory
@@ -46,22 +44,22 @@ class Collector implements Visitor
         $this->formelement_factory  = $formelement_factory;
     }
 
-    public function collectErrorsFields($parsed_query, PFUser $user, Tracker $tracker)
+    public function collectErrorsFields($parsed_query, InvalidFieldsCollectorParameters $parameters)
     {
         $this->fields_not_exist     = array();
         $this->fields_not_supported = array();
 
-        $parsed_query->accept($this, $user, $tracker);
+        $parsed_query->accept($this, $parameters);
 
         return new InvalidFieldsCollection($this->fields_not_exist, $this->fields_not_supported);
     }
 
-    public function visitComparison(Comparison $comparison, PFUser $user, Tracker $tracker)
+    public function visitComparison(Comparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
-            $tracker->getId(),
+            $parameters->getTracker()->getId(),
             $comparison->getField(),
-            $user
+            $parameters->getUser()
         );
 
         if (! $field) {
@@ -71,34 +69,34 @@ class Collector implements Visitor
         }
     }
 
-    public function visitAndExpression(AndExpression $and_expression, PFUser $user, Tracker $tracker)
+    public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)
     {
-        $and_expression->getExpression()->accept($this, $user, $tracker);
-        $this->visitTail($and_expression->getTail(), $user, $tracker);
+        $and_expression->getExpression()->accept($this, $parameters);
+        $this->visitTail($and_expression->getTail(), $parameters);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, PFUser $user, Tracker $tracker)
+    public function visitOrExpression(OrExpression $or_expression, InvalidFieldsCollectorParameters $parameters)
     {
-        $or_expression->getExpression()->accept($this, $user, $tracker);
-        $this->visitTail($or_expression->getTail(), $user, $tracker);
+        $or_expression->getExpression()->accept($this, $parameters);
+        $this->visitTail($or_expression->getTail(), $parameters);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, PFUser $user, Tracker $tracker)
+    public function visitOrOperand(OrOperand $or_operand, InvalidFieldsCollectorParameters $parameters)
     {
-        $or_operand->getOperand()->accept($this, $user, $tracker);
-        $this->visitTail($or_operand->getTail(), $user, $tracker);
+        $or_operand->getOperand()->accept($this, $parameters);
+        $this->visitTail($or_operand->getTail(), $parameters);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, PFUser $user, Tracker $tracker)
+    public function visitAndOperand(AndOperand $and_operand, InvalidFieldsCollectorParameters $parameters)
     {
-        $and_operand->getOperand()->accept($this, $user, $tracker);
-        $this->visitTail($and_operand->getTail(), $user, $tracker);
+        $and_operand->getOperand()->accept($this, $parameters);
+        $this->visitTail($and_operand->getTail(), $parameters);
     }
 
-    private function visitTail($tail, $user, $tracker)
+    private function visitTail($tail, InvalidFieldsCollectorParameters $parameters)
     {
         if ($tail) {
-            $tail->accept($this, $user, $tracker);
+            $tail->accept($this, $parameters);
         }
     }
 }
