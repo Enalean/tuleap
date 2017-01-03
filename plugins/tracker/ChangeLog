@@ -1,3 +1,6 @@
+Version 5.1112 - Tuleap 9.3
+    * Refactoring: wrap accept() calls
+
 Version 5.1111 - Tuleap 9.3
     * story #8858: query tracker with expressions (Refactoring: move collection in parameters)
 
