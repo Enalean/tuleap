@@ -7,11 +7,9 @@ RUN yum install -y make rpm-build tar git fontconfig epel-release \
 ENV CI true
 
 # Disable cli progress animation in npm
-RUN npm install --global npm \
-    && npm config set progress false
-
 # Install base node modules
-RUN npm install --global \
+RUN npm config set progress false \
+    && npm install --global \
     bower \
     phantomjs-prebuilt
 
