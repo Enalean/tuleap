@@ -1,3 +1,6 @@
+Version 5.1113 - Tuleap 9.3
+    * Invalid query means no results
+
 Version 5.1112 - Tuleap 9.3
     * Refactoring: wrap accept() calls
 
