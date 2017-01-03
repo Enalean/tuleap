@@ -1,3 +1,6 @@
+Version 5.1106 - Tuleap 9.3
+    * request #9768 Burndown - add logs for see if cache is complete
+
 Version 5.1105 - Tuleap 9.3
     * story #8858: Introduce a limit with the depth of AST
 
