@@ -235,8 +235,9 @@ h5.artifack_link_subtitle {
 
 .tracker-report-expert-content {
     display: flex;
-    margin: 10px 0 0;
+    margin: 10px 0 6px;
     padding: 0;
+    clear: both;
 }
 
 .tracker-report-expert-content-query {
@@ -249,7 +250,29 @@ h5.artifack_link_subtitle {
 
     > .CodeMirror {
         height: 100px;
+        transition: border linear .2s, box-shadow linear .2s;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+
+        &.CodeMirror-focused {
+            border-color: rgba(82, 168, 236, .8);
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6);
+        }
+
+        pre {
+            padding: 0 6px;
+
+            &.CodeMirror-placeholder {
+                color: #999999;
+            }
+        }
     }
+}
+
+select.tracker-report-expert-allowed-fields {
+    height: 100px;
+    margin: 0;
 }
 
 .tracker-report-search {
