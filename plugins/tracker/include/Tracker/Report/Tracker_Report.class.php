@@ -1741,29 +1741,36 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     private function getMatchingIdsFromExpertQuery()
     {
-        if (! $this->matching_ids) {
-            $additional_from = array();
-            $additional_where = array();
-
-            if ($this->expert_query) {
-                try {
-                    $expression = $this->parseExpertQuery();
-
-                    if ($this->canExecuteExpertQuery($expression)) {
-                        $from_where = $this->query_builder->buildFromWhere($expression, $this->getTracker());
-
-                        $additional_from  = array($from_where->getFrom());
-                        $additional_where = array($from_where->getWhere());
-                    }
-                } catch (SyntaxError $e) {
-                }
-            }
-
-            $this->matching_ids = $this->getMatchingIdsInDb(
-                $additional_from,
-                $additional_where
-            );
+        if ($this->matching_ids) {
+            return $this->matching_ids;
         }
+
+        if (empty($this->expert_query)) {
+            $this->matching_ids = $this->getUnfilteredMatchingIds();
+
+            return $this->matching_ids;
+        }
+
+        try {
+            $expression = $this->parseExpertQuery();
+
+            if ($this->canExecuteExpertQuery($expression)) {
+                $from_where = $this->query_builder->buildFromWhere($expression, $this->getTracker());
+
+                $additional_from  = array($from_where->getFrom());
+                $additional_where = array($from_where->getWhere());
+
+                $this->matching_ids = $this->getMatchingIdsInDb(
+                    $additional_from,
+                    $additional_where
+                );
+
+                return $this->matching_ids;
+            }
+        } catch (SyntaxError $e) {
+        }
+
+        $this->matching_ids = $this->getNoMatchingIds();
 
         return $this->matching_ids;
 
@@ -1774,7 +1781,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $additional_from,
         $additional_where
     ) {
-        $matching_ids = array();
+        $matching_ids = $this->getNoMatchingIds();
 
         $dao                  = $this->getDao();
         $tracker              = $this->getTracker();
@@ -1783,10 +1790,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $permissions          = $this->getPermissionsManager()->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
-        $matching_ids['id']   = '';
-        $matching_ids['last_changeset_id'] = '';
-        $matching_ids_result = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from,
-            $additional_where, $user, $permissions, $contributor_field_id);
+        $matching_ids_result  = $dao->searchMatchingIds(
+            $group_id,
+            $tracker->getId(),
+            $additional_from,
+            $additional_where,
+            $user,
+            $permissions,
+            $contributor_field_id
+        );
         if ($matching_ids_result) {
             $matching_ids = $matching_ids_result->getRow();
             if ($matching_ids) {
@@ -1802,6 +1814,19 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             return $matching_ids;
         }
         return $matching_ids;
+    }
+
+    private function getNoMatchingIds()
+    {
+        return array('id' => '', 'last_changeset_id' => '');
+    }
+
+    private function getUnfilteredMatchingIds()
+    {
+        $additional_from  = array();
+        $additional_where = array();
+
+        return $this->getMatchingIdsInDb($additional_from, $additional_where);
     }
 
     private function canExecuteExpertQuery($parsed_query)
