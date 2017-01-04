@@ -64,12 +64,6 @@ class PluginsAdministrationViews extends Views {
         $plugin_factory = PluginFactory::instance();
 
         switch ($view) {
-            case 'ajax_projects':
-                $this->header();
-                $this->$view();
-                $this->footer();
-                break;
-
             case 'restrict':
                 $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
                 $plugin                     = $plugin_factory->getPluginById($request->get('plugin_id'));
@@ -162,22 +156,6 @@ class PluginsAdministrationViews extends Views {
         $readme_file    = $this->plugin_manager->getInstallReadme($name);
         $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
         return $readme_content;
-    }
-
-    function ajax_projects() {
-        $request =& HTTPRequest::instance();
-        $p = $request->get('gen_prop');
-        if ($p && isset($p['allowed_project'])) {
-            $value = db_escape_string($p['allowed_project']);
-            $sql = db_query("SELECT group_id, unix_group_name FROM groups WHERE group_id LIKE '%$value%' OR unix_group_name LIKE '%$value%'");
-            if (db_numrows($sql)) {
-                echo '<ul>';
-                while($row = db_fetch_array($sql)) {
-                    echo '<li>'. $row[0] .' ('. $row[1] .')</li>';
-                }
-                echo '</ul>';
-            }
-        }
     }
 
     private function getPluginPropertiesPresenter(Plugin $plugin)
