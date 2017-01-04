@@ -1,4 +1,4 @@
-Version 9.3 (Not released yet)
+Version 9.3 (Wednesday, January 4th 2017)
 	== Bug Fix ==
 	* request #9779: Be able to delete a root trove category
 	* request #9702: Parse gitolite logs in a dedicated system event
@@ -41,7 +41,7 @@ Version 9.3 (Not released yet)
 
 	== Security ==
 	* request #9745: XSS on show_help
-    * request #9782: Denial of service through non filtered inputs in LIKE SQL queries
+	* request #9782: Denial of service through non filtered inputs in LIKE SQL queries
 
 	== Plugins ==
 	* mediawiki: 0.129
@@ -58,7 +58,7 @@ Version 9.3 (Not released yet)
 	* ldap: 3.118
 	* docman: 2.26.127
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.173
 	* BurningParrot: 0.22
 
