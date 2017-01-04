@@ -26,25 +26,23 @@ class ProjectsOverQuotaPresenter
 
     public $table_content;
     public $title;
-    public $table_header;
     public $exceeding_projects;
+    public $project_name;
+    public $current_size;
+    public $quota;
+    public $exceeding_size;
+    public $warn_administrators;
+    public $no_projects_warning;
 
     public function __construct(array $exceeding_projects)
     {
-        $this->title              = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
-        $this->table_header       = $this->getTableHeaderTitle();
-        $this->exceeding_projects = $exceeding_projects;
-    }
-
-    private function getTableHeaderTitle()
-    {
-        $title   = array();
-        $title[] = $GLOBALS['Language']->getText('plugin_statistics', 'project_name');
-        $title[] = $GLOBALS['Language']->getText('plugin_statistics', 'current_size');
-        $title[] = $GLOBALS['Language']->getText('plugin_statistics', 'quota');
-        $title[] = $GLOBALS['Language']->getText('plugin_statistics', 'exceeding_size');
-        $title[] = $GLOBALS['Language']->getText('plugin_statistics', 'warn_administrators');
-
-        return $title;
+        $this->title               = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
+        $this->project_name        = $GLOBALS['Language']->getText('plugin_statistics', 'project_name');
+        $this->current_size        = $GLOBALS['Language']->getText('plugin_statistics', 'current_size');
+        $this->quota               = $GLOBALS['Language']->getText('plugin_statistics', 'quota');
+        $this->exceeding_size      = $GLOBALS['Language']->getText('plugin_statistics', 'exceeding_size');
+        $this->warn_administrators = $GLOBALS['Language']->getText('plugin_statistics', 'warn_administrators');
+        $this->no_projects_warning = $GLOBALS['Language']->getText('plugin_statistics', 'no_projects_warning');
+        $this->exceeding_projects  = $exceeding_projects;
     }
 }
