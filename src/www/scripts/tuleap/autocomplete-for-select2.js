@@ -36,7 +36,7 @@ tuleap.autocomplete_projects_for_select2 = function(element, options) {
                 return_type: 'json_for_select_2',
                 name       : params.term,
                 page       : params.page || 1,
-                private    : options.include_private_projects
+                private    : options.include_private_projects ? 1 : 0
             };
         }
     };
