@@ -1,25 +1,31 @@
 <?php
-
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright (c) Enalean, 2015. All Rights Reserved.
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
+/**
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once ('pre.php');
 require_once ('www/file/file_utils.php');
-require_once ('common/frs/FRSPackageFactory.class.php');
-require_once ('common/frs/FRSReleaseFactory.class.php');
-require_once ('common/frs/FRSFileFactory.class.php');
-require_once ('common/frs/FileModuleMonitorFactory.class.php');
-require_once ('common/permission/PermissionsManager.class.php');
-require_once ('common/user/UserManager.class.php');
 
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
+use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
@@ -125,18 +131,20 @@ if (!$pv && $permission_manager->isAdmin($project, $user)) {
     $html .= '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
 }
 
+$package_permission_manager = new PackagePermissionManager($permission_manager, $frspf);
+
 // Iterate and show the packages
 while (list ($package_id, $package) = each($packages)) {
     $can_see_package = false;
-    if ($package->isActive() && $permission_manager->userCanRead($project, $user)) {
+
+    if ($package->isActive()) {
         $emphasis = 'strong';
-        $can_see_package = true;
-    } else if ($package->isHidden()) {
+    } else {
         $emphasis = 'em';
-        if ($frspf->userCanAdmin($user, $project->getID())) {
-            $can_see_package = true;
-        }
     }
+
+    $can_see_package = $package_permission_manager->canUserSeePackage($user, $package, $project);
+
     if ($can_see_package) {
         detectSpecialCharactersInName($package->getName(), $GLOBALS['Language']->getText('file_showfiles', 'package'));
         $html .= '<fieldset class="package">';
