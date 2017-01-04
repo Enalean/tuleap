@@ -266,8 +266,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 $from      = $GLOBALS['sys_noreply'];
                 $is_sent = send_admin_new_user_email(
                     $request->get('form_email'),
-                    $request->get('form_loginname'),
-                    $request->get('form_pw')
+                    $request->get('form_loginname')
                 );
 
                 if (! $is_sent) {
@@ -290,7 +289,7 @@ if ($request->isPost() && $request->exist('Register')) {
                     );
                 }
                 $presenter = new MailPresenterFactory();
-                $email_presenter = $presenter->createMailAccountPresenter($user_name, '', $mail_confirm_code, "user", $logo_retriever->getUrl());
+                $email_presenter = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", $logo_retriever->getUrl());
             }
 
             $title  = $Language->getText('account_register', 'title_confirm');
@@ -326,7 +325,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             $presenter          = new MailPresenterFactory();
-            $email_presenter    = $presenter->createMailAccountPresenter($user_name, '', $mail_confirm_code, "user", $logo_retriever->getUrl());
+            $email_presenter    = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", $logo_retriever->getUrl());
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,

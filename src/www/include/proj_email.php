@@ -36,14 +36,15 @@ function send_new_user_email($to, $login, $confirm_hash) {
     return $mail->send();
 }
 
-function send_admin_new_user_email($to, $login, $password) {
+function send_admin_new_user_email($to, $login)
+{
     //needed by new_user_email.txt
     $base_url  = get_server_url();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
     $mail = new TuleapRegisterMail($presenter, $renderer, "mail-admin");
-    $mail = $mail->getMail($login, $password, '', $base_url, $GLOBALS['sys_noreply'], $to, "admin");
+    $mail = $mail->getMail($login, '', $base_url, $GLOBALS['sys_noreply'], $to, "admin");
     return $mail->send();
 }
 
@@ -54,7 +55,7 @@ function send_new_user_email_notification($to, $login) {
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
     $mail = new TuleapRegisterMail($presenter, $renderer, "mail-notification");
-    $mail = $mail->getMail($login, '', '', $base_url, $GLOBALS['sys_noreply'], $to, "admin-notification");
+    $mail = $mail->getMail($login, '', $base_url, $GLOBALS['sys_noreply'], $to, "admin-notification");
     return $mail->send();
 }
 
@@ -65,6 +66,6 @@ function send_approval_new_user_email($to, $login) {
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
     $mail = new TuleapRegisterMail($presenter, $renderer, "mail-admin-approval");
-    $mail = $mail->getMail($login, '', '', $base_url, $GLOBALS['sys_noreply'], $to, "admin-approval");
+    $mail = $mail->getMail($login, '', $base_url, $GLOBALS['sys_noreply'], $to, "admin-approval");
     return $mail->send();
 }

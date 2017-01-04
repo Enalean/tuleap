@@ -23,9 +23,7 @@ $section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit 
                   ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
                   .$GLOBALS['sys_name']." autour de vous.";
 
-$section_after_login = " et le mot de passe : ";
-
-$section_after_password = "\nPensez à changer votre mot de passe après votre première connexion sur le site.";
+$section_after_login = "\nLe mot de passe a du vous être communiqué par l'un de vos administrateurs de site. Pensez à le changer après votre première connexion sur le site. Si jamais le mot de passe ne vous a pas été communiqué, vous pouvez utiliser la procédure de récupération en cas de mot de passe perdu pour en générer un nouveau.";
 
 $thanks = "Merci !";
 
@@ -33,5 +31,5 @@ $signature = "- L'équipe ".$GLOBALS['sys_name'];
 
 $help = "Pour toute demande d'aide contactez : ".$GLOBALS['sys_email_admin'];
 
-$message = $title . "\n\n" .  $section_one . $login . $section_after_login . $password . $section_after_password."\n\n" . $section_two . "\n\n"
+$message = $title . "\n\n" .  $section_one . $login . '.' . $section_after_login . "\n\n" . $section_two . "\n\n"
             .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;
