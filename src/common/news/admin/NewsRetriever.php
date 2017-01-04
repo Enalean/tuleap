@@ -38,7 +38,7 @@ class NewsRetriever
 
     public function countPendingNews()
     {
-        return count($this->dao->getWaitingPublicationNews());
+        return count($this->getWaitingPublicationNews());
     }
 
     public function getRejectedNews($old_date)
@@ -53,6 +53,17 @@ class NewsRetriever
 
     public function getWaitingPublicationNews()
     {
-        return $this->dao->getWaitingPublicationNews();
+        $result          = $this->dao->getWaitingPublicationNews();
+        $filtered_result = array();
+
+        foreach ($result as $row) {
+            $forum_id = $row['forum_id'];
+            $res      = news_read_permissions($forum_id);
+            if ((db_numrows($res) < 1) || (db_result($res, 0, 'ugroup_id') == $GLOBALS['UGROUP_ANONYMOUS'])) {
+                $filtered_result[] = $row;
+            }
+        }
+
+        return $filtered_result;
     }
 }
