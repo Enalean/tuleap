@@ -1,7 +1,12 @@
-Version 9.3 (Wednesday, January 4th 2017)
-	== Bug Fix ==
+Version 9.4 (Not released yet)
 
+	== Bug Fix ==
 	* request #9805: Cannot add quota for a private project
+	* request #9808: Bad link in MyAdmin widget to approve news
+
+Version 9.3 (Wednesday, January 4th 2017)
+
+	== Bug Fix ==
 	* request #9779: Be able to delete a root trove category
 	* request #9702: Parse gitolite logs in a dedicated system event
 	* request #9720: Release notes are not accessible to not logged users even if permissions allow it
