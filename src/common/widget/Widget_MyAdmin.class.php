@@ -113,7 +113,7 @@ class Widget_MyAdmin extends Widget {
 
         $html_my_admin .= $this->_get_admin_row(
             $i++,
-            '<a href="/news/admin">'. $GLOBALS['Language']->getText('admin_main', 'site_news_approval') .'</a>',
+            '<a href="/admin/news/">'. $GLOBALS['Language']->getText('admin_main', 'site_news_approval') .'</a>',
             $pending_news,
             $this->_get_color($pending_news)
         );
