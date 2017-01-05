@@ -48,6 +48,16 @@ class FolderHierarchicalRepresentationCollection
         return $this->collection[$artifact->getId()];
     }
 
+    /** @return FolderHierarchicalRepresentation | null */
+    public function getById($artifact_id)
+    {
+        if (isset($this->collection[$artifact_id])) {
+            return $this->collection[$artifact_id];
+        }
+
+        return null;
+    }
+
     public function toArray()
     {
         return $this->collection;

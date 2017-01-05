@@ -67,12 +67,14 @@ class FolderHierarchicalRepresentationCollectionBuilder
     }
 
     /** @return FolderHierarchicalRepresentationCollection */
-    private function convertAllFoldersToForestOfTopFolders(PFUser $current_user, $all_folders)
-    {
+    private function convertAllFoldersToForestOfTopFolders(
+        PFUser $current_user,
+        FolderHierarchicalRepresentationCollection $all_folders
+    ) {
         $top_level_folders = new FolderHierarchicalRepresentationCollection();
         /** @var FolderHierarchicalRepresentation $folder_representation */
         foreach ($all_folders->toArray() as $folder_representation) {
-            $parent = $this->getParent($folder_representation->getFolder(), $current_user);
+            $parent = $this->getParent($all_folders, $folder_representation->getParentId(), $current_user);
             if ($parent && $all_folders->contains($parent)) {
                 $all_folders->get($parent)->addChild($folder_representation);
             } else {
@@ -95,23 +97,28 @@ class FolderHierarchicalRepresentationCollectionBuilder
             if ($folder->getId() === $artifact->getId() || ! $folder->userCanView($current_user)) {
                 continue;
             }
-            $all_folders->add(new FolderHierarchicalRepresentation($folder));
+            $all_folders->add(new FolderHierarchicalRepresentation($folder, $row['parent_id']));
         }
 
         return $all_folders;
     }
 
     /** @return Tracker_Artifact */
-    private function getParent(Tracker_Artifact $folder, PFUser $current_user)
-    {
-        foreach ($this->child_retriever->getParentsHierarchy($folder)->getArtifacts() as $ancestors) {
-            foreach ($ancestors as $parent) {
-                if ($parent->getTrackerId() == $folder->getTrackerId() && $parent->userCanView($current_user)) {
-                    return $parent;
-                }
-
-                return null;
-            }
+    private function getParent(
+        FolderHierarchicalRepresentationCollection $all_folders,
+        $parent_id,
+        PFUser $current_user
+    ) {
+        $parent_representation = $all_folders->getById($parent_id);
+        if (! $parent_representation) {
+            return null;
         }
+        $parent = $parent_representation->getFolder();
+
+        if (! $parent->userCanView($current_user)) {
+            return null;
+        }
+
+        return $parent;
     }
 }
