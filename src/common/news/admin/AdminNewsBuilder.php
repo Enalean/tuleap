@@ -87,22 +87,12 @@ class AdminNewsBuilder
 
     public function getWaitingPublicationNewsPresenter()
     {
-        $result          = $this->news_manager->getWaitingPublicationNews();
-        $filtered_result = array();
-
-        foreach ($result as $row) {
-            $forum_id = $row['forum_id'];
-            $res      = news_read_permissions($forum_id);
-            if ((db_numrows($res) < 1) || (db_result($res, 0, 'ugroup_id') == $GLOBALS['UGROUP_ANONYMOUS'])) {
-                $filtered_result[] = $row;
-            }
-        }
-
+        $news      = $this->news_manager->getWaitingPublicationNews();
         $title     = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $presenter = new AdminWaitingPublicationPresenter(
             $this->csrf_token,
             $title,
-            $this->buildNewsList($filtered_result, 'waiting_publication')
+            $this->buildNewsList($news, 'waiting_publication')
         );
 
         return $presenter;
