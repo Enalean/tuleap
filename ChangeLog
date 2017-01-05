@@ -1,6 +1,7 @@
 Version 9.4 (Not released yet)
 
 	== Bug Fix ==
+	* request #9809: Pending news counter should not count private news
 	* request #9805: Cannot add quota for a private project
 	* request #9808: Bad link in MyAdmin widget to approve news
 
