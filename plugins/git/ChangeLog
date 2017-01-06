@@ -1,3 +1,6 @@
+Version 4.317 - Tuleap 9.4
+    * request #9824: Missing index on plugin_git_full_history
+
 Version 4.316 - Tuleap 9.3
     * request #9769: Be able to build Docker images running Tuleap unit tests again
 
