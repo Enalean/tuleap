@@ -1,3 +1,6 @@
+Version 5.1117 - Tuleap 9.4
+    * request #9773: Burndown issue when no permission on remaining_effort field
+
 Version 5.1116 - Tuleap 9.3
     * story #8858: Anonymous user cannot change the query
 

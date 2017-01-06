@@ -5,6 +5,9 @@ Version 9.4 (Not released yet)
 	* request #9805: Cannot add quota for a private project
 	* request #9808: Bad link in MyAdmin widget to approve news
 
+    == Plugins ==
+	* tracker: 5.1117
+
 Version 9.3 (Wednesday, January 4th 2017)
 
 	== Bug Fix ==
