@@ -671,6 +671,8 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         stub($this->field_computed)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 5, 2011))->returns(8);
         stub($this->field_computed)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 6, 2011))->returns(7);
         stub($this->field_computed)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 7, 2011))->returns(6);
+
+        stub($this->sprint)->getValue()->returns(10);
     }
 
     public function tearDown()
@@ -685,8 +687,8 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
     {
 
         stub($this->form_element_factory)->getComputableFieldByNameForUser('*', 'remaining_effort', $this->current_user)->returns($this->field_computed);
+        stub($this->form_element_factory)->getUsedFieldByNameForUser('*', 'start_date', $this->current_user)->returns($this->start_date_field);
 
-        stub($this->tracker)->hasFormElementWithNameAndType()->returns(false);
         stub($this->sprint)->getTracker()->returns($this->tracker);
 
         $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
@@ -699,7 +701,6 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         stub($this->form_element_factory)->getComputableFieldByNameForUser('*', 'remaining_effort', $this->current_user)->returns($this->field_computed);
         stub($this->form_element_factory)->getUsedFieldByNameForUser('*', 'start_date', $this->current_user)->returns($this->start_date_field);
 
-        stub($this->tracker)->hasFormElementWithNameAndType()->returns(true);
         stub($this->sprint)->getTracker()->returns($this->tracker);
         stub($this->computed_dao)->getCachedDays()->returns(array('cached_days' => 5));
         stub($this->remaining_effort_field)->getId()->returns(10);
@@ -715,7 +716,6 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         stub($this->form_element_factory)->getComputableFieldByNameForUser('*', 'remaining_effort', $this->current_user)->returns($this->field_computed);
         stub($this->form_element_factory)->getUsedFieldByNameForUser('*', 'start_date', $this->current_user)->returns($this->start_date_field);
 
-        stub($this->tracker)->hasFormElementWithNameAndType()->returns(true);
         stub($this->sprint)->getTracker()->returns($this->tracker);
         stub($this->computed_dao)->getCachedDays()->returns(array('cached_days' => 60));
         stub($this->remaining_effort_field)->getId()->returns(10);
@@ -731,7 +731,6 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         stub($this->form_element_factory)->getComputableFieldByNameForUser('*', 'remaining_effort', $this->current_user)->returns($this->field_computed);
         stub($this->form_element_factory)->getUsedFieldByNameForUser('*', 'start_date', $this->current_user)->returns(null);
 
-        stub($this->tracker)->hasFormElementWithNameAndType()->returns(true);
         stub($this->sprint)->getTracker()->returns($this->tracker);
         stub($this->computed_dao)->getCachedDays()->returns(array('cached_days' => 60));
         stub($this->remaining_effort_field)->getId()->returns(10);

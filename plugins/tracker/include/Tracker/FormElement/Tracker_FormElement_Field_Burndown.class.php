@@ -407,8 +407,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $days   = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
         $logger = $this->getLogger();
 
-        if ($this->hasRemainingEffort($artifact->getTracker())
-            && $this->hasStartDate($artifact, $user)) {
+        if ($this->doesUserCanReadRemainingEffort($artifact, $user)
+            && $this->doesUserCanReadStartDateAndIsStartDateFilled($artifact, $user)) {
             $cached_days = $this->getComputedDao()->getCachedDays(
                 $artifact->getId(),
                 $this->getBurndownRemainingEffortField($artifact, $user)->getId()
@@ -728,7 +728,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $timestamp;
     }
 
-    private function hasStartDate(Tracker_Artifact $artifact, PFUser $user) {
+    private function doesUserCanReadStartDateAndIsStartDateFilled(Tracker_Artifact $artifact, PFUser $user) {
         $start_date_field = $this->getBurndownStartDateField($artifact, $user);
         $artifact_value   = $artifact->getValue($start_date_field);
 
@@ -898,7 +898,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getChildTrackersWithoutRemainingEffort() {
         return array_filter($this->getChildTrackers(),
-            array($this, 'missesRemainingEffort'));
+            array($this, 'doesRemainingEffortFieldExists'));
     }
 
     /**
@@ -907,18 +907,25 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker $tracker
      * @return Boolean
      */
-    private function missesRemainingEffort(Tracker $tracker) {
-        return ! $this->hasRemainingEffort($tracker);
+    private function doesRemainingEffortFieldExists(Tracker $tracker)
+    {
+        return ! $tracker->hasFormElementWithNameAndType(
+            self::REMAINING_EFFORT_FIELD_NAME,
+            array('int', 'float', 'computed')
+        );
     }
 
     /**
-     * Returns true if the given tracker has a remaining effort field.
-     *
-     * @param Tracker $tracker
-     * @return Boolean
+     * @return bool
      */
-    private function hasRemainingEffort(Tracker $tracker) {
-        return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float', 'computed'));
+    private function doesUserCanReadRemainingEffort(Tracker_Artifact $artifact, PFUser $user)
+    {
+        $remaining_effort_field = $this->getBurndownRemainingEffortField($artifact, $user);
+        if ($remaining_effort_field === null) {
+            return false;
+        }
+
+        return true;
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
