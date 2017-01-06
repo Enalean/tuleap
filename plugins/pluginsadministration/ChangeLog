@@ -1,3 +1,6 @@
+Version 1.26 - Tuleap 9.4
+    * request #9782: Remove unused view in the PluginsAdministration plugin
+
 Version 1.25 - Tuleap 9.3
     * request #9776 Cannot restrict a plugin
 
