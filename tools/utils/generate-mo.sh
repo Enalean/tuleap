@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, 2015. All rights reserved
+# Copyright (c) Enalean, 2015 - 2017. All rights reserved
 #
 # This file is a part of Tuleap.
 #
@@ -19,13 +19,23 @@
 #
 
 basedir=$1
+translated_plugins=(proftpd tracker)
 
+echo "[core] Generating .mo file"
 for f in $(find "$basedir/site-content" -name "tuleap-core.po"); do
     locale_dir=$(dirname "$f")
     msgfmt -o "$locale_dir/tuleap-core.mo" "$f"
 done
 
-for f in $(find "$basedir/plugins/proftpd/site-content" -name "tuleap-proftpd.po"); do
-    locale_dir=$(dirname "$f")
-    msgfmt -o "$locale_dir/tuleap-proftpd.mo" "$f"
+index=0
+while [ "x${translated_plugins[index]}" != "x" ]
+do
+    translated_plugin=${translated_plugins[index]}
+    index=$(( $index + 1 ))
+
+    echo "[$translated_plugin] Generating .mo file"
+    for f in $(find "$basedir/plugins/$translated_plugin/site-content" -name "tuleap-$translated_plugin.po"); do
+        locale_dir=$(dirname "$f")
+        msgfmt -o "$locale_dir/tuleap-$translated_plugin.mo" "$f"
+    done
 done

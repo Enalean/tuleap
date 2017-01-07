@@ -1,0 +1,25 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Error during parsing expert query"
+msgstr "Erreur pendant l'analyse de la requête experte"
+
+#, php-format
+msgid "The field '%s' doesn't exist"
+msgid_plural "The fields '%s' don't exist"
+msgstr[0] "Le champ '%s' n'existe pas"
+msgstr[1] "Les champs '%s' n'existent pas"
+
+#, php-format
+msgid "The field '%s' isn't supported"
+msgid_plural "The fields '%s' aren't supported"
+msgstr[0] "Le champ '%s' n'est pas supporté"
+msgstr[1] "Les champs '%s' ne sont pas supportés"
+
+msgid ""
+"The query is considered too complex to be executed by the server.\n"
+"                                Please simplify it (e.g remove comparisons) "
+"to continue."
+msgstr ""
+"La requête est estimée trop complexe pour être exécutée par le serveur. "
+"Veuillez la simplifier (ex: enlever des comparaisons) pour pouvoir continuer."

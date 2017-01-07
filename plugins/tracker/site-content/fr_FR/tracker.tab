@@ -1404,10 +1404,6 @@ plugin_tracker_report	allowed_fields_label	Champs autorisés
 plugin_tracker_report	query_label	Requête
 plugin_tracker_report	query_tooltip	Vous pouvez utiliser : AND, OR, parenthèses. Ctrl + Espace active l'autocompletion.
 plugin_tracker_report	query_placeholder	Exemple : (champ_1 = 'valeur' OR champ_2 = 'valeur') AND champ_3 = 'valeur'
-plugin_tracker_report	parse_expert_query_error	Erreur pendant l'analyse de la requête experte
-plugin_tracker_report	validate_expert_query_fields_not_exist	Les champs '$1' n'existent pas
-plugin_tracker_report	validate_expert_query_fields_not_supported	Les champs '$1' ne sont pas supportés
-plugin_tracker_report	validate_expert_query_depth_exceed	La requête est estimée trop complexe pour être exécutée par le serveur. Veuillez la simplifier (ex: enlever des comparaisons) pour pouvoir continuer.
 
 plugin_tracker_report_widget	go_to_report	Voir le rapport
 
