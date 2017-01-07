@@ -423,7 +423,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
-    public function fetchAsArtifactLink($matching_ids, $field_id, $read_only, $prefill_removed_values, $prefill_natures, $is_reverse, $only_rows = false, $from_aid = null) {
+    public function fetchAsArtifactLink(
+        $matching_ids,
+        $field_id,
+        $read_only,
+        $prefill_removed_values,
+        $prefill_natures,
+        $is_reverse,
+        $only_rows = false,
+        $from_aid = null
+    ) {
         $html = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $offset     = 0;
@@ -451,7 +460,23 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
         $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
 
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only, $store_in_session, $from_aid);
+        $html .= $this->fetchTBody(
+            $matching_ids,
+            $total_rows,
+            $queries,
+            $columns,
+            $offset,
+            $extracolumn,
+            $only_one_column,
+            $use_data_from_db,
+            $pagination,
+            $field_id,
+            $prefill_removed_values,
+            $prefill_natures,
+            $only_rows,
+            $read_only,
+            $from_aid
+        );
 
         if (!$only_rows) {
             $html .= $this->fetchArtifactLinkGoToTracker();
@@ -547,7 +572,22 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
         $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
 
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only);
+        $html .= $this->fetchTBody(
+            $matching_ids,
+            $total_rows,
+            $queries,
+            $columns,
+            $offset,
+            $extracolumn,
+            $only_one_column,
+            $use_data_from_db,
+            $pagination,
+            $artifactlink_field_id,
+            $prefill_removed_values,
+            $prefill_natures,
+            $only_rows,
+            $read_only
+        );
 
         //Dispaly range
         $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);

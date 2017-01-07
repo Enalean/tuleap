@@ -993,14 +993,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_removed_values,
             $prefill_nature,
             $prefill_edited_natures,
-            $read_only,
             $prefill_parent,
+            $read_only,
             $from_aid
         );
     }
 
     private function fetchReverseLinks(Tracker_Artifact $artifact) {
         $reverse_links = $this->getReverseLinks($artifact->getId());
+        $from_aid      = $artifact->getId();
 
         return $this->fetchHtmlWidget(
             $artifact,
@@ -1012,7 +1013,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             array(),
             '',
             true,
-            null,
+            $from_aid,
             true
         );
     }
@@ -1063,6 +1064,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $prefill_nature         = '';
         $prefill_edited_natures = array();
         $prefill_parent         = '';
+        $from_aid               = $artifact->getId();
 
         return $this->fetchHtmlWidget(
             $artifact,
@@ -1073,7 +1075,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_nature,
             $prefill_edited_natures,
             $prefill_parent,
-            $read_only
+            $read_only,
+            $from_aid
         );
     }
 
