@@ -88,6 +88,10 @@ class Tracker_Chart_Data_Burndown
             }
         }
 
+        if ($number_of_days === 0) {
+            $remaining_effort[] = null;
+        }
+
         return $remaining_effort;
     }
 

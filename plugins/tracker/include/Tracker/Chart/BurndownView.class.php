@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\TimezoneRetriever;
 
 
 /**
@@ -39,6 +40,9 @@ class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown {
      * @return Chart
      */
     public function buildGraph() {
+        $user_timezone = date_default_timezone_get();
+        date_default_timezone_set(TimezoneRetriever::getServerTimezone());
+
         $graph = new Chart($this->width, $this->height);
         $graph->SetScale("datlin");
 
@@ -48,7 +52,7 @@ class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown {
         $colors = $graph->getThemedColors();
 
         $graph->xaxis->SetTickLabels($this->burndown_data->getHumanReadableDates());
-        
+
         $remaining_effort = new LinePlot($this->burndown_data->getRemainingEffort());
         $remaining_effort->SetColor($colors[1] . ':0.7');
         $remaining_effort->SetWeight(2);
@@ -63,6 +67,8 @@ class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown {
         $ideal_burndown->SetColor($colors[0] . ':1.25');
         $ideal_burndown->SetLegend('Ideal Burndown');
         $graph->Add($ideal_burndown);
+
+        date_default_timezone_set($user_timezone);
 
         return $graph;
     }
