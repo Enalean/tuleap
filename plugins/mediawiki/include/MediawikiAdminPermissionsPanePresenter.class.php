@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'MediawikiGroupPresenter.class.php';
-require_once 'MediawikiAdminPanePresenter.php';
-
 class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter {
 
     public  $groups_permissions;

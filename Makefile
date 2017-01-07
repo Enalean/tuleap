@@ -46,7 +46,7 @@ export TULEAP_LOCAL_INC
 PHPUNIT=$(PHP) vendor/phpunit/phpunit/phpunit.php $(PHPUNIT_OPTIONS)
 SIMPLETEST=$(PHP) tests/bin/simpletest $(SIMPLETEST_OPTIONS)
 
-AUTOLOAD_EXCLUDES=^mediawiki|^tests|^template
+AUTOLOAD_EXCLUDES=^tests|^template
 
 .DEFAULT_GOAL := help
 

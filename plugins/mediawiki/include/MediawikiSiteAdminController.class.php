@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,6 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-
-require_once 'MediawikiSiteAdminAllowedProjectsPresenter.class.php';
-require_once 'MediawikiSiteAdminResourceRestrictor.php';
-require_once 'events/SytemEvent_MEDIAWIKI_SWITCH_TO_123.class.php';
 
 class MediawikiSiteAdminController {
 

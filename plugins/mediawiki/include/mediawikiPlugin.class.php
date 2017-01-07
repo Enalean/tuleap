@@ -4,7 +4,7 @@
  *
  * Copyright 2000-2011, Fusionforge Team
  * Copyright 2012, Franck Villaume - TrivialDev
- * Copyright (c) Enalean SAS 2014. All Rights Reserved.
+ * Copyright (c) Enalean SAS 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,8 +25,7 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
-
-include_once 'MediawikiManager.class.php';
+require_once 'autoload.php';
 
 class MediaWikiPlugin extends Plugin {
 
@@ -252,10 +251,10 @@ class MediaWikiPlugin extends Plugin {
             $file_location = $matches[1];
 
             $folder_location = '';
-            if (is_dir('/var/lib/codendi/mediawiki/projects/' . $project->getUnixName())) {
-                $folder_location = '/var/lib/codendi/mediawiki/projects/' . $project->getUnixName().'/images';
-            } elseif (is_dir('/var/lib/codendi/mediawiki/projects/' . $project->getId())) {
-                $folder_location = '/var/lib/codendi/mediawiki/projects/' . $project->getId().'/images';
+            if (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName())) {
+                $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName().'/images';
+            } elseif (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getId())) {
+                $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getId().'/images';
             } else {
                 exit;
             }
@@ -284,7 +283,6 @@ class MediaWikiPlugin extends Plugin {
 
         function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
-            require_once 'MediaWikiPluginInfo.class.php';
             $this->pluginInfo = new MediaWikiPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -470,8 +468,6 @@ class MediaWikiPlugin extends Plugin {
             return;
         }
 
-        include_once dirname(__FILE__) .'/MediawikiInstantiater.class.php';
-
         return new MediaWikiInstantiater(
             $project,
             $this->getMediawikiManager(),
@@ -482,15 +478,10 @@ class MediaWikiPlugin extends Plugin {
     }
 
     private function getMediawikiLanguageManager() {
-        require_once 'MediawikiLanguageManager.php';
-        require_once 'MediawikiLanguageDao.php';
-
         return new MediawikiLanguageManager(new MediawikiLanguageDao());
     }
 
     public function plugin_statistics_service_usage($params) {
-        require_once 'MediawikiDao.class.php';
-
         $dao             = new MediawikiDao();
         $project_manager = ProjectManager::instance();
         $start_date      = $params['start_date'];
@@ -582,7 +573,6 @@ class MediaWikiPlugin extends Plugin {
     }
 
     public function service_classnames(array $params) {
-        include_once 'ServiceMediawiki.class.php';
         $params['classnames']['plugin_mediawiki'] = 'ServiceMediawiki';
     }
 
@@ -696,16 +686,12 @@ class MediaWikiPlugin extends Plugin {
     }
 
     public function system_event_get_types_for_default_queue(array &$params) {
-        require_once 'events/SytemEvent_MEDIAWIKI_SWITCH_TO_123.class.php';
-
         $params['types'] = array_merge($params['types'], array(
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME
         ));
     }
 
     public function getSystemEventClass($params) {
-        require_once 'events/SytemEvent_MEDIAWIKI_SWITCH_TO_123.class.php';
-
         switch($params['type']) {
             case SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME:
                 $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
@@ -722,8 +708,6 @@ class MediaWikiPlugin extends Plugin {
     }
 
     private function getMediawikiMigrator() {
-        require_once 'Migration/MediawikiMigrator.php';
-
         return new Mediawiki_Migration_MediawikiMigrator();
     }
 
@@ -767,9 +751,6 @@ class MediaWikiPlugin extends Plugin {
     }
 
     private function getMediawikiVersionManager() {
-        require_once 'MediawikiVersionManager.php';
-        require_once 'MediawikiVersionDao.php';
-
         return new MediawikiVersionManager(new MediawikiVersionDao());
     }
 
@@ -777,8 +758,6 @@ class MediaWikiPlugin extends Plugin {
      * @return MediawikiMLEBExtensionManager
      */
     private function getMediawikiMLEBExtensionManager() {
-        require_once 'MediawikiMLEBExtensionManager.php';
-
         return new MediawikiMLEBExtensionManager(
             $this->getMediawikiMigrator(),
             $this->getMediawikiMLEBExtensionDao(),
@@ -789,8 +768,6 @@ class MediaWikiPlugin extends Plugin {
     }
 
     private function getMediawikiMLEBExtensionDao() {
-        require_once 'MediawikiMLEBExtensionDao.php';
-
         return new MediawikiMLEBExtensionDao();
     }
 
@@ -801,7 +778,6 @@ class MediaWikiPlugin extends Plugin {
      */
     public function importXmlProject($params)
     {
-        require_once 'MediaWikiXMLImporter.class.php';
         $importer = new MediaWikiXMLImporter(
             $params['logger'],
             $this->getMediawikiManager(),

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, 2014. All rights reserved
+# Copyright (c) Enalean, 2014 - 2017. All rights reserved
 #
 # This file is a part of Tuleap.
 #
@@ -20,7 +20,6 @@
 
 echo "Running autoload in dev mode"
 declare -A AUTOLOAD_EXCLUDES
-AUTOLOAD_EXCLUDES["mediawiki"]=1
 AUTOLOAD_EXCLUDES["tests"]=1
 AUTOLOAD_EXCLUDES["template"]=1
 
