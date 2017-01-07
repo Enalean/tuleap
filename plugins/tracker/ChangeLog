@@ -1,3 +1,6 @@
+Version 5.1119 - Tuleap 9.4
+    * request #9807 Bad redirection link in ArtifactLink
+
 Version 5.1118 - Tuleap 9.4
     * request #9786 Unit tests fail when executed on a Saturday or Sunday
 

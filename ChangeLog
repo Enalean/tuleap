@@ -6,7 +6,7 @@ Version 9.4 (Not released yet)
 	* request #9808: Bad link in MyAdmin widget to approve news
 
     == Plugins ==
-	* tracker: 5.1118
+	* tracker: 5.1119
 	* pluginsadministration: 1.26
 	* git: 4.317
 
