@@ -313,7 +313,7 @@ class FRSReleaseFactory {
      *
      * @return Boolean
      */
-    protected function userCanAdmin($user, $project_id)
+    public function userCanAdmin($user, $project_id)
     {
         return $this->_getFRSPackageFactory()->userCanAdmin($user, $project_id);
     }

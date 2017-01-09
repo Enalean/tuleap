@@ -29,6 +29,7 @@ use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\ReleasePermissionManager;
 
 $authorized_user = false;
 
@@ -132,6 +133,7 @@ if (!$pv && $permission_manager->isAdmin($project, $user)) {
 }
 
 $package_permission_manager = new PackagePermissionManager($permission_manager, $frspf);
+$release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
 
 // Iterate and show the packages
 while (list ($package_id, $package) = each($packages)) {
@@ -200,18 +202,14 @@ while (list ($package_id, $package) = each($packages)) {
             // iterate and show the releases of the package
             foreach ($res_release as $package_release) {
                 $can_see_release = false;
-                if ($frsrf->userCanRead($group_id, $package_id, $package_release->getReleaseID(), $user->getId())
-                    && $permission_manager->userCanRead($project, $user)) {
-                    if ($package_release->isActive()) {
-                        $emphasis = 'strong';
-                        $can_see_release = true;
-                    } else if ($package_release->isHidden()) {
-                        $emphasis = 'em';
-                        if ($permission_manager->userCanRead($project, $user)) {
-                            $can_see_release = true;
-                        }
-                    }
+
+                if ($package_release->isActive()) {
+                    $emphasis = 'strong';
+                } else {
+                    $emphasis = 'em';
                 }
+
+                $can_see_release = $release_permission_manager->canUserSeeRelease($user, $package_release, $project);
                 if ($can_see_release) {
                     detectSpecialCharactersInName($package_release->getName(), $GLOBALS['Language']->getText('file_showfiles', 'release'));
 
