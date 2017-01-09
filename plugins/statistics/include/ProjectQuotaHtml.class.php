@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Statistics\ProjectsOverQuotaPresenter;
 
 require_once('ProjectQuotaManager.class.php');
@@ -269,7 +270,8 @@ class ProjectQuotaHtml {
      *
      * @return Void
      */
-    public function displayProjectsOverQuota() {
+    public function displayProjectsOverQuota()
+    {
         $exceeding_projects = $this->projectQuotaManager->getProjectsOverQuota();
 
         foreach ($exceeding_projects as $key => $value) {
@@ -282,11 +284,11 @@ class ProjectQuotaHtml {
             $exceeding_projects[$key] = $value;
         }
 
-        $presenter        = new ProjectsOverQuotaPresenter($exceeding_projects);
-        $template_factory = TemplateRendererFactory::build();
-        $renderer         = $template_factory->getRenderer(STATISTICS_TEMPLATE_DIR);
+        $title     = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
+        $presenter = new ProjectsOverQuotaPresenter($exceeding_projects);
+        $renderer  = new AdminPageRenderer();
+        $renderer->renderAPresenter($title, STATISTICS_TEMPLATE_DIR, 'projects-over-quota', $presenter);
 
-        $renderer->renderToPage('projects-over-quota', $presenter);
     }
 
     /**

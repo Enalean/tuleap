@@ -117,6 +117,7 @@ plugin_statistics	current_size	Taille actuelle du projet
 plugin_statistics	project_name	Nom du projet
 plugin_statistics	exceeding_size	Taille en excès
 plugin_statistics	warn_administrators	Notifier les administrateurs?
+plugin_statistics	no_projects_warning	Aucun projet correspondant.
 plugin_statistics	projects_over_quota_title	Projets excédant leur part de disque
 plugin_statistics	disk_quota_warning_subject	[Quota disque] [Avertissement] Le projet $1 excède la part de disque permise
 plugin_statistics	disk_quota_warning_body	Cher administrateur de projet, <br><br> La taille du projet <A href="/projects/$1" >$1</A> est: "$2".<br> Nous vous conseillons de supprimer des données inutiles pour diminuer la croissance de la taille de votre projet. <br> ( Il est à noter que la suppression d'élèments d'un dépôt Subversion n'a aucun effet sur la taille de disque, au contraire, il peut augmenter la taille de votre dépôt de serveur).<br> Nous vous conseillons d'éviter de stocker des fichiers binaires dans votre dépôt Subversion.<br> Pour les documents, vous pouvez enlever les versions les plus vieilles pour diminuer la taille du projet.<br> <br>--<br> Notez S'il vous plaît que sans aucune action de vous, pour la sécurité de la plate-forme entière, votre projet peut être suspendu jusqu'à ce que nous trouvions une solution.

@@ -46,7 +46,7 @@ class AdminPageRenderer
     {
         $this->header($title);
         $this->renderToPage($template_path, $template_name, $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $this->footer();
     }
 
     public function renderANoFramedPresenter($title, $template_path, $template_name, $presenter)

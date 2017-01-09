@@ -1,31 +1,53 @@
 <div id="plugin_statistics">
-    <h1>{{ title }}</h1>
-    <table width="100%">
-        <thead>
-            {{# table_header }}
-                <th>{{ . }}</th>
-            {{/ table_header }}
-        </thead>
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-archive"></i>  {{ title }}</h1>
+            </div>
+            <section class="tlp-pane-section">
 
-        <tbody>
-            {{# exceeding_projects }}
-                <tr>
-                    <td>
-                        <b>
-                            <a href="disk_usage.php?func=show_one_project&group_id={{ group_id }}">{{ project_name }}</a>
-                        </b>
-                    </td>
-                    <td><b>{{ current_disk_space }}</b></td>
-                    <td><b>{{ disk_quota }}</b></td>
-                    <td><b>{{ exceed }}</b></td>
-                    <td>
-                        <a href="#massmail_{{ group_id }}" class="project_home_contact_admins" data-toggle="modal">
-                            <span class="icon-envelope-alt"></span>
-                        </a>
-                        {{{ mail_form }}}
-                    </td>
-                </tr>
-            {{/ exceeding_projects }}
-        </tbody>
-    </table>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th>{{ project_name }}</th>
+                        <th class="tlp-table-cell-numeric">{{ current_size }}</th>
+                        <th class="tlp-table-cell-numeric">{{ quota }}</th>
+                        <th class="tlp-table-cell-numeric">{{ exceeding_size }}</th>
+                        <th>{{ warn_administrators }}</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {{# exceeding_projects }}
+                        <tr>
+                            <td>
+                                <a href="disk_usage.php?menu=services&project_filter={{ project_name }}+({{ project_unix_name }})">
+                                    {{ project_name }}
+                                </a>
+                            </td>
+                            <td class="tlp-table-cell-numeric">{{ current_disk_space }}</td>
+                            <td class="tlp-table-cell-numeric">{{ disk_quota }}</td>
+                            <td class="tlp-table-cell-numeric">{{ exceed }}</td>
+                            <td>
+                                <a href="#massmail_{{ group_id }}" class="project_home_contact_admins"
+                                   data-toggle="modal">
+                                    <span class="tlp-button-icon fa fa-envelope-o"></span>
+                                </a>
+                                {{{ mail_form }}}
+                            </td>
+                        </tr>
+                    {{/ exceeding_projects }}
+
+                    {{^ exceeding_projects }}
+                        <tr>
+                            <td colspan="5" class="tlp-table-cell-empty">
+                                {{ no_projects_warning }}
+                            </td>
+                        </tr>
+                    {{/ exceeding_projects }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
 </div>

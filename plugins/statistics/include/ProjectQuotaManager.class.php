@@ -92,51 +92,45 @@ class ProjectQuotaManager {
     }
 
     /**
-     * Prepare disk occupation data for a given project over quota
-     *
-     * @param String  $unix_group_name The unix name of the project
-     * @param Integer $group_id        The ID of the project
-     * @param Integer $current_size    The current disk size of the project
-     * @param Integer $allowed_size    The allowed disk size of the project
-     *
      * @return Array
      */
-    private function getProjectOverQuotaRow($unix_group_name, $group_id, $current_size, $allowed_size) {
+    private function getProjectOverQuotaRow(Project $project, $current_size, $allowed_size)
+    {
         $usage_output          = new Statistics_DiskUsageOutput($this->diskUsageManager);
-        $over_quota_disk_space = $current_size-$allowed_size;
-        $exceed_percent        = round(($over_quota_disk_space/$allowed_size), 2) * 100;
-        $projectRow            = array('project_name'       => $unix_group_name,
-                                       'group_id'           => $group_id,
-                                       'exceed'             => $exceed_percent.'%',
-                                       'disk_quota'         => $usage_output->sizeReadable($allowed_size),
-                                       'current_disk_space' => $usage_output->sizeReadable($current_size));
+        $over_quota_disk_space = $current_size - $allowed_size;
+        $exceed_percent        = round(($over_quota_disk_space / $allowed_size), 2) * 100;
+        $projectRow            = array(
+            'project_unix_name'  => $project->getUnixNameMixedCase(),
+            'project_name'       => $project->getUnconvertedPublicName(),
+            'group_id'           => $project->getGroupId(),
+            'exceed'             => $exceed_percent . '%',
+            'disk_quota'         => $usage_output->sizeReadable($allowed_size),
+            'current_disk_space' => $usage_output->sizeReadable($current_size)
+        );
+
         return $projectRow;
     }
 
     /**
-     * Retrieve the list of all projects exceeding their disk quota
-     *
      * @return Array
      */
-    public function getProjectsOverQuota() {
+    public function getProjectsOverQuota()
+    {
         $all_groups         = $this->fetchProjects();
         $exceeding_projects = array();
         foreach ($all_groups as $key => $group) {
-            $quota = $this->getProjectAuthorizedQuota($group['group_id']);
+            $quota        = $this->getProjectAuthorizedQuota($group['group_id']);
             $current_size = $this->diskUsageManager->returnTotalProjectSize($group['group_id']);
             $allowed_size = $this->convertQuotaToGiB($quota);
             if ($this->isProjectOverQuota($current_size, $allowed_size)) {
-                $exceeding_projects[$key] = $this->getProjectOverQuotaRow($group['unix_group_name'], $group['group_id'], $current_size, $allowed_size);
+                $project                  = $this->pm->getProject($group['group_id']);
+                $exceeding_projects[$key] = $this->getProjectOverQuotaRow($project, $current_size, $allowed_size);
             }
         }
+
         return $exceeding_projects;
     }
 
-    /**
-     * Retrieve the project ID and the unix group name of all Tuleap projects
-     *
-     * @return DataAccessResult
-     */
     private function fetchProjects() {
         return $this->diskUsageManager->_getDao()->searchAllGroups();
     }
