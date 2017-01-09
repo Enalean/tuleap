@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014, 2015. All rights reserved
+ * Copyright (c) Enalean, 2014, 2015, 2016, 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
-require_once 'MediawikiAdminPermissionsPanePresenter.class.php';
-require_once 'MediawikiUserGroupsMapper.class.php';
-require_once 'MediawikiManager.class.php';
-require_once 'MediawikiAdminLanguagePanePresenter.php';
-require_once 'MediawikiLanguageManager.php';
-require_once 'MediawikiLanguageDao.php';
 
 class MediawikiAdminController {
 

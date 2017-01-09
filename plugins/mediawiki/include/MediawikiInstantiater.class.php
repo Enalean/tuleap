@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2010  Olaf Lenz
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is part of FusionForge.
  *
@@ -22,11 +22,7 @@
 
 require_once 'www/env.inc.php';
 require_once 'pre.php';
-require_once 'MediawikiInstantiaterException.class.php';
 require_once 'common/backend/BackendLogger.class.php';
-require_once 'MediawikiUserGroupsMapper.class.php';
-require_once 'MediawikiSiteAdminResourceRestrictor.php';
-require_once 'MediawikiManager.class.php';
 
 class MediaWikiInstantiater {
 

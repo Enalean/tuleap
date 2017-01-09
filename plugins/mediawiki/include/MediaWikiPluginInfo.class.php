@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2013. All rights reserved
+ * Copyright (c) Enalean SAS, 2013 - 2017. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -21,7 +21,6 @@
  * Portions Copyright 2010 (c) Mélanie Le Bail
  */
 require_once 'common/plugin/PluginFileInfo.class.php';
-require_once 'MediaWikiPluginDescriptor.class.php';
 
 class MediaWikiPluginInfo extends PluginFileInfo {
 
