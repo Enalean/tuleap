@@ -1,3 +1,6 @@
+Version 0.79 - Tuleap 9.4
+    * request #9790 Project over quota is not taken into account in Burning Parrot (project over quota style table)
+
 Version 0.78 - Tuleap 9.3
     * request #9790 Project over quota is not taken into account in Burning Parrot (Refactoring: mustache files)
 
