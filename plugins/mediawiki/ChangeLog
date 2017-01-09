@@ -1,3 +1,6 @@
+Version 0.130 - Tuleap 9.4
+    * request #9834: Mediawiki plugin must use autoload file
+
 Version 0.129 - Tuleap 9.3
     * request #9576: Remove fusionforge_compat
 
