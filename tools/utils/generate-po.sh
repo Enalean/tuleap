@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, 2015. All rights reserved
+# Copyright (c) Enalean, 2015 - 2017. All rights reserved
 #
 # This file is a part of Tuleap.
 #
@@ -19,7 +19,9 @@
 #
 
 basedir=$1
+translated_plugins=(proftpd tracker)
 
+echo "[core] Generating .pot file"
 find "$basedir/src" -name "*.php" \
     | grep -v -E '(common/wiki/phpwiki|common/include/lib)' \
     | xargs xgettext \
@@ -32,30 +34,74 @@ find "$basedir/src" -name "*.php" \
     | sed '/^msgctxt/d' \
     > "$basedir/site-content/tuleap-core.pot"
 
+echo "[core] Merging .pot file into .po files"
 find "$basedir/site-content" -name "tuleap-core.po" -exec msgmerge \
     --update \
     "{}" \
     "$basedir/site-content/tuleap-core.pot" \;
 
-find "$basedir/plugins/proftpd" -name "*.php" \
-    | xargs xgettext \
-        --keyword="dgettext:1c,2" \
-        --default-domain=proftpd \
-        --from-code=UTF-8 \
-        --no-location \
-        --sort-output \
-        --omit-header \
-        -o - \
-    | msggrep \
-        --msgctxt \
-        --regexp=proftpd \
-        --no-location \
-        --sort-output \
-        - \
-    | sed '/^msgctxt/d' \
-    > "$basedir/plugins/proftpd/site-content/tuleap-proftpd.pot"
+index=0
+while [ "x${translated_plugins[index]}" != "x" ]
+do
+    translated_plugin=${translated_plugins[index]}
+    path=$basedir/plugins/$translated_plugin
+    index=$(( $index + 1 ))
 
-find "$basedir/plugins/proftpd/site-content" -name "tuleap-proftpd.po" -exec msgmerge \
-    --update \
-    "{}" \
-    "$basedir/plugins/proftpd/site-content/tuleap-proftpd.pot" \;
+    echo "[$translated_plugin] Generating default .pot file"
+    find "$path/include" -name "*.php" \
+        | xargs xgettext \
+            --keyword="dgettext:1c,2" \
+            --default-domain=$translated_plugin \
+            --from-code=UTF-8 \
+            --omit-header \
+            -o - \
+        | msggrep \
+            --msgctxt \
+            --regexp=$translated_plugin \
+            - \
+        | sed '/^msgctxt/d' \
+        > "$path/site-content/tuleap-$translated_plugin-default.pot"
+
+    echo "[$translated_plugin] Generating plural .pot file"
+    find "$path/include" -name "*.php" \
+        | xargs xgettext \
+            --keyword="dngettext:1c,2,3" \
+            --default-domain=$translated_plugin \
+            --from-code=UTF-8 \
+            --omit-header \
+            -o - \
+        | msggrep \
+            --msgctxt \
+            --regexp=$translated_plugin \
+            - \
+        | sed '/^msgctxt/d' \
+        > "$path/site-content/tuleap-$translated_plugin-plural.pot"
+
+    echo "[$translated_plugin] Combining .pot files into one"
+    msgcat --no-location --sort-output --use-first \
+        "$path/site-content/tuleap-$translated_plugin-plural.pot" \
+        "$path/site-content/tuleap-$translated_plugin-default.pot" \
+        > "$path/site-content/tuleap-$translated_plugin.pot"
+    rm "$path/site-content/tuleap-$translated_plugin-default.pot" \
+        "$path/site-content/tuleap-$translated_plugin-plural.pot"
+
+    for foreign_dir in $(find "$path/site-content" -mindepth 1 -maxdepth 1 -type d -not -name "en_US");
+    do
+        lc_messages=$foreign_dir/LC_MESSAGES
+        po_file=$lc_messages/tuleap-$translated_plugin.po
+        if [ ! -d "$lc_messages" ];
+        then
+            echo "[$translated_plugin] Creating missing ${po_file/$basedir\//}"
+            mkdir -p "$lc_messages"
+            echo 'msgid ""' > "$po_file"
+            echo 'msgstr ""' >> "$po_file"
+            echo '"Content-Type: text/plain; charset=UTF-8\n"' >> "$po_file"
+        fi
+    done
+
+    echo "[$translated_plugin] Merging .pot file into .po files"
+    find "$path/site-content" -name "tuleap-$translated_plugin.po" -exec msgmerge \
+        --update \
+        "{}" \
+        "$path/site-content/tuleap-$translated_plugin.pot" \;
+done

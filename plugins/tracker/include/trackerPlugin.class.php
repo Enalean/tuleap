@@ -50,6 +50,7 @@ class trackerPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        bindtextdomain('tuleap-tracker', __DIR__.'/../site-content');
 
         $this->addHook('javascript_file');
         $this->_addHook('cssfile',                             'cssFile',                           false);

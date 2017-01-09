@@ -1,0 +1,20 @@
+msgid "Error during parsing expert query"
+msgstr ""
+
+#, php-format
+msgid "The field '%s' doesn't exist"
+msgid_plural "The fields '%s' don't exist"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "The field '%s' isn't supported"
+msgid_plural "The fields '%s' aren't supported"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"The query is considered too complex to be executed by the server.\n"
+"                                Please simplify it (e.g remove comparisons) "
+"to continue."
+msgstr ""

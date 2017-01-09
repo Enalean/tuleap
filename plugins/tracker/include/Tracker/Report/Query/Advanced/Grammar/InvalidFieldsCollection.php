@@ -46,25 +46,9 @@ class InvalidFieldsCollection
     /**
      * @return boolean
      */
-    public function hasNonexistentFields()
+    public function hasInvalidFields()
     {
-        return ! empty($this->fields_not_exist);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function hasUnsupportedFields()
-    {
-        return ! empty($this->fields_not_supported);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function hasNoErrors()
-    {
-        return ! $this->hasNonexistentFields() && ! $this->hasUnsupportedFields();
+        return count($this->fields_not_exist) > 0 || count($this->fields_not_supported) > 0;
     }
 
     /**
@@ -81,21 +65,5 @@ class InvalidFieldsCollection
     public function getUnsupportedFields()
     {
         return $this->fields_not_supported;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNonexistentFieldsString()
-    {
-        return implode("', '", $this->fields_not_exist);
-    }
-
-    /**
-     * @return string
-     */
-    public function getUnsupportedFieldsString()
-    {
-        return implode("', '", $this->fields_not_supported);
     }
 }

@@ -1340,42 +1340,46 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                         $this->depth_validator->checkDepthOfTree($parsed_query);
 
                         $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
-                        if ($invalid_fields_collection->hasNonexistentFields()) {
-                            $GLOBALS['Response']->addFeedback(
-                                Feedback::ERROR,
-                                $GLOBALS['Language']->getText(
-                                    'plugin_tracker_report',
-                                    'validate_expert_query_fields_not_exist',
-                                    $invalid_fields_collection->getNonexistentFieldsString()
-                                )
+
+                        $nonexistent_fields    = $invalid_fields_collection->getNonexistentFields();
+                        $nb_nonexistent_fields = count($nonexistent_fields);
+                        if ($nb_nonexistent_fields > 0) {
+                            $message = sprintf(
+                                dngettext(
+                                    'tuleap-tracker',
+                                    "The field '%s' doesn't exist",
+                                    "The fields '%s' don't exist",
+                                    $nb_nonexistent_fields
+                                ),
+                                implode("', '", $nonexistent_fields)
                             );
+                            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
                         }
 
-                        if ($invalid_fields_collection->hasUnsupportedFields()) {
-                            $GLOBALS['Response']->addFeedback(
-                                Feedback::ERROR,
-                                $GLOBALS['Language']->getText(
-                                    'plugin_tracker_report',
-                                    'validate_expert_query_fields_not_supported',
-                                    $invalid_fields_collection->getUnsupportedFieldsString()
-                                )
+                        $unsupported_fields    = $invalid_fields_collection->getUnsupportedFields();
+                        $nb_unsupported_fields = count($unsupported_fields);
+                        if ($nb_unsupported_fields > 0) {
+                            $message = sprintf(
+                                dngettext(
+                                    'tuleap-tracker',
+                                    "The field '%s' isn't supported",
+                                    "The fields '%s' aren't supported",
+                                    $nb_unsupported_fields
+                                ),
+                                implode("', '", $unsupported_fields)
                             );
+                            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
                         }
                     } catch (SyntaxError $e) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_report',
-                                'parse_expert_query_error'
-                            )
+                            dgettext('tuleap-tracker', 'Error during parsing expert query')
                         );
                     } catch (LimitDepthIsExceededException $e) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_report',
-                                'validate_expert_query_depth_exceed'
-                            )
+                            dgettext('tuleap-tracker', 'The query is considered too complex to be executed by the server.
+                                Please simplify it (e.g remove comparisons) to continue.')
                         );
                     }
                 }
@@ -1843,7 +1847,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
         $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
 
-        return $invalid_fields_collection->hasNoErrors();
+        return ! $invalid_fields_collection->hasInvalidFields();
     }
 
     /**
