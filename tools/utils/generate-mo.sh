@@ -19,7 +19,7 @@
 #
 
 basedir=$1
-translated_plugins=(proftpd tracker)
+translated_plugins=(proftpd tracker captcha)
 
 echo "[core] Generating .mo file"
 for f in $(find "$basedir/site-content" -name "tuleap-core.po"); do

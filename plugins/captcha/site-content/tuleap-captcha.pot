@@ -1,0 +1,5 @@
+msgid "Add a captcha protection to sensitive operations"
+msgstr ""
+
+msgid "Captcha"
+msgstr ""

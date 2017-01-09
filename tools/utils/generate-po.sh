@@ -19,7 +19,7 @@
 #
 
 basedir=$1
-translated_plugins=(proftpd tracker)
+translated_plugins=(proftpd tracker captcha)
 
 echo "[core] Generating .pot file"
 find "$basedir/src" -name "*.php" \
