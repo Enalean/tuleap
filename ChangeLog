@@ -7,7 +7,7 @@ Version 9.4 (Not released yet)
 	* request #9840: news_read_permissions is unknown on NewsRetriever.php file
 
     == Plugins ==
-	* tracker: 5.1119
+	* tracker: 5.1120
 	* pluginsadministration: 1.26
 	* git: 4.317
 	* mediawiki: 0.130
