@@ -4,6 +4,7 @@ Version 9.4 (Not released yet)
 	* request #9809: Pending news counter should not count private news
 	* request #9805: Cannot add quota for a private project
 	* request #9808: Bad link in MyAdmin widget to approve news
+	* request #9840: news_read_permissions is unknown on NewsRetriever.php file
 
     == Plugins ==
 	* tracker: 5.1119
