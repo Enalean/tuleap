@@ -1,3 +1,6 @@
+Version 5.1121 - Tuleap 9.4
+    * request #9837: Provide a way to have pluralized textual messages
+
 Version 5.1120 - Tuleap 9.4
     * request #9844: Cannot edit Artifact Link Type
 

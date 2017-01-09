@@ -1,5 +1,8 @@
 Version 9.4 (Not released yet)
 
+	== Enhancement ==
+	* request #9837: Provide a way to have pluralized textual messages
+
 	== Bug Fix ==
 	* request #9809: Pending news counter should not count private news
 	* request #9805: Cannot add quota for a private project
@@ -7,7 +10,7 @@ Version 9.4 (Not released yet)
 	* request #9840: news_read_permissions is unknown on NewsRetriever.php file
 
     == Plugins ==
-	* tracker: 5.1120
+	* tracker: 5.1121
 	* pluginsadministration: 1.26
 	* git: 4.317
 	* mediawiki: 0.130
