@@ -17,16 +17,9 @@
 
             {{{ csrf_token }}}
 
-            <div class="tlp-form-element">
+            <div class="tlp-property">
                 <label class="tlp-label">{{ shortname_label }}</label>
-                <input type="text"
-                    name="shortname"
-                    class="tlp-input"
-                    value="{{ shortname }}"
-                    readonly
-                    disabled="disabled"
-                >
-                <p class="tlp-text-info">{{ shortname_help }}</p>
+                <p>{{ shortname }}</p>
             </div>
 
             <div class="tlp-form-element">
@@ -56,6 +49,7 @@
             </div>
         </div>
         <div class="tlp-modal-footer">
+            <input type="hidden" name="shortname" value="{{ shortname }}">
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
             <button type="submit" form="siteadmin-config-natures-modal-edit-{{ shortname }}-form" class="tlp-button-primary tlp-modal-action">
                 <i class="fa fa-save tlp-button-icon"></i> {{ btn_submit }}
