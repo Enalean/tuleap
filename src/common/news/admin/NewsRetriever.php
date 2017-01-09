@@ -19,6 +19,8 @@
 */
 namespace Tuleap\News\Admin;
 
+require_once 'www/news/news_utils.php';
+
 class NewsRetriever
 {
     const NEWS_STATUS_WAITING_PUBLICATION   = '0';
@@ -58,7 +60,7 @@ class NewsRetriever
 
         foreach ($result as $row) {
             $forum_id = $row['forum_id'];
-            $res      = news_read_permissions($forum_id);
+            $res      = \news_read_permissions($forum_id);
             if ((db_numrows($res) < 1) || (db_result($res, 0, 'ugroup_id') == $GLOBALS['UGROUP_ANONYMOUS'])) {
                 $filtered_result[] = $row;
             }
