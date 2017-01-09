@@ -82,7 +82,8 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $k
     }
     $having_keyword = '';
     if ($keyword) {
-        $keyword = "'%". db_es((string)$keyword) ."%'";
+        $data_access    = CodendiDataAccess::instance();
+        $keyword        = $data_access->quoteLikeValueSurround($keyword);
         $having_keyword = " AND full_name LIKE $keyword ";
     }
     $ugroup_id = (int)$ugroup_id;
@@ -151,12 +152,14 @@ function ugroup_db_list_all_ugroups_for_user($group_id,$user_id) {
 /** Return array of ugroup_id for all user-defined ugoups that user is part of 
  * and having tracker-related permissions on the $group_artifact_id tracker */
 function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id) {
+    $data_access       = CodendiDataAccess::instance();
+    $group_artifact_id = $data_access->quoteLikeValueSuffix($group_artifact_id);
     $sql="SELECT distinct ug.ugroup_id FROM ugroup ug, ugroup_user ugu, permissions p ".
       "WHERE ugu.user_id=".db_ei($user_id).
       " AND ug.group_id=".db_ei($group_id).
       " AND ugu.ugroup_id=ug.ugroup_id ".
       " AND p.ugroup_id = ugu.ugroup_id ".
-      " AND p.object_id LIKE '".db_ei($group_artifact_id)."%' ".
+      " AND p.object_id LIKE $group_artifact_id".
       " AND p.permission_type LIKE 'TRACKER%'";
 
     return util_result_column_to_array(db_query($sql));
@@ -285,7 +288,8 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_displ
     }
     $having_keyword = '';
     if ($keyword) {
-        $keyword = "'%". db_es((string)$keyword) ."%'";
+        $data_access    = CodendiDataAccess::instance();
+        $keyword        = $data_access->quoteLikeValueSurround($keyword);
         $having_keyword = " HAVING full_name LIKE $keyword ";
     }
 
