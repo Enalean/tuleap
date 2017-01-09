@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,3 +19,4 @@
  */
 
  define('USERLOGS_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
+define('USERLOG_BASE_URL', '/plugins/userlog');

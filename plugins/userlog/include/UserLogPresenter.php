@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,15 +43,16 @@ class UserLogPresenter
      */
     public $logs;
     public $selected_day;
+    public $export_url;
 
     public function __construct(array $logs, $selected_day, $limit, $offset, $nb_logs)
     {
-        $this->logs = $logs;
+        $this->logs         = $logs;
         $this->selected_day = $selected_day;
 
-        $this->search_title  = $GLOBALS['Language']->getText('global', 'search_title');
-        $this->pick_date     = $GLOBALS['Language']->getText('global', 'pick_date');
-        $this->btn_search    = $GLOBALS['Language']->getText('global', 'btn_search');
+        $this->search_title = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->pick_date    = $GLOBALS['Language']->getText('global', 'pick_date');
+        $this->btn_search   = $GLOBALS['Language']->getText('global', 'btn_search');
 
         $this->title_user_logging    = $GLOBALS['Language']->getText('plugin_userlog', 'title_user_logging');
         $this->subtitle_user_logging = $GLOBALS['Language']->getText('plugin_userlog', 'subtitle_user_logging');
@@ -62,8 +63,16 @@ class UserLogPresenter
         $this->label_uri             = $GLOBALS['Language']->getText('plugin_userlog', 'label_uri');
         $this->label_remote_adress   = $GLOBALS['Language']->getText('plugin_userlog', 'label_adress');
         $this->label_referrer        = $GLOBALS['Language']->getText('plugin_userlog', 'label_referrer');
+        $this->export_csv            = $GLOBALS['Language']->getText('plugin_userlog', 'export_csv');
 
-        $nb_displayed = $offset + $limit > $nb_logs ? $nb_logs - $offset : $limit;
+        $this->export_url = USERLOG_BASE_URL.'/?'.http_build_query(
+            array(
+                'action' => 'export',
+                'day'    => $selected_day,
+            )
+        );
+
+        $nb_displayed     = $offset + $limit > $nb_logs ? $nb_logs - $offset : $limit;
         $this->pagination = new PaginationPresenter(
             $limit,
             $offset,
