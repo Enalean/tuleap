@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
+
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
 class SizeValidatorParameters implements VisitorParameters
 {

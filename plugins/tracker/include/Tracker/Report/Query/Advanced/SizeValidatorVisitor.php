@@ -17,7 +17,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
+
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 
 class SizeValidatorVisitor implements Visitor
 {

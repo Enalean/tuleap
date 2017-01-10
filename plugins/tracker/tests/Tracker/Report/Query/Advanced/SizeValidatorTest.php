@@ -17,8 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -54,7 +57,7 @@ class SizeValidatorTest extends TuleapTestCase
         $subexpression = new AndExpression($comparison, null);
         $expression    = new OrExpression($subexpression, null);
 
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitSizeIsExceededException');
+        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException');
         $expression->accept($this->validator, new SizeValidatorParameters(0));
     }
 }

@@ -23,15 +23,15 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldsDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldsAreNotSupportedException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollection;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SizeValidatorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitSizeIsExceededException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
+use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\FieldsAreNotSupportedException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollection;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilderVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
@@ -80,7 +80,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $collector;
     /**
-     * @var OrExpression
+     * @var Visitable
      */
     private $parsed_expert_query;
     /**
