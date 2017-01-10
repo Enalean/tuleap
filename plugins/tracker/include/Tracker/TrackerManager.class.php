@@ -604,27 +604,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $renderer->renderToPage('tracker-home-nav', $presenter);
     }
 
-    private function getDeprecatedRetriever()
-    {
-        return new DeprecationRetriever(
-            new Dao(),
-            ProjectManager::instance(),
-            TrackerFactory::instance(),
-            Tracker_FormElementFactory::instance()
-        );
-    }
-
-    private function getDeprecatedFieldsByProject(Project $project)
-    {
-        $fields = array();
-
-        foreach($this->getDeprecatedRetriever()->getDeprecatedTrackersFieldsByProject($this->getProject($project->getId())) as $field) {
-            $fields[$field->getTrackerName($project)][] = $field->getFieldName();
-        }
-
-        return $fields;
-    }
-
     /**
      * Display all trackers of project $project that $user is able to see
      *
@@ -640,19 +619,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $toolbar = array();
         $html = '';
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
-
-        $deprecated_fields = $this->getDeprecatedFieldsByProject($project);
-        if (count($deprecated_fields) > 0 && $this->userIsTrackerAdmin($project, $user)) {
-            $html .= "<div class='alert alert-warning'>";
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'adapt_message');
-            $html .= "<ul>";
-            foreach ($deprecated_fields as $key => $deprecated_field) {
-                $html .= " <li> ".$hp->purify($key). " (" ;
-                $html .= $hp->purify(implode(", ", $deprecated_field)).")</li>";
-            }
-            $html .= "</ul>";
-            $html .= "</div>";
-        }
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';

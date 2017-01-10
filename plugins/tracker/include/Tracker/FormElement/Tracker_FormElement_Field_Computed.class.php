@@ -116,7 +116,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     public function useFastCompute() {
-        return $this->getProperty('fast_compute') == 1;
+        return true;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,6 @@ class SectionsPresenter
     {
         $this->emailgateway        = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
         $this->natures             = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
-        $this->deprecation_panel   = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'deprecation_panel');
         $this->report_config_panel = $GLOBALS['Language']->getText('plugin_tracker_report_config', 'report_config_panel');
 
         $this->emailgateway_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
@@ -43,9 +42,6 @@ class SectionsPresenter
         ));
         $this->natures_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
             'action'   => 'natures'
-        ));
-        $this->deprecation_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
-            'action'   => 'deprecation'
         ));
         $this->report_config_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
                 'action' => 'report-config'

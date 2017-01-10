@@ -1229,52 +1229,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
     }
 
-    public function displayHeaderWithRemovableWarning(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null, array $params = array())
-    {
-        $hp = Codendi_HTMLPurifier::instance();
-        $this->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
-        $deprecated_fields = $this->getDeprecatedFieldsByTracker();
-        $this->getWarningForDeprecatedFields($deprecated_fields, true);
-    }
-
-    private function getWarningForDeprecatedFields(array $deprecated_fields, $removable_flag)
-    {
-        $html = "";
-
-        $user = UserManager::instance()->getCurrentUser();
-        if (! $user->isAdmin($this->getGroupId())) {
-            return $html;
-        }
-
-        $display = true;
-        if ($this->getDeprecatedRetriever()->isWarningDeprecatedFieldHidden($user, $this)) {
-            if (count($deprecated_fields) == 0) {
-                $display = false;
-            } else if (count($deprecated_fields) > 0 && $removable_flag == true) {
-                $display = false;
-            }
-        } else {
-            if (count($deprecated_fields) == 0) {
-                $display = false;
-            }
-        }
-
-        if ($display) {
-            $html .= '<div id="warning-deprecated-field">';
-            $html .= '<p class="alert alert-warning">';
-            $html .=  $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'warning_deprecation_for_tracker');
-            $html .= '<a href="/plugins/tracker/?group_id='. urlencode($this->getGroupId()) .'&tracker='. urlencode($this->id) .'&func=hide-deprecated-fields">';
-            if ($removable_flag) {
-                $html .= '<button type="button" class="close" aria-hidden="true">&times;</button>';
-            }
-            $html .= ' </a>';
-            $html .= '</p>';
-            $html .= '</div>';
-        }
-
-        echo $html;
-    }
-
     public function getDefaultToolbar() {
         $toolbar = array();
 
@@ -1440,9 +1394,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $toolbar = $this->getAdminItems();
             }
             $this->displayHeader($layout, $title, $breadcrumbs, $toolbar);
-
-            $deprecated_fields = $this->getDeprecatedFieldsByTracker($this);
-            $this->getWarningForDeprecatedFields($deprecated_fields, false);
         }
     }
     public function displayAdmin(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
