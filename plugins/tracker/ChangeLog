@@ -1,3 +1,6 @@
+Version 5.1122 - Tuleap 9.4
+    * request #9842 TQL fatal error on DepthValidator when queries are too complex
+
 Version 5.1121 - Tuleap 9.4
     * request #9837: Provide a way to have pluralized textual messages
 
