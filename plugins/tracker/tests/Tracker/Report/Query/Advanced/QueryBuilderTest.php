@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use TuleapTestCase;
@@ -52,22 +52,22 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itPassesTheCurrentObjectInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery()
     {
-        $comparison = new Comparison('field', 'value');
+        $comparison = new EqualComparison('field', 'value');
 
         expect($this->field)->getExpertFrom("*", spl_object_hash($comparison))->once();
         expect($this->field)->getExpertWhere(spl_object_hash($comparison))->once();
 
-        $this->query_builder->visitComparison($comparison, $this->parameters);
+        $this->query_builder->visitEqualComparison($comparison, $this->parameters);
     }
 
     public function itRetrievesInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new Comparison('field', 'value');
+        $comparison = new EqualComparison('field', 'value');
 
         stub($this->field)->getExpertFrom("value", "*")->returns("le_from");
         stub($this->field)->getExpertWhere("*")->returns("le_where");
 
-        $result = $this->query_builder->visitComparison($comparison, $this->parameters);
+        $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
         $this->assertEqual($result->getFrom(), "le_from");
         $this->assertEqual($result->getWhere(), "le_where");
@@ -76,7 +76,7 @@ class QueryBuilderTest extends TuleapTestCase
     public function itRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpression()
     {
         $from_where = new FromWhere("le_from", "le_where");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\Comparison")
+        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where);
 
@@ -91,7 +91,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $from_where_expression = new FromWhere("le_from", "le_where");
         $from_where_tail       = new FromWhere("le_from_tail", "le_where_tail");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\Comparison")
+        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_expression);
         $tail = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndOperand")
@@ -109,7 +109,7 @@ class QueryBuilderTest extends TuleapTestCase
     public function itRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpression()
     {
         $from_where = new FromWhere("le_from", "le_where");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\Comparison")
+        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where);
 
@@ -124,7 +124,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
-        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\Comparison")
+        $comparison = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\EqualComparison")
             ->accept($this->query_builder, $this->parameters)
             ->returns($from_where_operand);
         $tail = stub("Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar\\AndOperand")

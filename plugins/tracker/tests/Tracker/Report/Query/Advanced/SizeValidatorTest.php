@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use TuleapTestCase;
 
@@ -44,7 +44,7 @@ class SizeValidatorTest extends TuleapTestCase
 
     public function itDoesNotThrowAnExceptionIfDeptDoesNotExceedLimit()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
         $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
         $expression    = new AndExpression($subexpression, $tail);
 
@@ -53,7 +53,7 @@ class SizeValidatorTest extends TuleapTestCase
 
     public function itThrowsAnExceptionIfDepthExceedLimit()
     {
-        $comparison    = new Comparison("field", "=", "value");
+        $comparison    = new EqualComparison("field", "=", "value");
         $subexpression = new AndExpression($comparison, null);
         $expression    = new OrExpression($subexpression, null);
 

@@ -25,7 +25,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -52,7 +52,7 @@ class InvalidFieldsCollectorVisitor implements Visitor
         $parsed_query->accept($this, new InvalidFieldsCollectorParameters($user, $tracker, $invalid_fields_collection));
     }
 
-    public function visitComparison(Comparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitEqualComparison(EqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
         $field_name = $comparison->getField();
 
