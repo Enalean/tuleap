@@ -1,3 +1,6 @@
+Version 0.41 - Tuleap 9.4
+    * request #9851: Improve performance of Folder selectbox rendering
+
 Version 0.40 - Tuleap 9.2
     * request #9698: Cannot change artifact folder
 
