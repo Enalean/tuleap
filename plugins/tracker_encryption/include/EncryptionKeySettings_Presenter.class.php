@@ -22,11 +22,13 @@
 class Tracker_EncryptionKeySettings_Presenter
 {
     private $tracker_id;
+    public $csrf_token;
 
-    public function __construct($tracker_id, $action_url)
+    public function __construct($tracker_id, $action_url, CSRFSynchronizerToken $csrf_token)
     {
         $this->tracker_id = $tracker_id;
         $this->action_url = $action_url;
+        $this->csrf_token = $csrf_token;
     }
 
     public function display_help()
