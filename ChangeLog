@@ -10,7 +10,10 @@ Version 9.4 (Not released yet)
 	* request #9840: news_read_permissions is unknown on NewsRetriever.php file
 	* request #9802: Refactoring - Introduce new object for package permission check
 
-    == Plugins ==
+	== Security ==
+	* request #9782: Prevent denial of service through LIKE queries in project administration
+
+	== Plugins ==
 	* tracker: 5.1123
 	* pluginsadministration: 1.26
 	* git: 4.317
