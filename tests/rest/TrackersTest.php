@@ -205,6 +205,55 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testGetTrackerArtifactsExpertQuery()
+    {
+        $query     = "i_want_to='Believe'";
+        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $response  = $this->getResponse($request);
+        $artifacts = $response->json();
+
+        $first_artifact_info = $artifacts[0];
+        $this->assertEquals(REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_artifact_info['uri']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetTrackerArtifactsExpertQueryWithNonexistentFieldReturnsError()
+    {
+        $query     = "nonexistent='Believe'";
+        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $response  = $this->getResponse($request);
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetTrackerArtifactsExpertQueryWithNotSupportedFieldReturnsError()
+    {
+        $query     = "status='On going'";
+        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $response  = $this->getResponse($request);
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetTrackerArtifactsExpertQueryWithASyntaxErrorInQueryReturnsError()
+    {
+        $query     = "i_want_to='On going";
+        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $response  = $this->getResponse($request);
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */

@@ -25,6 +25,11 @@ use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldsDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldsAreNotSupportedException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitDepthIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_FormElementFactory;
 use \Tracker;
@@ -40,7 +45,6 @@ use \PFUser;
 use \Tracker_Report_REST;
 use \PermissionsManager;
 use \Tracker_ReportDao;
-use \Tracker_FormElementFactory                   as FormElementFactory;
 use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
 use \Tracker_Artifact_PossibleParentsRetriever;
 use \Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
@@ -51,14 +55,15 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
  */
 class TrackersResource extends AuthenticatedResource {
 
-    const MAX_LIMIT        = 1000;
-    const DEFAULT_LIMIT    = 100;
-    const DEFAULT_OFFSET   = 0;
-    const DEFAULT_VALUES   = '';
-    const ALL_VALUES       = 'all';
-    const DEFAULT_CRITERIA = '';
-    const ORDER_ASC        = 'asc';
-    const ORDER_DESC       = 'desc';
+    const MAX_LIMIT            = 1000;
+    const DEFAULT_LIMIT        = 100;
+    const DEFAULT_OFFSET       = 0;
+    const DEFAULT_VALUES       = '';
+    const ALL_VALUES           = 'all';
+    const DEFAULT_CRITERIA     = '';
+    const ORDER_ASC            = 'asc';
+    const ORDER_DESC           = 'desc';
+    const DEFAULT_EXPERT_QUERY = '';
 
     /** @var UserManager */
     private $user_manager;
@@ -200,28 +205,40 @@ class TrackersResource extends AuthenticatedResource {
      *  <li>For date-like fields, the allowed operators are ["="|"<"|">"|"between"]. Dates must be in ISO date format</li>
      *  <li>Full example: {"title" : "bug", "2458" : {"operator" : "between", "value", ["2014-02-25", "2014-03-25T00:00:00-05:00"]}}</li>
      * </ol>
+     * <br><br>
+     * Notes on the expert query parameter
+     * <ol>
+     *  <li>You can use: AND, OR, parenthesis and only text fields.
+     *  <li>The basic form of a property is [field_shortname] = [string]
+     *      <br>Example: sprint_name='s1' AND description='desc1'
+     *  </li>
+     * </ol>
      * 
      * @url GET {id}/artifacts
      * @access hybrid
      *
-     * @param int    $id     ID of the tracker
-     * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
-     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
-     * @param int    $offset Position of the first element to display {@from path}{@min 0}
-     * @param string $query  JSON object of search criteria properties {@from path}
-     * @param string $order By default the artifacts are returned by Artifact ID ASC. Set this parameter to either ASC or DESC
-     *                      <b>Does not work with the query parameter</b> {@from path}{@choice asc,desc}
+     * @param int    $id             ID of the tracker
+     * @param string $values         Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
+     * @param int    $limit          Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset         Position of the first element to display {@from path}{@min 0}
+     * @param string $query          JSON object of search criteria properties {@from path}
+     * @param string $expert_query   Query with AND, OR, parenthesis and only Text fields
+     *                               <b>Does not work with query parameter</b> {@from path}
+     * @param string $order          By default the artifacts are returned by Artifact ID ASC. Set this parameter to either ASC or DESC
+     *                               <b>Does not work with query and expert_query parameters</b> {@from path}{@choice asc,desc}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      * @throws RestException 400
+     * @throws RestException 404
      */
     public function getArtifacts(
         $id,
-        $values = self::DEFAULT_VALUES,
-        $limit  = self::DEFAULT_LIMIT,
-        $offset = self::DEFAULT_OFFSET,
-        $query  = self::DEFAULT_CRITERIA,
-        $order  = self::ORDER_ASC
+        $values       = self::DEFAULT_VALUES,
+        $limit        = self::DEFAULT_LIMIT,
+        $offset       = self::DEFAULT_OFFSET,
+        $query        = self::DEFAULT_CRITERIA,
+        $expert_query = self::DEFAULT_EXPERT_QUERY,
+        $order        = self::ORDER_ASC
     ) {
         $this->checkAccess();
         $this->checkLimitValue($limit);
@@ -230,7 +247,9 @@ class TrackersResource extends AuthenticatedResource {
         $valid_tracker = $this->getTrackerById($user, $id);
 
         if ($query) {
-            $artifacts = $this->getArtifactsMatchingQuery($user, $valid_tracker, $query, $offset, $limit);
+            $artifacts = $this->getArtifactsMatchingFromCriteria($user, $valid_tracker, $query, $offset, $limit);
+        } else if ($expert_query) {
+            $artifacts = $this->getArtifactsMatchingFromExpertQuery($user, $valid_tracker, $expert_query, $offset, $limit);
         } else {
             $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
 
@@ -258,7 +277,8 @@ class TrackersResource extends AuthenticatedResource {
     /**
      * @throws RestException 400
      */
-    private function getArtifactsMatchingQuery(PFUser $user, Tracker $tracker, $query, $offset, $limit) {
+    private function getArtifactsMatchingFromCriteria(PFUser $user, Tracker $tracker, $query, $offset, $limit)
+    {
         $report = new Tracker_Report_REST(
             $user,
             $tracker,
@@ -269,10 +289,34 @@ class TrackersResource extends AuthenticatedResource {
 
         try {
             $report->setRESTCriteria($query);
-            $matching_ids = $report->getMatchingIds();
         } catch (InvalidCriteriaException $e) {
             throw new RestException(400, $e->getMessage());
         }
+
+        return $this->getArtifactsMatching($report, $offset, $limit);
+    }
+
+    private function getArtifactsMatchingFromExpertQuery(PFUser $user, Tracker $tracker, $query, $offset, $limit)
+    {
+        $report = new Tracker_Report_REST(
+            $user,
+            $tracker,
+            $this->permission_manager,
+            new Tracker_ReportDao(),
+            $this->formelement_factory
+        );
+
+        $report->setIsInExpertMode(true);
+        $report->setExpertQuery(stripslashes($query));
+
+        $this->validateExpertQuery($report);
+
+        return $this->getArtifactsMatching($report, $offset, $limit);
+    }
+
+    private function getArtifactsMatching(Tracker_Report_REST $report, $offset, $limit)
+    {
+        $matching_ids = $report->getMatchingIds();
 
         if (! $matching_ids['id']) {
             return array();
@@ -285,6 +329,33 @@ class TrackersResource extends AuthenticatedResource {
 
         $artifacts = $this->tracker_artifact_factory->getArtifactsByArtifactIdList($slice_matching_ids);
         return array_filter($artifacts);
+    }
+
+    private function validateExpertQuery(Tracker_Report_REST $report)
+    {
+        try {
+            $report->validateExpertQuery();
+        } catch (FieldsDoNotExistException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
+            );
+        } catch (FieldsAreNotSupportedException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
+            );
+        } catch (SyntaxError $exception) {
+            throw new RestException(
+                400,
+                "Error during parsing expert query"
+            );
+        } catch (LimitSizeIsExceededException $exception) {
+            throw new RestException(
+                400,
+                "The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue."
+            );
+        }
     }
 
     /**

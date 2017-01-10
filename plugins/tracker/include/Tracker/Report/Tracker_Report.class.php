@@ -23,6 +23,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldsDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldsAreNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SizeValidatorVisitor;
@@ -1333,46 +1335,23 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 }
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
-                        $parsed_query = $this->parseExpertQuery();
-                        $this->size_validator->checkSizeOfTree($parsed_query);
-
-                        $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
-
-                        $nonexistent_fields    = $invalid_fields_collection->getNonexistentFields();
-                        $nb_nonexistent_fields = count($nonexistent_fields);
-                        if ($nb_nonexistent_fields > 0) {
-                            $message = sprintf(
-                                dngettext(
-                                    'tuleap-tracker',
-                                    "The field '%s' doesn't exist",
-                                    "The fields '%s' don't exist",
-                                    $nb_nonexistent_fields
-                                ),
-                                implode("', '", $nonexistent_fields)
-                            );
-                            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
-                        }
-
-                        $unsupported_fields    = $invalid_fields_collection->getUnsupportedFields();
-                        $nb_unsupported_fields = count($unsupported_fields);
-                        if ($nb_unsupported_fields > 0) {
-                            $message = sprintf(
-                                dngettext(
-                                    'tuleap-tracker',
-                                    "The field '%s' isn't supported",
-                                    "The fields '%s' aren't supported",
-                                    $nb_unsupported_fields
-                                ),
-                                implode("', '", $unsupported_fields)
-                            );
-                            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
-                        }
-                    } catch (SyntaxError $e) {
+                        $this->validateExpertQuery();
+                    } catch (FieldsDoNotExistException $exception) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $exception->getMessage()
+                        );
+                    } catch (FieldsAreNotSupportedException $exception) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $exception->getMessage()
+                        );
+                    } catch (SyntaxError $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'Error during parsing expert query')
                         );
-                    } catch (LimitSizeIsExceededException $e) {
+                    } catch (LimitSizeIsExceededException $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'The query is considered too complex to be executed by the server.
@@ -1617,6 +1596,44 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
 
         return $additional_criteria;
+    }
+
+    public function validateExpertQuery()
+    {
+        $parsed_query = $this->parseExpertQuery();
+        $this->size_validator->checkSizeOfTree($parsed_query);
+
+        $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
+
+        $nonexistent_fields    = $invalid_fields_collection->getNonexistentFields();
+        $nb_nonexistent_fields = count($nonexistent_fields);
+        if ($nb_nonexistent_fields > 0) {
+            $message = sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    "The field '%s' doesn't exist",
+                    "The fields '%s' don't exist",
+                    $nb_nonexistent_fields
+                ),
+                implode("', '", $nonexistent_fields)
+            );
+            throw new FieldsDoNotExistException($message);
+        }
+
+        $unsupported_fields    = $invalid_fields_collection->getUnsupportedFields();
+        $nb_unsupported_fields = count($unsupported_fields);
+        if ($nb_unsupported_fields > 0) {
+            $message = sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    "The field '%s' isn't supported",
+                    "The fields '%s' aren't supported",
+                    $nb_unsupported_fields
+                ),
+                implode("', '", $unsupported_fields)
+            );
+            throw new FieldsAreNotSupportedException($message);
+        }
     }
 
     private function fetchUpdateRendererForm(Tracker_Report_Renderer $renderer) {
