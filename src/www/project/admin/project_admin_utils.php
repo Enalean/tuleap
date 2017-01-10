@@ -134,18 +134,18 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
         if(stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
             $value =  'ugroup_anonymous_users_name_key';
         }
-        $filter .= " AND group_history.old_value LIKE " . $data_access->quoteSmart("%$value%");
+        $filter .= " AND group_history.old_value LIKE " . $data_access->quoteLikeValueSurround($value);
     }
     if(!empty($event) && strcmp($event, 'any')) {
         $filter .= " AND ( 0 ";
         if(!empty($subEventsBox)) {
             foreach ($subEventsBox as $key => $value) {
-                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteSmart("$key%");
+                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteLikeValueSuffix($key);
             }
         } else {
             $subEventsList = get_history_entries();
             foreach ($subEventsList[$event] as $key => $value) {
-                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteSmart("$value%");
+                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteLikeValueSuffix($value);
             }
         }
         $filter .= " ) ";
