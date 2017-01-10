@@ -11,7 +11,7 @@ Version 9.4 (Not released yet)
 	* request #9802: Refactoring - Introduce new object for package permission check
 
     == Plugins ==
-	* tracker: 5.1122
+	* tracker: 5.1123
 	* pluginsadministration: 1.26
 	* git: 4.317
 	* mediawiki: 0.130
