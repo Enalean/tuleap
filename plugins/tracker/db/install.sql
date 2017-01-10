@@ -390,7 +390,7 @@ CREATE TABLE tracker_fileinfo(
 
 DROP TABLE IF EXISTS tracker_report_config;
 CREATE TABLE tracker_report_config(
-    query_limit INT(1) NOT NULL DEFAULT 15
+    query_limit INT(1) NOT NULL DEFAULT 30
 );
 
 DROP TABLE IF EXISTS tracker_report;
@@ -867,4 +867,4 @@ INSERT INTO user_access SET
         user_id = 90,
         last_access_date = '0';
 
-INSERT INTO tracker_report_config (query_limit) VALUES (15)
+INSERT INTO tracker_report_config (query_limit) VALUES (30)

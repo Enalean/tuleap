@@ -23,15 +23,12 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidatorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollection;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InvalidFieldsCollectorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\DepthValidatorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitDepthIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilderParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\ExpertModePresenter;
@@ -89,9 +86,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $query_builder;
     /**
-     * @var DepthValidatorVisitor
+     * @var SizeValidatorVisitor
      */
-    private $depth_validator;
+    private $size_validator;
 
     /**
      * Constructor
@@ -138,10 +135,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new TrackerReportConfigDao()
         );
 
-        $this->parser          = new Parser();
-        $this->depth_validator = new DepthValidatorVisitor($report_config->getExpertQueryLimit());
-        $this->collector       = new InvalidFieldsCollectorVisitor($this->getFormElementFactory());
-        $this->query_builder   = new QueryBuilderVisitor($this->getFormElementFactory());
+        $this->parser         = new Parser();
+        $this->size_validator = new SizeValidatorVisitor($report_config->getExpertQueryLimit());
+        $this->collector      = new InvalidFieldsCollectorVisitor($this->getFormElementFactory());
+        $this->query_builder  = new QueryBuilderVisitor($this->getFormElementFactory());
     }
 
     public function setProjectId($id) {
@@ -1337,7 +1334,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $parsed_query = $this->parseExpertQuery();
-                        $this->depth_validator->checkDepthOfTree($parsed_query);
+                        $this->size_validator->checkSizeOfTree($parsed_query);
 
                         $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
 
@@ -1375,7 +1372,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'Error during parsing expert query')
                         );
-                    } catch (LimitDepthIsExceededException $e) {
+                    } catch (LimitSizeIsExceededException $e) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'The query is considered too complex to be executed by the server.
@@ -1840,8 +1837,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function canExecuteExpertQuery($parsed_query)
     {
         try {
-            $this->depth_validator->checkDepthOfTree($parsed_query);
-        } catch (LimitDepthIsExceededException $e) {
+            $this->size_validator->checkSizeOfTree($parsed_query);
+        } catch (LimitSizeIsExceededException $e) {
             return false;
         }
 
