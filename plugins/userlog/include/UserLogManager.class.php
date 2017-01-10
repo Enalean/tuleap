@@ -94,29 +94,9 @@ class UserLogManager {
 
     function displayLogs($offset, $selected_day = null)
     {
-        $year  = null;
-        $month = null;
-        $day   = null;
-
-        if ($selected_day !== null) {
-            if (preg_match('/^([0-9]+)-([0-9]{1,2})-([0-9]{1,2})$/', $selected_day, $match)) {
-                $year  = $match[1];
-                $month = $match[2];
-                $day   = $match[3];
-            }
-        }
-        if ($year === null) {
-            $year  = date('Y');
-            $month = date('n');
-            $day   = date('j');
-        }
-
-        $start = mktime(0, 0, 0, $month, $day, $year);
-        $end   = mktime(23, 59, 59, $month, $day, $year);
-        $count = 100;
-
-        $log_builder              = new UserLogBuilder($this->getDao(), $this->user_manager);
-        list($logs, $total_count) = $log_builder->build($start, $end, $offset, $count);
+        $count       = 100;
+        $log_builder = new UserLogBuilder($this->getDao(), $this->user_manager);
+        list($logs, $total_count) = $log_builder->build($selected_day, $offset, $count);
 
         $presenter = new UserLogPresenter($logs, $selected_day, $count, $offset, $total_count);
 

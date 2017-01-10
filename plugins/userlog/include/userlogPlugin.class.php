@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -24,6 +24,9 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Userlog\UserLogBuilder;
+use Tuleap\Userlog\UserLogExporter;
+use Tuleap\Userlog\UserLogRouter;
 
 require_once 'constants.php';
 
@@ -115,33 +118,15 @@ class userlogPlugin extends Plugin {
         }
     }
 
-    function process() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
+    public function process()
+    {
+        $request = HTTPRequest::instance();
 
-        $request =& HTTPRequest::instance();
+        $router = new UserLogRouter(
+            new UserLogExporter(new UserLogBuilder(new UserLogDao(), UserManager::instance())),
+            new UserLogManager(new AdminPageRenderer(), UserManager::instance())
+        );
 
-        $valid = new Valid('offset');
-        $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
-        $valid->addRule(new Rule_Int());
-        $valid->addRule(new Rule_GreaterOrEqual(0));
-        if($request->valid($valid)) {
-            $offset = $request->get('offset');
-        } else {
-            $offset = 0;
-        }
-
-        $valid = new Valid('day');
-        $valid->addRule(new Rule_Date(), 'Invalid date submitted. Force it to today.');
-        if($request->valid($valid)) {
-            $day = $request->get('day');
-        } else {
-            $day = date('Y-n-j');
-        }
-
-        $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
-        $userLogManager->displayLogs($offset, $day);
+        $router->route($request);
     }
-
 }
-
-?>

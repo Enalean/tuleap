@@ -10,4 +10,5 @@ plugin_userlog	label_method	Method
 plugin_userlog	label_uri	URI
 plugin_userlog	label_adress	Address
 plugin_userlog	label_referrer	Referrer
+plugin_userlog	export_csv	CSV export
 plugin_userlog	label_between	between $1 and $2 hour
