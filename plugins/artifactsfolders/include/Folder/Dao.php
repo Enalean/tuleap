@@ -21,6 +21,7 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use DataAccessObject;
+use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 
 class Dao extends DataAccessObject
@@ -83,11 +84,22 @@ class Dao extends DataAccessObject
     public function searchFoldersInProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
+        $is_child   = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
-        $sql = "SELECT A.*
+        $sql = "SELECT A.*, parent.id AS parent_id
                 FROM tracker_artifact AS A
-                  INNER JOIN tracker AS T ON (T.id = A.tracker_id AND T.group_id = $project_id)
-                  INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker USING (tracker_id)";
+                    INNER JOIN tracker AS T ON (T.id = A.tracker_id AND T.group_id = $project_id)
+                    INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker USING (tracker_id)
+                    LEFT JOIN (
+                        tracker_changeset_value_artifactlink AS artlink
+                        INNER JOIN tracker_changeset_value AS cv ON (
+                            cv.id = artlink.changeset_value_id
+                            AND nature = $is_child
+                        )
+                        INNER JOIN tracker_artifact AS parent ON (
+                            parent.last_changeset_id = cv.changeset_id
+                        )
+                    ) ON (artlink.artifact_id = A.id AND parent.tracker_id = A.tracker_id)";
 
         return $this->retrieve($sql);
     }

@@ -34,9 +34,16 @@ class FolderHierarchicalRepresentation
      */
     private $children;
 
-    public function __construct(Tracker_Artifact $folder)
+    /**
+     * @var integer
+     */
+    private $parent_id;
+
+    public function __construct(Tracker_Artifact $folder, $parent_id)
     {
-        $this->folder = $folder;
+        $this->folder    = $folder;
+        $this->parent_id = $parent_id;
+
         $this->children = new FolderHierarchicalRepresentationCollection();
     }
 
@@ -53,5 +60,13 @@ class FolderHierarchicalRepresentation
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
     }
 }
