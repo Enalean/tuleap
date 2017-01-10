@@ -33,6 +33,12 @@ class ProjectsOverQuotaPresenter
     public $exceeding_size;
     public $warn_administrators;
     public $no_projects_warning;
+    public $modal_title;
+    public $action_url;
+    public $submit_button;
+    public $close_button;
+    public $subject_label;
+    public $body_label;
 
     public function __construct(array $exceeding_projects)
     {
@@ -43,6 +49,15 @@ class ProjectsOverQuotaPresenter
         $this->exceeding_size      = $GLOBALS['Language']->getText('plugin_statistics', 'exceeding_size');
         $this->warn_administrators = $GLOBALS['Language']->getText('plugin_statistics', 'warn_administrators');
         $this->no_projects_warning = $GLOBALS['Language']->getText('plugin_statistics', 'no_projects_warning');
-        $this->exceeding_projects  = $exceeding_projects;
+
+        $this->submit_button = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->close_button  = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->subject_label = $GLOBALS['Language']->getText('my_index', 'subject_label');
+        $this->body_label    = $GLOBALS['Language']->getText('my_index', 'body_label');
+        $this->modal_title   = $GLOBALS['Language']->getText('my_index', 'mass_mail_label');
+
+        $this->action_url = '/include/massmail_to_project_admins.php';
+
+        $this->exceeding_projects = $exceeding_projects;
     }
 }

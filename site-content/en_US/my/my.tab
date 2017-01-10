@@ -63,6 +63,7 @@ my_index	mail_sent	Mail sent to all members of project $1
 my_index	mail_not_sent	Mail not sent to members of project $1
 my_index	subject_label	Subject
 my_index	body_label	Message body
+my_index	mass_mail_label	Massmail to project administrators
 my_index	massmail_not_sent_max_users	You exceed the maximum number ($1) of persons to send the message. The email is not sent.
 my_index	massmail_form_title	Send an email to all members of the project
 

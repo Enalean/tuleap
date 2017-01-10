@@ -81,6 +81,7 @@ $recipients = array(
 );
 
 $GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/massmail.js');
 
 $csrf  = new CSRFSynchronizerToken('/admin/massmail.php');

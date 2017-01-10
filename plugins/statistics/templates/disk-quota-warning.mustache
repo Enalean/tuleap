@@ -1,0 +1,36 @@
+<div id="modal-mass-mail-quota-{{ project_id }}" class="tlp-modal" role="dialog"
+     aria-labelledby="modal-simple-content-label">
+
+    <form action="{{ action_url }}" method="POST">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title">
+                <i class="fa fa-enveloppe-o tlp-modal-title-icon"></i> {{ modal_title }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                ×
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="group_id" value="{{ project_id }}"/>
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="subject">{{ subject_label }}</label>
+                <input class="disk-quota-message-label tlp-input" type="text" id="subject" name="subject" value="{{ subject_content }}" required/>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="editor_{{ project_id }}">{{ body_label }}</label>
+                <textarea class="tlp-textarea project-over-quota-massmail-body" id="editor_{{ project_id }}" rows="10" name="body_{{ project_id }}">{{ body_content }}</textarea>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{ close_button }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" name="action" value="add">
+                <i class="fa fa-enveloppe-o tlp-button-icon"></i> {{ submit_button }}
+            </button>
+        </div>
+    </form>
+</div>

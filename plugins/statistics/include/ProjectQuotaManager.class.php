@@ -102,10 +102,10 @@ class ProjectQuotaManager {
         $projectRow            = array(
             'project_unix_name'  => $project->getUnixNameMixedCase(),
             'project_name'       => $project->getUnconvertedPublicName(),
-            'group_id'           => $project->getGroupId(),
+            'project_id'         => $project->getGroupId(),
             'exceed'             => $exceed_percent . '%',
             'disk_quota'         => $usage_output->sizeReadable($allowed_size),
-            'current_disk_space' => $usage_output->sizeReadable($current_size)
+            'current_disk_space' => $usage_output->sizeReadable($current_size),
         );
 
         return $projectRow;

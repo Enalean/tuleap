@@ -13,7 +13,7 @@
                         <th class="tlp-table-cell-numeric">{{ current_size }}</th>
                         <th class="tlp-table-cell-numeric">{{ quota }}</th>
                         <th class="tlp-table-cell-numeric">{{ exceeding_size }}</th>
-                        <th>{{ warn_administrators }}</th>
+                        <th></th>
                     </tr>
                     </thead>
 
@@ -28,12 +28,13 @@
                             <td class="tlp-table-cell-numeric">{{ current_disk_space }}</td>
                             <td class="tlp-table-cell-numeric">{{ disk_quota }}</td>
                             <td class="tlp-table-cell-numeric">{{ exceed }}</td>
-                            <td>
-                                <a href="#massmail_{{ group_id }}" class="project_home_contact_admins"
-                                   data-toggle="modal">
+                            <td class="tlp-table-cell-actions">
+                                <button type="button" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                   data-modal-id="modal-mass-mail-quota-{{ project_id }}">
                                     <span class="tlp-button-icon fa fa-envelope-o"></span>
-                                </a>
-                                {{{ mail_form }}}
+                                    {{ warn_administrators }}
+                                </button>
+                                {{> disk-quota-warning }}
                             </td>
                         </tr>
                     {{/ exceeding_projects }}

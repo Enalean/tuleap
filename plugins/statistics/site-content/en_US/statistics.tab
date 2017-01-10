@@ -116,7 +116,7 @@ plugin_statistics	services_usage	Service usage
 plugin_statistics	current_size	Current project size
 plugin_statistics	project_name	Project name
 plugin_statistics	exceeding_size	Exceeding size
-plugin_statistics	warn_administrators	Warn administrators?
+plugin_statistics	warn_administrators	Warn administrators
 plugin_statistics	no_projects_warning	There isn't any matching projects.
 plugin_statistics	projects_over_quota_title	Projects exceeding their disk quota
 plugin_statistics	disk_quota_warning_subject	[Disk quota] [Warning] Project $1 is exceeding allowed disk quota
