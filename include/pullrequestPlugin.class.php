@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -214,8 +214,8 @@ class pullrequestPlugin extends Plugin
                 $dest_branches[] = array('repo_id' => $repository->getId(), 'repo_name' => null, 'branch_name' => $branch);
             }
 
-            if ($repository->getParentId() != 0) {
-                $parent_repo     = $repository->getParent();
+            $parent_repo = $repository->getParent();
+            if ($parent_repo !== null) {
                 $git_exec        = new GitExec($parent_repo->getFullPath(), $parent_repo->getFullPath());
                 $parent_branches = $git_exec->getAllBranchNames();
                 foreach ($parent_branches as $branch) {
