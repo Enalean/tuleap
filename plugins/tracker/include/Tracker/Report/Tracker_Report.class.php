@@ -1104,7 +1104,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     if (!empty($renderer_table['masschange_checked'])) {
                         $masschange_aids = $request->get('masschange_aids');
                     } else if (!empty($renderer_table['masschange_all'])) {
-                        $masschange_aids = $request->get('masschange_aids_all');
+                        $masschange_aids_all = $this->getMatchingIds($request);
+                        if ($masschange_aids_all) {
+                            $masschange_aids = explode(',', $masschange_aids_all['id']);
+                        }
                     }
 
                     if (empty($masschange_aids)) {
