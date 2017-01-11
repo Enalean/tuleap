@@ -89,7 +89,7 @@ class Docman_MetadataComparator {
         $dstLoveIter = $dstLoveFactory->getIteratorByFieldId($dstMd->getId(), $dstMd->getLabel(), true);
         $dstLoveArray = $this->getArrayFromIterator($dstLoveIter, 'getId');
 
-        $maxRow = max($srcLoveIter->count(), $dstLoveIter->count());
+        $purifier = Codendi_HTMLPurifier::instance();
 
         // Keep a trace of matching love
         $matchingLove = array();
@@ -137,7 +137,7 @@ class Docman_MetadataComparator {
             $html .= "<td>";
             switch($rowStyle) {
             case 'missing':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_love', array($srcLove->getName()));
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_love', array($purifier->purify($srcLove->getName())));
             }
             $html .= "</td\n>";
 
@@ -153,7 +153,7 @@ class Docman_MetadataComparator {
                 $html .= "<tr>\n";
                 // Name
                 $html .= "<td>&nbsp;</td>\n";
-                $html .= "<td>".$love->getName()."</td>\n";
+                $html .= "<td>".$purifier->purify($love->getName())."</td>\n";
                 // Presence in source project
                 $html .= "<td></td>\n";
                 // Presence in destination project
@@ -201,6 +201,8 @@ class Docman_MetadataComparator {
         $html .= "<th>".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_action', array($this->dstGo->getPublicName()))."</th>\n";
         $html .= "</tr>\n";
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
         // Keep a trace of metadata that matched in the dst metadata list.
         $matchingMd = array();
         $srcMdIter->rewind();
@@ -245,6 +247,7 @@ class Docman_MetadataComparator {
                 }
             }
 
+            $purified_property_name = $purifier->purify($srcMd->getName());
 
             //
             // Display result
@@ -253,7 +256,7 @@ class Docman_MetadataComparator {
 
             // Property
             $html .= "<td colspan=\"2\" style=\"font-weight: bold;\">";
-            $html .= $srcMd->getName();
+            $html .= $purified_property_name;
             $html .= "</td>";
 
             // Presence in source project
@@ -291,13 +294,13 @@ class Docman_MetadataComparator {
             case 'equivalent':
                 $diffArray = $this->checkMdDifferences($srcMd, $dstMd, $mdMap['love']);
                 $diffStr = '<ul style="padding:0;padding-left:1.5em;margin:0;"><li>';
-                $diffStr .= implode('</li><li>', $diffArray);
+                $diffStr .= implode('</li><li>', $purifier->purify($diffArray));
                 $diffStr .= '</li></ul>';
 
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($srcMd->getName(), $this->dstGo->getPublicName(), $diffStr));                
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($purified_property_name, $this->dstGo->getPublicName(), $diffStr));
                 break;
             case 'missing':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_md', array($srcMd->getName()));
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_md', array($purified_property_name));
                 break;
             case 'conflict':
                 $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_conflict');
@@ -328,7 +331,8 @@ class Docman_MetadataComparator {
 
                 // Name
                 $html .= "<td colspan=\"2\" style=\"font-weight: bold;\">";
-                $html .= $md->getName();
+                $purified_name = $purifier->purify($md->getName());
+                $html .= $purified_name;
                 $html .= "</td>";
 
                 // Presence in source project
