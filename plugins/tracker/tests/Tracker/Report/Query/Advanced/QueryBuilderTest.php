@@ -30,7 +30,6 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class QueryBuilderTest extends TuleapTestCase
 {
-    private $user;
     private $tracker;
     private $field;
 
@@ -54,8 +53,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('field', 'value');
 
-        expect($this->field)->getExpertFrom("*", spl_object_hash($comparison))->once();
-        expect($this->field)->getExpertWhere(spl_object_hash($comparison))->once();
+        expect($this->field)->getExpertFromWhere("*", spl_object_hash($comparison))->once();
 
         $this->query_builder->visitEqualComparison($comparison, $this->parameters);
     }
@@ -64,8 +62,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('field', 'value');
 
-        stub($this->field)->getExpertFrom("value", "*")->returns("le_from");
-        stub($this->field)->getExpertWhere("*")->returns("le_where");
+        stub($this->field)->getExpertFromWhere("value", "*")->returns(new FromWhere("le_from", "le_where"));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 

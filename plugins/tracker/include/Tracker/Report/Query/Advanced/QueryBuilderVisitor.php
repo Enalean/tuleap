@@ -54,10 +54,7 @@ class QueryBuilderVisitor implements Visitor
             $comparison->getField()
         );
 
-        $from  = $formelement->getExpertFrom($comparison_value, spl_object_hash($comparison));
-        $where = $formelement->getExpertWhere(spl_object_hash($comparison));
-
-        return new FromWhere($from, $where);
+        return $formelement->getExpertFromWhere($comparison_value, spl_object_hash($comparison));
     }
 
     public function visitAndExpression(AndExpression $and_expression, QueryBuilderParameters $parameters)
