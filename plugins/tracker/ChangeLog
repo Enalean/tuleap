@@ -1,3 +1,6 @@
+Version 5.1127 - Tuleap 9.4
+    * story #8859 TQL search on date & numeric fields (Refactoring: FromElement returns directly a FrowWhere object)
+
 Version 5.1126 - Tuleap 9.4
     * Removing computed field values
 
