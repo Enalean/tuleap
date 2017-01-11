@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -107,26 +107,27 @@ class TransitionFactory {
     }
 
     protected $cache_transition_id = array();
-    /**
-     * Get a transition id
-     *
-     * @param int from
-     * @param int to
-     *
-     * @return Transition
-     */
-    public function getTransitionId($from, $to) {
+
+    public function getTransitionId(Tracker $tracker, $from, $to)
+    {
+        $tracker_id = $tracker->getId();
+
         $dao = $this->getDao();
         if ($from != null) {
             $from = $from->getId();
         }
-        if ( ! isset($this->cache_transition_id[$from][$to]) ) {
-            $this->cache_transition_id[$from][$to] = array(null);
-            if ($row = $dao->searchByFromTo($from, $to)->getRow()) {
-                $this->cache_transition_id[$from][$to] = array($row['transition_id']);
+
+        if (! isset($this->cache_transition_id[$tracker_id]) ) {
+            foreach ($dao->searchByTrackerId($tracker_id)->getRow() as $row) {
+                $this->cache_transition_id[$tracker_id][$from][$to] = $row['transition_id'];
             }
         }
-        return $this->cache_transition_id[$from][$to][0];
+
+        if (! isset($this->cache_transition_id[$tracker_id][$from][$to])) {
+            return null;
+        }
+
+        return $this->cache_transition_id[$tracker_id][$from][$to];
     }
 
     /**
