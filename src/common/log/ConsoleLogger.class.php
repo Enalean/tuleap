@@ -43,6 +43,7 @@ class Log_ConsoleLogger implements Logger {
 
     public function log($message, $level = null) {
         fwrite(STDERR, $this->colorize($level, $level.' '.$message).PHP_EOL);
+        fflush(STDERR);
     }
 
     public function warn($message, Exception $e = null) {

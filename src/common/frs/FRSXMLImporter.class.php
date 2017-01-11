@@ -117,6 +117,8 @@ class FRSXMLImporter {
 
     public function import(ImportConfig $configuration, Project $project, SimpleXMLElement $xml, $extraction_path, array &$frs_release_mapping)
     {
+        $this->logger->debug("Start import");
+
         $xml_frs = $xml->frs;
         if(!$xml_frs) {
             return true;
@@ -129,6 +131,8 @@ class FRSXMLImporter {
             $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
         }
 
+        $this->logger->debug("Packages imported. Import references");
+
         EventManager::instance()->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
             array(
@@ -140,11 +144,14 @@ class FRSXMLImporter {
                 'configuration'   => $configuration,
             )
         );
+
+        $this->logger->debug("Import completed");
         return true;
     }
 
     private function importRights(Project $project, SimpleXMLElement $xml_frs)
     {
+        $this->logger->debug("Start import of service level rights");
         if ($xml_frs->{'read-access'}) {
             $this->logger->info("Importing read access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_frs->{'read-access'});
@@ -160,6 +167,7 @@ class FRSXMLImporter {
                 $this->permission_creator->savePermissions($project, $ugroups_ids, FRSPermission::FRS_ADMIN);
             }
         }
+        $this->logger->debug("Import of service level rights completed");
     }
 
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
@@ -197,6 +205,7 @@ class FRSXMLImporter {
         $package->setApproveLicense(true);
         $package->setPackageID($this->package_factory->create($package->toArray()));
 
+        $this->logger->debug('Start import of package '.$package->getName());
         $read_perms = array();
         foreach($xml_pkg->{'read-access'} as $perm) {
             $ugroup_name = (string) $perm->ugroup;
@@ -216,6 +225,7 @@ class FRSXMLImporter {
                 $created_id_map['package'][$id] = $package->getPackageID();
             }
         }
+        $this->logger->debug('Import of package '.$package->getName().' completed');
     }
 
     private function importRelease(
@@ -240,6 +250,8 @@ class FRSXMLImporter {
         $release->setChanges((string) $xml_rel->changes);
         $release->setPreformatted($attrs['preformatted'] == '1' || $attrs['preformatted'] == 'true');
         $release->setReleasedBy($user->getId());
+
+        $this->logger->debug('Start import of release '.$release->getName());
 
         $created_release_id = $this->release_factory->create($release->toArray());
         $release->setReleaseID($created_release_id);
@@ -267,9 +279,13 @@ class FRSXMLImporter {
                 $created_id_map['release'][$id] = $release->getReleaseID();
             }
         }
+
+        $this->logger->debug('Import of release '.$release->getName().' completed');
     }
 
     private function importFile(Project $project, FRSRelease $release, PFUser $user, SimpleXMLElement $xml_file, $extraction_path) {
+        $this->logger->debug('Start import of file');
+
         $user  = empty($xml_file->user) ? $user : $this->user_finder->getUser($xml_file->user);
         $attrs = $xml_file->attributes();
         $src   = $extraction_path . '/' . $attrs['src'];
@@ -278,6 +294,8 @@ class FRSXMLImporter {
         $time  = strtotime($attrs['release-time']);
         $date  = strtotime($attrs['post-date']);
         $desc  = "";
+
+        $this->logger->debug('metadata gathered for file '.$name);
 
         $type_id = null;
         if(isset($attrs['filetype']) && !empty($attrs['filetype'])) {
@@ -307,11 +325,13 @@ class FRSXMLImporter {
                 "(expected MD5 $expected_md5, got $md5)");
         }
 
+        $this->logger->debug('Copy file to incoming dir');
         $dirPath = $this->file_factory->getSrcDir($project);
         $dest = "$dirPath/$name";
         if(!copy($src, $dest)) {
             throw new Exception("Could not copy $src to $dest");
         }
+        $this->logger->debug('Copy done');
 
         $newFile = new FRSFile();
         $newFile->setGroup($project);
@@ -327,6 +347,9 @@ class FRSXMLImporter {
         $newFile->setComment($desc);
         $newFile->setReleaseTime($time);
         $newFile->setPostDate($date);
+        $this->logger->debug('Create file into DB & move to final location');
         $this->file_factory->createFile($newFile);
+
+        $this->logger->debug('Import of file '.$name.' completed');
     }
 }

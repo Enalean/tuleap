@@ -35,10 +35,27 @@ use Tuleap\FRS\FRSPermissionFactory;
 class FRSFileFactory {
     const COMPUTE_MD5 = 0x0001;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @var string
+     */
     protected $fileforge;
 
-    function FRSFileFactory() {
+    function __construct(Logger $logger = null) {
         $this->fileforge = ForgeConfig::get('codendi_bin_prefix') . "/fileforge";
+        if ($logger === null) {
+            $this->logger = new Log_NoopLogger();
+        } else {
+            $this->setLogger($logger);
+        }
+    }
+
+    public function setLogger(Logger $logger) {
+        $this->logger = new WrapperLogger($logger, 'FRSFileFactory');
     }
 
     public function setFileForge($fileforge) {
@@ -265,6 +282,7 @@ class FRSFileFactory {
      * @return FRSFile
      */
     public function createFile(FRSFile $file, $extraFlags = self::COMPUTE_MD5) {
+        $this->logger->debug('createFile start');
         $rule = new Rule_FRSFileName();
         if(!$rule->isValid($file->getFileName())){
             throw new FRSFileIllegalNameException($file);
@@ -303,10 +321,14 @@ class FRSFileFactory {
             $file->setPostDate($now);
         }
 
+        $this->logger->debug('file ready to be moved');
         if($this->moveFileForge($file)){
+            $this->logger->debug('file moved, create into the DB');
             $fileId=$this->create($file->toArray());
+            $this->logger->debug('file '.$fileId.' created');
             if($fileId){
                 $file->setFileID($fileId);
+                $this->logger->debug('createFile completed');
                 return $file;
             } else {
                 throw new FRSFileDbException($file);
@@ -379,12 +401,17 @@ class FRSFileFactory {
             $fileName    = escapeshellarg($fileName);
             $cmdFilePath = escapeshellarg($unixName . '/' . $upload_sub_dir . '/' . $filePath);
             $ret_val     = null;
-            $exec_res    = null;
+            $exec_res    = array();
             $src_dir     = escapeshellarg($this->getSrcDir($project));
             $dst_dir     = escapeshellarg(ForgeConfig::get('ftp_frs_dir_prefix'));
             $cmd         = $this->fileforge . " $fileName $cmdFilePath $src_dir $dst_dir 2>&1";
 
+            $this->logger->debug('execute fileforge '.$cmd);
             exec($cmd, $exec_res, $ret_val);
+            $this->logger->debug('fileforge done with status '.$ret_val);
+            foreach ($exec_res as $line) {
+                $this->logger->debug("\t $line" );
+            }
             // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
             // So "convert" the unix "success" value to the php one (basically 0 => true).
             if ($ret_val == 0) {
