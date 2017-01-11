@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1286,7 +1286,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     protected function getTransitionId($from, $to) {
-        return TransitionFactory::instance()->getTransitionId($from, $to);
+        return TransitionFactory::instance()->getTransitionId($this->getTracker(), $from, $to);
     }
 
     public function getDefaultValue() {
