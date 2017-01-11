@@ -13,9 +13,9 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->da = mock('DataAccess');
-        stub($this->da)->quoteSmart($this->search_term.SystemEvent::PARAMETER_SEPARATOR)->returns($this->search_term);
-        stub($this->da)->quoteSmart(SystemEvent::PARAMETER_SEPARATOR.$this->search_term)->returns($this->search_term);
+        $this->da = partial_mock('DataAccess', array('quoteSmart', 'quoteSmartImplode'));
+        stub($this->da)->quoteSmart($this->search_term.SystemEvent::PARAMETER_SEPARATOR . '%')->returns("'" . $this->search_term . "%'");
+        stub($this->da)->quoteSmart('%' . SystemEvent::PARAMETER_SEPARATOR.$this->search_term)->returns("'%" . $this->search_term . "'");
         stub($this->da)->quoteSmart($this->search_term)->returns($this->search_term);
 
         stub($this->da)->quoteSmartImplode(', ', $this->event_type)->returns('MY_IMAGINARY_EVENT');
@@ -25,10 +25,10 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
     public function itCreatesCorrectQueryWithSearchTermInFirstPosition() {
         $this->dao = partial_mock('SystemEventDao', array('retrieve'), array($this->da));
 
-        $expected_sql = 'SELECT  * FROM system_event
+        $expected_sql = "SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
-                AND parameters LIKE abc"%"';
+                AND parameters LIKE 'abc%'";
 
         stub($this->dao)->retrieve($expected_sql)->once();
 
@@ -38,10 +38,10 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
     public function itCreatesCorrectQueryWithSearchTermInLastPosition() {
         $this->dao = partial_mock('SystemEventDao', array('retrieve'), array($this->da));
 
-        $expected_sql = 'SELECT  * FROM system_event
+        $expected_sql = "SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
-                AND parameters LIKE "%"abc';
+                AND parameters LIKE '%abc'";
 
         stub($this->dao)->retrieve($expected_sql)->once();
 

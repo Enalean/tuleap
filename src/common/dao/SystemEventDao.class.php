@@ -145,15 +145,16 @@ class SystemEventDao extends DataAccessObject {
      * @param Array $status
      * @return DataAccessResult
      */
-    public function searchWithParam($position, $val, $type, $status, $separator = SystemEvent::PARAMETER_SEPARATOR) {
-        if ($position == 'head') {
-            $stm    = $this->da->quoteSmart($val.$separator).'"%"';
-        } elseif ($position == 'tail') {
-            $stm = '"%"'.$this->da->quoteSmart($separator.$val);
-        } elseif ($position == 'all') {
-             $stm = $this->da->quoteSmart($val);
+    public function searchWithParam($position, $val, $type, $status, $separator = SystemEvent::PARAMETER_SEPARATOR)
+    {
+        if ($position === 'head') {
+            $stm = $this->da->quoteLikeValueSuffix($val.$separator);
+        } elseif ($position === 'tail') {
+            $stm = $this->da->quoteLikeValuePrefix($separator.$val);
+        } elseif ($position === 'all') {
+             $stm = $this->da->quoteSmart($this->da->escapeLikeValue($val));
         } else {
-            $stm    = '"%"'.$this->da->quoteSmart($separator.$val.$separator).'"%"';
+            $stm = $this->da->quoteLikeValueSurround($separator.$val.$separator);
         }
         
         $type   = $this->da->quoteSmartImplode(", ", $type);

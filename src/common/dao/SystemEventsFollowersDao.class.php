@@ -33,9 +33,9 @@ class SystemEventsFollowersDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchByType($type) {
-        $type = $this->da->quoteSmart('%'. $type .'%');
-        //todo: regexp?
+    public function searchByType($type)
+    {
+        $type = $this->da->quoteLikeValueSurround($type);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE types LIKE $type
