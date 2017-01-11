@@ -1,0 +1,10 @@
+# Captcha plugin
+
+This plugin adds a captcha to sensitive operations.
+
+Do not forget to configure it once you have enabled it.
+
+
+## Protected section
+
+* Registration
