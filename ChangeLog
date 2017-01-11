@@ -9,7 +9,9 @@ Version 9.4 (Not released yet)
 	* request #9805: Cannot add quota for a private project
 	* request #9808: Bad link in MyAdmin widget to approve news
 	* request #9840: news_read_permissions is unknown on NewsRetriever.php file
-	* request #9802: Refactoring - Introduce new object for package permission check
+	* request #9802:
+		- Refactoring - Introduce new object for package permission check
+		- Release hidden status should be correctly handle everywhere
 
 	== Security ==
 	* request #9782: Prevent denial of service through LIKE queries in project administration
