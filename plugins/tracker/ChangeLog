@@ -1,3 +1,6 @@
+Version 5.1124 - Tuleap 9.4
+    * story #8859: Refactoring: Do not pollute Grammar namespace
+
 Version 5.1123 - Tuleap 9.4
     * story #8859: REST API
 
