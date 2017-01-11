@@ -1,3 +1,6 @@
+Version 5.1129 - Tuleap 9.4
+    * request #9862 Do not generate a lot of input hidden for masschange
+
 Version 5.1128 - Tuleap 9.4
     * request #9854: Improve performance of Submit
 
