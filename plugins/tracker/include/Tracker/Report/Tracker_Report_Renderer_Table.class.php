@@ -1552,10 +1552,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $last_row  = $first_row + $this->chunksz;
             $html .= '<form method="POST" action="" id="tracker_report_table_masschange_form">';
             $html .= '<input type="hidden" name="func" value="display-masschange-form" />';
-            //build input for masschange all searched art ids
-            foreach ( explode(',', $matching_ids['id']) as $id ) {
-                $html .= '<input type="hidden" name="masschange_aids_all[]" value="'. $id .'"/>';
-            }
             $html .= '<div id="tracker_report_table_masschange_panel">';
             $html .= '<input id="masschange_btn_checked" type="submit" class="btn" name="renderer_table[masschange_checked]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_checked', $first_row, $last_row) .'" /> ';
             $html .= '<input id="masschange_btn_all" type="submit" class="btn" name="renderer_table[masschange_all]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_all', $total_rows) .'" />';
