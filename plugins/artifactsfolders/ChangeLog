@@ -1,3 +1,6 @@
+Version 0.42 - Tuleap 9.4
+    * request #9851: Improve performance of Folder selectbox rendering (#2)
+
 Version 0.41 - Tuleap 9.4
     * request #9851: Improve performance of Folder selectbox rendering
 
