@@ -17,7 +17,7 @@ Version 9.4 (Not released yet)
 	* request #9782: Prevent denial of service through LIKE queries in project administration
 
 	== Plugins ==
-	* tracker: 5.1127
+	* tracker: 5.1128
 	* pluginsadministration: 1.26
 	* git: 4.317
 	* mediawiki: 0.130
