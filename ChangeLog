@@ -2,6 +2,7 @@ Version 9.4 (Not released yet)
 
 	== Enhancement ==
 	* request #9837: Provide a way to have pluralized textual messages
+	* request #9849: Double message on file release update
 
 	== Bug Fix ==
 	* request #9809: Pending news counter should not count private news
