@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Copyright (c) Enalean, 2012, 2013, 2014, 2016. All Rights Reserved.
+# Copyright (c) Enalean, 2012, 2013, 2014, 2016, 2017. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -19,13 +19,10 @@
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Augment version number of each merged plugin and update the changelog
-# printout the list of plugins for the main ChangeLog (to be copy-pasted by hand)
+# Augment version number of each merged plugin
 
 # Usage:
-# $ tools/utils/changelogs/generate.sh "Default changelog message to add in each plugins"
-
-default_changelog_message=$1
+# $ tools/utils/changelogs/generate.sh
 
 tuleap_version=`php -r '$v = explode(".", file_get_contents("VERSION")); echo $v[0] .".". ($v[1]+1);'`
 php tools/utils/changelogs/increment_tuleap_version.php
@@ -78,7 +75,5 @@ for item in $modified_plugins $modified_themes $modified_api; do
 
     version=$(get_new_version $path)
     echo "    * $item_name: $version"
-    php tools/utils/changelogs/insert_line_in_core_changelog.php "$item_name" "$version" "$tuleap_version" "$item_type"
     echo $version > $path/VERSION
-    php tools/utils/changelogs/insert_lines_in_plugin_changelog.php "$path" "$version" "$default_changelog_message" "$tuleap_version"
 done
