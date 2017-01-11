@@ -86,7 +86,7 @@ class Dao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
         $is_child   = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
-        $sql = "SELECT A.*, parent.id AS parent_id
+        $sql = "SELECT A.*, parent.id AS parent_id, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (T.id = A.tracker_id AND T.group_id = $project_id)
                     INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker USING (tracker_id)
@@ -99,7 +99,12 @@ class Dao extends DataAccessObject
                         INNER JOIN tracker_artifact AS parent ON (
                             parent.last_changeset_id = cv.changeset_id
                         )
-                    ) ON (artlink.artifact_id = A.id AND parent.tracker_id = A.tracker_id)";
+                    ) ON (artlink.artifact_id = A.id AND parent.tracker_id = A.tracker_id)
+                    LEFT JOIN (
+                        tracker_semantic_title AS ST
+                        INNER JOIN tracker_changeset_value AS CV ON (CV.field_id = ST.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
+                    ) ON (A.tracker_id = ST.tracker_id AND CV.changeset_id = A.last_changeset_id)";
 
         return $this->retrieve($sql);
     }
