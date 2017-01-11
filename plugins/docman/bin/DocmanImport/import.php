@@ -137,37 +137,36 @@ $wsdl = "$url/soap/codendi.wsdl.php?wsdl";
 
 // Command line (for printing in log file)
 $command = implode(' ', $argv);
-$logger = new BackendLogger();
 
 if ($update || $continue) {
     // Connectecho
-    $xmlUpdate = new XMLDocmanUpdate($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $logger);
+    $xmlUpdate = new XMLDocmanUpdate($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $console);
 
     // Update
     if ($update) {
         try {
             $xmlUpdate->updatePath($archive, $folderId, $path);
         } catch (Exception $e) {
-            $logger->error($e->getMessage());
+            $console->error($e->getMessage());
             exit(1);
         }
     } else if ($continue) {
         try {
             $xmlUpdate->continuePath($archive, $folderId, $path);
         } catch (Exception $e) {
-            $logger->error($e->getMessage());
+            $console->error($e->getMessage());
             exit(1);
         }
     }
 } else {
     // Connect
-    $xmlImport = new XMLDocmanImport($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $logger);
+    $xmlImport = new XMLDocmanImport($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $console);
 
     try {
         // Import
         $xmlImport->importPath($archive, $folderId, $path);
     } catch (Exception $e) {
-        $logger->error($e->getMessage());
+        $console->error($e->getMessage());
         exit(1);
     }
 }
