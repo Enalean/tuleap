@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class Comparison implements Term, Visitable
+class EqualComparison implements Term, Visitable
 {
     /**
      * @var string
@@ -38,7 +38,7 @@ class Comparison implements Term, Visitable
 
     public function accept(Visitor $visitor, VisitorParameters $parameters)
     {
-        return $visitor->visitComparison($this, $parameters);
+        return $visitor->visitEqualComparison($this, $parameters);
     }
 
     /**

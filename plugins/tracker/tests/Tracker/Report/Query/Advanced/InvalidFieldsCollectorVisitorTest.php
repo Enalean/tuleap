@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use TuleapTestCase;
@@ -62,16 +62,16 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field);
 
-        $expr = new Comparison('field', 'value');
+        $expr = new EqualComparison('field', 'value');
 
-        $this->collector->visitComparison($expr, $this->parameters);
+        $this->collector->visitEqualComparison($expr, $this->parameters);
     }
 
     public function itThrowsAnExceptionIfFieldIsUnknown()
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(null);
 
-        $expr = new Comparison('field', 'value');
+        $expr = new EqualComparison('field', 'value');
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -83,7 +83,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
 
-        $expr = new Comparison('field', 'value');
+        $expr = new EqualComparison('field', 'value');
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -93,7 +93,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
         $tail          = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
         $expression    = new AndExpression($subexpression, $tail);
 
@@ -129,7 +129,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToOperandAndTailInAndOperand()
     {
-        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
         $tail       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand');
         $expression = new AndOperand($operand, $tail);
 
@@ -141,7 +141,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToSubExpressionInAndExpression()
     {
-        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $subexpression = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
         $tail          = null;
         $expression    = new AndExpression($subexpression, $tail);
 
@@ -174,7 +174,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDelegatesValidationToOperandInAndOperand()
     {
-        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $operand    = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison');
         $tail       = null;
         $expression = new AndOperand($operand, $tail);
 

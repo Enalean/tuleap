@@ -61,7 +61,7 @@ ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
     = field:Field _ "=" _ value:SimpleExpr {
-        return new Comparison($field, $value);
+        return new EqualComparison($field, $value);
     }
 
 Field
