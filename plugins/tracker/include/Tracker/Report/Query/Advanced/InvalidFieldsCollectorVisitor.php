@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use PFUser;
 use Tracker;
+use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
@@ -64,7 +65,9 @@ class InvalidFieldsCollectorVisitor implements Visitor
 
         if (! $field) {
             $parameters->getInvalidFieldsCollection()->addNonexistentField($field_name);
-        } else if (! $field instanceof Tracker_FormElement_Field_Text) {
+        } else if (! $field instanceof Tracker_FormElement_Field_Text
+            && ! $field instanceof Tracker_FormElement_Field_Numeric
+        ) {
             $parameters->getInvalidFieldsCollection()->addUnsupportedField($field_name);
         }
     }

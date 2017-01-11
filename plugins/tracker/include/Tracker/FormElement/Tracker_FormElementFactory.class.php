@@ -769,6 +769,19 @@ class Tracker_FormElementFactory {
         return $fields;
     }
 
+    public function getUsedFieldsForExpertModeUserCanRead(Tracker $tracker, PFUser $user)
+    {
+        $fields = array_merge($this->getUsedNumericFields($tracker), $this->getUsedTextFields($tracker));
+
+        foreach ($fields as $key => $field) {
+            if (! $field->userCanRead($user)) {
+                unset($fields[$key]);
+            }
+        }
+
+        return $fields;
+    }
+
     /**
      * @param Tracker $tracker
      * @param int $field_id

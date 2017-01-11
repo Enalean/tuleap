@@ -495,10 +495,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     {
         $id            = 'tracker-report-expert-query-' . $this->id;
         $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
-        $fields        = $this->getFormElementFactory()->getUsedTextFieldsUserCanRead(
+        $fields        = $this->getFormElementFactory()->getUsedFieldsForExpertModeUserCanRead(
             $this->getTracker(),
             $this->getCurrentUser()
         );
+
         $is_normal_mode_button_displayed = ($report_can_be_modified && $current_user->isLoggedIn());
         $is_query_modifiable             = $current_user->isLoggedIn();
 

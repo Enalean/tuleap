@@ -71,7 +71,7 @@ SimpleExpr
     = l:Literal { return $l; }
 
 Literal
-  = String / Integer
+  = String / Float / Integer
 
 String
   = String1
@@ -107,6 +107,9 @@ nl
 
 Integer "integer"
   = digits:$[0-9]+ { return intval($digits, 10); }
+
+Float
+  = digits:$([0-9]+ "." [0-9]+) { return floatval($digits); }
 
 _ "whitespace"
   = [ \t\n\r]*
