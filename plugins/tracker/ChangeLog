@@ -1,3 +1,6 @@
+Version 5.1126 - Tuleap 9.4
+    * Removing computed field values
+
 Version 5.1125 - Tuleap 9.4
     * story #8859: Refactoring: rename Comparison to EqualComparison
 
