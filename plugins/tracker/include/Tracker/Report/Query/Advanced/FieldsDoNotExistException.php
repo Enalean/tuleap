@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Exception;
 

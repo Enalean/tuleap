@@ -17,41 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use PFUser;
 use Tracker;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class InvalidFieldsCollectorParameters implements VisitorParameters
+class QueryBuilderParameters implements VisitorParameters
 {
-    /**
-     * @var PFUser
-     */
-    private $user;
-
     /**
      * @var Tracker
      */
     private $tracker;
 
-    /**
-     * @var InvalidFieldsCollection
-     */
-    private $invalid_fields_collection;
-
-    public function __construct(PFUser $user, Tracker $tracker, InvalidFieldsCollection $invalid_fields_collection)
+    public function __construct(Tracker $tracker)
     {
-        $this->user                      = $user;
-        $this->tracker                   = $tracker;
-        $this->invalid_fields_collection = $invalid_fields_collection;
-    }
-
-    /**
-     * @return PFUser
-     */
-    public function getUser()
-    {
-        return $this->user;
+        $this->tracker = $tracker;
     }
 
     /**
@@ -60,13 +40,5 @@ class InvalidFieldsCollectorParameters implements VisitorParameters
     public function getTracker()
     {
         return $this->tracker;
-    }
-
-    /**
-     * @return InvalidFieldsCollection
-     */
-    public function getInvalidFieldsCollection()
-    {
-        return $this->invalid_fields_collection;
     }
 }
