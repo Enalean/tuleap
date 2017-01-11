@@ -54,7 +54,7 @@ class Tracker_Report_HeaderRenderer
             $breadcrumbs      = array();
             $params           = array('body_class' => array('in_tracker_report'));
             $toolbar          = null;
-            $report->getTracker()->displayHeaderWithRemovableWarning($layout, $title, $breadcrumbs, $toolbar, $params);
+            $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
         }
 
         if ($request->get('pv')) {

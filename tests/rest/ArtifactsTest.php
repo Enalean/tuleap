@@ -160,9 +160,6 @@ class ArtifactsTest extends RestBase {
                 if ($field['label'] === 'remaining_effort') {
                     $this->assertEquals($remaining_effort_value, $value);
                 }
-                if ($field['label'] === 'progress') {
-                    $this->assertEquals($capacity_slow_compute_value, $value);
-                }
                 if ($field['label'] === 'capacity') {
                     $this->assertEquals($capacity_fast_compute_value, $value);
                 }

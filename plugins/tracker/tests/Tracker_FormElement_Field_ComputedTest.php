@@ -846,17 +846,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(25, $this->field->getComputedValue($this->user, $artifact));
     }
-
-    public function itDeterminesWhenFastComputeIsUsed()
-    {
-        $field_not_fast_compute = partial_mock('Tracker_FormElement_Field_Computed', array('getProperty'));
-        stub($field_not_fast_compute)->getProperty('fast_compute')->returns('0');
-        $this->assertFalse($field_not_fast_compute->useFastCompute());
-
-        $field_fast_compute = partial_mock('Tracker_FormElement_Field_Computed', array('getProperty'));
-        stub($field_fast_compute)->getProperty('fast_compute')->returns('1');
-        $this->assertTrue($field_fast_compute->useFastCompute());
-    }
 }
 
 class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase

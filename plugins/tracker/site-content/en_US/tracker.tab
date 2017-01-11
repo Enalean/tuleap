@@ -1665,7 +1665,6 @@ plugin_tracker_deprecation_panel	title	Trackers
 plugin_tracker_deprecation_panel	deprecation_panel	Deprecation monitoring panel
 plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Deprecated computed fields
 plugin_tracker_deprecation_panel	warning_deprecation	The legacy Computed fields will be gone in Tuleap 9.4
-plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	This tracker is based on deprecated computed fields (configuration will be gone in Tuleap 9.4).
 plugin_tracker_deprecation_panel	title_project	Project Name
 plugin_tracker_deprecation_panel	title_tracker	Tracker Name
 plugin_tracker_deprecation_panel	title_field	Incriminated field
