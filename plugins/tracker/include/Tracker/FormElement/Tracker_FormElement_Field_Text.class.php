@@ -90,18 +90,42 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
 
-    public function getExpertFromWhere($value, $suffix)
+    /**
+     * @return FromWhere
+     */
+    public function getExpertEqualFromWhere($value, $suffix)
     {
-        $a    = 'A_'. $this->id .'_'. $suffix;
-        $b    = 'B_'. $this->id .'_'. $suffix;
+        $changeset_value_text_alias = 'CVText_'. $this->id .'_'. $suffix;
+        $condition                  = "$changeset_value_text_alias.value LIKE ". $this->quoteLikeValueSurround($value);
+
+        return $this->getExpertFromWhere($suffix, $condition);
+    }
+
+    /**
+     * @return FromWhere
+     */
+    public function getExpertNotEqualFromWhere($value, $suffix)
+    {
+        $changeset_value_text_alias = 'CVText_'. $this->id .'_'. $suffix;
+        $condition                  = "($changeset_value_text_alias.value IS NULL
+            OR $changeset_value_text_alias.value NOT LIKE ". $this->quoteLikeValueSurround($value) .")";
+
+        return $this->getExpertFromWhere($suffix, $condition);
+    }
+
+    private function getExpertFromWhere($suffix, $condition)
+    {
+        $changeset_value_alias      = 'CV_'. $this->id .'_'. $suffix;
+        $changeset_value_text_alias = 'CVText_'. $this->id .'_'. $suffix;
         $from = " LEFT JOIN (
-                        tracker_changeset_value AS $a
-                        INNER JOIN tracker_changeset_value_text AS $b
-                         ON ($b.changeset_value_id = $a.id
-                             AND ". $this->buildMatchExpression("$b.value", $value) ."
+                        tracker_changeset_value AS $changeset_value_alias
+                        INNER JOIN tracker_changeset_value_text AS $changeset_value_text_alias
+                         ON ($changeset_value_text_alias.changeset_value_id = $changeset_value_alias.id
+                             AND $condition
                          )
-                     ) ON ($a.changeset_id = c.id AND $a.field_id = $this->id )";
-        $where = "$a.changeset_id IS NOT NULL";
+                     ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $this->id )";
+
+        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
 
         return new FromWhere($from, $where);
     }
@@ -129,6 +153,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     protected function quote($value) {
         return CodendiDataAccess::instance()->quoteSmart($value);
     }
+
+    protected function quoteLikeValueSurround($value)
+    {
+        return CodendiDataAccess::instance()->quoteLikeValueSurround($value);
+    }
+
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_Text_ValueDao();
     }

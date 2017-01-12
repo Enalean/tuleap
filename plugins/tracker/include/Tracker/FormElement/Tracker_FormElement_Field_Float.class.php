@@ -179,24 +179,52 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
         return $changeset_value;
     }
 
-    public function getExpertFromWhere($value, $suffix)
+    /**
+     * @return FromWhere
+     */
+    public function getExpertEqualFromWhere($value, $suffix)
     {
-        $a    = 'A_'. $this->id .'_'. $suffix;
-        $b    = 'B_'. $this->id .'_'. $suffix;
-        $from = " LEFT JOIN (
-                        tracker_changeset_value AS $a
-                        INNER JOIN tracker_changeset_value_float AS $b
-                         ON ($b.changeset_value_id = $a.id
-                             AND ". $this->buildMatchExpression("$b.value", $value) ."
-                         )
-                     ) ON ($a.changeset_id = c.id AND $a.field_id = $this->id )";
+        $changeset_value_numeric_alias = 'CVNumeric_'. $this->id .'_'. $suffix;
+        $condition                     = "$changeset_value_numeric_alias.value = ".$this->escapeFloat($value);
 
-        $where = "$a.changeset_id IS NOT NULL";
+        return $this->getExpertFromWhere($suffix, $condition);
+    }
+
+    /**
+     * @return FromWhere
+     */
+    public function getExpertNotEqualFromWhere($value, $suffix)
+    {
+        $changeset_value_numeric_alias = 'CVNumeric_'. $this->id .'_'. $suffix;
+        $condition = "($changeset_value_numeric_alias.value IS NULL
+            OR $changeset_value_numeric_alias.value != ".$this->escapeFloat($value).")";
+
+        return $this->getExpertFromWhere($suffix, $condition);
+    }
+
+    private function getExpertFromWhere($suffix, $condition)
+    {
+        $changeset_value_alias         = 'CV_'. $this->id .'_'. $suffix;
+        $changeset_value_numeric_alias = 'CVNumeric_'. $this->id .'_'. $suffix;
+        $from = " LEFT JOIN (
+                        tracker_changeset_value AS $changeset_value_alias
+                        INNER JOIN tracker_changeset_value_float AS $changeset_value_numeric_alias
+                         ON ($changeset_value_numeric_alias.changeset_value_id = $changeset_value_alias.id
+                             AND $condition
+                         )
+                     ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $this->id )";
+
+        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
 
         return new FromWhere($from, $where);
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitFloat($this);
+    }
+
+    private function escapeFloat($value)
+    {
+        return CodendiDataAccess::instance()->escapeFloat($value);
     }
 }

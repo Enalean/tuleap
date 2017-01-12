@@ -36,7 +36,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
             if ($matches[1]) {
                 $not = ' NOT';
             }
-            $expr = $field_name . $not ." RLIKE ". $this->quote($matches[2]);
+            $expr = $field_name . $not . " RLIKE " . $this->quote($matches[2]);
         }
         return $expr;
     }

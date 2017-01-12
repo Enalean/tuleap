@@ -27,6 +27,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -55,6 +56,43 @@ class InvalidFieldsCollectorVisitor implements Visitor
 
     public function visitEqualComparison(EqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
+        $this->visitComparison($comparison, $parameters);
+    }
+
+    public function visitNotEqualComparison(NotEqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    {
+        $this->visitComparison($comparison, $parameters);
+    }
+
+    public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)
+    {
+        $this->visitExpression($and_expression, $parameters);
+    }
+
+    public function visitOrExpression(OrExpression $or_expression, InvalidFieldsCollectorParameters $parameters)
+    {
+        $this->visitExpression($or_expression, $parameters);
+    }
+
+    public function visitOrOperand(OrOperand $or_operand, InvalidFieldsCollectorParameters $parameters)
+    {
+        $this->visitOperand($or_operand, $parameters);
+    }
+
+    public function visitAndOperand(AndOperand $and_operand, InvalidFieldsCollectorParameters $parameters)
+    {
+        $this->visitOperand($and_operand, $parameters);
+    }
+
+    private function visitTail($tail, InvalidFieldsCollectorParameters $parameters)
+    {
+        if ($tail) {
+            $tail->accept($this, $parameters);
+        }
+    }
+
+    private function visitComparison($comparison, InvalidFieldsCollectorParameters $parameters)
+    {
         $field_name = $comparison->getField();
 
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
@@ -72,34 +110,15 @@ class InvalidFieldsCollectorVisitor implements Visitor
         }
     }
 
-    public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)
+    private function visitExpression($expression, InvalidFieldsCollectorParameters $parameters)
     {
-        $and_expression->getExpression()->accept($this, $parameters);
-        $this->visitTail($and_expression->getTail(), $parameters);
+        $expression->getExpression()->accept($this, $parameters);
+        $this->visitTail($expression->getTail(), $parameters);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, InvalidFieldsCollectorParameters $parameters)
+    private function visitOperand($operand, InvalidFieldsCollectorParameters $parameters)
     {
-        $or_expression->getExpression()->accept($this, $parameters);
-        $this->visitTail($or_expression->getTail(), $parameters);
-    }
-
-    public function visitOrOperand(OrOperand $or_operand, InvalidFieldsCollectorParameters $parameters)
-    {
-        $or_operand->getOperand()->accept($this, $parameters);
-        $this->visitTail($or_operand->getTail(), $parameters);
-    }
-
-    public function visitAndOperand(AndOperand $and_operand, InvalidFieldsCollectorParameters $parameters)
-    {
-        $and_operand->getOperand()->accept($this, $parameters);
-        $this->visitTail($and_operand->getTail(), $parameters);
-    }
-
-    private function visitTail($tail, InvalidFieldsCollectorParameters $parameters)
-    {
-        if ($tail) {
-            $tail->accept($this, $parameters);
-        }
+        $operand->getOperand()->accept($this, $parameters);
+        $this->visitTail($operand->getTail(), $parameters);
     }
 }
