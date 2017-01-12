@@ -77,9 +77,10 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent {
 
     public function verbalizeParameters($with_link) {
         $repository = $this->getRepositoryFromParameters();
-            if ($repository) {
-                return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
-            }
+        if ($repository !== null) {
+            return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
+        }
+        return '';
     }
 
     private function getRepositoryFromParameters() {
