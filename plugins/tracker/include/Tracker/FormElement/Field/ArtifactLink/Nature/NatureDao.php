@@ -118,22 +118,22 @@ class NatureDao extends DataAccessObject {
         return $this->da->query($sql);
     }
 
-    public function searchAll() {
-        $sql = "SELECT DISTINCT shortname, forward_label, reverse_label, IF(cv.nature IS NULL, 0, 1) as is_used
-                           FROM plugin_tracker_artifactlink_natures AS n
-                      LEFT JOIN tracker_changeset_value_artifactlink AS cv ON n.shortname = cv.nature
-                       ORDER BY shortname ASC";
+    public function searchAll()
+    {
+        $sql = "SELECT *
+                FROM plugin_tracker_artifactlink_natures
+                ORDER BY shortname ASC";
 
         return $this->retrieve($sql);
     }
 
-    public function getFromShortname($shortname) {
+    public function getFromShortname($shortname)
+    {
         $shortname = $this->da->quoteSmart($shortname);
 
-        $sql = "SELECT DISTINCT shortname, forward_label, reverse_label, IF(cv.nature IS NULL, 0, 1) as is_used
-                  FROM plugin_tracker_artifactlink_natures AS n
-             LEFT JOIN tracker_changeset_value_artifactlink AS cv ON n.shortname = cv.nature
-                 WHERE shortname = $shortname";
+        $sql = "SELECT *
+                FROM plugin_tracker_artifactlink_natures
+                WHERE shortname = $shortname";
 
         return $this->retrieveFirstRow($sql);
     }
@@ -231,5 +231,14 @@ class NatureDao extends DataAccessObject {
                 LIMIT 1";
 
         return count($this->retrieve($sql)) > 0;
+    }
+
+    public function getUsedNatures()
+    {
+        $sql = "SELECT DISTINCT nature AS shortname
+                FROM tracker_changeset_value_artifactlink
+                WHERE nature IS NOT NULL";
+
+        return $this->retrieve($sql);
     }
 }

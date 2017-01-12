@@ -42,7 +42,8 @@
                                 </td>
                             </tr>
                             {{/ has_natures }}
-                            {{# natures }}
+                            {{# natures_usage }}
+                                {{# nature }}
                                 <tr>
                                     <td>{{ shortname }}</td>
                                     <td>{{ forward_label }}</td>
@@ -64,22 +65,22 @@
                                             </button>
                                         {{/ is_system }}
 
-                                        {{# is_or_has_been_used }}
+                                        {{^ can_be_deleted }}
                                             <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-left"
                                                 data-tlp-tooltip="{{ cannot_delete_title }}"
                                                 disabled
                                             >
                                                 <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_icon_label }}
                                             </button>
-                                        {{/ is_or_has_been_used }}
-                                        {{^ is_or_has_been_used }}
+                                        {{/ can_be_deleted }}
+                                        {{# can_be_deleted }}
                                             <button type="submit"
                                                 class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small siteadmin-config-natures-modal-delete-button"
                                                 data-delete-modal-id="siteadmin-config-natures-modal-delete-{{ shortname }}"
                                             >
                                                 <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_icon_label }}
                                             </button>
-                                        {{/ is_or_has_been_used }}
+                                        {{/ can_be_deleted }}
 
                                         {{^ is_system }}
                                             {{> siteadmin-config/natures-modal-edit }}
@@ -89,7 +90,8 @@
                                         {{/ is_or_has_been_used }}
                                     </td>
                                 </tr>
-                            {{/ natures }}
+                                {{/ nature }}
+                            {{/ natures_usage }}
                         </tbody>
                     </table>
                 </section>

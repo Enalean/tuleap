@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,21 +21,38 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NaturePresenter {
+class NatureUsagePresenter
+{
+    /**
+     * @var NaturePresenter
+     */
+    public $nature;
 
-    const FORWARD_LABEL = 'forward';
-    const REVERSE_LABEL = 'reverse';
+    /**
+     * @var boolean
+     */
+    public $is_or_has_been_used;
 
-    public $reverse_label;
-    public $forward_label;
-    public $shortname;
-    public $is_system = false;
-    public $is_visible;
+    /**
+     * @var boolean
+     */
+    public $can_be_deleted;
 
-    public function __construct($shortname, $forward_label, $reverse_label, $is_visible) {
-        $this->shortname           = $shortname;
-        $this->forward_label       = $forward_label;
-        $this->reverse_label       = $reverse_label;
-        $this->is_visible          = $is_visible;
+    public function __construct(NaturePresenter $nature, $is_or_has_been_used)
+    {
+        $this->nature              = $nature;
+        $this->is_or_has_been_used = $is_or_has_been_used;
+        $this->computeCanBeDeleted();
+    }
+
+    public function setIsUsed($is_used)
+    {
+        $this->is_or_has_been_used = $is_used;
+        $this->computeCanBeDeleted();
+    }
+
+    private function computeCanBeDeleted()
+    {
+        $this->can_be_deleted = ! $this->nature->is_system && ! $this->is_or_has_been_used;
     }
 }

@@ -115,7 +115,7 @@ class NaturePresenterFactory
     /** @return NaturePresenter | null */
     public function getFromShortname($shortname) {
         if($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
-            return new NaturePresenter('', '', '', true, true);
+            return new NaturePresenter('', '', '', true);
         }
 
         if($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
@@ -156,7 +156,6 @@ class NaturePresenterFactory
             $row['shortname'],
             $row['forward_label'],
             $row['reverse_label'],
-            (bool)$row['is_used'],
             true
         );
     }

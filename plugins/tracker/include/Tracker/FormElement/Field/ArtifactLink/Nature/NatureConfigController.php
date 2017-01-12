@@ -55,6 +55,9 @@ class NatureConfigController {
     /** @var AdminPageRenderer */
     private $admin_page_rendered;
 
+    /** @var NatureUsagePresenterFactory */
+    private $nature_usage_presenter_factory;
+
     public function __construct(
         ProjectManager $project_manager,
         AllowedProjectsConfig $allowed_projects_config,
@@ -62,15 +65,17 @@ class NatureConfigController {
         NatureEditor $nature_editor,
         NatureDeletor $nature_deletor,
         NaturePresenterFactory $nature_presenter_factory,
+        NatureUsagePresenterFactory $nature_usage_presenter_factory,
         AdminPageRenderer $admin_page_rendered
     ) {
-        $this->project_manager          = $project_manager;
-        $this->nature_creator           = $nature_creator;
-        $this->nature_presenter_factory = $nature_presenter_factory;
-        $this->nature_editor            = $nature_editor;
-        $this->nature_deletor           = $nature_deletor;
-        $this->allowed_projects_config  = $allowed_projects_config;
-        $this->admin_page_rendered      = $admin_page_rendered;
+        $this->project_manager                = $project_manager;
+        $this->nature_creator                 = $nature_creator;
+        $this->nature_presenter_factory       = $nature_presenter_factory;
+        $this->nature_editor                  = $nature_editor;
+        $this->nature_deletor                 = $nature_deletor;
+        $this->allowed_projects_config        = $allowed_projects_config;
+        $this->admin_page_rendered            = $admin_page_rendered;
+        $this->nature_usage_presenter_factory = $nature_usage_presenter_factory;
     }
 
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
@@ -181,7 +186,10 @@ class NatureConfigController {
     /** @return NatureConfigPresenter */
     private function getNatureConfigPresenter($title, CSRFSynchronizerToken $csrf) {
         $natures = $this->nature_presenter_factory->getAllNatures();
-        return new NatureConfigPresenter($title, $natures, $csrf, $this->getAllowedProjects($csrf));
+
+        $natures_usage = $this->nature_usage_presenter_factory->getNaturesUsagePresenters($natures);
+
+        return new NatureConfigPresenter($title, $natures_usage, $csrf, $this->getAllowedProjects($csrf));
     }
 
     private function getAllowedProjects(CSRFSynchronizerToken $csrf) {
