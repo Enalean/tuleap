@@ -219,6 +219,7 @@ account_lostlogin	newpasswd2	New Password (repeat)
 #-----------------------------------------------
 # Script: SF/www/account/lostpw-confirm.php
 #
+account_lostpw-confirm	token_generation_failed	An issue has been encountered, please retry
 account_lostpw-confirm	title	Lost Password Confirmation
 account_lostpw-confirm	mail_subject	$1 Password Verification
 account_lostpw-confirm	mail_body	Someone (presumably you) on the $1 site requested a\npassword change through email verification. If this was\nnot you,ignore this message and nothing will happen.\n\nIf you requested this verification, visit the following URL\nto change your password:\n\n$2\n\n -- The $1 Team\n

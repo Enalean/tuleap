@@ -212,6 +212,7 @@ account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #-----------------------------------------------
 # Script: SF/www/account/lostpw-confirm.php
 #
+account_lostpw-confirm	token_generation_failed	Une erreur a été rencontrée, merci de réessayer
 account_lostpw-confirm	title	Confirmation de la perte du mot de passe
 account_lostpw-confirm	mail_subject	Vérification du mot de passe de $1
 account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe :\n\n$2\n\n -- L'équipe $1\n
