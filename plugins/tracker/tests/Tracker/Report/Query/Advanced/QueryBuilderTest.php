@@ -31,7 +31,9 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class QueryBuilderTest extends TuleapTestCase
 {
     private $tracker;
-    private $field;
+    private $field_text;
+    private $int_field;
+    private $float_field;
 
     /** @var  QueryBuilderVisitor */
     private $query_builder;
@@ -41,11 +43,16 @@ class QueryBuilderTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->tracker    = aTracker()->withId(101)->build();
-        $this->parameters = new QueryBuilderParameters($this->tracker);
-        $this->field      = mock('Tracker_FormElement_Field_Text');
+        $this->tracker     = aTracker()->withId(101)->build();
+        $this->parameters  = new QueryBuilderParameters($this->tracker);
+        $this->field_text  = stub('Tracker_FormElement_Field_Text')->getName()->returns('field');
+        $this->int_field   = stub('Tracker_FormElement_Field_Integer')->getName()->returns('int');
+        $this->float_field = stub('Tracker_FormElement_Field_Float')->getName()->returns('float');
 
-        $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName()->returns($this->field);
+        $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
+        stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);
+        stub($formelement_factory)->getUsedFieldByName(101, 'float')->returns($this->float_field);
+
         $this->query_builder = new QueryBuilderVisitor($formelement_factory);
     }
 
@@ -53,7 +60,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('field', 'value');
 
-        expect($this->field)->getExpertFromWhere("*", spl_object_hash($comparison))->once();
+        expect($this->field_text)->getExpertFromWhere("*", spl_object_hash($comparison))->once();
 
         $this->query_builder->visitEqualComparison($comparison, $this->parameters);
     }
@@ -62,7 +69,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('field', 'value');
 
-        stub($this->field)->getExpertFromWhere("value", "*")->returns(new FromWhere("le_from", "le_where"));
+        stub($this->field_text)->getExpertFromWhere("value", "*")->returns(new FromWhere("le_from", "le_where"));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -200,5 +207,29 @@ class QueryBuilderTest extends TuleapTestCase
 
         $this->assertEqual($result->getFrom(), "le_from le_from_tail");
         $this->assertEqual($result->getWhere(), "(le_where OR le_where_tail)");
+    }
+
+    public function itRetrievesForIntegerFieldInComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new EqualComparison('int', 1);
+
+        stub($this->int_field)->getExpertFromWhere(1, "*")->returns(new FromWhere("le_from", "le_where"));
+
+        $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
+
+        $this->assertEqual($result->getFrom(), "le_from");
+        $this->assertEqual($result->getWhere(), "le_where");
+    }
+
+    public function itRetrievesForFloatFieldInComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new EqualComparison('float', 1.23);
+
+        stub($this->float_field)->getExpertFromWhere(1.23, "*")->returns(new FromWhere("le_from", "le_where"));
+
+        $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
+
+        $this->assertEqual($result->getFrom(), "le_from");
+        $this->assertEqual($result->getWhere(), "le_where");
     }
 }

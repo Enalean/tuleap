@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric {
 
@@ -156,6 +157,23 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
             $changeset_value = new Tracker_Artifact_ChangesetValue_Integer($value_id, $changeset, $this, $has_changed, $int_row_value);
         }
         return $changeset_value;
+    }
+
+    public function getExpertFromWhere($value, $suffix)
+    {
+        $a    = 'A_'. $this->id .'_'. $suffix;
+        $b    = 'B_'. $this->id .'_'. $suffix;
+        $from = " LEFT JOIN (
+                        tracker_changeset_value AS $a
+                        INNER JOIN tracker_changeset_value_int AS $b
+                         ON ($b.changeset_value_id = $a.id
+                             AND ". $this->buildMatchExpression("$b.value", $value) ."
+                         )
+                     ) ON ($a.changeset_id = c.id AND $a.field_id = $this->id )";
+
+        $where = "$a.changeset_id IS NOT NULL";
+
+        return new FromWhere($from, $where);
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
