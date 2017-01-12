@@ -1,3 +1,6 @@
+Version 4.318 - Tuleap 9.4
+    * request #9863: The parameters verbalization of a system event can lead to an exception
+
 Version 4.317 - Tuleap 9.4
     * request #9824: Missing index on plugin_git_full_history
 
