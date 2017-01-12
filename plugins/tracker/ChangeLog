@@ -1,3 +1,6 @@
+Version 5.1130 - Tuleap 9.4
+    * story #8859 TQL search on date & numeric fields (Numeric is allowed and returns a FrowWhere)
+
 Version 5.1129 - Tuleap 9.4
     * request #9862 Do not generate a lot of input hidden for masschange
 
