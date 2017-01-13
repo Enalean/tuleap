@@ -324,7 +324,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     *
      * @param Tracker_Artifact $artifact
      * @param PFUser $user
      * @param int $start_date
@@ -343,38 +342,86 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $capacity = $this->getCapacity($artifact);
         }
 
-        $user_timezone = date_default_timezone_get();
+        $user_timezone   = date_default_timezone_get();
         $server_timezone = TimezoneRetriever::getServerTimezone();
         date_default_timezone_set($server_timezone);
 
-        $start = new  DateTime();
-        $start->setTimestamp($start_date);
-        $start->setTime(0, 0, 0);
-
         $logger->debug("Capacity: " . $capacity);
         $logger->debug("Original start date: " . $start_date);
-        $logger->debug("Start date after updating timezone: " . $start->getTimestamp());
         $logger->debug("Duration: " . $duration);
         $logger->debug("User Timezone: " . $user_timezone);
         $logger->debug("Server timezone: " . $server_timezone);
 
-        $time_period   = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
-
-        $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start->getTimestamp());
-        if ($this->isCacheCompleteForBurndown($burndown_data, $artifact, $user) === false
-            && $this->isCacheBurndownAlreadyAsked($artifact) === false
-        ) {
-            $this->forceBurndownCacheGeneration($artifact->getId());
-            $burndown_data->setIsBeingCalculated(true);
-        } else if ($this->isCacheBurndownAlreadyAsked($artifact)) {
-            $burndown_data->setIsBeingCalculated(true);
-        }
+        $is_burndown_under_calculation = $this->isBurndownCompleteBasedOnServerTimezone(
+            $artifact,
+            $user,
+            $start_date,
+            $duration,
+            $capacity
+        );
 
         $logger->info("End calculating burndown " . $artifact->getId());
         date_default_timezone_set($user_timezone);
 
-        return $burndown_data;
+        return $this->addBurndownRemainingEffortDotsBasedOnUserTimezone(
+            $artifact,
+            $user,
+            $start_date,
+            $duration,
+            $capacity,
+            $is_burndown_under_calculation
+        );
+    }
+
+    private function addBurndownRemainingEffortDotsBasedOnUserTimezone(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $start_date,
+        $duration,
+        $capacity,
+        $is_burndown_under_calculation
+    ) {
+        $start = new  DateTime();
+        $start->setTimestamp($start_date);
+        $start->setTime(0, 0, 0);
+
+        $user_time_period   = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
+        $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
+
+        if ($is_burndown_under_calculation === false) {
+            $this->addRemainingEffortData(
+                $user_burndown_data, $user_time_period, $artifact, $user, $start->getTimestamp()
+            );
+        }
+
+        $user_burndown_data->setIsBeingCalculated($is_burndown_under_calculation);
+
+        return $user_burndown_data;
+    }
+
+    private function isBurndownCompleteBasedOnServerTimezone(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration, $capacity)
+    {
+        $start = new  DateTime();
+        $start->setTimestamp($start_date);
+        $start->setTime(0, 0, 0);
+
+        $logger = $this->getLogger();
+        $logger->debug("Start date after updating timezone: " . $start->getTimestamp());
+
+        $time_period          = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
+        $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+
+        $this->addRemainingEffortData($server_burndown_data, $time_period, $artifact, $user, $start->getTimestamp());
+        if ($this->isCacheCompleteForBurndown($server_burndown_data, $artifact, $user) === false
+            && $this->isCacheBurndownAlreadyAsked($artifact) === false
+        ) {
+            $this->forceBurndownCacheGeneration($artifact->getId());
+            $server_burndown_data->setIsBeingCalculated(true);
+        } else if ($this->isCacheBurndownAlreadyAsked($artifact)) {
+            $server_burndown_data->setIsBeingCalculated(true);
+        }
+
+        return $server_burndown_data->isBeingCalculated();
     }
 
     public function forceBurndownCacheGeneration($artifact_id)
