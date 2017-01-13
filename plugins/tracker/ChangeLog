@@ -1,4 +1,7 @@
-Version 5.1126 - Tuleap 9.4
+Version 5.1132 - Tuleap 9.4
+    * request #9860 Sprint Start Date does not correspond to Burndown chart starting point
+
+Version 5.1131 - Tuleap 9.4
     * request #9854: Improve performance of 'Submit new artifact' rendering (#2)
 
 Version 5.1130 - Tuleap 9.4
