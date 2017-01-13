@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
  */
 class TroveCatDao extends DataAccessObject
 {
-
     public function getMandatoryParentCategoriesUnderRoot()
     {
         $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);
@@ -31,6 +30,17 @@ class TroveCatDao extends DataAccessObject
                 WHERE parent.mandatory = 1
                   AND parent.parent = $root_id
                   AND children.trove_cat_id IS NOT NULL";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getParentCategoriesUnderRoot()
+    {
+        $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);
+
+        $sql = "SELECT *
+                FROM trove_cat
+                WHERE root_parent = $root_id";
 
         return $this->retrieve($sql);
     }
