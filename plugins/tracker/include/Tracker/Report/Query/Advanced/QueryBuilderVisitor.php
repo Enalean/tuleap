@@ -24,6 +24,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -54,7 +55,18 @@ class QueryBuilderVisitor implements Visitor
             $comparison->getField()
         );
 
-        return $formelement->getExpertFromWhere($comparison_value, spl_object_hash($comparison));
+        return $formelement->getExpertEqualFromWhere($comparison_value, spl_object_hash($comparison));
+    }
+
+    public function visitNotEqualComparison(NotEqualComparison $comparison, QueryBuilderParameters $parameters)
+    {
+        $comparison_value = $comparison->getValue();
+        $formelement      = $this->formelement_factory->getUsedFieldByName(
+            $parameters->getTracker()->getId(),
+            $comparison->getField()
+        );
+
+        return $formelement->getExpertNotEqualFromWhere($comparison_value, spl_object_hash($comparison));
     }
 
     public function visitAndExpression(AndExpression $and_expression, QueryBuilderParameters $parameters)

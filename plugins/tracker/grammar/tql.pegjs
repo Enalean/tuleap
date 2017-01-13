@@ -55,13 +55,18 @@ and
     }
 
 term
-	= EqualComparison / ParenthesisTerm
+	= EqualComparison / NotEqualComparison / ParenthesisTerm
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
     = field:Field _ "=" _ value:SimpleExpr {
         return new EqualComparison($field, $value);
+    }
+
+NotEqualComparison
+    = field:Field _ "!=" _ value:SimpleExpr {
+        return new NotEqualComparison($field, $value);
     }
 
 Field

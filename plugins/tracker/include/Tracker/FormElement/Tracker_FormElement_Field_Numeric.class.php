@@ -154,7 +154,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
                 // It's < or >,  = and a number then use as is
                 $matches[2] = (string)($this->cast($matches[2]));
                 $expr = $field_name.' '.$matches[1].' '.$matches[2];
-                
+
             } else if (preg_match("/^($this->pattern)$/", $criteria_value, $matches)) {
                 // It's a number so use  equality
                 $matches[1] = $this->cast($matches[1]);

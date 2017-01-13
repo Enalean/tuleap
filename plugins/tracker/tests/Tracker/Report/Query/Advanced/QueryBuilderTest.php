@@ -60,7 +60,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('field', 'value');
 
-        expect($this->field_text)->getExpertFromWhere("*", spl_object_hash($comparison))->once();
+        expect($this->field_text)->getExpertEqualFromWhere("*", spl_object_hash($comparison))->once();
 
         $this->query_builder->visitEqualComparison($comparison, $this->parameters);
     }
@@ -69,7 +69,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('field', 'value');
 
-        stub($this->field_text)->getExpertFromWhere("value", "*")->returns(new FromWhere("le_from", "le_where"));
+        stub($this->field_text)->getExpertEqualFromWhere("value", "*")->returns(new FromWhere("le_from", "le_where"));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -213,7 +213,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('int', 1);
 
-        stub($this->int_field)->getExpertFromWhere(1, "*")->returns(new FromWhere("le_from", "le_where"));
+        stub($this->int_field)->getExpertEqualFromWhere(1, "*")->returns(new FromWhere("le_from", "le_where"));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -225,7 +225,7 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('float', 1.23);
 
-        stub($this->float_field)->getExpertFromWhere(1.23, "*")->returns(new FromWhere("le_from", "le_where"));
+        stub($this->float_field)->getExpertEqualFromWhere(1.23, "*")->returns(new FromWhere("le_from", "le_where"));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 

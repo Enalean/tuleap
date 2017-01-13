@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -43,7 +44,12 @@ class SizeValidatorVisitor implements Visitor
 
     public function visitEqualComparison(EqualComparison $comparison, SizeValidatorParameters $parameters)
     {
-        $this->incrementSize($parameters);
+        $this->visitComparison($comparison, $parameters);
+    }
+
+    public function visitNotEqualComparison(NotEqualComparison $comparison, SizeValidatorParameters $parameters)
+    {
+        $this->visitComparison($comparison, $parameters);
     }
 
     public function visitAndExpression(AndExpression $and_expression, SizeValidatorParameters $parameters)
@@ -89,6 +95,11 @@ class SizeValidatorVisitor implements Visitor
         $expression->getExpression()->accept($this, $parameters);
 
         $this->visitTail($expression->getTail(), $parameters);
+    }
+
+    private function visitComparison($comparison, SizeValidatorParameters $parameters)
+    {
+        $this->incrementSize($parameters);
     }
 
     private function checkSize($size)
