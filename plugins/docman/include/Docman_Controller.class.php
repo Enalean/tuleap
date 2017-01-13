@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015.
+ * Copyright (c) Enalean, 2015 - 2017.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
@@ -20,6 +20,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
+
 require_once('DocmanConstants.class.php');
 require_once('common/mvc/Controler.class.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -1808,8 +1811,12 @@ class Docman_Controller extends Controler {
         return ProjectManager::instance()->getProject($this->getGroupId());
     }
 
-    private function getMailBuilder() {
-        return new MailBuilder(TemplateRendererFactory::build());
+    private function getMailBuilder()
+    {
+        return new MailBuilder(
+            TemplateRendererFactory::build(),
+            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+        );
     }
 
     public function userCannotDelete(PFUser $user, Docman_Item $item)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
@@ -68,7 +70,10 @@ try {
         new MailHeaderManager(new MailHeaderDao()),
         new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),
         PluginManager::instance(),
-        new MailBuilder(TemplateRendererFactory::build()),
+        new MailBuilder(
+            TemplateRendererFactory::build(),
+            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+        ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         UserManager::instance(),
         EventManager::instance()

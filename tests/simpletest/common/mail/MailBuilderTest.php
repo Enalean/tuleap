@@ -34,6 +34,9 @@ class MailBuilderTest extends TuleapTestCase {
     /** @var MailEnhancer */
     private $mail_enhancer;
 
+    /** @var Tuleap\Mail\MailFilter */
+    private $mail_filter;
+
     public function setUp() {
         parent::setUp();
 
@@ -49,8 +52,13 @@ class MailBuilderTest extends TuleapTestCase {
         $template_factory = stub('TemplateRendererFactory')->getRenderer()->returns($this->renderer);
 
         $this->mail_enhancer = mock('MailEnhancer');
+        $this->mail_filter   =  mock('Tuleap\Mail\MailFilter');
 
-        $this->builder       = partial_mock('MailBuilder', array('getMailSender'), array($template_factory));
+        $this->builder = partial_mock(
+            'MailBuilder',
+            array('getMailSender'),
+            array($template_factory, $this->mail_filter)
+        );
         $this->codendi_mail  = mock('Codendi_Mail');
 
         $emails            = array('a@example.com', 'b@example.com');
@@ -68,6 +76,7 @@ class MailBuilderTest extends TuleapTestCase {
             $goto_link,
             $service_name
         );
+        stub($this->mail_filter)->filter()->returns($this->notification->getEmails());
 
         $GLOBALS['sys_default_domain'] = '';
         $GLOBALS['HTML']               = mock('Layout');

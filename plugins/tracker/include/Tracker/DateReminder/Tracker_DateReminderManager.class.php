@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean 2017. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
@@ -218,7 +222,12 @@ class Tracker_DateReminderManager {
             $mail_enhancer->addHeader($header['name'], $header['value']);
         }
 
-        $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
+        $mail_notification_builder = new MailNotificationBuilder(
+            new MailBuilder(
+                TemplateRendererFactory::build(),
+                new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+            )
+        );
         $mail_notification_builder->buildAndSendEmail(
             $project,
             $recipients,

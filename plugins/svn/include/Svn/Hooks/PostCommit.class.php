@@ -232,14 +232,17 @@ class PostCommit {
         return $subject;
     }
 
-    private function getNotifiedMails(Repository $repository) {
+    private function getNotifiedMails(Repository $repository)
+    {
         $notified_mail = array();
 
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
         foreach ($commit_info->getChangedDirectories() as $path) {
             $mailing_list = $this->mail_notification_manager->getByPath($repository, $path);
             foreach ($mailing_list as $mail) {
-                    $notified_mail[] = $mail->getNotifiedMails();
+                $mail_list     = explode(",", $mail->getNotifiedMails());
+                $mail_list     = array_map('trim', $mail_list);
+                $notified_mail = array_merge($mail_list, $notified_mail);
             }
         }
 

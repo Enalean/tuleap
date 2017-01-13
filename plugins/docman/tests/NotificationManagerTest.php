@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -45,20 +46,29 @@ Mock::generate('NotificationsDao');
 
 Mock::generate('BaseLanguage');
 
-class Docman_NotificationsManagerTest extends UnitTestCase {
+class Docman_NotificationsManagerTest extends UnitTestCase
+{
+    /**
+     * @var Tuleap\Mail\MailFilter
+     */
+    private $mail_filter;
 
-    function setUp() {
+    public function setUp()
+    {
         $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', '/tuleap');
+
+        $this->mail_filter = mock('Tuleap\Mail\MailFilter');
     }
 
-    function tearDown() {
+    public function tearDown() {
         unset($GLOBALS['sys_noreply']);
         ForgeConfig::restore();
     }
 
-    function testSendNotificationsSuccess() {
+    public function testSendNotificationsSuccess()
+    {
         $mail         = new MockMail($this);
         $mail->setReturnValue('send', true);
         $feedback     = new MockFeedback($this);
@@ -67,7 +77,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $itemFty      = new MockDocman_ItemFactory($this);
         $notifDao     = new MockNotificationsDao($this);
         $project      = aMockProject()->withId(101)->build();
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
 
         $nm = new Docman_NotificationsManager_TestVersion($this);
         $nm->setReturnValue('_getDao', $notifDao);
@@ -82,7 +92,8 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $nm->sendNotifications('', '');
     }
 
-    function testGetMessageForUserSameListenedItem() {
+    public function testGetMessageForUserSameListenedItem()
+    {
         $language = new MockBaseLanguage();
         $language->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
         $language->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
@@ -92,7 +103,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
 
         $project      = aMockProject()->withId(101)->build();
         $feedback     = new MockFeedback($this);
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
 
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->__construct($project, '/toto', $feedback, $mail_builder);
@@ -120,7 +131,8 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $this->assertEqual($message4, $notificationsManager->_getMessageForUser($user, 'something happen', $params));
     }
 
-    function testGetMessageForUserParentListened() {
+    public function testGetMessageForUserParentListened()
+    {
         $language = new MockBaseLanguage();
         $language->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
         $language->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
@@ -130,7 +142,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
 
         $project      = aMockProject()->withId(101)->build();
         $feedback     = new MockFeedback($this);
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
 
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->__construct($project, '/toto', $feedback, $mail_builder);
@@ -159,5 +171,4 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $this->assertEqual($message3, $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
         $this->assertEqual($message4, $notificationsManager->_getMessageForUser($user, 'something happen', $params));
     }
-
 }

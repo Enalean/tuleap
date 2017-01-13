@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\MailFilter;
+
 class MailBuilder {
 
     const TRUNCATED_SUBJECT_TEMPLATE = 'subject';
@@ -26,10 +28,20 @@ class MailBuilder {
     /** @var TemplateRenderer */
     private $renderer;
 
-    public function __construct(TemplateRendererFactory $template_factory) {
+    /**
+     * @var MailFilter
+     */
+    private $mail_filter;
+
+    public function __construct(
+        TemplateRendererFactory $template_factory,
+        MailFilter $mail_filter
+    ) {
         $this->renderer = $template_factory->getRenderer(
-            ForgeConfig::get('codendi_dir') .'/src/templates/mail/truncated'
+            ForgeConfig::get('codendi_dir') . '/src/templates/mail/truncated'
         );
+
+        $this->mail_filter = $mail_filter;
     }
 
     /**
@@ -41,7 +53,8 @@ class MailBuilder {
      */
     public function buildAndSendEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer) {
         $sent_status = true;
-        foreach ($notification->getEmails() as $email) {
+        $filtered_emails = $this->mail_filter->filter($project, $notification->getEmails());
+        foreach ($filtered_emails as $email) {
             $mail = $this->buildEmail($project, $notification, $mail_enhancer, $email);
             if ($this->doesMailHasRecipient($mail)) {
                 $sent_status = $mail->send() && $sent_status;

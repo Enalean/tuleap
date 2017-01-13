@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 
 class WikiNotification {
     /** @var Notification */
@@ -38,8 +41,17 @@ class WikiNotification {
     /**
      * @return bool
      */
-    public function send() {
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+    public function send()
+    {
+        $mail_builder = new MailBuilder(
+            TemplateRendererFactory::build(),
+            new MailFilter(
+                UserManager::instance(),
+                new URLVerification(),
+                new MailLogger()
+            )
+        );
+
         return $mail_builder->buildAndSendEmail($this->project, $this->notification, $this->mail_enhancer);
     }
 }
