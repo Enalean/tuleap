@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ class MailPresenterFactory {
      *
      * @return MailRegisterPresenter
      */
-    public function createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role, $logo_url) {
+    public function createMailAccountPresenter($login, $confirm_hash, $presenter_role, $logo_url) {
         $color_logo = "#000";
         $color_button = "#347DBA";
 
@@ -36,7 +36,6 @@ class MailPresenterFactory {
 
         $attributes_presenter = array(
             "login"         => $login,
-            "password"      => $password,
             "color_logo"    => $color_logo,
             "color_button"  => $color_button,
             "confirm_hash"  => $confirm_hash,
@@ -95,7 +94,6 @@ class MailPresenterFactory {
      */
     private function createAdminEmailPresenter(array $attributes_presenter) {
         $login      = $attributes_presenter["login"];
-        $password   = $attributes_presenter["password"];
 
         include($GLOBALS['Language']->getContent('account/new_account_email'));
         $presenter = new MailRegisterByAdminPresenter(
@@ -109,9 +107,7 @@ class MailPresenterFactory {
             $help,
             $attributes_presenter["color_logo"],
             $login,
-            $section_three,
-            $section_after_password,
-            $password
+            $section_three
         );
         return $presenter;
     }

@@ -40,7 +40,8 @@ class TuleapRegisterMail {
      *
      * @return Codendi_Mail
      */
-    public function getMail($login, $password, $confirm_hash, $base_url, $from, $to, $presenter_role) {
+    public function getMail($login, $confirm_hash, $base_url, $from, $to, $presenter_role)
+    {
         if ($presenter_role === "user") {
             $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', $GLOBALS['sys_name']);
             include($GLOBALS['Language']->getContent('include/new_user_email'));
@@ -65,7 +66,6 @@ class TuleapRegisterMail {
                 $this->template,
                 $this->mail_presenter_factory->createMailAccountPresenter(
                     $login,
-                    $password,
                     $confirm_hash,
                     $presenter_role,
                     $cid_logo

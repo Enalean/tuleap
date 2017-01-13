@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,6 @@
 class MailRegisterByAdminPresenter extends MailRegisterPresenter {
 
     public $section_three;
-    public $section_after_password;
     public $password;
 
     public function __construct(
@@ -35,14 +34,9 @@ class MailRegisterByAdminPresenter extends MailRegisterPresenter {
         $help,
         $color_logo,
         $login,
-        $section_three,
-        $section_after_password,
-        $password
+        $section_three
     ) {
         parent::__construct($logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
         $this->section_three          = $section_three;
-        $this->section_after_password = $section_after_password;
-        $this->password               = $password;
     }
 }
-?>
