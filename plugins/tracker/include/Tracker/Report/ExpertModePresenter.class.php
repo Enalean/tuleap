@@ -59,17 +59,9 @@ class ExpertModePresenter
         $this->is_in_expert_mode               = $is_in_expert_mode;
         $this->expert_query                    = $expert_query;
         $this->is_normal_mode_button_displayed = $is_normal_mode_button_displayed;
-        $this->allowed_fields                  = array_values($allowed_fields);
         $this->is_query_modifiable             = $is_query_modifiable;
 
-        $this->allowed_fields_names_json_encoded = json_encode(
-            array_map(
-                function (Tracker_FormElement $field) {
-                    return $field->getName();
-                },
-                $this->allowed_fields
-            )
-        );
+        $this->initAllowedFields($allowed_fields);
 
         $this->allowed_fields_label   = $GLOBALS['Language']->getText('plugin_tracker_report', 'allowed_fields_label');
         $this->query_label            = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_label');
@@ -78,5 +70,22 @@ class ExpertModePresenter
         $this->btn_report_normal_mode = $GLOBALS['Language']->getText('plugin_tracker_report', 'btn_report_normal_mode');
         $this->btn_search             = $GLOBALS['Language']->getText('global', 'btn_search');
         $this->query_tooltip          = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_tooltip');
+    }
+
+    private function initAllowedFields(array $allowed_fields)
+    {
+        $this->allowed_fields = array_values($allowed_fields);
+        usort($this->allowed_fields, function ($field_a, $field_b) {
+            return strnatcasecmp($field_a->getLabel(), $field_b->getLabel());
+        });
+
+        $allowed_fields_names = array_map(
+            function (Tracker_FormElement $field) {
+                return $field->getName();
+            },
+            $this->allowed_fields
+        );
+        usort($allowed_fields_names, 'strnatcasecmp');
+        $this->allowed_fields_names_json_encoded = json_encode($allowed_fields_names);
     }
 }
