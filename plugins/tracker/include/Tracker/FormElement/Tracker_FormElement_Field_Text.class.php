@@ -107,8 +107,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     public function getExpertNotEqualFromWhere($value, $suffix)
     {
         $changeset_value_text_alias = 'CVText_'. $this->id .'_'. $suffix;
-        $condition                  = "($changeset_value_text_alias.value IS NULL
-            OR $changeset_value_text_alias.value NOT LIKE ". $this->quoteLikeValueSurround($value) .")";
+        if ($value === '') {
+            $condition = "$changeset_value_text_alias.value IS NOT NULL AND $changeset_value_text_alias.value <> ''";
+        } else {
+            $condition = "($changeset_value_text_alias.value IS NULL
+                OR $changeset_value_text_alias.value NOT LIKE " . $this->quoteLikeValueSurround($value) . ")";
+        }
 
         return $this->getExpertFromWhere($suffix, $condition);
     }

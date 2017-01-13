@@ -184,8 +184,12 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      */
     public function getExpertEqualFromWhere($value, $suffix)
     {
-        $changeset_value_numeric_alias = 'CVNumeric_'. $this->id .'_'. $suffix;
-        $condition                     = "$changeset_value_numeric_alias.value = ".$this->escapeFloat($value);
+        $changeset_value_float_alias = 'CVFloat_'. $this->id .'_'. $suffix;
+        if ($value === '') {
+            $condition = "1";
+        } else {
+            $condition = "$changeset_value_float_alias.value = ".$this->escapeFloat($value);
+        }
 
         return $this->getExpertFromWhere($suffix, $condition);
     }
@@ -195,21 +199,25 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      */
     public function getExpertNotEqualFromWhere($value, $suffix)
     {
-        $changeset_value_numeric_alias = 'CVNumeric_'. $this->id .'_'. $suffix;
-        $condition = "($changeset_value_numeric_alias.value IS NULL
-            OR $changeset_value_numeric_alias.value != ".$this->escapeFloat($value).")";
+        $changeset_value_float_alias = 'CVFloat_'. $this->id .'_'. $suffix;
+        if ($value === '') {
+            $condition = "$changeset_value_float_alias.value IS NOT NULL";
+        } else {
+            $condition = "($changeset_value_float_alias.value IS NULL
+                OR $changeset_value_float_alias.value != ".$this->escapeFloat($value).")";
+        }
 
         return $this->getExpertFromWhere($suffix, $condition);
     }
 
     private function getExpertFromWhere($suffix, $condition)
     {
-        $changeset_value_alias         = 'CV_'. $this->id .'_'. $suffix;
-        $changeset_value_numeric_alias = 'CVNumeric_'. $this->id .'_'. $suffix;
+        $changeset_value_alias       = 'CV_'. $this->id .'_'. $suffix;
+        $changeset_value_float_alias = 'CVFloat_'. $this->id .'_'. $suffix;
         $from = " LEFT JOIN (
                         tracker_changeset_value AS $changeset_value_alias
-                        INNER JOIN tracker_changeset_value_float AS $changeset_value_numeric_alias
-                         ON ($changeset_value_numeric_alias.changeset_value_id = $changeset_value_alias.id
+                        INNER JOIN tracker_changeset_value_float AS $changeset_value_float_alias
+                         ON ($changeset_value_float_alias.changeset_value_id = $changeset_value_alias.id
                              AND $condition
                          )
                      ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $this->id )";
