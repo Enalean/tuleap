@@ -26,12 +26,17 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ICheckThatFieldIsAllowedForComparison;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 
 class InvalidFieldsCollectorVisitor implements Visitor
 {
@@ -39,10 +44,23 @@ class InvalidFieldsCollectorVisitor implements Visitor
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
+    /**
+     * @var EqualComparisonVisitor
+     */
+    private $equal_comparison_visitor;
+    /**
+     * @var NotEqualComparisonVisitor
+     */
+    private $not_equal_comparison_visitor;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory)
-    {
-        $this->formelement_factory  = $formelement_factory;
+    public function __construct(
+        Tracker_FormElementFactory $formelement_factory,
+        EqualComparisonVisitor $equal_comparison_visitor,
+        NotEqualComparisonVisitor $not_equal_comparison_visitor
+    ) {
+        $this->formelement_factory          = $formelement_factory;
+        $this->equal_comparison_visitor     = $equal_comparison_visitor;
+        $this->not_equal_comparison_visitor = $not_equal_comparison_visitor;
     }
 
     public function collectErrorsFields(
@@ -56,12 +74,12 @@ class InvalidFieldsCollectorVisitor implements Visitor
 
     public function visitEqualComparison(EqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
-        $this->visitComparison($comparison, $parameters);
+        $this->visitComparison($comparison, $this->equal_comparison_visitor, $parameters);
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
-        $this->visitComparison($comparison, $parameters);
+        $this->visitComparison($comparison, $this->not_equal_comparison_visitor, $parameters);
     }
 
     public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)
@@ -91,8 +109,11 @@ class InvalidFieldsCollectorVisitor implements Visitor
         }
     }
 
-    private function visitComparison($comparison, InvalidFieldsCollectorParameters $parameters)
-    {
+    private function visitComparison(
+        Comparison $comparison,
+        ICheckThatFieldIsAllowedForComparison $checker,
+        InvalidFieldsCollectorParameters $parameters
+    ) {
         $field_name = $comparison->getField();
 
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
@@ -103,10 +124,12 @@ class InvalidFieldsCollectorVisitor implements Visitor
 
         if (! $field) {
             $parameters->getInvalidFieldsCollection()->addNonexistentField($field_name);
-        } else if (! $field instanceof Tracker_FormElement_Field_Text
-            && ! $field instanceof Tracker_FormElement_Field_Numeric
-        ) {
-            $parameters->getInvalidFieldsCollection()->addUnsupportedField($field_name);
+        } else {
+            try {
+                $checker->checkThatFieldIsAllowed($field);
+            } catch (FieldIsNotSupportedForComparisonException $exception) {
+                $parameters->getInvalidFieldsCollection()->addUnsupportedField($field_name);
+            }
         }
     }
 

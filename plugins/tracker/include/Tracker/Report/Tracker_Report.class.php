@@ -27,6 +27,8 @@ use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsAreNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -139,8 +141,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
         $this->parser         = new Parser();
         $this->size_validator = new SizeValidatorVisitor($report_config->getExpertQueryLimit());
-        $this->collector      = new InvalidFieldsCollectorVisitor($this->getFormElementFactory());
-        $this->query_builder  = new QueryBuilderVisitor($this->getFormElementFactory());
+        $this->collector      = new InvalidFieldsCollectorVisitor(
+            $this->getFormElementFactory(),
+            new InvalidFields\EqualComparisonVisitor(),
+            new InvalidFields\NotEqualComparisonVisitor()
+        );
+        $this->query_builder  = new QueryBuilderVisitor(
+            $this->getFormElementFactory(),
+            new QueryBuilder\EqualComparisonVisitor(),
+            new QueryBuilder\NotEqualComparisonVisitor()
+        );
     }
 
     public function setProjectId($id) {

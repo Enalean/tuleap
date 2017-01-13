@@ -24,6 +24,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -55,7 +57,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             $this->invalid_fields_collection
         );
 
-        $this->collector = new InvalidFieldsCollectorVisitor($this->formelement_factory);
+        $this->collector = new InvalidFieldsCollectorVisitor($this->formelement_factory, new EqualComparisonVisitor(), new NotEqualComparisonVisitor());
     }
 
     public function itDoesNotThrowAnExceptionIfFieldIsUsed()

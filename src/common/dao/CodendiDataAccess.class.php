@@ -42,6 +42,7 @@ class CodendiDataAccess extends DataAccess {
     }
     
     protected static $_instance;
+    /** @return CodendiDataAccess */
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
