@@ -79,6 +79,7 @@ var fat_combined_files = [
         'src/www/scripts/tuleap/project-privacy-tooltip.js',
         'src/www/scripts/tuleap/massmail_project_members.js',
         'src/www/scripts/tuleap/textarea_rte.js',
+        'src/www/scripts/tuleap/tuleap-ckeditor-toolbar.js',
         'src/www/scripts/d3/d3.min.js'
     ],
     subset_combined_files = [

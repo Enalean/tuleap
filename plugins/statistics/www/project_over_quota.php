@@ -16,9 +16,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once('pre.php');
 
-require_once dirname(__FILE__).'/../include/ProjectQuotaHtml.class.php';
+$GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 
 $pluginManager    = PluginManager::instance();
 $statisticsPlugin = $pluginManager->getPluginByName('statistics');

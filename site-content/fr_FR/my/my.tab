@@ -55,6 +55,7 @@ my_index	mail_sent	Email envoyé aux membres du projet $1
 my_index	mail_not_sent	Echec de l'envoi de mail aux membres du projet $1
 my_index	subject_label	Sujet
 my_index	body_label	Corps du message
+my_index	mass_mail_label	Envoyer le mail aux administrateurs du projet
 my_index	massmail_not_sent_max_users	Vous avez dépassé le nombre maximum ($1) de personnes à qui envoyer le message. L'email n'est pas envoyé.
 my_index	massmail_form_title	Envoi d'un email aux membres du projet
 

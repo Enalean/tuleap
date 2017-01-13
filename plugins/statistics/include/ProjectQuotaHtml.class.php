@@ -273,49 +273,39 @@ class ProjectQuotaHtml {
     public function displayProjectsOverQuota()
     {
         $exceeding_projects = $this->projectQuotaManager->getProjectsOverQuota();
-
-        foreach ($exceeding_projects as $key => $value) {
-            $value['mail_form'] = $this->fetchMailForm(
-                $value['group_id'],
-                $value['project_name'],
-                $value['current_disk_space']
-            );
-
-            $exceeding_projects[$key] = $value;
+        if (count($exceeding_projects) > 0) {
+            $exceeding_projects = $this->enhanceWithModalValues($exceeding_projects);
         }
 
         $title     = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
         $presenter = new ProjectsOverQuotaPresenter($exceeding_projects);
         $renderer  = new AdminPageRenderer();
         $renderer->renderAPresenter($title, STATISTICS_TEMPLATE_DIR, 'projects-over-quota', $presenter);
-
     }
 
     /**
-     * Display a modal mass mail form with the default warning content
-     * to be sent to project administrators.
-     *
-     * @param Integer $group_id Id of the project we want to warn its admins
-     * @param String  $project_name The unix name of the project
-     * @param String  $current_disk_space The current disk size we want reduce
-     *
-     * @return String
+     * @return array
      */
-    private function fetchMailForm($group_id, $project_name, $current_disk_space) {
-        $token           = new CSRFSynchronizerToken('');
-        $subject_content = $GLOBALS['Language']->getText('plugin_statistics', 'disk_quota_warning_subject', array($project_name));
-        $body_content    = $GLOBALS['Language']->getText('plugin_statistics', 'disk_quota_warning_body', array($project_name, $current_disk_space));
-        $presenter       = new DiskQuotaWarningFormPresenter(
-                                $group_id,
-                                $token,
-                                'Massmail to project administrators',
-                                '/include/massmail_to_project_admins.php',
-                                $subject_content,
-                                $body_content
-                            );
-        $template_factory = TemplateRendererFactory::build();
-        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-        return $renderer->renderToString('disk-quota-warning',$presenter);
-    }
+    private function enhanceWithModalValues(array $exceeding_projects)
+    {
+        $new_values['csrf_token']  = new CSRFSynchronizerToken('');
+        $enhanced_projects         = array();
 
+        foreach ($exceeding_projects as $project) {
+            $new_values['subject_content'] = $GLOBALS['Language']->getText(
+                'plugin_statistics',
+                'disk_quota_warning_subject',
+                array($project['project_name'])
+            );
+            $new_values['body_content']    = $GLOBALS['Language']->getText(
+                'plugin_statistics',
+                'disk_quota_warning_body',
+                array($project['project_name'], $project['current_disk_space'])
+            );
+
+            $enhanced_projects[] = array_merge($project, $new_values);
+        }
+
+        return $enhanced_projects;
+    }
 }

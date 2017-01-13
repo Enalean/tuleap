@@ -57,12 +57,7 @@
 
     function initHTMLEditor() {
         editor = CKEDITOR.replace('mail_message', {
-            toolbar: [
-                ['Bold', 'Italic', 'Underline'],
-                ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
-                ['Link', 'Unlink', 'Anchor', 'Image'],
-                ['Source']
-            ]
+            toolbar: tuleap.ckeditor.toolbar
         });
     }
 

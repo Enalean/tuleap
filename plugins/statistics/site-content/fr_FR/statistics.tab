@@ -116,7 +116,7 @@ plugin_statistics	services_usage	Utilisation des services
 plugin_statistics	current_size	Taille actuelle du projet
 plugin_statistics	project_name	Nom du projet
 plugin_statistics	exceeding_size	Taille en excès
-plugin_statistics	warn_administrators	Notifier les administrateurs?
+plugin_statistics	warn_administrators	Notifier les administrateurs
 plugin_statistics	no_projects_warning	Aucun projet correspondant.
 plugin_statistics	projects_over_quota_title	Projets excédant leur part de disque
 plugin_statistics	disk_quota_warning_subject	[Quota disque] [Avertissement] Le projet $1 excède la part de disque permise
