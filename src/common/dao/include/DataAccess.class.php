@@ -328,6 +328,14 @@ class DataAccess {
     {
         return $this->quoteSmart($this->escapeLikeValue($value) . '%');
     }
+
+    /**
+     * @return string
+     */
+    public function quoteLikeValuePrefix($value)
+    {
+        return $this->quoteSmart('%'. $this->escapeLikeValue($value));
+    }
     
     /**
      * Retrieves the number of rows from a result set.
