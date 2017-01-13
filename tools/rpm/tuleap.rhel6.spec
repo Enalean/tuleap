@@ -490,7 +490,7 @@ BurningParrot, default theme starting Tuleap 10
 #
 # Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in tools cli plugins site-content src ChangeLog VERSION AUTHORS; do
+for i in tools cli plugins site-content src VERSION AUTHORS; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -501,8 +501,6 @@ done
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
-# We do not need to package the ChangeLog file of the API
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Remove captcha plugin
@@ -915,7 +913,6 @@ fi
 %{APP_DIR}/tools
 %{APP_DIR}/cli
 %{APP_DIR}/site-content
-%{APP_DIR}/ChangeLog
 %{APP_DIR}/VERSION
 %{APP_DIR}/AUTHORS
 # Split src for src/www/themes
