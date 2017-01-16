@@ -27,7 +27,7 @@ class FileModuleMonitorDao extends DataAccessObject {
         $_package_id = (int) $package_id;
         $_group_id = (int) $group_id;
         
-        $sql = sprintf("SELECT u.email,p.name "
+        $sql = sprintf("SELECT u.email,u.user_id,p.name "
               ."FROM user AS u,filemodule_monitor AS fm, frs_package AS p "
               ."WHERE u.user_id = fm.user_id " 
               ."AND fm.filemodule_id = p.package_id "
