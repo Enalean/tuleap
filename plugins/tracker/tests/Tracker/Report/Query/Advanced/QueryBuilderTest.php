@@ -19,11 +19,14 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -42,39 +45,34 @@ class QueryBuilderTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        CodendiDataAccess::setInstance(mock('CodendiDataAccess'));
 
         $this->tracker     = aTracker()->withId(101)->build();
         $this->parameters  = new QueryBuilderParameters($this->tracker);
-        $this->field_text  = stub('Tracker_FormElement_Field_Text')->getName()->returns('field');
-        $this->int_field   = stub('Tracker_FormElement_Field_Integer')->getName()->returns('int');
-        $this->float_field = stub('Tracker_FormElement_Field_Float')->getName()->returns('float');
+        $this->field_text  = aTextField()->withName('field')->withId(101)->build();
+        $this->int_field   = anIntegerField()->withName('int')->withId(102)->build();
+        $this->float_field = aFloatField()->withName('float')->withId(103)->build();
 
         $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
         stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);
         stub($formelement_factory)->getUsedFieldByName(101, 'float')->returns($this->float_field);
 
-        $this->query_builder = new QueryBuilderVisitor($formelement_factory);
+        $this->query_builder = new QueryBuilderVisitor($formelement_factory, new EqualComparisonVisitor(), new NotEqualComparisonVisitor());
     }
 
-    public function itPassesTheCurrentObjectInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery()
+    public function tearDown()
     {
-        $comparison = new EqualComparison('field', 'value');
-
-        expect($this->field_text)->getExpertEqualFromWhere("*", spl_object_hash($comparison))->once();
-
-        $this->query_builder->visitEqualComparison($comparison, $this->parameters);
+        CodendiDataAccess::clearInstance();
+        parent::tearDown();
     }
 
     public function itRetrievesInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
         $comparison = new EqualComparison('field', 'value');
 
-        stub($this->field_text)->getExpertEqualFromWhere("value", "*")->returns(new FromWhere("le_from", "le_where"));
-
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from");
-        $this->assertEqual($result->getWhere(), "le_where");
+        $this->assertPattern('/tracker_changeset_value_text/', $result->getFrom());
     }
 
     public function itRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpression()
@@ -213,23 +211,18 @@ class QueryBuilderTest extends TuleapTestCase
     {
         $comparison = new EqualComparison('int', 1);
 
-        stub($this->int_field)->getExpertEqualFromWhere(1, "*")->returns(new FromWhere("le_from", "le_where"));
-
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from");
-        $this->assertEqual($result->getWhere(), "le_where");
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
     }
 
     public function itRetrievesForFloatFieldInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
         $comparison = new EqualComparison('float', 1.23);
 
-        stub($this->float_field)->getExpertEqualFromWhere(1.23, "*")->returns(new FromWhere("le_from", "le_where"));
-
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertEqual($result->getFrom(), "le_from");
-        $this->assertEqual($result->getWhere(), "le_where");
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
     }
+/**/
 }

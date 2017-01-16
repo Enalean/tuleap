@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class NotEqualComparison implements Term, Visitable
+class NotEqualComparison implements Term, Visitable, Comparison
 {
     /**
      * @var string

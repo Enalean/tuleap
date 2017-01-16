@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,41 +19,15 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class EqualComparison implements Term, Visitable, Comparison
+interface Comparison
 {
     /**
-     * @var string
+     * @return string
      */
-    private $field;
-    /**
-     * @var string
-     */
-    private $value;
-
-    public function __construct($field, $value)
-    {
-        $this->field = $field;
-        $this->value = $value;
-    }
-
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
-    {
-        return $visitor->visitEqualComparison($this, $parameters);
-    }
+    public function getValue();
 
     /**
      * @return string
      */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
+    public function getField();
 }

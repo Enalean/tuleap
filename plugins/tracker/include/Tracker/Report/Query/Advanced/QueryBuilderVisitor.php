@@ -23,12 +23,15 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
 
 class QueryBuilderVisitor implements Visitor
 {
@@ -36,10 +39,23 @@ class QueryBuilderVisitor implements Visitor
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
+    /**
+     * @var NotEqualComparisonVisitor
+     */
+    private $not_equal_comparison_visitor;
+    /**
+     * @var EqualComparisonVisitor
+     */
+    private $equal_comparison_visitor;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory)
-    {
-        $this->formelement_factory = $formelement_factory;
+    public function __construct(
+        Tracker_FormElementFactory $formelement_factory,
+        EqualComparisonVisitor $equal_comparison_visitor,
+        NotEqualComparisonVisitor $not_equal_comparison_visitor
+    ) {
+        $this->formelement_factory          = $formelement_factory;
+        $this->equal_comparison_visitor     = $equal_comparison_visitor;
+        $this->not_equal_comparison_visitor = $not_equal_comparison_visitor;
     }
 
     public function buildFromWhere(Visitable $parsed_query, Tracker $tracker)
@@ -49,24 +65,20 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitEqualComparison(EqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $comparison_value = $comparison->getValue();
-        $formelement      = $this->formelement_factory->getUsedFieldByName(
-            $parameters->getTracker()->getId(),
-            $comparison->getField()
-        );
+        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
 
-        return $formelement->getExpertEqualFromWhere($comparison_value, spl_object_hash($comparison));
+        return $this->equal_comparison_visitor
+            ->getFromWhereBuilder($formelement)
+            ->getFromWhere($comparison, $formelement);
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $comparison_value = $comparison->getValue();
-        $formelement      = $this->formelement_factory->getUsedFieldByName(
-            $parameters->getTracker()->getId(),
-            $comparison->getField()
-        );
+        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
 
-        return $formelement->getExpertNotEqualFromWhere($comparison_value, spl_object_hash($comparison));
+        return $this->not_equal_comparison_visitor
+            ->getFromWhereBuilder($formelement)
+            ->getFromWhere($comparison, $formelement);
     }
 
     public function visitAndExpression(AndExpression $and_expression, QueryBuilderParameters $parameters)
@@ -131,5 +143,15 @@ class QueryBuilderVisitor implements Visitor
             $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
             '(' . $from_where_expression->getWhere() . ' OR ' . $from_where_tail->getWhere() . ')'
         );
+    }
+
+    private function getFormElementFromComparison(Comparison $comparison, QueryBuilderParameters $parameters)
+    {
+        $formelement = $this->formelement_factory->getUsedFieldByName(
+            $parameters->getTracker()->getId(),
+            $comparison->getField()
+        );
+
+        return $formelement;
     }
 }
