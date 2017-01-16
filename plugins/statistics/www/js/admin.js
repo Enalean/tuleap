@@ -85,5 +85,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.checked = input.value === content_value;
             });
         });
-    })
+    });
+
+    var filter_project_over_quota = document.getElementById('filter-table-project-over-quota');
+    if (filter_project_over_quota) {
+        tlp.filterInlineTable(filter_project_over_quota);
+    }
 });
