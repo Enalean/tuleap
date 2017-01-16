@@ -23,12 +23,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
 use TuleapTestCase;
@@ -69,7 +71,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             new EqualComparisonVisitor(),
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
-            new GreaterThanComparisonVisitor()
+            new GreaterThanComparisonVisitor(),
+            new LesserThanOrEqualComparisonVisitor()
         );
     }
 
@@ -116,6 +119,18 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $expr = new GreaterThanComparison('int', 20);
 
         $this->collector->visitGreaterThanComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+    }
+
+    public function itDoesNotThrowAnExceptionIfFieldIsUsedForLesserThanOrEqualComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+
+        $expr = new LesserThanOrEqualComparison('int', 20);
+
+        $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
@@ -174,6 +189,18 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
 
         $expr = new GreaterThanComparison('field', 'value');
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+    }
+
+    public function itThrowsAnExceptionIfFieldIsNotNumericForLesserThanOrEqualComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+
+        $expr = new LesserThanOrEqualComparison('field', 'value');
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 

@@ -55,7 +55,12 @@ and
     }
 
 term
-    = EqualComparison / NotEqualComparison / LesserThanComparison / GreaterThanComparison / ParenthesisTerm
+    = EqualComparison
+        / NotEqualComparison
+        / LesserThanOrEqualComparison
+        / LesserThanComparison
+        / GreaterThanComparison
+        / ParenthesisTerm
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
@@ -77,6 +82,11 @@ LesserThanComparison
 GreaterThanComparison
     = field:Field _ ">" _ value:SimpleExpr {
         return new GreaterThanComparison($field, $value);
+    }
+
+LesserThanOrEqualComparison
+    = field:Field _ "<=" _ value:SimpleExpr {
+        return new LesserThanOrEqualComparison($field, $value);
     }
 
 Field

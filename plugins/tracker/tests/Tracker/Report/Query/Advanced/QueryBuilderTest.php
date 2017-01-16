@@ -30,6 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
 use TuleapTestCase;
@@ -67,7 +68,8 @@ class QueryBuilderTest extends TuleapTestCase
             new EqualComparisonVisitor(),
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
-            new GreaterThanComparisonVisitor()
+            new GreaterThanComparisonVisitor(),
+            new LesserThanOrEqualComparisonVisitor()
         );
     }
 
