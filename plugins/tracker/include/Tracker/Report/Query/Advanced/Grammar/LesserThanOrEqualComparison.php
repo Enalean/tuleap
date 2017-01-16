@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,34 +19,41 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-include "../include/autoload.php";
-include "../include/manual_autoload.php";
+class LesserThanOrEqualComparison implements Term, Visitable, Comparison
+{
+    /**
+     * @var string
+     */
+    private $field;
+    /**
+     * @var string
+     */
+    private $value;
 
-$input = <<<EOS
+    public function __construct($field, $value)
+    {
+        $this->field = $field;
+        $this->value = $value;
+    }
 
-field1_name = "f1"
-and field1_description = "desc1"
-or field1_float = 1.23
-or field1_float != 2.5
-or (
-    field1_int < 20
-    and field1_int > 10
-)
-or (
-    field2_int <= 2
-    and field2_int > 0
-)
+    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitLesserThanOrEqualComparison($this, $parameters);
+    }
 
-EOS;
+    /**
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
 
-try {
-    $parser = new Parser;
-    $result = $parser->parse($input);
-    print_r($result);
-} catch (SyntaxError $ex) {
-    echo "Syntax error: " . $ex->getMessage()
-        . ' At line ' . $ex->grammarLine
-        . ' column ' . $ex->grammarColumn
-        . ' offset ' . $ex->grammarOffset;
-    exit(1);
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
