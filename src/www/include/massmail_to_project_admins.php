@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,6 +55,10 @@ if ($massmail_sender->sendMassmail($project, $user, $subject, $body, $admins)) {
     );
 }
 
-$GLOBALS['Response']->redirect("/projects/$project_unix_name");
+$event_manager = EventManager::instance();
+$event_manager->processEvent(
+    Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS,
+    array()
+);
 
-?>
+$GLOBALS['Response']->redirect("/projects/" . $project->getUnixName());
