@@ -27,9 +27,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -64,7 +66,8 @@ class QueryBuilderTest extends TuleapTestCase
             $formelement_factory,
             new EqualComparisonVisitor(),
             new NotEqualComparisonVisitor(),
-            new LesserThanComparisonVisitor()
+            new LesserThanComparisonVisitor(),
+            new GreaterThanComparisonVisitor()
         );
     }
 
@@ -274,6 +277,24 @@ class QueryBuilderTest extends TuleapTestCase
         $comparison = new LesserThanComparison('float', 1.23);
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+    }
+
+    public function itRetrievesForIntegerFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new GreaterThanComparison('int', 1);
+
+        $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+    }
+
+    public function itRetrievesForFloatFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new GreaterThanComparison('float', 1.23);
+
+        $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
     }
