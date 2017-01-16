@@ -1,65 +1,71 @@
-<div id="plugin_statistics">
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-archive"></i>  {{ title }}</h1>
-            </div>
-            <section class="tlp-pane-section">
-                <div class="tlp-table-actions">
-                    <div class="tlp-table-actions-spacer"></div>
-                    <div class="tlp-form-element tlp-table-actions-element tlp-table-actions-element">
-                        <input type="search"
-                               size="28"
-                               class="tlp-search"
-                               id="filter-table-project-over-quota"
-                               data-target-table-id="project-over-quota"
-                               autocomplete="on"
-                               placeholder="{{ filter_project_quota }}">
-                    </div>
+<section class="tlp-framed-vertically">
+    {{# header }}
+        {{> admin-header }}
+    {{/ header }}
+    <div id="plugin_statistics" class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-archive"></i>  {{ title }}</h1>
                 </div>
-                <table class="tlp-table" id="project-over-quota">
-                    <thead>
-                    <tr>
-                        <th>{{ project_name }}</th>
-                        <th class="tlp-table-cell-numeric">{{ current_size }}</th>
-                        <th class="tlp-table-cell-numeric">{{ quota }}</th>
-                        <th class="tlp-table-cell-numeric">{{ exceeding_size }}</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {{# exceeding_projects }}
+                <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <div class="tlp-table-actions-spacer"></div>
+                        <div class="tlp-form-element tlp-table-actions-element">
+                            <input type="search"
+                                   size="28"
+                                   class="tlp-search"
+                                   id="filter-table-project-over-quota"
+                                   data-target-table-id="project-over-quota"
+                                   autocomplete="on"
+                                   placeholder="{{ filter_project_quota }}">
+                        </div>
+                    </div>
+                    <table class="tlp-table" id="project-over-quota">
+                        <thead>
                         <tr>
-                            <td class="tlp-table-cell-filterable">
-                                <a href="disk_usage.php?menu=services&project_filter={{ project_name }}+({{ project_unix_name }})">
-                                    {{ project_name }}
-                                </a>
-                            </td>
-                            <td class="tlp-table-cell-numeric">{{ current_disk_space }}</td>
-                            <td class="tlp-table-cell-numeric">{{ disk_quota }}</td>
-                            <td class="tlp-table-cell-numeric">{{ exceed }}</td>
-                            <td class="tlp-table-cell-actions">
-                                <button type="button" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                                   data-modal-id="modal-mass-mail-quota-{{ project_id }}">
-                                    <span class="tlp-button-icon fa fa-envelope-o"></span>
-                                    {{ warn_administrators }}
-                                </button>
-                                {{> disk-quota-warning }}
-                            </td>
+                            <th>{{ project_name }}</th>
+                            <th class="tlp-table-cell-numeric">{{ current_size }}</th>
+                            <th class="tlp-table-cell-numeric">{{ quota }}</th>
+                            <th class="tlp-table-cell-numeric">{{ exceeding_size }}</th>
+                            <th></th>
                         </tr>
-                    {{/ exceeding_projects }}
+                        </thead>
 
-                    {{^ exceeding_projects }}
-                        <tr>
-                            <td colspan="5" class="tlp-table-cell-empty">
-                                {{ no_projects_warning }}
-                            </td>
-                        </tr>
-                    {{/ exceeding_projects }}
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </section>
-</div>
+                        <tbody>
+                        {{# exceeding_projects }}
+                            <tr>
+                                <td class="tlp-table-cell-filterable">
+                                    <a href="disk_usage.php?menu=services&project_filter={{ project_name }}+({{ project_unix_name }})">
+                                        {{ project_name }}
+                                    </a>
+                                </td>
+                                <td class="tlp-table-cell-numeric">{{ current_disk_space }}</td>
+                                <td class="tlp-table-cell-numeric">{{ disk_quota }}</td>
+                                <td class="tlp-table-cell-numeric">{{ exceed }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    <button type="button"
+                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                            data-modal-id="modal-mass-mail-quota-{{ project_id }}">
+                                        <span class="tlp-button-icon fa fa-envelope-o"></span>
+                                        {{ warn_administrators }}
+                                    </button>
+                                    {{> disk-quota-warning }}
+                                </td>
+                            </tr>
+                        {{/ exceeding_projects }}
+
+                        {{^ exceeding_projects }}
+                            <tr>
+                                <td colspan="5" class="tlp-table-cell-empty">
+                                    {{ no_projects_warning }}
+                                </td>
+                            </tr>
+                        {{/ exceeding_projects }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    </div>
+</section>

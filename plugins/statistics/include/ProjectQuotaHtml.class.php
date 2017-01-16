@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectsOverQuotaPresenter;
 
 require_once('ProjectQuotaManager.class.php');
@@ -278,9 +279,20 @@ class ProjectQuotaHtml {
         }
 
         $title     = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
-        $presenter = new ProjectsOverQuotaPresenter($exceeding_projects);
+        $presenter = new ProjectsOverQuotaPresenter($this->getHeaderPresenter($title), $exceeding_projects);
         $renderer  = new AdminPageRenderer();
-        $renderer->renderAPresenter($title, STATISTICS_TEMPLATE_DIR, 'projects-over-quota', $presenter);
+        $renderer->renderANoFramedPresenter($title, STATISTICS_TEMPLATE_DIR, 'projects-over-quota', $presenter);
+    }
+
+    /**
+     * @return AdminHeaderPresenter
+     */
+    private function getHeaderPresenter($title)
+    {
+        return new AdminHeaderPresenter(
+            $title,
+            'project_quota'
+        );
     }
 
     /**
