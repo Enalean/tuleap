@@ -507,6 +507,18 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Remove captcha plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha
+# Remove development tools
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/changelogs
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php56
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-mo.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-po.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/sass.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
