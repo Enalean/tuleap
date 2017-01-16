@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@ class InvalidFieldsCollection
     private $fields_not_exist;
 
     /** @var array */
-    private $fields_not_supported;
+    private $fields_not_supporting_operator;
 
     public function __construct()
     {
-        $this->fields_not_exist     = array();
-        $this->fields_not_supported = array();
+        $this->fields_not_exist               = array();
+        $this->fields_not_supporting_operator = array();
     }
 
     public function addNonexistentField($field_name)
@@ -38,9 +38,9 @@ class InvalidFieldsCollection
         $this->fields_not_exist[] = $field_name;
     }
 
-    public function addUnsupportedField($field_name)
+    public function addFieldNotSupportingOperator($field_name)
     {
-        $this->fields_not_supported[] = $field_name;
+        $this->fields_not_supporting_operator[] = $field_name;
     }
 
     /**
@@ -48,7 +48,10 @@ class InvalidFieldsCollection
      */
     public function hasInvalidFields()
     {
-        return count($this->fields_not_exist) > 0 || count($this->fields_not_supported) > 0;
+        return max(
+            count($this->fields_not_exist),
+            count($this->fields_not_supporting_operator)
+        ) > 0;
     }
 
     /**
@@ -62,8 +65,8 @@ class InvalidFieldsCollection
     /**
      * @return array
      */
-    public function getUnsupportedFields()
+    public function getFieldsNotSupportingOperator()
     {
-        return $this->fields_not_supported;
+        return $this->fields_not_supporting_operator;
     }
 }

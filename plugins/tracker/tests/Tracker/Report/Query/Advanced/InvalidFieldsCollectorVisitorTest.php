@@ -85,7 +85,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison()
@@ -97,7 +97,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitNotEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanComparison()
@@ -109,7 +109,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitLesserThanComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanComparison()
@@ -121,7 +121,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitGreaterThanComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itDoesNotThrowAnExceptionIfFieldIsUsedForLesserThanOrEqualComparison()
@@ -133,7 +133,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itCollectsNonExistentFieldsIfFieldIsUnknown()
@@ -145,7 +145,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('field'));
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()
@@ -157,7 +157,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumeric()
@@ -169,7 +169,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanComparison()
@@ -181,7 +181,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanComparison()
@@ -193,7 +193,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
     }
 
     public function itThrowsAnExceptionIfFieldIsNotNumericForLesserThanOrEqualComparison()
@@ -205,7 +205,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
     }
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()
