@@ -267,8 +267,11 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         $artifact = $this->changeset->getArtifact();
 
         $still_existing_files_ids = array();
-        foreach ($artifact->getLastChangeset()->getValue($this->field)->getFiles() as $file) {
-            $still_existing_files_ids[$file->getId()] = true;
+
+        if ($artifact->getLastChangeset()->getValue($this->field)) {
+            foreach ($artifact->getLastChangeset()->getValue($this->field)->getFiles() as $file) {
+                $still_existing_files_ids[$file->getId()] = true;
+            }
         }
 
         $added    = array();
