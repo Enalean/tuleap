@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,6 +43,8 @@ class AdminHeaderPresenter
     public $disk_usage_users_user_details_label;
     public $disk_usage_global_menu_span_label;
     public $disk_usage_global_menu_label;
+    public $project_over_quota_tab_label;
+    public $all_project_quota_tab_label;
 
     public function __construct(
         $title,
@@ -56,10 +58,12 @@ class AdminHeaderPresenter
         $this->service_usage_tab_active  = ($active_tab === 'service_usage');
         $this->data_export_tab_active    = ($active_tab === 'data_export');
 
-        $this->frequencies_tab_label    = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
-        $this->disk_usage_tab_label     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
-        $this->project_quota_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
-        $this->data_export_tab_label    = $GLOBALS['Language']->getText('plugin_statistics', 'data_export_title');
+        $this->frequencies_tab_label        = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
+        $this->disk_usage_tab_label         = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
+        $this->project_quota_tab_label      = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
+        $this->all_project_quota_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'project_quota_tab_label');
+        $this->project_over_quota_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'project_over_quota_tab_label');
+        $this->data_export_tab_label        = $GLOBALS['Language']->getText('plugin_statistics', 'data_export_title');
 
         $this->disk_usage_services_menu_span_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_span_label');
         $this->disk_usage_services_menu_label        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_label');

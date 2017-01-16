@@ -23,7 +23,10 @@ namespace Tuleap\Statistics;
 
 class ProjectsOverQuotaPresenter
 {
-
+    /**
+     * @var AdminHeaderPresenter
+     */
+    public $header;
     public $table_content;
     public $title;
     public $exceeding_projects;
@@ -40,7 +43,7 @@ class ProjectsOverQuotaPresenter
     public $subject_label;
     public $body_label;
 
-    public function __construct(array $exceeding_projects)
+    public function __construct(AdminHeaderPresenter $header, array $exceeding_projects)
     {
         $this->title                = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
         $this->project_name         = $GLOBALS['Language']->getText('plugin_statistics', 'project_name');
@@ -60,5 +63,6 @@ class ProjectsOverQuotaPresenter
         $this->action_url = '/include/massmail_to_project_admins.php';
 
         $this->exceeding_projects = $exceeding_projects;
+        $this->header             = $header;
     }
 }

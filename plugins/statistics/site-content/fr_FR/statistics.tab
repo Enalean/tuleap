@@ -93,6 +93,8 @@ plugin_statistics	scm_git_repositories	Nombre total des dépôts git
 plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un commit
 
 plugin_statistics	quota_title	Quota par projet
+plugin_statistics	project_quota_tab_label	Tous les quotas par projet
+plugin_statistics	project_over_quota_tab_label	Projets dépassant les quotas
 plugin_statistics	quota_description	Quota personnalisé par projet
 plugin_statistics	search_projects	Filtrer les projets
 plugin_statistics	no_projects	Il n'y a pas de projet avec un quota personnalisé. Tous les projets ont le quota par défaut ($1 Go).

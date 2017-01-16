@@ -93,6 +93,8 @@ plugin_statistics	scm_git_repositories	Total number of repositorires
 plugin_statistics	scm_repo_evolution	Number of repositories containing commits
 
 plugin_statistics	quota_title	Project quota
+plugin_statistics	project_quota_tab_label	All projects quota
+plugin_statistics	project_over_quota_tab_label	Projects over quota
 plugin_statistics	quota_description	Custom quota for each project
 plugin_statistics	search_projects	Filter projects
 plugin_statistics	no_projects	There isn't any projects with a custom quota. All projects have the default quota ($1 GB).

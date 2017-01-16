@@ -18,10 +18,13 @@
             <a href="disk_usage.php?menu=global" class="tlp-tab-menu-item">{{ disk_usage_global_menu_label }}</a>
         </nav>
     </div>
-    <a
-        href="project_quota.php"
-        class="tlp-tab {{# project_quota_tab_active }}tlp-tab-active{{/ project_quota_tab_active }}"
-    >{{ project_quota_tab_label }}</a>
+    <div class="tlp-tab {{# project_quota_tab_active }}tlp-tab-active{{/ project_quota_tab_active }}">
+        {{ project_quota_tab_label }} <i class="fa fa-caret-down"></i>
+        <nav class="tlp-tab-menu">
+            <a href="project_quota.php" class="tlp-tab-menu-item" >{{ all_project_quota_tab_label }}</a>
+            <a href="project_over_quota.php" class="tlp-tab-menu-item" >{{ project_over_quota_tab_label }}</a>
+        </nav>
+    </div>
     <a
             href="data_export.php"
             class="tlp-tab {{# data_export_tab_active }}tlp-tab-active{{/ data_export_tab_active }}"
