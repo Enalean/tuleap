@@ -22,9 +22,12 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use TuleapTestCase;
 
@@ -34,7 +37,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 {
 
     private $tracker;
-    private $field;
+    private $field_text;
+    private $int_field;
     private $formelement_factory;
     private $collector;
     private $user;
@@ -46,7 +50,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         parent::setUp();
 
         $this->tracker             = aTracker()->withId(101)->build();
-        $this->field               = aStringField()->build();
+        $this->field_text          = aTextField()->withName('field')->withId(101)->build();
+        $this->int_field           = anIntegerField()->withName('int')->withId(102)->build();
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->user                = aUser()->build();
 
@@ -57,19 +62,51 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             $this->invalid_fields_collection
         );
 
-        $this->collector = new InvalidFieldsCollectorVisitor($this->formelement_factory, new EqualComparisonVisitor(), new NotEqualComparisonVisitor());
+        $this->collector = new InvalidFieldsCollectorVisitor(
+            $this->formelement_factory,
+            new EqualComparisonVisitor(),
+            new NotEqualComparisonVisitor(),
+            new LesserThanComparisonVisitor()
+        );
     }
 
-    public function itDoesNotThrowAnExceptionIfFieldIsUsed()
+    public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field);
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
         $expr = new EqualComparison('field', 'value');
 
         $this->collector->visitEqualComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
     }
 
-    public function itThrowsAnExceptionIfFieldIsUnknown()
+    public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
+
+        $expr = new NotEqualComparison('field', 'value');
+
+        $this->collector->visitNotEqualComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+    }
+
+    public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+
+        $expr = new LesserThanComparison('int', 20);
+
+        $this->collector->visitLesserThanComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+    }
+
+    public function itCollectsNonExistentFieldsIfFieldIsUnknown()
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(null);
 
@@ -81,11 +118,35 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
     }
 
-    public function itThrowsAnExceptionIfFieldIsNotText()
+    public function itCollectsUnsupportedFieldsIfFieldIsNotText()
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
 
         $expr = new EqualComparison('field', 'value');
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotNumeric()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
+
+        $expr = new EqualComparison('field', 20);
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+
+        $expr = new LesserThanComparison('field', 'value');
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 

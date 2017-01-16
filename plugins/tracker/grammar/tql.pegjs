@@ -36,7 +36,7 @@ summary = 'ありがとう' or
 
 or_expression
     = _ expression:and_expression _ tail:or? {
-    	return new OrExpression($expression, $tail);
+        return new OrExpression($expression, $tail);
     }
 
 or
@@ -46,7 +46,7 @@ or
 
 and_expression
     = expression:term _ tail:and? {
-    	return new AndExpression($expression, $tail);
+        return new AndExpression($expression, $tail);
     }
 
 and
@@ -55,7 +55,7 @@ and
     }
 
 term
-	= EqualComparison / NotEqualComparison / ParenthesisTerm
+    = EqualComparison / NotEqualComparison / LesserThanComparison / ParenthesisTerm
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
@@ -67,6 +67,11 @@ EqualComparison
 NotEqualComparison
     = field:Field _ "!=" _ value:SimpleExpr {
         return new NotEqualComparison($field, $value);
+    }
+
+LesserThanComparison
+    = field:Field _ "<" _ value:SimpleExpr {
+        return new LesserThanComparison($field, $value);
     }
 
 Field

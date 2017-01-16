@@ -144,12 +144,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->collector      = new InvalidFieldsCollectorVisitor(
             $this->getFormElementFactory(),
             new InvalidFields\EqualComparisonVisitor(),
-            new InvalidFields\NotEqualComparisonVisitor()
+            new InvalidFields\NotEqualComparisonVisitor(),
+            new InvalidFields\LesserThanComparisonVisitor()
         );
         $this->query_builder  = new QueryBuilderVisitor(
             $this->getFormElementFactory(),
             new QueryBuilder\EqualComparisonVisitor(),
-            new QueryBuilder\NotEqualComparisonVisitor()
+            new QueryBuilder\NotEqualComparisonVisitor(),
+            new QueryBuilder\LesserThanComparisonVisitor()
         );
     }
 
