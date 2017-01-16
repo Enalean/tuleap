@@ -26,10 +26,10 @@
         </form>
     </div>
     <div class="chart">
-        <graph
-            class="chart-content"
-            ng-if="! reports_modal.loading"
-            data="reports_modal.data"
+        <graph id="cumulative-chart"
+               class="chart-content"
+               ng-if="! reports_modal.loading"
+               data="reports_modal.data"
         ></graph>
     </div>
 </div>
