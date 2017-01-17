@@ -29,6 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValue;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
@@ -83,7 +84,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
-        $expr = new EqualComparison('field', 'value');
+        $expr = new EqualComparison('field', new SimpleValue('value'));
 
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
@@ -95,7 +96,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
-        $expr = new NotEqualComparison('field', 'value');
+        $expr = new NotEqualComparison('field', new SimpleValue('value'));
 
         $this->collector->visitNotEqualComparison($expr, $this->parameters);
 
@@ -107,7 +108,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new LesserThanComparison('int', 20);
+        $expr = new LesserThanComparison('int', new SimpleValue(20));
 
         $this->collector->visitLesserThanComparison($expr, $this->parameters);
 
@@ -119,7 +120,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new GreaterThanComparison('int', 20);
+        $expr = new GreaterThanComparison('int', new SimpleValue(20));
 
         $this->collector->visitGreaterThanComparison($expr, $this->parameters);
 
@@ -131,7 +132,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new LesserThanOrEqualComparison('int', 20);
+        $expr = new LesserThanOrEqualComparison('int', new SimpleValue(20));
 
         $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
 
@@ -143,7 +144,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new GreaterThanOrEqualComparison('int', 20);
+        $expr = new GreaterThanOrEqualComparison('int', new SimpleValue(20));
 
         $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
 
@@ -155,7 +156,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(null);
 
-        $expr = new EqualComparison('field', 'value');
+        $expr = new EqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -167,7 +168,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
 
-        $expr = new EqualComparison('field', 'value');
+        $expr = new EqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -179,7 +180,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
 
-        $expr = new EqualComparison('field', 20);
+        $expr = new EqualComparison('field', new SimpleValue(20));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -191,7 +192,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
 
-        $expr = new LesserThanComparison('field', 'value');
+        $expr = new LesserThanComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -203,7 +204,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
 
-        $expr = new GreaterThanComparison('field', 'value');
+        $expr = new GreaterThanComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -215,7 +216,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
 
-        $expr = new LesserThanOrEqualComparison('field', 'value');
+        $expr = new LesserThanOrEqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -227,7 +228,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
 
-        $expr = new GreaterThanOrEqualComparison('field', 'value');
+        $expr = new GreaterThanOrEqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 

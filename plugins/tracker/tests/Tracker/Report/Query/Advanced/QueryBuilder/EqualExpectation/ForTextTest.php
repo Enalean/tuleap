@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualExpression;
 
 use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValue;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison\ForText;
 use TuleapTestCase;
 
@@ -42,7 +43,7 @@ class ForTextTest extends TuleapTestCase
 
     public function itUsesTheComparisonInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery()
     {
-        $comparison = new EqualComparison('field', 'value');
+        $comparison = new EqualComparison('field', new SimpleValue('value'));
         $field_id   = 101;
         $field      = aTextField()->withId($field_id)->build();
 

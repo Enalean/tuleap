@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValue;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -53,7 +54,7 @@ class SizeValidatorTest extends TuleapTestCase
 
     public function itThrowsAnExceptionIfDepthExceedLimit()
     {
-        $comparison    = new EqualComparison("field", "=", "value");
+        $comparison    = new EqualComparison("field", new SimpleValue('value'));
         $subexpression = new AndExpression($comparison, null);
         $expression    = new OrExpression($subexpression, null);
 

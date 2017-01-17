@@ -67,32 +67,32 @@ ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
     = field:Field _ "=" _ value:SimpleExpr {
-        return new EqualComparison($field, $value);
+        return new EqualComparison($field, new SimpleValue($value));
     }
 
 NotEqualComparison
     = field:Field _ "!=" _ value:SimpleExpr {
-        return new NotEqualComparison($field, $value);
+        return new NotEqualComparison($field, new SimpleValue($value));
     }
 
 LesserThanComparison
     = field:Field _ "<" _ value:SimpleExpr {
-        return new LesserThanComparison($field, $value);
+        return new LesserThanComparison($field, new SimpleValue($value));
     }
 
 GreaterThanComparison
     = field:Field _ ">" _ value:SimpleExpr {
-        return new GreaterThanComparison($field, $value);
+        return new GreaterThanComparison($field, new SimpleValue($value));
     }
 
 LesserThanOrEqualComparison
     = field:Field _ "<=" _ value:SimpleExpr {
-        return new LesserThanOrEqualComparison($field, $value);
+        return new LesserThanOrEqualComparison($field, new SimpleValue($value));
     }
 
 GreaterThanOrEqualComparison
     = field:Field _ ">=" _ value:SimpleExpr {
-        return new GreaterThanOrEqualComparison($field, $value);
+        return new GreaterThanOrEqualComparison($field, new SimpleValue($value));
     }
 
 Field
