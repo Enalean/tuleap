@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,28 +19,36 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-include "../include/autoload.php";
-include "../include/manual_autoload.php";
+class BetweenValue implements Value
+{
+    /**
+     * @var string
+     */
+    private $min_value;
+    /**
+     * @var string
+     */
+    private $max_value;
 
-$input = <<<EOS
+    public function __construct($min_value, $max_value)
+    {
+        $this->min_value = $min_value;
+        $this->max_value = $max_value;
+    }
 
-field1_name = "f1"
-and field1_description = "desc1"
-or field1_float != 2.5
-or field2_float > 5.4
-or field2_int <= 2
-and field3_int between (1, 10)
+    /**
+     * @return string
+     */
+    public function getMinValue()
+    {
+        return $this->min_value;
+    }
 
-EOS;
-
-try {
-    $parser = new Parser;
-    $result = $parser->parse($input);
-    print_r($result);
-} catch (SyntaxError $ex) {
-    echo "Syntax error: " . $ex->getMessage()
-        . ' At line ' . $ex->grammarLine
-        . ' column ' . $ex->grammarColumn
-        . ' offset ' . $ex->grammarOffset;
-    exit(1);
+    /**
+     * @return string
+     */
+    public function getMaxValue()
+    {
+        return $this->max_value;
+    }
 }
