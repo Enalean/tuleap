@@ -25,22 +25,17 @@ class InvalidFieldsCollection
     private $fields_not_exist;
 
     /** @var array */
-    private $fields_not_supporting_operator;
+    private $invalid_field_errors;
 
     public function __construct()
     {
-        $this->fields_not_exist               = array();
-        $this->fields_not_supporting_operator = array();
+        $this->fields_not_exist     = array();
+        $this->invalid_field_errors = array();
     }
 
     public function addNonexistentField($field_name)
     {
         $this->fields_not_exist[] = $field_name;
-    }
-
-    public function addFieldNotSupportingOperator($field_name)
-    {
-        $this->fields_not_supporting_operator[] = $field_name;
     }
 
     /**
@@ -50,7 +45,7 @@ class InvalidFieldsCollection
     {
         return max(
             count($this->fields_not_exist),
-            count($this->fields_not_supporting_operator)
+            count($this->invalid_field_errors)
         ) > 0;
     }
 
@@ -65,8 +60,13 @@ class InvalidFieldsCollection
     /**
      * @return array
      */
-    public function getFieldsNotSupportingOperator()
+    public function getInvalidFieldErrors()
     {
-        return $this->fields_not_supporting_operator;
+        return $this->invalid_field_errors;
+    }
+
+    public function addInvalidFieldError($error_message)
+    {
+        $this->invalid_field_errors[] = $error_message;
     }
 }

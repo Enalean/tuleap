@@ -26,7 +26,7 @@ use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotSupportOperatorException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsException;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use \Tuleap\Tracker\REST\ReportRepresentation;
@@ -339,7 +339,7 @@ class TrackersResource extends AuthenticatedResource {
                 400,
                 $exception->getMessage()
             );
-        } catch (FieldsDoNotSupportOperatorException $exception) {
+        } catch (InvalidFieldsException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()

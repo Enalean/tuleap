@@ -21,15 +21,15 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tracker_FormElement_Field;
 
-class FieldIsNotSupportedForComparisonException extends InvalidFieldException
+class FieldIsNotSupportedAtAllException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field, $operator)
+    public function __construct(Tracker_FormElement_Field $field)
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "The field '%s' is not supported for the operator %s."),
-                $field->getName(),
-                $operator
+                dgettext("tuleap-tracker", "The field '%s' is not supported. Please
+                    refer to the documentation for the allowed types."),
+                $field->getName()
             )
         );
     }

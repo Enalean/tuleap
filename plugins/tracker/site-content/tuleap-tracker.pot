@@ -2,16 +2,32 @@ msgid "Error during parsing expert query"
 msgstr ""
 
 #, php-format
-msgid "The field '%s' does not support this operator"
-msgid_plural "The fields '%s' do not support this operator"
-msgstr[0] ""
-msgstr[1] ""
-
-#, php-format
 msgid "The field '%s' doesn't exist"
 msgid_plural "The fields '%s' don't exist"
 msgstr[0] ""
 msgstr[1] ""
+
+#, php-format
+msgid "The field '%s' is not supported for the operator %s."
+msgstr ""
+
+#, php-format
+msgid ""
+"The field '%s' is not supported. Please\n"
+"                    refer to the documentation for the allowed types."
+msgstr ""
+
+#, php-format
+msgid "The float field '%s' cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to the float value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to the string value '%s'."
+msgstr ""
 
 msgid ""
 "The query is considered too complex to be executed by the server.\n"

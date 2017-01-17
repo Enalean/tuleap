@@ -2,6 +2,8 @@
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -13,16 +15,26 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tracker_FormElement_Field;
+use Exception;
 
-interface ICheckThatFieldIsAllowedForComparison
+class InvalidFieldsException extends Exception
 {
-    /** @throws FieldIsNotSupportedForComparisonException */
-    public function checkThatFieldIsAllowed(Tracker_FormElement_Field $field);
+    private $error_messages;
+
+    public function __construct($error_messages)
+    {
+        parent::__construct(implode("\n", $error_messages));
+
+        $this->error_messages = $error_messages;
+    }
+
+    public function getErrorMessages()
+    {
+        return $this->error_messages;
+    }
 }
