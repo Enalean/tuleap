@@ -147,7 +147,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new InvalidFields\NotEqualComparisonVisitor(),
             new InvalidFields\LesserThanComparisonVisitor(),
             new InvalidFields\GreaterThanComparisonVisitor(),
-            new InvalidFields\LesserThanOrEqualComparisonVisitor()
+            new InvalidFields\LesserThanOrEqualComparisonVisitor(),
+            new InvalidFields\GreaterThanOrEqualComparisonVisitor()
         );
         $this->query_builder  = new QueryBuilderVisitor(
             $this->getFormElementFactory(),
@@ -155,7 +156,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new QueryBuilder\NotEqualComparisonVisitor(),
             new QueryBuilder\LesserThanComparisonVisitor(),
             new QueryBuilder\GreaterThanComparisonVisitor(),
-            new QueryBuilder\LesserThanOrEqualComparisonVisitor()
+            new QueryBuilder\LesserThanOrEqualComparisonVisitor(),
+            new QueryBuilder\GreaterThanOrEqualComparisonVisitor()
         );
     }
 

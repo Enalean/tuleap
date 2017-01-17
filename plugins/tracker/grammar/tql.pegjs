@@ -58,6 +58,7 @@ term
     = EqualComparison
         / NotEqualComparison
         / LesserThanOrEqualComparison
+        / GreaterThanOrEqualComparison
         / LesserThanComparison
         / GreaterThanComparison
         / ParenthesisTerm
@@ -87,6 +88,11 @@ GreaterThanComparison
 LesserThanOrEqualComparison
     = field:Field _ "<=" _ value:SimpleExpr {
         return new LesserThanOrEqualComparison($field, $value);
+    }
+
+GreaterThanOrEqualComparison
+    = field:Field _ ">=" _ value:SimpleExpr {
+        return new GreaterThanOrEqualComparison($field, $value);
     }
 
 Field
