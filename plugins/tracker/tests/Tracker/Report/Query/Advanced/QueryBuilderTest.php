@@ -23,12 +23,15 @@ use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
@@ -69,7 +72,8 @@ class QueryBuilderTest extends TuleapTestCase
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
             new GreaterThanComparisonVisitor(),
-            new LesserThanOrEqualComparisonVisitor()
+            new LesserThanOrEqualComparisonVisitor(),
+            new GreaterThanOrEqualComparisonVisitor()
         );
     }
 
@@ -297,6 +301,42 @@ class QueryBuilderTest extends TuleapTestCase
         $comparison = new GreaterThanComparison('float', 1.23);
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+    }
+
+    public function itRetrievesForIntegerFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new LesserThanOrEqualComparison('int', 1);
+
+        $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+    }
+
+    public function itRetrievesForFloatFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new LesserThanOrEqualComparison('float', 1.23);
+
+        $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+    }
+
+    public function itRetrievesForIntegerFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new GreaterThanOrEqualComparison('int', 1);
+
+        $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+    }
+
+    public function itRetrievesForFloatFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new GreaterThanOrEqualComparison('float', 1.23);
+
+        $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
     }

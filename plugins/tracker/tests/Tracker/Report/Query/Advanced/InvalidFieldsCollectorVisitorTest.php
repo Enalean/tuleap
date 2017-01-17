@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
@@ -29,6 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
@@ -72,7 +74,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
             new GreaterThanComparisonVisitor(),
-            new LesserThanOrEqualComparisonVisitor()
+            new LesserThanOrEqualComparisonVisitor(),
+            new GreaterThanOrEqualComparisonVisitor()
         );
     }
 
@@ -124,13 +127,25 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
     }
 
-    public function itDoesNotThrowAnExceptionIfFieldIsUsedForLesserThanOrEqualComparison()
+    public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanOrEqualComparison()
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new LesserThanOrEqualComparison('int', 20);
 
         $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+    }
+
+    public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanOrEqualComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+
+        $expr = new GreaterThanOrEqualComparison('int', 20);
+
+        $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
@@ -196,11 +211,23 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
     }
 
-    public function itThrowsAnExceptionIfFieldIsNotNumericForLesserThanOrEqualComparison()
+    public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanOrEqualComparison()
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
 
         $expr = new LesserThanOrEqualComparison('field', 'value');
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanOrEqualComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+
+        $expr = new GreaterThanOrEqualComparison('field', 'value');
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
