@@ -1,1 +1,17 @@
-<div class="alert alert-warning">{{ page_under_construction }} </div>
+<form action="?group_id={{ group_id }}&action=update-visibility" method="post">
+    <div>
+        {{# project_visibility_presenter }}
+            {{# can_configure_visibility }}
+
+                {{> project_visibility }}
+            {{/ can_configure_visibility }}
+        {{/ project_visibility_presenter }}
+
+        {{# project_truncated_presenter }}
+            {{# can_configure_truncated_mail }}
+                {{> truncated_emails }}
+            {{/can_configure_truncated_mail}}
+        {{/ project_truncated_presenter }}
+    </div>
+    <input class='btn btn-primary' type="submit" name="Update" value="{{ label_submit }}">
+</form>

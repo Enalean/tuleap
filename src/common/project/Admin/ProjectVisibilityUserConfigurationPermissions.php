@@ -22,27 +22,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuealp\project\Admin\ProjectVisibilityController;
-use Tuealp\project\Admin\ProjectVisibilityRouter;
-use Tuealp\project\Admin\ProjectVisibilityUserConfigurationPermissions;
-use Tuealp\project\Admin\ServicesUsingTruncatedMailRetriever;
+namespace Tuealp\project\Admin;
 
-require_once('pre.php');
+use ForgeAccess;
+use ForgeConfig;
+use PFUser;
+use Project;
 
-$group_id = $request->get('group_id');
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+class ProjectVisibilityUserConfigurationPermissions
+{
+    public function canUserConfigureProjectVisibility(PFUser $user, Project $project)
+    {
+        return $user->isSuperUser()
+            || (ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
+                && $user->isAdmin($project->getID())
+            );
+    }
 
-if (! $request->getProject()) {
-    exit_no_group();
+    public function canUserConfigureTruncatedMail(PFUser $user)
+    {
+        return $user->isSuperUser();
+    }
 }
-
-$project_visibility_router = new ProjectVisibilityRouter(
-    new ProjectVisibilityController(
-        ProjectManager::instance(),
-        new ProjectVisibilityUserConfigurationPermissions(),
-        new ServicesUsingTruncatedMailRetriever(EventManager::instance())
-    )
-);
-$project_visibility_router->route($request);
-
-project_admin_footer(array());

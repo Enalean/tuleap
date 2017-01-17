@@ -24,12 +24,33 @@
 
 namespace Tuealp\project\Admin;
 
+use Project;
+use ProjectTruncatedEmailsPresenter;
+use ProjectVisibilityPresenter;
+
 class ProjectGlobalVisibilityPresenter
 {
-    public $page_under_construction;
+    /**
+     * @var ProjectVisibilityPresenter
+     */
+    public $project_visibility_presenter;
 
-    public function __construct()
-    {
-        $this->page_under_construction = $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'under_construction');
+    /**
+     * @var ProjectTruncatedEmailsPresenter
+     */
+    public $project_truncated_presenter;
+
+    public $label_submit;
+
+    public function __construct(
+        Project $project,
+        ProjectVisibilityPresenter $project_visibility_presenter,
+        ProjectTruncatedEmailsPresenter $project_truncated_presenter
+    ) {
+        $this->project_visibility_presenter = $project_visibility_presenter;
+        $this->project_truncated_presenter  = $project_truncated_presenter;
+        $this->group_id                     = $project->getGroupId();
+
+        $this->label_submit = _('Update');
     }
 }

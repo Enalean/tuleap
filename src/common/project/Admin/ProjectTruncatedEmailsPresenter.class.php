@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProjectTruncatedEmailsPresenter {
+class ProjectTruncatedEmailsPresenter
+{
+    public $can_configure_truncated_mail;
 
     /** @var Project */
     private $project;
@@ -25,9 +27,11 @@ class ProjectTruncatedEmailsPresenter {
     /** @var array */
     private $impacted_services_list;
 
-    public function __construct(Project $project, array $impacted_services_list) {
-        $this->project                = $project;
-        $this->impacted_services_list = $impacted_services_list;
+    public function __construct(Project $project, array $impacted_services_list, $can_configure_truncated_mail)
+    {
+        $this->project                      = $project;
+        $this->impacted_services_list       = $impacted_services_list;
+        $this->can_configure_truncated_mail = $can_configure_truncated_mail;
     }
 
     public function truncated_emails_title() {

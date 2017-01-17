@@ -103,3 +103,9 @@ msgstr "Suivi"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+msgid "Update failed"
+msgstr "La mise à jour a échoué"
+
+msgid "Update successful"
+msgstr "Mis à jour avec succès"

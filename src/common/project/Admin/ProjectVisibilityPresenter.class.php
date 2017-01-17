@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,15 +53,22 @@ class ProjectVisibilityPresenter {
      * @var BaseLanguage
      */
     private $language;
+    public $can_configure_visibility;
 
-    public function __construct(BaseLanguage $language, $platform_allows_restricted, $project_visibility) {
-        $this->language                   = $language;
+    public function __construct(
+        BaseLanguage $language,
+        $platform_allows_restricted,
+        $project_visibility,
+        $can_configure_visibility
+    ) {
+        $this->language = $language;
         $this->platform_allows_restricted = (bool) $platform_allows_restricted;
-        $this->project_visibility         = $project_visibility;
-        $this->section_title              = $this->language->getText('project_admin_editgroupinfo', 'visibility_section');
-        $this->choose_visbility           = $this->language->getText('project_admin_editgroupinfo', 'choose_visbility');
+        $this->project_visibility = $project_visibility;
+        $this->section_title = $this->language->getText('project_admin_editgroupinfo', 'visibility_section');
+        $this->choose_visbility = $this->language->getText('project_admin_editgroupinfo', 'choose_visbility');
         $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning');
-        $this->general_warning_message    = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
+        $this->general_warning_message = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
+        $this->can_configure_visibility = $can_configure_visibility;
 
         $this->generateVisibilityOptions();
     }
