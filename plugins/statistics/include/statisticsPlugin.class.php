@@ -44,6 +44,7 @@ class StatisticsPlugin extends Plugin {
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
+        $this->addHook(Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS);
 
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(ProjectDetailsPresenter::GET_MORE_INFO_LINKS);
@@ -81,6 +82,15 @@ class StatisticsPlugin extends Plugin {
     public function system_event_get_types_for_custom_queue($params) {
         if ($params['queue'] === SystemEventQueueStatistics::NAME) {
             $params['types'][] = SystemEvent_STATISTICS_DAILY::NAME;
+        }
+    }
+
+    /** @see Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS */
+    public function after_massmail_to_project_admins($params)
+    {
+        $request = HTTPRequest::instance();
+        if ($request->get('project_over_quota')) {
+            $GLOBALS['Response']->redirect("/plugins/statistics/project_over_quota.php");
         }
     }
 

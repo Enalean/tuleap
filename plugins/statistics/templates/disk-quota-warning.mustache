@@ -12,6 +12,7 @@
         </div>
         <div class="tlp-modal-body">
             <input type="hidden" name="group_id" value="{{ project_id }}"/>
+            <input type="hidden" name="project_over_quota" value="1"/>
             {{# csrf_token }}
                 {{> csrf_token_input }}
             {{/ csrf_token }}

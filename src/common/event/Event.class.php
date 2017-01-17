@@ -1300,4 +1300,12 @@ class Event {
      *    'subject'     => <string>
      */
     const MASSMAIL = 'massmail';
+
+
+    /**
+     * Event sent to know where redirect after sending massmail
+     *
+     * Parameters:
+     */
+    const AFTER_MASSMAIL_TO_PROJECT_ADMINS = 'after_massmail_to_project_admins';
 }
