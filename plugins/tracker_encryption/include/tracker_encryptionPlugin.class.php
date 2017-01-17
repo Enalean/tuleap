@@ -122,6 +122,8 @@ class tracker_encryptionPlugin extends Plugin
             break;
             case 'admin-editencryptionkey':
                 $key = trim($request->getValidated('key', 'text', ''));
+                $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
+                $csrf_token->check();
                 $this->editTrackerKey($tracker_id, $key);
             break;
         }
@@ -134,9 +136,10 @@ class tracker_encryptionPlugin extends Plugin
          $breadcrumbs = array();
          $layout = new TrackerManager();
          $tracker->displayAdminHeader($layout, $title, $breadcrumbs);
+         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
          $this->renderer->renderToPage(
             'tracker-key-settings',
-             new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey'));
+             new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey', $csrf_token));
          $GLOBALS['HTML']->footer(array());
     }
 
