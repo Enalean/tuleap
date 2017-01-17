@@ -98,6 +98,18 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
+    public function itDoesNotCollectInvalidFieldsIfDateFieldIsUsedForEqualComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aMockDateWithoutTimeField()->build());
+
+        $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
+
+        $this->collector->visitEqualComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+    }
+
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison()
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
@@ -205,6 +217,22 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->returns(aSelectBoxField()->withName('status')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper(20));
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'status' is not supported./", implode("\n", $errors));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotDate()
+    {
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aSelectBoxField()->withName('status')->build());
+
+        $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 

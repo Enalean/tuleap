@@ -16,6 +16,10 @@ msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
 #, php-format
+msgid "The date field '%s' cannot be compared to the string value '%s'."
+msgstr "Le champ date '%s' ne peut pas être comparé à la chaîne '%s'."
+
+#, php-format
 msgid "The field '%s' doesn't exist"
 msgid_plural "The fields '%s' don't exist"
 msgstr[0] "Le champ '%s' n'existe pas"
@@ -30,8 +34,8 @@ msgid ""
 "The field '%s' is not supported. Please\n"
 "                    refer to the documentation for the allowed types."
 msgstr ""
-"Le champ '%s' n'est pas supporté. Merci de vous référer à la "
-"documentation pour les types de champs autorisés."
+"Le champ '%s' n'est pas supporté. Merci de vous référer à la documentation "
+"pour les types de champs autorisés."
 
 #, php-format
 msgid "The float field '%s' cannot be compared to the string value '%s'."
@@ -40,12 +44,11 @@ msgstr "Le champ flottant '%s' ne peut pas être comparé à la chaîne '%s'."
 #, php-format
 msgid "The integer field '%s' cannot be compared to the float value '%s'."
 msgstr ""
-"Le champ entier '%s' ne peut pas être comparé à la valeur "
-"flottante '%s'."
+"Le champ entier '%s' ne peut pas être comparé à la valeur flottante '%s'."
 
 #, php-format
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
-msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'"
+msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
