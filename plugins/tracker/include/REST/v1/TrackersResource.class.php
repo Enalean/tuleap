@@ -26,7 +26,7 @@ use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsAreNotSupportedException;
+use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotSupportOperatorException;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use \Tuleap\Tracker\REST\ReportRepresentation;
@@ -212,7 +212,7 @@ class TrackersResource extends AuthenticatedResource {
      *      <br>Example: sprint_name='s1' AND description='desc1'
      *  </li>
      * </ol>
-     * 
+     *
      * @url GET {id}/artifacts
      * @access hybrid
      *
@@ -339,7 +339,7 @@ class TrackersResource extends AuthenticatedResource {
                 400,
                 $exception->getMessage()
             );
-        } catch (FieldsAreNotSupportedException $exception) {
+        } catch (FieldsDoNotSupportOperatorException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()

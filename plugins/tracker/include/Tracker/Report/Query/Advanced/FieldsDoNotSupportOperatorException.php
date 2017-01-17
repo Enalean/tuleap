@@ -22,6 +22,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Exception;
 
-class FieldsAreNotSupportedException extends Exception
+class FieldsDoNotSupportOperatorException extends Exception
 {
 }

@@ -178,7 +178,7 @@ class InvalidFieldsCollectorVisitor implements Visitor
             try {
                 $checker->checkThatFieldIsAllowed($field);
             } catch (FieldIsNotSupportedForComparisonException $exception) {
-                $parameters->getInvalidFieldsCollection()->addUnsupportedField($field_name);
+                $parameters->getInvalidFieldsCollection()->addFieldNotSupportingOperator($field_name);
             }
         }
     }
