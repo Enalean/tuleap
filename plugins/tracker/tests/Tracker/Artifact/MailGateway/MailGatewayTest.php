@@ -68,6 +68,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
     public function setUp() {
         parent::setUp();
 
+        $filter = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter');
+
         $this->mailgateway = new Tracker_Artifact_MailGateway_TokenMailGateway(
             $this->parser,
             $this->incoming_message_factory,
@@ -76,8 +78,11 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
             $this->incoming_mail_dao,
             $this->artifact_factory,
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
-            $this->logger
+            $this->logger,
+            $filter
         );
+
+        stub($filter)->isAnAutoReplyMail()->returns(false);
     }
 
     public function itDoesNotCreateArtifact() {
@@ -172,8 +177,6 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
 class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
 
-    private $changeset_id = 666;
-
     public function setUp() {
         parent::setUp();
 
@@ -185,6 +188,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         stub($this->tracker)->getFormElementFields()->returns(array($title_field, $description_field));
 
         $this->changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(666);
+        $filter = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter');
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_InsecureMailGateway(
             $this->parser,
@@ -194,8 +198,10 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
             $this->incoming_mail_dao,
             $this->artifact_factory,
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
-            $this->logger
+            $this->logger,
+            $filter
         );
+        stub($filter)->isAnAutoReplyMail()->returns(false);
     }
 
     public function itUpdatesArtifact() {

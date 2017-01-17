@@ -52,7 +52,8 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
             $incoming_mail_dao,
             $artifact_factory,
             $tracker_artifactbyemail,
-            $logger
+            $logger,
+            mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter')
         );
     }
 

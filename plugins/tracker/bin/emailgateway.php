@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
 require 'pre.php';
 
@@ -55,6 +56,7 @@ $incoming_mail_dao = new Tracker_Artifact_Changeset_IncomingMailDao();
 $parser              = new Tracker_Artifact_MailGateway_Parser();
 $citation_stripper   = new Tracker_Artifact_MailGateway_CitationStripper();
 $notifier            = new Tracker_Artifact_MailGateway_Notifier();
+$filter              = new MailGatewayFilter();
 $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $parser,
     $incoming_message_factory,
@@ -63,7 +65,8 @@ $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $incoming_mail_dao,
     $artifact_factory,
     new Tracker_ArtifactByEmailStatus($tracker_config),
-    $logger
+    $logger,
+    $filter
 );
 $mailgateway = $mailgateway_builder->build($raw_mail);
 
