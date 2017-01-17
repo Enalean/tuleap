@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
 abstract class Tracker_Artifact_MailGateway_MailGateway {
 
@@ -60,6 +62,11 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
      */
     private $incoming_mail_dao;
 
+    /**
+     * @var MailGatewayFilter
+     */
+    private $mail_filter;
+
     public function __construct(
         Tracker_Artifact_MailGateway_Parser $parser,
         Tracker_Artifact_MailGateway_IncomingMessageFactory $incoming_message_factory,
@@ -68,7 +75,8 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
-        Logger $logger
+        Logger $logger,
+        MailGatewayFilter $mail_filter
     ) {
         $this->logger                   = $logger;
         $this->parser                   = $parser;
@@ -78,14 +86,19 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         $this->artifact_factory         = $artifact_factory;
         $this->tracker_artifactbyemail  = $tracker_artifactbyemail;
         $this->incoming_mail_dao        = $incoming_mail_dao;
+        $this->mail_filter              = $mail_filter;
     }
 
     public function process($raw_mail) {
         $raw_mail_parsed = $this->parser->parse($raw_mail);
         try {
-            $changeset = $this->createChangeset($raw_mail_parsed);
-            if ($changeset) {
-                $this->linkRawMailToChangeset($raw_mail, $changeset);
+            if ($this->mail_filter->isAnAutoReplyMail($raw_mail_parsed) === false) {
+                $changeset = $this->createChangeset($raw_mail_parsed);
+                if ($changeset) {
+                    $this->linkRawMailToChangeset($raw_mail, $changeset);
+                }
+            } else {
+                $this->logger->debug('Auto-reply mail detected ');
             }
         } catch (Tracker_Artifact_MailGateway_MultipleUsersExistException $e) {
             $this->logger->debug('Multiple users match with ' . $raw_mail_parsed['headers']['from']);
