@@ -149,7 +149,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
     }
 
     public function itCollectsNonExistentFieldsIfFieldIsUnknown()
@@ -209,7 +209,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getUnsupportedFields(), array('field'));
+        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanOrEqualComparison()

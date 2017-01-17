@@ -19,15 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Comparison
+interface Value
 {
-    /**
-     * @return Value
-     */
-    public function getValue();
-
-    /**
-     * @return string
-     */
-    public function getField();
 }

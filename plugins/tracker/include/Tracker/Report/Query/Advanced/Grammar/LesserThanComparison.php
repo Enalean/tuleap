@@ -50,10 +50,10 @@ class LesserThanComparison implements Term, Visitable, Comparison
     }
 
     /**
-     * @return string
+     * @return SimpleValue
      */
     public function getValue()
     {
-        return $this->simple_value->getValue();
+        return $this->simple_value;
     }
 }
