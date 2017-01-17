@@ -26,14 +26,14 @@ class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
      */
     private $field;
     /**
-     * @var string
+     * @var SimpleValue
      */
-    private $value;
+    private $simple_value;
 
-    public function __construct($field, $value)
+    public function __construct($field, SimpleValue $simple_value)
     {
-        $this->field = $field;
-        $this->value = $value;
+        $this->field        = $field;
+        $this->simple_value = $simple_value;
     }
 
     public function accept(Visitor $visitor, VisitorParameters $parameters)
@@ -54,6 +54,6 @@ class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->simple_value->getValue();
     }
 }

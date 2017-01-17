@@ -19,34 +19,16 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class LesserThanComparison implements Term, Visitable, Comparison
+class SimpleValue
 {
     /**
      * @var string
      */
-    private $field;
-    /**
-     * @var SimpleValue
-     */
-    private $simple_value;
+    private $value;
 
-    public function __construct($field, SimpleValue $simple_value)
+    public function __construct($value)
     {
-        $this->field        = $field;
-        $this->simple_value = $simple_value;
-    }
-
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
-    {
-        return $visitor->visitLesserThanComparison($this, $parameters);
-    }
-
-    /**
-     * @return string
-     */
-    public function getField()
-    {
-        return $this->field;
+        $this->value = $value;
     }
 
     /**
@@ -54,6 +36,6 @@ class LesserThanComparison implements Term, Visitable, Comparison
      */
     public function getValue()
     {
-        return $this->simple_value->getValue();
+        return $this->value;
     }
 }
