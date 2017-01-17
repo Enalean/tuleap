@@ -29,9 +29,10 @@ class ForText implements FromWhereBuilder
 {
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix   = spl_object_hash($comparison);
-        $value    = $comparison->getValue();
-        $field_id = (int) $field->getId();
+        $suffix           = spl_object_hash($comparison);
+        $comparison_value = $comparison->getValue();
+        $value            = $comparison_value->getValue();
+        $field_id         = (int) $field->getId();
 
         $changeset_value_text_alias = "CVText_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";

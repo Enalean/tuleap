@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class SimpleValue
+class SimpleValue implements Value
 {
     /**
      * @var string
