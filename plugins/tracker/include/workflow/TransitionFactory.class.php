@@ -115,11 +115,16 @@ class TransitionFactory {
         $dao = $this->getDao();
         if ($from != null) {
             $from = $from->getId();
+        } else if ($from === null) {
+            $from = 0;
         }
 
         if (! isset($this->cache_transition_id[$tracker_id]) ) {
             foreach ($dao->searchByTrackerId($tracker_id) as $row) {
-                $this->cache_transition_id[$tracker_id][$from][$to] = $row['transition_id'];
+                $row_from = (int) $row['from_id'];
+                $row_to   = (int) $row['to_id'];
+
+                $this->cache_transition_id[$tracker_id][$row_from][$row_to] = $row['transition_id'];
             }
         }
 
