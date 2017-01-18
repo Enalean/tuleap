@@ -135,8 +135,8 @@ class Backend {
         self::$backend_instances = array();
     }
 
-    public static function setInstance($instance) {
-        self::$backend_instances[self::BACKEND] = $instance;
+    public static function setInstance($type, $instance) {
+        self::$backend_instances[$type] = $instance;
     }
 
     /**

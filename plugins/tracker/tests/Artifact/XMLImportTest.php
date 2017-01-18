@@ -83,7 +83,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
         $this->summary_field_id = 50;
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'summary')->returns(
-            aStringField()->withId(50)->build()
+            aStringField()->withId(50)->withProperty('maxchars', 'string', '0')->build()
         );
 
         $this->john_doe = aUser()->withId(200)->withUserName('john_doe')->build();

@@ -78,7 +78,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         ForgeConfig::set('sys_http_user', 'user');
 
         $backend = mock('Backend');
-        Backend::setInstance($backend);
+        Backend::setInstance('Backend', $backend);
     }
 
     public function tearDown() {

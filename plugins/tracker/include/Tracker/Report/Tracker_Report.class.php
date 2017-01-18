@@ -89,10 +89,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @var QueryBuilderVisitor
      */
     private $query_builder;
-    /**
-     * @var SizeValidatorVisitor
-     */
-    private $size_validator;
 
     /**
      * Constructor
@@ -135,13 +131,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
 
-        $report_config = new TrackerReportConfig(
-            new TrackerReportConfigDao()
-        );
-
-        $this->parser         = new Parser();
-        $this->size_validator = new SizeValidatorVisitor($report_config->getExpertQueryLimit());
-        $this->collector      = new InvalidFieldsCollectorVisitor(
+        $this->parser    = new Parser();
+        $this->collector = new InvalidFieldsCollectorVisitor(
             $this->getFormElementFactory(),
             new InvalidFields\EqualComparisonVisitor(),
             new InvalidFields\NotEqualComparisonVisitor(),
@@ -867,6 +858,18 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     public function getRenderers() {
         return Tracker_Report_RendererFactory::instance()->getReportRenderersByReport($this);
+    }
+
+    /**
+     * @return SizeValidatorVisitor
+     */
+    private function getSizeValidator()
+    {
+        $report_config = new TrackerReportConfig(
+            new TrackerReportConfigDao()
+        );
+
+        return new SizeValidatorVisitor($report_config->getExpertQueryLimit());
     }
 
     protected function orderRenderersByRank($renderers) {
@@ -1628,7 +1631,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     public function validateExpertQuery()
     {
         $parsed_query = $this->parseExpertQuery();
-        $this->size_validator->checkSizeOfTree($parsed_query);
+        $this->getSizeValidator()->checkSizeOfTree($parsed_query);
 
         $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
 
@@ -1881,7 +1884,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function canExecuteExpertQuery($parsed_query)
     {
         try {
-            $this->size_validator->checkSizeOfTree($parsed_query);
+            $this->getSizeValidator()->checkSizeOfTree($parsed_query);
         } catch (LimitSizeIsExceededException $e) {
             return false;
         }

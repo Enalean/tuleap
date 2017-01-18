@@ -526,6 +526,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->cache_specific_properties;
     }
 
+    /** @deprecated For unit tests only */
+    public function setCacheSpecificProperties(array $cache_specific_properties) {
+        $this->cache_specific_properties = $cache_specific_properties;
+    }
+
     /**
      * Get the properties as a unique, flattened array
      *

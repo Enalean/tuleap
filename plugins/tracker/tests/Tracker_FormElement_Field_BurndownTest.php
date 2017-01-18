@@ -94,6 +94,7 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
     public function setUp()
     {
         parent::setUp();
+        $_SERVER['REQUEST_URI'] = '/plugins/tracker';
 
         $tracker          = mock('Tracker');
         $this->tracker_id = 101;
@@ -206,6 +207,7 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
     public function tearDown()
     {
         Tracker_FormElementFactory::clearInstance();
+        unset($_SERVER['REQUEST_URI']);
         parent::tearDown();
     }
 }
@@ -250,6 +252,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
 
+        $computed_dao = mock('Tracker_FormElement_Field_ComputedDao');
+
         $this->field = TestHelper::getPartialMock(
             'Tracker_FormElement_Field_Burndown',
             array(
@@ -258,7 +262,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
                 'userCanRead',
                 'getProperty',
                 'isCacheBurndownAlreadyAsked',
-                'getLogger'
+                'getLogger',
+                'getComputedDao'
             )
         );
 
@@ -268,6 +273,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->field)->getLogger()->returns($logger);
         stub($this->field)->getBurndown()->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
+        stub($this->field)->getComputedDao()->returns($computed_dao);
     }
 
     public function tearDown() {
