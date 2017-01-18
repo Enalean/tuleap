@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,44 +18,43 @@
  */
 
 require_once 'common/project/ProjectCreator.class.php';
-require_once('common/language/BaseLanguage.class.php');
 
-Mock::generate('Project');
-Mock::generate('ProjectManager');
-Mock::generate('BaseLanguage');
-Mock::generate('UserManager');
-Mock::generate('ProjectManager');
-Mock::generate('SystemEventManager');
+class ProjectCreatorTest extends TuleapTestCase
+{
 
-class ProjectCreatorTest_BaseLanguage extends MockBaseLanguage {
-    
-    public function getText($section, $name, $args = array()) {
-        $args = implode($args, ',');
-        return "$section.$name($args)";
-    }
-}
-
-class ProjectCreatorTest extends TuleapTestCase {
-
-    public function setUp(){
-        $GLOBALS['Language']   = new ProjectCreatorTest_BaseLanguage();
+    public function setUp()
+    {
+        $GLOBALS['Language']   = mock('BaseLanguage');
         $GLOBALS['svn_prefix'] = 'whatever';
 
-        $this->event_manager = new MockSystemEventManager();
-        $this->event_manager->setReturnValue('isUserNameAvailable', true);
-        $this->event_manager->setReturnValue('isProjectNameAvailable', true);
+        $this->event_manager = stub('SystemEventManager')->isUserNameAvailable()->returns(true);
+        stub($this->event_manager)->isProjectNameAvailable()->returns(true);
         SystemEventManager::setInstance($this->event_manager);
 
-        $this->project_manager = new MockProjectManager();
-        $this->project_manager->setReturnValue('getProjectByUnixName', null);
+        $this->project_manager = stub('ProjectManager')->getProjectByUnixName()->returns(null);
         ProjectManager::setInstance($this->project_manager);
 
-        $this->user_manager = new MockUserManager();
-        $this->user_manager->setReturnValue('getUserByUserName', null);
+        $this->user_manager = stub('UserManager')->getUserByUserName()->returns(null);
         UserManager::setInstance($this->user_manager);
+
+        $backend_cvs = stub('BackendCVS')->isNameAvailable()->returns(true);
+        BackendCVS::setInstance('CVS', $backend_cvs);
+
+        $this->creator = partial_mock(
+            'ProjectCreator',
+            array('createProject'),
+            array(
+                $this->project_manager,
+                mock('ReferenceManager'),
+                mock('Tuleap\Project\UgroupDuplicator'),
+                false,
+                mock('Tuleap\FRS\FRSPermissionCreator')
+            ));
     }
 
-    public function tearDown(){
+    public function tearDown()
+    {
+        BackendCVS::clearInstances();
         UserManager::clearInstance();
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
@@ -65,38 +64,21 @@ class ProjectCreatorTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function testInvalidShortNameShouldRaiseException() {
-        $creator = $this->GivenAProjectCreator();
-        
+    public function testInvalidShortNameShouldRaiseException()
+    {
         $this->expectException('Project_InvalidShortName_Exception');
-        $creator->create('contains.point', 'sdf', array());
+        $this->creator->create('contains.point', 'sdf', array());
     }
-    
-    public function testInvalidFullNameShouldRaiseException() {
-        $creator = $this->GivenAProjectCreator();
-        
+
+    public function testInvalidFullNameShouldRaiseException()
+    {
         $this->expectException('Project_InvalidFullName_Exception');
-        $creator->create('shortname', 'a', array()); // a is too short
+        $this->creator->create('shortname', 'a', array());
     }
-    
-    public function testCreationFailureShouldRaiseException() {
-        $creator = $this->GivenAProjectCreator();
 
+    public function testCreationFailureShouldRaiseException()
+    {
         $this->expectException('Project_Creation_Exception');
-        $creator->create('shortname', 'Valid Full Name', array());
-    }
-    
-    /**
-     * @return ProjectCreator
-     */
-    private function GivenAProjectCreator() {
-        $projectManager         = new MockProjectManager();
-        $ugroup_duplicator      = mock('Tuleap\Project\UgroupDuplicator');
-        $frs_permission_creator = mock('Tuleap\FRS\FRSPermissionCreator');
-
-        $creator = TestHelper::getPartialMock('ProjectCreator', array('createProject'));
-        $creator->__construct($projectManager, ReferenceManager::instance(), $ugroup_duplicator, false, $frs_permission_creator);
-        
-        return $creator;
+        $this->creator->create('shortname', 'Valid Full Name', array());
     }
 }

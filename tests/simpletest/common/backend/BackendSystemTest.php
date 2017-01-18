@@ -45,9 +45,10 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
                                                              ));
 
 
-class BackendSystemTest extends UnitTestCase {
-    
+class BackendSystemTest extends TuleapTestCase {
+
     function setUp() {
+        parent::setUp();
         $GLOBALS['homedir_prefix']            = dirname(__FILE__) . '/_fixtures/home/users';
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
@@ -66,22 +67,13 @@ class BackendSystemTest extends UnitTestCase {
     function tearDown() {
         //clear the cache between each tests
         Backend::clearInstances();
-        unset($GLOBALS['homedir_prefix']);
-        unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['codendi_shell_skel']);
-        unset($GLOBALS['tmp_dir']);
-        unset($GLOBALS['ftp_frs_dir_prefix']);
-        unset($GLOBALS['ftp_anon_dir_prefix']);
-        unset($GLOBALS['sys_file_deletion_delay']);
-        unset($GLOBALS['sys_custom_incdir']);
-        unset($GLOBALS['sys_incdir']);
         ForgeConfig::restore();
 
         $logfile = $GLOBALS['codendi_log'].'/codendi_syslog';
         if (is_file($logfile)) {
             unlink($logfile);
         }
-        unset($GLOBALS['codendi_log']);
+        parent::tearDown();
     }
     
     function testConstructor() {

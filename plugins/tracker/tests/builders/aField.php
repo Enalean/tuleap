@@ -82,6 +82,7 @@ class Test_Tracker_FormElement_Builder {
     protected $use_it;
     protected $bind;
     protected $label;
+    private $properties = array();
 
     public function __construct($klass) {
         $this->klass = $klass;
@@ -125,6 +126,24 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
 
+    public function withProperty($name, $type, $value)
+    {
+        $this->properties[$name] = array(
+            'name'  => $name,
+            'type'  => $type,
+            'value' => $value
+        );
+
+        return $this;
+    }
+
+    protected function setProperties(Tracker_FormElement_Field $field)
+    {
+        if ($this->properties) {
+            $field->setCacheSpecificProperties($this->properties);
+        }
+    }
+
     /**
      * @return Tracker_FormElement
      */
@@ -137,6 +156,8 @@ class Test_Tracker_FormElement_Builder {
         if ($this->bind) {
             $object->setBind($this->bind);
         }
+        $this->setProperties($object);
+
         return $object;
     }
 }
@@ -156,10 +177,8 @@ class Test_Tracker_FormElementDateWithoutTime_Builder extends Test_Tracker_FormE
         if ($this->bind) {
             $object->setBind($this->bind);
         }
+        $this->setProperties($object);
 
         return $object;
     }
 }
-
-
-?>
