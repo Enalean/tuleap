@@ -40,6 +40,8 @@ try {
     die();
 }
 
+Tuleap\Instrument\Collect::increment('service.api.rest.accessed');
+
 preg_match('/^\/api\/v(\d+)\//', $_SERVER['REQUEST_URI'], $matches);
 $version = floor(file_get_contents(__DIR__ .'/VERSION'));
 if ($matches && isset($matches[1]) && $matches[1] == 2) {

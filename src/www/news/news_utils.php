@@ -31,6 +31,8 @@ require_once('www/forum/forum_utils.php');
 function news_header($params) {
   global $HTML,$group_id,$news_name,$news_id,$Language;
 
+    Tuleap\Instrument\Collect::increment('service.project.news.accessed');
+
 	$params['toptab']='news';
 	$params['group']=$group_id;
 

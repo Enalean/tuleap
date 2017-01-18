@@ -39,6 +39,8 @@ $header_params = array(
     'title' => $Language->getText('homepage', 'title'),
 );
 
+Tuleap\Instrument\Collect::increment('service.homepage.accessed');
+
 if ($HTML->canDisplayStandardHomepage()) {
     $header_params['body_class'] = array('homepage');
 

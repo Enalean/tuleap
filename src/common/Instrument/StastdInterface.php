@@ -20,17 +20,9 @@
 
 namespace Tuleap\Instrument;
 
-class NoopStatsd implements StatsdInterface
+interface StatsdInterface
 {
-    public static function startTiming($key)
-    {
-    }
-
-    public static function endTiming($key)
-    {
-    }
-
-    public static function increment($key)
-    {
-    }
+    public static function increment($key);
+    public static function startTiming($key);
+    public static function endTiming($key);
 }

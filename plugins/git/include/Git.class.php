@@ -337,6 +337,7 @@ class Git extends PluginController {
         $this->access_loger               = $access_loger;
         $this->detector                   = $detector;
 
+        Tuleap\Instrument\Collect::increment('service.project.plugin_git.accessed');
         $url = new Git_URL(
             $this->projectManager,
             $this->factory,
