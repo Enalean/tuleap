@@ -47,7 +47,7 @@ class Rule_FRSFileNameTest extends UnitTestCase {
     }
 
     function testNameContainsInvalidCharacterAnywhere() {
-        $str = "[]`!\"$%^,&*();=|[{}<>?/]";
+        $str = "`!\"$%^,&*();=|{}<>?/";
         for($i = 0; $i < strlen($str); $i++) {
             $this->_testStringWithChar($str[$i]);
         }
