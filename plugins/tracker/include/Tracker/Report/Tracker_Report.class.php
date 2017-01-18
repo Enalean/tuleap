@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsException;
+use Tuleap\Tracker\Report\Query\Advanced\FieldsAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
@@ -1368,7 +1368,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                             Feedback::ERROR,
                             $exception->getMessage()
                         );
-                    } catch (InvalidFieldsException $exception) {
+                    } catch (FieldsAreInvalidException $exception) {
                         foreach ($exception->getErrorMessages() as $message) {
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
@@ -1651,7 +1651,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
         $invalid_field_errors = $invalid_fields_collection->getInvalidFieldErrors();
         if ($invalid_field_errors) {
-            throw new InvalidFieldsException($invalid_field_errors);
+            throw new FieldsAreInvalidException($invalid_field_errors);
         }
     }
 
