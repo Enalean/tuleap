@@ -26,7 +26,7 @@ class IntegerFieldChecker implements InvalidFieldChecker
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValue()->getValue();
+        $value = $comparison->getValueWrapper()->getValue();
 
         if (is_float($value + 0)) {
             throw new IntegerToFloatComparisonException($field, $value);

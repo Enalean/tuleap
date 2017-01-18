@@ -30,7 +30,7 @@ class ForText implements FromWhereBuilder
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix           = spl_object_hash($comparison);
-        $comparison_value = $comparison->getValue();
+        $comparison_value = $comparison->getValueWrapper();
         $value            = $comparison_value->getValue();
         $field_id         = (int) $field->getId();
 

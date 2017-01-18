@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 interface Comparison
 {
     /**
-     * @return Value
+     * @return ValueWrapper
      */
-    public function getValue();
+    public function getValueWrapper();
 
     /**
      * @return string

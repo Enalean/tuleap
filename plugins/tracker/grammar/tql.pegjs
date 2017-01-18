@@ -68,37 +68,37 @@ ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
     = field:Field _ "=" _ value:SimpleExpr {
-        return new EqualComparison($field, new SimpleValue($value));
+        return new EqualComparison($field, new SimpleValueWrapper($value));
     }
 
 NotEqualComparison
     = field:Field _ "!=" _ value:SimpleExpr {
-        return new NotEqualComparison($field, new SimpleValue($value));
+        return new NotEqualComparison($field, new SimpleValueWrapper($value));
     }
 
 LesserThanComparison
     = field:Field _ "<" _ value:SimpleExpr {
-        return new LesserThanComparison($field, new SimpleValue($value));
+        return new LesserThanComparison($field, new SimpleValueWrapper($value));
     }
 
 GreaterThanComparison
     = field:Field _ ">" _ value:SimpleExpr {
-        return new GreaterThanComparison($field, new SimpleValue($value));
+        return new GreaterThanComparison($field, new SimpleValueWrapper($value));
     }
 
 LesserThanOrEqualComparison
     = field:Field _ "<=" _ value:SimpleExpr {
-        return new LesserThanOrEqualComparison($field, new SimpleValue($value));
+        return new LesserThanOrEqualComparison($field, new SimpleValueWrapper($value));
     }
 
 GreaterThanOrEqualComparison
     = field:Field _ ">=" _ value:SimpleExpr {
-        return new GreaterThanOrEqualComparison($field, new SimpleValue($value));
+        return new GreaterThanOrEqualComparison($field, new SimpleValueWrapper($value));
     }
 
 BetweenComparison
     = field:Field _ "between"i _ "(" _ min_value:SimpleExpr _ "," _ max_value:SimpleExpr _ ")" {
-        return new BetweenComparison($field, new BetweenValue($min_value, $max_value));
+        return new BetweenComparison($field, new BetweenValueWrapper($min_value, $max_value));
     }
 
 Field

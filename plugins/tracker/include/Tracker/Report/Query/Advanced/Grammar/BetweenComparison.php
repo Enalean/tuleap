@@ -26,11 +26,11 @@ class BetweenComparison implements Term, Visitable, Comparison
      */
     private $field;
     /**
-     * @var BetweenValue
+     * @var BetweenValueWrapper
      */
     private $between_value;
 
-    public function __construct($field, BetweenValue $between_value)
+    public function __construct($field, BetweenValueWrapper $between_value)
     {
         $this->field        = $field;
         $this->between_value = $between_value;
@@ -50,9 +50,9 @@ class BetweenComparison implements Term, Visitable, Comparison
     }
 
     /**
-     * @return BetweenValue
+     * @return BetweenValueWrapper
      */
-    public function getValue()
+    public function getValueWrapper()
     {
         return $this->between_value;
     }

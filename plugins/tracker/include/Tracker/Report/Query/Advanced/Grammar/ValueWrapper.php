@@ -19,36 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class BetweenValue implements Value
+interface ValueWrapper
 {
-    /**
-     * @var string
-     */
-    private $min_value;
-    /**
-     * @var string
-     */
-    private $max_value;
-
-    public function __construct($min_value, $max_value)
-    {
-        $this->min_value = $min_value;
-        $this->max_value = $max_value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMinValue()
-    {
-        return $this->min_value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMaxValue()
-    {
-        return $this->max_value;
-    }
 }

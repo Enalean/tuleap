@@ -26,8 +26,8 @@ class FloatFieldBetweenValueChecker implements InvalidFieldChecker
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $min_value = $comparison->getValue()->getMinValue();
-        $max_value = $comparison->getValue()->getMaxValue();
+        $min_value = $comparison->getValueWrapper()->getMinValue();
+        $max_value = $comparison->getValueWrapper()->getMaxValue();
 
         $this->checkFieldIsNumeric($field, $min_value);
         $this->checkFieldIsNumeric($field, $max_value);
