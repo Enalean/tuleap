@@ -47,9 +47,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     private $field_text;
     private $int_field;
     private $formelement_factory;
+    /** @var InvalidFieldsCollectorVisitor */
     private $collector;
     private $user;
     private $parameters;
+    /** @var InvalidFieldsCollection */
     private $invalid_fields_collection;
 
     public function setUp()
@@ -89,7 +91,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison()
@@ -101,7 +103,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitNotEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanComparison()
@@ -113,7 +115,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitLesserThanComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanComparison()
@@ -125,7 +127,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitGreaterThanComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanOrEqualComparison()
@@ -137,7 +139,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanOrEqualComparison()
@@ -149,7 +151,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itCollectsNonExistentFieldsIfFieldIsUnknown()
@@ -161,79 +163,103 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('field'));
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aSelectBoxField()->withName('status')->build());
 
         $expr = new EqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'status' is not supported./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumeric()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aSelectBoxField()->build());
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aSelectBoxField()->withName('status')->build());
 
         $expr = new EqualComparison('field', new SimpleValue(20));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'status' is not supported./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aStringField()->withName('string')->build());
 
         $expr = new LesserThanComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'string' is not supported for the operator <./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aStringField()->withName('string')->build());
 
         $expr = new GreaterThanComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'string' is not supported for the operator >./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanOrEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aStringField()->withName('string')->build());
 
         $expr = new LesserThanOrEqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'string' is not supported for the operator <=./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanOrEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aStringField()->build());
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aStringField()->withName('string')->build());
 
         $expr = new GreaterThanOrEqualComparison('field', new SimpleValue('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getFieldsNotSupportingOperator(), array('field'));
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'string' is not supported for the operator >=./", implode("\n", $errors));
     }
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()

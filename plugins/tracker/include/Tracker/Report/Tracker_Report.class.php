@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotSupportOperatorException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
@@ -1366,16 +1366,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                             Feedback::ERROR,
                             $exception->getMessage()
                         );
-                    } catch (FieldsAreNotSupportedException $exception) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            $exception->getMessage()
-                        );
-                    } catch (FieldsDoNotSupportOperatorException $exception) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            $exception->getMessage()
-                        );
+                    } catch (InvalidFieldsException $exception) {
+                        foreach ($exception->getErrorMessages() as $message) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                $message
+                            );
+                        }
                     } catch (SyntaxError $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
@@ -1650,19 +1647,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             throw new FieldsDoNotExistException($message);
         }
 
-        $fields_not_supporting_operator = $invalid_fields_collection->getFieldsNotSupportingOperator();
-        $nb_fields_not_supporting_operator = count($fields_not_supporting_operator);
-        if ($nb_fields_not_supporting_operator > 0) {
-            $message = sprintf(
-                dngettext(
-                    'tuleap-tracker',
-                    "The field '%s' does not support this operator",
-                    "The fields '%s' do not support this operator",
-                    $nb_fields_not_supporting_operator
-                ),
-                implode("', '", $fields_not_supporting_operator)
-            );
-            throw new FieldsDoNotSupportOperatorException($message);
+        $invalid_field_errors = $invalid_fields_collection->getInvalidFieldErrors();
+        if ($invalid_field_errors) {
+            throw new InvalidFieldsException($invalid_field_errors);
         }
     }
 

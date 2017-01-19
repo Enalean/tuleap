@@ -36,9 +36,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ICheckThatFieldIsAllowedForComparison;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
@@ -161,7 +161,7 @@ class InvalidFieldsCollectorVisitor implements Visitor
 
     private function visitComparison(
         Comparison $comparison,
-        ICheckThatFieldIsAllowedForComparison $checker,
+        IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidFieldsCollectorParameters $parameters
     ) {
         $field_name = $comparison->getField();
@@ -176,9 +176,11 @@ class InvalidFieldsCollectorVisitor implements Visitor
             $parameters->getInvalidFieldsCollection()->addNonexistentField($field_name);
         } else {
             try {
-                $checker->checkThatFieldIsAllowed($field);
-            } catch (FieldIsNotSupportedForComparisonException $exception) {
-                $parameters->getInvalidFieldsCollection()->addFieldNotSupportingOperator($field_name);
+                $checker_provider
+                    ->getInvalidFieldChecker($field)
+                    ->checkFieldIsValidForComparison($comparison, $field);
+            } catch (InvalidFieldException $exception) {
+                $parameters->getInvalidFieldsCollection()->addInvalidFieldError($exception->getMessage());
             }
         }
     }
