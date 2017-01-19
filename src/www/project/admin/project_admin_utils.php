@@ -27,6 +27,7 @@ function project_admin_header($params) {
 	<P><TABLE width="100%"><TR>';
     echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
+	<A HREF="/project/admin/project_visibility.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_project_visibility').'</A> |
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
 	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
 
