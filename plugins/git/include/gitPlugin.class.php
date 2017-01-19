@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -60,6 +60,8 @@ use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -392,7 +394,12 @@ class GitPlugin extends Plugin {
                     $this->getGitRepositoryUrlManager(),
                     UserManager::instance(),
                     new MailBuilder(
-                        TemplateRendererFactory::build()
+                        TemplateRendererFactory::build(),
+                        new MailFilter(
+                            UserManager::instance(),
+                            new URLVerification(),
+                            new MailLogger()
+                        )
                     ),
                 );
                 break;

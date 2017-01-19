@@ -1,6 +1,7 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
@@ -19,6 +20,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
+
 require_once('Docman_Controller.class.php');
 require_once('Docman_Actions.class.php');
 class Docman_HTTPController extends Docman_Controller {
@@ -121,7 +125,17 @@ class Docman_HTTPController extends Docman_Controller {
                                                              $directUrl,
                                                              $detailUrl));
 
-            $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
+            $mail_notification_builder = new MailNotificationBuilder(
+                new MailBuilder(
+                    TemplateRendererFactory::build(),
+                    new MailFilter(
+                        UserManager::instance(),
+                        new URLVerification(),
+                        new MailLogger()
+                    )
+                )
+            );
+
             $mail_notification_builder->buildAndSendEmail(
                 $group,
                 array($owner->getEmail()),

@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2014, 2015, 2016. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,6 +22,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 
 require_once 'pre.php';
 
@@ -89,7 +92,10 @@ $post_receive = new Git_Hook_PostReceive(
     )
 );
 
-$mail_builder = new MailBuilder(TemplateRendererFactory::build());
+$mail_builder = new MailBuilder(
+    TemplateRendererFactory::build(),
+    new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+);
 
 $post_receive->beforeParsingReferences($repository_path);
 
