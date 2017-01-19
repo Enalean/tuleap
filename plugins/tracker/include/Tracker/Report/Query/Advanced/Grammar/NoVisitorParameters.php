@@ -19,15 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Comparison extends Visitable
+class NoVisitorParameters implements VisitorParameters
 {
-    /**
-     * @return ValueWrapper
-     */
-    public function getValueWrapper();
-
-    /**
-     * @return string
-     */
-    public function getField();
 }

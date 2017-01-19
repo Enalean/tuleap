@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,8 +40,14 @@ function aStringField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
 }
 
-function aMockDateWithoutTimeField() {
-    return new Test_Tracker_FormElementDateWithoutTime_Builder('Tracker_FormElement_Field_Date');
+function aDateFieldWithTime()
+{
+    return new Test_Tracker_FormElementDate_Builder('Tracker_FormElement_Field_Date', true);
+}
+
+function aMockDateWithoutTimeField()
+{
+    return new Test_Tracker_FormElementDate_Builder('Tracker_FormElement_Field_Date', false);
 }
 
 function anOpenListField() {
@@ -161,15 +167,23 @@ class Test_Tracker_FormElement_Builder {
         return $object;
     }
 }
-class Test_Tracker_FormElementDateWithoutTime_Builder extends Test_Tracker_FormElement_Builder {
-    public function build() {
+class Test_Tracker_FormElementDate_Builder extends Test_Tracker_FormElement_Builder {
+    protected $with_time;
+
+    public function __construct($klass, $with_time)
+    {
+        $this->with_time = $with_time;
+    }
+
+    public function build()
+    {
         $object = partial_mock(
             'Tracker_FormElement_Field_Date',
             array('isTimeDisplayed'),
             array($this->id, $this->trackerId, null, $this->name, $this->label, null, $this->use_it, null, null, null, null, $this->originalField)
         );
 
-        stub($object)->isTimeDisplayed()->returns(false);
+        stub($object)->isTimeDisplayed()->returns($this->with_time);
 
         if ($this->tracker) {
             $object->setTracker($this->tracker);

@@ -48,8 +48,13 @@ class DateTimeFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
     {
+        $value = $value_wrapper->getValue();
+
+        if ($value === '') {
+            return;
+        }
+
         $format     = "Y-m-d H:i";
-        $value      = $value_wrapper->getValue();
         $date_value = DateTime::createFromFormat($format, $value);
 
         if ($date_value === false) {

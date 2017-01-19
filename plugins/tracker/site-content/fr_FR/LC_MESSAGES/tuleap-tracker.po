@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.5.4\n"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
@@ -38,8 +38,84 @@ msgstr ""
 "pour les types de champs autorisés."
 
 #, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with < operator."
+msgstr ""
+"Le champ flottant '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur <."
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with <= operator."
+msgstr ""
+"Le champ flottant '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur <=."
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with > operator."
+msgstr ""
+"Le champ flottant '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur >."
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with >= operator."
+msgstr ""
+"Le champ flottant '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur >=."
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+"Le champ flottant '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur BETWEEN()."
+
+#, php-format
 msgid "The float field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ flottant '%s' ne peut pas être comparé à la chaîne '%s'."
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with < "
+"operator."
+msgstr ""
+"Le champ entier '%s' ne peut pas être comparé à une chaine vide avec "
+"l'opérateur <."
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with <= "
+"operator."
+msgstr ""
+"Le champ entier '%s' ne peut pas être comparé à une chaine vide avec "
+"l'opérateur <=."
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with > "
+"operator."
+msgstr ""
+"Le champ entier '%s' ne peut pas être comparé à une chaine vide avec "
+"l'opérateur >."
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with >= "
+"operator."
+msgstr ""
+"Le champ entier '%s' ne peut pas être comparé à une chaine vide avec "
+"l'opérateur >=."
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+"Le champ entier '%s' ne peut pas être comparé à une chaine vide avec "
+"l'opérateur BETWEEN()."
 
 #, php-format
 msgid "The integer field '%s' cannot be compared to the float value '%s'."

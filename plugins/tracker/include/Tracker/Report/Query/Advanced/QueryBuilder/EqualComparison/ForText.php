@@ -37,11 +37,17 @@ class ForText implements FromWhereBuilder
         $changeset_value_text_alias = "CVText_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
+        if ($value === '') {
+            $matches_value = " = ''";
+        } else {
+            $matches_value = " LIKE ". $this->quoteLikeValueSurround($value);
+        }
+
         $from = " LEFT JOIN (
             tracker_changeset_value AS $changeset_value_alias
             INNER JOIN tracker_changeset_value_text AS $changeset_value_text_alias
              ON ($changeset_value_text_alias.changeset_value_id = $changeset_value_alias.id
-                 AND $changeset_value_text_alias.value LIKE ". $this->quoteLikeValueSurround($value) ."
+                 AND $changeset_value_text_alias.value $matches_value
              )
          ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
 
