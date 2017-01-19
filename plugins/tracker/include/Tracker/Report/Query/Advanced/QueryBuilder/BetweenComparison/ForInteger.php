@@ -30,7 +30,7 @@ class ForInteger implements FromWhereBuilder
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix           = spl_object_hash($comparison);
-        $comparison_value = $comparison->getValue();
+        $comparison_value = $comparison->getValueWrapper();
         $min_value        = $comparison_value->getMinValue();
         $max_value        = $comparison_value->getMaxValue();
         $field_id         = (int) $field->getId();

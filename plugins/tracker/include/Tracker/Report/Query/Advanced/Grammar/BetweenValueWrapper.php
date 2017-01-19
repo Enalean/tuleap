@@ -19,23 +19,36 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class SimpleValue implements Value
+class BetweenValueWrapper implements ValueWrapper
 {
     /**
      * @var string
      */
-    private $value;
+    private $min_value;
+    /**
+     * @var string
+     */
+    private $max_value;
 
-    public function __construct($value)
+    public function __construct($min_value, $max_value)
     {
-        $this->value = $value;
+        $this->min_value = $min_value;
+        $this->max_value = $max_value;
     }
 
     /**
      * @return string
      */
-    public function getValue()
+    public function getMinValue()
     {
-        return $this->value;
+        return $this->min_value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMaxValue()
+    {
+        return $this->max_value;
     }
 }

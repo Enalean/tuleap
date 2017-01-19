@@ -26,11 +26,11 @@ class LesserThanComparison implements Term, Visitable, Comparison
      */
     private $field;
     /**
-     * @var SimpleValue
+     * @var SimpleValueWrapper
      */
     private $simple_value;
 
-    public function __construct($field, SimpleValue $simple_value)
+    public function __construct($field, SimpleValueWrapper $simple_value)
     {
         $this->field        = $field;
         $this->simple_value = $simple_value;
@@ -50,9 +50,9 @@ class LesserThanComparison implements Term, Visitable, Comparison
     }
 
     /**
-     * @return SimpleValue
+     * @return SimpleValueWrapper
      */
-    public function getValue()
+    public function getValueWrapper()
     {
         return $this->simple_value;
     }

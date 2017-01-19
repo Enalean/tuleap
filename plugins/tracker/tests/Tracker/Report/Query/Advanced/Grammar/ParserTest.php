@@ -42,7 +42,7 @@ class ParserTest extends TuleapTestCase
 
         $expected = new OrExpression(
             new AndExpression(
-                new EqualComparison('field', new SimpleValue('value')),
+                new EqualComparison('field', new SimpleValueWrapper('value')),
                 null
             ),
             null
