@@ -22,6 +22,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValue;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
@@ -31,6 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValue;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
@@ -74,7 +77,8 @@ class QueryBuilderTest extends TuleapTestCase
             new LesserThanComparisonVisitor(),
             new GreaterThanComparisonVisitor(),
             new LesserThanOrEqualComparisonVisitor(),
-            new GreaterThanOrEqualComparisonVisitor()
+            new GreaterThanOrEqualComparisonVisitor(),
+            new BetweenComparisonVisitor()
         );
     }
 
@@ -338,6 +342,24 @@ class QueryBuilderTest extends TuleapTestCase
         $comparison = new GreaterThanOrEqualComparison('float', new SimpleValue(1.23));
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+    }
+
+    public function itRetrievesForIntegerFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new BetweenComparison('int', new BetweenValue(1, 2));
+
+        $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_int/', $result->getFrom());
+    }
+
+    public function itRetrievesForFloatFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new BetweenComparison('float', new BetweenValue(1.23, 2.56));
+
+        $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
     }

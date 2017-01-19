@@ -21,6 +21,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValue;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
@@ -30,6 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValue;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
@@ -78,7 +81,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             new LesserThanComparisonVisitor(),
             new GreaterThanComparisonVisitor(),
             new LesserThanOrEqualComparisonVisitor(),
-            new GreaterThanOrEqualComparisonVisitor()
+            new GreaterThanOrEqualComparisonVisitor(),
+            new BetweenComparisonVisitor()
         );
     }
 
@@ -149,6 +153,18 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $expr = new GreaterThanOrEqualComparison('int', new SimpleValue(20));
 
         $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+    }
+
+    public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForBetweenComparison()
+    {
+        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+
+        $expr = new BetweenComparison('int', new BetweenValue(20, 30));
+
+        $this->collector->visitBetweenComparison($expr, $this->parameters);
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
         $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
@@ -260,6 +276,22 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator >=./", implode("\n", $errors));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForBetweenComparison()
+    {
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aStringField()->withName('string')->build());
+
+        $expr = new BetweenComparison('field', new BetweenValue('value1', 'value2'));
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'string' is not supported for the operator between()./", implode("\n", $errors));
     }
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()

@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
@@ -72,6 +73,11 @@ class SizeValidatorVisitor implements Visitor
     }
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, SizeValidatorParameters $parameters)
+    {
+        $this->visitComparison($comparison, $parameters);
+    }
+
+    public function visitBetweenComparison(BetweenComparison $comparison, SizeValidatorParameters $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }

@@ -24,6 +24,7 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -35,6 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
@@ -74,6 +76,10 @@ class InvalidFieldsCollectorVisitor implements Visitor
      * @var GreaterThanOrEqualComparisonVisitor
      */
     private $greater_than_or_equal_comparison_visitor;
+    /**
+     * @var BetweenComparisonVisitor
+     */
+    private $between_comparison_visitor;
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
@@ -82,7 +88,8 @@ class InvalidFieldsCollectorVisitor implements Visitor
         LesserThanComparisonVisitor $lesser_than_comparison_visitor,
         GreaterThanComparisonVisitor $greater_than_comparison_visitor,
         LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_comparison_visitor,
-        GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor
+        GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
+        BetweenComparisonVisitor $between_comparison_visitor
     ) {
         $this->formelement_factory                      = $formelement_factory;
         $this->equal_comparison_visitor                 = $equal_comparison_visitor;
@@ -91,6 +98,7 @@ class InvalidFieldsCollectorVisitor implements Visitor
         $this->greater_than_comparison_visitor          = $greater_than_comparison_visitor;
         $this->lesser_than_or_equal_comparison_visitor  = $lesser_than_or_equal_comparison_visitor;
         $this->greater_than_or_equal_comparison_visitor = $greater_than_or_equal_comparison_visitor;
+        $this->between_comparison_visitor               = $between_comparison_visitor;
     }
 
     public function collectErrorsFields(
@@ -130,6 +138,11 @@ class InvalidFieldsCollectorVisitor implements Visitor
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->greater_than_or_equal_comparison_visitor, $parameters);
+    }
+
+    public function visitBetweenComparison(BetweenComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    {
+        $this->visitComparison($comparison, $this->between_comparison_visitor, $parameters);
     }
 
     public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)

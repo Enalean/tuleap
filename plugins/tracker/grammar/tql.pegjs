@@ -61,6 +61,7 @@ term
         / GreaterThanOrEqualComparison
         / LesserThanComparison
         / GreaterThanComparison
+        / BetweenComparison
         / ParenthesisTerm
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
@@ -93,6 +94,11 @@ LesserThanOrEqualComparison
 GreaterThanOrEqualComparison
     = field:Field _ ">=" _ value:SimpleExpr {
         return new GreaterThanOrEqualComparison($field, new SimpleValue($value));
+    }
+
+BetweenComparison
+    = field:Field _ "between"i _ "(" _ min_value:SimpleExpr _ "," _ max_value:SimpleExpr _ ")" {
+        return new BetweenComparison($field, new BetweenValue($min_value, $max_value));
     }
 
 Field
