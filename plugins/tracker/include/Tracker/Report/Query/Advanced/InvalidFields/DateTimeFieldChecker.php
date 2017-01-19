@@ -21,24 +21,46 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use DateTime;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class DateTimeFieldChecker implements InvalidFieldChecker
+class DateTimeFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValueWrapper()->getValue();
+        $date_value = $comparison->getValueWrapper()->accept($this);
 
-        $format          = "Y-m-d H:i";
-        $date_time_value = DateTime::createFromFormat($format, $value);
-
-        if ($date_time_value === false) {
-            $format = "Y-m-d";
-            $date_value = DateTime::createFromFormat($format, $value);
-
-            if ($date_value === false) {
-                throw new DateToStringComparisonException($field, $value);
-            }
+        if ($date_value === false) {
+            throw new DateToStringComparisonException($field, $date_value);
         }
+    }
+
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    {
+        $format            = "Y-m-d H:i";
+        $current_date_time = $value_wrapper->getValue();
+
+        return $current_date_time->format($format);
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    {
+        $format     = "Y-m-d H:i";
+        $value      = $value_wrapper->getValue();
+        $date_value = DateTime::createFromFormat($format, $value);
+
+        if ($date_value === false) {
+            $format     = "Y-m-d";
+            $date_value = DateTime::createFromFormat($format, $value);
+        }
+
+        return $date_value;
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    {
     }
 }

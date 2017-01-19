@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,41 +19,28 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class BetweenComparison implements Term, Visitable, Comparison
+class CurrentDateTimeValueWrapper implements ValueWrapper
 {
     /**
-     * @var string
+     * @var \DateTime
      */
-    private $field;
-    /**
-     * @var BetweenValueWrapper
-     */
-    private $value_wrapper;
+    private $value;
 
-    public function __construct($field, BetweenValueWrapper $value_wrapper)
+    public function __construct()
     {
-        $this->field         = $field;
-        $this->value_wrapper = $value_wrapper;
+        $this->value = new \DateTime();
     }
 
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor)
     {
-        return $visitor->visitBetweenComparison($this, $parameters);
+        return $visitor->visitCurrentDateTimeValueWrapper($this);
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getField()
+    public function getValue()
     {
-        return $this->field;
-    }
-
-    /**
-     * @return BetweenValueWrapper
-     */
-    public function getValueWrapper()
-    {
-        return $this->value_wrapper;
+        return $this->value;
     }
 }

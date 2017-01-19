@@ -31,8 +31,8 @@ class ForFloat implements FromWhereBuilder
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();
-        $min_value        = $comparison_value->getMinValue();
-        $max_value        = $comparison_value->getMaxValue();
+        $min_value        = $comparison_value->getMinValue()->getValue();
+        $max_value        = $comparison_value->getMaxValue()->getValue();
         $field_id         = (int) $field->getId();
 
         $changeset_value_float_alias = "CVFloat_{$field_id}_{$suffix}";

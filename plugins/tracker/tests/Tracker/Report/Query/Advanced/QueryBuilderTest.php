@@ -360,7 +360,13 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new BetweenComparison('int', new BetweenValueWrapper(1, 2));
+        $comparison = new BetweenComparison(
+            'int',
+            new BetweenValueWrapper(
+                new SimpleValueWrapper(1),
+                new SimpleValueWrapper(2)
+            )
+        );
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
@@ -369,7 +375,13 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new BetweenComparison('float', new BetweenValueWrapper(1.23, 2.56));
+        $comparison = new BetweenComparison(
+            'float',
+            new BetweenValueWrapper(
+                new SimpleValueWrapper(1.23),
+                new SimpleValueWrapper(2.56)
+            )
+        );
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
