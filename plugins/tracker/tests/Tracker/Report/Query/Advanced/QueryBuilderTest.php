@@ -50,6 +50,7 @@ class QueryBuilderTest extends TuleapTestCase
     private $field_text;
     private $int_field;
     private $float_field;
+    private $date_field;
 
     /** @var  QueryBuilderVisitor */
     private $query_builder;
@@ -65,10 +66,12 @@ class QueryBuilderTest extends TuleapTestCase
         $this->field_text  = aTextField()->withName('field')->withId(101)->build();
         $this->int_field   = anIntegerField()->withName('int')->withId(102)->build();
         $this->float_field = aFloatField()->withName('float')->withId(103)->build();
+        $this->date_field  = aMockDateWithoutTimeField()->withName('date')->withId(104)->build();
 
         $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
         stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);
         stub($formelement_factory)->getUsedFieldByName(101, 'float')->returns($this->float_field);
+        stub($formelement_factory)->getUsedFieldByName(101, 'date')->returns($this->date_field);
 
         $this->query_builder = new QueryBuilderVisitor(
             $formelement_factory,
@@ -245,6 +248,15 @@ class QueryBuilderTest extends TuleapTestCase
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
+    }
+
+    public function itRetrievesForDateFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new EqualComparison('date', new SimpleValueWrapper('2017-01-17'));
+
+        $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_date/', $result->getFrom());
     }
 
     public function itRetrievesForTextInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
