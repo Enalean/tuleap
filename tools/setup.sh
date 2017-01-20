@@ -727,10 +727,11 @@ setup_tuleap() {
     done
     # replace string patterns in local.inc
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain" 
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name"
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_mail_secure_mode = 0' 'sys_mail_secure_mode = 1'
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
     if [ "$disable_subdomains" = "y" ]; then
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
