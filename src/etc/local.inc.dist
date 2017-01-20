@@ -219,7 +219,7 @@ $mailman_list_dir= '/var/lib/mailman/lists';
 $mailman_wrapper = '/usr/lib/mailman/mail/mailman';
 
 // Sendmail alias
-$alias_file      = '/etc/aliases.codendi';
+$alias_file           = '/etc/aliases.codendi';
 
 // Plugins related paths
 $sys_pluginsroot       = $codendi_dir . '/plugins/';
@@ -532,3 +532,6 @@ $sys_trusted_proxies = '';
 //$statsd_server    = 'graphite.graphite-statsd.docker';
 //$statsd_port      = 8125;
 //$statsd_server_id = 'local';
+
+// When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects
+$sys_mail_secure_mode = 0;

@@ -89,6 +89,7 @@ class MailFilterTest extends TuleapTestCase
         $this->project = mock('Project');
 
         ForgeConfig::store();
+        ForgeConfig::set('sys_mail_secure_mode', true);
     }
 
     public function tearDown()
@@ -219,6 +220,25 @@ class MailFilterTest extends TuleapTestCase
 
         expect($this->mail_logger)->warn()->never();
         expect($this->mail_logger)->info()->count(2);
+        $this->assertEqual($filtered_mails, $expected_mails);
+    }
+
+    public function itDoesNotFilterMailsWhenConfigurationAllowsIt()
+    {
+        ForgeConfig::set('sys_mail_secure_mode', false);
+        $this->initializeMails();
+
+        $filtered_mails = $this->mail_filter->filter(
+            $this->project,
+            array(
+                $this->user_registered->getEmail(),
+                $this->user_active->getEmail()
+            )
+        );
+        $expected_mails = array($this->user_registered->getEmail(), $this->user_active->getEmail());
+
+        expect($this->mail_logger)->warn()->never();
+        expect($this->mail_logger)->info()->once();
         $this->assertEqual($filtered_mails, $expected_mails);
     }
 }

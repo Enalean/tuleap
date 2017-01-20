@@ -61,6 +61,11 @@ class MailFilter
 
     public function filter(Project $project, array $mails)
     {
+        if ((bool)ForgeConfig::get('sys_mail_secure_mode') === false) {
+            $this->logger->info("Platform is in insecure send mail mode. All notifications sent");
+            return $mails;
+        }
+
         if ($project->isPublic()) {
             $this->logger->info("Project " . $project->getUnconvertedPublicName() . " is public. All notifications sent");
             return $mails;
