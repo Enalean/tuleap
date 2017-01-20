@@ -94,6 +94,9 @@ class XMLDocmanImport {
 
     protected $logger;
 
+    // File to be uploaded chunk size
+    private $chunk_size = 10000000; // ~10MB
+
     /**
      * XMLDocmanImport constructor
      *
@@ -112,6 +115,7 @@ class XMLDocmanImport {
         $this->importMessageMetadata = $importMessageMetadata;
         $this->autoRetry = $autoRetry;
         $this->logger = $logger;
+
 
         $this->logger->info("Init Import process");
 
@@ -917,7 +921,7 @@ class XMLDocmanImport {
     }
 
     private function printException($e) {
-        $this->logger->info($e->__toString());
+        $this->logger->error($e->__toString());
     }
 
     /**
@@ -1031,41 +1035,51 @@ class XMLDocmanImport {
         $fullPath = $this->dataBaseDir.'/'.$file;
         $fileSize = filesize($fullPath);
 
-        // The following is inspired from CLI_Action_Docman_CreateFile.class.php
-        $chunk_size = 6000000; // ~6 Mo
+        $chunk_offset = 0;
+        $item_id      = 0;
 
-        // How many chunks do we have to send
-        if ($fileSize == 0) {
-            $chunk_count = 1;
-        } else {
-            $chunk_count = ceil($fileSize / $chunk_size);
-        }
+        $this->initRetryCounter();
+        do {
+            $continue = true;
 
-        for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
-            $this->initRetryCounter();
-            do {
-                $retry = false;
+            // Retrieve the current chunk of the file
+            $contents = file_get_contents($fullPath, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
 
-                // Display progression indicator
-                $this->logger->info("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
+            if (strlen($contents) < $this->chunk_size) {
+                $continue = false;
+            }
 
-                // Retrieve the current chunk of the file
-                $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
+            // Send the chunk
+            try {
+                if ($item_id === 0) {
+                    $this->logger->info("\r$infoStr attempt to upload first chunk");
+                    // If this is the first chunk, then use the original soapCommand...
+                    $item_id = $this->soap->createDocmanFile(
+                        $this->hash, $this->groupId, $parentId, $title,
+                        $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize,
+                        $fileName, $fileType, base64_encode($contents), $chunk_offset, $this->chunk_size, $author, $date, $owner,
+                        $createDate, $updateDate);
+                } else {
+                    // Display progress bar
+                    $chunk_count = ceil($fileSize / $this->chunk_size);
+                    $this->logger->info("\r$infoStr ". floor($chunk_offset / $chunk_count * 100)  ."%");
 
-                // Send the chunk
-                try {
-                    if (!$chunk_offset) {
-                        // If this is the first chunk, then use the original soapCommand...
-                        $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date, $owner, $createDate, $updateDate);
-                    } else {
-                        // If this is not the first chunk, then we have to append the chunk
-                        $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
-                    }
-                } catch (Exception $e){
-                    $retry = $this->askWhatToDo($e);
+                    // If this is not the first chunk, then we have to append the chunk
+                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, base64_encode($contents),
+                        $chunk_offset, $this->chunk_size);
                 }
-            } while ($retry);
-        }
+                $chunk_offset++;
+                unset($contents);
+            } catch (Exception $e){
+                unset($contents);
+                if ($this->requestEntityTooLarge($e)) {
+                    $continue = $this->adjustChunkSize();
+                } else {
+                    $continue = $this->askWhatToDo($e);
+                }
+            }
+        } while ($continue);
+
         // Finish!
         $this->logger->info("\r$infoStr #$item_id");
 
@@ -1074,12 +1088,28 @@ class XMLDocmanImport {
             if ($this->checkChecksum($item_id, $fullPath) === true) {
                 return $item_id;
             } else {
-                $this->logger->info("ERROR: Checksum error");
+                $this->logger->error("ERROR: Checksum error");
                 return false;
             }
         } catch (Exception $e){
             $this->printException($e);
         }
+    }
+
+    private function adjustChunkSize() {
+        $this->logger->warn("Request entity too large, need to adjust upload chunk size");
+        $this->chunk_size = floor($this->chunk_size / 2);
+        if ($this->chunk_size > 1000) {
+            $this->logger->info("New chunk size: ".$this->chunk_size);
+            return true;
+        } else {
+            throw new Exception('Unable to upload content, chunk size too large');
+        }
+    }
+
+    private function requestEntityTooLarge(SoapFault $fault)
+    {
+        return isset($fault->faultcode) && strtolower($fault->faultcode) == 'http' && strpos(strtolower($fault->getMessage()), 'request entity too large') !== false;
     }
 
     /**
@@ -1113,37 +1143,45 @@ class XMLDocmanImport {
         $fullPath = $this->dataBaseDir.'/'.$file;
         $fileSize = filesize($fullPath);
 
-        // The following is inspired from CLI_Action_Docman_CreateFile.class.php
-        $chunk_size = 6000000; // ~6 Mo
+        $chunk_offset = 0;
 
-        // How many chunks do we have to send
-        $chunk_count = ceil($fileSize / $chunk_size);
+        $this->initRetryCounter();
+        do {
+            $continue = true;
 
-        for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
-            $this->initRetryCounter();
-            do {
-                $retry = false;
+            // Retrieve the current chunk of the file
+            $contents = file_get_contents($fullPath, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
 
-                // Display progression indicator
-                $this->logger->info("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
+            if (strlen($contents) < $this->chunk_size) {
+                $continue = false;
+            }
 
-                // Retrieve the current chunk of the file
-                $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
+            // Send the chunk
+            try {
+                if ($chunk_offset === 0) {
+                    $this->logger->info("\r$infoStr attempt to upload first chunk");
+                    // If this is the first chunk, then use the original soapCommand...
+                    $this->soap->createDocmanFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $fileName, $fileType, base64_encode($contents), $chunk_offset, $this->chunk_size, $author, $date);
+                } else {
+                    // Display progress bar
+                    $chunk_count = ceil($fileSize / $this->chunk_size);
+                    $this->logger->info("\r$infoStr ". floor($chunk_offset / $chunk_count * 100)  ."%");
 
-                // Send the chunk
-                try {
-                    if (!$chunk_offset) {
-                        // If this is the first chunk, then use the original soapCommand...
-                        $this->soap->createDocmanFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date);
-                    } else {
-                        // If this is not the first chunk, then we have to append the chunk
-                        $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
-                    }
-                } catch (Exception $e){
-                    $retry = $this->askWhatToDo($e);
+                    // If this is not the first chunk, then we have to append the chunk
+                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, base64_encode($contents), $chunk_offset, $this->chunk_size);
                 }
-            } while ($retry);
-        }
+                $chunk_offset++;
+                unset($contents);
+            } catch (Exception $e){
+                unset($contents);
+                if ($this->requestEntityTooLarge($e)) {
+                    $continue = $this->adjustChunkSize();
+                } else {
+                    $continue = $this->askWhatToDo($e);
+                }
+            }
+        } while ($continue);
+
         // Finish!
         $this->logger->info("\r$infoStr     ");
 
@@ -1152,7 +1190,7 @@ class XMLDocmanImport {
             if ($this->checkChecksum($itemId, $fullPath) == true) {
                 return true;
             } else {
-                $this->logger->info("ERROR: Checksum error");
+                $this->logger->error("ERROR: Checksum error");
                 return false;
             }
         } catch (Exception $e){
@@ -1178,4 +1216,3 @@ class XMLDocmanImport {
         } while ($retry);
     }
 }
-?>
