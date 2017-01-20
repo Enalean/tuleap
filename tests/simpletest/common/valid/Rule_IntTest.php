@@ -24,7 +24,7 @@
 
 require_once('common/valid/Rule.class.php');
 
-class Rule_IntTest extends UnitTestCase {
+class Rule_IntTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'Rule_Int test') {
         $this->UnitTestCase($name);

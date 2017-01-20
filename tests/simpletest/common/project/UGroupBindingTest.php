@@ -30,7 +30,7 @@ Mock::generate('BaseLanguage');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-class UGroupBindingTest extends UnitTestCase {
+class UGroupBindingTest extends TuleapTestCase {
     private $ugroup_id = 200;
     private $source_id = 300;
     private $ugroupManager;
@@ -38,16 +38,11 @@ class UGroupBindingTest extends UnitTestCase {
     private $ugroupBinding;
 
     public function setUp() {
+        parent::setUp();
         $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
         $this->ugroupManager = new MockUGroupManager();
         $this->ugroupUserDao = new MockUGroupUserDao();
         $this->ugroupBinding = new UGroupBinding($this->ugroupUserDao, $this->ugroupManager);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
     }
 
     function testRemoveUgroupBinding() {
@@ -100,6 +95,4 @@ class UGroupBindingTest extends UnitTestCase {
         $this->ugroupManager->setReturnValueAt(2, 'updateUgroupBinding', false);
         $this->assertFalse($ugroupBinding->removeAllUGroupsBinding($this->ugroup_id));
     }
-
 }
-?>

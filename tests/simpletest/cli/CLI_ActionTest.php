@@ -16,7 +16,7 @@ Mock::generate('CLI_Module');
 require_once(CODENDI_CLI_DIR .'/include/CLI_Action.class.php');
 Mock::generatePartial('CLI_Action', 'CLI_ActionTestVersion', array('help', '_getCodendiSOAP'));
 
-class CLI_ActionTest extends UnitTestCase {
+class CLI_ActionTest extends TuleapTestCase {
     
     function testHelp() {
         $action =& new CLI_Action('name', 'description');

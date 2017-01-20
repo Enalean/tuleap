@@ -39,15 +39,7 @@ Mock::generate('Backend');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Rule_UserNameTest extends UnitTestCase {
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class Rule_UserNameTest extends TuleapTestCase {
 
     function testReservedNames() {
         $r = new Rule_UserName();
@@ -283,4 +275,3 @@ class Rule_UserNameTest extends UnitTestCase {
         $this->assertFalse($r->isSystemName("usertest"));
     }
 }
-?>

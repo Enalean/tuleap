@@ -26,21 +26,17 @@ Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTes
 Mock::generate('PFUser');
 Mock::generate('Docman_LockFactory');
 
-class PermissionsManagerLockTest extends UnitTestCase {
+class PermissionsManagerLockTest extends TuleapTestCase {
     private $user;
     private $docmanPm;
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 1234);
         $this->itemId = 1848;
         $this->docmanPm = new Docman_PermissionsManagerTestLock($this);
-    }
-
-    function tearDown() {
-        unset($this->user);
-        unset($this->docmanPm);
-        unset($this->itemId);
     }
 
     function testItemIsNotLocked() {
@@ -105,5 +101,4 @@ class PermissionsManagerLockTest extends UnitTestCase {
 
         $this->assertFalse($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
-
 }

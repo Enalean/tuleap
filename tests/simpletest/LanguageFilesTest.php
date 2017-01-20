@@ -5,7 +5,7 @@
 * 
 */
 
-class LanguageFilesTest extends UnitTestCase {
+class LanguageFilesTest extends TuleapTestCase {
 
     function testLanguagesFiles() {
         $cmd          = $GLOBALS['basedir'].'/src/utils/analyse_language_files.pl '.$GLOBALS['basedir'].' 2>&1';

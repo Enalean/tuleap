@@ -34,7 +34,7 @@ Mock::generate('Docman_MetadataFactory');
 Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneOneMd', array('_getMetadataFactory', '_getListOfValuesElementFactory', '_getEventManager'));
 Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneRealMd', array('getRealMetadataList', '_cloneOneMetadata'));
 
-class MetadataTest extends UnitTestCase {
+class MetadataTest extends TuleapTestCase {
 
     function testCloneOneMetadata()
     {

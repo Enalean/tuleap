@@ -34,15 +34,7 @@ require_once('common/backend/BackendCVS.class.php');
 Mock::generate('BackendCVS');
 
 
-class Rule_ProjectNameTest extends UnitTestCase {
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class Rule_ProjectNameTest extends TuleapTestCase {
 
     function testNoUnderscore() {
         $r = new Rule_ProjectName();
@@ -210,5 +202,3 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 }
-
-?>

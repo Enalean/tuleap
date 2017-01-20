@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('common/include/Codendi_File.class.php');
-class Codendi_FileTest extends UnitTestCase {
+class Codendi_FileTest extends TuleapTestCase {
     
     protected $small_file;
     protected $big_file;

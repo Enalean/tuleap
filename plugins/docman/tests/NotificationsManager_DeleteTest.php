@@ -34,7 +34,7 @@ Mock::generate('PFUser');
 
 Mock::generate('Docman_PermissionsManager');
 
-class NotificationsManager_DeleteTest extends UnitTestCase {
+class NotificationsManager_DeleteTest extends TuleapTestCase {
 
     /*
      * Test the case when deleting a docman item the notification mail

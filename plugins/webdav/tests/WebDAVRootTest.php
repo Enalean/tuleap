@@ -33,19 +33,7 @@ array('getWebDAVProject', 'getUser', 'getProjectIdByName', 'getPublicProjectList
 /**
  * This is the unit test of WebDAVRoot
  */
-class WebDAVRootTest extends UnitTestCase {
-
-    function setUp() {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-
-    }
-
-    function tearDown() {
-
-        unset($GLOBALS['Language']);
-
-    }
+class WebDAVRootTest extends TuleapTestCase {
 
     /**
      * Testing when There is no public projects
@@ -248,6 +236,4 @@ class WebDAVRootTest extends UnitTestCase {
         $this->assertEqual($webDAVRoot->getChild($project->getName()), $project);
 
     }
-
 }
-?>

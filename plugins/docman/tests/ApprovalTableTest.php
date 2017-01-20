@@ -24,7 +24,7 @@
 
 require_once 'bootstrap.php';
 
-class ApprovalTableTest extends UnitTestCase {
+class ApprovalTableTest extends TuleapTestCase {
 
     function testTableStateRejected() {
         // Std case

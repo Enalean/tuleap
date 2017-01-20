@@ -12,7 +12,7 @@ Mock::generate('DataAccessResult');
  *
  * Tests the class ArtifactRuleFactory
  */
-class ArtifactRuleFactoryTest extends UnitTestCase {
+class ArtifactRuleFactoryTest extends TuleapTestCase {
 
     function testGetRuleById() {
         

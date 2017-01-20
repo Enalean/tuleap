@@ -13,7 +13,7 @@ Mock::generatePartial('DataAccessResult', 'DataAccessResultTestVersion', array('
  *
  * Tests the class DataAccessResult
  */
-class DataAccessResultTest extends UnitTestCase {
+class DataAccessResultTest extends TuleapTestCase {
 
     function testGetRow() {
         $dar = new DataAccessResultTestVersion($this);
@@ -40,7 +40,7 @@ class FakeInstanciator {
     }
 }
 
-class DataAccessResult_InstanciatorTest extends UnitTestCase {
+class DataAccessResult_InstanciatorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();

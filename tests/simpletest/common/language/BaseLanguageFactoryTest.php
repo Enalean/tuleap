@@ -20,8 +20,11 @@
 
 require_once 'common/language/BaseLanguageFactory.class.php';
 
-class BaseLanguageFactoryTest extends UnitTestCase {
-    function setUp() {
+class BaseLanguageFactoryTest extends TuleapTestCase {
+
+    public function setUp()
+    {
+        parent::setUp();
         ForgeConfig::store();
         ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/local.inc');
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
@@ -32,12 +35,14 @@ class BaseLanguageFactoryTest extends UnitTestCase {
         $GLOBALS['sys_incdir']        = $GLOBALS['tmp_dir'];
     }
     
-    function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         setlocale(LC_ALL, $this->oldLocale);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['sys_incdir']);
         unset($GLOBALS['sys_custom_incdir']);
+        parent::tearDown();
     }
     
     public function testFactoryShouldReturnABaseLanguageAccordingToTheLocale() {
@@ -92,4 +97,3 @@ class BaseLanguageFactoryTest extends UnitTestCase {
         $this->assertEqual($currentlocale, setlocale(LC_ALL, '0'));
     }
 }
-?>

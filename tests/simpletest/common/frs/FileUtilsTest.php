@@ -10,7 +10,7 @@ require_once('www/file/file_utils.php');
  * Tests the file_utils.php file
  */
 
-class FileUtils extends UnitTestCase {
+class FileUtils extends TuleapTestCase {
 
     function testFileUtilsGetSize_1_Mo_File() {
         $file = dirname(__FILE__) . '/_fixtures/File_1_Mo';

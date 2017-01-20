@@ -10,7 +10,7 @@ Mock::generate('ArtifactRuleValue');
  *
  * Tests the class ArtifactRuleValueView
  */
-class ArtifactRuleValueViewTest extends UnitTestCase {
+class ArtifactRuleValueViewTest extends TuleapTestCase {
 
     function testFetch() {
         $rule =& new MockArtifactRuleValue($this);

@@ -36,7 +36,7 @@ Mock::generate('BackendCVS');
 require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 
-class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
+class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
     public function __construct($name = 'SystemEvent_PROJECT_RENAME test') {
         parent::__construct($name);

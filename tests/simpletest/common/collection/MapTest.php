@@ -10,7 +10,7 @@ require_once('common/collection/Collection.class.php');
  *
  * Test the class Map
  */
-class MapTest extends UnitTestCase {
+class MapTest extends TuleapTestCase {
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test

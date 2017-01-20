@@ -31,7 +31,7 @@ Mock::generate('BackendSVN');
 Mock::generate('SystemEventManager');
 
 
-class LDAP_UserManagerTest extends UnitTestCase {
+class LDAP_UserManagerTest extends TuleapTestCase {
 
     function testGetLoginFromString() {
         $ldap = new MockLDAP($this);

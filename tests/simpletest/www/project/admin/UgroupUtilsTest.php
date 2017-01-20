@@ -23,9 +23,11 @@ Mock::generate('UserManager');
 Mock::generate('PFUser');
 Mock::generate('ProjectUGroup');
 
-class UgroupUtilsTest extends UnitTestCase {
+class UgroupUtilsTest extends TuleapTestCase {
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         if (MOCKFUNCTION_AVAILABLE) {
             MockFunction::generate('db_query');
             MockFunction::generate('db_fetch_array');
@@ -33,12 +35,14 @@ class UgroupUtilsTest extends UnitTestCase {
         }
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         if (MOCKFUNCTION_AVAILABLE) {
             MockFunction::restore('db_query');
             MockFunction::restore('db_fetch_array');
             MockFunction::restore('ugroup_get_user_manager');
         }
+        parent::tearDown();
     }
 
     function testUgroupCountProjectAdminsNoUsers() {
@@ -318,4 +322,3 @@ class UgroupUtilsTest extends UnitTestCase {
         }
     }
 }
-?>

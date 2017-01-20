@@ -58,7 +58,7 @@ Mock::generate('Docman_Path');
 
 Mock::generate('NotificationsDao');
 
-class NotificationsManager_MoveTest extends UnitTestCase {
+class NotificationsManager_MoveTest extends TuleapTestCase {
     var $groupId;
 
     /**
@@ -66,17 +66,20 @@ class NotificationsManager_MoveTest extends UnitTestCase {
      */
     private $mail_filter;
 
-    function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', '/tuleap');
         $this->mail_filter = mock('Tuleap\Mail\MailFilter');
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['sys_noreply']);
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     function testNotifications() {

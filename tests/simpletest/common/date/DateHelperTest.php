@@ -24,7 +24,7 @@ Mock::generate('BaseLanguage');
 
 require_once('utils.php');
 
-class DateHelperTest extends UnitTestCase {
+class DateHelperTest extends TuleapTestCase {
 
     public function test_distanceOfTimeInWords() {
         $expected = array(

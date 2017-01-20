@@ -21,7 +21,7 @@ require_once 'common/user/User_SOAPServer.class.php';
 
 Mock::generate('UserManager');
 
-class User_SOAPServerTest extends UnitTestCase {
+class User_SOAPServerTest extends TuleapTestCase {
     
     public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException() {
         $this->GivenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())

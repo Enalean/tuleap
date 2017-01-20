@@ -48,7 +48,7 @@ Mock::generate('WikiAttachment');
 /**
  * Test for project delete system event
  */
-class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
+class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
 
     /**
      * Project delete Users fail

@@ -27,7 +27,7 @@ Mock::generate('Docman_VersionDao');
 
 Mock::generate('Project');
 
-class RenameProjectTest extends UnitTestCase {
+class RenameProjectTest extends TuleapTestCase {
 
     function testRenameProjectTest() {
 

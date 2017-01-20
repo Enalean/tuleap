@@ -27,7 +27,7 @@ require_once('common/valid/Valid.class.php');
 Mock::generate('Rule');
 Mock::generatePartial('Valid', 'ValidTestVersion', array('addFeedback'));
 
-class ValidTest extends UnitTestCase {
+class ValidTest extends TuleapTestCase {
 
     function testArgPropagate() {
         $v = new Valid();

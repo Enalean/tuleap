@@ -7,7 +7,7 @@
  *
  * abstract
  */
-class SanitizerTestCase extends UnitTestCase {
+class SanitizerTestCase extends TuleapTestCase {
     function SimpleSanitizerTest($test_name = false) {
         $this->UnitTestCase($test_name);
     }

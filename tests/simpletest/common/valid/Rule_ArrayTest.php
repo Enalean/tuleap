@@ -22,7 +22,7 @@
 require_once('common/valid/Rule.class.php');
 require_once('common/valid/ValidFactory.class.php');
 
-class Rule_ArrayTest extends UnitTestCase {
+class Rule_ArrayTest extends TuleapTestCase {
 
     function testTestsWetherTheArgumentIsAnArray() {
         $r = new Rule_Array();

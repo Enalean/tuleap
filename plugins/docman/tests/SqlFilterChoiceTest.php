@@ -27,7 +27,7 @@ require_once 'bootstrap.php';
 
 Mock::generatePartial('Docman_SqlFilter', 'Docman_SqlFilterTestVersion', array());
 
-class SqlFilterChoiceTest extends UnitTestCase {
+class SqlFilterChoiceTest extends TuleapTestCase {
 
     function testSqlFilterChoicePerPattern() {
         $docmanSf = new Docman_SqlFilterTestVersion($this);

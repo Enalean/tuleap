@@ -13,7 +13,7 @@ Mock::generatePartial('Mail', 'MailTestVersion', array('_getUserDao'));
  *
  * Test the class Mail
  */
-class MailTest extends UnitTestCase {
+class MailTest extends TuleapTestCase {
 
     function testEncoding() {
         $mail =& new MailTestVersion($this);

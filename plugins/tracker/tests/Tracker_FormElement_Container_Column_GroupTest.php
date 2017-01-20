@@ -23,7 +23,7 @@ Mock::generate('Tracker_FormElement_Container_Column');
 Mock::generate('Tracker_Artifact');
 
 
-class Tracker_FormElement_Container_Column_GroupTest extends UnitTestCase {
+class Tracker_FormElement_Container_Column_GroupTest extends TuleapTestCase {
     
     public function test_fetchArtifact() {
         $a = new MockTracker_Artifact();

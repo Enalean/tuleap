@@ -47,16 +47,12 @@ Mock::generatePartial(
 /**
  * This is the unit test of WebDAVProject
  */
-class WebDAVFRSTest extends UnitTestCase {
+class WebDAVFRSTest extends TuleapTestCase {
 
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    public function setUp()
+    {
+        parent::setUp();
         $this->frs_permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
     }
 
     /**
@@ -206,7 +202,4 @@ class WebDAVFRSTest extends UnitTestCase {
 
         $webDAVFRS->createDirectory('pkg');
     }
-
 }
-
-?>

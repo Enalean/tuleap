@@ -42,18 +42,10 @@ Mock::generate('Backend');
 require_once('common/system_event/SystemEventManager.class.php');
 Mock::generate('SystemEventManager');
 
-class Rule_UserNameIntegrationTest extends UnitTestCase {
+class Rule_UserNameIntegrationTest extends TuleapTestCase {
 
     function __construct($name = 'Rule_UserName Integration test') {
         parent::__construct($name);
-    }
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
     }
 
     function testOk() {
@@ -202,4 +194,3 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $this->assertFalse($r->isValid("user"));
     }
 }
-?>

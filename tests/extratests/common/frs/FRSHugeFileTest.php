@@ -19,13 +19,15 @@
  */
 require_once('common/frs/FRSFile.class.php');
 
-class FRSHugeFileTest extends UnitTestCase {
+class FRSHugeFileTest extends TuleapTestCase {
 
     function __construct($name = 'FRSHugeFileTest test') {
         parent::__construct($name);
     }
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->fixDir    = dirname(__FILE__). '/_fixtures/big_dir';
         $this->readPath  = $this->fixDir.'/file_2.5GB';
         $this->writePath = $this->fixDir.'/file_2.5GB_copy';
@@ -40,7 +42,6 @@ class FRSHugeFileTest extends UnitTestCase {
             mkdir($this->fixDir);
         }
         $cmd = '/bin/df --portability '.escapeshellarg($parentPath).' | tail -1 | awk \'{print $4}\'';
-        //echo $cmd.PHP_EOL;
         $spaceLeft = `$cmd` ;
         if ($spaceLeft < 5200000) {
             trigger_error("No sufficient space to create ".$this->readPath.". Cannot test big files. Tip: link ".$this->fixDir." to a partition with more than 5GB available.", E_USER_WARNING);
@@ -54,13 +55,14 @@ class FRSHugeFileTest extends UnitTestCase {
         }
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unlink(realpath($this->readPath));
         unlink(realpath($this->writePath));
+        parent::tearDown();
     }
 
     function testWithBigFile() {
-        //$this->assertTrue(is_writeable($this->writePath), "$this->writePath should be writable");
         $writeFile = fopen(PHP_BigFile::stream($this->writePath), 'wb');
         $this->assertTrue($writeFile);
 
@@ -78,6 +80,3 @@ class FRSHugeFileTest extends UnitTestCase {
         $this->assertIdentical(md5_file($this->readPath), md5_file($this->writePath));
     }
 }
-
-
-?>

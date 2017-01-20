@@ -109,19 +109,26 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
-class Tracker_FormElement_FieldTest extends UnitTestCase {
-    function setUp() {
+class Tracker_FormElement_FieldTest extends TuleapTestCase {
+
+    private $response;
+    private $language;
+
+    public function setUp()
+    {
+        parent::setUp();
         $this->response = new MockResponse();
         $this->language = new MockBaseLanguage();
-        $this->changeset_value = new MockTracker_Artifact_ChangesetValue();
         
         $GLOBALS['Response'] = $this->response;
         $GLOBALS['Language'] = $this->language;
     }
     
-    function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
+        parent::tearDown();
     }
     
     function testValidateField() {

@@ -24,7 +24,7 @@
 
 require_once 'bootstrap.php';
 
-class Docman_ErrorPermissionDeniedTest extends UnitTestCase {
+class Docman_ErrorPermissionDeniedTest extends TuleapTestCase {
 
     function testUrlTransformMiddle() {
         $e   = new Docman_Error_PermissionDenied();

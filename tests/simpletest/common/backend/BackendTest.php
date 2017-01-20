@@ -59,16 +59,18 @@ class BackendTest_Plugin_With_SetUp_And_Params {
     }
 }
 
-class BackendTest extends UnitTestCase {
+class BackendTest extends TuleapTestCase {
     
     function __construct($name = 'BackendSystem test') {
         parent::__construct($name);
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         //clear the cache between each tests
         Backend::clearInstances();
         EventManager::clearInstance();
+        parent::tearDown();
     }
     
     function testFactory_core() {
@@ -174,6 +176,4 @@ class BackendTest extends UnitTestCase {
         closedir($d);
         rmdir($test_dir);
     }
-
 }
-?>

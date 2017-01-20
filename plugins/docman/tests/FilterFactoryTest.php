@@ -27,7 +27,7 @@ Mock::generate('Docman_FilterItemType');
 
 Mock::generatePartial('Docman_FilterFactory', 'Docman_FilterFactoryTestVersion', array('getGlobalSearchMetadata', 'getItemTypeSearchMetadata', 'cloneFilterValues', 'getFilterFactory', 'createFilter', 'createFromMetadata'));
 
-class Docman_FilterFactoryTest extends UnitTestCase {
+class Docman_FilterFactoryTest extends TuleapTestCase {
 
     function testCloneFilter() {
         $mdFactory =  new MockDocman_MetadataFactory();

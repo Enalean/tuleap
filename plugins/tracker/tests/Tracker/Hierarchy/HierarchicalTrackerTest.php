@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,11 @@
  */
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
+class Tracker_Hierarchy_HierarchicalTrackerTest extends TuleapTestCase {
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->project_id = 110;
         $project = new MockProject();
         $project->setReturnValue('getId', $this->project_id);
@@ -59,5 +61,3 @@ class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
         $this->assertEqual($children[0], $this->child);
     }
 }
-
-?>

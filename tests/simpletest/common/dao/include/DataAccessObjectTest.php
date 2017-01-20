@@ -12,7 +12,7 @@ Mock::generate('DataAccessResult');
  *
  * Tests the class Dao
  */
-class DaoTest extends UnitTestCase {
+class DaoTest extends TuleapTestCase {
 
     function testDao() {
         $da = new MockDataAccess($this);

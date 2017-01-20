@@ -38,19 +38,7 @@ Mock::generate('EventManager');
 /**
  * This is the unit test of WebDAVProject
  */
-class WebDAVProjectTest extends UnitTestCase {
-
-    function setUp() {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-
-    }
-
-    function tearDown() {
-
-        unset($GLOBALS['Language']);
-
-    }
+class WebDAVProjectTest extends TuleapTestCase {
 
     /**
      * Testing when The project have no active services
@@ -94,50 +82,6 @@ class WebDAVProjectTest extends UnitTestCase {
         $webDAVProject->getChild('Files');
 
     }
-
-    /**
-     * Testing when the user can't access to the service
-     */
-    /*function testGetChildFailWithUserCanNotRead() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $FRSPackage = new MockFRSPackage();
-        $WebDAVPackage = new MockWebDAVFRSPackage();
-        $WebDAVPackage->setReturnValue('exist', true);
-        $WebDAVPackage->setReturnValue('userCanRead', false);
-
-        $webDAVProject->setReturnValue('getFRSPackageFromName', $FRSPackage);
-        $webDAVProject->setReturnValue('getWebDAVPackage', $WebDAVPackage);
-
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $webDAVProject->getChild($WebDAVPackage->getPackageId());
-
-    }*/
-
-    /**
-     * Testing when the package exist and user can read
-     */
-    /*function testSucceedGetChild() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $FRSPackage = new MockFRSPackage();
-        $WebDAVPackage = new MockWebDAVFRSPackage();
-        $WebDAVPackage->setReturnValue('exist', true);
-        $WebDAVPackage->setReturnValue('userCanRead', true);
-
-        $webDAVProject->setReturnValue('getFRSPackageFromName', $FRSPackage);
-        $webDAVProject->setReturnValue('getWebDAVPackage', $WebDAVPackage);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $this->assertEqual($webDAVProject->getChild($WebDAVPackage->getPackageId()), $WebDAVPackage);
-
-    }*/
 
     /**
      * Testing when project is not public and user is not member and not restricted
@@ -298,7 +242,4 @@ class WebDAVProjectTest extends UnitTestCase {
         $this->assertEqual($webDAVProject->userCanRead(), true);
 
     }
-
 }
-
-?>

@@ -25,7 +25,7 @@ Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 
 
-class GitViewsTest extends UnitTestCase {
+class GitViewsTest extends TuleapTestCase {
 
     public function testCanReturnOptionsListOfProjectsTheUserIsAdminOf() {
         $user    = $this->GivenAUserWithProjects();

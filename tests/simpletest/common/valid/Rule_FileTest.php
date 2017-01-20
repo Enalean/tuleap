@@ -26,13 +26,15 @@ require_once('common/valid/Rule.class.php');
 
 Mock::generatePartial('Rule_File', 'Rule_FileTestVersion', array('geti18nError'));
 
-class Rule_FileTest extends UnitTestCase {
+class Rule_FileTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'Rule_File test') {
         $this->UnitTestCase($name);
     }
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $tmpName = dirname(__FILE__).'/_unit_tests_rules_file.txt';
         $fd = fopen($tmpName, 'w');
         fwrite($fd, 'A test file');
@@ -44,9 +46,11 @@ class Rule_FileTest extends UnitTestCase {
                             'error'    => UPLOAD_ERR_OK);
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         @unlink($this->file['tmp_name']);
         unset($this->file);
+        parent::tearDown();
     }
 
     function testOk() {
@@ -96,38 +100,6 @@ class Rule_FileTest extends UnitTestCase {
         $this->assertPattern('/'.UPLOAD_ERR_NO_FILE.'/', $r->error);
     }
 
-    /* PHP5
-    function testErrorTmpDir() {
-        $r =& new Rule_FileTestVersion($this);
-        $r->setMaxSize('1000');
-        $r->setReturnValue('geti18nError', UPLOAD_ERR_NO_TMP_DIR);
-        $r->expectOnce('geti18nError', array('error_upload_tmpdir', UPLOAD_ERR_NO_TMP_DIR));
-        $this->file['error'] = UPLOAD_ERR_NO_TMP_DIR;
-        $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_NO_TMP_DIR.'/', $r->error);
-    }
-
-    function testErrorCantWrite() {
-        $r =& new Rule_FileTestVersion($this);
-        $r->setMaxSize('1000');
-        $r->setReturnValue('geti18nError', UPLOAD_ERR_CANT_WRITE);
-        $r->expectOnce('geti18nError', array('error_upload_cantwrite', UPLOAD_ERR_CANT_WRITE));
-        $this->file['error'] = UPLOAD_ERR_CANT_WRITE;
-        $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_CANT_WRITE.'/', $r->error);
-    }
-
-    function testErrorExt() {
-        $r =& new Rule_FileTestVersion($this);
-        $r->setMaxSize('1000');
-        $r->setReturnValue('geti18nError', UPLOAD_ERR_EXTENSION);
-        $r->expectOnce('geti18nError', array('error_upload_ext', UPLOAD_ERR_EXTENSION));
-        $this->file['error'] = UPLOAD_ERR_EXTENSION;
-        $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_EXTENSION.'/', $r->error);
-    }
-    */
-
     function testErrorMaxSize() {
         $r =& new Rule_FileTestVersion($this);
         $r->setMaxSize('5');
@@ -144,7 +116,4 @@ class Rule_FileTest extends UnitTestCase {
         $this->file['name'] = '';
         $this->assertFalse($r->isValid($this->file));
     }
-
 }
-
-?>

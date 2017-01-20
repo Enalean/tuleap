@@ -24,7 +24,7 @@ Mock::generate('Tracker');
 
 Mock::generate('Tracker_FormElement_Field_List');
 
-class Tracker_Semantic_StatusFactoryTest extends UnitTestCase {
+class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase {
 
     private $xml_security;
 

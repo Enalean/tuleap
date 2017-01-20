@@ -8,7 +8,7 @@ Mock::generatePartial('ForumMLInsert', 'ForumMLInsertTest', array('insertMessage
 Mock::generate('ForumML_FileStorage');
 
 
-class ForumML_InsertTest extends UnitTestCase {
+class ForumML_InsertTest extends TuleapTestCase {
 	private $_fixture;
 
 	function __construct($name="ForumML Mail DB insert tests") {

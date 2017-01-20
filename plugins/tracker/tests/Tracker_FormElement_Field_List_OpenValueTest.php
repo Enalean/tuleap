@@ -19,7 +19,7 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_List_OpenValueTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_OpenValueTest extends TuleapTestCase {
     
     public function testJSon() {
         $id          = 123;

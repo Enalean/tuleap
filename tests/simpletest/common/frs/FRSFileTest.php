@@ -2,7 +2,7 @@
 
 require_once('common/frs/FRSFile.class.php');
 
-class FRSFileTest extends UnitTestCase {
+class FRSFileTest extends TuleapTestCase {
 
     function testGetContentWholeFile() {
         $file = new FRSFile();

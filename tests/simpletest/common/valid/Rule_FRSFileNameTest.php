@@ -24,7 +24,7 @@ require_once('common/valid/Rule.class.php');
 
 require_once('utils.php');
 
-class Rule_FRSFileNameTest extends UnitTestCase {
+class Rule_FRSFileNameTest extends TuleapTestCase {
 
     function testNameValid() {
         $r = new Rule_FRSFileName();

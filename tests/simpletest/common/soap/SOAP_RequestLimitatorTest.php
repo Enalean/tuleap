@@ -41,7 +41,7 @@ class AboutOneHourAgoExpectation extends SimpleExpectation {
     }
 }
 
-class SOAP_RequestLimitatorTest extends UnitTestCase {
+class SOAP_RequestLimitatorTest extends TuleapTestCase {
 
     private function GivenThereWasAlreadyOneCallTheLastHour() {
         $dao = new MockSOAP_RequestLimitatorDao();

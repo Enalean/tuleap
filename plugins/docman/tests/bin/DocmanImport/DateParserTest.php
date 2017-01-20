@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../../bin/DocmanImport/DateParser.class.php');
 
-class DateParserTest extends UnitTestCase {
+class DateParserTest extends TuleapTestCase {
 
     public function testParseIso8601 () {
         $currentTimeStamp = time();

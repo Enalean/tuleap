@@ -98,21 +98,17 @@ require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
 
-class Tracker_FormElement_Field_ListTest extends UnitTestCase {
+class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->field_class            = 'Tracker_FormElement_Field_ListTestVersion';
         $this->field_class_for_import = 'Tracker_FormElement_Field_ListTestVersion_ForImport';
         $this->dao_class              = 'MockTracker_FormElement_Field_Value_ListDao';
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_List';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
         $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
-    }
-    
-    function tearDown() {
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
     }
     
     function testGetChangesetValue() {

@@ -27,7 +27,7 @@ require_once('common/include/Codendi_HTTPPurifier.class.php');
 /**
  * Tests the class Codendi_HTTPPurifier
  */
-class Codendi_HTTPPurifierTest extends UnitTestCase {
+class Codendi_HTTPPurifierTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'Codendi_HTTPPurifier test') {
         $this->UnitTestCase($name);

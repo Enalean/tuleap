@@ -24,7 +24,7 @@
 
 require_once('common/widget/Rule_Widget.class.php');
 
-class Rule_Widget_OwnerTest extends UnitTestCase {
+class Rule_Widget_OwnerTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'Rule_Widget_Owner test') {
         $this->UnitTestCase($name);

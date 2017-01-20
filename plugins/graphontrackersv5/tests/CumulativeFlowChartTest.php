@@ -28,7 +28,7 @@ class TestableFlowChartDataBuilder extends GraphOnTrackersV5_CumulativeFlow_Data
     }
 }
 
-class CumulativeFlowChartTest extends UnitTestCase {
+class CumulativeFlowChartTest extends TuleapTestCase {
     public function testFilterEmptyLines() {
         $initial_array= array(
             "1393891200" => array

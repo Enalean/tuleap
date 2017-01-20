@@ -36,19 +36,7 @@ array('getFileLocation', 'getFile', 'getFileId', 'getProject', 'getUtils', 'logD
 /**
  * This is the unit test of WebDAVFRSFile
  */
-class WebDAVFRSFileTest extends UnitTestCase {
-
-    function setUp() {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-
-    }
-
-    function tearDown() {
-
-        unset($GLOBALS['Language']);
-
-    }
+class WebDAVFRSFileTest extends TuleapTestCase {
 
     /**
      * Testing if the download method works perfectly
@@ -120,5 +108,3 @@ class WebDAVFRSFileTest extends UnitTestCase {
 
     }
 }
-
-?>

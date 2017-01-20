@@ -10,7 +10,7 @@
 require_once('common/reference/Reference.class.php');
 
 
-class ReferenceTest extends UnitTestCase {
+class ReferenceTest extends TuleapTestCase {
         
     function testScope() {
         $ref =& new Reference(1,"art","Goto artifact",'/tracker/?func=detail&aid=$1&group_id=$group_id','S','tracker','artifact',1,101);

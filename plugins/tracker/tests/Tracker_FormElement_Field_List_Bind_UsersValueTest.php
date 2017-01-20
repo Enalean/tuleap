@@ -33,7 +33,7 @@ Mock::generate('UserManager');
 require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
-class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase {
     
     public function testGetLabel() {
         $uh = new MockUserHelper();

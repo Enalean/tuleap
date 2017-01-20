@@ -28,7 +28,7 @@ function foobar() {
     return 'foo';
 }
 
-class MockFunctionsTest extends UnitTestCase {
+class MockFunctionsTest extends TuleapTestCase {
 
     function testFoobar() {
         $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
