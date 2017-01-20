@@ -20,23 +20,41 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class FloatFieldBetweenValueChecker implements InvalidFieldChecker
+class FloatFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $min_value = $comparison->getValueWrapper()->getMinValue();
-        $max_value = $comparison->getValueWrapper()->getMaxValue();
+        $values = $comparison->getValueWrapper()->accept($this);
 
-        $this->checkFieldIsNumeric($field, $min_value);
-        $this->checkFieldIsNumeric($field, $max_value);
+        foreach ($values as $value) {
+            if (! is_numeric($value)) {
+                throw new FloatToStringComparisonException($field, $value);
+            }
+        }
     }
 
-    private function checkFieldIsNumeric(Tracker_FormElement_Field $field, $value)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
     {
-        if (! is_numeric($value)) {
-            throw new FloatToStringComparisonException($field, $value);
-        }
+        return $value_wrapper->getValue()->format('Y-m-d');
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    {
+        return $value_wrapper->getValue();
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    {
+        $values = array();
+        $values[] = $value_wrapper->getMinValue()->accept($this);
+        $values[] = $value_wrapper->getMaxValue()->accept($this);
+
+        return $values;
     }
 }

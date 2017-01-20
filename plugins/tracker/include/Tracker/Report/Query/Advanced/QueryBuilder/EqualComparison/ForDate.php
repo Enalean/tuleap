@@ -24,14 +24,18 @@ use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class ForDate implements FromWhereBuilder
+class ForDate implements FromWhereBuilder, ValueWrapperVisitor
 {
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix   = spl_object_hash($comparison);
-        $value    = $comparison->getValueWrapper()->getValue();
+        $value    = $comparison->getValueWrapper()->accept($this);
         $field_id = (int) $field->getId();
 
         $changeset_value_date_alias = "CVDate_{$field_id}_{$suffix}";
@@ -57,6 +61,20 @@ class ForDate implements FromWhereBuilder
         $where = "$changeset_value_alias.changeset_id IS NOT NULL";
 
         return new FromWhere($from, $where);
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    {
+        return $value_wrapper->getValue();
+    }
+
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    {
+        return $value_wrapper->getValue()->format('Y-m-d');
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    {
     }
 
     private function escapeInt($value)

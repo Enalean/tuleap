@@ -20,33 +20,45 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class IntegerFieldBetweenValueChecker implements InvalidFieldChecker
+class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $min_value = $comparison->getValueWrapper()->getMinValue();
-        $max_value = $comparison->getValueWrapper()->getMaxValue();
+        $values = $comparison->getValueWrapper()->accept($this);
 
-        $this->checkFieldIsNotFloat($field, $min_value);
-        $this->checkFieldIsNotFloat($field, $max_value);
+        foreach ($values as $value) {
+            if (is_float($value + 0)) {
+                throw new IntegerToFloatComparisonException($field, $value);
+            }
 
-        $this->checkFieldIsNumeric($field, $min_value);
-        $this->checkFieldIsNumeric($field, $max_value);
-    }
-
-    private function checkFieldIsNotFloat(Tracker_FormElement_Field $field, $value)
-    {
-        if (is_float($value + 0)) {
-            throw new IntegerToFloatComparisonException($field, $value);
+            if (! is_numeric($value)) {
+                throw new IntegerToStringComparisonException($field, $value);
+            }
         }
     }
 
-    private function checkFieldIsNumeric(Tracker_FormElement_Field $field, $value)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
     {
-        if (! is_numeric($value)) {
-            throw new IntegerToStringComparisonException($field, $value);
-        }
+        return $value_wrapper->getValue()->format('Y-m-d');
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    {
+        return $value_wrapper->getValue();
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    {
+        $values = array();
+        $values[] = $value_wrapper->getMinValue()->accept($this);
+        $values[] = $value_wrapper->getMaxValue()->accept($this);
+
+        return $values;
     }
 }

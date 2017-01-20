@@ -67,86 +67,95 @@ term
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
-    = field:Field _ "=" _ value:SimpleExpr {
-        return new EqualComparison($field, new SimpleValueWrapper($value));
+    = field:Field _ "=" _ value_wrapper:SimpleExpr {
+        return new EqualComparison($field, $value_wrapper);
     }
 
 NotEqualComparison
-    = field:Field _ "!=" _ value:SimpleExpr {
-        return new NotEqualComparison($field, new SimpleValueWrapper($value));
+    = field:Field _ "!=" _ value_wrapper:SimpleExpr {
+        return new NotEqualComparison($field, $value_wrapper);
     }
 
 LesserThanComparison
-    = field:Field _ "<" _ value:SimpleExpr {
-        return new LesserThanComparison($field, new SimpleValueWrapper($value));
+    = field:Field _ "<" _ value_wrapper:SimpleExpr {
+        return new LesserThanComparison($field, $value_wrapper);
     }
 
 GreaterThanComparison
-    = field:Field _ ">" _ value:SimpleExpr {
-        return new GreaterThanComparison($field, new SimpleValueWrapper($value));
+    = field:Field _ ">" _ value_wrapper:SimpleExpr {
+        return new GreaterThanComparison($field, $value_wrapper);
     }
 
 LesserThanOrEqualComparison
-    = field:Field _ "<=" _ value:SimpleExpr {
-        return new LesserThanOrEqualComparison($field, new SimpleValueWrapper($value));
+    = field:Field _ "<=" _ value_wrapper:SimpleExpr {
+        return new LesserThanOrEqualComparison($field, $value_wrapper);
     }
 
 GreaterThanOrEqualComparison
-    = field:Field _ ">=" _ value:SimpleExpr {
-        return new GreaterThanOrEqualComparison($field, new SimpleValueWrapper($value));
+    = field:Field _ ">=" _ value_wrapper:SimpleExpr {
+        return new GreaterThanOrEqualComparison($field, $value_wrapper);
     }
 
 BetweenComparison
-    = field:Field _ "between"i _ "(" _ min_value:SimpleExpr _ "," _ max_value:SimpleExpr _ ")" {
-        return new BetweenComparison($field, new BetweenValueWrapper($min_value, $max_value));
+    = field:Field _ "between"i _ "(" _ min_value_wrapper:SimpleExpr _ "," _ max_value_wrapper:SimpleExpr _ ")" {
+        return new BetweenComparison($field, new BetweenValueWrapper($min_value_wrapper, $max_value_wrapper));
     }
 
 Field
-  = name:$[a-zA-Z0-9_]+ { return $name; }
+    = name:$[a-zA-Z0-9_]+ { return $name; }
 
 SimpleExpr
     = l:Literal { return $l; }
 
 Literal
-  = String / Float / Integer
+    = String / Float / Integer / CurrentDateTime
 
 String
-  = String1
-  / String2
+     = String1
+        / String2
 
 String1
-  = '"' chars:([^\n\r\f\\"] / "\\" nl:nl { return ""; } / escape)* '"' {
-      return join("", $chars);
+    = '"' chars:([^\n\r\f\\"] / "\\" nl:nl { return ""; } / escape)* '"' {
+        return new SimpleValueWrapper(join("", $chars));
     }
 
 String2
-  = "'" chars:([^\n\r\f\\'] / "\\" nl:nl { return ""; } / escape)* "'" {
-      return join("", $chars);
+    = "'" chars:([^\n\r\f\\'] / "\\" nl:nl { return ""; } / escape)* "'" {
+        return new SimpleValueWrapper(join("", $chars));
     }
 
 hex
-  = [0-9a-f]i
+    = [0-9a-f]i
 
 unicode
-  = "\\u" digits:$(hex hex? hex? hex? hex? hex?) (nl / _)? {
-      return chr_unicode(intval($digits, 16));
+    = "\\u" digits:$(hex hex? hex? hex? hex? hex?) (nl / _)? {
+        return chr_unicode(intval($digits, 16));
     }
 
 escape
-  = unicode
-  / "\\" ch:[^\r\n\f0-9a-f]i { return $ch; }
+    = unicode
+        / "\\" ch:[^\r\n\f0-9a-f]i { return $ch; }
 
 nl
-  = "\n"
-  / "\r\n"
-  / "\r"
-  / "\f"
+    = "\n"
+        / "\r\n"
+        / "\r"
+        / "\f"
 
 Integer "integer"
-  = digits:$[0-9]+ { return intval($digits, 10); }
+    = digits:$[0-9]+ {
+        return new SimpleValueWrapper(intval($digits, 10));
+    }
 
 Float
-  = digits:$([0-9]+ "." [0-9]+) { return floatval($digits); }
+    = digits:$([0-9]+ "." [0-9]+) {
+        return new SimpleValueWrapper(floatval($digits));
+    }
+
+CurrentDateTime
+    = "now"i _ "(" _ ")" {
+        return new CurrentDateTimeValueWrapper();
+    }
 
 _ "whitespace"
-  = [ \t\n\r]*
+    = [ \t\n\r]*

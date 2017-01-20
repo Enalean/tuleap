@@ -174,7 +174,13 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new BetweenComparison('int', new BetweenValueWrapper(20, 30));
+        $expr = new BetweenComparison(
+            'int',
+            new BetweenValueWrapper(
+                new SimpleValueWrapper(20),
+                new SimpleValueWrapper(30)
+            )
+        );
 
         $this->collector->visitBetweenComparison($expr, $this->parameters);
 
@@ -312,7 +318,13 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
-        $expr = new BetweenComparison('field', new BetweenValueWrapper('value1', 'value2'));
+        $expr = new BetweenComparison(
+            'field',
+            new BetweenValueWrapper(
+                new SimpleValueWrapper('value1'),
+                new SimpleValueWrapper('value2')
+            )
+        );
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 

@@ -21,19 +21,40 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use DateTime;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class DateFieldChecker implements InvalidFieldChecker
+class DateFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValueWrapper()->getValue();
-
-        $format     = "Y-m-d";
-        $date_value = DateTime::createFromFormat($format, $value);
+        $date_value = $comparison->getValueWrapper()->accept($this);
 
         if ($date_value === false) {
-            throw new DateToStringComparisonException($field, $value);
+            throw new DateToStringComparisonException($field, $date_value);
         }
+    }
+
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    {
+        $format            = "Y-m-d";
+        $current_date_time = $value_wrapper->getValue();
+
+        return $current_date_time->format($format);
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    {
+        $format = "Y-m-d";
+        $value  = $value_wrapper->getValue();
+
+        return DateTime::createFromFormat($format, $value);
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    {
     }
 }

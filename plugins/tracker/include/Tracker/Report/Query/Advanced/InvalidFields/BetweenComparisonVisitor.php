@@ -64,7 +64,7 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)

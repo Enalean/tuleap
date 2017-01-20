@@ -31,6 +31,11 @@ class SimpleValueWrapper implements ValueWrapper
         $this->value = $value;
     }
 
+    public function accept(ValueWrapperVisitor $visitor)
+    {
+        return $visitor->visitSimpleValueWrapper($this);
+    }
+
     /**
      * @return string
      */
