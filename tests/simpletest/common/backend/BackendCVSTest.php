@@ -387,10 +387,12 @@ class BackendCVSTest extends UnitTestCase {
        
         $project1 = new MockProject($this);
         $project1->setReturnValue('getId', 102);
-       
+        $project1->setReturnValue('usesCVS', true);
+
         $project2 = new MockProject($this);
         $project2->setReturnValue('getId', 101);
-       
+        $project2->setReturnValue('usesCVS', true);
+
         $projects =  array(102, 101);
         $user->setReturnValue('getProjects', $projects);
          

@@ -329,7 +329,7 @@ class BackendCVS extends Backend {
             $pm = $this->getProjectManager();
             foreach ($projects as $groupId) {
                 $project = $pm->getProject($groupId);
-                if ($this->repositoryExists($project)) {
+                if ($project->usesCVS() === true && $this->repositoryExists($project)) {
                     if (!$this->updateCVSwriters($groupId)) {
                         return false;
                     }
