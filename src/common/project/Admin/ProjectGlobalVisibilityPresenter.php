@@ -41,16 +41,21 @@ class ProjectGlobalVisibilityPresenter
     public $project_truncated_presenter;
 
     public $label_submit;
+    public $can_admin_do_something;
+    public $warning_no_configuration_allowed;
 
     public function __construct(
         Project $project,
         ProjectVisibilityPresenter $project_visibility_presenter,
-        ProjectTruncatedEmailsPresenter $project_truncated_presenter
+        ProjectTruncatedEmailsPresenter $project_truncated_presenter,
+        $can_admin_do_something
     ) {
         $this->project_visibility_presenter = $project_visibility_presenter;
         $this->project_truncated_presenter  = $project_truncated_presenter;
         $this->group_id                     = $project->getGroupId();
+        $this->can_admin_do_something       = $can_admin_do_something;
 
-        $this->label_submit = _('Update');
+        $this->label_submit                     = _('Update');
+        $this->warning_no_configuration_allowed = _('Project administrators are not allowed to configure anything here');
     }
 }

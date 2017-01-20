@@ -109,3 +109,6 @@ msgstr "La mise à jour a échoué"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
+
+msgid "Project administrators are not allowed to configure anything here"
+msgstr "les administrateurs du projet ne sont pas autorisés à configurer quelque chose ici"

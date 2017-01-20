@@ -43,4 +43,10 @@ class ProjectVisibilityUserConfigurationPermissions
     {
         return $user->isSuperUser();
     }
+
+    public function canUserConfigureSomething(PFUser $user, Project $project)
+    {
+        return $this->canUserConfigureTruncatedMail($user) ||
+            $this->canUserConfigureProjectVisibility($user, $project);
+    }
 }
