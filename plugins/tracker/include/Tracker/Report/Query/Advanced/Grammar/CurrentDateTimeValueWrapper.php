@@ -19,16 +19,21 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
+use DateInterval;
+use DateTime;
+
 class CurrentDateTimeValueWrapper implements ValueWrapper
 {
+    private static $MINUS_SIGN = '-';
+
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $value;
 
-    public function __construct()
+    public function __construct($sign, $period)
     {
-        $this->value = new \DateTime();
+        $this->value = $this->computeCurrentDateTime($sign, $period);
     }
 
     public function accept(ValueWrapperVisitor $visitor)
@@ -37,10 +42,28 @@ class CurrentDateTimeValueWrapper implements ValueWrapper
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return DateTime
+     */
+    private function computeCurrentDateTime($sign, $period)
+    {
+        $value = new DateTime();
+
+        if ($period) {
+            if ($sign === self::$MINUS_SIGN) {
+                $value->sub(new DateInterval($period));
+            } else {
+                $value->add(new DateInterval($period));
+            }
+        }
+
+        return $value;
     }
 }
