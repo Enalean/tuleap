@@ -622,11 +622,7 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.width = this.width - this.margin.left - this.margin.right;
         this.height = this.height - this.margin.top - this.margin.bottom;
 
-        if (this.data.hasOwnProperty("capacity") ) {
-            this.ideal_data  = [ 0, 0 ];
-        } else {
-            this.ideal_data  = [ this.data.capacity, 0 ];
-        }
+        this.ideal_data  = [ this.data.capacity, 0 ];
     },
 
     display: function(append_element_selector) {
@@ -658,7 +654,7 @@ tuleap.agiledashboard.Burndown = Class.create({
 
     defineOrdinates: function() {
         this.y = this.d3.scale.linear().range([this.height, 0]);
-        this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data)));
+        this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data), Number));
     },
 
     bootstrapTheChart: function(append_element_selector) {
