@@ -28,11 +28,25 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
 class FloatFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
+    /**
+     * @var EmptyStringChecker
+     */
+    private $empty_string_checker;
+
+    public function __construct(EmptyStringChecker $empty_string_checker)
+    {
+        $this->empty_string_checker = $empty_string_checker;
+    }
+
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $value = $comparison->getValueWrapper()->accept($this);
 
-        if (! is_numeric($value)) {
+        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+            throw new FloatToEmptyStringComparisonException($comparison, $field);
+        }
+
+        if (! is_numeric($value) && $value !== "") {
             throw new FloatToStringComparisonException($field, $value);
         }
     }

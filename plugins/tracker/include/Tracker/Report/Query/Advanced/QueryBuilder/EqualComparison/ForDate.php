@@ -45,7 +45,7 @@ class ForDate implements FromWhereBuilder, ValueWrapperVisitor
         $date_value = DateTime::createFromFormat($format, $value);
 
         if ($value === '') {
-            $condition = "1";
+            $condition = "$changeset_value_date_alias.value IS NULL";
         } else {
             $condition = "$changeset_value_date_alias.value = ".$this->escapeInt($date_value->format("U"));
         }

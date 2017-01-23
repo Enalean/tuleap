@@ -22,7 +22,63 @@ msgid ""
 msgstr ""
 
 #, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with < operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with <= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with > operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with >= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+
+#, php-format
 msgid "The float field '%s' cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with < "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with <= "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with > "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with >= "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
 msgstr ""
 
 #, php-format

@@ -38,7 +38,7 @@ class ForInteger implements FromWhereBuilder
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
         if ($value === '') {
-            $condition = "1";
+            $condition = "$changeset_value_int_alias.value IS NULL";
         } else {
             $condition = "$changeset_value_int_alias.value = ".$this->escapeInt($value);
         }

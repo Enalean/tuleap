@@ -50,7 +50,7 @@ class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
         if ($value === '') {
-            $condition = "1";
+            $condition = "$changeset_value_date_alias.value IS NULL";
         } else {
             $condition = "$changeset_value_date_alias.value " . $this->date_time_condition_builder->buildConditionForDateOrDateTime($value);
         }

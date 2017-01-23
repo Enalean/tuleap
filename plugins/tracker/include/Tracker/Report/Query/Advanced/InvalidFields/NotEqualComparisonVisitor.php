@@ -72,12 +72,12 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new FloatFieldChecker();
+        return new FloatFieldChecker(new EmptyStringAllowed());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldChecker();
+        return new IntegerFieldChecker(new EmptyStringAllowed());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)

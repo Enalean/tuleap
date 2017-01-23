@@ -17,17 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-interface Comparison extends Visitable
+class EmptyStringAllowed implements EmptyStringChecker
 {
-    /**
-     * @return ValueWrapper
-     */
-    public function getValueWrapper();
-
-    /**
-     * @return string
-     */
-    public function getField();
+    public function isEmptyStringAProblem($value)
+    {
+        return false;
+    }
 }
