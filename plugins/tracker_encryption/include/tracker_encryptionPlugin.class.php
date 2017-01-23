@@ -116,31 +116,42 @@ class tracker_encryptionPlugin extends Plugin
     {
         $func       = $request->get('func');
         $tracker_id = $request->get('tracker');
+        $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
         switch ($func) {
             case 'admin-encryption':
-                $this->displayTrackerKeyForm($tracker_id);
+                if ($tracker->userIsAdmin()) {
+                    $this->displayTrackerKeyForm($tracker_id);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
+                }
             break;
             case 'admin-editencryptionkey':
-                $key = trim($request->getValidated('key', 'text', ''));
-                $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
-                $csrf_token->check();
-                $this->editTrackerKey($tracker_id, $key);
+                if ($tracker->userIsAdmin()) {
+                    $key = trim($request->getValidated('key', 'text', ''));
+                    $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
+                    $csrf_token->check();
+                    $this->editTrackerKey($tracker_id, $key);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
+                }
             break;
         }
     }
 
     private function displayTrackerKeyForm($tracker_id)
     {
-         $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
-         $title = '';
-         $breadcrumbs = array();
-         $layout = new TrackerManager();
-         $tracker->displayAdminHeader($layout, $title, $breadcrumbs);
-         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
-         $this->renderer->renderToPage(
-            'tracker-key-settings',
-             new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey', $csrf_token));
-         $GLOBALS['HTML']->footer(array());
+        $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
+        $title = '';
+        $breadcrumbs = array();
+        $layout = new TrackerManager();
+        $tracker->displayAdminHeader($layout, $title, $breadcrumbs);
+        $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
+        $this->renderer->renderToPage(
+           'tracker-key-settings',
+            new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey', $csrf_token));
+        $GLOBALS['HTML']->footer(array());
     }
 
     private function editTrackerKey($tracker_id, $key)
