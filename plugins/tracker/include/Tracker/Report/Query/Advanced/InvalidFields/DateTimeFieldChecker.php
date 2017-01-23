@@ -26,46 +26,60 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class DateTimeFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
+    const DATETIME_FORMAT = "Y-m-d H:i";
+
+    /**
+     * @var EmptyStringChecker
+     */
+    private $empty_string_checker;
+
+    public function __construct(EmptyStringChecker $empty_string_checker)
+    {
+        $this->empty_string_checker = $empty_string_checker;
+    }
+
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $date_value = $comparison->getValueWrapper()->accept($this);
+        $date_value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+
+        if ($this->empty_string_checker->isEmptyStringAProblem($date_value)) {
+            throw new DateToEmptyStringComparisonException($comparison, $field);
+        }
 
         if ($date_value === false) {
             throw new DateToStringComparisonException($field, $date_value);
         }
     }
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $format            = "Y-m-d H:i";
         $current_date_time = $value_wrapper->getValue();
 
-        return $current_date_time->format($format);
+        return $current_date_time->format(self::DATETIME_FORMAT);
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         $value = $value_wrapper->getValue();
 
         if ($value === '') {
-            return;
+            return '';
         }
 
-        $format     = "Y-m-d H:i";
-        $date_value = DateTime::createFromFormat($format, $value);
+        $date_value = DateTime::createFromFormat(self::DATETIME_FORMAT, $value);
 
         if ($date_value === false) {
-            $format     = "Y-m-d";
-            $date_value = DateTime::createFromFormat($format, $value);
+            $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
         }
 
         return $date_value;
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
     }
 }

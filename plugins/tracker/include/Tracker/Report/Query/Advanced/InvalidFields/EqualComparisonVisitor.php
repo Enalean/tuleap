@@ -63,9 +63,13 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvi
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
         if ($field->isTimeDisplayed() === true) {
-            return new DateTimeFieldChecker();
+            return new DateTimeFieldChecker(
+                new EmptyStringAllowed()
+            );
         }
-        return new DateFieldChecker();
+        return new DateFieldChecker(
+            new EmptyStringAllowed()
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -155,12 +159,16 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvi
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new DateTimeFieldChecker();
+        return new DateTimeFieldChecker(
+            new EmptyStringAllowed()
+        );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new DateTimeFieldChecker();
+        return new DateTimeFieldChecker(
+            new EmptyStringAllowed()
+        );
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)

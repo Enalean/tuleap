@@ -26,38 +26,45 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class DateFieldCheckerTest extends TuleapTestCase
 {
-
-    /** @var DateFieldChecker */
+    /** @var DateTimeFieldChecker */
     private $date_field_checker;
     /** @var Tracker_FormElement_Field_Date */
     private $field;
     /** @var Comparison */
     private $comparison;
-    /** @var SimpleValueWrapper */
-    private $value_wrapper;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->date_field_checker = new DateFieldChecker();
+        $this->date_field_checker = new DateFieldChecker(new EmptyStringAllowed());
         $this->field              = aMockDateWithoutTimeField()->build();
         $this->comparison         = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
     }
 
-    public function itDoesNotThrowForEmptyValue()
+    public function itDoesNotThrowWhenEmptyValueIsAllowed()
     {
-        $this->value_wrapper = new SimpleValueWrapper('');
-        stub($this->comparison)->getValueWrapper()->returns($this->value_wrapper);
+        $value_wrapper = new SimpleValueWrapper('');
+        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
         $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
         $this->pass();
     }
 
+    public function itThrowsWhenEmptyValueIsForbidden()
+    {
+        $this->date_field_checker = new DateFieldChecker(new EmptyStringForbidden());
+        $value_wrapper            = new SimpleValueWrapper('');
+        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
+        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateToEmptyStringComparisonException');
+
+        $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
+    }
+
     public function itDoesNotThrowForShortFormattedValue()
     {
-        $this->value_wrapper = new SimpleValueWrapper('2014-11-14');
-        stub($this->comparison)->getValueWrapper()->returns($this->value_wrapper);
+        $value_wrapper = new SimpleValueWrapper('2014-11-14');
+        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
         $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
         $this->pass();
@@ -65,11 +72,10 @@ class DateFieldCheckerTest extends TuleapTestCase
 
     public function itThrowsForAnInvalidValue()
     {
-        $this->value_wrapper = new SimpleValueWrapper('ittérativisme');
-        stub($this->comparison)->getValueWrapper()->returns($this->value_wrapper);
+        $value_wrapper = new SimpleValueWrapper('ittérativisme');
+        stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateToStringComparisonException');
 
         $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->pass();
     }
 }

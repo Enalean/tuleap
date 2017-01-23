@@ -21,9 +21,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface ValueWrapperVisitor
 {
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper);
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper);
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper);
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
 }

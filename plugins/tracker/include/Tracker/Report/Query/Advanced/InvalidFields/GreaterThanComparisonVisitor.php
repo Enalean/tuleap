@@ -64,7 +64,14 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, 
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        if ($field->isTimeDisplayed() === true) {
+            return new DateTimeFieldChecker(
+                new EmptyStringForbidden()
+            );
+        }
+        return new DateFieldChecker(
+            new EmptyStringForbidden()
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -154,12 +161,16 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, 
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return new DateTimeFieldChecker(
+            new EmptyStringForbidden()
+        );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return new DateTimeFieldChecker(
+            new EmptyStringForbidden()
+        );
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)

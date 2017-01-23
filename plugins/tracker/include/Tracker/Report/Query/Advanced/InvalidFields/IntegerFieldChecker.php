@@ -25,6 +25,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
 
 class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
@@ -40,7 +42,7 @@ class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValueWrapper()->accept($this);
+        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
         if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
             throw new IntegerToEmptyStringComparisonException($comparison, $field);
@@ -55,17 +57,17 @@ class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
         }
     }
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format('Y-m-d');
+        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
     }
 }

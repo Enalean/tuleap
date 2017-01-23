@@ -21,5 +21,5 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface ValueWrapper
 {
-    public function accept(ValueWrapperVisitor $visitor);
+    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters);
 }
