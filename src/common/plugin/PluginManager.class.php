@@ -130,7 +130,13 @@ class PluginManager {
             file_put_contents($hooks_cache_file, json_encode($hooks_cache));
             return $hooks_cache;
         }
-        return json_decode(file_get_contents($hooks_cache_file), true);
+
+        $hooks_cache = json_decode(file_get_contents($hooks_cache_file), true);
+        if ($hooks_cache === null) {
+            return $this->getHooksOfAvailablePlugins();
+        }
+
+        return $hooks_cache;
     }
 
     public function getCacheFile() {
