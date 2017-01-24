@@ -85,7 +85,15 @@ class ProjectVisibilityController
             )
         );
 
-        $presenter = new ProjectGlobalVisibilityPresenter($project, $visibility_presenter, $truncated_presenter);
+        $presenter = new ProjectGlobalVisibilityPresenter(
+            $project,
+            $visibility_presenter,
+            $truncated_presenter,
+            $this->project_visibility_configuration->canUserConfigureSomething(
+                $current_user,
+                $project
+            )
+        );
 
         $this->displayHeader($project);
         $renderer = TemplateRendererFactory::build()->getRenderer(
