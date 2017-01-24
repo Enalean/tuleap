@@ -98,6 +98,6 @@ class DeprecationRetriever
 
     public function isALegacyField(Tracker_FormElement_Field_Computed $field)
     {
-        return $this->dao->searchDeprecatedFieldsById($field->getId())->count() > 0;
+        return false;
     }
 }
