@@ -91,7 +91,7 @@ class Dao extends DataAccessObject
                     INNER JOIN tracker AS T ON (T.id = A.tracker_id AND T.group_id = $project_id)
                     INNER JOIN plugin_artifactsfolders_tracker_usage AS folder_tracker USING (tracker_id)
                     LEFT JOIN (
-                        tracker_changeset_value_artifactlink AS artlink
+                        tracker_changeset_value_artifactlink AS artlink USE INDEX (idx_reverse)
                         INNER JOIN tracker_changeset_value AS cv ON (
                             cv.id = artlink.changeset_value_id
                             AND nature = $is_child
