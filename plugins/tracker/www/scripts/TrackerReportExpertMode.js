@@ -105,6 +105,14 @@
                         token: "string"
                     },
                     {
+                        regex: /\d+[dwmy]/i, // Time period
+                        token: "variable-3"
+                    },
+                    {
+                        regex: /\d+(?:\.\d+)?/i, // Float & integers
+                        token: "number"
+                    },
+                    {
                         regex: /(?:and|or)\b/i,
                         token: "keyword"
                     },
@@ -113,15 +121,17 @@
                         token: "variable-2"
                     },
                     {
-                        regex: /[=]+/,
+                        regex: /[=<>!+-]+/,
                         token: "operator"
                     },
                     {
                         regex: /[(]/,
+                        token: "operator",
                         indent: true
                     },
                     {
                         regex: /[)]/,
+                        token: "operator",
                         dedent: true
                     },
                     {
