@@ -64,7 +64,14 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
+        if ($field->isTimeDisplayed() === true) {
+            return new DateTimeFieldBetweenValueChecker(
+                new EmptyStringForbidden()
+            );
+        }
+        return new DateFieldBetweenValueChecker(
+            new EmptyStringForbidden()
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -74,12 +81,12 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new FloatFieldBetweenValueChecker();
+        return new FloatFieldBetweenValueChecker(new EmptyStringForbidden());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldBetweenValueChecker();
+        return new IntegerFieldBetweenValueChecker(new EmptyStringForbidden());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
@@ -154,12 +161,16 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return new DateTimeFieldBetweenValueChecker(
+            new EmptyStringForbidden()
+        );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return new DateTimeFieldBetweenValueChecker(
+            new EmptyStringForbidden()
+        );
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)

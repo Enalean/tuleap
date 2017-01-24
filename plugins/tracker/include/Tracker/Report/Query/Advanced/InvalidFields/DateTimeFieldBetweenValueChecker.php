@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use DateTime;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -26,8 +27,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
 
-class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class DateTimeFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     /**
      * @var EmptyStringChecker
@@ -41,32 +43,49 @@ class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        $date_values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
-        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new IntegerToEmptyStringComparisonException($comparison, $field);
-        }
+        foreach ($date_values as $date_value) {
+            if ($this->empty_string_checker->isEmptyStringAProblem($date_value)) {
+                throw new DateToEmptyStringComparisonException($comparison, $field);
+            }
 
-        if (! is_numeric($value) && $value !== "") {
-            throw new IntegerToStringComparisonException($field, $value);
-        }
-
-        if (is_float($value + 0)) {
-            throw new IntegerToFloatComparisonException($field, $value);
+            if ($date_value === false) {
+                throw new DateToStringComparisonException($field, $date_value);
+            }
         }
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
+        $current_date_time = $value_wrapper->getValue();
+
+        return $current_date_time->format(DateTimeFieldChecker::DATETIME_FORMAT);
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue();
+        $value = $value_wrapper->getValue();
+
+        if ($value === '') {
+            return '';
+        }
+
+        $date_value = DateTime::createFromFormat(DateTimeFieldChecker::DATETIME_FORMAT, $value);
+
+        if ($date_value === false) {
+            $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
+        }
+
+        return $date_value;
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
+        $values   = array();
+        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
+        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
+
+        return $values;
     }
 }
