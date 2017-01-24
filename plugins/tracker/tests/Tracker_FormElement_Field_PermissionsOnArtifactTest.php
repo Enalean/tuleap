@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,100 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TuleapTestCase {
+class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TuleapTestCase
+{
+    /**
+     * @var Tracker_FormElement_Field_PermissionsOnArtifact
+     */
+    private $field;
 
-    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {
-        $field = new Tracker_FormElement_Field_PermissionsOnArtifact(
-            1,
-            101,
-            null,
-            'field_perms_on_artifact',
-            'Field Perms On Artifact',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
+    /**
+     * @var Tracker_Artifact
+     */
+    private $artifact;
+
+    public function setUp()
+    {
+        $this->artifact = anArtifact()->withId(101)->build();
+        $this->field    = partial_mock('Tracker_FormElement_Field_PermissionsOnArtifact',
+            array(
+                'addRequiredError',
+                'isRequired'
+            )
         );
+    }
 
+    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
+    {
         $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
 
         $value = 'some_value';
+        $this->field->getFieldDataFromRESTValueByField($value);
+    }
 
-        $field->getFieldDataFromRESTValueByField($value);
+    public function itReturnsTrueWhenCheckboxIsCheckedAndAUgroupIsSelected()
+    {
+        stub($this->field)->isRequired()->returns(false);
+        $submitted_values = array(
+            'use_artifact_permissions' => true,
+            'u_groups'                 => array(ForgeAccess::ANONYMOUS)
+        );
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+        );
+    }
+
+    public function itReturnsTrueWhenCheckboxIsUnchecked()
+    {
+        stub($this->field)->isRequired()->returns(false);
+        $submitted_values = array(
+            'use_artifact_permissions' => false
+        );
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+        );
+    }
+
+    public function itReturnsTrueWhenArrayIsEmpty()
+    {
+        stub($this->field)->isRequired()->returns(false);
+        $submitted_values = array();
+        $this->assertTrue(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+        );
+    }
+
+    public function itReturnsFalseWhenCheckboxIsCheckedAndNoUGroupIsSelected()
+    {
+        stub($this->field)->isRequired()->returns(false);
+        $submitted_values = array(
+            'use_artifact_permissions' => true,
+            'u_groups'                 => array()
+        );
+
+        $this->assertFalse(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+        );
+    }
+
+    public function itReturnsFalseWhenFieldIsRequiredAndNoValueAreSet()
+    {
+        stub($this->field)->isRequired()->returns(true);
+        $submitted_values = array();
+        $this->assertFalse(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+        );
+    }
+
+    public function itReturnsFalseWhenFieldIsRequiredAndValueAreNotCorrectlySet()
+    {
+        stub($this->field)->isRequired()->returns(true);
+        $submitted_values = array(
+            'use_artifact_permissions' => true,
+            'u_groups'                 => array()
+        );
+        $this->assertFalse(
+            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+        );
     }
 }
