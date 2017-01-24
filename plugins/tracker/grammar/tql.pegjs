@@ -154,20 +154,17 @@ Float
 
 CurrentDateTime
     = "now"i _ "(" _ ")" _ period:PeriodCurrentDateTime? {
-        return new CurrentDateTimeValueWrapper(substr($period, 0, 1), substr($period, 1, strlen($period)));
+        return new CurrentDateTimeValueWrapper($period["sign"], $period["duration"]);
     }
 
 PeriodCurrentDateTime
-    = sign:$[+|-] _ duration:$[0-9]+ period:Period {
-        return $sign."P".$duration.$period;
+    = sign:$[+|-] _ number:$[0-9]+ designator:Designator {
+        return array("sign" => $sign, "duration" => "P".$number.$designator);
     }
 
-Period
-    = Day
-
-Day
-    = "d"i {
-        return "D";
+Designator
+    = designator:$[d|w|m|y]i {
+        return strtoupper($designator);
     }
 
 _ "whitespace"
