@@ -105,8 +105,12 @@
                         token: "string"
                     },
                     {
-                        regex: /(?:and|or|now|between)\b/i,
+                        regex: /(?:and|or)\b/i,
                         token: "keyword"
+                    },
+                    {
+                        regex: /(?:now|between)\b/i,
+                        token: "variable-2"
                     },
                     {
                         regex: /[=]+/,
