@@ -22,7 +22,7 @@
 # Augment version number of each merged plugin
 
 # Usage:
-# $ tools/utils/changelogs/generate.sh
+# $ tools/utils/version_numbers/generate.sh
 
 new_tuleap_version=$(awk -F'.' '{OFS="."; if ($3 == '99') { $NF=$NF+1; print} else { $2=$2+1; print $1, $2 }}' VERSION)
 echo $new_tuleap_version > VERSION

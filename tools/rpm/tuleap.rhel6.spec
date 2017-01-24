@@ -507,7 +507,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha
 # Remove development tools
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/changelogs
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php56
