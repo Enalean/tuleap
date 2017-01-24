@@ -105,7 +105,7 @@
                         token: "string"
                     },
                     {
-                        regex: /(?:and|or)\b/i,
+                        regex: /(?:and|or|now|between)\b/i,
                         token: "keyword"
                     },
                     {
