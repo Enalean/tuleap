@@ -96,3 +96,6 @@ msgstr ""
 
 msgid "Project administrators are not allowed to configure anything here"
 msgstr ""
+
+msgid "Please accept platform <a href='/tos/tos.php'>Term of Services</a>"
+msgstr ""

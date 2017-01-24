@@ -1,6 +1,6 @@
 <h3>{{ section_title }}</h3>
 <label for="project_visibility">{{ choose_visbility }}</label>
-<select name="project_visibility">
+<select name="project_visibility" id="project_visibility">
     {{# options }}
         <option value="{{ value }}" {{ selected }}>{{ label }}</option>
     {{/ options }}
@@ -16,3 +16,9 @@
         {{{ general_warning_message }}}
     </p>
 {{/ platform_allows_restricted }}
+
+<p id="term_of_service_usage" class="term-of-service-hidden">
+    <label class="checkbox" for="term_of_service">
+        <input type="checkbox" name="term_of_service" id="term_of_service"> {{{ term_of_service_message }}}
+    </label>
+</p>
