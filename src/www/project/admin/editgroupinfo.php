@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright Enalean (c) 2015. All rights reserved.
+ * Copyright Enalean (c) 2015 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -190,23 +190,6 @@ if ($valid_data==1) {
         ));
     }
 
-    //update visibility
-    if ($user_can_choose_visibility) {
-        if ($currentproject->getAccess() != $request->get('project_visibility')) {
-            $project_manager->setAccess($currentproject, $request->get('project_visibility'));
-            $update_success = true;
-        }
-    }
-
-    //update truncated emails
-    if ($user_can_choose_truncated_emails) {
-        $usage = (int) $request->exist('truncated_emails');
-        if ($currentproject->getTruncatedEmailsUsage() != $usage) {
-            $project_manager->setTruncatedEmailsUsage($currentproject, $usage);
-            $update_success = true;
-        }
-    }
-
     if (! $update_success) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
@@ -232,40 +215,6 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editgroupi
 echo '<FORM action="?group_id='.$group_id.'" method="post" id="project_info_form">';
 
 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
-
-if ($user_can_choose_visibility) {
-    $presenter = new ProjectVisibilityPresenter($Language, ForgeConfig::areRestrictedUsersAllowed(), $currentproject->getAccess());
-    echo $renderer->renderToString('project_visibility', $presenter);
-}
-
-if ($user_can_choose_truncated_emails) {
-    $truncated_mails_impacted_services = array();
-
-    $file_service = $currentproject->getService(Service::FILE);
-    if ($file_service) {
-        $truncated_mails_impacted_services[] = $file_service->getInternationalizedName();
-    }
-
-    $svn_service  = $currentproject->getService(Service::SVN);
-    if ($svn_service) {
-        $truncated_mails_impacted_services[] = $svn_service->getInternationalizedName();
-    }
-
-    $wiki_service = $currentproject->getService(Service::WIKI);
-    if ($wiki_service) {
-        $truncated_mails_impacted_services[] = $wiki_service->getInternationalizedName();
-    }
-
-    EventManager::instance()->processEvent(
-        Event::SERVICES_TRUNCATED_EMAILS,
-        array(
-            'project'  => $currentproject,
-            'services' => &$truncated_mails_impacted_services
-        )
-    );
-    $presenter = new ProjectTruncatedEmailsPresenter($currentproject, $truncated_mails_impacted_services);
-    echo $renderer->renderToString('truncated_emails', $presenter);
-}
 
 print "<P><h3>".$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 

@@ -40,6 +40,15 @@ class ProjectVisibilityRouter
 
     public function route(HTTPRequest $request)
     {
-        $this->project_visibility_controller->display($request);
+        $action = $request->get('action');
+
+        switch ($action) {
+            case "update-visibility":
+                $this->project_visibility_controller->update($request);
+                break;
+            default:
+                $this->project_visibility_controller->display($request);
+                break;
+        }
     }
 }

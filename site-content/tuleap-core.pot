@@ -87,3 +87,9 @@ msgstr ""
 
 msgid "Wiki"
 msgstr ""
+
+msgid "Update failed"
+msgstr ""
+
+msgid "Update successful"
+msgstr ""
