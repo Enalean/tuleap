@@ -24,20 +24,12 @@
 # Usage:
 # $ tools/utils/changelogs/generate.sh
 
-tuleap_version=`php -r '$v = explode(".", file_get_contents("VERSION")); echo $v[0] .".". ($v[1]+1);'`
-php tools/utils/changelogs/increment_tuleap_version.php
-
-get_new_version() {
-    version_file="$1/VERSION"
-    major_version=`cat $version_file | sed -r "s|(\.[0-9]+)$||"`
-    minor_version=`cat $version_file | sed -r "s|([0-9]+\.)+||"`
-    minor_version=`expr 1 + $minor_version`
-    echo "$major_version.$minor_version"
-}
+new_tuleap_version=$(awk -F'.' '{OFS="."; if ($3 == '99') { $NF=$NF+1; print} else { $2=$2+1; print $1, $2 }}' VERSION)
+echo $new_tuleap_version > VERSION
 
 search_modified_added_or_deleted_files_in_git_staging_area() {
     path=$1
-    git status --porcelain | grep -Pe "^(M|D|A)  $path" | awk -F' ' '{print $2}'
+    git status --porcelain | awk -F' ' '($1 == "M" || $1 == "D" || $1 == "A") {print $2}' | grep "$path"
 }
 
 modified_plugins=$(search_modified_added_or_deleted_files_in_git_staging_area "plugins/" | cut -d/ -f1,2 | uniq)
@@ -73,7 +65,7 @@ for item in $modified_plugins $modified_themes $modified_api; do
 	continue
     fi
 
-    version=$(get_new_version $path)
+    version=$(awk -F'.' '{OFS="."; $NF=$NF+1; print}' "$path/VERSION")
     echo "    * $item_name: $version"
     echo $version > $path/VERSION
 done
