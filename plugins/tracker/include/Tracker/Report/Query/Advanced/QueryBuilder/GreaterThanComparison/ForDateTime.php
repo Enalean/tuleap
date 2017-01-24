@@ -54,9 +54,9 @@ class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
         $changeset_value_date_alias = "CVDate_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-        $floored_timestamp = $this->escapeInt($floored_timestamp);
-        $condition         = "$changeset_value_date_alias.value > $floored_timestamp";
+        $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $ceiled_timestamp = $this->escapeInt($ceiled_timestamp);
+        $condition        = "$changeset_value_date_alias.value > $ceiled_timestamp";
 
         $from = " LEFT JOIN (
             tracker_changeset_value AS $changeset_value_alias
