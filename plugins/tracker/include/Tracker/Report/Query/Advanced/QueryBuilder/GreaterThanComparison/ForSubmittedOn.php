@@ -48,9 +48,9 @@ class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
     {
         $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
-        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
-        $floored_timestamp = $this->escapeInt($floored_timestamp);
-        $condition         = "artifact.submitted_on > $floored_timestamp";
+        $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $ceiled_timestamp = $this->escapeInt($ceiled_timestamp);
+        $condition        = "artifact.submitted_on > $ceiled_timestamp";
 
         $from  = "";
         $where = "$condition";
