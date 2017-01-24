@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1308,4 +1308,12 @@ class Event {
      * Parameters:
      */
     const AFTER_MASSMAIL_TO_PROJECT_ADMINS = 'after_massmail_to_project_admins';
+
+    /**
+     * Event sent to get whitelisted external scripts that can be loaded
+     *
+     * Parameters:
+     * 'whitelist_scripts' => array (OUT)
+     */
+    const CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST = 'content_security_policy_script_whitelist';
 }
