@@ -30,11 +30,25 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
 
 class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
+    /**
+     * @var EmptyStringChecker
+     */
+    private $empty_string_checker;
+
+    public function __construct(EmptyStringChecker $empty_string_checker)
+    {
+        $this->empty_string_checker = $empty_string_checker;
+    }
+
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
         foreach ($values as $value) {
+            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+                throw new IntegerToEmptyStringComparisonException($comparison, $field);
+            }
+
             if (is_float($value + 0)) {
                 throw new IntegerToFloatComparisonException($field, $value);
             }
