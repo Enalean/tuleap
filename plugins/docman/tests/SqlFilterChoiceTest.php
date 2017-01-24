@@ -27,9 +27,27 @@ require_once 'bootstrap.php';
 
 Mock::generatePartial('Docman_SqlFilter', 'Docman_SqlFilterTestVersion', array());
 
-class SqlFilterChoiceTest extends TuleapTestCase {
+class SqlFilterChoiceTest extends TuleapTestCase
+{
+    public function setUp()
+    {
+        parent::setUp();
+        $data_access = partial_mock('DataAccess', array('quoteSmart'));
+        stub($data_access)->quoteSmart('%codex%')->returns('"%codex%"');
+        stub($data_access)->quoteSmart('%c*od*ex%')->returns('"%c*od*ex%"');
+        stub($data_access)->quoteSmart('%codex')->returns('"%codex"');
+        stub($data_access)->quoteSmart('%*codex')->returns('"%*codex"');
+        CodendiDataAccess::setInstance($data_access);
+    }
 
-    function testSqlFilterChoicePerPattern() {
+    public function tearDown()
+    {
+        parent::tearDown();
+        CodendiDataAccess::clearInstance();
+    }
+
+    public function itTestSqlFilterChoicePerPattern()
+    {
         $docmanSf = new Docman_SqlFilterTestVersion($this);
 
         $this->assertEqual($docmanSf->getSearchType('*codex*')   , array('like' => true, 'pattern' =>'"%codex%"'));
