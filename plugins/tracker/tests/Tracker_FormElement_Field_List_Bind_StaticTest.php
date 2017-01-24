@@ -24,7 +24,7 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_StaticValue');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
-class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
     
     public function testGetBindValues() {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();

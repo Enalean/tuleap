@@ -28,7 +28,7 @@ Mock::generate('Docman_MetadataListOfValuesElement');
 
 Mock::generatePartial('Docman_MetadataListOfValuesElementFactory', 'MetadataListOfValuesElementFactoryMocked', array('getListByFieldId', 'getMetadataListOfValuesElementFactory'));
 
-class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
+class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
 
     function testCloneValues()
     {

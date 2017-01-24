@@ -1,4 +1,4 @@
-<?php
+k<?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
@@ -46,21 +46,19 @@ array('getReleaseId', 'getPackage', 'getProject', 'getUtils', 'getMaxFileSize', 
 /**
  * This is the unit test of WebDAVFRSRelease
  */
-class WebDAVFRSReleaseTest extends UnitTestCase {
+class WebDAVFRSReleaseTest extends TuleapTestCase {
 
 
-    function setUp() {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures/incoming';
-
     }
 
-    function tearDown() {
-
-        unset($GLOBALS['Language']);
+    public function tearDown()
+    {
         unset($GLOBALS['ftp_incoming_dir']);
-
+        parent::tearDown();
     }
 
     /**
@@ -975,7 +973,4 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
     }
-
 }
-
-?>

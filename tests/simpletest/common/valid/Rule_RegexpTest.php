@@ -19,7 +19,7 @@
  */
 require_once('common/valid/Rule.class.php');
 
-class Rule_RegexpTest extends UnitTestCase {
+class Rule_RegexpTest extends TuleapTestCase {
     function __construct($name = 'Rule_Int test') {
         parent::__construct($name);
     }

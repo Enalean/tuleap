@@ -28,14 +28,23 @@ require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 
 Mock::generatePartial('ForumML_FileStorage', 'ForumML_FileStorageTestVersion', array('fileExists'));
 
-class ForumML_FileStorageTest extends UnitTestCase {
+class ForumML_FileStorageTest extends TuleapTestCase {
     private $_fixture;
     private $_namePattern;
     
-    public function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->_fixture = dirname(__FILE__) . '/_fixtures';
-        // validchar for attachment name
         $this->_namePattern = "`[^a-z0-9_-]`i";
+    }
+
+    public function tearDown() {
+        $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24/Screenshot_jpg');
+        $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24');
+        $this->_deleteIfExists($this->_fixture.'/gpig-interest');
+
+        parent::tearDown();
     }
 
     private function _deleteIfExists($path) {
@@ -51,13 +60,6 @@ class ForumML_FileStorageTest extends UnitTestCase {
         $fs->root = $path;
         $fs->setReturnValue('fileExists', false);
         return $fs;
-    }
-	
-    function tearDown() {
-        $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24/Screenshot_jpg');
-        $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24');
-        $this->_deleteIfExists($this->_fixture.'/gpig-interest');
-
     }
 
 	function testForumML_FileStorage() {
@@ -170,7 +172,4 @@ class ForumML_FileStorageTest extends UnitTestCase {
 
         $this->assertNotEqual($path1, $path2);
     }
-
 }
-
-?>

@@ -9,7 +9,7 @@
  * Tests the class Tracker_RuleValue
  */
 require_once('bootstrap.php');
-class Tracker_Rule_ListTest extends UnitTestCase {
+class Tracker_Rule_ListTest extends TuleapTestCase {
 
     function testApplyTo() {
         $trv  = new Tracker_Rule_List();

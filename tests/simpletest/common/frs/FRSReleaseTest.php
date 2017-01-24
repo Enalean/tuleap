@@ -16,7 +16,7 @@ Mock::generate('ProjectManager');
 Mock::generate('FRSPackageFactory');
 Mock::generatePartial('FRSRelease', 'FRSReleaseTestVersion', array('_getFRSPackageFactory', '_getProjectManager'));
 
-class FRSReleaseTest extends UnitTestCase {
+class FRSReleaseTest extends TuleapTestCase {
 
     function testIsActive() {
         $active_value = 1;

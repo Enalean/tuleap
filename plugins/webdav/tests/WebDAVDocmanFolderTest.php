@@ -59,15 +59,7 @@ Mock::generate('EventManager');
 /**
  * This is the unit test of WebDAVDocmanFolder
  */
-class WebDAVDocmanFolderTest extends UnitTestCase {
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class WebDAVDocmanFolderTest extends TuleapTestCase {
 
     /**
      * Testing when the folder have no childrens
@@ -428,7 +420,4 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
-
 }
-
-?>

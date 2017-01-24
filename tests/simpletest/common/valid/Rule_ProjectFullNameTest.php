@@ -23,21 +23,18 @@ require_once('common/valid/Rule.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Rule_ProjectFullNameTest extends UnitTestCase {
+class Rule_ProjectFullNameTest extends TuleapTestCase {
 
     function __construct($name = 'Rule_ProjectFullNameFormat test') {
         parent::__construct($name);
     }
     
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['Language']->setReturnValue('getText', 'error_only_spaces', array('rule_group_name', 'error_only_spaces'));
         $GLOBALS['Language']->setReturnValue('getText', 'name_too_short', array('include_account','name_too_short'));
         $GLOBALS['Language']->setReturnValue('getText', 'name_too_long', array('include_account','name_too_long', 40));
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
     }
 
     function testIsValid() {
@@ -63,7 +60,4 @@ class Rule_ProjectFullNameTest extends UnitTestCase {
         $this->assertFalse($rule->isValid("This a very very long project name longer than 40 characters :)"));
         $this->assertEqual($rule->getErrorMessage(), 'name_too_long');
     }
-
 }
-
-?>

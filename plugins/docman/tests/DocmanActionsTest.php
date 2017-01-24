@@ -2,7 +2,6 @@
 /*
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -53,18 +52,10 @@ Mock::generate('EventManager');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
 
-class DocmanActionsTest extends UnitTestCase {
+class DocmanActionsTest extends TuleapTestCase {
 
     function __construct($name = 'DocmanActions test') {
         parent::__construct($name);
-    }
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
     }
 
     function testCannotDeleteVersionOnNonFile() {

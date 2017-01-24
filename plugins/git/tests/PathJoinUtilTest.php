@@ -22,7 +22,7 @@
 require_once 'bootstrap.php';
 require_once GIT_BASE_DIR.'/PathJoinUtil.php';
 
-class PathJoinUtilTest extends UnitTestCase {
+class PathJoinUtilTest extends TuleapTestCase {
 
     function testEmptyArrayReturnsEmptyPath() {
         $this->assertEqual('', unixPathJoin(array()));

@@ -29,7 +29,7 @@ Mock::generatePartial('LDAP_UserDao', 'LDAP_UserDaoTV', array('retrieve'));
 Mock::generate('DataAccessResult');
 Mock::generate('DataAccess');
 
-class LDAP_UserDaoTest extends UnitTestCase {
+class LDAP_UserDaoTest extends TuleapTestCase {
     
     function __construct($name = 'LDAP_UserDao test') {
         parent::__construct($name);

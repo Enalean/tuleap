@@ -29,7 +29,7 @@ Mock::generate('MailingListDao');
 Mock::generate('DataAccessResult');
 Mock::generate('MailingList');
 
-class BackendMailingListTest extends UnitTestCase {
+class BackendMailingListTest extends TuleapTestCase {
 
     function testDeleteProjectMailingListsNothingToDelete() {
         $backend = new BackendMailingList_TestVersion();

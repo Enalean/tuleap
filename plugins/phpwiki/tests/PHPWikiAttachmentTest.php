@@ -24,10 +24,11 @@ Mock::generate('PHPWikiAttachmentDao');
 Mock::generatePartial('PHPWikiAttachment', 'PHPWikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
 Mock::generatePartial('PHPWikiAttachment', 'PHPWikiAttachmentTestVersionRestoreDeleted', array('initWithId', 'getDao', 'isActive', 'exist'));
 
-class PHPWikiAttachmentTest extends UnitTestCase {
+class PHPWikiAttachmentTest extends TuleapTestCase {
 
-    function tearDown() {
+    public function tearDown() {
         clearstatcache();
+        parent::tearDown();
     }
 
     function testGetFilesystemName() {
@@ -214,4 +215,3 @@ class PHPWikiAttachmentTest extends UnitTestCase {
         $this->assertTrue($wa->restoreDeletedAttachment(1));
     }
 }
-?>

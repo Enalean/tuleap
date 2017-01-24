@@ -35,7 +35,7 @@ Mock::generatePartial(
     
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 
-class Tracker_FormElement_Field_LastUpdateDateTest extends UnitTestCase {
+class Tracker_FormElement_Field_LastUpdateDateTest extends TuleapTestCase {
     
     function testhasChanges() {
         $f = new Tracker_FormElement_Field_LastUpdateDateTestVersion();

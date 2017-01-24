@@ -32,24 +32,19 @@ Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManagerDao');
 Mock::generate('DataAccessResult');
 
-class Docman_PermissionsManagerTest extends UnitTestCase {
-    var $user;
-    var $docmanPm;
-    var $refOnNull;
+class Docman_PermissionsManagerTest extends TuleapTestCase {
+    private $user;
+    private $docmanPm;
+    private $refOnNull;
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 1234);
         $this->docmanPm  = new Docman_PermissionsManagerTestVersion($this);
         $this->refOnNull = null;
         $this->project   = new MockProject();
-    }
-
-    function tearDown() {
-        unset($this->user);
-        unset($this->docmanPm);
-        unset($this->refOnNull);
-        unset($this->project);
     }
 
     // Functional test (should never change)
@@ -774,6 +769,4 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
                            'jane.doe@example.com' => 'fr_FR');
         $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
     }
-
-       //function testGetProjectAdminUsersSuccess() {
 }

@@ -19,7 +19,7 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
+class Tracker_FormElement_StaticField_LineBreakTest extends TuleapTestCase {
     
     public function testFetchDescription() {
         $expected_message = '';

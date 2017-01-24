@@ -49,13 +49,15 @@ Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('getUserManag
 Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit','updateCVSwriters',
 'repositoryExists', 'getProjectManager'));
 
-class BackendCVSTest extends UnitTestCase {
+class BackendCVSTest extends TuleapTestCase {
     
     function __construct($name = 'BackendCVS test') {
         parent::__construct($name);
     }
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['cvs_prefix']                = dirname(__FILE__) . '/_fixtures/cvsroot';
         $GLOBALS['cvslock_prefix']            = dirname(__FILE__) . '/_fixtures/var/lock/cvs';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
@@ -67,7 +69,8 @@ class BackendCVSTest extends UnitTestCase {
     }
     
     
-    function tearDown() {
+    public function tearDown()
+    {
         system('rm -rf '. escapeshellarg($GLOBALS['cvs_prefix']     .'/TestProj'));
         system('rm -rf '. escapeshellarg($GLOBALS['cvslock_prefix'] .'/TestProj'));
         //clear the cache between each tests
@@ -79,6 +82,7 @@ class BackendCVSTest extends UnitTestCase {
         unset($GLOBALS['cvs_cmd']);
         unset($GLOBALS['cvs_root_allow_file']);
         ForgeConfig::restore();
+        parent::tearDown();
     }
     
     function testConstructor() {
@@ -531,6 +535,4 @@ class BackendCVSTest extends UnitTestCase {
         
         return $backend;
     }
-
 }
-?>

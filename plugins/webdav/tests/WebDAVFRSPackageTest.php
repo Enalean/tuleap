@@ -39,19 +39,7 @@ array('getPackage', 'getPackageId', 'getProject', 'getUtils', 'getReleaseList', 
 /**
  * This is the unit test of WebDAVFRSPackage
  */
-class WebDAVFRSPackageTest extends UnitTestCase {
-
-    function setUp() {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-
-    }
-
-    function tearDown() {
-
-        unset($GLOBALS['Language']);
-
-    }
+class WebDAVFRSPackageTest extends TuleapTestCase {
 
     /**
      * Testing when The package have no releases
@@ -593,7 +581,4 @@ class WebDAVFRSPackageTest extends UnitTestCase {
 
         $webDAVFRSPackage->createDirectory('release');
     }
-
 }
-
-?>

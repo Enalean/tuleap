@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class MD5SumComparisonTest extends UnitTestCase {
+class MD5SumComparisonTest extends TuleapTestCase {
 
     function __construct($name = 'MD5SumComparisonTest test') {
         parent::__construct($name);
     }
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->fixDir    = dirname(__FILE__). '/_fixtures/big_dir';
         $this->readPath  = $this->fixDir.'/file_2.5GB';
 
@@ -37,7 +39,6 @@ class MD5SumComparisonTest extends UnitTestCase {
             mkdir($this->fixDir);
         }
         $cmd = '/bin/df --portability '.escapeshellarg($parentPath).' | tail -1 | awk \'{print $4}\'';
-        //echo $cmd.PHP_EOL;
         $spaceLeft = `$cmd` ;
         if ($spaceLeft < 5200000) {
             trigger_error("No sufficient space to create ".$this->readPath.". Cannot test big files. Tip: link ".$this->fixDir." to a partition with more than 5GB available.", E_USER_WARNING);
@@ -51,8 +52,10 @@ class MD5SumComparisonTest extends UnitTestCase {
         }
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unlink(realpath($this->readPath));
+        parent::tearDown();
     }
 
     function testMd5sumDelay() {
@@ -71,4 +74,3 @@ class MD5SumComparisonTest extends UnitTestCase {
         }
     }
 }
-?>

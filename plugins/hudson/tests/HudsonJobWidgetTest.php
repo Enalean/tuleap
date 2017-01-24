@@ -32,14 +32,8 @@ Mock::generate('HudsonJob');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class HudsonJobWidgetTest extends UnitTestCase {
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
-    
+class HudsonJobWidgetTest extends TuleapTestCase {
+
     function testNoJobAvailable() {
         $hjw = new HudsonJobWidgetTestVersion($this);
         $hjw->setReturnValue('getAvailableJobs', array());
@@ -59,5 +53,3 @@ class HudsonJobWidgetTest extends UnitTestCase {
     }
 	
 }
-
-?>

@@ -41,7 +41,7 @@ Mock::generate('PFUser');
 Mock::generate('DataAccessResult');
 Mock::generate('HTTPRequest');
 
-class TokenTest extends UnitTestCase {
+class TokenTest extends TuleapTestCase {
 
     function testGenerateRandomToken() {
         $dao  = new MockDocman_TokenDao();

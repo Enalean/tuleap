@@ -37,7 +37,7 @@ Mock::generate('Tracker');
 
 Mock::generate('TrackerFactory');
 
-class Tracker_CannedResponseFactoryTest extends UnitTestCase {
+class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
 
     /** @var XML_Security */
     protected $xml_security;

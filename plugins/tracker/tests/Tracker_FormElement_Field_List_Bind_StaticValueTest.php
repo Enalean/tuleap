@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-class Tracker_FormElement_Field_List_Bind_StaticValueTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase {
     
     public function testGetLabel() {
         $id          = 123;

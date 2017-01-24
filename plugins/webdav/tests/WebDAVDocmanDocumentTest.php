@@ -34,15 +34,7 @@ Mock::generate('Project');
 /**
  * This is the unit test of WebDAVDocmanDocument
  */
-class WebDAVDocmanDocumentTest extends UnitTestCase {
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class WebDAVDocmanDocumentTest extends TuleapTestCase {
 
     function testDeleteNoWriteEnabled() {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
@@ -98,7 +90,4 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
 
         $webDAVDocmanDocument->setName('newName');
     }
-
 }
-
-?>

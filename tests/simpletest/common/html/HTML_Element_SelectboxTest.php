@@ -21,15 +21,12 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class HTML_Element_SelectboxTest extends UnitTestCase {
+class HTML_Element_SelectboxTest extends TuleapTestCase {
 
-    function setup() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    public function setup()
+    {
+        parent::setUp();
         $GLOBALS['Language']->setReturnValue('getText', 'none');
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
     }
 
     function testWithNone() {
@@ -48,7 +45,4 @@ class HTML_Element_SelectboxTest extends UnitTestCase {
         $selectbox->addMultipleOptions(array('one' => '1', 'two' => '2'), 'two');
          $this->assertEqual('<select id="customfield_3" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>', $selectbox->renderValue());
     }
-
 }
-
-?>

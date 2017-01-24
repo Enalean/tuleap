@@ -2,7 +2,7 @@
 
 require_once('common/include/SOAPRequest.class.php');
 
-class SOAPRequestTest extends UnitTestCase {
+class SOAPRequestTest extends TuleapTestCase {
 
     function testInit() {
        $request =& new SOAPRequest(array(

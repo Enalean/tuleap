@@ -30,16 +30,20 @@ Mock::generate('FRSFileFactory');
 require_once('common/frs/FRSFile.class.php');
 Mock::generate('FRSFile');
 
-class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
+class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['sys_name'] = 'Codendi';
         $GLOBALS['sys_noreply'] = '"Codendi" <noreply@codendi.org>';
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['sys_name']);
         unset($GLOBALS['sys_noreply']);
+        parent::tearDown();
     }
 
     /**
@@ -153,7 +157,5 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not send mail to inform user that comparing md5sum failed/i', $evt->getLog());
-
     }
 }
-?>

@@ -36,7 +36,7 @@ Mock::generate('UserManager');
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem','getItemFromDb','isRoot'));
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', array('_getItemDao', '_getVersionFactory', 'getItemTypeForItem', '_getUserManager', '_getEventManager'));
 
-class Docman_ItemFactoryTest extends UnitTestCase {
+class Docman_ItemFactoryTest extends TuleapTestCase {
 
     /**
      * 140

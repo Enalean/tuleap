@@ -23,7 +23,7 @@ require_once 'common/permission/PermissionsManager.class.php';
 
 Mock::generate('PermissionsDao');
 
-class PermissionsManagerTest extends UnitTestCase {
+class PermissionsManagerTest extends TuleapTestCase {
 
     function testDuplicatePermissionsPassParamters() {
         $source           = 123;

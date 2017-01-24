@@ -23,9 +23,11 @@ Mock::generate('WikiAttachmentDao');
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersionRestoreDeleted', array('initWithId', 'getDao', 'isActive', 'exist'));
 
-class WikiAttachmentTest extends UnitTestCase {
+class WikiAttachmentTest extends TuleapTestCase {
 
-    function tearDown() {
+    public function tearDown()
+    {
+        parent::tearDown();
         clearstatcache();
     }
 
@@ -213,4 +215,3 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertTrue($wa->restoreDeletedAttachment(1));
     }
 }
-?>

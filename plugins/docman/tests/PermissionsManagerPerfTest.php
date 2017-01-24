@@ -29,24 +29,19 @@ Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTes
 Mock::generate('PFUser');
 Mock::generate('PermissionsManager');
 
-class PermissionsManagerPerfTest extends UnitTestCase {
+class PermissionsManagerPerfTest extends TuleapTestCase {
     var $user;
     var $docmanPm;
     var $refOnNull;
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $this->user     = mock('PFUser');
         $this->docmanPm = new Docman_PermissionsManagerTestPerfVersion($this);
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->refOnNull = null;
     }
-
-    function tearDown() {
-        unset($this->user);
-        unset($this->docmanPm);
-        unset($this->refOnNull);
-    }
-
 
     function testSuperAdminHasAllAccess() {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
@@ -220,5 +215,4 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         // test read
         $this->docmanPm->userCanRead($this->user, $itemId);
     }
-
 }

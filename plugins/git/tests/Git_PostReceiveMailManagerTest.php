@@ -36,16 +36,20 @@ Mock::generate('BaseLanguage');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-class Git_PostReceiveMailManagerTest extends UnitTestCase {
+class Git_PostReceiveMailManagerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Response'] = new MockResponse();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
         unset($GLOBALS['Response']);
+        parent::tearDown();
     }
 
     public function testRemoveMailByProjectPrivateRepositoryUserStillMember(){
@@ -147,4 +151,3 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
         $prm->removeMailByRepository($repo, "codendiadm@codendi.org");
     }
 }
-?>

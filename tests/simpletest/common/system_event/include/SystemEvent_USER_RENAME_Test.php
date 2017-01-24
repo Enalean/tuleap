@@ -39,7 +39,7 @@ Mock::generate('EventManager');
 
 
 
-class SystemEvent_USER_RENAME_Test extends UnitTestCase {
+class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
     
     /**
      * Rename user 142 'mickey' in 'tazmani'

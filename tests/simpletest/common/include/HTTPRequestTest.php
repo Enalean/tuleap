@@ -12,9 +12,11 @@ Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'
  *
  * Tests the class HTTPRequest
  */
-class HTTPRequestTest extends UnitTestCase {
+class HTTPRequestTest extends TuleapTestCase {
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $_REQUEST['exists'] = '1';
         $_REQUEST['exists_empty'] = '';
         $_SERVER['server_exists'] = '1';
@@ -36,7 +38,8 @@ class HTTPRequestTest extends UnitTestCase {
         $_FILES['file1'] = array('name' => 'Test file 1');
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unset($_REQUEST['exists']);
         unset($_REQUEST['quote']);
         unset($_REQUEST['exists_empty']);
@@ -50,6 +53,7 @@ class HTTPRequestTest extends UnitTestCase {
         unset($_REQUEST['testkey_array_mixed2']);
         unset($_REQUEST['testkey_array_mixed3']);
         unset($_FILES['file1']);
+        parent::tearDown();
     }
 
     function testGet() {

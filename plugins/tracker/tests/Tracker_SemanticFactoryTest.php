@@ -46,7 +46,7 @@ Mock::generate('Tracker_TooltipFactory');
 
 Mock::generate('Tracker_Semantic_ContributorFactory');
 
-class Tracker_SemanticFactoryTest extends UnitTestCase {
+class Tracker_SemanticFactoryTest extends TuleapTestCase {
 
     private $xml_security;
 

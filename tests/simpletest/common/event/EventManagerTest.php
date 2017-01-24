@@ -22,7 +22,7 @@
 Mock::generate('EventListener', 'Event1MockEventListener', array('doSomething'));
 Mock::generate('EventListener', 'Event2MockEventListener', array('CallHook'));
 
-class EventManagerTest extends UnitTestCase {
+class EventManagerTest extends TuleapTestCase {
 
     function testSingleton() {
         $this->assertReference(

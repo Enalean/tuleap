@@ -24,7 +24,7 @@
 
 require_once('common/widget/Valid_Widget.class.php');
 
-class Valid_Widget_OwnerTest extends UnitTestCase {
+class Valid_Widget_OwnerTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'Valid_Widget_Owner test') {
         $this->UnitTestCase($name);

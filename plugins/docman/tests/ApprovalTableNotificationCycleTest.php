@@ -36,7 +36,7 @@ Mock::generate('Docman_ApprovalReviewer');
 Mock::generate('Docman_ApprovalTable');
 
 
-class ApprovalTableNotificationCycleTest extends UnitTestCase {
+class ApprovalTableNotificationCycleTest extends TuleapTestCase {
 
     /**
      * first:  approve

@@ -34,10 +34,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
 
     private $user;
     private $project;
-    private $item;
+    protected $item;
     private $maxFileSize;
-    private $plugin;
-    
+
     /**
      * Constructor of the class
      *

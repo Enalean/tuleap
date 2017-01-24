@@ -20,7 +20,7 @@ class TestPluginInfo extends PluginInfo {
  *
  * Tests the class PluginInfo
  */
-class PluginInfoTest extends UnitTestCase {
+class PluginInfoTest extends TuleapTestCase {
 
     function testPluginDescriptor() {
         $p  = new MockPlugin($this);

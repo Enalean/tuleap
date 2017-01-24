@@ -34,7 +34,7 @@ Mock::generatePartial('LDAP', 'LDAP4GroupManager', array('searchGroupMembers', '
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
 
-class LDAP_GroupManagerTest extends UnitTestCase {
+class LDAP_GroupManagerTest extends TuleapTestCase {
     function __construct($name = 'LDAP_GroupManagerTest') {
         parent::__construct($name);
     }

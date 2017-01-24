@@ -20,7 +20,7 @@
 
 require_once 'common/layout/ColorHelper.class.php';
 
-class ColorHelperTest extends UnitTestCase {
+class ColorHelperTest extends TuleapTestCase {
 
     private $colorSet = array(
         '#FFFFFF' => array(255, 255, 255),

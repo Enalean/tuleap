@@ -56,17 +56,21 @@ Mock::generate('response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class TrackerFactoryTest extends UnitTestCase {
+class TrackerFactoryTest extends TuleapTestCase {
 
 
-    public function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
     
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
+        parent::tearDown();
     }
     
     public function testImpossibleToCreateTrackerWhenProjectHasAReferenceEqualsShortname() {

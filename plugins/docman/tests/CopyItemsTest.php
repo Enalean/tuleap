@@ -62,7 +62,7 @@ Mock::generate('PFUser');
  *       - same type
  *     - for list of values, the same value exist in both projects.
  */
-class CopyItemsTest extends UnitTestCase {
+class CopyItemsTest extends TuleapTestCase {
 
     function testDocumentCopyWithinTheSameProject() {
         $srcGroupId = $dstGroupId = 1789;

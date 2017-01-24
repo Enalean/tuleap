@@ -14,7 +14,7 @@ require_once(CODENDI_CLI_DIR .'/include/CLI_Module.class.php');
 Mock::generatePartial('CLI_Module', 'CLI_ModuleTestVersion', array('help'));
 
 
-class CLI_ModuleTest extends UnitTestCase {
+class CLI_ModuleTest extends TuleapTestCase {
     
     function test_get_parameter() {
         $params = explode(' ', '-v --name=john -l doe -abc --content=/tracker/?group_id=1');

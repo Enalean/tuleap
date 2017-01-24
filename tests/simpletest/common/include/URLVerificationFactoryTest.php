@@ -38,7 +38,7 @@ class MockEM4Url extends MockEventManager {
    }
 }
 
-class URLVerificationFactoryTest extends UnitTestCase {
+class URLVerificationFactoryTest extends TuleapTestCase {
 
     function testGetUrlVerifictionNoPluginResponse() {
         $em = new MockEM4Url($this);

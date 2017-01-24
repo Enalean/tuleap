@@ -20,8 +20,11 @@
 
 require_once('common/include/Codendi_Diff.class.php');
 
-class Codendi_DiffTest extends UnitTestCase {
-    public function setUp() {
+class Codendi_DiffTest extends TuleapTestCase {
+
+    public function setUp()
+    {
+        parent::setUp();
         $this->a = array('Line 1', 'Line 2');
         $this->b = array('Line 1', 'Line 2');
         $this->c = array('Line 1', 'Line 2 modified');
@@ -29,15 +32,6 @@ class Codendi_DiffTest extends UnitTestCase {
         $this->e = array();
         $this->f = array('Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5');
         $this->g = array('Line 10', 'Line 2', 'Line 3', 'Line 4', 'Line 50');
-    }
-    public function tearDown() {
-        unset($this->a);
-        unset($this->b);
-        unset($this->c);
-        unset($this->d);
-        unset($this->e);
-        unset($this->f);
-        unset($this->g);
     }
     
     public function testHtmlUnifiedDiffFormatter_NoChanges() {
@@ -127,7 +121,4 @@ class Codendi_DiffTest extends UnitTestCase {
                                     '</div>'.
                                 '</div>');
     }
-
-
 }
-?>

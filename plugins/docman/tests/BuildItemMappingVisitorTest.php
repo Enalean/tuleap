@@ -29,13 +29,7 @@ Mock::generate('Docman_PermissionsManager');
 Mock::generate('PFUser');
 Mock::generatePartial('Docman_BuildItemMappingVisitor', 'BuildItemMappingVisitorTestVersion', array('getItemDao', 'getPermissionsManager', 'getCurrentUser'));
 
-class BuildItemMappingVisitorTest extends UnitTestCase {
-
-    function setUp() {
-    }
-
-    function tearDown() {
-    }
+class BuildItemMappingVisitorTest extends TuleapTestCase {
 
     function testCompareFolderChildrenOk() {
         // Src (reference)
@@ -389,5 +383,4 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
                                                135 => 40,
                                                173 => 56));
     }
-
 }

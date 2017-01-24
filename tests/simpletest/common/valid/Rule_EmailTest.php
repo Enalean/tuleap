@@ -24,13 +24,15 @@
 
 require_once('common/valid/Rule.class.php');
 
-class Rule_EmailTest extends UnitTestCase {
+class Rule_EmailTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'Rule_Email test') {
         $this->UnitTestCase($name);
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
+        parent::tearDown();
         unset($GLOBALS['sys_disable_subdomains']);
     }
 
@@ -92,7 +94,4 @@ class Rule_EmailTest extends UnitTestCase {
 
         $this->assertFalse($r->isValid("user@codendi.domain.com; toto l'asticot, user3@codendi.domain.com"));
     }
-
 }
-
-?>

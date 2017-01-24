@@ -8,7 +8,7 @@ require_once('common/tracker/ArtifactRuleValue.class.php');
  *
  * Tests the class ArtifactRuleValue
  */
-class ArtifactRuleValueTest extends UnitTestCase {
+class ArtifactRuleValueTest extends TuleapTestCase {
 
     function testApplyTo() {
         $arv =& new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');

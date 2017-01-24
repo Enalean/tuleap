@@ -40,15 +40,7 @@ array('getSize', 'getMaxFileSize', 'getItem', 'getUser', 'logDownload', 'downloa
 /**
  * This is the unit test of WebDAVDocmanFile
  */
-class WebDAVDocmanFileTest extends UnitTestCase {
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class WebDAVDocmanFileTest extends TuleapTestCase {
 
     /**
      * Test when the file doesn't exist on the filesystem
@@ -179,7 +171,4 @@ class WebDAVDocmanFileTest extends UnitTestCase {
 
         $webDAVDocmanFile->setName('newName');
     }
-
 }
-
-?>

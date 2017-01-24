@@ -10,7 +10,7 @@ if (!class_exists("FakeValue")) {
  * 
  *
  */
-class CollectionTestCase extends UnitTestCase {
+class CollectionTestCase extends TuleapTestCase {
     
     var $collection_class_name;
     

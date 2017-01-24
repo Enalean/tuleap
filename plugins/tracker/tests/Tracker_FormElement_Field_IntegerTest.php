@@ -46,15 +46,12 @@ class Tracker_FormElement_Field_IntegerTestVersion_Expose_ProtectedMethod extend
 }
 
 
-class Tracker_FormElement_Field_IntegerTest extends UnitTestCase {
+class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
 
-    function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
-    }
-    function tearDrop() {
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
     }
 
     function testNoDefaultValue() {

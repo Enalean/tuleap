@@ -46,7 +46,7 @@ Mock::generate('NotificationsDao');
 
 Mock::generate('BaseLanguage');
 
-class Docman_NotificationsManagerTest extends UnitTestCase
+class Docman_NotificationsManagerTest extends TuleapTestCase
 {
     /**
      * @var Tuleap\Mail\MailFilter
@@ -55,6 +55,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase
 
     public function setUp()
     {
+        parent::setUp();
         $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', '/tuleap');
@@ -65,6 +66,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase
     public function tearDown() {
         unset($GLOBALS['sys_noreply']);
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     public function testSendNotificationsSuccess()

@@ -26,16 +26,18 @@ Mock::generate('EventManager');
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Respone class.
  */
-class LayoutTest extends UnitTestCase
+class LayoutTest extends TuleapTestCase
 {
     public function setUp()
     {
-        $GLOBALS['sys_user_theme']     = 'Stuff';
+        parent::setUp();
+        $GLOBALS['sys_user_theme'] = 'Stuff';
     }
 
     public function tearDown()
     {
         unset($GLOBALS['sys_user_theme']);
+        parent::tearDown();
     }
 
     public function testAddStyleSheet()

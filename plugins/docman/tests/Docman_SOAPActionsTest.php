@@ -53,10 +53,9 @@ Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test',
 /**
  * Unit tests for Docman_SOAPActions
  */
-class Docman_SOAPActionsTest extends UnitTestCase {
+class Docman_SOAPActionsTest extends TuleapTestCase {
     private $MD5Map;
     private $itemFactory;
-    private $folderFactory;
     private $action;
     private $permissionManager;
     private $docmanPermissionsManager;
@@ -69,8 +68,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         return new $partialName($this);
     }
 
-    public function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    public function setUp()
+    {
+        parent::setUp();
 
         // Mock instanciation
         $controller = new MockDocman_SOAPController();
@@ -128,7 +128,8 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $this->action->__construct($controller);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language'],
               $this->itemFactory,
               $this->fileStorage,
@@ -137,6 +138,8 @@ class Docman_SOAPActionsTest extends UnitTestCase {
               $this->docmanPermissionsManager,
               $this->action,
               $this->lockFactory);
+
+        parent::tearDown();
     }
 
     /**

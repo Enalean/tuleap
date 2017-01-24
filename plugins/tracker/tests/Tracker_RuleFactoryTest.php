@@ -16,7 +16,7 @@ Mock::generate('Tracker_FormElement_Field_List');
  *
  * Tests the class ArtifactRuleFactory
  */
-class Tracker_RuleFactoryTest extends UnitTestCase {
+class Tracker_RuleFactoryTest extends TuleapTestCase {
 
     public function testImportListRules() {
         $xmlstr = <<<XML

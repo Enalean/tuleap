@@ -20,7 +20,7 @@
 require_once 'common/svn/SVN_Apache_ModMysql.class.php';
 
 
-class SVN_Apache_ModMysqlTest extends UnitTestCase {
+class SVN_Apache_ModMysqlTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();

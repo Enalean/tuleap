@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,16 +25,14 @@ Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_Date');
 Mock::generate('PFUser');
 
-class Transition_PostAction_Field_DateTest extends UnitTestCase {
+class Transition_PostAction_Field_DateTest extends TuleapTestCase {
     
-    public function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage();
+    public function setUp()
+    {
+        parent::setUp();
         $GLOBALS['Language']->setReturnValue('getText', Tracker_FormElement_DateFormatter::DATE_FORMAT, array('system', 'datefmt_short'));
     }
-    public function tearDown() {
-        unset($GLOBALS['Language']);
-    }
-    
+
     public function testBeforeShouldSetTheDate() {
         $current_user = mock('PFUser');
         
@@ -183,4 +181,3 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $this->assertEqual($expected, $fields_data[$field_id]);
     }
 }
-?>

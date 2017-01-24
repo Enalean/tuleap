@@ -9,7 +9,7 @@ require_once('common/frs/FRSPackage.class.php');
  *
  * Tests the FRSPackage class
  */
-class FRSPackageTest extends UnitTestCase {
+class FRSPackageTest extends TuleapTestCase {
 
     function testIsActive() {
         global $GLOBALS;

@@ -19,7 +19,7 @@
  */
 require_once 'common/TreeNode/GetStateVisitor.class.php';
 
-class TreeNode_GetStateVisitorVisitorTest extends UnitTestCase {
+class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
     
     const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
     const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;

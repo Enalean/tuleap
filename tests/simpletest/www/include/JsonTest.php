@@ -19,7 +19,7 @@
  */
 require_once('www/include/json.php');
 
-class JsonTest extends UnitTestCase {
+class JsonTest extends TuleapTestCase {
     
     public function testStartsWithHeaderInfo() {
         $this->assertPattern("/^X-JSON:.*/", json_header('something'));

@@ -50,7 +50,7 @@ class Docman_ItemFactory {
 
     private static $instance;
     
-    function Docman_ItemFactory($groupId=null) {
+    function __construct($groupId=null) {
         // Cache highly used info
         $this->rootItems[] = array();
         $this->onlyOneChildForRoot[] = array();

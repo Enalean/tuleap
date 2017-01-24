@@ -4,7 +4,7 @@ require_once('common/dao/UserDao.class.php');
 require_once('common/dao/include/DataAccess.class.php');
 Mock::generate('DataAccess');
 
-class UserDaoTest extends UnitTestCase {
+class UserDaoTest extends TuleapTestCase {
 
      function testReplaceStringInList() {
          $da  = new MockDataAccess($this);

@@ -31,15 +31,17 @@ array('issetUsername', 'setHeader', 'getUsername', 'getPassword', 'getUser', 'er
 /**
  * This is the unit test of WebDAVAuthentication
  */
-class WebDAVAuthenticationTest extends UnitTestCase {
+class WebDAVAuthenticationTest extends TuleapTestCase {
 
 
     public function setUp() {
+        parent::setUp();
         ForgeConfig::store();
     }
 
     public function tearDown() {
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     /**
@@ -139,7 +141,4 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $this->assertEqual($webDAVAuthentication->authenticate(), $user);
 
     }
-
 }
-
-?>
