@@ -124,27 +124,6 @@ function trove_get_html_cat_selectfull($node,$selected,$name) {
     return $html;
 }
 
-function trove_get_html_cat_select_parent($selected = 0, $ignore_fullpath = false) {
-    global $Language;
-	$html = "";
-    $html .= '<BR><SELECT name="form_parent">';
-	$html .= '  <OPTION value="0">'.$Language->getText('admin_trove_cat_edit','root')."\n".'</OPTION>';
-    $sql = "SELECT trove_cat_id,fullpath FROM trove_cat ";
-    if ($ignore_fullpath) {
-        $sql .= " WHERE fullpath NOT LIKE '".db_escape_string($ignore_fullpath)." ::%' AND fullpath NOT LIKE '".db_escape_string($ignore_fullpath)."' ";
-    }
-    $sql .= " ORDER BY fullpath";
-    $purifier = Codendi_HTMLPurifier::instance();
-	$res_cat = db_query($sql);
-	while ($row_cat = db_fetch_array($res_cat)) {
-		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
-		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
-		$html .= '>'.$purifier->purify($row_cat['fullpath'])."\n".'</OPTION>';
-	}
-	$html .= "</SELECT>\n";
-    return $html;
-}
-
 /**
  * returns the html code for the full select 
  * for all categories, for a specific group
@@ -252,13 +231,6 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 		$isfirstdiscrim = 0;
 	}
 	echo '</UL>';
-}
-
-// returns cat fullname
-function trove_getfullname($node) {
-	$res = db_query('SELECT fullname FROM trove_cat WHERE trove_cat_id='.db_ei($node));
-	$row = db_fetch_array($res);
-	return $row['fullname'];
 }
 
 // returns a full path for a trove category
