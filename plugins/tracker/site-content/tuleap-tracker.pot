@@ -2,6 +2,32 @@ msgid "Error during parsing expert query"
 msgstr ""
 
 #, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with < operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with <= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with > operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with >= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+
+#, php-format
 msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 

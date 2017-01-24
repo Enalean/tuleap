@@ -19,36 +19,67 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
+use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateTimeFieldChecker;
 
-class ForSubmittedOn implements FromWhereBuilder
+class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
 {
     /**
-     * @var DateTimeConditionBuilder
+     * @var DateTimeValueRounder
      */
-    private $date_time_condition_builder;
+    private $date_time_value_rounder;
 
-    public function __construct(DateTimeConditionBuilder $date_time_condition_builder)
+    public function __construct(DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->date_time_condition_builder = $date_time_condition_builder;
+        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValueWrapper()->getValue();
+        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
         if ($value === '') {
-            $condition = "1";
+            $condition = "0";
         } else {
-            $condition = "artifact.submitted_on " . $this->date_time_condition_builder->buildConditionForDateOrDateTime($value);
+            $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+            $ceiled_timestamp  = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+            $floored_timestamp = $this->escapeInt($floored_timestamp);
+            $ceiled_timestamp  = $this->escapeInt($ceiled_timestamp);
+            $condition         = "artifact.submitted_on BETWEEN $floored_timestamp AND $ceiled_timestamp";
         }
 
         $from  = "";
         $where = "$condition";
 
         return new FromWhere($from, $where);
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+        return $value_wrapper->getValue();
+    }
+
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+        return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+    }
+
+    private function escapeInt($value)
+    {
+        return CodendiDataAccess::instance()->escapeInt($value);
     }
 }

@@ -36,9 +36,9 @@ class BetweenValueWrapper implements ValueWrapper
         $this->max_value_wrapper = $max_value_wrapper;
     }
 
-    public function accept(ValueWrapperVisitor $visitor)
+    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
     {
-        return $visitor->visitBetweenValueWrapper($this);
+        return $visitor->visitBetweenValueWrapper($this, $parameters);
     }
 
     /**

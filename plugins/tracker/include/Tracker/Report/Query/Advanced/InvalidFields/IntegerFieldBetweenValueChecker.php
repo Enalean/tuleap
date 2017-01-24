@@ -25,12 +25,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
 
 class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $values = $comparison->getValueWrapper()->accept($this);
+        $values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
         foreach ($values as $value) {
             if (is_float($value + 0)) {
@@ -43,21 +45,21 @@ class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapp
         }
     }
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format('Y-m-d');
+        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         $values = array();
-        $values[] = $value_wrapper->getMinValue()->accept($this);
-        $values[] = $value_wrapper->getMaxValue()->accept($this);
+        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
+        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
 
         return $values;
     }

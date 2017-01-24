@@ -61,12 +61,9 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        if ($field->isTimeDisplayed() === true) {
-            return new EqualComparison\ForDateTime(
-                new EqualComparison\DateTimeConditionBuilder()
-            );
-        }
-        return new EqualComparison\ForDate();
+        return new EqualComparison\ForDateTime(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -157,14 +154,14 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
         return new EqualComparison\ForLastUpdateDate(
-            new EqualComparison\DateTimeConditionBuilder()
+            new DateTimeValueRounder()
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
         return new EqualComparison\ForSubmittedOn(
-            new EqualComparison\DateTimeConditionBuilder()
+            new DateTimeValueRounder()
         );
     }
 

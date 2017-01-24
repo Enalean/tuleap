@@ -19,28 +19,25 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class SimpleValueWrapper implements ValueWrapper
+use Tracker_FormElement_Field;
+
+class ValueWrapperParameters
 {
     /**
-     * @var string
+     * @var Tracker_FormElement_Field
      */
-    private $value;
+    private $field;
 
-    public function __construct($value)
+    public function __construct(Tracker_FormElement_Field $field)
     {
-        $this->value = $value;
-    }
-
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
-    {
-        return $visitor->visitSimpleValueWrapper($this, $parameters);
+        $this->field = $field;
     }
 
     /**
-     * @return string
+     * @return Tracker_FormElement_Field
      */
-    public function getValue()
+    public function getField()
     {
-        return $this->value;
+        return $this->field;
     }
 }

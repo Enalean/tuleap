@@ -17,9 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
+namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparison;
 
-use DateTime;
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
@@ -29,26 +28,35 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateTimeFieldChecker;
 
-class ForDate implements FromWhereBuilder, ValueWrapperVisitor
+class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
 {
+    /**
+     * @var DateTimeValueRounder
+     */
+    private $date_time_value_rounder;
+
+    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    {
+        $this->date_time_value_rounder = $date_time_value_rounder;
+    }
+
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix   = spl_object_hash($comparison);
-        $value    = $comparison->getValueWrapper()->accept($this);
+        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
         $field_id = (int) $field->getId();
 
         $changeset_value_date_alias = "CVDate_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
-        $format     = "!Y-m-d";
-        $date_value = DateTime::createFromFormat($format, $value);
-
-        if ($value === '') {
-            $condition = "$changeset_value_date_alias.value IS NULL";
-        } else {
-            $condition = "$changeset_value_date_alias.value = ".$this->escapeInt($date_value->format("U"));
-        }
+        $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
+        $floored_timestamp = $this->escapeInt($floored_timestamp);
+        $condition         = "$changeset_value_date_alias.value > $floored_timestamp";
 
         $from = " LEFT JOIN (
             tracker_changeset_value AS $changeset_value_alias
@@ -63,17 +71,21 @@ class ForDate implements FromWhereBuilder, ValueWrapperVisitor
         return new FromWhere($from, $where);
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format('Y-m-d');
+        $field = $parameters->getField();
+        if ($field->isTimeDisplayed() === true) {
+            return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+        }
+        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
     }
 
