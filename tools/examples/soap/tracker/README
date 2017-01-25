@@ -1,7 +1,0 @@
-All those sample files uses environment variables to reach the right server
-To set your environment up, you need to run (in bash, adapt to your shell):
-export TULEAP_SERVER=http://shunt.cro.enalean.com
-export TULEAP_USER=username
-export TULEAP_PASSWORD=password_in_clear
-
-(you can set it up in your env)
