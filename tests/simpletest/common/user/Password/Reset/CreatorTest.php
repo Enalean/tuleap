@@ -34,7 +34,7 @@ class CreatorTest extends \TuleapTestCase
         stub($user)->getId()->returns(101);
 
         $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->create(101, 'random_password_hashed')->returns(22);
+        stub($dao)->create(101, 'random_password_hashed', '*')->returns(22);
 
         $token_creator = new Creator($dao, $random_number_generator, $password_handler);
 

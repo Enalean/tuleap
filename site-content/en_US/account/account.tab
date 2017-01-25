@@ -213,6 +213,7 @@ account_lostlogin	title	Lost Password
 account_lostlogin	message	Welcome, $1. You may now change your lost password.
 account_lostlogin	duplicate_hash	This hash key exists more than once.
 account_lostlogin	invalid_hash	Invalid confirmation hash.
+account_lostlogin	expired_token	The confirmation key is expired, please renew if needed your request for the retrieval of your lost password
 account_lostlogin	newpasswd	New Password
 account_lostlogin	newpasswd2	New Password (repeat)
 #

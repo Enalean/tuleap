@@ -25,12 +25,13 @@ class DataAccessObject extends \DataAccessObject
     /**
      * @return int|false
      */
-    public function create($user_id, $verifier)
+    public function create($user_id, $verifier, $current_time)
     {
-        $user_id  = $this->da->escapeInt($user_id);
-        $verifier = $this->da->quoteSmart($verifier);
+        $user_id      = $this->da->escapeInt($user_id);
+        $verifier     = $this->da->quoteSmart($verifier);
+        $current_time = $this->da->escapeInt($current_time);
 
-        $sql = "INSERT INTO user_lost_password(user_id, verifier) VALUES($user_id, $verifier)";
+        $sql = "INSERT INTO user_lost_password(user_id, verifier, creation_date) VALUES($user_id, $verifier, $current_time)";
 
         return $this->updateAndGetLastId($sql);
     }
