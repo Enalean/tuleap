@@ -162,7 +162,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function areBurndownFieldsCorrectlySet(Tracker_Artifact $artifact, PFUser $user)
     {
         try {
-
             return $this->getBurndownDuration($artifact, $user) !== null
             && $this->getBurndownStartDate($artifact, $user) !== null;
         } catch(Tracker_FormElement_Field_BurndownException $e) {
@@ -838,16 +837,28 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @throws Tracker_FormElement_Field_BurndownException
      */
-    private function getBurndownDuration(Tracker_Artifact $artifact, PFUser $user) {
-        $field    = $this->getBurndownDurationField($artifact, $user);
+    private function getBurndownDuration(Tracker_Artifact $artifact, PFUser $user)
+    {
+        $field = $this->getBurndownDurationField($artifact, $user);
+
+        if ($artifact->getValue($field) === null) {
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+            );
+
+        }
         $duration = $artifact->getValue($field)->getValue();
 
         if ($duration <= 0) {
-            throw new Tracker_FormElement_Field_BurndownException($GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning'));
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+            );
         }
 
         if ($duration === 1) {
-            throw new Tracker_FormElement_Field_BurndownException($GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short'));
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
+            );
         }
 
         return $duration;
