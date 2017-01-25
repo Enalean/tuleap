@@ -29,6 +29,8 @@ use Tuealp\project\Admin\ServicesUsingTruncatedMailRetriever;
 
 require_once('pre.php');
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/project-visibility.js');
+
 $group_id = $request->get('group_id');
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 

@@ -47,6 +47,11 @@ class ProjectVisibilityPresenter {
     /**
      * @var string
      */
+    public $term_of_service_message;
+
+    /**
+     * @var string
+     */
     private $project_visibility;
 
     /**
@@ -68,6 +73,8 @@ class ProjectVisibilityPresenter {
         $this->choose_visbility           = $this->language->getText('project_admin_editgroupinfo', 'choose_visbility');
         $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning');
         $this->general_warning_message    = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
+        $this->term_of_service_message    = _("Please accept platform <a href='/tos/tos.php'>Term of Services</a>");
+
         $this->can_configure_visibility   = $can_configure_visibility;
 
         $this->generateVisibilityOptions();

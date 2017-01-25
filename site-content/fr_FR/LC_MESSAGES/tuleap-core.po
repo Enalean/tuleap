@@ -111,4 +111,7 @@ msgid "Update successful"
 msgstr "Mis à jour avec succès"
 
 msgid "Project administrators are not allowed to configure anything here"
-msgstr "les administrateurs du projet ne sont pas autorisés à configurer quelque chose ici"
+msgstr "Les administrateurs du projet ne sont pas autorisés à configurer quelque chose ici"
+
+msgid "Please accept platform <a href='/tos/tos.php'>Term of Services</a>"
+msgstr "Merci d'accepter les conditions <a href='/tos/tos.php'>générales d'utilisation</a> de la plateforme"

@@ -132,7 +132,15 @@ class ProjectVisibilityController
     {
         if ($this->project_visibility_configuration->canUserConfigureProjectVisibility($user, $project)) {
             if ($project->getAccess() != $request->get('project_visibility')) {
-                $this->project_manager->setAccess($project, $request->get('project_visibility'));
+                if ($request->get('term_of_service')) {
+                    $this->project_manager->setAccess($project, $request->get('project_visibility'));
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', _("Please accept term of service"));
+                    $GLOBALS['Response']->redirect(
+                        '/project/admin/project_visibility.php?' .
+                        http_build_query(array('group_id' => $request->getProject()->getid()))
+                    );
+                }
             }
         }
     }
