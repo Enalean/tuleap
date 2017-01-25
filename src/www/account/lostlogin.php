@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\Password\Reset\ExpiredTokenException;
+
 require_once('pre.php');
 
 $request = HTTPRequest::instance();
@@ -33,6 +35,12 @@ $reset_token_verifier = new \Tuleap\User\Password\Reset\Verifier($reset_token_da
 try {
     $token = \Tuleap\User\Password\Reset\Token::constructFromIdentifier($confirm_hash);
     $user  = $reset_token_verifier->getUser($token);
+} catch (ExpiredTokenException $ex) {
+    $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+        $GLOBALS['Language']->getText('account_lostlogin', 'expired_token')
+    );
+    $GLOBALS['Response']->redirect('/account/lostpw.php');
 } catch (Exception $ex) {
     exit_error(
         $GLOBALS['Language']->getText('include_exit', 'error'),

@@ -57,8 +57,9 @@ class Creator
     {
         $verifier                 = $this->random_number_generator->getNumber();
         $verifier_password_hashed = $this->password_handler->computeHashPassword($verifier);
+        $current_date             = new \DateTime();
 
-        $token_id = $this->dao->create($user->getId(), $verifier_password_hashed);
+        $token_id = $this->dao->create($user->getId(), $verifier_password_hashed, $current_date->getTimestamp());
 
         if ($token_id === false) {
             throw new TokenNotCreatedException();

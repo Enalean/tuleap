@@ -206,6 +206,7 @@ account_lostlogin	title	Mot de passe perdu
 account_lostlogin	message	Bienvenue, $1. Vous pouvez changer votre mot de passe perdu maintenant.
 account_lostlogin	duplicate_hash	Cette clé de confirmation est présente plus d'une fois dans la base.
 account_lostlogin	invalid_hash	Clé de confirmation invalide.
+account_lostlogin	expired_token	La clé de confirmation a expirée, veuillez si nécessaire faire une nouvelle demande de récupération de mot de passe
 account_lostlogin	newpasswd	Nouveau mot de passe
 account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #

@@ -1020,6 +1020,7 @@ CREATE TABLE user_lost_password (
   id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   user_id INT(11) NOT NULL,
   verifier VARCHAR(255) NOT NULL,
+  creation_date INTEGER UNSIGNED NOT NULL,
   INDEX idx_user_id (user_id)
 );
 

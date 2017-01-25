@@ -20,11 +20,15 @@
 
 namespace Tuleap\User\Password\Reset;
 
+use DateInterval;
+use DateTime;
 use PasswordHandler;
 use UserManager;
 
 class Verifier
 {
+    const TOKEN_VALIDITY_PERIOD = 'PT1H';
+
     /**
      * @var DataAccessObject
      */
@@ -47,6 +51,7 @@ class Verifier
 
     /**
      * @return \PFUser
+     * @throws \Tuleap\User\Password\Reset\ExpiredTokenException
      * @throws \Tuleap\User\Password\Reset\InvalidTokenException
      */
     public function getUser(Token $token)
@@ -61,6 +66,15 @@ class Verifier
 
         if ($is_token_valid === false) {
             throw new InvalidTokenException('Invalid identifier');
+        }
+
+        $maximum_expiration_date = new DateTime('@' . $row['creation_date']);
+        $maximum_expiration_date->add(new DateInterval(self::TOKEN_VALIDITY_PERIOD));
+
+        $current_date = new DateTime();
+
+        if ($current_date > $maximum_expiration_date) {
+            throw new ExpiredTokenException();
         }
 
         return $this->user_manager->getUserById($row['user_id']);

@@ -24,11 +24,13 @@ class VerifierTest extends \TuleapTestCase
 {
     public function itGetsUserAssociatedWithToken()
     {
-        $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
+        $creation_date = new \DateTime();
+        $dao           = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
         stub($dao)->getTokenInformationById()->returns(
             array(
-                'verifier' => 'token_verification_part_password_hashed',
-                'user_id'  => 101
+                'verifier'      => 'token_verification_part_password_hashed',
+                'user_id'       => 101,
+                'creation_date' => $creation_date->getTimestamp()
             )
         );
 
@@ -79,6 +81,35 @@ class VerifierTest extends \TuleapTestCase
         $token_verifier = new Verifier($dao, $password_handler, $user_manager);
 
         $this->expectException('Tuleap\\User\\Password\\Reset\\InvalidTokenException');
+        $token_verifier->getUser($token);
+    }
+
+    public function itThrowsAnExceptionWhenTheTokenIsExpired()
+    {
+        $expired_creation_date = new \DateTime();
+        $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
+        $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
+        $dao                   = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
+        stub($dao)->getTokenInformationById()->returns(
+            array(
+                'verifier'      => 'token_verification_part_password_hashed',
+                'user_id'       => 101,
+                'creation_date' => $expired_creation_date->getTimestamp()
+            )
+        );
+
+        $password_handler = mock('PasswordHandler');
+        stub($password_handler)->verifyHashPassword()->returns(true);
+
+        $user         = mock('PFUser');
+        $user_manager = mock('UserManager');
+        stub($user_manager)->getUserById(101)->returns($user);
+
+        $token = mock('Tuleap\\User\\Password\\Reset\\Token');
+
+        $token_verifier = new Verifier($dao, $password_handler, $user_manager);
+
+        $this->expectException('Tuleap\\User\\Password\\Reset\\ExpiredTokenException');
         $token_verifier->getUser($token);
     }
 }
