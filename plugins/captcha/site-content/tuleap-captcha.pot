@@ -3,3 +3,6 @@ msgstr ""
 
 msgid "Captcha"
 msgstr ""
+
+msgid "Captcha is not valid"
+msgstr ""

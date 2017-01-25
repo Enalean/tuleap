@@ -796,6 +796,14 @@ class Event {
     const USER_REGISTER_ADDITIONAL_FIELD = 'user_register_additional_field';
 
     /**
+     * Allow plugin to deal before user registration
+     *
+     * 'request'               => HTTPRequest (IN)
+     * 'is_registration_valid' => bool (OUT)
+     */
+    const BEFORE_USER_REGISTRATION = 'before_user_registration';
+
+    /**
      * Allow plugin to deal after user registration
      *
      * 'user_id' => int (IN)

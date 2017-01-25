@@ -35,6 +35,7 @@ class captchaPlugin extends Plugin
         $this->addHook('cssfile', 'loadCSSFiles');
         $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
         $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
+        $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
     }
 
     /**
@@ -79,6 +80,25 @@ class captchaPlugin extends Plugin
             $presenter        = new Presenter($test_site_key);
             $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
             $params['field'] .= $renderer->renderToString('user-registration', $presenter);
+        }
+    }
+
+    public function checkCaptchaBeforeSubmission(array $params)
+    {
+        $test_secret_key = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
+        $request         = $params['request'];
+        $challenge       = $request->get('g-recaptcha-response');
+        $http_client     = new Http_Client();
+
+        $recaptcha_client = new \Tuleap\Captcha\Client($test_secret_key, $http_client);
+        $is_captcha_valid = $recaptcha_client->verify($challenge, $request->getIPAddress());
+
+        if (! $is_captcha_valid) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-captcha', 'Captcha is not valid')
+            );
+            $params['is_registration_valid'] = false;
         }
     }
 }
