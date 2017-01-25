@@ -585,7 +585,7 @@ function handleConnected() {
   jid = con.jid;
   Debug.log("jid: "+jid);
   
-  var aRoom = '<?php echo $room ?>@<?php echo $conference_service ?>.<?php echo $host ?>';
+  var aRoom = '<?php echo $hp->purify($room, CODENDI_PURIFIER_JS_QUOTE) ?>@<?php echo $hp->purify($conference_service, CODENDI_PURIFIER_JS_QUOTE) ?>.<?php echo $hp->purify($host, CODENDI_PURIFIER_JS_QUOTE) ?>';
 /*
   if (passedArgs['room'] && ROOMS[passedArgs['room']])
     aRoom = ROOMS[passedArgs['room']].name+'@'+ROOMS[passedArgs['room']].server;
@@ -741,12 +741,12 @@ if (is.b == 'op' ||
 getArgs();
 
 if (typeof(AUTHTYPE) == 'undefined' || AUTHTYPE!='saslanon') {
-  pass = '<?php echo $pwd ?>';
-  jid = '<?php echo $username ?>'+'@'+'<?php echo $host ?>';
+  pass = '<?php echo $hp->purify($pwd, CODENDI_PURIFIER_JS_QUOTE) ?>';
+  jid = '<?php echo $hp->purify($username, CODENDI_PURIFIER_JS_QUOTE) ?>'+'@'+'<?php echo $hp->purify($host, CODENDI_PURIFIER_JS_QUOTE) ?>';
 }
 
 
-nick = '<?php echo $username ?>';
+nick = '<?php echo $hp->purify($username, CODENDI_PURIFIER_JS_QUOTE) ?>';
 
 if (nick && nick.match(/^\s*(\S+|\S+.*\S+)\s*$/))
   // skip blanks
