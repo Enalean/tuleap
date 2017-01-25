@@ -32,6 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateTimeFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
 
 class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
 {
@@ -39,12 +40,22 @@ class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
      * @var DateTimeValueRounder
      */
     private $date_time_value_rounder;
+    /**
+     * @var FromWhereComparisonFieldBuilder
+     */
+    private $from_where_builder;
 
-    public function __construct(DateTimeValueRounder $date_time_value_rounder)
-    {
+    public function __construct(
+        DateTimeValueRounder $date_time_value_rounder,
+        FromWhereComparisonFieldBuilder $from_where_comparison_builder
+    ) {
         $this->date_time_value_rounder = $date_time_value_rounder;
+        $this->from_where_builder      = $from_where_comparison_builder;
     }
 
+    /**
+     * @return FromWhere
+     */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix   = spl_object_hash($comparison);
@@ -64,24 +75,26 @@ class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
             $condition         = "$changeset_value_date_alias.value BETWEEN $floored_timestamp AND $ceiled_timestamp";
         }
 
-        $from = " LEFT JOIN (
-            tracker_changeset_value AS $changeset_value_alias
-            INNER JOIN tracker_changeset_value_date AS $changeset_value_date_alias
-             ON ($changeset_value_date_alias.changeset_value_id = $changeset_value_alias.id
-                 AND $condition
-             )
-         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
-
-        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
-
-        return new FromWhere($from, $where);
+        return $this->from_where_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_date_alias,
+            'tracker_changeset_value_date',
+            $condition
+        );
     }
 
+    /**
+     * @return string
+     */
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         return $value_wrapper->getValue();
     }
 
+    /**
+     * @return string
+     */
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         $field = $parameters->getField();

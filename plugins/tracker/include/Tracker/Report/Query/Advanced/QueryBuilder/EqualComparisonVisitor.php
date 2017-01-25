@@ -62,7 +62,8 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
         return new EqualComparison\ForDateTime(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldBuilder()
         );
     }
 
@@ -73,12 +74,16 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new EqualComparison\ForFloat();
+        return new EqualComparison\ForFloat(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new EqualComparison\ForInteger();
+        return new EqualComparison\ForInteger(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
@@ -98,7 +103,9 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitText(Tracker_FormElement_Field_Text $field)
     {
-        return new EqualComparison\ForText();
+        return new EqualComparison\ForText(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
@@ -154,14 +161,16 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
         return new EqualComparison\ForLastUpdateDate(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
         return new EqualComparison\ForSubmittedOn(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
         );
     }
 
