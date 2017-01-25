@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright 2011-2016 (c) Enalean
+// Copyright 2011-2017 (c) Enalean
 // Copyright 1999-2000 (c) The SourceForge Crew
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
@@ -66,19 +66,6 @@ if (!defined('IS_SCRIPT')) {
         define('IS_SCRIPT', false);
     }
 }
-if (!IS_SCRIPT) {
-    // Protection against clickjacking
-    header('X-Frame-Options: SAMEORIGIN');
-    $csp_rules = "frame-ancestors 'self'; ";
-
-    // XSS prevention
-    header('X-XSS-Protection: 1; mode=block');
-    $csp_whitelist_script_scr = ForgeConfig::get('sys_csp_script_scr_whitelist');
-    $csp_rules               .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; "
-                              . "reflected-xss block;";
-
-    header('Content-Security-Policy: ' . $csp_rules);
-}
 
 //{{{ Sanitize $_REQUEST : remove cookies
 while(count($_REQUEST)) {
@@ -140,6 +127,28 @@ $cookie_manager = new CookieManager();
 
 $loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_manager);
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
+
+if (!IS_SCRIPT) {
+    // Protection against clickjacking
+    header('X-Frame-Options: SAMEORIGIN');
+    $csp_rules = "frame-ancestors 'self'; ";
+
+    // XSS prevention
+    header('X-XSS-Protection: 1; mode=block');
+    $whitelist_scripts = array();
+    EventManager::instance()->processEvent(
+        Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
+        array(
+            'whitelist_scripts' => &$whitelist_scripts
+        )
+    );
+    $csp_whitelist_script_scr  = implode(' ', $whitelist_scripts);
+    $csp_whitelist_script_scr .= ForgeConfig::get('sys_csp_script_scr_whitelist');
+    $csp_rules                .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; "
+        . "reflected-xss block;";
+
+    header('Content-Security-Policy: ' . $csp_rules);
+}
 
 $feedback=''; // Initialize global var
 

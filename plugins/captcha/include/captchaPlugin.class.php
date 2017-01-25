@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Captcha\Plugin\Info as PluginInfo;
+use Tuleap\Captcha\Registration\Presenter;
 
 class captchaPlugin extends Plugin
 {
@@ -29,6 +30,11 @@ class captchaPlugin extends Plugin
         bindtextdomain('tuleap-captcha', __DIR__ . '/../site-content');
 
         $this->setScope(self::SCOPE_SYSTEM);
+
+        $this->addHook('javascript_file', 'loadJavascriptFiles');
+        $this->addHook('cssfile', 'loadCSSFiles');
+        $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
+        $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
     }
 
     /**
@@ -41,5 +47,38 @@ class captchaPlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function loadJavascriptFiles()
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0) {
+            echo '<script src="https://www.google.com/recaptcha/api.js" async></script>';
+        }
+    }
+
+    public function loadCSSFiles()
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+        }
+    }
+
+    public function addExternalScriptToTheWhitelist(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0) {
+            $params['whitelist_scripts'][] = 'https://www.google.com/recaptcha/';
+            $params['whitelist_scripts'][] = 'https://www.gstatic.com/recaptcha/';
+        }
+    }
+
+    public function addAdditionalFieldUserRegistration(array $params)
+    {
+        $request = $params['request'];
+        if (! $request->getCurrentUser()->isSuperUser()) {
+            $test_site_key    = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+            $presenter        = new Presenter($test_site_key);
+            $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
+            $params['field'] .= $renderer->renderToString('user-registration', $presenter);
+        }
     }
 }
