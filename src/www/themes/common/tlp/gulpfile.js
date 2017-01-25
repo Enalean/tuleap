@@ -20,40 +20,38 @@
 var pkg         = require('./package.json');
 var gulp        = require('gulp');
 var sass        = require('gulp-sass');
-var sourcemaps  = require('gulp-sourcemaps');
 var concat      = require('gulp-concat');
 var uglify      = require('gulp-uglify');
 var scsslint    = require('gulp-scss-lint');
 var rename      = require('gulp-rename');
 var header      = require('gulp-header');
-var replace     = require('gulp-replace');
 var streamqueue = require('streamqueue');
 var babel       = require('gulp-babel');
 
 var locales = ['en_US', 'fr_FR'];
 var colors  = ['orange', 'blue', 'green', 'red', 'grey', 'purple'];
 var banner  = [
-   '/**',
-   ' * <%= pkg.name %> v<%= pkg.version %>',
-   ' *',
-   ' * Copyright (c) <%= pkg.author %>, 2016. All Rights Reserved.',
-   ' *',
-   ' * This file is a part of <%= pkg.name %>.',
-   ' *',
-   ' * Tuleap is free software; you can redistribute it and/or modify',
-   ' * it under the terms of the GNU General Public License as published by',
-   ' * the Free Software Foundation; either version 2 of the License, or',
-   ' * (at your option) any later version.',
-   ' *',
-   ' * Tuleap is distributed in the hope that it will be useful,',
-   ' * but WITHOUT ANY WARRANTY; without even the implied warranty of',
-   ' * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the',
-   ' * GNU General Public License for more details.',
-   ' *',
-   ' * You should have received a copy of the GNU General Public License',
-   ' * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.',
-   ' */',
-   ''
+    '/**',
+    ' * <%= pkg.name %> v<%= pkg.version %>',
+    ' *',
+    ' * Copyright (c) <%= pkg.author %>, 2017. All Rights Reserved.',
+    ' *',
+    ' * This file is a part of <%= pkg.name %>.',
+    ' *',
+    ' * Tuleap is free software; you can redistribute it and/or modify',
+    ' * it under the terms of the GNU General Public License as published by',
+    ' * the Free Software Foundation; either version 2 of the License, or',
+    ' * (at your option) any later version.',
+    ' *',
+    ' * Tuleap is distributed in the hope that it will be useful,',
+    ' * but WITHOUT ANY WARRANTY; without even the implied warranty of',
+    ' * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the',
+    ' * GNU General Public License for more details.',
+    ' *',
+    ' * You should have received a copy of the GNU General Public License',
+    ' * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.',
+    ' */',
+    ''
 ].join('\n');
 
 gulp.task('default', ['assets', 'js', 'sass', 'sass:doc']);
@@ -72,7 +70,7 @@ gulp.task('sass:watch', ['sass'], function() {
 gulp.task('sass:lint', function() {
     return gulp.src('./src/scss/**/*.scss')
         .pipe(scsslint({
-            'config': '.scss-lint.yml'
+            config: '.scss-lint.yml'
         }));
 });
 
@@ -87,7 +85,7 @@ colors.forEach(function (color) {
 gulp.task('sass:doc', function() {
     return gulp.src('./doc/css/*.scss')
         .pipe(scsslint({
-            'config': '.scss-lint.yml'
+            config: '.scss-lint.yml'
         }))
         .pipe(
             sass({
@@ -103,18 +101,17 @@ gulp.task('sass:doc', function() {
 });
 
 function compressForAGivenColor(color) {
-    var tlp_files = gulp.src('./src/scss/tlp-' + color + '.scss')
+    gulp.src('./src/scss/tlp-' + color + '.scss')
         .pipe(
             sass({
                 outputStyle: 'compressed'
             })
             .on('error', sass.logError)
         )
-        .pipe(header(banner, { pkg: pkg }));
-    var vendor_files = gulp.src('./src/vendor/**/*.css');
-
-    return streamqueue({ objectMode: true }, tlp_files, vendor_files)
-        .pipe(concat('tlp-' + color + '.min.css'))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest('./dist'));
 }
 
@@ -145,7 +142,7 @@ function compileForAGivenLocale(locale) {
         locale_files = gulp.src('./src/vendor-i18n/' + locale + '/**/*.js').pipe(uglify());
 
     return streamqueue({ objectMode: true }, tlp_files, vendor_files, overrides, locale_files)
-        .pipe(concat('tlp.' + locale +'.min.js'))
+        .pipe(concat('tlp.' + locale + '.min.js'))
         .pipe(gulp.dest('./dist'));
 }
 

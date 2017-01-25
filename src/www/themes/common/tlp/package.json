@@ -14,15 +14,13 @@
     "gulp-concat": "^2.6.0",
     "gulp-header": "1.8.2",
     "gulp-rename": "^1.2.2",
-    "gulp-replace": "~0.5.4",
     "gulp-sass": "^2.3.1",
     "gulp-scss-lint": "^0.3.9",
-    "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.3",
     "streamqueue": "^1.1.1"
   },
   "scripts": {
-    "build": "node_modules/.bin/gulp",
-    "watch": "node_modules/.bin/gulp watch"
+    "build": "gulp",
+    "watch": "gulp watch"
   }
 }
