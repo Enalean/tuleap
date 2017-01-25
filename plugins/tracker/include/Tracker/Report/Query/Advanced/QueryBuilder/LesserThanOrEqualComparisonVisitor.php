@@ -168,4 +168,9 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
     {
         return null;
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        return null;
+    }
 }

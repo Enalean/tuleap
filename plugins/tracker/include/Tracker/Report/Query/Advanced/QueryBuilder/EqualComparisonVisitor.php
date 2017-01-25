@@ -169,4 +169,9 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
     {
         return null;
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        return null;
+    }
 }

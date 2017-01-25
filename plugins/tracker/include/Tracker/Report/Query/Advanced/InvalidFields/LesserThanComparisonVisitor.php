@@ -177,4 +177,9 @@ class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, I
     {
         throw new FieldIsNotSupportedAtAllException($field);
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        throw new FieldIsNotSupportedAtAllException($field);
+    }
 }

@@ -1,0 +1,14 @@
+{
+    "name": "tracker_encryption",
+    "themes": {
+        "default": {
+            "files": [
+                "www/themes/default/css/style.scss"
+            ],
+            "target_dir": "www/themes/default/css"
+        }
+    },
+    "javascript": [
+        "www/scripts/update_tracker_key_modal.js"
+    ]
+}

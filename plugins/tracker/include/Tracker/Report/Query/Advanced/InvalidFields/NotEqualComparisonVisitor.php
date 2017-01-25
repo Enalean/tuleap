@@ -175,4 +175,9 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
     {
         throw new FieldIsNotSupportedAtAllException($field);
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        throw new FieldIsNotSupportedAtAllException($field);
+    }
 }

@@ -34,6 +34,7 @@ class tracker_encryptionPlugin extends Plugin
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
         $this->addHook('javascript_file');
+        $this->addHook('cssfile');
         $this->renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_ENCRYPTION_TEMPLATE_DIR);
     }
 
@@ -164,7 +165,14 @@ class tracker_encryptionPlugin extends Plugin
     public function javascript_file($params)
     {
         if ($this->currentRequestIsForPlugin()) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/update_tracker_key_modal.js"></script>'.PHP_EOL;
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/update_tracker_key_modal.js"></script>'.PHP_EOL;
+        }
+    }
+
+    public function cssFile($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
         }
     }
 }

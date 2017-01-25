@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,9 +39,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     protected $allUsedElements = array();
     
     /**
-     * Constructor needs the list all used FormElements (to rank the element in the page)
-     * 
-     * @param Array $allUsedElements 
+     * @param Array $allUsedElements
      */
     public function __construct($allUsedElements) {
         $this->allUsedElements = $allUsedElements;
@@ -205,6 +203,11 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     public function visitPriority(Tracker_FormElement_Field_Priority $element) {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Priority($element, $this->allUsedElements);
+    }
+
+    public function visitExternalField(Tracker_FormElement_Field $element)
+    {
+        $this->visitField($element);
     }
 
     /**
