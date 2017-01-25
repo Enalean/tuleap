@@ -23,6 +23,7 @@ use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison\ForText;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -47,7 +48,9 @@ class ForTextTest extends TuleapTestCase
         $field_id   = 101;
         $field      = aTextField()->withId($field_id)->build();
 
-        $for_text   = new ForText();
+        $for_text   = new ForText(
+            new FromWhereComparisonFieldBuilder()
+        );
         $from_where = $for_text->getFromWhere($comparison, $field);
 
         $suffix = spl_object_hash($comparison);

@@ -24,9 +24,20 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
 
 class ForText implements FromWhereBuilder
 {
+    /**
+     * @var FromWhereComparisonFieldBuilder
+     */
+    private $from_where_builder;
+
+    public function __construct(FromWhereComparisonFieldBuilder $from_where_comparison_builder)
+    {
+        $this->from_where_builder = $from_where_comparison_builder;
+    }
+
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix           = spl_object_hash($comparison);
@@ -43,17 +54,15 @@ class ForText implements FromWhereBuilder
             $matches_value = " LIKE ". $this->quoteLikeValueSurround($value);
         }
 
-        $from = " LEFT JOIN (
-            tracker_changeset_value AS $changeset_value_alias
-            INNER JOIN tracker_changeset_value_text AS $changeset_value_text_alias
-             ON ($changeset_value_text_alias.changeset_value_id = $changeset_value_alias.id
-                 AND $changeset_value_text_alias.value $matches_value
-             )
-         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
+        $condition = "$changeset_value_text_alias.value $matches_value";
 
-        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
-
-        return new FromWhere($from, $where);
+        return $this->from_where_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_text_alias,
+            'tracker_changeset_value_text',
+            $condition
+        );
     }
 
     private function quoteLikeValueSurround($value)
