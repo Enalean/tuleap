@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 
@@ -12,12 +25,19 @@ $request = HTTPRequest::instance();
 
 $confirm_hash = $request->get('confirm_hash');
 
-$um   = UserManager::instance();
-$user = $um->getUserByConfirmHash($confirm_hash);
+$reset_token_dao      = new Tuleap\User\Password\Reset\DataAccessObject();
+$password_handler     = PasswordHandlerFactory::getPasswordHandler();
+$user_manager         = UserManager::instance();
+$reset_token_verifier = new \Tuleap\User\Password\Reset\Verifier($reset_token_dao, $password_handler, $user_manager);
 
-if ($user == null) {
-    exit_error($Language->getText('include_exit', 'error'),
-               $Language->getText('account_lostlogin', 'invalid_hash'));
+try {
+    $token = \Tuleap\User\Password\Reset\Token::constructFromIdentifier($confirm_hash);
+    $user  = $reset_token_verifier->getUser($token);
+} catch (Exception $ex) {
+    exit_error(
+        $GLOBALS['Language']->getText('include_exit', 'error'),
+        $GLOBALS['Language']->getText('account_lostlogin', 'invalid_hash')
+    );
 }
 
 if ($request->isPost()
@@ -26,7 +46,11 @@ if ($request->isPost()
     && !strcmp($request->get('form_pw'), $request->get('form_pw2'))) {
 
     $user->setPassword($request->get('form_pw'));
-    $um->updateDb($user);
+
+    $reset_token_revoker = new \Tuleap\User\Password\Reset\Revoker($reset_token_dao);
+    $reset_token_revoker->revokeTokens($user);
+
+    $user_manager->updateDb($user);
 
     session_redirect("/");
 }

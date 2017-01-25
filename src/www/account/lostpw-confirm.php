@@ -1,36 +1,50 @@
 <?php
 //
-// Copyright 2015 (c) Enalean
+// Copyright 2015-2017 (c) Enalean
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
 //
 
+use Tuleap\User\Password\Reset\TokenNotCreatedException;
+
 require_once('pre.php');
 
-$em =& EventManager::instance();
-$em->processEvent('before_lostpw-confirm', array());
+$event_manager = EventManager::instance();
+$event_manager->processEvent('before_lostpw-confirm', array());
 
 $number_generator = new RandomNumberGenerator();
 $confirm_hash     = $number_generator->getNumber();
 
-$request =& HTTPRequest::instance();
+$request      = HTTPRequest::instance();
+$user_manager = UserManager::instance();
 
-$res_user = db_query("SELECT * FROM user WHERE user_name='".db_es($request->get('form_loginname'))."'");
-if (db_numrows($res_user) < 1) exit_error("Invalid User","That user does not exist.");
-$row_user = db_fetch_array($res_user);
+$user = $user_manager->getUserByUserName($request->get('form_loginname'));
+if ($user === null) {
+    exit_error('Invalid User', 'That user does not exist.');
+}
 
-db_query("UPDATE user SET confirm_hash='".$confirm_hash."' WHERE user_id=".$row_user['user_id']);
-
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+$reset_token_dao         = new Tuleap\User\Password\Reset\DataAccessObject();
+$random_number_generator = new RandomNumberGenerator();
+$password_handler        = PasswordHandlerFactory::getPasswordHandler();
+$reset_token_creator     = new \Tuleap\User\Password\Reset\Creator($reset_token_dao, $random_number_generator, $password_handler);
+try {
+    $reset_token = $reset_token_creator->create($user);
+} catch (TokenNotCreatedException $ex) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        $GLOBALS['Language']->getText('account_lostpw-confirm', 'token_generation_failed')
+    );
+    $GLOBALS['Response']->redirect('/account/lostpw.php');
+}
 
 $message = stripcslashes($Language->getText('account_lostpw-confirm', 'mail_body',
 	      array($GLOBALS['sys_name'],
-                get_server_url()."/account/lostlogin.php?confirm_hash=".$confirm_hash)));
+                $request->getServerUrl(). '/account/lostlogin.php?confirm_hash=' . urlencode($reset_token->getIdentifier()))));
 
 $mail = new Mail();
-$mail->setTo($row_user['email'],true);
+$mail->setTo($user->getEmail(), true);
 $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
 $mail->setBody($message);
 $mail->setFrom($GLOBALS['sys_noreply']);

@@ -1016,6 +1016,13 @@ CREATE TABLE user_access (
   PRIMARY KEY  (user_id)
 );
 
+CREATE TABLE user_lost_password (
+  id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  verifier VARCHAR(255) NOT NULL,
+  INDEX idx_user_id (user_id)
+);
+
 
 #
 # Table structure for table 'user_bookmarks'
