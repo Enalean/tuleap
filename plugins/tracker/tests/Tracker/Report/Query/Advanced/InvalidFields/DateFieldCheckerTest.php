@@ -19,6 +19,8 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
