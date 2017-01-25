@@ -61,7 +61,8 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
         return new BetweenComparison\ForDateTime(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldBuilder()
         );
     }
 
@@ -72,12 +73,16 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new BetweenComparison\ForFloat();
+        return new BetweenComparison\ForFloat(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new BetweenComparison\ForInteger();
+        return new BetweenComparison\ForInteger(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
@@ -153,14 +158,16 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
         return new BetweenComparison\ForLastUpdateDate(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
         return new BetweenComparison\ForSubmittedOn(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
         );
     }
 

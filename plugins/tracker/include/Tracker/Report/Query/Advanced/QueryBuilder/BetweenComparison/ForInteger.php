@@ -24,9 +24,23 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
 
 class ForInteger implements FromWhereBuilder
 {
+    /**
+     * @var FromWhereComparisonFieldBuilder
+     */
+    private $from_where_builder;
+
+    public function __construct(FromWhereComparisonFieldBuilder $from_where_comparison_builder)
+    {
+        $this->from_where_builder = $from_where_comparison_builder;
+    }
+
+    /**
+     * @return FromWhere
+     */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix           = spl_object_hash($comparison);
@@ -36,29 +50,17 @@ class ForInteger implements FromWhereBuilder
         $field_id         = (int) $field->getId();
 
         $changeset_value_int_alias = "CVInt_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
+        $changeset_value_alias     = "CV_{$field_id}_{$suffix}";
 
-        if ($min_value === '' && $max_value === '') {
-            $condition = "1";
-        } else if ($min_value === '') {
-            $condition = "$changeset_value_int_alias.value <= ".$this->escapeInt($max_value);
-        } else if ($max_value === '') {
-            $condition = "$changeset_value_int_alias.value >= ".$this->escapeInt($min_value);
-        } else {
-            $condition = "$changeset_value_int_alias.value BETWEEN ".$this->escapeInt($min_value)." AND ".$this->escapeInt($max_value);
-        }
+        $condition = "$changeset_value_int_alias.value BETWEEN ".$this->escapeInt($min_value)." AND ".$this->escapeInt($max_value);
 
-        $from = " LEFT JOIN (
-            tracker_changeset_value AS $changeset_value_alias
-            INNER JOIN tracker_changeset_value_int AS $changeset_value_int_alias
-             ON ($changeset_value_int_alias.changeset_value_id = $changeset_value_alias.id
-                 AND $condition
-             )
-         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
-
-        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
-
-        return new FromWhere($from, $where);
+        return $this->from_where_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_int_alias,
+            'tracker_changeset_value_int',
+            $condition
+        );
     }
 
     private function escapeInt($value)
