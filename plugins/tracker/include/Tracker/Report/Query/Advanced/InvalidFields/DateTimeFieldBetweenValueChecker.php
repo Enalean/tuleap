@@ -44,13 +44,19 @@ class DateTimeFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrap
     {
         $date_values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
-        foreach ($date_values as $date_value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem($date_value)) {
+        foreach ($date_values as $value) {
+            $date_value = DateTime::createFromFormat(DateTimeFieldChecker::DATETIME_FORMAT, $value);
+
+            if ($date_value === false) {
+                $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
+            }
+
+            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
                 throw new DateToEmptyStringComparisonException($comparison, $field);
             }
 
-            if ($date_value === false) {
-                throw new DateToStringComparisonException($field, $date_value);
+            if ($date_value === false && $value !== '') {
+                throw new DateToStringComparisonException($field, $value);
             }
         }
     }
@@ -64,19 +70,7 @@ class DateTimeFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrap
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $value = $value_wrapper->getValue();
-
-        if ($value === '') {
-            return '';
-        }
-
-        $date_value = DateTime::createFromFormat(DateTimeFieldChecker::DATETIME_FORMAT, $value);
-
-        if ($date_value === false) {
-            $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
-        }
-
-        return $date_value;
+        return $value_wrapper->getValue();
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
