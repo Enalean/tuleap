@@ -60,7 +60,9 @@ class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVi
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return null;
+        return new GreaterThanOrEqualComparison\ForDateTime(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -150,12 +152,16 @@ class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVi
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return null;
+        return new GreaterThanOrEqualComparison\ForLastUpdateDate(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return null;
+        return new GreaterThanOrEqualComparison\ForSubmittedOn(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)
