@@ -61,7 +61,9 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return null;
+        return new NotEqualComparison\ForDateTime(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -151,12 +153,16 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return null;
+        return new NotEqualComparison\ForLastUpdateDate(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return null;
+        return new NotEqualComparison\ForSubmittedOn(
+            new DateTimeValueRounder()
+        );
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)
