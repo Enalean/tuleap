@@ -26,7 +26,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
 
 class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {

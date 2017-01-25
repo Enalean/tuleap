@@ -17,44 +17,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparison;
 
+use CodendiDataAccess;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
+use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateTimeFieldChecker;
 
-class FloatFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
 {
     /**
-     * @var EmptyStringChecker
+     * @var DateTimeValueRounder
      */
-    private $empty_string_checker;
+    private $date_time_value_rounder;
 
-    public function __construct(EmptyStringChecker $empty_string_checker)
+    public function __construct(DateTimeValueRounder $date_time_value_rounder)
     {
-        $this->empty_string_checker = $empty_string_checker;
+        $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
-        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new FloatToEmptyStringComparisonException($comparison, $field);
-        }
+        $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
+        $ceiled_timestamp = $this->escapeInt($ceiled_timestamp);
+        $condition        = "artifact.submitted_on <= $ceiled_timestamp";
 
-        if (! is_numeric($value) && $value !== "") {
-            throw new FloatToStringComparisonException($field, $value);
-        }
-    }
+        $from  = "";
+        $where = "$condition";
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
+        return new FromWhere($from, $where);
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -62,7 +63,17 @@ class FloatFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
         return $value_wrapper->getValue();
     }
 
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+        return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+    }
+
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
+    }
+
+    private function escapeInt($value)
+    {
+        return CodendiDataAccess::instance()->escapeInt($value);
     }
 }
