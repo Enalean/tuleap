@@ -236,7 +236,7 @@ class Docman_VersionDao extends DataAccessObject {
     
         $sql_update = 'UPDATE plugin_docman_version '.
                       'SET path = REPLACE (path,'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').' ,'.$this->da->quoteSmart($docman_path.strtolower($new_name).'/').') '. 
-                      'WHERE path LIKE "%"'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').'"%"';
+                      'WHERE path LIKE '.$this->da->quoteLikeValueSurround($docman_path.$project->getUnixName(true).'/');
         return $this->update($sql_update);
     }
 

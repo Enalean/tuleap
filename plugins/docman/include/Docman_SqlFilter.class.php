@@ -134,11 +134,12 @@ extends Docman_MetadataSqlQueryChunk {
         $res = array();
         if (preg_match ('/^\*(.+)$/', $qv)) {
             $matches = array();
+            $data_access = CodendiDataAccess::instance();
             if (preg_match ('/^\*(.+)\*$/', $qv, $matches)) {
-                $pattern = '"%'.db_es($matches[1]).'%"';
+                $pattern = $data_access->quoteLikeValueSurround($matches[1]);
             } else  {
                 $qv_without_star = substr($qv, 1);
-                $pattern = '"%'.db_es($qv_without_star).'"';
+                $pattern         = $data_access->quoteLikeValuePrefix($qv_without_star);
             }
             $res['like']     = true;
             $res['pattern'] = $pattern;
