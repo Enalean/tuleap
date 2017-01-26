@@ -14,6 +14,8 @@ require_once('common/wiki/lib/Wiki.class.php');
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/mail/MassmailFormPresenter.class.php';
 
+Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
+
 $hp =& Codendi_HTMLPurifier::instance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();

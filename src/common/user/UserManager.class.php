@@ -457,6 +457,7 @@ class UserManager {
      */
     function login($name, $pwd, $allowpending = false) {
         try {
+            Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.attempted');
             $password_expiration_checker = new User_PasswordExpirationChecker();
             $password_handler            = PasswordHandlerFactory::getPasswordHandler();
             $login_manager = new User_LoginManager(
@@ -479,6 +480,7 @@ class UserManager {
             $password_expiration_checker->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
 
+            Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.succeeded');
             return $this->setCurrentUser($user);
 
         } catch (User_InvalidPasswordWithUserException $exception) {
@@ -503,6 +505,7 @@ class UserManager {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
 
+        Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.failed');
         return $this->setCurrentUser($this->createAnonymousUser());
     }
 

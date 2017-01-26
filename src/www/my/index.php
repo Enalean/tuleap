@@ -14,6 +14,7 @@ require_once('../admin/admin_utils.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 if (user_isloggedin()) {
+    Tuleap\Instrument\Collect::increment('service.my.accessed');
 
     // Make sure this page is not cached because
     // it uses the exact same URL for all user's

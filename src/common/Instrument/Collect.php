@@ -22,7 +22,13 @@ namespace Tuleap\Instrument;
 
 use ForgeConfig;
 
-class Collect
+/**
+ * Wrapper for Dominkl Statsd
+ *
+ * @see https://github.com/domnikl/statsd-php
+ * @see https://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
+ */
+class Collect implements StatsdInterface
 {
     const NAME_SPACE = 'tuleap';
 
@@ -30,6 +36,12 @@ class Collect
      * @var \Domnikl\Statsd\Client
      */
     private static $statsd;
+
+    public static function increment($key)
+    {
+        self::connect();
+        self::$statsd->increment($key);
+    }
 
     public static function startTiming($key)
     {

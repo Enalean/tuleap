@@ -2,6 +2,8 @@
 
 require_once('pre.php');
 
+Tuleap\Instrument\Collect::increment('service.api.soap.accessed');
+
 define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__).'/VERSION'));
 
 define('LOG_SOAP_REQUESTS', false);
