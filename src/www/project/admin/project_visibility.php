@@ -22,10 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuealp\project\Admin\ProjectVisibilityController;
-use Tuealp\project\Admin\ProjectVisibilityRouter;
-use Tuealp\project\Admin\ProjectVisibilityUserConfigurationPermissions;
-use Tuealp\project\Admin\ServicesUsingTruncatedMailRetriever;
+use Tuleap\Project\Admin\ProjectVisibilityController;
+use Tuleap\Project\Admin\ProjectVisibilityRouter;
+use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
+use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 
 require_once('pre.php');
 
