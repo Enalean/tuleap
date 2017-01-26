@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateValueExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
@@ -45,7 +45,7 @@ class DateFieldCheckerTest extends TuleapTestCase
 
         $this->date_field_checker = new DateFieldChecker(
             new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATE),
-            new DateValueExtractor(DateFormat::DATE)
+            new CollectionOfDateValuesExtractor(DateFormat::DATE)
         );
         $this->field              = aMockDateWithoutTimeField()->build();
         $this->comparison         = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
@@ -64,7 +64,7 @@ class DateFieldCheckerTest extends TuleapTestCase
     {
         $this->date_field_checker = new DateFieldChecker(
             new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATE),
-            new DateValueExtractor(DateFormat::DATE)
+            new CollectionOfDateValuesExtractor(DateFormat::DATE)
         );
         $value_wrapper = new SimpleValueWrapper('');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);

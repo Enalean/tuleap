@@ -26,25 +26,27 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 class DateFieldChecker implements InvalidFieldChecker
 {
     /**
-     * @var DateValueExtractor
+     * @var CollectionOfDateValuesExtractor
      */
-    private $value_extractor;
+    private $values_extractor;
 
     /**
      * @var DateFormatValidator
      */
     private $validator;
 
-    public function __construct(DateFormatValidator $validator, DateValueExtractor $value_extractor)
+    public function __construct(DateFormatValidator $validator, CollectionOfDateValuesExtractor $values_extractor)
     {
-        $this->validator       = $validator;
-        $this->value_extractor = $value_extractor;
+        $this->validator        = $validator;
+        $this->values_extractor = $values_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $this->value_extractor->extractValue($comparison->getValueWrapper(), $field);
+        $date_values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
-        $this->validator->checkValueIsValid($comparison, $field, $value);
+        foreach ($date_values as $value) {
+            $this->validator->checkValueIsValid($comparison, $field, $value);
+        }
     }
 }

@@ -46,7 +46,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateValueExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
@@ -72,12 +72,12 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvi
         if ($field->isTimeDisplayed() === true) {
             return new DateFieldChecker(
                 new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
-                new DateValueExtractor(DateFormat::DATETIME)
+                new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
             );
         }
         return new DateFieldChecker(
             new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATE),
-            new DateValueExtractor(DateFormat::DATE)
+            new CollectionOfDateValuesExtractor(DateFormat::DATE)
         );
     }
 
@@ -170,7 +170,7 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvi
     {
         return new DateFieldChecker(
             new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
-            new DateValueExtractor(DateFormat::DATETIME)
+            new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
         );
     }
 
@@ -178,7 +178,7 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvi
     {
         return new DateFieldChecker(
             new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
-            new DateValueExtractor(DateFormat::DATETIME)
+            new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
         );
     }
 
