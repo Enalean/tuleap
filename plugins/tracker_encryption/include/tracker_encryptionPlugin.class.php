@@ -164,8 +164,8 @@ class tracker_encryptionPlugin extends Plugin
 
     public function javascript_file($params)
     {
-        if ($this->currentRequestIsForPlugin()) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/update_tracker_key_modal.js"></script>'.PHP_EOL;
+        if ($this->currentRequestIsForPlugin() || strpos($_SERVER['REQUEST_URI'], 'plugins/tracker') == true) {
+            echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }
 

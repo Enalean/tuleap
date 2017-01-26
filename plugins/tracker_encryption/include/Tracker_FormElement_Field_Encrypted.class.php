@@ -31,7 +31,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
     {
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
 
-        $html  = '<div class="input-append">';
+        $html  = '<div class="input-append encrypted-field">';
         $html .= $this->fetchInput($value, 'password');
         $html .= $this->fetchButton();
         $html  .= '</div>';
@@ -47,23 +47,6 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
         $html = '<button class="btn" type="button" id="show_password_'. $this->id .'">
                      <span id="show_password_icon_'. $this->id .'" class="icon-eye-close"></span>
                  </button>';
-
-        $html .= '<script type="text/javascript">
-                      (function($) {
-                          $("#show_password_'. $this->id .'").bind("mousedown", function (event) {
-                              $("#password_'. $this->id .'").attr("type", "text");
-                              $("#show_password_icon_'. $this->id .'").attr("class", "icon-eye-open");
-                          })
-                          $("#show_password_'. $this->id .'").bind("mouseup", function (event) {
-                              $("#password_'. $this->id .'").attr("type", "password");
-                              $("#show_password_icon_'. $this->id .'").attr("class", "icon-eye-close");
-                          })
-                          $("#show_password_'. $this->id .'").bind("mouseout", function (event) {
-                              $("#password_'. $this->id .'").attr("type", "password");
-                              $("#show_password_icon_'. $this->id .'").attr("class", "icon-eye-close");
-                          })
-                      }(jQuery));
-                  </script>';
 
         return $html;
     }

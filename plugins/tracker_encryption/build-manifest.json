@@ -9,6 +9,7 @@
         }
     },
     "javascript": [
-        "www/scripts/update_tracker_key_modal.js"
+        "www/scripts/update_tracker_key_modal.js",
+        "www/scripts/encrypted_field.js"
     ]
 }
