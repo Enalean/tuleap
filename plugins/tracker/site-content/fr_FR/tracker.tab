@@ -813,9 +813,11 @@ plugin_tracker_common_type	del_err	Erreur lors de la destruction des dépendance
 plugin_tracker_common_type	none_found	Aucun trouvé
 plugin_tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
 plugin_tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
+plugin_tracker_common_type	no_view_permission_anonymous	Vous n'avez pas les permissions pour visualiser cet outil de suivi. Etant donné que vous êtes anonyme, essayez de vous <a href="$1">connecter</a>.
 plugin_tracker_common_type	shortname_already_exists	Le nom court '$1' est déjà utilisé. Veuillez en choisir un autre.
 plugin_tracker_common_type	name_already_exists	Le nom du tracker '$1' est déjà utilisé. Veuillez en choisir un autre.
 plugin_tracker_common_type	no_view_permission_on_artifact	Vous n'avez pas les permissions pour visualiser cet artefact.
+plugin_tracker_common_type	no_view_permission_on_artifact_anonymous	Vous n'avez pas les permissions pour visualiser cet artefact. Etant donné que vous êtes anonyme, essayez de vous <a href="$1">connecter</a>.
 plugin_tracker_common_type	artifact_not_exist	Cet artefact n'existe pas.
 plugin_tracker_common_type	report_not_exist	Ce rapport n'existe pas.
 plugin_tracker_common_type	tracker_not_exist	Ce tracker n'existe pas.

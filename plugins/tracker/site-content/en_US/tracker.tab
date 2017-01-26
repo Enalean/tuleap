@@ -821,9 +821,11 @@ plugin_tracker_common_type	del_err	Error deleting dependencies $1: $2
 plugin_tracker_common_type	none_found	None Found
 plugin_tracker_common_type	invalid_mail	"$1" is not a valid email address
 plugin_tracker_common_type	no_view_permission	You don't have the permissions to view this tracker.
+plugin_tracker_common_type	no_view_permission_anonymous	You don't have the permissions to view this tracker. Given that you are anonymous, please try to <a href="$1">login</a>.
 plugin_tracker_common_type	shortname_already_exists	The short name '$1' is already used. Please use another one.
 plugin_tracker_common_type	name_already_exists	The tracker name '$1' is already used. Please use another one.
 plugin_tracker_common_type	no_view_permission_on_artifact	You don't have the permissions to view this artifact.
+plugin_tracker_common_type	no_view_permission_on_artifact_anonymous	You don't have the permissions to view this artifact. Given that you are anonymous, please try to <a href="$1">login</a>.
 plugin_tracker_common_type	artifact_not_exist	This artifact does not exist.
 plugin_tracker_common_type	report_not_exist	This report does not exist.
 plugin_tracker_common_type	tracker_not_exist	This tracker does not exist.
