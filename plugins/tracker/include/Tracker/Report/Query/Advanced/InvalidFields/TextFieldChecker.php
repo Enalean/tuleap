@@ -20,12 +20,34 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
-class TextFieldChecker implements InvalidFieldChecker
+class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        // Always ok to search something on a text field
+        try {
+            $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        } catch (NowIsNotSupportedException $exception) {
+            throw new TextToNowComparisonException($field);
+        }
+    }
+
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+        throw new NowIsNotSupportedException();
+    }
+
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    {
     }
 }
