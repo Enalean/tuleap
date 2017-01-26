@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
 use DateTime;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -50,7 +51,7 @@ class DateTimeFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
         $date_value = DateTime::createFromFormat(self::DATETIME_FORMAT, $value);
 
         if ($date_value === false) {
-            $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
+            $date_value = DateTime::createFromFormat(DateFormat::DATE, $value);
         }
 
         if ($this->empty_string_checker->isEmptyStringAProblem($value)) {

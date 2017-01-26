@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualCo
 
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -39,22 +40,12 @@ class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
      * @var DateTimeValueRounder
      */
     private $date_time_value_rounder;
-    /**
-     * @var FromWhereComparisonFieldReadOnlyBuilder
-     */
-    private $from_where_builder;
 
-    public function __construct(
-        DateTimeValueRounder $date_time_value_rounder,
-        FromWhereComparisonFieldReadOnlyBuilder $from_where_comparison_builder
-    ) {
+    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    {
         $this->date_time_value_rounder = $date_time_value_rounder;
-        $this->from_where_builder      = $from_where_comparison_builder;
     }
 
-    /**
-     * @return FromWhere
-     */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
@@ -63,23 +54,20 @@ class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
         $floored_timestamp = $this->escapeInt($floored_timestamp);
         $condition         = "artifact.submitted_on >= $floored_timestamp";
 
-        return $this->from_where_builder->getFromWhere($condition);
+        $from  = "";
+        $where = "$condition";
+
+        return new FromWhere($from, $where);
     }
 
-    /**
-     * @return string
-     */
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    /**
-     * @return string
-     */
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+        return $value_wrapper->getValue()->format(DateFormat::DATETIME);
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)

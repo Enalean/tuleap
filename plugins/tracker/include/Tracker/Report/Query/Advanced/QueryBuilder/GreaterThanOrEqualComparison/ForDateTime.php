@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualCo
 
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -93,9 +94,9 @@ class ForDateTime implements FromWhereBuilder, ValueWrapperVisitor
     {
         $field = $parameters->getField();
         if ($field->isTimeDisplayed() === true) {
-            return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+            return $value_wrapper->getValue()->format(DateFormat::DATETIME);
         }
-        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
+        return $value_wrapper->getValue()->format(DateFormat::DATE);
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
