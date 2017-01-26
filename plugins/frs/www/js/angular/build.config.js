@@ -7,7 +7,7 @@ module.exports = {
      * development and the `compile_dir` folder is where our app resides once it's
      * completely built.
      */
-    build_dir: 'build',
+    build_dir  : 'build',
     compile_dir: 'bin',
 
     /**
@@ -48,8 +48,6 @@ module.exports = {
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
-
-        html: ['src/index.html'],
         scss: 'src/app/main.scss'
     },
 
@@ -63,9 +61,6 @@ module.exports = {
      *
      * The `vendor_files.js` property holds files to be automatically
      * concatenated and minified with our project source files.
-     *
-     * The `vendor_files.css` property holds any CSS files to be automatically
-     * included in our app.
      */
     vendor_files: {
         js: [
@@ -78,8 +73,6 @@ module.exports = {
             'vendor/showdown/dist/showdown.js',
             'vendor/ng-showdown/dist/ng-showdown.js',
             'vendor/angular-ui-router/release/angular-ui-router.js'
-        ],
-        css: [
         ],
         assets: [
         ]
