@@ -19,8 +19,11 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     var select_element = document.getElementById('project_visibility');
-    select_element.addEventListener('change', function () {
-        document.getElementById("term_of_service").required = true;
-        document.getElementById("term_of_service_usage").className = 'term-of-service';
-    });
+
+    if (select_element) {
+        select_element.addEventListener('change', function () {
+            document.getElementById("term_of_service").required = true;
+            document.getElementById("term_of_service_usage").className = 'term-of-service';
+        });
+    }
 });
