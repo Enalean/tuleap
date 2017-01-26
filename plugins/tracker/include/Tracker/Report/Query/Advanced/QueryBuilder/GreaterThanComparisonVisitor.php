@@ -61,7 +61,8 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
         return new GreaterThanComparison\ForDateTime(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldBuilder()
         );
     }
 
@@ -72,12 +73,16 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new GreaterThanComparison\ForFloat();
+        return new GreaterThanComparison\ForFloat(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new GreaterThanComparison\ForInteger();
+        return new GreaterThanComparison\ForInteger(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
@@ -153,14 +158,16 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
         return new GreaterThanComparison\ForLastUpdateDate(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
         return new GreaterThanComparison\ForSubmittedOn(
-            new DateTimeValueRounder()
+            new DateTimeValueRounder(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
         );
     }
 
