@@ -88,6 +88,9 @@ msgstr ""
 msgid "Wiki"
 msgstr ""
 
+msgid "Update"
+msgstr ""
+
 msgid "Update failed"
 msgstr ""
 
@@ -95,7 +98,4 @@ msgid "Update successful"
 msgstr ""
 
 msgid "Project administrators are not allowed to configure anything here"
-msgstr ""
-
-msgid "Please accept platform <a href='/tos/tos.php'>Term of Services</a>"
 msgstr ""

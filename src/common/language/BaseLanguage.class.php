@@ -3,48 +3,24 @@
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
  * http://sourceforge.net
- * 
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- *
- *  Tim Perdue, September 7, 2000
- *  Laurent Julliard, Jan 14, 2004
- *  Manuel Vacelet, July 22, 2008 (nice, every 4 years !)
- *
- *  Base class for adding multilingual support to Codendi
- *
- *  Contains variables which can be overridden optionally by other
- *  language files.
- *
- *  Base language is english - an english class will extend this one,
- *  but won't override anything
- *
- *  As new languages are added, they can override what they wish, and
- *  as we extend our class, other languages can follow suit
- *  as they are translated without holding up our progress
- *
- *  A global language file is loaded first and then each php script
- *  loads its won scripts (site-local customized versions are also
- *  loaded if they do exist)
- *
- */
 class BaseLanguage {
 
     const DEFAULT_LANG = 'en_US';
@@ -534,5 +510,10 @@ class BaseLanguage {
 
     public function getCacheDirectory() {
         return ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.'lang';
+    }
+
+    public function getOverridableText($pagename, $category, $args="")
+    {
+        return $this->getText($pagename, $category, $args);
     }
 }

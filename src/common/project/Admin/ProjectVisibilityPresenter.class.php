@@ -47,7 +47,7 @@ class ProjectVisibilityPresenter {
     /**
      * @var string
      */
-    public $term_of_service_message;
+    public $purified_term_of_service_message;
 
     /**
      * @var string
@@ -73,7 +73,10 @@ class ProjectVisibilityPresenter {
         $this->choose_visbility           = $this->language->getText('project_admin_editgroupinfo', 'choose_visbility');
         $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning');
         $this->general_warning_message    = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
-        $this->term_of_service_message    = _("Please accept platform <a href='/tos/tos.php'>Term of Services</a>");
+        $this->purified_term_of_service_message = Codendi_HTMLPurifier::instance()->purify(
+            $this->language->getOverridableText('project_admin_editgroupinfo', 'term_of_service'),
+            CODENDI_PURIFIER_LIGHT
+        );
 
         $this->can_configure_visibility   = $can_configure_visibility;
 
