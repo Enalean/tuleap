@@ -41,6 +41,7 @@ project_admin_editgroupinfo	unrestricted_label	public incl. restricted users
 project_admin_editgroupinfo	restricted_warning	Only project members can access a <b>private</b> project. <br>A <b>public</b> project is accessible to all <b>except restricted users</b>.<br>It is not advisable to allow <b>restricted users</b> to access you project without good reason.<br />Please not that <b>Public incl. Restricted</b> only applies to <em>project summary page</em>, <em>Mediawiki</em> and <em>git repositories</em>.
 project_admin_editgroupinfo	general_warning	Only project members can access a <b>private</b> project <br>A <b>public</b> project is accessible to everyone.
 project_admin_editgroupinfo	under_construction	Page under construction.
+project_admin_editgroupinfo	term_of_service	Please accept platform <a href='/tos/tos.php'>Term of Services</a>
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php

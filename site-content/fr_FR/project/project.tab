@@ -41,6 +41,7 @@ project_admin_editgroupinfo	unrestricted_label	publique incluant les utilsateurs
 project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b>. <br>Un projet <b>publique</b> est accessible à tous, <b>sauf les utilsateurs restreints</b>. <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet publique à des <b>utilsateurs restreints</b> sans bonne raison.<br />Notez que <b>Publique incluant les utilisateurs restreints</b> ne s'applique qu'à <em>la page sommaire</em>, à <em>Mediawiki</em> et aux <em>dépôts git</em>.
 project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b> <br>Un projet <b>publique</b> est accessible à tous.
 project_admin_editgroupinfo	under_construction	Page en cours de construction.
+project_admin_editgroupinfo	term_of_service	Merci d'accepter les <a href='/tos/tos.php'>conditions générales d'utilisation</a> de la plateforme
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
