@@ -47,8 +47,8 @@ use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldBetweenValueChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldBetweenValueChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 
 class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {
@@ -89,12 +89,12 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new FloatFieldBetweenValueChecker(new EmptyStringForbidden());
+        return new FloatFieldChecker(new EmptyStringForbidden(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldBetweenValueChecker(new EmptyStringForbidden());
+        return new IntegerFieldChecker(new EmptyStringForbidden(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)

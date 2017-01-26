@@ -89,12 +89,12 @@ class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, I
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new FloatFieldChecker(new EmptyStringForbidden());
+        return new FloatFieldChecker(new EmptyStringForbidden(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldChecker(new EmptyStringForbidden());
+        return new IntegerFieldChecker(new EmptyStringForbidden(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
