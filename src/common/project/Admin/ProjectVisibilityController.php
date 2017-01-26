@@ -22,18 +22,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuealp\project\Admin;
+namespace Tuleap\Project\Admin;
 
 use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Project;
-use Event;
-use EventManager;
 use ProjectManager;
 use ProjectTruncatedEmailsPresenter;
 use ProjectVisibilityPresenter;
-use Service;
 use TemplateRendererFactory;
 
 class ProjectVisibilityController

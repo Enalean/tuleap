@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuealp\project\Admin;
+namespace Tuleap\Project\Admin;
 
 use ForgeAccess;
 use ForgeConfig;
