@@ -19,29 +19,26 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
-use DateTime;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
 class DateFieldBetweenValueChecker implements InvalidFieldChecker
 {
     /**
-     * @var EmptyStringChecker
-     */
-    private $empty_string_checker;
-
-    /**
      * @var BetweenDateValuesExtractor
      */
     private $values_extractor;
 
-    public function __construct(EmptyStringChecker $empty_string_checker, BetweenDateValuesExtractor $values_extractor)
+    /**
+     * @var FormatValidator
+     */
+    private $validator;
+
+    public function __construct(DateFormatValidator $validator, BetweenDateValuesExtractor $values_extractor)
     {
-        $this->empty_string_checker = $empty_string_checker;
-        $this->values_extractor     = $values_extractor;
+        $this->validator        = $validator;
+        $this->values_extractor = $values_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
@@ -49,15 +46,7 @@ class DateFieldBetweenValueChecker implements InvalidFieldChecker
         $date_values = $this->values_extractor->extractBetweenValues($comparison->getValueWrapper(), $field);
 
         foreach ($date_values as $value) {
-            $date_value = DateTime::createFromFormat(DateFormat::DATE, $value);
-
-            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-                throw new DateToEmptyStringComparisonException($comparison, $field);
-            }
-
-            if ($date_value === false && $value !== '') {
-                throw new DateToStringComparisonException($field, $value);
-            }
+            $this->validator->checkValueIsValid($comparison, $field, $value);
         }
     }
 }
