@@ -21,8 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use DateTime;
 use DateHelper;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 
 class DateTimeValueRounder
 {
@@ -66,7 +65,7 @@ class DateTimeValueRounder
 
     private function floorDateTime($value)
     {
-        $date_value = DateTime::createFromFormat(DateTimeFieldChecker::DATETIME_FORMAT, $value);
+        $date_value = DateTime::createFromFormat(DateFormat::DATETIME, $value);
 
         if ($date_value === false) {
             return null;
@@ -78,7 +77,7 @@ class DateTimeValueRounder
 
     private function floorDate($value)
     {
-        $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
+        $date_value = DateTime::createFromFormat(DateFormat::DATE, $value);
 
         if ($date_value === false) {
             return null;

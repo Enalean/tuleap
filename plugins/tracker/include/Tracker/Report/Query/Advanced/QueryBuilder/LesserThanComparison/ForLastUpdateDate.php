@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparison
 
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -79,7 +80,7 @@ class ForLastUpdateDate implements FromWhereBuilder, ValueWrapperVisitor
      */
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+        return $value_wrapper->getValue()->format(DateFormat::DATETIME);
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)

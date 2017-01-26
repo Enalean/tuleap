@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
 use DateTime;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -47,10 +48,10 @@ class DateTimeFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrap
         $date_values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
 
         foreach ($date_values as $value) {
-            $date_value = DateTime::createFromFormat(DateTimeFieldChecker::DATETIME_FORMAT, $value);
+            $date_value = DateTime::createFromFormat(DateFormat::DATETIME, $value);
 
             if ($date_value === false) {
-                $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
+                $date_value = DateTime::createFromFormat(DateFormat::DATE, $value);
             }
 
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
@@ -67,7 +68,7 @@ class DateTimeFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrap
     {
         $current_date_time = $value_wrapper->getValue();
 
-        return $current_date_time->format(DateTimeFieldChecker::DATETIME_FORMAT);
+        return $current_date_time->format(DateFormat::DATETIME);
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)

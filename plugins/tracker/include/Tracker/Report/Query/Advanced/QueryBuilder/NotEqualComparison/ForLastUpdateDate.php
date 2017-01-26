@@ -85,7 +85,7 @@ class ForLastUpdateDate implements FromWhereBuilder, ValueWrapperVisitor
      */
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format(DateTimeFieldChecker::DATETIME_FORMAT);
+        return $value_wrapper->getValue()->format(DateFormat::DATETIME);
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
