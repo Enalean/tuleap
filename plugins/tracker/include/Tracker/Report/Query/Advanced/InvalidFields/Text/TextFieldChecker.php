@@ -17,55 +17,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text;
 
-use DateTime;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class DateFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
-    const DATE_FORMAT = "Y-m-d";
-
-    /**
-     * @var EmptyStringChecker
-     */
-    private $empty_string_checker;
-
-    public function __construct(EmptyStringChecker $empty_string_checker)
-    {
-        $this->empty_string_checker = $empty_string_checker;
-    }
-
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value      = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
-        $date_value = DateTime::createFromFormat(self::DATE_FORMAT, $value);
-
-        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new DateToEmptyStringComparisonException($comparison, $field);
-        }
-
-        if ($date_value === false && $value !== '') {
-            throw new DateToStringComparisonException($field, $value);
+        try {
+            $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        } catch (NowIsNotSupportedException $exception) {
+            throw new TextToNowComparisonException($field);
         }
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $current_date_time = $value_wrapper->getValue();
-
-        return $current_date_time->format(self::DATE_FORMAT);
+        throw new NowIsNotSupportedException();
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue();
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)

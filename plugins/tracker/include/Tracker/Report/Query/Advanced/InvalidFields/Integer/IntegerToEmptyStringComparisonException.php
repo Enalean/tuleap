@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 
 use RuntimeException;
 use Tracker_FormElement_Field;
@@ -31,8 +31,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class DateToEmptyStringComparisonException extends InvalidFieldException implements Visitor
+class IntegerToEmptyStringComparisonException extends InvalidFieldException implements Visitor
 {
     public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
     {
@@ -45,36 +46,36 @@ class DateToEmptyStringComparisonException extends InvalidFieldException impleme
 
     public function visitEqualComparison(EqualComparison $comparison, NoVisitorParameters $parameters)
     {
-        throw new RuntimeException('Date should be comparable = to an empty string');
+        throw new RuntimeException('Integer should be comparable = to an empty string');
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, NoVisitorParameters $parameters)
     {
-        throw new RuntimeException('Date should be comparable != to an empty string');
+        throw new RuntimeException('Integer should be comparable != to an empty string');
     }
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, NoVisitorParameters $parameters)
     {
-        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with < operator.");
+        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with < operator.");
     }
 
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, NoVisitorParameters $parameters)
     {
-        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with > operator.");
+        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with > operator.");
     }
 
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, NoVisitorParameters $parameters)
     {
-        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with <= operator.");
+        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with <= operator.");
     }
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, NoVisitorParameters $parameters)
     {
-        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with >= operator.");
+        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with >= operator.");
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, NoVisitorParameters $parameters)
     {
-        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with BETWEEN() operator.");
+        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with BETWEEN() operator.");
     }
 }

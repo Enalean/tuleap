@@ -38,7 +38,7 @@ class DateTimeFieldCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->date_field_checker = new DateTimeFieldChecker(new EmptyStringAllowed());
+        $this->date_field_checker = new Date\DateTimeFieldChecker(new EmptyStringAllowed());
         $this->field              = aDateFieldWithTime()->build();
         $this->comparison         = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
     }
@@ -54,10 +54,10 @@ class DateTimeFieldCheckerTest extends TuleapTestCase
 
     public function itThrowsWhenEmptyValueIsForbidden()
     {
-        $this->date_field_checker = new DateFieldChecker(new EmptyStringForbidden());
+        $this->date_field_checker = new Date\DateFieldChecker(new EmptyStringForbidden());
         $value_wrapper            = new SimpleValueWrapper('');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateToEmptyStringComparisonException');
+        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringComparisonException');
 
         $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
     }
@@ -84,7 +84,7 @@ class DateTimeFieldCheckerTest extends TuleapTestCase
     {
         $value_wrapper = new SimpleValueWrapper('ittérativisme');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
-        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateToStringComparisonException');
+        $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringComparisonException');
 
         $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
     }

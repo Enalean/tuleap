@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -26,8 +26,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class FloatFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     /**
      * @var EmptyStringChecker
@@ -42,21 +45,19 @@ class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         try {
-            $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+            $values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
         } catch (NowIsNotSupportedException $exception) {
-            throw new IntegerToNowComparisonException($field);
+            throw new FloatToNowComparisonException($field);
         }
 
-        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new IntegerToEmptyStringComparisonException($comparison, $field);
-        }
+        foreach ($values as $value) {
+            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+                throw new FloatToEmptyStringComparisonException($comparison, $field);
+            }
 
-        if (! is_numeric($value) && $value !== "") {
-            throw new IntegerToStringComparisonException($field, $value);
-        }
-
-        if (is_float($value + 0)) {
-            throw new IntegerToFloatComparisonException($field, $value);
+            if (! is_numeric($value)) {
+                throw new FloatToStringComparisonException($field, $value);
+            }
         }
     }
 
@@ -72,5 +73,10 @@ class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
+        $values = array();
+        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
+        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
+
+        return $values;
     }
 }

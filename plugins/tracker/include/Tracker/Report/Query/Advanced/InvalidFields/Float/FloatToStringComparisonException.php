@@ -17,18 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class FloatToNowComparisonException extends InvalidFieldException
+class FloatToStringComparisonException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field)
+    public function __construct(Tracker_FormElement_Field $field, $value)
     {
-        $message = sprintf(
-            dgettext("tuleap-tracker", "The float field '%s' cannot be compared to NOW()."),
-            $field->getName()
+        parent::__construct(
+            sprintf(
+                dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the string value '%s'."),
+                $field->getName(),
+                $value
+            )
         );
-        parent::__construct($message);
     }
 }
