@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2012-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -148,8 +148,7 @@ class Http_Client
     /**
      * Method to execute requests..
      *
-     * @param array $options curl options
-     * @throws Tracker_Exception
+     * @throws \Http_ClientException
      */
     public function doRequest() {
         $this->curl_response = $this->execute();

@@ -235,6 +235,14 @@ $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
 $errors = array();
 if ($request->isPost() && $request->exist('Register')) {
+    $is_registration_valid = true;
+    EventManager::instance()->processEvent(
+        Event::BEFORE_USER_REGISTRATION,
+        array(
+            'request'               => $request,
+            'is_registration_valid' => &$is_registration_valid
+        )
+    );
     $page                        = $request->get('page');
     $displayed_image             = true;
     $image_url                   = '';
@@ -245,7 +253,7 @@ if ($request->isPost() && $request->exist('Register')) {
     );
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
     $logo_retriever              = new LogoRetriever();
-    if ($new_userid = register_valid($mail_confirm_code, $errors)) {
+    if ($is_registration_valid && $new_userid = register_valid($mail_confirm_code, $errors)) {
         EventManager::instance()->processEvent(
             Event::AFTER_USER_REGISTRATION,
             array(

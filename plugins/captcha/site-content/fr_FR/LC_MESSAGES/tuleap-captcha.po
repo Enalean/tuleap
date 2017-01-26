@@ -6,3 +6,6 @@ msgstr "Ajoute un captcha aux opérations sensibles"
 
 msgid "Captcha"
 msgstr "Captcha"
+
+msgid "Captcha is not valid"
+msgstr "Le captcha n'est pas valide"
