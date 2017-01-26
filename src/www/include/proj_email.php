@@ -32,7 +32,7 @@ function send_new_user_email($to, $login, $confirm_hash) {
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
     $mail = new TuleapRegisterMail($presenter, $renderer, "mail");
-    $mail = $mail->getMail($login, '', $confirm_hash, $base_url, $GLOBALS['sys_noreply'], $to, "user");
+    $mail = $mail->getMail($login, $confirm_hash, $base_url, $GLOBALS['sys_noreply'], $to, "user");
     return $mail->send();
 }
 
