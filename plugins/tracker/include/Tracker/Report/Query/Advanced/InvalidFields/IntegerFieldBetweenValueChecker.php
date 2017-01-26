@@ -41,7 +41,11 @@ class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapp
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        try {
+            $values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        } catch (NowIsNotSupportedException $exception) {
+            throw new IntegerToNowComparisonException($field);
+        }
 
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
@@ -60,7 +64,7 @@ class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapp
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
+        throw new NowIsNotSupportedException();
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)

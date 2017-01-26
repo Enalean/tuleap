@@ -41,7 +41,11 @@ class FloatFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        try {
+            $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        } catch (NowIsNotSupportedException $exception) {
+            throw new FloatToNowComparisonException($field);
+        }
 
         if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
             throw new FloatToEmptyStringComparisonException($comparison, $field);
@@ -54,7 +58,7 @@ class FloatFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        return $value_wrapper->getValue()->format(DateFieldChecker::DATE_FORMAT);
+        throw new NowIsNotSupportedException();
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
