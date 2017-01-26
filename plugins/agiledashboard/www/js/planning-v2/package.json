@@ -3,10 +3,9 @@
   "name": "planning-v2",
   "version": "0.0.1",
   "homepage": "https://www.enalean.com",
-  "licenses": {
-    "type": "GNU General Public License v2"
-  },
+  "license": "GPL-2.0",
   "private": true,
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^2.13.1",
     "eslint-plugin-angular": "1.3.0",
@@ -16,13 +15,13 @@
     "grunt-contrib-concat": "^1.0.0",
     "grunt-contrib-connect": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^18.1.0",
     "grunt-html2js": "^0.3.5",
     "grunt-karma": "^0.12.1",
     "grunt-ng-annotate": "^2.0.1",
+    "grunt-sass": "2.0.0",
     "jasmine-core": "^2.3.4",
     "jit-grunt": "^0.10.0",
     "karma": "^0.13.15",
@@ -35,9 +34,9 @@
     "time-grunt": "^1.2.2"
   },
   "scripts": {
-    "build": "node_modules/.bin/grunt build",
-    "coverage": "node_modules/.bin/grunt coverage",
-    "test": "node_modules/.bin/grunt test",
-    "watch": "node_modules/.bin/grunt watch"
+    "build": "grunt build",
+    "coverage": "grunt coverage",
+    "test": "grunt test",
+    "watch": "grunt watch"
   }
 }
