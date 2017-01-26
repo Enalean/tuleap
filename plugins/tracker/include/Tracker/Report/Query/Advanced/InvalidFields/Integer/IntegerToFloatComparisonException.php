@@ -17,17 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class FloatToStringComparisonException extends InvalidFieldException
+class IntegerToFloatComparisonException extends InvalidFieldException
 {
     public function __construct(Tracker_FormElement_Field $field, $value)
     {
         parent::__construct(
             sprintf(
-                dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the string value '%s'."),
+                dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the float value '%s'."),
                 $field->getName(),
                 $value
             )

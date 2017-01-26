@@ -21,8 +21,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use DateTime;
 use DateHelper;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\DateTimeFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldChecker;
 
 class DateTimeValueRounder
 {

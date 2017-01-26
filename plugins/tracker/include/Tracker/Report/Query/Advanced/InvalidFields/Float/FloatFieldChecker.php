@@ -17,24 +17,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class FloatFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
+    /**
+     * @var EmptyStringChecker
+     */
+    private $empty_string_checker;
+
+    public function __construct(EmptyStringChecker $empty_string_checker)
+    {
+        $this->empty_string_checker = $empty_string_checker;
+    }
+
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         try {
-            $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+            $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
         } catch (NowIsNotSupportedException $exception) {
-            throw new TextToNowComparisonException($field);
+            throw new FloatToNowComparisonException($field);
+        }
+
+        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+            throw new FloatToEmptyStringComparisonException($comparison, $field);
+        }
+
+        if (! is_numeric($value) && $value !== "") {
+            throw new FloatToStringComparisonException($field, $value);
         }
     }
 
@@ -45,6 +66,7 @@ class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
+        return $value_wrapper->getValue();
     }
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)

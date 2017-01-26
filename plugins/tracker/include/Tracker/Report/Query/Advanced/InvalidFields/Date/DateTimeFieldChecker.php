@@ -17,8 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
+use DateTime;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -26,9 +27,13 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
-class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class DateTimeFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
+    const DATETIME_FORMAT = "Y-m-d H:i";
+
     /**
      * @var EmptyStringChecker
      */
@@ -41,30 +46,27 @@ class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapp
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        try {
-            $values = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
-        } catch (NowIsNotSupportedException $exception) {
-            throw new IntegerToNowComparisonException($field);
+        $value      = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        $date_value = DateTime::createFromFormat(self::DATETIME_FORMAT, $value);
+
+        if ($date_value === false) {
+            $date_value = DateTime::createFromFormat(DateFieldChecker::DATE_FORMAT, $value);
         }
 
-        foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-                throw new IntegerToEmptyStringComparisonException($comparison, $field);
-            }
+        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+            throw new DateToEmptyStringComparisonException($comparison, $field);
+        }
 
-            if (is_float($value + 0)) {
-                throw new IntegerToFloatComparisonException($field, $value);
-            }
-
-            if (! is_numeric($value)) {
-                throw new IntegerToStringComparisonException($field, $value);
-            }
+        if ($date_value === false && $value !== '') {
+            throw new DateToStringComparisonException($field, $value);
         }
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        throw new NowIsNotSupportedException();
+        $current_date_time = $value_wrapper->getValue();
+
+        return $current_date_time->format(self::DATETIME_FORMAT);
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -74,10 +76,5 @@ class IntegerFieldBetweenValueChecker implements InvalidFieldChecker, ValueWrapp
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $values = array();
-        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
-        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
-
-        return $values;
     }
 }

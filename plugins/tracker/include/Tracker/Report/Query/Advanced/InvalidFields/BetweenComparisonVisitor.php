@@ -43,6 +43,10 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldBetweenValueChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldBetweenValueChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldBetweenValueChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldBetweenValueChecker;
 
 class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {

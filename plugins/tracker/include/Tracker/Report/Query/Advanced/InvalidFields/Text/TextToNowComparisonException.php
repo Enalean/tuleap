@@ -17,20 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class DateToStringComparisonException extends InvalidFieldException
+class TextToNowComparisonException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field, $value)
+    public function __construct(Tracker_FormElement_Field $field)
     {
-        parent::__construct(
-            sprintf(
-                dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the string value '%s'."),
-                $field->getName(),
-                $value
-            )
+        $message = sprintf(
+            dgettext("tuleap-tracker", "The text field '%s' cannot be compared to NOW()."),
+            $field->getName()
         );
+        parent::__construct($message);
     }
 }
