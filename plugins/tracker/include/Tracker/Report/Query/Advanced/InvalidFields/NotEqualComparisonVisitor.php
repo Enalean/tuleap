@@ -43,8 +43,11 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateValueExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
@@ -68,12 +71,14 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
         if ($field->isTimeDisplayed() === true) {
-            return new DateTimeFieldChecker(
-                new EmptyStringAllowed()
+            return new DateFieldChecker(
+                new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+                new DateValueExtractor(DateFormat::DATETIME)
             );
         }
         return new DateFieldChecker(
-            new EmptyStringAllowed()
+            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATE),
+            new DateValueExtractor(DateFormat::DATE)
         );
     }
 
@@ -164,15 +169,17 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new DateTimeFieldChecker(
-            new EmptyStringAllowed()
+        return new DateFieldChecker(
+            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+            new DateValueExtractor(DateFormat::DATETIME)
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new DateTimeFieldChecker(
-            new EmptyStringAllowed()
+        return new DateFieldChecker(
+            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+            new DateValueExtractor(DateFormat::DATETIME)
         );
     }
 

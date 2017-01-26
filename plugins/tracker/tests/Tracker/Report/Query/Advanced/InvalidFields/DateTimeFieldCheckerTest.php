@@ -19,6 +19,10 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateValueExtractor;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
@@ -38,9 +42,12 @@ class DateTimeFieldCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->date_field_checker = new Date\DateTimeFieldChecker(new EmptyStringAllowed());
-        $this->field              = aDateFieldWithTime()->build();
-        $this->comparison         = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
+        $this->date_field_checker = new DateFieldChecker(
+            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
+            new DateValueExtractor(DateFormat::DATETIME)
+        );
+        $this->field      = aDateFieldWithTime()->build();
+        $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
     }
 
     public function itDoesNotThrowWhenEmptyValueIsAllowed()
@@ -54,8 +61,11 @@ class DateTimeFieldCheckerTest extends TuleapTestCase
 
     public function itThrowsWhenEmptyValueIsForbidden()
     {
-        $this->date_field_checker = new Date\DateFieldChecker(new EmptyStringForbidden());
-        $value_wrapper            = new SimpleValueWrapper('');
+        $this->date_field_checker = new DateFieldChecker(
+            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+            new DateValueExtractor(DateFormat::DATETIME)
+        );
+        $value_wrapper = new SimpleValueWrapper('');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringComparisonException');
 
