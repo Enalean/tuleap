@@ -43,6 +43,8 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\BetweenDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldBetweenValueChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldBetweenValueChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldBetweenValueChecker;
@@ -70,11 +72,13 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
     {
         if ($field->isTimeDisplayed() === true) {
             return new DateTimeFieldBetweenValueChecker(
-                new EmptyStringForbidden()
+                new EmptyStringForbidden(),
+                new BetweenDateValuesExtractor(DateFormat::DATETIME)
             );
         }
         return new DateFieldBetweenValueChecker(
-            new EmptyStringForbidden()
+            new EmptyStringForbidden(),
+            new BetweenDateValuesExtractor(DateFormat::DATE)
         );
     }
 
@@ -166,14 +170,16 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPro
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
         return new DateTimeFieldBetweenValueChecker(
-            new EmptyStringForbidden()
+            new EmptyStringForbidden(),
+            new BetweenDateValuesExtractor(DateFormat::DATETIME)
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
         return new DateTimeFieldBetweenValueChecker(
-            new EmptyStringForbidden()
+            new EmptyStringForbidden(),
+            new BetweenDateValuesExtractor(DateFormat::DATETIME)
         );
     }
 
