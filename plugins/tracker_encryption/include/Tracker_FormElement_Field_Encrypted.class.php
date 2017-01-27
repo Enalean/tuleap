@@ -18,27 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field_String
+use Tuleap\TrackerEncryption\ChangesetValue;
+use Tuleap\TrackerEncryption\Dao\ValueDao;
+
+class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
 {
 
     /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values=array())
+    protected function fetchSubmitValue($submitted_values = array())
     {
-        $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
-        $html_purifier    = Codendi_HTMLPurifier::instance();
-        $html .= '<div class="input-append">
-                      <input type="password" autocomplete="off" id="password_'. $this->id .'" class="form-control" name="artifact['. $this->id .']" size="'. $this->getProperty('size') .'"
-                     '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'value= "'.  $html_purifier->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />
-                     <button class="btn" type="button" id="show_password_'. $this->id .'">
-                         <span id="show_password_icon_'. $this->id .'" class="icon-eye-close"></span>
-                     </button>
-                  </div>';
+
+        $html  = '<div class="input-append">';
+        $html .= $this->fetchInput($value, 'password');
+        $html .= $this->fetchButton();
+        $html  .= '</div>';
+
+        return $html;
+    }
+
+    /**
+     * @return string html
+     */
+    private function fetchButton()
+    {
+        $html = '<button class="btn" type="button" id="show_password_'. $this->id .'">
+                     <span id="show_password_icon_'. $this->id .'" class="icon-eye-close"></span>
+                 </button>';
 
         $html .= '<script type="text/javascript">
                       (function($) {
@@ -56,26 +64,16 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field_Stri
                           })
                       }(jQuery));
                   </script>';
+
         return $html;
     }
 
     /**
-     * Display the html field in the admin ui
      * @return string html
      */
     protected function fetchAdminFormElement()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $value = '';
-        if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $html .= '<input id="password" class="form-control" type="text"
-                         size="'. $this->getProperty('size') .'"
-                         '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
-                         value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'" autocomplete="off"/>';
-        return $html;
+        return $this->fetchSubmitValue(array());
     }
 
     /**
@@ -112,10 +110,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field_Stri
 
     protected function validate(Tracker_Artifact $artifact, $value)
     {
-        $dao_pub_key        = new TrackerPublicKeyDao();
-        $tracker_key        = new Tracker_Key($dao_pub_key, $artifact->tracker_id);
-        $key                = $tracker_key->getKey();
-        $maximum_characters_allowed = $tracker_key->getFieldSize($key);
+        $maximum_characters_allowed = $this->getMaxSizeAllowed();
         if ($maximum_characters_allowed !== 0 && mb_strlen($value) > $maximum_characters_allowed) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -128,6 +123,15 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field_Stri
             return false;
         }
         return true;
+    }
+
+    private function getMaxSizeAllowed()
+    {
+        $dao_pub_key        = new TrackerPublicKeyDao();
+        $tracker_key        = new Tracker_Key($dao_pub_key, $this->getTrackerId());
+        $key                = $tracker_key->getKey();
+
+        return $tracker_key->getFieldSize($key);
     }
 
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
@@ -144,5 +148,242 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field_Stri
         } else {
             return $this->getValueDao()->create($changeset_value_id, $value);
         }
+    }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
+        return $visitor->visitExternalField($this);
+    }
+
+    public function getSOAPAvailableValues()
+    {
+    }
+
+    /**
+     * @param Tracker_ReportCriteria $criteria
+     *
+     * @return string
+     * @see fetchCriteria
+     */
+    public function fetchCriteriaValue($criteria)
+    {
+        return '';
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public function fetchRawValue($value)
+    {
+        return '';
+    }
+
+    /**
+     * @param Tracker_ReportCriteria $criteria
+     *
+     * @return string
+     */
+    public function getCriteriaFrom($criteria)
+    {
+        return '';
+    }
+
+    public function getQueryFrom()
+    {
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
+
+        return "LEFT JOIN ( tracker_changeset_value AS $R1
+                    INNER JOIN tracker_changeset_value_encrypted AS $R2 ON ($R2.changeset_value_id = $R1.id)
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
+    }
+
+    public function getQuerySelect()
+    {
+        $R2 = 'R2_' . $this->id;
+
+        return "$R2.value AS `" . $this->name . "`";
+    }
+
+    /**
+     * @param Tracker_ReportCriteria $criteria
+     *
+     * @return string
+     * @see getCriteriaFrom
+     */
+    public function getCriteriaWhere($criteria)
+    {
+        return '';
+    }
+
+    protected function getCriteriaDao()
+    {
+    }
+
+    /**
+     * @return string
+     */
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        $html = '';
+        if (! empty($submitted_values)
+            && is_array($submitted_values[0])
+            && isset($submitted_values[0][$this->getId()])
+            && $submitted_values[0][$this->getId()] !== false
+        ) {
+            $value = $submitted_values[0][$this->getId()];
+        } else {
+            if ($value != null) {
+                $value = $value->getValue();
+            }
+        }
+        $html .= $this->fetchEditInput($value);
+
+        return $html;
+    }
+
+    /**
+     * @return string
+     */
+    public function fetchArtifactValueReadOnly(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null
+    ) {
+        if (isset($value) === false || $value->getValue() === '') {
+            return $this->getNoValueLabel();
+        }
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return $purifier->purify($value->getValue());
+    }
+
+    protected function getHiddenArtifactValueForEdition(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
+            $this->fetchArtifactValue($artifact, $value, $submitted_values) . '</div>';
+    }
+
+    private function fetchInput($value, $field_type)
+    {
+        $html_purifier = Codendi_HTMLPurifier::instance();
+
+        return '<input
+            type="' . $field_type . '"
+            autocomplete="off"
+            id="password_' . $this->id . '"
+            class="form-control"
+            name="artifact[' . $this->id . ']"
+            maxlength="' . $this->getMaxSizeAllowed() . '"
+            value= "' . $html_purifier->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" />';
+    }
+
+    private function fetchEditInput($value)
+    {
+        return $this->fetchInput($value, 'text');
+    }
+
+    protected function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        return "<div class='tracker-form-element-encrypted'>" . $this->fetchArtifactValueReadOnly($artifact, $value) . "</div>" .
+            $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
+    }
+
+    /**
+     * @return string html
+     */
+    protected function fetchSubmitValueMasschange()
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
+    {
+        return '';
+    }
+
+    protected function getValueDao()
+    {
+        return new ValueDao();
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @param array $from
+     * @param array $to
+     *
+     * @return string
+     */
+    public function fetchFollowUp($artifact, $from, $to)
+    {
+        return '';
+    }
+
+    /**
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return string
+     */
+    public function fetchRawValueFromChangeset($changeset)
+    {
+        return '';
+    }
+
+    /**
+     * @param Tracker_Artifact_Changeset $changeset
+     * @param int $value_id
+     * @param boolean $has_changed
+     *
+     * @return Tracker_Artifact_ChangesetValue | null
+     */
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
+        $changeset_value = null;
+        if ($row = $this->getValueDao()->searchById($value_id)->getRow()) {
+            $changeset_value = new ChangesetValue($value_id, $changeset, $this, $has_changed, $row['value']);
+        }
+
+        return $changeset_value;
+    }
+
+    /**
+     * @param int $artifact_id
+     * @param int $changeset_id
+     * @param mixed $value
+     * @param int $report_id
+     *
+     * @return string
+     */
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
+    {
+        return $value;
+    }
+
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+    }
+
+    public function canBeUsedAsReportCriterion()
+    {
+        return false;
+    }
+
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    {
+        return $old_value->getValue() !== $new_value;
     }
 }

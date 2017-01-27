@@ -212,4 +212,9 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
     {
         throw new UnsupportedFieldException();
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        throw new UnsupportedFieldException();
+    }
 }

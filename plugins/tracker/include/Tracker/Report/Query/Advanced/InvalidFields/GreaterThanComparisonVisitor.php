@@ -187,4 +187,9 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, 
     {
         throw new FieldIsNotSupportedAtAllException($field);
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        throw new FieldIsNotSupportedAtAllException($field);
+    }
 }

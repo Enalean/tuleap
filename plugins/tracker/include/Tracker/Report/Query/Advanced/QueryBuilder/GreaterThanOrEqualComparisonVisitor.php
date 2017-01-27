@@ -175,4 +175,9 @@ class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVi
     {
         return null;
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $field)
+    {
+        return null;
+    }
 }

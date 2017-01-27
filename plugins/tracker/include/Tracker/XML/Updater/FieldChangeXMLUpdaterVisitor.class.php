@@ -194,4 +194,9 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
     {
         return $this->computed_updater;
     }
+
+    public function visitExternalField(Tracker_FormElement_Field $element)
+    {
+        return $this->unknown_updater;
+    }
 }
