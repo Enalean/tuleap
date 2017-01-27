@@ -88,12 +88,12 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvi
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new FloatFieldChecker(new EmptyStringAllowed());
+        return new FloatFieldChecker(new EmptyStringAllowed(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldChecker(new EmptyStringAllowed());
+        return new IntegerFieldChecker(new EmptyStringAllowed(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)

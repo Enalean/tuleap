@@ -46,7 +46,6 @@ use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
@@ -90,12 +89,12 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new FloatFieldChecker(new EmptyStringForbidden());
+        return new FloatFieldChecker(new EmptyStringForbidden(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new IntegerFieldChecker(new EmptyStringForbidden());
+        return new IntegerFieldChecker(new EmptyStringForbidden(), new CollectionOfAlphaNumericValuesExtractor());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)

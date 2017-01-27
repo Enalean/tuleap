@@ -26,54 +26,51 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfAlphaNumericValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class IntegerFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class IntegerFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var EmptyStringChecker
      */
     private $empty_string_checker;
 
-    public function __construct(EmptyStringChecker $empty_string_checker)
-    {
+    /**
+     * @var CollectionOfAlphaNumericValuesExtractor
+     */
+    private $values_extractor;
+
+    public function __construct(
+        EmptyStringChecker $empty_string_checker,
+        CollectionOfAlphaNumericValuesExtractor $values_extractor
+    ) {
         $this->empty_string_checker = $empty_string_checker;
+        $this->values_extractor = $values_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         try {
-            $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+            $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         } catch (NowIsNotSupportedException $exception) {
             throw new IntegerToNowComparisonException($field);
         }
 
-        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new IntegerToEmptyStringComparisonException($comparison, $field);
+        foreach ($values as $value) {
+            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+                throw new IntegerToEmptyStringComparisonException($comparison, $field);
+            }
+
+            if (is_float($value + 0)) {
+                throw new IntegerToFloatComparisonException($field, $value);
+            }
+
+            if (! is_numeric($value) && $value !== "") {
+                throw new IntegerToStringComparisonException($field, $value);
+            }
         }
-
-        if (! is_numeric($value) && $value !== "") {
-            throw new IntegerToStringComparisonException($field, $value);
-        }
-
-        if (is_float($value + 0)) {
-            throw new IntegerToFloatComparisonException($field, $value);
-        }
-    }
-
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        throw new NowIsNotSupportedException();
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
     }
 }
