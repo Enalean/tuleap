@@ -60,9 +60,11 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return new LesserThanOrEqualComparison\ForDateTime(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldBuilder()
+        return new DateTimeFromWhereBuilder(
+            new FromWhereComparisonFieldBuilder(),
+            new LesserThanOrEqualComparison\ForDateTime(
+                new DateTimeValueRounder()
+            )
         );
     }
 
