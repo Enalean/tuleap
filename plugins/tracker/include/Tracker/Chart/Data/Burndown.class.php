@@ -155,11 +155,19 @@ class Tracker_Chart_Data_Burndown
             return array();
         }
 
-        return array_filter($this->getRemainingEffort(), array($this, 'isValueNotNull'));
+        return $this->removeNullRemainingEffort($this->getRemainingEffort());
     }
 
-    private function isValueNotNull($value) {
-        return $value !== null;
+    private function removeNullRemainingEffort($remaining_efforts) {
+        $remaining_effort_without_null_values = array();
+
+        foreach ($remaining_efforts as $remaining_effort) {
+            if ($remaining_effort !== null) {
+                $remaining_effort_without_null_values[] = $remaining_effort;
+            }
+        }
+
+        return $remaining_effort_without_null_values;
     }
 
     private function getIdealEffortAtDay($i, $start_effort) {
