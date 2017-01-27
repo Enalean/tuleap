@@ -68,4 +68,15 @@ class ForumDao extends DataAccessObject {
                 LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
+
+    public function updatePublicForumToPrivate($group_id)
+    {
+        $group_id = $this->da->escapeInt($group_id);
+        $sql = "UPDATE forum_group_list
+                SET is_public = 0
+                WHERE group_id = $group_id
+                AND is_public = 1";
+
+        return $this->update($sql);
+    }
 }

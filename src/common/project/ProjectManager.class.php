@@ -474,6 +474,9 @@ class ProjectManager {
         ));
 
         $this->getFrsPermissionsCreator()->updateProjectAccess($project, $old_access, $access_level);
+        if ($access_level == Project::ACCESS_PRIVATE) {
+            $this->updateForumVisibilityToPrivate($project_id);
+        }
     }
 
     private function getFrsPermissionsCreator()
@@ -897,6 +900,12 @@ class ProjectManager {
         }
         $dar->freeMemory();
         return $result;
+    }
+
+    private function updateForumVisibilityToPrivate($group_id)
+    {
+            $forum_dao = new ForumDao(CodendiDataAccess::instance());
+            return $forum_dao->updatePublicForumToPrivate($group_id);
     }
 }
 
