@@ -19,58 +19,32 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
-use DateTime;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 
-class DateFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class DateFieldChecker implements InvalidFieldChecker
 {
-    const DATE_FORMAT = "Y-m-d";
+    /**
+     * @var DateValueExtractor
+     */
+    private $value_extractor;
 
     /**
-     * @var EmptyStringChecker
+     * @var DateFormatValidator
      */
-    private $empty_string_checker;
+    private $validator;
 
-    public function __construct(EmptyStringChecker $empty_string_checker)
+    public function __construct(DateFormatValidator $validator, DateValueExtractor $value_extractor)
     {
-        $this->empty_string_checker = $empty_string_checker;
+        $this->validator       = $validator;
+        $this->value_extractor = $value_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value      = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
-        $date_value = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+        $value = $this->value_extractor->extractValue($comparison->getValueWrapper(), $field);
 
-        if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
-            throw new DateToEmptyStringComparisonException($comparison, $field);
-        }
-
-        if ($date_value === false && $value !== '') {
-            throw new DateToStringComparisonException($field, $value);
-        }
-    }
-
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        $current_date_time = $value_wrapper->getValue();
-
-        return $current_date_time->format(self::DATE_FORMAT);
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
+        $this->validator->checkValueIsValid($comparison, $field, $value);
     }
 }

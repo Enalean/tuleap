@@ -20,7 +20,11 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateValueExtractor;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
@@ -39,7 +43,10 @@ class DateFieldCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->date_field_checker = new Date\DateFieldChecker(new EmptyStringAllowed());
+        $this->date_field_checker = new DateFieldChecker(
+            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATE),
+            new DateValueExtractor(DateFormat::DATE)
+        );
         $this->field              = aMockDateWithoutTimeField()->build();
         $this->comparison         = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
     }
@@ -55,8 +62,11 @@ class DateFieldCheckerTest extends TuleapTestCase
 
     public function itThrowsWhenEmptyValueIsForbidden()
     {
-        $this->date_field_checker = new Date\DateFieldChecker(new EmptyStringForbidden());
-        $value_wrapper            = new SimpleValueWrapper('');
+        $this->date_field_checker = new DateFieldChecker(
+            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATE),
+            new DateValueExtractor(DateFormat::DATE)
+        );
+        $value_wrapper = new SimpleValueWrapper('');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringComparisonException');
 
