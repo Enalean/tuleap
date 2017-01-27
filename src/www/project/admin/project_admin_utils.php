@@ -1,16 +1,31 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
+/**
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright Enalean (c) 2017. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*
+use Tuleap\project\Admin\ProjectVisibilityUserConfigurationPermissions;
 
-	Standard header to be used on all /project/admin/* pages
-
-*/
 require_once('common/dao/ProjectHistoryDao.class.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
@@ -23,13 +38,19 @@ function project_admin_header($params) {
     $params['group']=$group_id;
     site_project_header($params);
 
+    $user_configuration_permissions = new ProjectVisibilityUserConfigurationPermissions();
+    $user                           = UserManager::instance()->getCurrentUser();
+    $project                        = ProjectManager::instance()->getProject($group_id);
+
     echo '
-	<P><TABLE width="100%"><TR>';
+    <P><TABLE width="100%"><TR>';
     echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
-	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
-	<A HREF="/project/admin/project_visibility.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_project_visibility').'</A> |
-	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
-	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
+    <A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> | ';
+    if ($user_configuration_permissions->canUserConfigureSomething($user, $project)) {
+        echo '<A HREF="/project/admin/project_visibility.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_project_visibility').'</A> | ';
+    }
+    echo '<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> | ';
+    echo '<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
 
     $em = EventManager::instance();
     $em->processEvent('admin_toolbar_configuration', array('group_id' => $group_id));
@@ -40,22 +61,20 @@ function project_admin_header($params) {
     }
     echo '</td></tr>';
     echo '</td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_permissions').'</b></td><td><b>
-	<A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> |
-	<A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> |
-	<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','permission_request').'</A>';
+    <A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> |
+    <A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> |
+    <A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','permission_request').'</A>';
     echo '</td><td></td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_data').'</b></td><td><b>
-	<A HREF="/project/export/index.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','project_data_export').'</A> |
-	<A HREF="/tracker/import_admin.php?group_id='.$group_id.'&mode=admin">'.$Language->getText('project_admin_utils','tracker_import').'</A> |
-	<A HREF="/project/admin/history.php?group_id='.$group_id.'">'.$Language->getText('project_admin_history','proj_history').'</A> |
+    <A HREF="/project/export/index.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','project_data_export').'</A> |
+    <A HREF="/tracker/import_admin.php?group_id='.$group_id.'&mode=admin">'.$Language->getText('project_admin_utils','tracker_import').'</A> |
+    <A HREF="/project/admin/history.php?group_id='.$group_id.'">'.$Language->getText('project_admin_history','proj_history').'</A> |
     <A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','access_logs').'</A>';
     //Call hook that can be displayed in this area
     $em->processEvent('admin_toolbar_data', array('group_id' => $group_id));
 
-    //<A HREF="/project/admin/?group_id='.$group_id.'&func=import">Tracker Import</A>
-
     echo '</td><td></td></tr></table>';
     echo '</B>
-	<P>';
+    <P>';
 }
 
 /*

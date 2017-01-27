@@ -82,14 +82,17 @@ class ProjectVisibilityController
             )
         );
 
+        if ($this->project_visibility_configuration->canUserConfigureSomething($current_user, $project) === false) {
+            $GLOBALS['Response']->redirect(
+                '/project/admin/?' .
+                http_build_query(array('group_id' => $request->getProject()->getid()))
+            );
+        }
+
         $presenter = new ProjectGlobalVisibilityPresenter(
             $project,
             $visibility_presenter,
-            $truncated_presenter,
-            $this->project_visibility_configuration->canUserConfigureSomething(
-                $current_user,
-                $project
-            )
+            $truncated_presenter
         );
 
         $this->displayHeader($project);

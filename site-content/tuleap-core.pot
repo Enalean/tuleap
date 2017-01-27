@@ -96,6 +96,3 @@ msgstr ""
 
 msgid "Update successful"
 msgstr ""
-
-msgid "Project administrators are not allowed to configure anything here"
-msgstr ""
