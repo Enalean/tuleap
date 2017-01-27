@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\TrackerEncryption\Dao\ValueDao;
+
 require_once 'autoload.php';
 require_once 'constants.php';
 
@@ -78,25 +80,35 @@ class tracker_encryptionPlugin extends Plugin
 
     public function tracker_encryption_add_key($params)
     {
-        $logger = new BackendLogger();
+        $logger      = new BackendLogger();
         $dao_pub_key = new TrackerPublicKeyDao();
-        $tracker_key = new Tracker_Key($dao_pub_key, $params['tracker_id'], $params['key']);
+        $value_dao   = new ValueDao();
+        $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $params['tracker_id'], $params['key']);
         if ($params['key'] == "" || $tracker_key->isValidPublicKey($params['key'])) {
             $tracker_key->associateKeyToTracker();
             $tracker = TrackerFactory::instance()->getTrackerById($params['tracker_id']);
             $tracker_key->historizeKey($tracker->getGroupId());
             $tracker_key->resetEncryptedFieldValues($params['tracker_id']);
-            $logger->info("[Tracker Encryption] A new public key has been set for the tracker[".$params['tracker_id']."].");
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated'));
+            $logger->info(
+                "[Tracker Encryption] A new public key has been set for the tracker[" . $params['tracker_id'] . "]."
+            );
+            $GLOBALS['Response']->addFeedback(
+                'info',
+                $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated')
+            );
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_encryption', 'public_key_error'));
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_tracker_encryption', 'public_key_error')
+            );
         }
     }
 
     public function tracker_event_delete_tracker($params)
     {
         $dao_pub_key = new TrackerPublicKeyDao();
-        $tracker_key = new Tracker_Key($dao_pub_key, $params['tracker_id'], $params['key']);
+        $value_dao   = new ValueDao();
+        $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $params['tracker_id'], $params['key']);
         $tracker_key->deleteTrackerKey($params['tracker_id']);
     }
 

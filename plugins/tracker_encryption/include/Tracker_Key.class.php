@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +18,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\TrackerEncryption\Dao\ValueDao;
+
 require_once '/usr/share/pear/Crypt/RSA.php';
 
 class Tracker_Key
 {
     private $key;
     private $id_tracker;
+
+    /**
+     * @var TrackerPublicKeyDao
+     */
     private $dao_pub_key;
 
-    public function __construct(TrackerPublicKeyDao $dao_pub_key, $id_tracker, $key = "")
+    /**
+     * @var ValueDao
+     */
+    private $value_dao;
+
+    public function __construct(TrackerPublicKeyDao $dao_pub_key, ValueDao $value_dao, $id_tracker, $key = "")
     {
         $this->dao_pub_key = $dao_pub_key;
-        $this->id_tracker = $id_tracker;
-        $this->key = $key;
+        $this->id_tracker  = $id_tracker;
+        $this->key         = $key;
+        $this->value_dao   = $value_dao;
     }
 
     public function getKey()
@@ -81,7 +94,7 @@ class Tracker_Key
 
     public function resetEncryptedFieldValues($tracker_id)
     {
-        $this->dao_pub_key->resetEncryptedFieldValues($tracker_id);
+        $this->value_dao->resetEncryptedFieldValues($tracker_id);
     }
 
     /**
