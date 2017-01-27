@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
-class DateValueExtractor implements ValueWrapperVisitor
+class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 {
     /**
      * @var string
@@ -39,9 +39,10 @@ class DateValueExtractor implements ValueWrapperVisitor
         $this->date_format = $date_format;
     }
 
-    public function extractValue(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
+    /** @return array */
+    public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
     {
-        return $value_wrapper->accept($this, new ValueWrapperParameters($field));
+        return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -58,5 +59,10 @@ class DateValueExtractor implements ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
+        $values   = array();
+        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
+        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
+
+        return $values;
     }
 }
