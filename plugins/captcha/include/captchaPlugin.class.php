@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Captcha\ConfigurationRetriever;
+use Tuleap\Captcha\DataAccessObject;
 use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
 
@@ -52,21 +54,21 @@ class captchaPlugin extends Plugin
 
     public function loadJavascriptFiles()
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
             echo '<script src="https://www.google.com/recaptcha/api.js" async></script>';
         }
     }
 
     public function loadCSSFiles()
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
         }
     }
 
     public function addExternalScriptToTheWhitelist(array $params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
             $params['whitelist_scripts'][] = 'https://www.google.com/recaptcha/';
             $params['whitelist_scripts'][] = 'https://www.gstatic.com/recaptcha/';
         }
@@ -76,8 +78,13 @@ class captchaPlugin extends Plugin
     {
         $request = $params['request'];
         if (! $request->getCurrentUser()->isSuperUser()) {
-            $test_site_key    = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
-            $presenter        = new Presenter($test_site_key);
+            try {
+                $configuration = $this->getConfiguration();
+            } catch (\Tuleap\Captcha\ConfigurationNotFoundException $ex) {
+                return;
+            }
+            $site_key         = $configuration->getSiteKey();
+            $presenter        = new Presenter($site_key);
             $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
             $params['field'] .= $renderer->renderToString('user-registration', $presenter);
         }
@@ -85,12 +92,17 @@ class captchaPlugin extends Plugin
 
     public function checkCaptchaBeforeSubmission(array $params)
     {
-        $test_secret_key = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
-        $request         = $params['request'];
-        $challenge       = $request->get('g-recaptcha-response');
-        $http_client     = new Http_Client();
+        try {
+            $configuration = $this->getConfiguration();
+        } catch (\Tuleap\Captcha\ConfigurationNotFoundException $ex) {
+            return;
+        }
+        $secret_key  = $configuration->getSecretKey();
+        $request     = $params['request'];
+        $challenge   = $request->get('g-recaptcha-response');
+        $http_client = new Http_Client();
 
-        $recaptcha_client = new \Tuleap\Captcha\Client($test_secret_key, $http_client);
+        $recaptcha_client = new \Tuleap\Captcha\Client($secret_key, $http_client);
         $is_captcha_valid = $recaptcha_client->verify($challenge, $request->getIPAddress());
 
         if (! $is_captcha_valid) {
@@ -100,5 +112,29 @@ class captchaPlugin extends Plugin
             );
             $params['is_registration_valid'] = false;
         }
+    }
+
+    /**
+     * @return \Tuleap\Captcha\Configuration
+     * @throws \Tuleap\Captcha\ConfigurationNotFoundException
+     */
+    private function getConfiguration()
+    {
+        $configuration_retriever = new ConfigurationRetriever(new DataAccessObject());
+        return $configuration_retriever->retrieve();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isConfigured()
+    {
+        try {
+            $this->getConfiguration();
+        } catch (\Tuleap\Captcha\ConfigurationNotFoundException $ex) {
+            return false;
+        }
+
+        return true;
     }
 }
