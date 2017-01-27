@@ -128,7 +128,8 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
     private function getMaxSizeAllowed()
     {
         $dao_pub_key        = new TrackerPublicKeyDao();
-        $tracker_key        = new Tracker_Key($dao_pub_key, $this->getTrackerId());
+        $value_dao          = new ValueDao();
+        $tracker_key        = new Tracker_Key($dao_pub_key, $value_dao, $this->getTrackerId());
         $key                = $tracker_key->getKey();
 
         return $tracker_key->getFieldSize($key);
@@ -138,7 +139,8 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
     {
         if ($value != "") {
             $dao_pub_key        = new TrackerPublicKeyDao();
-            $tracker_key        = new Tracker_Key($dao_pub_key, $artifact->tracker_id);
+            $value_dao          = new ValueDao();
+            $tracker_key        = new Tracker_Key($dao_pub_key, $value_dao, $artifact->tracker_id);
             try {
                 $encryption_manager = new Encryption_Manager($tracker_key);
                 return $this->getValueDao()->create($changeset_value_id, $encryption_manager->encrypt($value));
