@@ -1,22 +1,22 @@
-@import "../../vendor/angular-ui-tree/dist/angular-ui-tree";
-@import "../../vendor/artifact-modal/dist/assets/tuleap-artifact-modal";
-@import "../../vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker";
-@import "../../vendor/angular-ui-select/dist/select";
-@import "../../vendor/ng-scrollbar/dist/ng-scrollbar";
-@import "../../vendor/dragular/dist/dragular";
-@import "animate.min";
-@import "../../../../../../../src/www/themes/common/css/utils/colors";
+@import '../../vendor/angular-ui-tree/dist/angular-ui-tree.min';
+@import '../../vendor/artifact-modal/dist/assets/tuleap-artifact-modal';
+@import '../../vendor/angular-bootstrap-datetimepicker/src/scss/datetimepicker';
+@import '../../vendor/angular-ui-select/dist/select';
+@import '../../vendor/ng-scrollbar/dist/ng-scrollbar';
+@import '../../vendor/dragular/dist/dragular';
+@import '../../vendor/animate.css/animate';
+@import '../../../../../../../src/www/themes/common/css/utils/colors';
 
 $kanban-column-header-height: 48px;
 $kanban-column-footer-height: 48px;
 
-@import "error/error";
-@import "edit-kanban/edit-kanban";
-@import "kanban-item/kanban-item";
-@import "highlight-filter/highlight";
-@import "reports-modal/reports-modal";
-@import "socket/socket";
-@import "reports-modal/diagram";
+@import 'error/error';
+@import 'edit-kanban/edit-kanban';
+@import 'kanban-item/kanban-item';
+@import 'highlight-filter/highlight';
+@import 'reports-modal/reports-modal';
+@import 'socket/socket';
+@import 'reports-modal/diagram';
 
 @-webkit-keyframes loading-header {
     0%, 50%, 100% {

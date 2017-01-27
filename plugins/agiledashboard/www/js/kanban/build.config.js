@@ -9,7 +9,6 @@ module.exports = {
      */
     build_dir  : 'build',
     compile_dir: 'bin',
-    vendor_dir : 'vendor',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -49,8 +48,6 @@ module.exports = {
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
-
-        html: ['src/index.html'],
         scss: 'src/app/kanban.scss'
     },
 
@@ -64,9 +61,6 @@ module.exports = {
      *
      * The `vendor_files.js` property holds files to be automatically
      * concatenated and minified with our project source files.
-     *
-     * The `vendor_files.css` property holds any CSS files to be automatically
-     * included in our app.
      */
     vendor_files: {
         js: [
@@ -96,14 +90,6 @@ module.exports = {
             'vendor/dragular/dist/dragular.js',
             'vendor/angular-jwt/dist/angular-jwt.min.js',
             'vendor/striptagsjs/striptags.js'
-        ],
-        css: [
-            'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
-            'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
-            'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
-            'vendor/angular-ui-select/dist/select.css',
-            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css',
-            'vendor/dragular/dist/dragular.css'
         ],
         assets: [
             'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',

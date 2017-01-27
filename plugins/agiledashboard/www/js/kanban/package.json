@@ -3,10 +3,9 @@
   "name": "kanban",
   "version": "0.0.1",
   "homepage": "https://www.enalean.com",
-  "licenses": {
-    "type": "MIT"
-  },
+  "license": "MIT",
   "private": true,
+  "dependencies": {},
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-angular-gettext": "^2.1.14",
@@ -15,12 +14,12 @@
     "grunt-contrib-connect": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-html2js": "^0.3.5",
     "grunt-karma": "^0.12.1",
     "grunt-ng-annotate": "^2.0.1",
+    "grunt-sass": "2.0.0",
     "jasmine-core": "^2.3.4",
     "jit-grunt": "^0.10.0",
     "karma": "^0.13.15",
@@ -33,9 +32,9 @@
     "time-grunt": "^1.2.2"
   },
   "scripts": {
-    "build": "node_modules/.bin/grunt build",
-    "coverage": "node_modules/.bin/grunt coverage",
-    "test": "node_modules/.bin/grunt test",
-    "watch": "node_modules/.bin/grunt watch"
+    "build": "grunt build",
+    "coverage": "grunt coverage",
+    "test": "grunt test",
+    "watch": "grunt watch"
   }
 }
