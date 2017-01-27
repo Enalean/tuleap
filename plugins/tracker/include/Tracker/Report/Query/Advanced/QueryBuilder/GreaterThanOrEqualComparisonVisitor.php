@@ -60,9 +60,11 @@ class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVi
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return new GreaterThanOrEqualComparison\ForDateTime(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldBuilder()
+        return new DateTimeFromWhereBuilder(
+            new FromWhereComparisonFieldBuilder(),
+            new GreaterThanOrEqualComparison\ForDateTime(
+                new DateTimeValueRounder()
+            )
         );
     }
 

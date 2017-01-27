@@ -71,12 +71,12 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
     {
         if ($field->isTimeDisplayed() === true) {
             return new DateFieldChecker(
-                new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+                new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
                 new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
             );
         }
         return new DateFieldChecker(
-            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATE),
+            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATE),
             new CollectionOfDateValuesExtractor(DateFormat::DATE)
         );
     }
@@ -169,7 +169,7 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
         return new DateFieldChecker(
-            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
             new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
         );
     }
@@ -177,7 +177,7 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
         return new DateFieldChecker(
-            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+            new DateFormatValidator(new EmptyStringAllowed(), DateFormat::DATETIME),
             new CollectionOfDateValuesExtractor(DateFormat::DATETIME)
         );
     }

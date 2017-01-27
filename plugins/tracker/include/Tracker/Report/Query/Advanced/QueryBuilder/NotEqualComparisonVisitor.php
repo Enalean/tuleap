@@ -61,9 +61,11 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return new NotEqualComparison\ForDateTime(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldBuilder()
+        return new DateTimeFromWhereBuilder(
+            new FromWhereComparisonFieldBuilder(),
+            new NotEqualComparison\ForDateTime(
+                new DateTimeValueRounder()
+            )
         );
     }
 
