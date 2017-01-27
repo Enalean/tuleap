@@ -9,7 +9,6 @@ module.exports = {
      */
     build_dir  : 'build',
     compile_dir: 'bin',
-    vendor_dir : 'vendor',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -62,9 +61,6 @@ module.exports = {
      *
      * The `vendor_files.js` property holds files to be automatically
      * concatenated and minified with our project source files.
-     *
-     * The `vendor_files.css` property holds any CSS files to be automatically
-     * included in our app.
      */
     vendor_files: {
         js: [
@@ -89,13 +85,6 @@ module.exports = {
             'vendor/angular-base64-upload/dist/angular-base64-upload.js',
             'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
             'vendor/dragular/dist/dragular.min.js'
-        ],
-        css: [
-            'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
-            'vendor/angular-ui-select/dist/select.css',
-            'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
-            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css',
-            'vendor/dragular/dist/dragular.min.css'
         ],
         assets: [
             'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',

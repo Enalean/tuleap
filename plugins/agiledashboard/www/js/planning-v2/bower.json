@@ -1,26 +1,27 @@
 {
-    "name": "planning-v2",
-    "version": "0.0.1",
-    "dependencies": {
-        "angular": "~1.3.20",
-        "angular-sanitize": "~1.3.20",
-        "angular-animate": "~1.3.20",
-        "angular-gettext": "~1.1.0",
-        "angular-ui-router": "~0.2.10",
-        "restangular": "~1.4.0",
-        "angular-moment": "~0.8.0",
-        "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#9c3ba33866cb6f614c6e61757215a8e170e03d15",
-        "lodash": "~2.4.0",
-        "dragular": "3.4.0"
-    },
-    "devDependencies": {
-        "angular-mocks": "~1.3.20",
-        "jasmine-promise-matchers": "~1.1.2",
-        "jasmine-fixture": "~1.3.4",
-        "jquery": "~2.1.4"
-    },
-    "resolutions": {
-        "moment": "^2.9.0",
-        "angular": "1.3.20"
-    }
+  "name": "planning-v2",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "~1.3.20",
+    "angular-sanitize": "~1.3.20",
+    "angular-animate": "~1.3.20",
+    "angular-gettext": "~1.1.0",
+    "angular-ui-router": "~0.2.10",
+    "restangular": "~1.4.0",
+    "angular-moment": "~0.8.0",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#9c3ba33866cb6f614c6e61757215a8e170e03d15",
+    "lodash": "~2.4.0",
+    "dragular": "3.4.0",
+    "animate.css": "3.5.2"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.3.20",
+    "jasmine-promise-matchers": "~1.1.2",
+    "jasmine-fixture": "~1.3.4",
+    "jquery": "~2.1.4"
+  },
+  "resolutions": {
+    "moment": "^2.9.0",
+    "angular": "1.3.20"
+  }
 }
