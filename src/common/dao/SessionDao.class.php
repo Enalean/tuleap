@@ -18,7 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SessionDao extends DataAccessObject {
+class SessionDao extends DataAccessObject
+{
+
+    public function create($user_id, $token, $ip_address, $current_time)
+    {
+        $user_id      = $this->getDa()->escapeInt($user_id);
+        $token        = $this->getDa()->quoteSmart($token);
+        $ip_address   = $this->getDa()->quoteSmart($ip_address);
+        $current_time = $this->getDa()->escapeInt($current_time);
+
+        $sql = "INSERT INTO session(user_id, session_hash, ip_addr, time)
+                VALUES($user_id, $token, $ip_address, $current_time)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function searchById($id, $current_time, $session_lifetime)
+    {
+        $id               = $this->getDa()->escapeInt($id);
+        $current_time     = $this->getDa()->escapeInt($current_time);
+        $session_lifetime = $this->getDa()->escapeInt($session_lifetime);
+
+        $sql = "SELECT * FROM session WHERE id = $id AND time + $session_lifetime > $current_time";
+        return $this->retrieveFirstRow($sql);
+    }
+
     /**
      * @return int the number of active sessions
      */
@@ -33,6 +58,19 @@ class SessionDao extends DataAccessObject {
         return $row['nb'];
     }
 
+    public function deleteSessionById($id)
+    {
+        $id  = $this->getDa()->escapeInt($id);
+        $sql = "DELETE FROM session WHERE id = $id";
+        return $this->update($sql);
+    }
+
+    public function deleteSessionByUserId($user_id)
+    {
+        $user_id = $this->getDa()->escapeInt($user_id);
+        $sql     = "DELETE FROM session WHERE user_id = $user_id";
+        return $this->update($sql);
+    }
     /**
      * Purge the table
      *

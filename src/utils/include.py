@@ -137,3 +137,14 @@ def get_codendi_user():
 #                return m.group(1)
 #        f.close
         
+
+def constant_time_str_compare(value1, value2):
+    if len(value1) != len(value2):
+        return False
+
+    result = 0
+
+    for x, y in zip(value1, value2):
+        result |= ord(x) ^ ord(y)
+
+    return result == 0

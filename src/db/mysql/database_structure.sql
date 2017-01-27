@@ -713,15 +713,14 @@ CREATE TABLE project_weekly_metric (
 #
 
 CREATE TABLE session (
-  user_id int(11) NOT NULL default '0',
-  session_hash char(32) NOT NULL default '',
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  session_hash CHAR(64) NOT NULL,
   ip_addr varchar(45) NOT NULL default '',
   time int(11) NOT NULL default '0',
-  PRIMARY KEY  (session_hash),
   KEY idx_session_user_id (user_id),
-  KEY time_idx (time),
   KEY idx_session_time (time)
-);
+) ENGINE=InnoDB;
 
 #
 # Table structure for table 'snippet'

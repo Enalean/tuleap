@@ -333,59 +333,6 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchBySessionHash($session_hash, $current_time, $session_lifetime)
-    {
-        $session_hash     = $this->da->quoteSmart($session_hash);
-        $current_time     = $this->da->escapeInt($current_time);
-        $session_lifetime = $this->da->escapeInt($session_lifetime);
-
-        $sql = "SELECT user.*, session_hash, session.ip_addr AS session_ip_addr, session.time AS session_time
-                FROM user INNER JOIN session USING (user_id)
-                WHERE session_hash = $session_hash AND session.time + $session_lifetime > $current_time";
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @return string the new session_hash
-     */
-    function createSession($user_id, $time) {
-
-        // generate a token from a PRNG
-        // continue until unique token is generated (SHOULD only be once)
-        $number_generator = new RandomNumberGenerator();
-        do {
-            $token = $number_generator->getNumber();
-            $sql = "SELECT 1
-                    FROM session
-                    WHERE session_hash = ". $this->da->quoteSmart($token);
-            $dar = $this->retrieve($sql);
-        } while ($dar && $dar->rowCount() == 1);
-        $sql = sprintf("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES (%s, %s, %d, %d)",
-            $this->da->quoteSmart($token),
-            $this->da->quoteSmart(HTTPRequest::instance()->getIPAddress()),
-            $time,
-            $user_id
-        );
-        if ($this->update($sql)) {
-            $this->storeLoginSuccess($user_id, $time);
-        } else {
-            $token = false;
-        }
-        return $token;
-    }
-
-    /**
-     * Delete all active sessions opened by a user
-     *
-     * @param Integer $userId User id
-     *
-     * @return Boolean SQL success
-     */
-    function deleteAllUserSessions($userId) {
-        $sql = 'DELETE FROM session WHERE user_id = '.$this->da->escapeInt($userId);
-        return $this->update($sql);
-    }
-
     /**
      * Store login success.
      *
@@ -434,12 +381,6 @@ class UserDao extends DataAccessObject {
                 last_auth_failure = ". $this->da->escapeInt($time) ."
                 WHERE user_id = (SELECT user_id from user WHERE user_name = ". $this->da->quoteSmart($login).")";
         $this->update($sql);
-    }
-
-    function deleteSession($session_hash) {
-        $sql = "DELETE FROM session
-                WHERE session_hash = ". $this->da->quoteSmart($session_hash);
-        return $this->update($sql);
     }
 
     /**
