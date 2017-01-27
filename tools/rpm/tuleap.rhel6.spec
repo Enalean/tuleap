@@ -925,7 +925,6 @@ fi
 %{APP_DIR}/src/utils
 # Split src/www for src/www/themes
 %dir %{APP_DIR}/src/www
-%{APP_DIR}/src/www/.htaccess
 %{APP_DIR}/src/www/*.php
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
@@ -944,7 +943,6 @@ fi
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
 %{APP_DIR}/src/www/forum
-%{APP_DIR}/src/www/goto
 %{APP_DIR}/src/www/help
 %{APP_DIR}/src/www/include
 %{APP_DIR}/src/www/mail
@@ -952,7 +950,6 @@ fi
 %{APP_DIR}/src/www/new
 %{APP_DIR}/src/www/news
 %{APP_DIR}/src/www/project
-%{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
@@ -974,7 +971,6 @@ fi
 %{APP_DIR}/src/www/tour
 %{APP_DIR}/src/www/tracker
 %{APP_DIR}/src/www/user
-%{APP_DIR}/src/www/users
 %{APP_DIR}/src/www/widgets
 %{APP_DIR}/src/www/wiki
 # Plugins dir
