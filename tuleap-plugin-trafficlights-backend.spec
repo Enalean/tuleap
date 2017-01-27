@@ -34,7 +34,7 @@ Test and tracability plugin
 # Build
 %build
 npm install
-grunt
+npm run build
 find www/themes -name '*.scss' | xargs rm -f
 
 #

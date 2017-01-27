@@ -5,7 +5,7 @@ Everytime you add a translation:
 
     <any translate>String to be translated</any>
 
-the `template.pot` file will be updated in this directory via `grunt` or `grunt watch` commands.
+the `template.pot` file will be updated in this directory via `npm run build` or `npm run watch` commands.
 
 This file is used to update language files.
 

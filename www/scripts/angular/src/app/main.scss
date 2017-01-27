@@ -1,20 +1,20 @@
-@import "../assets/animate.min";
-@import "../../vendor/artifact-modal/dist/assets/tuleap-artifact-modal";
-@import "../../vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker";
-@import "../../vendor/angular-ui-select/dist/select";
-@import "../../vendor/ng-scrollbar/dist/ng-scrollbar";
+@import '../../vendor/animate.css/animate';
+@import '../../vendor/artifact-modal/dist/assets/tuleap-artifact-modal';
+@import '../../vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker';
+@import '../../vendor/angular-ui-select/dist/select';
+@import '../../vendor/ng-scrollbar/dist/ng-scrollbar';
 
-@import "../app/campaign/campaign";
-@import "../app/campaign/campaign-new";
-@import "../app/campaign/campaign-list";
-@import "../app/execution/execution";
-@import "../app/execution/execution-list";
-@import "../app/execution/execution-detail";
-@import "../app/execution/execution-presences";
-@import "../app/socket/socket";
-@import "../app/execution/timer/execution-timer";
-@import "../app/artifact-links-graph/artifact-links-graph";
-@import "../app/graph/graph";
+@import '../app/campaign/campaign';
+@import '../app/campaign/campaign-new';
+@import '../app/campaign/campaign-list';
+@import '../app/execution/execution';
+@import '../app/execution/execution-list';
+@import '../app/execution/execution-detail';
+@import '../app/execution/execution-presences';
+@import '../app/socket/socket';
+@import '../app/execution/timer/execution-timer';
+@import '../app/artifact-links-graph/artifact-links-graph';
+@import '../app/graph/graph';
 
 #trafficlights-app {
     height: 100%;
