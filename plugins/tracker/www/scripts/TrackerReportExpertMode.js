@@ -158,13 +158,17 @@
                 query_rich_editor = CodeMirror.fromTextArea(
                     tracker_query,
                     {
-                        extraKeys   : { "Ctrl-Space": "autocomplete" },
+                        extraKeys   : { "Ctrl-Space": "autocomplete", "Ctrl-Enter": submitForm },
                         lineNumbers : false,
                         lineWrapping: true,
                         mode        : "tql",
                         readOnly    : tracker_query.readOnly ? 'nocursor' : false
                     }
                 );
+            }
+
+            function submitForm() {
+                document.querySelector('button[name="tracker_expert_query_submit"]').click();
             }
 
             function autocomplete(editor) {
