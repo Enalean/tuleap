@@ -190,8 +190,8 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 use_ssl,
                 gerrit_version,
                 http_password,
-                replication_password,
-                auth_type
+                auth_type,
+                replication_password
             )
             SELECT
                 $id,
@@ -204,8 +204,8 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 $use_ssl,
                 $gerrit_version,
                 $http_password,
-                replication_password,
-                $auth_type
+                $auth_type,
+                replication_password
             FROM plugin_git_remote_servers
             WHERE id = $id";
         }
@@ -217,6 +217,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM plugin_git_remote_servers
                 where ID = $id";
+
         return $this->update($sql);
     }
 

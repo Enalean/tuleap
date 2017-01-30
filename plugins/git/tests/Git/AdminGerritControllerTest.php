@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\AdminGerritBuilder;
+
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 class Git_Admin_process_Test extends TuleapTestCase {
@@ -33,7 +35,8 @@ class Git_Admin_process_Test extends TuleapTestCase {
             $this->factory,
             $this->admin_page_renderer,
             mock('Tuleap\Git\GerritServerResourceRestrictor'),
-            mock('Tuleap\Git\RemoteServer\Gerrit\Restrictor')
+            mock('Tuleap\Git\RemoteServer\Gerrit\Restrictor'),
+            new AdminGerritBuilder()
         );
 
         $this->request_update_existing_server = array(

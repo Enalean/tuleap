@@ -107,9 +107,13 @@ plugin_git	gerrit_label_login	Login
 plugin_git	gerrit_label_identity_file	Identity file
 plugin_git	gerrit_label_gerrit_version	Gerrit server version
 plugin_git	gerrit_label_http_password	HTTP password
+plugin_git	gerrit_label_http_password_edit	Change HTTP password
 plugin_git	gerrit_label_replication_password	Replication password
+plugin_git	gerrit_label_replication_password_edit	Change replication password
 plugin_git	gerrit_label_auth_type	Authentication type
+plugin_git	gerrit_replication_information	It is either SSH or password replication for replication
 plugin_git	delete_gerrit_title	Delete $1
+plugin_git	warning_no_possible_go_back	Once migrated, you will no more able to go back in version 2.5
 plugin_git	delete_gerrit_desc	Wow, wait a minute. You are about to delete the <b>$1</b> server. Please confirm your action.
 plugin_git	edit_gerrit_title	Edit $1
 
