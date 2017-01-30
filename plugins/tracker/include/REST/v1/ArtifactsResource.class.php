@@ -20,12 +20,15 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Tracker;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use \Luracast\Restler\RestException;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
+use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
+use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use \UserManager;
 use \PFUser;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
@@ -74,6 +77,9 @@ class ArtifactsResource extends AuthenticatedResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var MovedArtifactValueBuilder  */
+    private $moved_value_builder;
+
     public function __construct()
     {
         $this->tracker_factory     = TrackerFactory::instance();
@@ -84,6 +90,7 @@ class ArtifactsResource extends AuthenticatedResource {
             $this->artifact_factory,
             new NatureDao()
         );
+        $this->moved_value_builder = new MovedArtifactValueBuilder();
     }
 
     /**
@@ -480,6 +487,62 @@ class ArtifactsResource extends AuthenticatedResource {
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
+    }
+
+    /**
+     * Move artifact
+     *
+     * For now move will only preserve semantics title
+     *
+     * <pre>
+     * /!\ Move REST route is under construction and subject to changes /!\
+     * </pre>
+     *
+     *
+     * @url POST {id}/move
+     *
+     * @param int $id
+     * @param int $tracker_id     Tracker id where artifact will be moved {@from body}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     *
+     * @return ArtifactReference
+     */
+    protected function moveArtifact($id, $tracker_id)
+    {
+        $this->options();
+        $user = UserManager::instance()->getCurrentUser();
+
+        $artifact = $this->getArtifactById($user, $id);
+        $tracker  = $this->getTrackerById($user, $tracker_id);
+
+        $reference = new TrackerReference();
+        $reference->build($tracker);
+
+        try {
+            $values = $this->moved_value_builder->getValues($artifact, $tracker);
+        } catch (SemanticTitleNotDefinedException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+
+        $tracker->getWorkflow()->disable();
+
+        return $this->post($reference, $values);
+    }
+
+    private function getTrackerById(PFUser $user, $tracker_id)
+    {
+        $tracker  = $this->tracker_factory->getTrackerById($tracker_id);
+        if (! $tracker) {
+            throw new RestException(404, "Tracker not found");
+        }
+        if (! $tracker->userCanSubmitArtifact($user)) {
+            throw new RestException(403, "User can't write in destination tracker");
+        }
+
+        return $tracker;
     }
 
     /**
