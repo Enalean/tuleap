@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -115,6 +115,9 @@ class Tracker_Action_CopyArtifact {
         } catch (Tracker_XML_Exporter_TooManyChildrenException $exception) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_too_many_children', array(Tracker_XML_ChildrenCollector::MAX)));
             $this->redirectToArtifact($from_artifact);
+        } catch (Tracker_Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid'));
+            $GLOBALS['Response']->redirect('/plugins/tracker/?func=copy-artifact&aid=' . $from_artifact->getId());
         }
     }
 
