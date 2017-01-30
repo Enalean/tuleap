@@ -162,17 +162,21 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new EqualComparison\ForLastUpdateDate(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new EqualComparison\ForLastUpdateDate(
+                new DateTimeValueRounder()
+            )
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new EqualComparison\ForSubmittedOn(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new EqualComparison\ForSubmittedOn(
+                new DateTimeValueRounder()
+            )
         );
     }
 

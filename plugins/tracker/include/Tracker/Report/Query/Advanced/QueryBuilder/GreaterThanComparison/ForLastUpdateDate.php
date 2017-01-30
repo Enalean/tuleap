@@ -20,71 +20,28 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparison;
 
 use CodendiDataAccess;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeReadOnlyConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldReadOnlyBuilder;
 
-class ForLastUpdateDate implements FromWhereBuilder, ValueWrapperVisitor
+class ForLastUpdateDate implements DateTimeReadOnlyConditionBuilder
 {
     /**
      * @var DateTimeValueRounder
      */
     private $date_time_value_rounder;
-    /**
-     * @var FromWhereComparisonFieldReadOnlyBuilder
-     */
-    private $from_where_builder;
 
-    public function __construct(
-        DateTimeValueRounder $date_time_value_rounder,
-        FromWhereComparisonFieldReadOnlyBuilder $from_where_comparison_builder
-    ) {
+    public function __construct(DateTimeValueRounder $date_time_value_rounder)
+    {
         $this->date_time_value_rounder = $date_time_value_rounder;
-        $this->from_where_builder      = $from_where_comparison_builder;
     }
 
-    /**
-     * @return FromWhere
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getCondition($value)
     {
-        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
-
         $ceiled_timestamp = $this->date_time_value_rounder->getCeiledTimestampFromDateTime($value);
         $ceiled_timestamp = $this->escapeInt($ceiled_timestamp);
         $condition        = "c.submitted_on > $ceiled_timestamp";
 
-        return $this->from_where_builder->getFromWhere($condition);
-    }
-
-    /**
-     * @return string
-     */
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    /**
-     * @return string
-     */
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue()->format(DateFormat::DATETIME);
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
+        return $condition;
     }
 
     private function escapeInt($value)

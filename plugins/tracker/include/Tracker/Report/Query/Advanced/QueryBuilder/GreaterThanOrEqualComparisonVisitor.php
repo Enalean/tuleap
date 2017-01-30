@@ -159,17 +159,21 @@ class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVi
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new GreaterThanOrEqualComparison\ForLastUpdateDate(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new GreaterThanOrEqualComparison\ForLastUpdateDate(
+                new DateTimeValueRounder()
+            )
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new GreaterThanOrEqualComparison\ForSubmittedOn(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new GreaterThanOrEqualComparison\ForSubmittedOn(
+                new DateTimeValueRounder()
+            )
         );
     }
 
