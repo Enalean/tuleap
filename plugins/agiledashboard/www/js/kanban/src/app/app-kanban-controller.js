@@ -607,10 +607,6 @@ function KanbanCtrl(
         return promise;
     }
 
-    function getColumn(id) {
-        return ColumnCollectionService.getColumn(id);
-    }
-
     function moveKanbanItemToTop(item) {
         var column      = ColumnCollectionService.getColumn(item.in_column),
             compared_to = DroppedService.getComparedToBeFirstItemOfColumn(column);

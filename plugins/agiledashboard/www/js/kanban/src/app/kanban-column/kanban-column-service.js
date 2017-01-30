@@ -73,7 +73,9 @@ function KanbanColumnService(
                 compared_to
             );
 
-            self.filterItems(destination_column);
+            if (destination_column.is_open) {
+                self.filterItems(destination_column);
+            }
         });
     }
 

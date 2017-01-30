@@ -485,7 +485,10 @@ describe("KanbanColumnService -", function() {
                     { id: 46 },
                     { id: 37 },
                     { id: 62 }
-                ]
+                ],
+                is_open: false,
+                fully_loaded: false,
+                filtered_content: []
             };
             spyOn(KanbanColumnService, "moveItem");
             spyOn(KanbanColumnService, "filterItems");
@@ -495,7 +498,9 @@ describe("KanbanColumnService -", function() {
 
             expect(KanbanItemRestService.getItem).toHaveBeenCalledWith(50);
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(item, source_column, destination_column, null);
-            expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(destination_column);
+            expect(KanbanColumnService.filterItems).not.toHaveBeenCalledWith(destination_column);
+            expect(destination_column.filtered_content).toEqual([]);
+            expect(destination_column.filtered_content).not.toBe(destination_column.content);
         });
 
         it("Given an item id, a source column and a destination column, when I move an item from an column loaded, then the item is moved", function() {
@@ -510,6 +515,13 @@ describe("KanbanColumnService -", function() {
                     { id: 46 },
                     { id: 37 },
                     { id: 62 }
+                ],
+                is_open: true,
+                fully_loaded: true,
+                filtered_content: [
+                    { id: 46 },
+                    { id: 37 },
+                    { id: 62 }
                 ]
             };
             spyOn(KanbanColumnService, "moveItem");
@@ -521,6 +533,7 @@ describe("KanbanColumnService -", function() {
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(item, source_column, destination_column, null);
             expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(destination_column);
             expect(KanbanItemRestService.getItem).not.toHaveBeenCalled();
+            expect(destination_column.filtered_content).toEqual(destination_column.content);
         });
     });
 });
