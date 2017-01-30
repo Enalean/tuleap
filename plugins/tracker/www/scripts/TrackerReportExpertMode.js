@@ -66,14 +66,35 @@
             [].forEach.call(tracker_report_expert_allowed_fields, function (field) {
                 field.addEventListener('click', function (event) {
                     if (query_rich_editor instanceof CodeMirror) {
-                        var text_query = query_rich_editor.getValue();
-                        query_rich_editor.setValue(text_query + ' ' + event.target.value + ' ');
+                        var cursor_start = query_rich_editor.getCursor('from'),
+                            cursor_end   = query_rich_editor.getCursor('to'),
+                            value        = event.target.value;
+
+                        if (isTextNotSelected(cursor_start, cursor_end)) {
+                            value = value + ' ';
+                            if (shouldASpaceBePrefixed(query_rich_editor, cursor_start)) {
+                                value = ' ' + value;
+                            }
+                            query_rich_editor.doc.setSelection(cursor_start);
+                        }
+
+                        query_rich_editor.doc.replaceSelection(value);
                         query_rich_editor.focus();
-                        query_rich_editor.setCursor(query_rich_editor.lineCount(), 0);
                         event.target.selected = false;
                     }
                 });
             });
+        }
+
+        function isTextNotSelected(cursor_start, cursor_end) {
+            return cursor_start.line === cursor_end.line &&
+                cursor_start.ch === cursor_end.ch;
+        }
+
+        function shouldASpaceBePrefixed(query_rich_editor, cursor_start) {
+            var line_start = query_rich_editor.getLine(cursor_start.line);
+
+            return cursor_start.ch !== 0 && line_start.charAt(cursor_start.ch - 1) !== ' ';
         }
 
         function sendRequestNewMode(mode) {
