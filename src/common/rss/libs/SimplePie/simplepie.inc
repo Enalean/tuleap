@@ -760,29 +760,6 @@ class SimplePie
 	}
 
 	/**
-	 * Remove items that link back to this before destroying this object
-	 */
-	function __destruct()
-	{
-		if (!empty($this->data['items']))
-		{
-			foreach ($this->data['items'] as $item)
-			{
-				$item->__destruct();
-			}
-			unset($this->data['items']);
-		}
-		if (!empty($this->data['ordered_items']))
-		{
-			foreach ($this->data['ordered_items'] as $item)
-			{
-				$item->__destruct();
-			}
-			unset($this->data['ordered_items']);
-		}
-	}
-
-	/**
 	 * Force the given data/URL to be treated as a feed no matter what it
 	 * appears like
 	 *
@@ -3101,14 +3078,6 @@ class SimplePie_Item
 	function __toString()
 	{
 		return md5(serialize($this->data));
-	}
-
-	/**
-	 * Remove items that link back to this before destroying this object
-	 */
-	function __destruct()
-	{
-		unset($this->feed);
 	}
 
 	function get_item_tags($namespace, $tag)
@@ -5706,14 +5675,6 @@ class SimplePie_Source
 	function __toString()
 	{
 		return md5(serialize($this->data));
-	}
-
-	/**
-	 * Remove items that link back to this before destroying this object
-	 */
-	function __destruct()
-	{
-		unset($this->item);
 	}
 
 	function get_source_tags($namespace, $tag)
