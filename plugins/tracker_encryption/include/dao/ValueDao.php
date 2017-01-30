@@ -69,4 +69,16 @@ class ValueDao extends Tracker_FormElement_Field_ValueDao
 
         return $this->update($sql);
     }
+
+    public function keep($from, $to)
+    {
+        $from = $this->da->escapeInt($from);
+        $to   = $this->da->escapeInt($to);
+        $sql = "INSERT INTO tracker_changeset_value_encrypted(changeset_value_id, value)
+                SELECT $to, value
+                FROM tracker_changeset_value_encrypted
+                WHERE changeset_value_id = $from";
+
+        return $this->update($sql);
+    }
 }

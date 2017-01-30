@@ -110,6 +110,12 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field
 
     protected function validate(Tracker_Artifact $artifact, $value)
     {
+        if ($this->getLastChangesetValue($artifact) !== null
+            && $this->getLastChangesetValue($artifact)->getValue() === $value
+        ) {
+            return true;
+        }
+
         $maximum_characters_allowed = $this->getMaxSizeAllowed();
         if ($maximum_characters_allowed !== 0 && mb_strlen($value) > $maximum_characters_allowed) {
             $GLOBALS['Response']->addFeedback(
