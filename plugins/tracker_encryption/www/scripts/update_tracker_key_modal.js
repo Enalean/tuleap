@@ -18,13 +18,15 @@
  */
 
 jQuery(document).ready(function( $ ) {
-    var tracker_key = document.getElementById("tracker-key").textContent;
-    $("#submit_form").on("click", function(e){
-        e.preventDefault();
-        if (tracker_key == "" || $("#tracker-key").val() == tracker_key) {
-            $('form').submit();
-        } else {
-            $('#confirm').modal('show');
-        }
-    });
+    if (document.getElementById("tracker-key")) {
+        var tracker_key = document.getElementById("tracker-key").textContent;
+        $("#submit_form").on("click", function(e){
+            e.preventDefault();
+            if (tracker_key == "" || $("#tracker-key").val() == tracker_key) {
+                $('form').submit();
+            } else {
+                $('#confirm').modal('show');
+            }
+        });
+    }
 });
