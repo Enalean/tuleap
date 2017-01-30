@@ -159,17 +159,21 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new BetweenComparison\ForLastUpdateDate(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new BetweenComparison\ForLastUpdateDate(
+                new DateTimeValueRounder()
+            )
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new BetweenComparison\ForSubmittedOn(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new BetweenComparison\ForSubmittedOn(
+                new DateTimeValueRounder()
+            )
         );
     }
 

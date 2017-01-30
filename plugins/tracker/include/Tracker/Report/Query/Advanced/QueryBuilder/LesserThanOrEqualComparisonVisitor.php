@@ -159,17 +159,21 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new LesserThanOrEqualComparison\ForLastUpdateDate(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new LesserThanOrEqualComparison\ForLastUpdateDate(
+                new DateTimeValueRounder()
+            )
         );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new LesserThanOrEqualComparison\ForSubmittedOn(
-            new DateTimeValueRounder(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+        return new DateTimeReadOnlyFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new LesserThanOrEqualComparison\ForSubmittedOn(
+                new DateTimeValueRounder()
+            )
         );
     }
 

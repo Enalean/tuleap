@@ -20,21 +20,10 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparison;
 
 use CodendiDataAccess;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeReadOnlyConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateTimeFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldReadOnlyBuilder;
 
-class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
+class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
 {
     /**
      * @var DateTimeValueRounder
@@ -46,32 +35,13 @@ class ForSubmittedOn implements FromWhereBuilder, ValueWrapperVisitor
         $this->date_time_value_rounder = $date_time_value_rounder;
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getCondition($value)
     {
-        $value = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
-
         $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime($value);
         $floored_timestamp = $this->escapeInt($floored_timestamp);
         $condition         = "artifact.submitted_on >= $floored_timestamp";
 
-        $from  = "";
-        $where = "$condition";
-
-        return new FromWhere($from, $where);
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue()->format(DateFormat::DATETIME);
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
+        return $condition;
     }
 
     private function escapeInt($value)
