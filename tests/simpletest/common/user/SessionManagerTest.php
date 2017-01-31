@@ -125,6 +125,7 @@ class SessionManagerTest extends TuleapTestCase
         $user = mock('PFUser');
         stub($this->user_manager)->getUserById($user_id)->returns($user);
 
+        $user->expectOnce('setSessionId', array($session_id));
         $user->expectOnce('setSessionHash', array("$session_id.$session_token"));
         $session_user = $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
         $this->assertIdentical($user, $session_user);
@@ -153,6 +154,7 @@ class SessionManagerTest extends TuleapTestCase
         stub($this->session_dao)->create()->returns($session_id);
         stub($this->random_number_generator)->getNumber()->returns($random_token);
 
+        $user->expectOnce('setSessionId', array($session_id));
         $user->expectOnce('setSessionHash', array("$session_id.$random_token"));
         $session_identifier = $session_manager->createSession($user, $request, self::CURRENT_TIME);
         $this->assertEqual("$session_id.$random_token", $session_identifier);

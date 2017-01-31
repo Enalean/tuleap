@@ -1524,11 +1524,11 @@ CREATE TABLE ugroup_mapping (
 );
 
 CREATE TABLE feedback (
-  session_hash CHAR( 32 ) NOT NULL ,
-  feedback TEXT NOT NULL ,
-  created_at DATETIME NOT NULL ,
-  PRIMARY KEY ( session_hash )
-);
+  session_id INT(11) UNSIGNED,
+  feedback TEXT NOT NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (session_id)
+) ENGINE=InnoDB;
 
 CREATE TABLE notifications (
   user_id int(11) NOT NULL default '0',

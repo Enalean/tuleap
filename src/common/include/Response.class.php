@@ -44,13 +44,14 @@ class Response {
     * Constructor
     */
     public function Response() {
-        if (session_hash()) {
+        $session_id = UserManager::instance()->getCurrentUser()->getSessionId();
+        if ($session_id) {
             $dao = $this->getFeedbackDao();
-            $dar = $dao->search(session_hash());
+            $dar = $dao->search($session_id);
             if ($dar && $dar->valid()) {
                 $row = $dar->current();
                 $this->_feedback = unserialize($row['feedback']);
-                $dao->delete(session_hash());
+                $dao->delete($session_id);
             }
         }
         if (!$this->_feedback) {
@@ -118,8 +119,9 @@ class Response {
     }
 
     function _serializeFeedback() {
-        $dao = $this->getFeedbackDao();
-        $dao->create(session_hash(), serialize($this->_feedback));
+        $dao        = $this->getFeedbackDao();
+        $session_id = UserManager::instance()->getCurrentUser()->getSessionId();
+        $dao->create($session_id, serialize($this->_feedback));
     }
 
     function setCookie($name, $value, $expire = 0) {
