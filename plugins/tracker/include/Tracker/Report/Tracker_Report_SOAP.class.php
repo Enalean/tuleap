@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
-class Tracker_Report_SOAP extends Tracker_Report {
+class Tracker_Report_SOAP extends Tracker_Report
+{
     /**
      * @var Tracker_FormElementFactory
      */
@@ -27,11 +27,11 @@ class Tracker_Report_SOAP extends Tracker_Report {
     private $soap_criteria = array();
 
     public function __construct(
-            PFUser $current_user,
-            Tracker $tracker,
-            PermissionsManager $permissions_manager,
-            Tracker_ReportDao $dao,
-            Tracker_FormElementFactory $formelement_factory
+        PFUser $current_user,
+        Tracker $tracker,
+        PermissionsManager $permissions_manager,
+        Tracker_ReportDao $dao,
+        Tracker_FormElementFactory $formelement_factory
     ) {
         $id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $is_in_expert_mode = $expert_query = $updated_by = $updated_at = 0;
         parent::__construct(
@@ -65,10 +65,15 @@ class Tracker_Report_SOAP extends Tracker_Report {
     public function getCriteria() {
         $rank = 0;
 
-        foreach ($this->soap_criteria as $key => $value) {
-            $is_advanced = false;
-            if ($formelement = $this->formelement_factory->getFormElementByName($this->getTracker()->getId(), $value->field_name)) {
-                if ($formelement->userCanRead($this->current_user)) {
+        if (is_array($this->soap_criteria)) {
+            foreach ($this->soap_criteria as $key => $value) {
+                $is_advanced = false;
+                $formelement = $this->formelement_factory->getFormElementByName(
+                    $this->getTracker()->getId(),
+                    $value->field_name
+                );
+
+                if ($formelement && $formelement->userCanRead($this->current_user)) {
                     $criteria = new Tracker_Report_Criteria(
                         0,
                         $this,
@@ -82,8 +87,7 @@ class Tracker_Report_SOAP extends Tracker_Report {
                 }
             }
         }
+
         return $this->criteria;
     }
 }
-
-?>
