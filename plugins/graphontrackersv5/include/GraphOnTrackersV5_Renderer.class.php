@@ -27,12 +27,12 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     protected $chart_to_edit;
     protected $plugin;
 
-    public function __construct($id, $report, $name, $description, $rank, $plugin) {
+    public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->charts        = null;
         $this->chart_to_edit = null;
         $this->plugin        = $plugin;
-        $this->chart_factories = array();
+        $this->user_manager  = $user_manager;
     }
 
     public function initiateSession() {
@@ -52,10 +52,12 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * Delete the renderer
      */
     public function delete() {
-        foreach($this->getChartFactory()
-                     ->getCharts($this) as $chart){
-            $this->getChartFactory()
-                 ->deleteChart($this->id, $chart->getId());
+        foreach($this->getChartFactory()->getCharts($this) as $chart) {
+            $this->getChartFactory()->deleteChart(
+                $this->id,
+                $chart->getId(),
+                $this->report->userCanUpdate($this->user_manager->getCurrentUser())
+            );
         }
     }
 

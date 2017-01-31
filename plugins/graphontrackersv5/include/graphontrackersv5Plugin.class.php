@@ -101,7 +101,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
                 $params['row']['name'],
                 $params['row']['description'],
                 $params['row']['rank'],
-                $this
+                $this,
+                UserManager::instance()
             );
             if ($params['store_in_session']) {
                 $params['instance']->initiateSession();
@@ -193,7 +194,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
                     $params['name'],
                     $params['description'],
                     $params['rank'],
-                    $this
+                    $this,
+                    UserManager::instance()
             );
             $params['renderers'][$params['renderer_key']]->initiateSession();
         }
