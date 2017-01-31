@@ -43,7 +43,7 @@ class NatureConfigPresenter {
     public $create_new_nature;
     public $edit_nature;
     public $shortname_pattern;
-    public $natures;
+    public $natures_usage;
     public $has_natures;
     public $sections;
     public $available_natures;
@@ -55,7 +55,7 @@ class NatureConfigPresenter {
     public $delete_modal_submit;
     public $delete_modal_content;
 
-    public function __construct($title, array $natures, CSRFSynchronizerToken $csrf, $allowed_projects) {
+    public function __construct($title, array $natures_usage, CSRFSynchronizerToken $csrf, $allowed_projects) {
         $this->desc                = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
         $this->available_natures   = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
         $this->shortname_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
@@ -88,8 +88,8 @@ class NatureConfigPresenter {
         $this->sections = new SectionsPresenter();
 
         $this->title            = $title;
-        $this->natures          = $natures;
-        $this->has_natures      = count($this->natures) > 0;
+        $this->natures_usage    = $natures_usage;
+        $this->has_natures      = count($this->natures_usage) > 0;
         $this->no_natures       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'there_is_no_nature');
         $this->csrf_token       = $csrf->fetchHTMLInput();
         $this->allowed_projects = $allowed_projects;

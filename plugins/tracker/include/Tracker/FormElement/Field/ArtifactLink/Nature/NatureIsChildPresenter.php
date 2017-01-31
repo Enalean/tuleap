@@ -30,7 +30,6 @@ class NatureIsChildPresenter extends NaturePresenter {
             Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
             $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),
             $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse'),
-            true,
             true
         );
 

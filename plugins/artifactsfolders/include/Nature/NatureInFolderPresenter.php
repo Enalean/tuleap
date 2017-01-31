@@ -33,7 +33,6 @@ class NatureInFolderPresenter extends NaturePresenter
             self::NATURE_IN_FOLDER,
             $GLOBALS['Language']->getText('plugin_folders', '_in_folder_forward'),
             $GLOBALS['Language']->getText('plugin_folders', '_in_folder_reverse'),
-            true,
             false
         );
 
