@@ -60,7 +60,7 @@ class MediawikiSiteAdminController {
     public function site_update_allowed_project_list(HTTPRequest $request) {
         $this->assertSiteAdmin($request);
 
-        $token = new CSRFSynchronizerToken('/plugins/mediawiki/forge_admin?action=site_update_allowed_project_list');
+        $token = new CSRFSynchronizerToken('/plugins/mediawiki/forge_admin.php?action=site_update_allowed_project_list');
         $token->check();
 
         $project_to_add  = $request->get('project-to-allow');
@@ -68,7 +68,7 @@ class MediawikiSiteAdminController {
             $this->allowProject($project_to_add);
         }
 
-        $GLOBALS['Response']->redirect('/plugins/mediawiki/forge_admin?action=site_index');
+        $GLOBALS['Response']->redirect('/plugins/mediawiki/forge_admin.php?action=site_index');
     }
 
     private function allowProject($project_to_add) {

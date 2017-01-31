@@ -37,7 +37,7 @@ class MediawikiAdminLanguagePanePresenter extends MediawikiAdminPanePresenter {
     }
 
     public function route() {
-        return MEDIAWIKI_BASE_URL . '/forge_admin?' . http_build_query(array(
+        return MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(array(
             'group_id' => $this->project->getID(),
             'action'   => 'save_language'
         ));

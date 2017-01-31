@@ -176,7 +176,7 @@ $used_language = $language_manager->getUsedLanguageForProject($group);
 if ($used_language) {
     $wgLanguageCode  = substr($used_language, 0, 2);
 } else if ($mw_service && $mw_service->userIsAdmin($user)) {
-    header('Location: /plugins/mediawiki/forge_admin?group_id='. $group->getID() .'&pane=language&nolang=1');
+    header('Location: /plugins/mediawiki/forge_admin.php?group_id='. $group->getID() .'&pane=language&nolang=1');
     die();
 } else {
     $wgLanguageCode  = substr($user->getLocale(), 0, 2);

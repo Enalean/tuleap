@@ -126,7 +126,7 @@ class Tuleap123Template extends BaseTemplate {
             } else  {
                 $GLOBALS['HTML']->header($this->params);
                 if ($this->IsUserAdmin()) {
-                    echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
+                    echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin.php?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
                 }
             }
 
@@ -277,7 +277,7 @@ echo $footerEnd;
         if ($this->IsUserAdmin()) {
             $added_toolbox []= array(
                 'text' => $GLOBALS['Language']->getText('global', 'Administration'),
-                'href' => '/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId()
+                'href' => '/plugins/mediawiki/forge_admin.php?group_id='.$GLOBALS['group']->getId()
             );
         }
 

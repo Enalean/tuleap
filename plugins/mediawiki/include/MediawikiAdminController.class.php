@@ -185,7 +185,7 @@ class MediawikiAdminController {
             }
         }
 
-        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(
+        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin.php?'. http_build_query(
             array(
                 'group_id'   => $request->get('group_id'),
                 'pane'       => 'language',
@@ -232,7 +232,7 @@ class MediawikiAdminController {
             }
         }
 
-        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(
+        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin.php?'. http_build_query(
             array(
                 'group_id'   => $request->get('group_id'),
             )

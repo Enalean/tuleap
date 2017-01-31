@@ -673,14 +673,14 @@ class MediaWikiPlugin extends Plugin {
     {
         $params['plugins'][] = array(
             'label' => 'Mediawiki',
-            'href'  => $this->getPluginPath() . '/forge_admin?action=site_index'
+            'href'  => $this->getPluginPath() . '/forge_admin.php?action=site_index'
         );
     }
 
     /** @see Event::IS_IN_SITEADMIN */
     public function is_in_siteadmin($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/forge_admin?action=site_index') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/forge_admin.php?action=site_index') === 0) {
             $params['is_in_siteadmin'] = true;
         }
     }
