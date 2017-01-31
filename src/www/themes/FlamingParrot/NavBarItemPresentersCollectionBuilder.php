@@ -135,7 +135,7 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
     private function addHelpItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
         $item = new FlamingParrot_NavBarItemDropdownPresenter(
             'help',
-            $this->isNavBarItemActive(array('/help/', '/contact.php', '/help/api'), 'help'),
+            $this->isNavBarItemActive(array('/help/', '/contact.php', '/help/api.php'), 'help'),
             $GLOBALS['Language']->getText('include_menu', 'help')
         );
 
@@ -151,7 +151,7 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
                     new FlamingParrot_NavBarItemLinkPresenter(
                         self::$NO_ID,
                         self::$NOT_ACTIVE,
-                        '/help/api',
+                        '/help/api.php',
                         $GLOBALS['Language']->getText('include_menu', 'api')
                     ),
                 )

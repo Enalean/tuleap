@@ -12,7 +12,7 @@ $presenter = array(
         array(
             'title'       => 'Core',
             'wsdl'        => '/soap/?wsdl',
-            'wsdl_viewer' => '/soap/wsdl',
+            'wsdl_viewer' => '/soap/wsdl.php',
             'changelog'   => '/soap/ChangeLog',
             'version'     => file_get_contents(dirname(__FILE__).'/../soap/VERSION'),
             'description' => <<<EOT
@@ -28,7 +28,7 @@ EOT
         array(
             'title'       => 'Subversion',
             'wsdl'        => '/soap/svn/?wsdl',
-            'wsdl_viewer' => '/soap/svn/wsdl-viewer',
+            'wsdl_viewer' => '/soap/svn/wsdl-viewer.php',
             'changelog'   => '/soap/svn/ChangeLog',
             'version'     => file_get_contents(dirname(__FILE__).'/../soap/svn/VERSION'),
             'description' => 'Get informations about Subversion usage in project.',
@@ -36,7 +36,7 @@ EOT
         array(
             'title'       => 'Project',
             'wsdl'        => '/soap/project/?wsdl',
-            'wsdl_viewer' => '/soap/project/wsdl-viewer',
+            'wsdl_viewer' => '/soap/project/wsdl-viewer.php',
             'changelog'   => '/soap/project/ChangeLog',
             'version'     => file_get_contents(dirname(__FILE__).'/../soap/project/VERSION'),
             'description' => 'Create and administrate projects.',

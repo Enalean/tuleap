@@ -39,9 +39,25 @@ class SOAP_WSDLRenderer {
         $proc->importStylesheet($xslDoc);
         
         $xmlDoc = new DOMDocument();
-        $xmlDoc->loadXML(file_get_contents($wsdl_uri));
+        $xmlDoc->loadXML($this->getWSDL($wsdl_uri));
         echo $proc->transformToXML($xmlDoc);
 
         $xml_security->disableExternalLoadOfEntities();
+    }
+
+    private function getWSDL($wsdl_uri) {
+        return file_get_contents($wsdl_uri, false, stream_context_create($this->getHTTPContext()));
+    }
+
+    private function getHTTPContext() {
+        if (ForgeConfig::get('sys_use_unsecure_ssl_certificate', false)) {
+            return array(
+                'ssl' => array(
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                )
+            );
+        }
+        return array();
     }
 }

@@ -536,3 +536,8 @@ $sys_trusted_proxies = '';
 
 // When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects
 $sys_mail_secure_mode = 0;
+
+// Is your ssl certificate legit or not
+// This is useful for intra-application https call (like SOAP) starting PHP 5.6
+// Should be toggled to 1 in dev only otherwise it means that your server is exposed to security vulnerabilities
+$sys_use_unsecure_ssl_certificate = 0;
