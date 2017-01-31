@@ -165,14 +165,15 @@ class BacklogItemResource extends AuthenticatedResource {
         if ($initial_effort_field && $initial_effort_field->userCanRead($current_user)) {
 
             $rest_value = $initial_effort_field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+            if ($rest_value) {
+                if (is_a($initial_effort_field, 'Tracker_FormElement_Field_List')) {
+                    $value = $this->getBacklogItemInitialEffortFromList($rest_value);
+                } else {
+                    $value = $rest_value->value;
+                }
 
-            if (is_a($initial_effort_field, 'Tracker_FormElement_Field_List')) {
-                $value = $this->getBacklogItemInitialEffortFromList($rest_value);
-            } else {
-                $value = $rest_value->value;
+                $backlog_item->setInitialEffort($value);
             }
-
-            $backlog_item->setInitialEffort($value);
         }
 
         return $backlog_item;

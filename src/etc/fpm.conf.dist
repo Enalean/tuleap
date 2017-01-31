@@ -10,5 +10,11 @@ php_value[memory_limit] = 196M
 php_admin_flag[short_open_tag] = on
 php_value[date.timezone] = Europe/Paris
 
-# For "/users" or "/projects"
-security.limit_extensions =
+; For development, catch worker output
+catch_workers_output = yes
+php_flag[display_errors] = on
+php_flag[html_errors] = on
+
+; For git over http
+;php_value[post_max_size] = 256M
+;php_value[upload_max_filesize] = 256M

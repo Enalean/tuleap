@@ -58,20 +58,6 @@ $gitphp_conf['gittmp'] = "/tmp/";
 $gitphp_conf['title'] = "Tuleap";
 
 /*
- * self
- * This is the path to the script that will be inserted
- * in urls.  If you leave this blank/commented the script
- * will try to guess the correct URL, but you can override
- * it here if it's not being guessed correctly.
- *
- * If only specifying the directory path (and omitting the
- * index.php filename), make sure to include the trailing
- * slash!
- */
-$gitphp_conf['self'] = "http://{$_SERVER['SCRIPT_URL']}/";
-$_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_URL'];
-
-/*
  * compressformat
  * Indicates what kind of compression will be done on the
  * snapshot archive.  Recognized settings are:

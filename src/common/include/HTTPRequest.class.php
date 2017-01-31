@@ -283,4 +283,41 @@ class HTTPRequest extends Codendi_Request {
             return $_SERVER[self::HEADER_REMOTE_ADDR];
         }
     }
+
+    /**
+     * Return PATH_INFO content from the env. variables available in FastCGI mode
+     *
+     * In FastCGI we don't have PATH_INFO set automatically. However this value can be computed based on other
+     * variables in the environment. Useful when running the application with php-fpm
+     *
+     * @return string
+     */
+    public function getPathInfoFromFCGI()
+    {
+        $path = $this->stripQueryString($this->getFromServer('REQUEST_URI'));
+        $path = $this->stripScriptNameBase($path, $this->getFromServer('SCRIPT_NAME'));
+        return $this->stripScriptName($path, $this->getFromServer('SCRIPT_NAME'));
+    }
+
+    private function stripQueryString($request_uri)
+    {
+        $query_string_start = strpos($request_uri, '?');
+        return substr($request_uri, 0, $query_string_start);
+    }
+
+    private function stripScriptNameBase($request_uri, $script_name)
+    {
+        $script_name_base_end = strlen(dirname($script_name));
+        return substr($request_uri, $script_name_base_end);
+    }
+
+    private function stripScriptName($request_uri, $script_name)
+    {
+        $script_name       = basename($script_name);
+        $script_name_start = strpos($request_uri, '/'.$script_name);
+        if ($script_name_start !== false) {
+            return substr($request_uri, strlen($script_name) + 1);
+        }
+        return $request_uri;
+    }
 }
