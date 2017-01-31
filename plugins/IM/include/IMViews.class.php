@@ -103,7 +103,7 @@ class IMViews extends Views {
 
         $jabberConf = $im_object->get_server_conf();
 
-    	$sessionId = session_hash();
+        $sessionId = UserManager::instance()->getCurrentUser()->getSessionHash();
 		$server_dns = $jabberConf['server_dns'];
 		$conference_service = $jabberConf['conference_service'];
 

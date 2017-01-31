@@ -21,6 +21,7 @@
 namespace Tuleap\Layout;
 
 use Tuleap\Layout\IncludeAssets;
+use UserManager;
 use Widget_Static;
 use Response;
 use ForgeConfig;
@@ -129,7 +130,7 @@ abstract class BaseLayout extends Response
 
     public function redirect($url)
     {
-        $is_anon = session_hash() ? false : true;
+        $is_anon = UserManager::instance()->getCurrentUser()->isAnonymous();
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
         if (($is_anon && (headers_sent() || $has_feedback)) || (!$is_anon && headers_sent())) {
             $this->header(array('title' => 'Redirection'));

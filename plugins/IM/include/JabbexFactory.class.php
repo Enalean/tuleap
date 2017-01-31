@@ -14,7 +14,7 @@ class JabbexFactory {
         if ( ! self::$_jabbex_instance) {
             try {
                 require_once("jabbex_api/Jabbex.php");
-                self::$_jabbex_instance = new Jabbex(session_hash());
+                self::$_jabbex_instance = new Jabbex(UserManager::instance()->getCurrentUser()->getSessionHash());
             } catch (Exception $e) {
                 $GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error:'.$e->getMessage());
                 return null;

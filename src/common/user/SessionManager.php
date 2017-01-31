@@ -78,6 +78,7 @@ class SessionManager
             throw new InvalidSessionException();
         }
 
+        $user->setSessionId($session_id);
         $user->setSessionHash($session_identifier);
         return $user;
     }
@@ -102,6 +103,7 @@ class SessionManager
         }
 
         $session_identifier = $session_id . self::SESSION_IDENTIFIER_SEPARATOR . $token;
+        $user->setSessionId($session_id);
         $user->setSessionHash($session_identifier);
 
         return $session_identifier;
@@ -112,11 +114,12 @@ class SessionManager
      */
     public function destroyCurrentSession(PFUser $user)
     {
-        list($session_id) = $this->getSessionIdentifierParts($user->getSessionHash());
+        $session_id = $user->getSessionId();
         $is_deleted = $this->session_dao->deleteSessionById($session_id);
         if ($is_deleted === false) {
             throw new SessionDataAccessException();
         }
+        $user->setSessionId(false);
         $user->setSessionHash(false);
     }
 
@@ -129,6 +132,7 @@ class SessionManager
         if ($is_deleted === false) {
             throw new SessionDataAccessException();
         }
+        $user->setSessionId(false);
         $user->setSessionHash(false);
     }
 

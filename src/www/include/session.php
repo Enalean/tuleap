@@ -84,8 +84,4 @@ function session_continue($sessionKey) {
     return $user->isLoggedIn();
 }
 
-function session_hash() {
-    return UserManager::instance()->getCurrentUser()->getSessionHash();
-}
-
 ?>

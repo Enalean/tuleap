@@ -166,6 +166,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     var $_usergroupdao;
 
     /**
+     * @var int|false
+     */
+    private $session_id;
+
+    /**
      * session hash
      * By default it is false. Use explicitly setSessionHash()
      * @see setSessionHash
@@ -242,6 +247,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
 
         $this->session_hash = false;
+        $this->session_id   = false;
     }
 
 
@@ -1266,6 +1272,19 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       */
      function getSessionHash() {
          return $this->session_hash;
+     }
+
+     public function setSessionId($session_id)
+     {
+         $this->session_id = $session_id;
+     }
+
+    /**
+     * @return int|false
+     */
+     public function getSessionId()
+     {
+         return $this->session_id;
      }
 
      /**
