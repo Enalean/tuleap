@@ -56,7 +56,6 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
 <head>
    <title><?php echo $Language->getText('file_confirm_download','download_agreement'); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 </head>
 
 <body>
