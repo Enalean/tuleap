@@ -293,9 +293,12 @@ class Docman_MetadataComparator {
                 break;
             case 'equivalent':
                 $diffArray = $this->checkMdDifferences($srcMd, $dstMd, $mdMap['love']);
-                $diffStr = '<ul style="padding:0;padding-left:1.5em;margin:0;"><li>';
-                $diffStr .= implode('</li><li>', $purifier->purify($diffArray));
-                $diffStr .= '</li></ul>';
+                $diffStr = '<ul style="padding:0;padding-left:1.5em;margin:0;">';
+                foreach ($diffArray as $diff) {
+                    $diff_purified = $purifier->purify($diff, CODENDI_PURIFIER_FULL);
+                    $diffStr      .= "<li>$diff_purified</li>";
+                }
+                $diffStr .= '</ul>';
 
                 $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($purified_property_name, $this->dstGo->getPublicName(), $diffStr));
                 break;
