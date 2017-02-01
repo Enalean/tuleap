@@ -208,8 +208,6 @@ function forum_delete_monitor ($forum_id, $user_id) {
  */
 function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='', $need_feedback = true) {
   global $feedback;
-    $current_project = ProjectManager::instance()->getProject($group_id);
-    if (($current_project->getAccess() == Project::ACCESS_PRIVATE && $is_public ==0) || $current_project->getAccess() == Project::ACCESS_PUBLIC){
 	/*
 		Adding forums to this group
 	*/
@@ -246,7 +244,6 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	  }
 	  return $forum_id;
 	}
-    }
 }
 
 function make_links ($data="") {
