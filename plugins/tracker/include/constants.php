@@ -293,3 +293,21 @@ define('TRACKER_EVENT_FETCH_ADMIN_BUTTONS', 'tracker_event_fetch_admin_buttons')
  *   'group_id'    group_id
  */
 define('TRACKER_EVENT_EXPORT_FULL_XML', 'tracker_event_export_full_xml');
+
+/**
+ * Getting informations from agile dashboard plugin about the tracker affilitaion to an agile dashboard
+ *
+ * Parameters:
+ *  'cannot_configure_instantiate_for_new_projects' Boolean
+ *  'tracker'                                       Tracker
+ */
+define('TRACKER_EVENT_GENERAL_SETTINGS', 'tracker_event_general_settings');
+
+/**
+ * Get the trackers required by agile dashboard
+ *
+ * Parameters:
+ *  'project_id'        project_id
+ *  'tracker_ids_list'  array containing tracker ids
+*/
+define('TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED', 'tracker_event_project_creation_trackers_required');
