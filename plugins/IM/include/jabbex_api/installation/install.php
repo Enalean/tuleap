@@ -1018,8 +1018,7 @@ class JabbeXInstaller {
         
         $this->_add_property("jdbcAuthProvider.passwordSQL", "SELECT LOWER(user_pw) FROM user WHERE user_name=?");
         $this->_add_property("jdbcAuthProvider.passwordType", "md5");
-        $this->_add_property("jdbcAuthProvider.codendiUserSessionIdSQL", "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
-        
+
         $this->_add_property("jdbcUserProvider.loadUserSQL", "SELECT realname , email FROM user WHERE user_name=?");
         $this->_add_property("jdbcUserProvider.userCountSQL", "SELECT COUNT(*) FROM user WHERE status = \'A\'");
         $this->_add_property("jdbcUserProvider.allUsersSQL", "SELECT LOWER(user_name) FROM user WHERE status = \'A\'");
