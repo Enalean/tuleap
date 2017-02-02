@@ -27,12 +27,6 @@ help_browse_tracker_query_field	af_not_created	ArtifactField could not be create
 help_browse_tracker_query_field	art_search_criteria	Artifact Search -  Selection Criteria
 #
 #-----------------------------------------------
-# Script: SF/www/help/index.php
-#
-help_index	welcome	Welcome to $1
-help_index	page_info	Information Page
-#
-#-----------------------------------------------
 # Script: SF/www/help/show_help.php
 #
 help_show_help	page_not_found	$1 Help System - Error: page not found

@@ -340,9 +340,9 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
                                                    ,'selected'=>$selected)));
 		}
 
-        $selected = (boolean) (strstr(getStringFromServer('REQUEST_URI'),'/site/') || $selected_top_tab === 'site');
+        $selected = (boolean) (strstr(getStringFromServer('REQUEST_URI'),'/help/') || $selected_top_tab === 'help');
         $sthSelected = ($sthSelected || $selected);
-        $menuTree->addChild(new TreeNode(array('link'=>'/site/'
+        $menuTree->addChild(new TreeNode(array('link'=>'/help/'
                                                ,'title'=>$Language->getText('include_layout','Help')
                                                ,'selected'=>$selected)));
         

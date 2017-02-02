@@ -101,8 +101,8 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter {
         return get_server_url().'/projects/'.$this->project->getUnixName();
     }
 
-    public function getUrlDocumentationSite() {
-        return get_server_url().'/site';
+    private function getUrlDocumentationSite() {
+        return get_server_url().'/help/';
     }
 
     public function getUrlProjectAdministration() {

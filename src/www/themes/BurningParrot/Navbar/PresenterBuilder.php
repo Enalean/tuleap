@@ -99,7 +99,7 @@ class PresenterBuilder
         return array(
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'help'),
-                '/site/',
+                '/help/',
                 'fa fa-question-circle',
                 ''
             ),

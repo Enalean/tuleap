@@ -20,12 +20,6 @@ help_browse_tracker_query_field	af_not_created	ArtifactField n'a pas pu être cr
 help_browse_tracker_query_field	art_search_criteria	Recherche d'éléments -  Critère de sélection
 #
 #-----------------------------------------------
-# Script: SF/www/help/index.php
-#
-help_index	welcome	Bienvenue sur $1
-help_index	page_info	Page d'information
-#
-#-----------------------------------------------
 # Script: SF/www/help/show_help.php
 #
 help_show_help	page_not_found	Système d'aide $1 - Erreur&nbsp;: page introuvable
