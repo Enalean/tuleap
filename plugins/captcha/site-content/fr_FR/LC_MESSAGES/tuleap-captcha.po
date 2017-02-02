@@ -4,9 +4,37 @@ msgstr "Content-Type: text/plain; charset=UTF-8\n"
 msgid "Add a captcha protection to sensitive operations"
 msgstr "Ajoute un captcha aux opérations sensibles"
 
+msgid "An error occurred while saving your keys, please retry"
+msgstr ""
+"Une erreur est survenue lors de l'enregistrement de vos clés, merci de "
+"réessayer"
+
 msgid "Captcha"
 msgstr "Captcha"
 
+msgid "Captcha configuration"
+msgstr "Configuration du captcha"
+
+msgid "Save settings"
+msgstr "Sauvegarder la configuration"
+
+msgid "Secret key"
+msgstr "Clé secrète"
+
+msgid "Site key"
+msgstr "Clé du site"
+
+msgid "The provided keys are not valid"
+msgstr "Les clés fournies ne sont pas valides"
+
 msgid ""
 "We have not been able to assert that you are not a robot, please try again"
-msgstr "Nous n'avons pas été en mesure d'affirmer que vous n'êtes pas un robot, merci de réessayer"
+msgstr ""
+"Nous n'avons pas été en mesure d'affirmer que vous n'êtes pas un robot, "
+"merci de réessayer"
+
+msgid "You can get the required keys from the Google reCAPTCHA administration"
+msgstr "Vous pouvez obtenir les clés requises depuis l'administration Google reCAPTCHA"
+
+msgid "Your keys has been successfully saved"
+msgstr "Vos clés ont sauvegardées avec succès"

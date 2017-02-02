@@ -18,10 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Captcha\Administration\Controller;
+use Tuleap\Captcha\Administration\Router;
+use Tuleap\Captcha\ConfigurationNotFoundException;
 use Tuleap\Captcha\ConfigurationRetriever;
+use Tuleap\Captcha\ConfigurationSaver;
 use Tuleap\Captcha\DataAccessObject;
 use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
+
+require_once 'constants.php';
 
 class captchaPlugin extends Plugin
 {
@@ -38,6 +45,8 @@ class captchaPlugin extends Plugin
         $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
         $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
         $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
+        $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
+        $this->addHook(Event::IS_IN_SITEADMIN, 'isInSiteAdmin');
     }
 
     /**
@@ -136,5 +145,35 @@ class captchaPlugin extends Plugin
         }
 
         return true;
+    }
+
+    public function addSiteAdministrationOptionHook(array $params)
+    {
+        $params['plugins'][] = array(
+            'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
+            'href'  => CAPTCHA_BASE_URL . '/admin/'
+        );
+    }
+
+    public function isInSiteAdmin(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], CAPTCHA_BASE_URL . '/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
+    }
+
+    public function processAdmin(HTTPRequest $request)
+    {
+        $dao        = new DataAccessObject();
+        $saver      = new ConfigurationSaver($dao);
+        $renderer   = new AdminPageRenderer();
+        try {
+            $configuration = $this->getConfiguration();
+        } catch (ConfigurationNotFoundException $ex) {
+            $configuration = new \Tuleap\Captcha\Configuration('', '');
+        }
+        $controller = new Controller($configuration, $saver, $renderer);
+        $router     = new Router($controller);
+        $router->route($request);
     }
 }
