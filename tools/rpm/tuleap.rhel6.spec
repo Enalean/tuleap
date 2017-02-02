@@ -926,6 +926,7 @@ fi
 # Split src/www for src/www/themes
 %dir %{APP_DIR}/src/www
 %{APP_DIR}/src/www/*.php
+%{APP_DIR}/src/www/.htaccess
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
 # API Explorer is not packaged with the core
@@ -954,7 +955,6 @@ fi
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
-%{APP_DIR}/src/www/site
 %{APP_DIR}/src/www/snippet
 %{APP_DIR}/src/www/soap
 %{APP_DIR}/src/www/softwaremap
