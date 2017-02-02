@@ -105,10 +105,10 @@ class AdminSidebarPresenter
         $this->configuration_nav_homepage              = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_homepage');
         $this->configuration_nav_categories            = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_categories');
         $this->configuration_nav_project_fields        = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_project_fields');
-        $this->configuration_nav_predefined_services   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_services');
         $this->configuration_nav_predefined_references = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_references');
         $this->configuration_nav_tracker_restore       = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_tracker_restore');
         $this->configuration_nav_svn                   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_svn');
+        $this->configuration_nav_templates             = _('Project templates');
 
         $this->utils_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_section_title');
         $this->utils_nav_system_events                 = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_system_events');

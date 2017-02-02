@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
@@ -134,6 +135,7 @@ class trackerPlugin extends Plugin {
         }
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
+        $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1241,5 +1243,22 @@ class trackerPlugin extends Plugin {
                 break;
             }
         }
+    }
+
+    /** @see TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS */
+    public function event_additional_admin_buttons(array $params)
+    {
+        /** @var Project $template */
+        $template = $params['template'];
+
+        $is_service_used = $template->usesService($this->getServiceShortname());
+
+        $params['buttons'][] = array(
+            'icon'        => 'fa-list',
+            'label'       => dgettext('tuleap-tracker', 'Configure trackers'),
+            'uri'         => TRACKER_BASE_URL . '/?group_id=' . (int)$template->getID(),
+            'is_disabled' => ! $is_service_used,
+            'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : ''
+        );
     }
 }
