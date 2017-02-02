@@ -12,12 +12,6 @@ require_once('features_boxes.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
-}
-
 $current_user              = UserManager::instance()->getCurrentUser();
 $current_user_display_name = '';
 if ($current_user->isLoggedIn()) {

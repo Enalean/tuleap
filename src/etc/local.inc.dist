@@ -359,7 +359,11 @@ $sys_project_approval = 1;
 
 // Is license approval mandatory when downloading a file from the FRS?
 // (1 is mandatory, 0 is optional)
-$sys_frs_license_mandatory = 1;
+$sys_frs_license_mandatory = 0;
+
+// If sys_frs_license_mandatory is 1, then you must give the Exchange policy URL
+// which will be used to generate links on the download confirmation popup.
+$sys_exchange_policy_url = '';
 
 // Maximum duration of a session (in seconds)
 // Default value is about 2 weeks: 3600*24*14=1209600
@@ -423,9 +427,6 @@ $sys_avatar_path = $sys_data_dir . '/user/avatar/';
 
 //Zend Framework 1 path
 $zend_path = '/usr/share/zend';
-
-//Exchange policy URL
-$sys_exchange_policy_url = '/plugins/docman/?group_id=1';
 
 // Allow to limit the number of SOAP call that might be critical for the platform.
 // As of today it only impact Project::addProject but it might evolve.

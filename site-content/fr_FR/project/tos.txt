@@ -5,10 +5,9 @@
 //
 -->
 <?php
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+$exchange_policy_url = ForgeConfig::get('sys_exchange_policy_url');
+if (! $exchange_policy_url) {
+    $exchange_policy_url = "javascript:;";
 }
 ?>
 <h2>Conditions générales d'utilisation de <?=$GLOBALS['sys_name']?></h2>
@@ -56,14 +55,14 @@ les cas explicitement mentionnés dans ce document.  </p>
 et géré par <?php print $GLOBALS['sys_org_name']; ?> dans le but de
 promouvoir le développement logiciel collaboratif et la réutilisation
 de composants logiciels selon les termes de la <b><u><a
-href="<?php echo $exchangePolicyUrl ?>"
+href="<?php echo $exchange_policy_url ?>"
 target="_blank" rel="noreferrer">Politique d'échange générale de <?php print
 $GLOBALS['sys_org_name']; ?></a></b></u>.  Enregistrer votre projet
 sur <?php print $GLOBALS['sys_name']; ?> implique que vous comprenez
 les termes de cette politique générale et que vous prenez l'engagement
 de vous y conformer.  <p>
 
-<B>2. DESCRIPTION DU SERVICE</B> 
+<B>2. DESCRIPTION DU SERVICE</B>
 </p>
 
 <p> <P> <?php print $GLOBALS['sys_name']; ?> offre actuellement aux
