@@ -134,6 +134,7 @@ if (!IS_SCRIPT) {
     $csp_rules = "frame-ancestors 'self'; ";
 
     // XSS prevention
+    header('X-Content-Type-Options: nosniff');
     header('X-XSS-Protection: 1; mode=block');
     $whitelist_scripts = array();
     EventManager::instance()->processEvent(
