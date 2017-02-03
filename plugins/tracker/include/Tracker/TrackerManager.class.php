@@ -56,14 +56,26 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @throws Tracker_CannotAccessTrackerException
      */
-    public function checkUserCanAccessTracker($tracker, $user, Codendi_Request $request) {
+    public function checkUserCanAccessTracker($tracker, $user, Codendi_Request $request)
+    {
         $this->checkServiceEnabled($tracker->getProject(), $request);
 
-        if (!$tracker->isActive()) {
+        if (! $tracker->isActive()) {
             throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
         }
-        if (!$tracker->userCanView($user)) {
-            throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
+        if (! $tracker->userCanView($user)) {
+            if ($user->isAnonymous()) {
+                $url_redirect = new URLRedirect(EventManager::instance());
+
+                throw new Tracker_CannotAccessTrackerException(
+                    $GLOBALS['Language']->getText(
+                    'plugin_tracker_common_type',
+                    'no_view_permission_anonymous',
+                    array($url_redirect->buildReturnToLogin($_SERVER))
+                ));
+            } else {
+                throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
+            }
         }
     }
 
@@ -87,7 +99,25 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 if ($artifact->userCanView($user)) {
                     $artifact->process($this, $request, $user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
+                    if ($user->isAnonymous()) {
+                        $url_redirect = new URLRedirect(EventManager::instance());
+
+                        $GLOBALS['Response']->addFeedback(
+                            'error',
+                            $GLOBALS['Language']->getText(
+                                'plugin_tracker_common_type',
+                                'no_view_permission_on_artifact_anonymous',
+                                array($url_redirect->buildReturnToLogin($_SERVER))
+                            ),
+                            CODENDI_PURIFIER_LIGHT
+                        );
+                    } else {
+                        $GLOBALS['Response']->addFeedback(
+                            'error',
+                            $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact')
+                        );
+                    }
+
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
                 }
             } else if ($request->get('func') == 'new-artifact-link') {
@@ -119,7 +149,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @return void
      */
     public function process($request, $user) {
-        $url    = $this->getUrl();
+        $url = $this->getUrl();
 
         try {
             $object = $url->getDispatchableFromRequest($request, $user);
@@ -128,7 +158,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {
             if (! $request->isAjax()) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $this->displayAllTrackers($object->getTracker()->getProject(), $user);
             } else {
                 $GLOBALS['Response']->send401UnauthorizedHeader();
