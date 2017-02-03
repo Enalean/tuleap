@@ -611,7 +611,7 @@ project_admin_userperms	write_perms	Ecriture
 # Script: SF/www/project/admin/userimport.php
 #
 project_admin_userimport	import_members	Importer des membres au projet $1
-project_admin_userimport	import_welcome	<P>Vous pouvez importer des utilisateur dans votre projet à l'aide d'un fichier texte. <br>Voir le <a href="$1">Format d'Import</a> pour plus de détails.<P>
+project_admin_userimport	import_welcome	Vous pouvez importer des utilisateur dans votre projet à l'aide d'un fichier texte. <br>Voir le <a href="$1">Format d'Import</a> pour plus de détails.
 project_admin_userimport	upload_file	Télécharger le fichier :
 project_admin_userimport	submit	Importer les membres
 project_admin_userimport	parse_report	Rapport d'importation du fichier

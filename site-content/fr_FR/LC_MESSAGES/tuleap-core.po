@@ -59,6 +59,9 @@ msgstr "Messagerie Instantanée"
 msgid "Lists"
 msgstr "Listes"
 
+msgid "Load users"
+msgstr "Importer les utilisateurs"
+
 msgid "Mediawiki"
 msgstr "Mediawiki"
 
