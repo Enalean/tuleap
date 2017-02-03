@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
+use HTTPRequest;
 use ProjectManager;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
@@ -48,7 +49,7 @@ class StandUpNotificationSender
         $this->logger                     = $logger;
     }
 
-    public function send()
+    public function send(HTTPRequest $http_request)
     {
         try {
             $agile_dashboard_bots = $this->bot_agiledashboard_factory->getAgileDashboardBotsForSummary();
@@ -59,6 +60,7 @@ class StandUpNotificationSender
                 $project = $this->project_manager->getProject($project_id);
                 $admins  = $project->getAdmins();
                 $text    = $this->notification_builder->buildNotificationText(
+                    $http_request,
                     $admins[0],
                     $project
                 );
