@@ -6,10 +6,9 @@
 //
 -->
 <?php
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+$exchange_policy_url = ForgeConfig::get('sys_exchange_policy_url');
+if (! $exchange_policy_url) {
+    $exchange_policy_url = "javascript:;";
 }
 ?>
 <h2><?=$GLOBALS['sys_name']?> Terms of Service Agreement</h2>
@@ -52,7 +51,7 @@ herein.
 <p>
 <?php print $GLOBALS['sys_name']; ?> is a website owned and operated by <?php print $GLOBALS['sys_org_name']; ?> for
 the purpose of fostering the cross-organizational software development as well as content and source code sharing under
- the terms of the <b><u><a href="<?php echo $exchangePolicyUrl ?>" target="_blank" rel="noreferrer"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy</a></b></u>.  Registering your project on <?php print $GLOBALS['sys_name']; ?> implies that you fully understand this corporate policy and take the commitment to comply with it.
+ the terms of the <b><u><a href="<?php echo $exchange_policy_url; ?>" target="_blank" rel="noreferrer"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy</a></b></u>.  Registering your project on <?php print $GLOBALS['sys_name']; ?> implies that you fully understand this corporate policy and take the commitment to comply with it.
 <p>
 <B>2. DESCRIPTION OF SERVICE</B> 
 </p>

@@ -10,7 +10,7 @@ $body = "Vous êtes maintenant un utilisateur enregistré sur ".$GLOBALS['sys_na
 .". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés,ou même démarrer votre "
 ."propre projet ."
 ."\n\n\n Nous vous recommandons vivement de parcourir le site,lire la documentation du site ("
-."<". $base_url ."/plugins/docman/?group_id=1>) et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) "
+."<". $base_url ."/help/>) et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) "
 ."(définir vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
 ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
 .$GLOBALS['sys_name']." autour de vous. \n\n\n-- L'équipe ".$GLOBALS['sys_name'];
@@ -21,7 +21,7 @@ $title = "Création de compte sur ".$GLOBALS['sys_name']." !";
 $section_one = "Vous êtes maintenant un utilisateur enregistré sur ".$GLOBALS['sys_name'].". En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".$GLOBALS['sys_name'].". "
 ."Vous pouvez utiliser les forums, souscrire à des listes de diffusions, naviguer dans la liste des projets hébergés, ou même démarrer votre propre projet .";
 
-$section_two = "Nous vous recommandons vivement de parcourir le site, lire la documentation du site (<". $base_url ."/plugins/docman/?group_id=1>) "
+$section_two = "Nous vous recommandons vivement de parcourir le site, lire la documentation du site (<". $base_url ."/help/>) "
 ."et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) (définir vos préférences, etc...)";
 
 $section_three = "Profitez pleinement du site, envoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de ".$GLOBALS['sys_name']." autour de vous.";

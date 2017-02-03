@@ -73,13 +73,13 @@ function download_local(group_id,file_id) {
 <span class="small">
 <div align="center">
 <?php
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+
+$exchange_policy_url = ForgeConfig::get('sys_exchange_policy_url');
+if (! $exchange_policy_url) {
+    $exchange_policy_url = 'javascript:;';
 }
 
-echo $Language->getText('file_confirm_download', 'download_explain', array($GLOBALS['sys_org_name'], $GLOBALS['sys_email_contact'], $exchangePolicyUrl));
+echo $Language->getText('file_confirm_download', 'download_explain', array($GLOBALS['sys_org_name'], $GLOBALS['sys_email_contact'], $exchange_policy_url));
 ?><br>
 
 <br><br>
