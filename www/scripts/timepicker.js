@@ -19,11 +19,16 @@
 
 (function ($) {
     $(document).ready(function () {
-        $('.bot-mattermost-agiledashboard-field-time').datetimepicker({
-            language: codendi.locale,
-            pickTime: true,
-            pickSeconds: false,
-            pickDate: false
-        });
+        var field_times = document.querySelectorAll('.bot-mattermost-agiledashboard-field-time');
+        if (field_times.length != 0) {
+            [].forEach.call(field_times, function(date_picker) {
+                $(date_picker).datetimepicker({
+                    language: codendi.locale,
+                    pickTime: true,
+                    pickSeconds: false,
+                    pickDate: false
+                });
+            });
+        }
     });
 })(window.jQuery);
