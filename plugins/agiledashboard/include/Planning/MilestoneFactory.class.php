@@ -891,7 +891,7 @@ class Planning_MilestoneFactory {
         return $this->getReverseKeySortedMilestonesFromArtifacts($artifacts);
     }
 
-    public function userCanChangePrioritiesInMilestone(Planning_ArtifactMilestone $milestone, PFUser $user) {
+    public function userCanChangePrioritiesInMilestone(Planning_Milestone $milestone, PFUser $user) {
         $planning                   = $milestone->getPlanning();
         $user_can_change_priorities = $this->planning_permissions_manager->userHasPermissionOnPlanning($planning->getId(), $planning->getGroupId(), $user, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
 

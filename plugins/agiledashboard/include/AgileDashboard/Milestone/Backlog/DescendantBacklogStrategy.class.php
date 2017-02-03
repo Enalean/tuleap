@@ -114,7 +114,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return $this->getDescendantTrackers();
     }
 
-    private function getAddItemsToBacklogUrls(PFUser $user, Planning_ArtifactMilestone $milestone, $redirect_to_self) {
+    private function getAddItemsToBacklogUrls(PFUser $user, Planning_Milestone $milestone, $redirect_to_self) {
         $submit_urls = array();
 
         foreach ($this->getDescendantTrackers() as $descendant_tracker) {
@@ -130,7 +130,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return $submit_urls;
     }
 
-    private function canUserPrioritizeBacklog(Planning_ArtifactMilestone $milestone, PFUser $user) {
+    private function canUserPrioritizeBacklog(Planning_Milestone $milestone, PFUser $user) {
         $artifact_factory  = Tracker_ArtifactFactory::instance();
         $milestone_factory = new Planning_MilestoneFactory(
             PlanningFactory::build(),
@@ -162,7 +162,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
 
     public function getPresenter(
         PFUser $user,
-        Planning_ArtifactMilestone $milestone,
+        Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
@@ -182,7 +182,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         );
     }
 
-    private function getSolveInconsistenciesUrl(Planning_ArtifactMilestone $milestone, $redirect_to_self) {
+    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, $redirect_to_self) {
         return  AGILEDASHBOARD_BASE_URL.
                 "/?group_id=".$milestone->getGroupId().
                 "&aid=".$milestone->getArtifactId().
