@@ -10,6 +10,9 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Configure services"
+msgstr ""
+
 msgid "Dashboard of the project"
 msgstr ""
 
@@ -70,6 +73,15 @@ msgstr ""
 msgid "Open/Collapse the sidebar"
 msgstr ""
 
+msgid "Please accept term of service"
+msgstr ""
+
+msgid "Project name"
+msgstr ""
+
+msgid "Project templates"
+msgstr ""
+
 msgid "Project web site"
 msgstr ""
 
@@ -85,14 +97,14 @@ msgstr ""
 msgid "Tracker"
 msgstr ""
 
-msgid "Wiki"
+msgid "Unix name"
 msgstr ""
 
 msgid "Update"
 msgstr ""
 
-msgid "Update failed"
+msgid "Update successful"
 msgstr ""
 
-msgid "Update successful"
+msgid "Wiki"
 msgstr ""

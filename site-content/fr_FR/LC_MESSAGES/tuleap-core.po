@@ -24,6 +24,9 @@ msgstr "CVS"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Configure services"
+msgstr "Configurer les services"
+
 msgid "Dashboard of the project"
 msgstr "Dashboard du projet"
 
@@ -86,6 +89,15 @@ msgstr "Ouvre/Ferme la fenêtre d'aide des raccourcis"
 msgid "Open/Collapse the sidebar"
 msgstr "Ouvre/Ferme la barre de service"
 
+msgid "Please accept term of service"
+msgstr "Merci d'accepter les conditions d'utilisation"
+
+msgid "Project name"
+msgstr "Nom du projet"
+
+msgid "Project templates"
+msgstr "Patrons de projet"
+
 msgid "Project web site"
 msgstr "Site web du projet"
 
@@ -101,14 +113,14 @@ msgstr "Barre de service (projet)"
 msgid "Tracker"
 msgstr "Suivi"
 
-msgid "Wiki"
-msgstr "Wiki"
+msgid "Unix name"
+msgstr "Now unix"
 
 msgid "Update"
 msgstr "Mettre à jour"
 
-msgid "Update failed"
-msgstr "La mise à jour a échoué"
-
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
+
+msgid "Wiki"
+msgstr "Wiki"
