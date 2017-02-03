@@ -108,7 +108,7 @@ class captchaPlugin extends Plugin
         if (! $is_captcha_valid) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-captcha', 'Captcha is not valid')
+                dgettext('tuleap-captcha', 'We have not been able to assert that you are not a robot, please try again')
             );
             $params['is_registration_valid'] = false;
         }

@@ -4,5 +4,6 @@ msgstr ""
 msgid "Captcha"
 msgstr ""
 
-msgid "Captcha is not valid"
+msgid ""
+"We have not been able to assert that you are not a robot, please try again"
 msgstr ""
