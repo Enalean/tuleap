@@ -83,7 +83,7 @@ INSERT
         'plugin_mediawiki',
         '/plugins/mediawiki/wiki/$projectname',
         1,
-        1,
+        0,
         'system',
         160
     );

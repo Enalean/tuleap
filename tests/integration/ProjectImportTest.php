@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -160,7 +160,7 @@ class ProjectImportTest extends TuleapDbTestCase
         $project = $project_manager->getProjectByUnixName('toto123');
         $this->assertEqual($project->getPublicName(), 'Toto 123');
         $this->assertEqual($project->getDescription(), '123 Soleil');
-        $this->assertEqual($project->usesSVN(), true);
+        $this->assertEqual($project->usesSVN(), false);
         $this->assertEqual($project->usesCVS(), false);
         $this->assertEqual($project->usesService('plugin_mediawiki'), true);
         $system_event_runner->expectCallCount('runSystemEvents', 1);
