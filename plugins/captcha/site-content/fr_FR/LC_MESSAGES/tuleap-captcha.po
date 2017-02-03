@@ -7,5 +7,6 @@ msgstr "Ajoute un captcha aux opérations sensibles"
 msgid "Captcha"
 msgstr "Captcha"
 
-msgid "Captcha is not valid"
-msgstr "Le captcha n'est pas valide"
+msgid ""
+"We have not been able to assert that you are not a robot, please try again"
+msgstr "Nous n'avons pas été en mesure d'affirmer que vous n'êtes pas un robot, merci de réessayer"
