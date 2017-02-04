@@ -107,8 +107,9 @@ class ProjectXMLImporter {
         ImportConfig $configuration,
         ArchiveInterface $archive,
         Tuleap\Project\SystemEventRunner $event_runner,
-        $project_name_override = null)
-    {
+        $is_template,
+        $project_name_override = null
+    ) {
         $this->logger->info('Start importing new project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
@@ -129,14 +130,16 @@ class ProjectXMLImporter {
             $xml_element['unix-name'] = $project_name_override;
         }
 
-        $project = $this->createProject($xml_element, $event_runner);
+        $project = $this->createProject($xml_element, $event_runner, $is_template);
 
         $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
     }
 
-    private function createProject(SimpleXMLElement $xml,
-        Tuleap\Project\SystemEventRunner $event_runner)
-    {
+    private function createProject(
+        SimpleXMLElement $xml,
+        Tuleap\Project\SystemEventRunner $event_runner,
+        $is_template
+    ) {
         $event_runner->checkPermissions();
 
         $this->logger->info("Create project {$xml['unix-name']}");
@@ -144,7 +147,12 @@ class ProjectXMLImporter {
             100,
             $this->xml_validator,
             ServiceManager::instance(),
-            $this->project_manager);
+            $this->project_manager
+        );
+        if ($is_template) {
+            $this->logger->info("The project will be a template");
+            $data->setIsTemplate();
+        }
         $project = $this->project_creator->build($data);
 
         $this->logger->info("Execute system events to finish creation of project {$project->getID()}, this can take a while...");
