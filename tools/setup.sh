@@ -1463,6 +1463,15 @@ if [ -d "$INSTALL_DIR/plugins/git" ]; then
 fi
 
 
+##############################################
+# Templates
+#
+
+if [ -d "$INSTALL_DIR/plugins/agiledashboard" ]; then
+    echo "Creating Scrum template"
+    /usr/share/tuleap/tools/utils/setup_templates/create_scrum.sh
+fi
+
 
 ##############################################
 # Register buckets in forgeupgrade
