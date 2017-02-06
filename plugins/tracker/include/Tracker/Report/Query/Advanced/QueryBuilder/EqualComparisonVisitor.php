@@ -133,7 +133,8 @@ class EqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
     private function visitList()
     {
         return new EqualComparison\ForList(
-            new FromWhereComparisonFieldBuilder()
+            new FromWhereComparisonFieldBuilder(),
+            new FromWhereComparisonListFieldBuilder()
         );
     }
 
