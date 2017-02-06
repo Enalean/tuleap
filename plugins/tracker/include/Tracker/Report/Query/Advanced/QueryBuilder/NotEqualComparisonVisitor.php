@@ -112,22 +112,29 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return null;
+        return $this->visitList();
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return null;
+        return $this->visitList();
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return null;
+        return $this->visitList();
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return null;
+        return $this->visitList();
+    }
+
+    private function visitList()
+    {
+        return new NotEqualComparison\ForList(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
