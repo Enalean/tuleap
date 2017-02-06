@@ -438,6 +438,15 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-artifactsfolders
 Add a "Folder" tab in an artifact
 
+%package plugin-captcha
+Summary: Add a captcha protection to sensitive operations
+Group: Development/Tools
+Version: @@PLUGIN_CAPTCHA_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-captcha
+%{summary}.
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -503,8 +512,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
-# Remove captcha plugin
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha
 # Remove development tools
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
@@ -1214,6 +1221,10 @@ fi
 %files plugin-artifactsfolders
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/artifactsfolders
+
+%files plugin-captcha
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/captcha
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)
