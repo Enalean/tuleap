@@ -204,7 +204,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)
             ->getUsedFieldByNameForUser(101, "field", $this->user)
-            ->returns(aSelectBoxField()->withName('status')->build());
+            ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
 
@@ -213,14 +213,14 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
 
         $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
-        $this->assertPattern("/The field 'status' is not supported./", implode("\n", $errors));
+        $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumeric()
     {
         stub($this->formelement_factory)
             ->getUsedFieldByNameForUser(101, "field", $this->user)
-            ->returns(aSelectBoxField()->withName('status')->build());
+            ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper(20));
 
@@ -229,14 +229,14 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
 
         $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
-        $this->assertPattern("/The field 'status' is not supported./", implode("\n", $errors));
+        $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotDate()
     {
         stub($this->formelement_factory)
             ->getUsedFieldByNameForUser(101, "field", $this->user)
-            ->returns(aSelectBoxField()->withName('status')->build());
+            ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
 
@@ -245,7 +245,23 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
 
         $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
-        $this->assertPattern("/The field 'status' is not supported./", implode("\n", $errors));
+        $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotClosedList()
+    {
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(anOpenListField()->withName('openlist')->build());
+
+        $expr = new EqualComparison('field', new SimpleValueWrapper('planned'));
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanComparison()

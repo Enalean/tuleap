@@ -616,6 +616,14 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
+     * @return array All (multi) selectboxes formElements used by the tracker
+     */
+    public function getUsedClosedListFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'cb', 'rb'));
+    }
+
+    /**
+     * @param Tracker $tracker
      * @return array of Tracker_FormElement_Field_ArtifactLink
      */
     public function getUsedArtifactLinkFields($tracker) {
@@ -774,7 +782,8 @@ class Tracker_FormElementFactory {
         $fields = array_merge(
             $this->getUsedNumericFields($tracker),
             $this->getUsedTextFields($tracker),
-            $this->getUsedDateFields($tracker)
+            $this->getUsedDateFields($tracker),
+            $this->getUsedClosedListFields($tracker)
         );
 
         foreach ($fields as $key => $field) {

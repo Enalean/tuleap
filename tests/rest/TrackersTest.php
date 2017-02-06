@@ -235,7 +235,7 @@ class TrackersTest extends RestBase {
      */
     public function testGetTrackerArtifactsExpertQueryWithNotSupportedFieldReturnsError()
     {
-        $query     = "status='On going'";
+        $query     = "openlist='On going'";
         $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
         $response  = $this->getResponse($request);
 

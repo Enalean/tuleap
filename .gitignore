@@ -10,6 +10,7 @@ documentation/user_guide/html/*
 nbproject
 plugins/maillog
 *.mo
+*.po~
 *.css
 !plugins/boomerang/*.css
 !plugins/git/gitphp-0.1.0/gitphp.css
