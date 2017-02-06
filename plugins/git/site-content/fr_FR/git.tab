@@ -556,3 +556,10 @@ plugin_git	digest	"Digest"
 plugin_git	basic	Basique
 
 plugin_git	regenerate_gitolite_configuration	Régénérer la configuration
+
+plugin_git	gerrit_servers_id_does_not_exist	Le serveur Gerrit demandé n'existe pas.
+plugin_git	gerrit_servers_allowed_project_back_link_title	Retour à la liste des serveurs Gerrit
+plugin_git	gerrit_servers_allowed_project_title	Restriction de projets pour $1
+plugin_git	gerrit_servers_allowed_project_pane_title	Projets autorisés à utiliser $1
+plugin_git	gerrit_servers_allowed_project_allow_all	Autoriser tous les projets à utiliser ce serveur Gerrit.
+plugin_git	gerrit_servers_under_implementation	Cette fonctionnalité est en cours de développement.

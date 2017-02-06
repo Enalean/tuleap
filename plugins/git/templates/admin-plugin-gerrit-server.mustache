@@ -138,6 +138,15 @@
                         </button>
                         {{> admin-plugin-gerrit-modal-edit }}
 
+                        <a type="button"
+                           href="?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id={{ id }}"
+                           class="tlp-button-primary tlp-button-outline gerrit-action-restrict-button"
+                           disabled
+                        >
+                            <i class="fa fa-lock tlp-button-icon"></i>
+                            {{ btn_restrict }}
+                        </a>
+
                         {{# is_used }}
                             <button type="submit" class="tlp-button-danger tlp-button-outline tlp-tooltip tlp-tooltip-left"
                                     data-tlp-tooltip="{{ btn_delete_title }}"

@@ -106,7 +106,7 @@ class Git_AdminRouter {
     }
 
     private function getControllerFromRequest(Codendi_Request $request) {
-        if ($request->get('pane') == 'gerrit_servers_admin') {
+        if ($request->get('pane') == 'gerrit_servers_admin'  || $request->get('view') === 'gerrit_servers_restriction' ) {
             return new Git_AdminGerritController(
                 $this->csrf,
                 $this->gerrit_server_factory,
