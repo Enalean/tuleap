@@ -133,7 +133,8 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
     private function visitList()
     {
         return new NotEqualComparison\ForList(
-            new FromWhereComparisonFieldBuilder()
+            new FromWhereComparisonFieldBuilder(),
+            new FromWhereNotEqualComparisonListFieldBuilder()
         );
     }
 

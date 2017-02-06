@@ -22,35 +22,102 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 
 class ForList implements FromWhereBuilder
 {
     /**
      * @var FromWhereComparisonFieldBuilder
      */
+    private $from_where_empty_comparison_builder;
+    /**
+     * @var FromWhereNotEqualComparisonListFieldBuilder
+     */
     private $from_where_builder;
 
-    public function __construct(FromWhereComparisonFieldBuilder $from_where_comparison_builder)
-    {
-        $this->from_where_builder = $from_where_comparison_builder;
+    public function __construct(
+        FromWhereComparisonFieldBuilder $from_where_empty_comparison_builder,
+        FromWhereNotEqualComparisonListFieldBuilder $from_where_comparison_builder
+    ) {
+        $this->from_where_empty_comparison_builder = $from_where_empty_comparison_builder;
+        $this->from_where_builder                  = $from_where_comparison_builder;
     }
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix   = spl_object_hash($comparison);
-        $field_id = (int) $field->getId();
+        $suffix           = spl_object_hash($comparison);
+        $comparison_value = $comparison->getValueWrapper();
+        $value            = $comparison_value->getValue();
+        $field_id         = (int) $field->getId();
+        $tracker_id       = (int) $field->getTrackerId();
 
         $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
+        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
+        $filter_alias               = "Filter_{$field_id}_{$suffix}";
 
-        $matches_value = " != " . $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        if ($value === '') {
+            return $this->getFromWhereForEmptyCondition(
+                $field_id,
+                $changeset_value_alias,
+                $changeset_value_list_alias
+            );
+        }
 
-        $condition = "$changeset_value_list_alias.bindvalue_id $matches_value";
+        return $this->getFromWhereForNonEmptyCondition(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias,
+            $list_value_alias,
+            $filter_alias,
+            $tracker_id,
+            $value
+        );
+    }
+
+    /**
+     * @return FromWhere
+     */
+    private function getFromWhereForNonEmptyCondition(
+        $field_id,
+        $changeset_value_alias,
+        $changeset_value_list_alias,
+        $list_value_alias,
+        $filter_alias,
+        $tracker_id,
+        $value
+    ) {
+        $condition = "$list_value_alias.label = " . $this->quoteSmart($value);
 
         return $this->from_where_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias,
+            'tracker_changeset_value_list',
+            'tracker_field_list_bind_static_value',
+            $list_value_alias,
+            $filter_alias,
+            $tracker_id,
+            $condition
+        );
+    }
+
+    /**
+     * @return FromWhere
+     */
+    private function getFromWhereForEmptyCondition(
+        $field_id,
+        $changeset_value_alias,
+        $changeset_value_list_alias
+    ) {
+        $matches_value = " != " . $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $condition     = "$changeset_value_list_alias.bindvalue_id $matches_value";
+
+        return $this->from_where_empty_comparison_builder->getFromWhere(
             $field_id,
             $changeset_value_alias,
             $changeset_value_list_alias,
@@ -62,5 +129,10 @@ class ForList implements FromWhereBuilder
     private function escapeInt($value)
     {
         return CodendiDataAccess::instance()->escapeInt($value);
+    }
+
+    private function quoteSmart($value)
+    {
+        return CodendiDataAccess::instance()->quoteSmart($value);
     }
 }
