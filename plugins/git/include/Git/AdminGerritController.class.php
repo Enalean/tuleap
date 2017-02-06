@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
 
 class Git_AdminGerritController {
 
@@ -50,7 +51,44 @@ class Git_AdminGerritController {
             $this->addGerritServer($request);
         } else if ($request->get('action') == 'delete-gerrit-server') {
             $this->deleteGerritServer($request);
+        } elseif ($request->get('action') == 'set-gerrit-server-restriction') {
+            $this->setGerritServerRestriction($request);
         }
+    }
+
+    private function setGerritServerRestriction(Codendi_Request $request)
+    {
+        $gerrit_server_id = $request->get('gerrit_server_id');
+
+        try {
+            $this->gerrit_server_factory->getServerById($gerrit_server_id);
+        }  catch (Git_RemoteServer_NotFoundException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_id_does_not_exist')
+            );
+
+            $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+
+            $this->renderGerritServerList($title);
+        }
+
+        $this->checkSynchronizerToken('/plugins/git/admin/?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' . $gerrit_server_id);
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_under_implementation')
+        );
+
+        $GLOBALS['Response']->redirect(
+            '/plugins/git/admin/?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' . $gerrit_server_id
+        );
+    }
+
+    private function checkSynchronizerToken($url)
+    {
+        $token = new CSRFSynchronizerToken($url);
+        $token->check();
     }
 
     private function addGerritServer(Codendi_Request $request)
@@ -79,6 +117,36 @@ class Git_AdminGerritController {
     public function display(Codendi_Request $request) {
         $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
 
+        switch ($request->get('action')) {
+            case 'manage-allowed-projects':
+                try {
+                    $presenter     = $this->getManageAllowedProjectsPresenter($request);
+                    $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
+
+                    $this->admin_page_renderer->renderAPresenter(
+                        $title,
+                        $template_path,
+                        $presenter->getTemplate(),
+                        $presenter
+                    );
+                } catch (Git_RemoteServer_NotFoundException $exception) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_id_does_not_exist')
+                    );
+
+                    $this->renderGerritServerList($title);
+                }
+
+                break;
+            default:
+                $this->renderGerritServerList($title);
+                break;
+        }
+    }
+
+    private function renderGerritServerList($title)
+    {
         $admin_presenter = new Git_AdminGerritPresenter(
             $title,
             $this->csrf,
@@ -87,9 +155,20 @@ class Git_AdminGerritController {
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
-            dirname(GIT_BASE_DIR).'/templates',
+            dirname(GIT_BASE_DIR) . '/templates',
             'admin-plugin',
             $admin_presenter
+        );
+    }
+
+    private function getManageAllowedProjectsPresenter(Codendi_Request $request) {
+        $gerrit_server_id = $request->get('gerrit_server_id');
+        $gerrit_server    = $this->gerrit_server_factory->getServerById($gerrit_server_id);
+
+        return new AdminAllowedProjectsGerritPresenter(
+            $gerrit_server,
+            array(),
+            false
         );
     }
 

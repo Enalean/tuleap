@@ -311,6 +311,8 @@ class GitPlugin extends Plugin {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/modal-mirror-configuration.js';
             } else if (strpos($_SERVER['REQUEST_URI'], 'mirrors_restriction')) {
                 $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+            } else if (strpos($_SERVER['REQUEST_URI'], 'gerrit_servers_restriction')) {
+                $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
             }
             else if (strpos($_SERVER['REQUEST_URI'], 'gitolite_config')) {
                 $params['javascript_files'][] = GIT_BASE_URL . '/scripts/admin-gitolite.js';

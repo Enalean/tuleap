@@ -117,6 +117,10 @@
     }
 }
 
+.gerrit-action-restrict-button {
+    margin: 0 ($tlp-spacing / 2) 0 0;
+}
+
 /* -------------------- MEDIA QUERIES ---------------------- */
 
 @media screen and (max-width: 1300px) {

@@ -101,9 +101,9 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
         $this->yes            = $GLOBALS['Language']->getText('plugin_git', 'yes');
         $this->no             = $GLOBALS['Language']->getText('plugin_git', 'no');
-
         $this->basic          = $GLOBALS['Language']->getText('plugin_git', 'basic');
         $this->digest         = $GLOBALS['Language']->getText('plugin_git', 'digest');
+        $this->btn_restrict   = $GLOBALS['Language']->getText('global','btn_restrict');
     }
 
     public function list_of_servers_is_empty()
