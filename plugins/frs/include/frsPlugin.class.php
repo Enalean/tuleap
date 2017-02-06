@@ -110,15 +110,17 @@ class frsPlugin extends \Plugin
             $release_id  = $params['release_id'];
             $artifact_id = $release_request['artifact-id'];
 
-            if (! ctype_digit($artifact_id)) {
-                $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_id_not_int');
-                return;
-            }
+            if ($artifact_id !== '') {
+                if (! ctype_digit($artifact_id)) {
+                    $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_id_not_int');
+                    return;
+                }
 
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
-            if (! $artifact) {
-                $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_does_not_exist', $artifact_id);
-                return;
+                $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+                if (! $artifact) {
+                    $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_does_not_exist', $artifact_id);
+                    return;
+                }
             }
 
             $updater = $this->getLinkUpdater();
@@ -132,7 +134,7 @@ class frsPlugin extends \Plugin
 
     private function doesRequestContainsAdditionalInformation(array $release_request)
     {
-        return isset($release_request['artifact-id']) && $release_request['artifact-id'] !== '';
+        return isset($release_request['artifact-id']);
     }
 
     /**
