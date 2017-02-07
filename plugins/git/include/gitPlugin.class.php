@@ -62,6 +62,8 @@ use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Git\RestrictedGerritServerDao;
+use Tuleap\Git\GerritServerResourceRestrictor;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -638,7 +640,8 @@ class GitPlugin extends Plugin {
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getAdminPageRenderer(),
-            $this->getRegexpFineGrainedDisabler()
+            $this->getRegexpFineGrainedDisabler(),
+            new GerritServerResourceRestrictor(new RestrictedGerritServerDao())
         );
         $admin->process($request);
         $admin->display($request);
