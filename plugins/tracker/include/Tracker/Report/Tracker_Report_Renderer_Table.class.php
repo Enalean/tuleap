@@ -1964,7 +1964,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
         $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
 
-        if($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
+        if($this->report->getTracker()->isProjectAllowedToUseNature() &&
+            $this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE
+        ) {
             foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
                 $line[] = $column['field']->fetchCSVChangesetValueWithNature(
                     $row['changeset_id'],
