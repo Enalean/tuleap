@@ -139,7 +139,10 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
 
     private function visitList()
     {
-        return new ListFieldChecker(new EmptyStringAllowed(), new CollectionOfListValuesExtractor());
+        return new ListFieldChecker(
+            new EmptyStringAllowed(),
+            new CollectionOfListValuesExtractor()
+        );
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
