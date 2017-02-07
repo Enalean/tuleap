@@ -150,7 +150,12 @@ class ProjectImportTest extends TuleapDbTestCase
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
         $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__ . '/_fixtures/fake_project');
 
-        $importer->importNewFromArchive(new Tuleap\Project\XML\Import\ImportConfig(), $archive, $system_event_runner);
+        $importer->importNewFromArchive(
+            new Tuleap\Project\XML\Import\ImportConfig(),
+            $archive,
+            $system_event_runner,
+            false
+        );
 
         // Reset Project Manager (and its cache)
         ProjectManager::clearInstance();
@@ -201,7 +206,12 @@ class ProjectImportTest extends TuleapDbTestCase
         $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__ . '/_fixtures/fake_project_with_missing_natures');
 
         $this->expectException();
-        $importer->importNewFromArchive(new Tuleap\Project\XML\Import\ImportConfig(), $archive, $system_event_runner);
+        $importer->importNewFromArchive(
+            new Tuleap\Project\XML\Import\ImportConfig(),
+            $archive,
+            $system_event_runner,
+            false
+        );
     }
 
     private function mediawikiTests(Project $project) {

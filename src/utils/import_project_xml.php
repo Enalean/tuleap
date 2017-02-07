@@ -45,7 +45,8 @@ $usage_options .= 'h';  // help message
 $usage_long_options = array(
     'force::',
     'help',
-    'automap::'
+    'automap::',
+    'type::'
 );
 
 function usage() {
@@ -77,6 +78,8 @@ Long options:
   --force=<something>          Force something
                                Supported values:
                                    references
+
+  --type=template              If the project is created, then it can be defined as a template
 
   --help                       Display this help
 
@@ -130,6 +133,15 @@ if (isset($arguments['automap'])) {
     } else {
         fwrite(STDERR, 'When using automap, you need to specify a default action, eg: --automap=no-email,create:A'.PHP_EOL);
         exit(1);
+    }
+}
+
+$is_template = false;
+if (isset($arguments['type']) && trim($arguments['type']) != '') {
+    if (trim($arguments['type']) === 'template') {
+        $is_template = true;
+    } else {
+        usage();
     }
 }
 
@@ -216,7 +228,13 @@ try {
         if (empty($project_id)) {
             $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
             $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
-            $xml_importer->importNewFromArchive($configuration, $archive, $system_event_runner, $project_name_override);
+            $xml_importer->importNewFromArchive(
+                $configuration,
+                $archive,
+                $system_event_runner,
+                $is_template,
+                $project_name_override
+            );
         } else {
             $xml_importer->importFromArchive($configuration, $project_id, $archive);
         }

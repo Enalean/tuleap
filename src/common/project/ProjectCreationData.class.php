@@ -25,6 +25,7 @@ class ProjectCreationData {
     private $unix_name;
     private $is_public;
     private $is_test;
+    private $is_template;
     private $short_description;
     private $built_from_template;
     private $trove_data;
@@ -72,6 +73,16 @@ class ProjectCreationData {
 
     public function isTest() {
         return $this->is_test;
+    }
+
+    public function isTemplate()
+    {
+        return $this->is_template;
+    }
+
+    public function setIsTemplate()
+    {
+        $this->is_template = true;
     }
 
     public function getShortDescription() {

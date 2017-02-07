@@ -64,6 +64,13 @@ class ProjectCreator {
     const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
 
     /**
+     * Waiting for "private const" in PHP 7.1 https://wiki.php.net/rfc/class_const_visibility
+     */
+    private static $TYPE_PROJECT  = 1;
+    private static $TYPE_TEMPLATE = 2;
+    private static $TYPE_TEST     = 3;
+
+    /**
      * @var UgroupDuplicator
      */
     private $ugroup_duplicator;
@@ -308,6 +315,13 @@ class ProjectCreator {
 
         $access = $data->getAccess();
 
+        $type = self::$TYPE_PROJECT;
+        if ($data->isTest()) {
+            $type = self::$TYPE_TEST;
+        } elseif ($data->isTemplate()) {
+            $type = self::$TYPE_TEMPLATE;
+        }
+
         // make group entry
         $insert_data = array(
             'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data->getFullName())) ."'",
@@ -321,7 +335,7 @@ class ProjectCreator {
             'register_time'       => time(),
             'rand_hash'           => "'". md5($random_num) ."'",
             'built_from_template' => db_ei($data->getTemplateId()),
-            'type'                => ($data->isTest() ? 3 : 1)
+            'type'                => db_ei($type)
         );
         $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
         $result=db_query($sql);
