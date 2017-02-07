@@ -365,7 +365,6 @@ project_reference	reference_task_desc_key	Tache
 project_reference	reference_sr_desc_key	Demande de support
 project_reference	reference_patch_desc_key	Patch
 project_reference	reference_release_desc_key	Version
-project_reference	reference_snippet_desc_key	Echantillon de code
 
 project_reference	reference_artifact_nature_key	Artefact
 project_reference	reference_document_nature_key	Document
@@ -377,7 +376,6 @@ project_reference	reference_forum_nature_key	Forum
 project_reference	reference_forum_message_nature_key	Message de forum
 project_reference	reference_news_nature_key	Annonce
 project_reference	reference_wiki_page_nature_key	Page Wiki
-project_reference	reference_snippet_nature_key	Echantillon de Code
 project_reference	reference_other_nature_key	Autre
 #
 #-----------------------------------------------

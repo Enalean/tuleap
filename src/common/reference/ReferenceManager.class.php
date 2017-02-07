@@ -99,7 +99,6 @@ class ReferenceManager {
     const REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
     const REFERENCE_NATURE_NEWS = 'news';
     const REFERENCE_NATURE_WIKIPAGE = 'wiki_page';
-    const REFERENCE_NATURE_SNIPPET = 'snippet';
     const REFERENCE_NATURE_OTHER = 'other';
     
     /**
@@ -158,7 +157,6 @@ class ReferenceManager {
             self::REFERENCE_NATURE_FORUMMESSAGE => array('keyword' => 'msg', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUMMESSAGE.'_nature_key')),
             self::REFERENCE_NATURE_NEWS => array('keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_NEWS.'_nature_key')),
             self::REFERENCE_NATURE_WIKIPAGE => array('keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_WIKIPAGE.'_nature_key')),
-            self::REFERENCE_NATURE_SNIPPET => array('keyword' => 'snippet', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SNIPPET.'_nature_key'))
         );
     
         $plugins_natures = array();

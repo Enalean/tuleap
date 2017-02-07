@@ -311,7 +311,6 @@ class URLVerification {
         // Restricted users cannot access any page belonging to a project they are not a member of.
         // In addition, the following URLs are forbidden (value overriden in site-content file)
         $forbidden_url = array( 
-          '/snippet',     // Code Snippet Library
           '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
           '/project/register.php',    // Register a new project
           '/export',      // Codendi XML feeds

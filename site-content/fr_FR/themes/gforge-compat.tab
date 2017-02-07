@@ -59,8 +59,6 @@ menu	account_maintenance	Gestion du compte
 menu	admin	Administration
 menu	bookmark_page	Ajouter aux favoris
 menu	change_my_theme	Changer de thème
-menu	code_snippet	Boite à outils
-menu	code_snippet_library	Bibliothèque de code
 menu	compile_farm	Ferme de compilation
 menu	diary_notes	Journal et notes
 menu	discussion_forums	Forums de discussion

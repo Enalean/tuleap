@@ -146,7 +146,6 @@ include_menu	this_forum	This Forum
 include_menu	this_tracker	This Tracker
 include_menu	all_trackers	All trackers
 include_menu	software_proj	Software Projects
-include_menu	code_snippets	Code Snippets 
 include_menu	people	People
 include_menu	this_wiki	This Wiki
 include_menu	wiki	Wiki
@@ -156,7 +155,6 @@ include_menu	software_map	Software Map
 include_menu	software	Software
 include_menu	new_releases	New Releases
 include_menu	other_site_mirrors	Other Site Mirrors
-include_menu	code_snippet_lib	Code Snippet Library
 include_menu	help_index	Help Index
 include_menu	site_doc	Site Documentation
 include_menu	dev_channel	Developers Channels
@@ -307,15 +305,6 @@ include_session	no_access	You have attempted to reach a part of the site for whi
 include_session	hash_err	ERROR - two people had the same hash - backarrow and re-login. It should never happen again
 include_session	expired_password	Your password has expired.
 include_session	password_will_expire	Your password will expire in $1 day(s).
-#
-#-----------------------------------------------
-# Script: SF/www/include/snippet_caching.php
-#
-include_snippet_caching	browse_snippet	Browse Snippets
-include_snippet_caching	browse_explain	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box.
-include_snippet_caching	count_update	Counts last updated: $1
-include_snippet_caching	browse_lang	Browse by Language
-include_snippet_caching	browse_cat	Browse by Category
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_exit.php

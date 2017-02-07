@@ -665,86 +665,6 @@ CREATE TABLE session (
 ) ENGINE=InnoDB;
 
 #
-# Table structure for table 'snippet'
-#
-
-CREATE TABLE snippet (
-  snippet_id int(11) NOT NULL auto_increment,
-  created_by int(11) NOT NULL default '0',
-  name text,
-  description text,
-  type int(11) NOT NULL default '0',
-  language int(11) NOT NULL default '0',
-  license text NOT NULL,
-  category int(11) NOT NULL default '0',
-  PRIMARY KEY  (snippet_id),
-  KEY idx_snippet_language (language),
-  KEY idx_snippet_category (category)
-);
-
-#
-# Table structure for table 'snippet_package'
-#
-
-CREATE TABLE snippet_package (
-  snippet_package_id int(11) NOT NULL auto_increment,
-  created_by int(11) NOT NULL default '0',
-  name text,
-  description text,
-  category int(11) NOT NULL default '0',
-  language int(11) NOT NULL default '0',
-  PRIMARY KEY  (snippet_package_id),
-  KEY idx_snippet_package_language (language),
-  KEY idx_snippet_package_category (category)
-);
-
-#
-# Table structure for table 'snippet_package_item'
-#
-
-CREATE TABLE snippet_package_item (
-  snippet_package_item_id int(11) NOT NULL auto_increment,
-  snippet_package_version_id int(11) NOT NULL default '0',
-  snippet_version_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (snippet_package_item_id),
-  KEY idx_snippet_package_item_pkg_ver (snippet_package_version_id)
-);
-
-#
-# Table structure for table 'snippet_package_version'
-#
-
-CREATE TABLE snippet_package_version (
-  snippet_package_version_id int(11) NOT NULL auto_increment,
-  snippet_package_id int(11) NOT NULL default '0',
-  changes text,
-  version text,
-  submitted_by int(11) NOT NULL default '0',
-  date int(11) NOT NULL default '0',
-  PRIMARY KEY  (snippet_package_version_id),
-  KEY idx_snippet_package_version_pkg_id (snippet_package_id)
-);
-
-#
-# Table structure for table 'snippet_version'
-#
-
-CREATE TABLE snippet_version (
-  snippet_version_id int(11) NOT NULL auto_increment,
-  snippet_id int(11) NOT NULL default '0',
-  changes text,
-  version text,
-  submitted_by int(11) NOT NULL default '0',
-  date int(11) NOT NULL default '0',
-  code longblob,
-  filename varchar(255) NOT NULL default '',
-  filesize varchar(50) NOT NULL default '',
-  filetype varchar(50) NOT NULL default '',
-  PRIMARY KEY  (snippet_version_id),
-  KEY idx_snippet_version_snippet_id (snippet_id)
-);
-
-#
 # Table structure for table 'stats_project'
 #
 
@@ -1167,42 +1087,6 @@ CREATE TABLE svn_token (
   comment TEXT,
   INDEX idx_user_id (user_id)
 );
-
-#
-# snippet category table
-#
-CREATE TABLE snippet_category (
-  category_id int(11) NOT NULL,
-  category_name varchar(255) NOT NULL default ''
-);
-
-#
-# snippet type table
-#
-CREATE TABLE snippet_type (
-  type_id int(11) NOT NULL,
-  type_name varchar(255) NOT NULL default ''
-);
-
-
-#
-# snippet license table
-#
-CREATE TABLE snippet_license (
-  license_id int(11) NOT NULL,
-  license_name varchar(255) NOT NULL default ''
-);
-
-
-#
-# snippet language table
-#
-CREATE TABLE snippet_language (
-  language_id int(11) NOT NULL,
-  language_name varchar(255) NOT NULL default ''
-);
-
-
 
 #
 # Service table

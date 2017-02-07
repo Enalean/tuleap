@@ -393,7 +393,7 @@ $sys_suspend_non_project_member_delay = 0;
 // Default value is 3 days
 $sys_file_deletion_delay = 3;
 
-// Max upload size for quick release, documentation, patch and code snippet.
+// Max upload size for quick release, documentation.
 // in bytes. E.g. 67108864 for 64 MB
 // Make sure that php.ini and mysql configuration file (/etc/my.cnf)
 // are also configured to allow this size.
@@ -409,10 +409,6 @@ $sys_proxy = '';
 // Enable trove categorization (project tree/software map)
 // (1 to enable, 0 to disable)
 $sys_use_trove = 1;
-
-// Enable code snippet library
-// (1 to enable, 0 to disable)
-$sys_use_snippet = 1;
 
 //Enable new project registration
 // (1 to enable, 0 to disable)

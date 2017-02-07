@@ -36,11 +36,9 @@ search_index	task_summary	Task Summary
 search_index	created_by	Created By
 search_index	start_date	Start Date
 search_index	end_date	End Date
-search_index	snippet_name	Snippet Name
 search_index	artifact_summary	Artifact Summary
 search_index	invalid_search	ERROR - Invalid Search
 search_index	prev_res	Previous Results
 search_index	next_res	Next Results
 search_index	soft	Projects
 search_index	people	People
-search_index	snippets	Snippets
