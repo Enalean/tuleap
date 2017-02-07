@@ -124,17 +124,17 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
