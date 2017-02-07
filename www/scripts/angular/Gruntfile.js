@@ -40,7 +40,7 @@ module.exports = function(grunt) {
                 ' * <%= pkg.homepage %>\n' +
                 ' *\n' +
                 ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-                ' * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n' +
+                ' * Licensed <%= pkg.license %>\n' +
                 ' */\n'
         },
 
@@ -117,14 +117,6 @@ module.exports = function(grunt) {
                     expand: true
                 }]
             },
-            build_vendorcss: {
-                files: [{
-                    src: ['<%= vendor_files.css %>'],
-                    dest: '<%= build_dir %>/',
-                    cwd: '.',
-                    expand: true
-                }]
-            },
             build_vendorassets: {
                 files: [{
                     src: ['<%= vendor_files.assets %>'],
@@ -140,25 +132,7 @@ module.exports = function(grunt) {
                     dest: '<%= compile_dir %>/assets',
                     cwd: '<%= build_dir %>/assets',
                     expand: true
-                },
-                {
-                    src: ['<%= vendor_files.css %>'],
-                    dest: '<%= compile_dir %>/',
-                    cwd: '.',
-                    expand: true
                 }]
-            },
-            css_to_scss: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%=  vendor_dir %>',
-                        src: ['**/*.css'],
-                        dest: '<%=  vendor_dir %>',
-                        filter: 'isFile',
-                        ext: ".scss"
-                    }
-                ]
             }
         },
 
@@ -180,7 +154,6 @@ module.exports = function(grunt) {
                     '<%= build_dir %>/modules/**/*.js',
                     '<%= build_dir %>/src/**/*.js',
                     '<%= html2js.app.dest %>',
-                    '<%= vendor_files.js %>',
                     'module.suffix'
                 ],
                 dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
@@ -222,8 +195,9 @@ module.exports = function(grunt) {
                     '<%= build_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.scss %>'
                 },
                 options: {
-                    sourcemap: 'file',
-                    style: 'expanded'
+                    sourceMap     : true,
+                    sourceMapEmber: true,
+                    outputStyle   : 'expanded'
                 }
             },
             prod: {
@@ -231,9 +205,11 @@ module.exports = function(grunt) {
                     '<%= compile_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.scss %>'
                 },
                 options: {
-                    sourcemap: 'none',
-                    style: 'compressed',
-                    loadPath: ['/tuleap/plugins/trafficlights/www/scripts/angular/src/app/artifact-links-graph']
+                    sourceMap   : true,
+                    outputStyle : 'compressed',
+                    includePaths: [
+                        '/tuleap/plugins/trafficlights/www/scripts/angular/src/app/artifact-links-graph'
+                    ]
                 }
             }
         },
@@ -467,12 +443,10 @@ module.exports = function(grunt) {
         'clean:build',
         'nggettext_extract',
         'html2js',
-        'copy:css_to_scss',
         'copy:build_assets',
         'copy:build_appmodules',
         'copy:build_appjs',
         'copy:build_vendorjs',
-        'copy:build_vendorcss',
         'copy:build_vendorassets'
     ]);
 

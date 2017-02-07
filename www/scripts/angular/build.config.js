@@ -10,7 +10,6 @@ module.exports = {
      */
     build_dir  : 'build',
     compile_dir: 'bin',
-    vendor_dir: 'vendor',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -46,8 +45,6 @@ module.exports = {
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
-
-        html: ['src/index.html'],
         scss: 'src/app/main.scss'
     },
 
@@ -96,12 +93,6 @@ module.exports = {
             'vendor/angular-locker/dist/angular-locker.min.js',
             'vendor/angular-jwt/dist/angular-jwt.min.js',
             'vendor/angular-animate-change/release/angular-animate-change.js'
-        ],
-        css: [
-            'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
-            'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
-            'vendor/angular-ui-select/dist/select.css',
-            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
         ],
         assets: [
             'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',
