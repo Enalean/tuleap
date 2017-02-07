@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
@@ -175,7 +175,15 @@ msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 
 #, php-format
 msgid "The list field '%s' cannot be compared to NOW()."
-msgstr "Le champ list '%s' ne peut pas être comparé à NOW()."
+msgstr "Le champ liste '%s' ne peut pas être comparé à NOW()."
+
+#, php-format
+msgid ""
+"The list field '%s' cannot be compared to the empty string with IN() "
+"operator."
+msgstr ""
+"Le champ liste '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur IN()."
 
 msgid ""
 "The query is considered too complex to be executed by the server.\n"

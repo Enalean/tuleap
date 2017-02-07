@@ -25,6 +25,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
@@ -35,6 +37,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
@@ -82,7 +85,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             new GreaterThanComparisonVisitor(),
             new LesserThanOrEqualComparisonVisitor(),
             new GreaterThanOrEqualComparisonVisitor(),
-            new BetweenComparisonVisitor()
+            new BetweenComparisonVisitor(),
+            new InComparisonVisitor()
         );
     }
 
@@ -348,6 +352,30 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator between()./", implode("\n", $errors));
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsNotListForInComparison()
+    {
+        stub($this->formelement_factory)
+            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->returns(aStringField()->withName('string')->build());
+
+        $expr = new InComparison(
+            'field',
+            new InValueWrapper(
+                array(
+                    new SimpleValueWrapper('value1'),
+                    new SimpleValueWrapper('value2')
+                )
+            )
+        );
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+
+        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $this->assertPattern("/The field 'string' is not supported for the operator in()./", implode("\n", $errors));
     }
 
     public function itDelegatesValidationToSubExpressionAndTailInAndExpression()

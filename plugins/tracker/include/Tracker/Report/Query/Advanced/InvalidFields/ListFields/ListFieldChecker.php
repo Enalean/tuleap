@@ -20,19 +20,13 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List_Bind;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class ListFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+class ListFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var EmptyStringChecker
@@ -71,19 +65,6 @@ class ListFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
                 throw new ListValueDoNotExistComparisonException($field, $value);
             }
         }
-    }
-
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        throw new NowIsNotSupportedException();
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
     }
 
     private function extractLabelValues(array $list_values)

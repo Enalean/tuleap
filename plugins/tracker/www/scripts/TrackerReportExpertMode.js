@@ -138,7 +138,7 @@
                         token: "keyword"
                     },
                     {
-                        regex: /(?:now|between)\b/i,
+                        regex: /(?:now|between|in)\b/i,
                         token: "variable-2"
                     },
                     {
@@ -172,7 +172,7 @@
             } else {
                 var tracker_query      = document.getElementById('tracker-report-expert-query-textarea'),
                     allowed_fields     = JSON.parse(tracker_query.dataset.allowedFields),
-                    autocomplete_words = ['AND', 'OR', 'BETWEEN(', 'NOW()'].concat(allowed_fields);
+                    autocomplete_words = ['AND', 'OR', 'BETWEEN(', 'NOW()', 'IN('].concat(allowed_fields);
 
                 CodeMirror.commands.autocomplete = autocomplete;
 

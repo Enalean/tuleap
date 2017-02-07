@@ -26,6 +26,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
@@ -36,6 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
@@ -51,6 +54,7 @@ class QueryBuilderTest extends TuleapTestCase
     private $int_field;
     private $float_field;
     private $date_field;
+    private $selectbox_field;
 
     /** @var  QueryBuilderVisitor */
     private $query_builder;
@@ -67,11 +71,13 @@ class QueryBuilderTest extends TuleapTestCase
         $this->int_field   = anIntegerField()->withName('int')->withId(102)->build();
         $this->float_field = aFloatField()->withName('float')->withId(103)->build();
         $this->date_field  = aMockDateWithoutTimeField()->withName('date')->withId(104)->build();
+        $this->selectbox_field = aSelectBoxField()->withName('sb')->withId(105)->build();
 
         $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
         stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);
         stub($formelement_factory)->getUsedFieldByName(101, 'float')->returns($this->float_field);
         stub($formelement_factory)->getUsedFieldByName(101, 'date')->returns($this->date_field);
+        stub($formelement_factory)->getUsedFieldByName(101, 'sb')->returns($this->selectbox_field);
 
         $this->query_builder = new QueryBuilderVisitor(
             $formelement_factory,
@@ -81,7 +87,8 @@ class QueryBuilderTest extends TuleapTestCase
             new GreaterThanComparisonVisitor(),
             new LesserThanOrEqualComparisonVisitor(),
             new GreaterThanOrEqualComparisonVisitor(),
-            new BetweenComparisonVisitor()
+            new BetweenComparisonVisitor(),
+            new InComparisonVisitor()
         );
     }
 
@@ -387,5 +394,21 @@ class QueryBuilderTest extends TuleapTestCase
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
     }
-/**/
+
+    public function itRetrievesForSelectBoxFieldInInComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new InComparison(
+            'sb',
+            new InValueWrapper(
+                array(
+                    new SimpleValueWrapper('first'),
+                    new SimpleValueWrapper('second')
+                )
+            )
+        );
+
+        $result = $this->query_builder->visitInComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_list/', $result->getFrom());
+    }
 }
