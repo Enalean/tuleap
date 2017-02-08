@@ -381,6 +381,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 0, 0, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 0, 0, 'system', 130);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 0, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 0, 0, 'system', 105);
 
 -- Group 1
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/admin/', 1, 1, 'system', 10);
