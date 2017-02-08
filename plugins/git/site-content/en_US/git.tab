@@ -463,6 +463,7 @@ plugin_git	mirror_no_mirrors_part_one	There is nothing here,
 plugin_git	mirror_no_mirrors_part_two	start by adding a mirror.
 plugin_git	mirror_number_of_repositories	$1 repositories
 plugin_git	no_specified_mirror_name	Not specified mirror name
+plugin_git	mirror_not_found	Mirror not found, please try again
 
 plugin_git	system_event_queue	Git
 plugin_git	mirror_system_event_queue	Grok Mirror
