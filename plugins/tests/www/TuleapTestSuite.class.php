@@ -20,6 +20,11 @@ class TuleapTestSuite extends TestSuite {
             $this->addFile($dir);
         }
     }
+
+    public function randomize()
+    {
+        shuffle($this->_test_cases);
+    }
 }
 
 class TuleapTestCollector extends SimpleCollector {
@@ -78,5 +83,3 @@ class FilterDirectoryLikeASir extends RecursiveFilterIterator {
         return file_exists($file->getPathname() . '/.simpletest_skip');
     }
 }
-
-?>
