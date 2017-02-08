@@ -53,19 +53,19 @@ plugin_git	admin_mail	Notifications
 
 plugin_git	admin_mirroring	Réplication
 plugin_git	mirroring_title	Réplication
-plugin_git	mirroring_info	Sélectionnez les mirroirs sur lesquels vous souhaitez répliquer le dépôt <b>$1</b>:
-plugin_git	mirroring_default_info	Sélectionnez les mirroirs sur lesquels vous souhaitez répliquer par défaut tout nouveau dépôt :
+plugin_git	mirroring_info	Sélectionnez les miroirs sur lesquels vous souhaitez répliquer le dépôt <b>$1</b>:
+plugin_git	mirroring_default_info	Sélectionnez les miroirs sur lesquels vous souhaitez répliquer par défaut tout nouveau dépôt :
 plugin_git	mirroring_mirror_name	Nom
 plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Utilisé par ce dépôt ?
 plugin_git	mirroring_mirror_default_used	Utilisé par défaut ?
 plugin_git	mirroring_update_mirroring	Mettre à jour les réplications de ce dépôt
 plugin_git	mirroring_update_default_mirroring	Mettre à jour les réplications par défaut
-plugin_git	mirroring_mirroring_successful	Le dépôt va être répliqué sur les mirroirs sélectionnés dans quelques minutes.
-plugin_git	mirroring_mirroring_successful_plural	Les dépôts vont être répliqués sur les mirroirs sélectionnés dans quelques minutes.
+plugin_git	mirroring_mirroring_successful	Le dépôt va être répliqué sur les miroirs sélectionnés dans quelques minutes.
+plugin_git	mirroring_mirroring_successful_plural	Les dépôts vont être répliqués sur les miroirs sélectionnés dans quelques minutes.
 plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué dans quelques minutes.
 plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques minutes.
-plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
+plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des miroirs sur lesquels le dépôt est répliqué.
 
 plugin_git	mirror_no_repositories	Aucun
 plugin_git	repos_mirror_title	Dépôts sur le miroir $1
@@ -118,7 +118,7 @@ plugin_git	project_deletion_not_possible	Impossible de supprimer le project $1 s
 plugin_git	project_deletion_open_elements	Il y'a des revues ouvertes concernant ce projet.
 
 plugin_git	actions_repo_not_found	Le dépôt n'existe pas
-plugin_git	actions_mirror_ids_not_valid	La requête contient des données non valides (identifiants de mirroir).
+plugin_git	actions_mirror_ids_not_valid	La requête contient des données non valides (identifiants de miroir).
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
 plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
 plugin_git	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le repertoire
@@ -153,8 +153,8 @@ plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration vers Gerrit
 plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
 plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
-plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un mirroir de la référence sur Gerrit.</li></ul>
-plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur <a href="$2">$2</a>.</li><li>Le dépot courant est maintenant un mirroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur <a href="$2">$2</a>.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_past_project_warn	Ce dépôt a déjà été migré sur Gerrit et existe encore. Il n'est pas possible de migrer ce dépôt sur ce même serveur avant de l'avoir supprimé.
 plugin_git	gerrit_past_project_delete	Supprimer ce projet sur Gerrit
@@ -311,7 +311,7 @@ plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée 
 plugin_git	delegated_to_gerrit_error	Une erreur s'est produite lors de la migration vers gerrit $1. <strong>N'utilisez pas le dépôt gerrit</strong>, consultez <a href="$2">le rapport d'erreur</a> et contacter l'administration site.
 plugin_git	delegated_to_gerrit_queue	Le dépôt est en attente de transfert vers gerrit. Veuillez revenir dans quelques minutes.
 plugin_git	waiting_for_repo_creation	Le dépôt est en attente de création. Veuillez revenir dans quelques minutes.
-plugin_git	waiting_for_repo_creation_default_mirrors	Le dépôt sera automatiquement répliqué sur les mirroirs : $1.
+plugin_git	waiting_for_repo_creation_default_mirrors	Le dépôt sera automatiquement répliqué sur les miroirs : $1.
 plugin_git	delegated_to_gerrit_error_mail_subject	Erreur lors de la migration de $1 vers gerrit
 plugin_git	delegated_to_gerrit_error_mail_body	Une erreur s'est produite lors de la migration de $1 vers gerrit. Veuillez consulter le statut dans la <a href="$2">section gerrit</a> et contacter l'administration site.
 
@@ -395,40 +395,40 @@ plugin_git	gitolite_config_tab_name	Gitolite
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	general_settings_tab_name	Configuration générale
 plugin_git	mirror_tab_name	Miroirs
-plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le mirroir
+plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le miroir
 plugin_git	admin_mirror_fields_required	Tous les champs sont requis
 plugin_git	admin_mirror_hostname_duplicate	Le hostname choisi doit être unique !
 plugin_git	admin_mirror_hostname_reserved	Le hostname choisi ($1) est réservé !
 plugin_git	reserved_hostnames_help	Doit être unique. Le nom "projects" et le hostname défini dans le fichier .gitolite.rc ne peuvent être utilisés.
-plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le mirroir
-plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le mirroir
+plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le miroir
+plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le miroir
 plugin_git	admin_mirror_updated	Miroir modifié !
-plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le mirroir
-plugin_git	admin_mirror_defalut_cannot_delete	Une erreur est apparue lors de la suppression du mirroir en tant que mirroir par défaut.
+plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le miroir
+plugin_git	admin_mirror_defalut_cannot_delete	Une erreur est apparue lors de la suppression du miroir en tant que miroir par défaut.
 plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un miroir
-plugin_git	dump_mirrored_repositories_label	Réécrire la configuration des dépôts mirroirs
-plugin_git	dump_mirrored_repositories_text	Un évènement système sera généré pour reconstruire la configuration des dépôts mirroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque mirroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc. Voulez-vous continuer ?
+plugin_git	dump_mirrored_repositories_label	Réécrire la configuration des dépôts miroirs
+plugin_git	dump_mirrored_repositories_text	Un évènement système sera généré pour reconstruire la configuration des dépôts miroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque miroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc. Voulez-vous continuer ?
 plugin_git	dump_gitolite_conf_queued	Un évènement système a été généré. La configuration de gitolite sera reconstruite au moment de son éxécution. <a href="$1">La queue Git se trouve ici</a>.
-plugin_git	mirror_section_title	Administration des mirroirs
+plugin_git	mirror_section_title	Administration des miroirs
 plugin_git	url_label	Hôte SSH
 plugin_git	hostname_label	Hôte
 plugin_git	owner_label	Propriétaire
 plugin_git	ssh_key_label	Clé SSH du propriétaire
 plugin_git	pwd_label	Mot de passe du propriétaire
-plugin_git	mirrored_repo_label	Liste des dépôts présents sur ce mirroir
-plugin_git	manage_allowed_projects_label	Liste des projets autorisés sur ce mirroir
+plugin_git	mirrored_repo_label	Liste des dépôts présents sur ce miroir
+plugin_git	manage_allowed_projects_label	Liste des projets autorisés sur ce miroir
 plugin_git	repositories_label	Dépôts sur ce miroir
 plugin_git	manage_allowed_projects	Gérer les projets autorisés
 plugin_git	admin_update_button	Modifier
 plugin_git	admin_delete_button	Supprimer
 plugin_git	change_pwd	cliquer ici pour modifier
 plugin_git	or	ou
-plugin_git	mirror_no_repository	Aucun dépôt sur ce mirroir
+plugin_git	mirror_no_repository	Aucun dépôt sur ce miroir
 plugin_git	mirror_repo	Dépôt
 plugin_git	mirror_title	Liste des dépôts sur $1
-plugin_git	mirror_back	Retour à la liste des mirroirs
-plugin_git	mirror_allowed_project_back_link_title	Retour à la liste des mirroirs
+plugin_git	mirror_back	Retour à la liste des miroirs
+plugin_git	mirror_allowed_project_back_link_title	Retour à la liste des miroirs
 plugin_git	mirror_allowed_project_title	Restriction de projets pour $1
 plugin_git	mirror_allowed_project_pane_title	Projets autorisés à utiliser $1
 plugin_git	mirror_allowed_project_pane_information	Cette section permet de définir les projets qui pourront utiliser ou non $1.
@@ -452,8 +452,8 @@ plugin_git	mirror_allowed_project_revoke_title	Attention
 plugin_git	mirror_allowed_project_revoke_description	Vous êtes sur le point d'interdire l'accès à ce miroir pour les projects sélectionnés. Celà implique la suppression de la réplication des dépôts des projets sélectionnés. Êtes-vous sûr de vouloir faire celà ?
 plugin_git	mirror_allowed_project_revoke_yes	Oui, interdire l'accès
 plugin_git	mirror_allowed_project_revoke_no	Non
-plugin_git	default_mirros_update_success	Mirroirs par défaut mis à jour.
-plugin_git	default_mirros_update_error	Une erreur est survenue lors de la mise à jour des mirroirs par défaut.
+plugin_git	default_mirros_update_success	Miroirs par défaut mis à jour.
+plugin_git	default_mirros_update_error	Une erreur est survenue lors de la mise à jour des miroirs par défaut.
 plugin_git	mirror_no_mirrors_part_one	Il n'y a rien ici,
 plugin_git	mirror_no_mirrors_part_two	commencez par ajouter un miroir.
 plugin_git	mirror_number_of_repositories	$1 dépôts
@@ -465,7 +465,7 @@ plugin_git	mirror_system_event_queue	Grok Mirror
 project_admin_utils	git_repo_create	Création d'un dépôt Git
 project_admin_utils	git_repo_delete	Suppression d'un dépôt Git
 project_admin_utils	git_repo_update	Mise à jour d'un dépôt Git
-project_admin_utils	git_repo_mirroring_update	Mise à jour des mirroirs d'un dépôt Git
+project_admin_utils	git_repo_mirroring_update	Mise à jour des miroirs d'un dépôt Git
 project_admin_utils	git_repo_to_gerrit	Migration d'un dépôt Git vers Gerrit
 project_admin_utils	git_create_template	Création d'un template Gerrit
 project_admin_utils	git_delete_template	Suppression d'un template Gerrit
@@ -480,7 +480,7 @@ plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
 plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
 plugin_git	add_remote_text	Ou ajoutez simplement ce dépôt distant à votre copie locale:
 plugin_git	default_location	Défaut
-plugin_git	ssh_mirrors_text	Mirroirs SSH
+plugin_git	ssh_mirrors_text	Miroirs SSH
 
 plugin_git	restore_invalid_id	Impossible de restorer le dépôt Git : Identifiant invalide
 plugin_git	restore_invalid_name	Impossible de restorer le dépôt Git : un dépôt avec le même nom existe déjà
