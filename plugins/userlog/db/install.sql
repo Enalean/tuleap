@@ -6,7 +6,6 @@ CREATE TABLE plugin_userlog_request (
   time int(11) NOT NULL default 0,
   group_id int(11) NOT NULL default 0,
   user_id int(11) NOT NULL default 0,
-  session_hash char(32) NOT NULL default '',
   http_user_agent VARCHAR(255) NOT NULL default '',
   http_request_uri VARCHAR(255) NOT NULL default '',
   http_request_method VARCHAR(4) NOT NULL default '',
