@@ -458,6 +458,7 @@ plugin_git	mirror_no_mirrors_part_one	Il n'y a rien ici,
 plugin_git	mirror_no_mirrors_part_two	commencez par ajouter un miroir.
 plugin_git	mirror_number_of_repositories	$1 dépôts
 plugin_git	no_specified_mirror_name	Nom de miroir non renseigné
+plugin_git	mirror_not_found	Miroir non trouvé, merci de réessayer
 
 plugin_git	system_event_queue	Git
 plugin_git	mirror_system_event_queue	Grok Mirror
