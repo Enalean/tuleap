@@ -49,6 +49,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
 class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
@@ -118,22 +119,27 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
+    }
+
+    private function visitList()
+    {
+        return new ListFieldChecker(new EmptyStringAllowed(), new CollectionOfListValuesExtractor());
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
