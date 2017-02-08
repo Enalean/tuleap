@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
@@ -172,6 +172,10 @@ msgstr ""
 #, php-format
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
+
+#, php-format
+msgid "The list field '%s' cannot be compared to NOW()."
+msgstr "Le champ list '%s' ne peut pas être comparé à NOW()."
 
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
