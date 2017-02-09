@@ -282,18 +282,20 @@ codendi.tracker.artifact.artifactLink = {
                 }
             }
 
-            artifact_link.insert({top: this.ul});
+            if( this.ul) {
+                artifact_link.insert({top: this.ul});
 
-            this.natureLabel = new Element('li').update(codendi.getText('tracker_artifact_link', 'nature_label') + ':');
-            this.natureLabel.addClassName('tracker-form-element-artifactlink-list-nav-label');
-            this.natureLabel.hide();
+                this.natureLabel = new Element('li').update(codendi.getText('tracker_artifact_link', 'nature_label') + ':');
+                this.natureLabel.addClassName('tracker-form-element-artifactlink-list-nav-label');
+                this.natureLabel.hide();
 
-            this.trackerLabel = new Element('li').update(codendi.getText('tracker_artifact_link', 'trackers_label') + ':');
-            this.trackerLabel.addClassName('tracker-form-element-artifactlink-list-nav-label');
-            this.trackerLabel.hide();
+                this.trackerLabel = new Element('li').update(codendi.getText('tracker_artifact_link', 'trackers_label') + ':');
+                this.trackerLabel.addClassName('tracker-form-element-artifactlink-list-nav-label');
+                this.trackerLabel.hide();
 
-            this.ul.appendChild(this.natureLabel);
-            this.ul.appendChild(this.trackerLabel);
+                this.ul.appendChild(this.natureLabel);
+                this.ul.appendChild(this.trackerLabel);
+            }
 
             var natureTabs = artifact_link.select('h2[class*="tracker-form-element-artifactlink-nature"]');
             if(natureTabs.length > 0) {
