@@ -36,7 +36,7 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
     }
 
     public function update_allowed_projects_action() {
-        return '/plugins/mediawiki/forge_admin?action=site_update_allowed_project_list';
+        return '/plugins/mediawiki/forge_admin.php?action=site_update_allowed_project_list';
     }
 
     public function update_allowed_projects_action_csrf() {

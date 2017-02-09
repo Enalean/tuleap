@@ -21,30 +21,17 @@
 class MediawikiFusionForgeProjectNameRetriever {
 
     public function getFusionForgeProjectName($fusionforgeprojectname) {
+        if ($fusionforgeprojectname !== null) {
+            return $fusionforgeprojectname;
+        }
         if (! $fusionforgeprojectname) {
             $administration_project = new Group(1);
             $fusionforgeprojectname     = $administration_project->getUnixName();
         }
 
-        $exppath = explode('/', $_SERVER['PHP_SELF']) ;
-
-        # determine $fusionforgeproject from the URL
-        while (count ($exppath) >= 4) {
-            if (($exppath[0] == 'plugins') &&
-                ($exppath[1] == 'mediawiki') &&
-                ($exppath[2] == 'wiki') &&
-                in_array($exppath[4], array(
-                    'api.php',
-                    'index.php',
-                    'load.php',
-                ))) {
-                    $fusionforgeprojectname = $exppath[3] ;
-                    break ;
-            } else {
-                    array_shift ($exppath) ;
-            }
-        }
-
+        $wiki_url = substr($_SERVER['REQUEST_URI'], strlen('/plugins/mediawiki/wiki') + 1);
+        $wiki_url_array = explode('/', $wiki_url);
+        $fusionforgeprojectname = $wiki_url_array[0];
         return $fusionforgeprojectname;
     }
 }
