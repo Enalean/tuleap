@@ -202,15 +202,18 @@ require_once('exit.php');
 //various html libs like button bar, themable
 require_once('html.php');
 
-
-//insert this page view into the database
-if(!IS_SCRIPT) {
-    require_once('logger.php');
-}
+$event_manager = EventManager::instance();
+$event_manager->processEvent(
+    Event::HIT,
+    array(
+        'is_script' => IS_SCRIPT,
+        'request'  => $request
+    )
+);
 
 /*
 
-	Timezone must come after logger to prevent messups
+	Timezone must come after we have warn plugins of the hit to prevent messups
 
 
 */

@@ -37,7 +37,7 @@ class userlogPlugin extends Plugin {
         parent::__construct($id);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook('logger_after_log_hook', 'logUser', false);
+        $this->addHook(Event::HIT, 'logUser', false);
         $this->addHook(Event::IS_IN_SITEADMIN);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -91,22 +91,15 @@ class userlogPlugin extends Plugin {
         }
     }
 
-    /**
-     * $params['isScript']
-     * $params['groupId']
-     * $params['time']
-     */
-    function logUser($params) {
-        if(!$params['isScript']) {
-            $uid = 0;
-            $uid = user_getid();
-
-            $request = HTTPRequest::instance();
+    public function logUser($params)
+    {
+        if(! $params['is_script']) {
+            $request = $params['request'];
 
             $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
-            $userLogManager->logAccess($params['time'],
-                                       $params['groupId'],
-                                       $uid,
+            $userLogManager->logAccess($_SERVER['REQUEST_TIME'],
+                                       $request->getProject()->getID(),
+                                       $request->getCurrentUser()->getId(),
                                        $request->getFromServer('HTTP_USER_AGENT'),
                                        $request->getFromServer('REQUEST_METHOD'),
                                        $request->getFromServer('REQUEST_URI'),

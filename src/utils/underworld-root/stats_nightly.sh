@@ -10,12 +10,6 @@ echo "--- Beginning of $script ---"
 
 # START with specific scripts
 
-# Compute the number of reference to the Codendi site
-# through the Codendi logo displayed on other Web pages
-# by day and by project (group). Must be run after midnight to compute
-# statistics for the day before
-./db_site_stats.pl $*
-
 # Compute all sorts of project metric (number of forum
 # messages, tasks, bugs, cvs commit, patches, file release
 # file download, # of developers,...

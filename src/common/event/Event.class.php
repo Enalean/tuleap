@@ -1324,4 +1324,13 @@ class Event {
      * 'whitelist_scripts' => array (OUT)
      */
     const CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST = 'content_security_policy_script_whitelist';
+
+    /**
+     * Event sent at each hit
+     *
+     * Parameters:
+     * 'is_script' => boolean (IN)
+     * 'request'   => HTTPRequest (IN)
+     */
+    const HIT = 'hit';
 }

@@ -15,10 +15,6 @@ function browser_get_agent () {
 	return $GLOBALS['BROWSER_AGENT'];
 }
 
-function browser_get_version() {
-	return $GLOBALS['BROWSER_VER'];
-}
-
 function browser_get_platform() {
 	return $GLOBALS['BROWSER_PLATFORM'];
 }
@@ -104,15 +100,5 @@ if (strstr($HTTP_USER_AGENT,'Win')) {
 } else {
 	$GLOBALS['BROWSER_PLATFORM']='Other';
 }
-
-/*
-echo "\n\nAgent: $HTTP_USER_AGENT";
-echo "\nIE: ".browser_is_ie();
-echo "\nMac: ".browser_is_mac();
-echo "\nWindows: ".browser_is_windows();
-echo "\nPlatform: ".browser_get_platform();
-echo "\nVersion: ".browser_get_version();
-echo "\nAgent: ".browser_get_agent();
-*/
 
 ?>

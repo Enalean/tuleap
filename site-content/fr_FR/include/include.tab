@@ -120,11 +120,6 @@ include_layout	network_gallery	Galerie réseau
 include_layout	template_warning	Attention ce projet est un patron de projet
 #
 #-----------------------------------------------
-# Script: SF/www/include/logger.php
-#
-include_logger	log_err	Une erreur est survenue dans le logger.\n
-#
-#-----------------------------------------------
 # Script: SF/www/include/menu.php
 #
 include_menu	site_admin	Administration

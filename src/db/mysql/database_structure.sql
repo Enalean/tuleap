@@ -29,64 +29,6 @@
 # Server version	3.23.51-log
 
 #
-# Table structure for table 'activity_log'
-#
-
-CREATE TABLE activity_log (
-  day int(11) NOT NULL default '0',
-  hour int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  browser varchar(8) NOT NULL default 'OTHER',
-  ver float(10,2) NOT NULL default '0.00',
-  platform varchar(8) NOT NULL default 'OTHER',
-  time int(11) NOT NULL default '0',
-  page text,
-  type int(11) NOT NULL default '0',
-  KEY idx_activity_log_day (day),
-  KEY idx_activity_log_group (group_id),
-  KEY type_idx (type)
-);
-
-#
-# Table structure for table 'activity_log_old'
-#
-
-
-CREATE TABLE activity_log_old (
-  day int(11) NOT NULL default '0',
-  hour int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  browser varchar(8) NOT NULL default 'OTHER',
-  ver float(10,2) NOT NULL default '0.00',
-  platform varchar(8) NOT NULL default 'OTHER',
-  time int(11) NOT NULL default '0',
-  page text,
-  type int(11) NOT NULL default '0',
-  KEY idx_activity_log_day (day),
-  KEY idx_activity_log_group (group_id),
-  KEY type_idx (type)
-);
-
-#
-# Table structure for table 'activity_log_old_old'
-#
-
-CREATE TABLE activity_log_old_old (
-  day int(11) NOT NULL default '0',
-  hour int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  browser varchar(8) NOT NULL default 'OTHER',
-  ver float(10,2) NOT NULL default '0.00',
-  platform varchar(8) NOT NULL default 'OTHER',
-  time int(11) NOT NULL default '0',
-  page text,
-  type int(11) NOT NULL default '0',
-  KEY idx_activity_log_day (day),
-  KEY idx_activity_log_group (group_id),
-  KEY type_idx (type)
-);
-
-#
 # Table structure for table 'filedownload_log'
 #
 
