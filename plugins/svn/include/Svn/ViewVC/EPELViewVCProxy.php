@@ -167,16 +167,7 @@ class EPELViewVCProxy implements ViewVCProxy
         $this->access_history_saver->saveAccess($user, $repository);
 
         //this is very important. default path must be /
-        $path = "/";
-
-        if ($request->getFromServer('PATH_INFO') != "") {
-            $path = $request->getFromServer('PATH_INFO');
-
-            // hack: path must always end with /
-            if (strrpos($path, "/") != (strlen($path) - 1)) {
-                $path .= "/";
-            }
-        }
+        $path = $request->getPathInfoFromFCGI();
 
         $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
             'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.

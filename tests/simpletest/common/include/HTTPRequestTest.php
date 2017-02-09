@@ -695,3 +695,31 @@ class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServer
         $this->assertEqual('https://example.clear.test', $this->request->getServerUrl());
     }
 }
+
+class HTTPRequest_getPathInfoFromFCGI extends TuleapTestCase {
+
+    private $request;
+
+    public function setUp()
+    {
+        $this->request = new HTTPRequest();
+    }
+
+    public function itReturnsSubPathInViewVCProxy()
+    {
+        $this->setServerValue('QUERY_STRING', 'root=mozilla%2Fkaboom');
+        $this->setServerValue('SCRIPT_NAME', '/plugins/svn/index.php');
+        $this->setServerValue('REQUEST_URI', '/plugins/svn/index.php/branches/?root=mozilla%2Fkaboom');
+
+        $this->assertEqual('/branches/', $this->request->getPathInfoFromFCGI());
+    }
+
+    public function itReturnsSlashWhenBrowsingIndex()
+    {
+        $this->setServerValue('QUERY_STRING', 'roottype=svn&root=mozilla/kaboom');
+        $this->setServerValue('SCRIPT_NAME', '/plugins/svn/index.php');
+        $this->setServerValue('REQUEST_URI', '/plugins/svn/?roottype=svn&root=mozilla/kaboom');
+
+        $this->assertEqual('/', $this->request->getPathInfoFromFCGI());
+    }
+}

@@ -94,7 +94,7 @@ if ($request->exist('update')) {
         }
     }
 
-    $GLOBALS['Response']->redirect('/admin/groupedit?group_id='.$group_id);
+    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
 }
 
 $fields_factory            = new Tuleap\Project\DescriptionFieldsFactory(new Tuleap\Project\DescriptionFieldsDao());

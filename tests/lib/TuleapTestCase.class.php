@@ -312,6 +312,11 @@ abstract class TuleapTestCase extends UnitTestCase {
         clearstatcache();
     }
 
+    protected function setServerValue($variable, $value) {
+        $this->preserveServer($variable);
+        $_SERVER[$variable] = $value;
+    }
+
     protected function preserveServer($variable) {
         $this->original_server[$variable] = isset($_SERVER[$variable]) ? $_SERVER[$variable] : null;
         unset($_SERVER[$variable]);
