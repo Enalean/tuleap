@@ -5,20 +5,20 @@
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
@@ -56,18 +56,15 @@ class UserLogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    /**
-     *
-     */
-    function addRequest($time, $gid, $uid, $sessionHash, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer) {
+    public function addRequest($time, $gid, $uid, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer)
+    {
         $sql = 'INSERT INTO plugin_userlog_request'.
-            '(time,group_id,user_id,session_hash,http_user_agent,http_request_method,http_request_uri,http_remote_addr,http_referer)'.
+            '(time,group_id,user_id,http_user_agent,http_request_method,http_request_uri,http_remote_addr,http_referer)'.
             ' VALUES '.
             '('.
             $this->da->escapeInt($time).','.
             $this->da->escapeInt($gid).','.
             $this->da->escapeInt($uid).','.
-            $this->da->quoteSmart($sessionHash).','.
             $this->da->quoteSmart($userAgent).','.
             $this->da->quoteSmart($requestMethod).','.
             $this->da->quoteSmart($requestUri).','.
