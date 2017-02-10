@@ -58,11 +58,10 @@ class Widget_ImageViewer extends Widget {
         return $prefs;
     }
     function getInstallPreferences() {
-        $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
         $prefs .= '<table>';
         $prefs .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $this->getTitle() .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" value="'. $GLOBALS['Language']->getText('widget_imageviewer', 'default_url') .'" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" placeholder="https://example.com/image.jpeg" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
