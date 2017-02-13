@@ -119,7 +119,7 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
