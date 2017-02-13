@@ -38,17 +38,22 @@ class GerritServerResourceRestrictor
 
     public function unsetRestriction(Git_RemoteServer_GerritServer $gerrit_server)
     {
-        return $this->dao->unsetRestriction($gerrit_server->getId());
+        return $this->dao->unsetResourceRestricted($gerrit_server->getId());
     }
 
     public function setRestricted(Git_RemoteServer_GerritServer $gerrit_server)
     {
-        return $this->dao->setRestricted($gerrit_server->getId());
+        return $this->dao->setResourceRestricted($gerrit_server->getId());
     }
 
     public function isRestricted(Git_RemoteServer_GerritServer $gerrit_server)
     {
-        return $this->dao->isRestricted($gerrit_server->getId());
+        return $this->dao->isResourceRestricted($gerrit_server->getId());
+    }
+
+    public function allowProject(Git_RemoteServer_GerritServer $gerrit_server, Project $project)
+    {
+        return $this->dao->allowProjectOnResource($gerrit_server->getId(), $project->getID());
     }
 
     /**
@@ -56,7 +61,7 @@ class GerritServerResourceRestrictor
      */
     public function searchAllowedProjects(Git_RemoteServer_GerritServer $gerrit_server)
     {
-        $rows     = $this->dao->searchAllowedProjects($gerrit_server->getId());
+        $rows     = $this->dao->searchAllowedProjectsOnResource($gerrit_server->getId());
         $projects = array();
 
         foreach ($rows as $row) {

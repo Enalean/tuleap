@@ -40,16 +40,23 @@ class Git_AdminGerritController {
      */
     private $gerrit_ressource_restrictor;
 
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
     public function __construct(
         CSRFSynchronizerToken                $csrf,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         AdminPageRenderer                    $admin_page_renderer,
-        GerritServerResourceRestrictor       $gerrit_ressource_restrictor
+        GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
+        ProjectManager                       $project_manager
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->csrf                        = $csrf;
         $this->admin_page_renderer         = $admin_page_renderer;
         $this->gerrit_ressource_restrictor = $gerrit_ressource_restrictor;
+        $this->project_manager             = $project_manager;
     }
 
     public function process(Codendi_Request $request) {
@@ -86,16 +93,43 @@ class Git_AdminGerritController {
 
     private function updateAllowedProjectList(Codendi_Request $request)
     {
-        $gerrit_server = $this->getGerritServerFromRequest($request);
+        $gerrit_server         = $this->getGerritServerFromRequest($request);
+        $project_to_add        = $request->get('project-to-allow');
+        $project_ids_to_remove = $request->get('project-ids-to-revoke');
 
-        $GLOBALS['Response']->addFeedback(
-            Feedback::WARN,
-            $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_under_implementation')
-        );
+        if ($request->get('allow-project') && ! empty($project_to_add)) {
+            $this->allowProjectForGerritServer($gerrit_server, $project_to_add);
+
+        } elseif ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
+            $this->revokeProjectsForGerritServer($gerrit_server, $project_ids_to_remove);
+        }
 
         $GLOBALS['Response']->redirect(
             '/plugins/git/admin/?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
             urlencode($gerrit_server->getId())
+        );
+    }
+
+    private function allowProjectForGerritServer(Git_RemoteServer_GerritServer $gerrit_server, $project_to_add) {
+        $project = $this->project_manager->getProjectFromAutocompleter($project_to_add);
+
+        if ($project && $this->gerrit_ressource_restrictor->allowProject($gerrit_server, $project)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_allow_project')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_update_project_list_error')
+            );
+        }
+    }
+
+    private function revokeProjectsForGerritServer(Git_RemoteServer_GerritServer $gerrit_server, $project_ids) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_under_implementation')
         );
     }
 
