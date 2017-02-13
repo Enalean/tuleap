@@ -31,6 +31,7 @@ or field2_float > 5.4
 or field2_int <= 2
 and field3_int between (1, 10)
 AND field4_list in ("open", "closed", "blocked")
+AND field5_list not in ("blocked", "archive",)
 
 EOS;
 

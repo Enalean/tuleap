@@ -207,7 +207,7 @@ class TrackersResource extends AuthenticatedResource {
      * <br><br>
      * Notes on the expert query parameter
      * <ol>
-     *  <li>You can use: AND, OR, BETWEEN(), NOW(), IN(), parenthesis.
+     *  <li>You can use: AND, OR, BETWEEN(), NOW(), IN(), NOT IN(), parenthesis.
      *  <li>The basic form of a property is [field_shortname] = [string]
      *      <br>Example: sprint_name='s1' AND description='desc1'
      *  </li>

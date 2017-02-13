@@ -25,6 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
@@ -53,5 +54,10 @@ class ListToEmptyStringComparisonException extends InvalidFieldException impleme
     public function visitInComparison(InComparison $comparison, NoVisitorParameters $parameters)
     {
         return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with IN() operator.");
+    }
+
+    public function visitNotInComparison(NotInComparison $comparison, NoVisitorParameters $parameters)
+    {
+        return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with NOT IN() operator.");
     }
 }

@@ -63,6 +63,7 @@ term
         / GreaterThanComparison
         / BetweenComparison
         / InComparison
+        / NotInComparison
         / ParenthesisTerm
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
@@ -100,6 +101,11 @@ GreaterThanOrEqualComparison
 BetweenComparison
     = field:Field _ "between"i _ "(" _ min_value_wrapper:SimpleExpr _ "," _ max_value_wrapper:SimpleExpr _ ")" {
         return new BetweenComparison($field, new BetweenValueWrapper($min_value_wrapper, $max_value_wrapper));
+    }
+
+NotInComparison
+    = field:Field _ "not in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
+        return new NotInComparison($field, new InValueWrapper($list));
     }
 
 InComparison

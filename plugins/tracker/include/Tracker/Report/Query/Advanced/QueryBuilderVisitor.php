@@ -31,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -44,6 +45,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualCompariso
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparisonVisitor;
 
 class QueryBuilderVisitor implements Visitor
 {
@@ -84,6 +86,11 @@ class QueryBuilderVisitor implements Visitor
      */
     private $in_comparison_visitor;
 
+    /**
+     * @var NotInComparisonVisitor
+     */
+    private $not_in_comparison_visitor;
+
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         EqualComparisonVisitor $equal_comparison_visitor,
@@ -93,7 +100,8 @@ class QueryBuilderVisitor implements Visitor
         LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_comparison_visitor,
         GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
         BetweenComparisonVisitor $between_comparison_visitor,
-        InComparisonVisitor $in_comparison_visitor
+        InComparisonVisitor $in_comparison_visitor,
+        NotInComparisonVisitor $not_in_comparison_visitor
     ) {
         $this->formelement_factory                      = $formelement_factory;
         $this->equal_comparison_visitor                 = $equal_comparison_visitor;
@@ -104,6 +112,7 @@ class QueryBuilderVisitor implements Visitor
         $this->greater_than_or_equal_comparison_visitor = $greater_than_or_equal_comparison_visitor;
         $this->between_comparison_visitor               = $between_comparison_visitor;
         $this->in_comparison_visitor                    = $in_comparison_visitor;
+        $this->not_in_comparison_visitor                = $not_in_comparison_visitor;
     }
 
     public function buildFromWhere(Visitable $parsed_query, Tracker $tracker)
@@ -179,6 +188,15 @@ class QueryBuilderVisitor implements Visitor
         $formelement = $this->getFormElementFromComparison($comparison, $parameters);
 
         return $this->in_comparison_visitor
+            ->getFromWhereBuilder($formelement)
+            ->getFromWhere($comparison, $formelement);
+    }
+
+    public function visitNotInComparison(NotInComparison $comparison, QueryBuilderParameters $parameters)
+    {
+        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
+
+        return $this->not_in_comparison_visitor
             ->getFromWhereBuilder($formelement)
             ->getFromWhere($comparison, $formelement);
     }

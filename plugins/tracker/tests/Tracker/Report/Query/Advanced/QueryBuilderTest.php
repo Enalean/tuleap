@@ -31,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -43,6 +44,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisito
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparisonVisitor;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -88,7 +90,8 @@ class QueryBuilderTest extends TuleapTestCase
             new LesserThanOrEqualComparisonVisitor(),
             new GreaterThanOrEqualComparisonVisitor(),
             new BetweenComparisonVisitor(),
-            new InComparisonVisitor()
+            new InComparisonVisitor(),
+            new NotInComparisonVisitor()
         );
     }
 
@@ -408,6 +411,23 @@ class QueryBuilderTest extends TuleapTestCase
         );
 
         $result = $this->query_builder->visitInComparison($comparison, $this->parameters);
+
+        $this->assertPattern('/tracker_changeset_value_list/', $result->getFrom());
+    }
+
+    public function itRetrievesForSelectBoxFieldInNotInComparisonTheExpertFromAndWhereClausesOfTheField()
+    {
+        $comparison = new NotInComparison(
+            'sb',
+            new InValueWrapper(
+                array(
+                    new SimpleValueWrapper('third'),
+                    new SimpleValueWrapper('fourth')
+                )
+            )
+        );
+
+        $result = $this->query_builder->visitNotInComparison($comparison, $this->parameters);
 
         $this->assertPattern('/tracker_changeset_value_list/', $result->getFrom());
     }
