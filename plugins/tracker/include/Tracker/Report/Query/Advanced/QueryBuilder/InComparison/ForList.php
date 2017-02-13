@@ -17,28 +17,63 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison;
 
+use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 
-class CollectionOfListValuesExtractor implements ValueWrapperVisitor
+class ForList implements FromWhereBuilder, ValueWrapperVisitor
 {
-    /** @return array */
-    public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
+    /**
+     * @var FromWhereComparisonListFieldBuilder
+     */
+    private $from_where_builder;
+
+    public function __construct(FromWhereComparisonListFieldBuilder $from_where_builder)
     {
-        return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
+        $this->from_where_builder = $from_where_builder;
+    }
+
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    {
+        $suffix   = spl_object_hash($comparison);
+        $values   = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        $field_id = (int)$field->getId();
+
+        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
+        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
+        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
+
+        $escaped_values = $this->quoteSmartImplode($values);
+        $condition      = "$list_value_alias.label IN($escaped_values)";
+
+        return $this->from_where_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias,
+            'tracker_changeset_value_list',
+            'tracker_field_list_bind_static_value',
+            $list_value_alias,
+            $condition
+        );
+    }
+
+    private function quoteSmartImplode($values)
+    {
+        return CodendiDataAccess::instance()->quoteSmartImplode(',', $values);
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        throw new NowIsNotSupportedException();
     }
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -48,11 +83,6 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $values   = array();
-        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
-        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
-
-        return $values;
     }
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)

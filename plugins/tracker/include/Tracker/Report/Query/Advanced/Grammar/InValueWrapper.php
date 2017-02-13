@@ -19,13 +19,26 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface ValueWrapperVisitor
+class InValueWrapper implements ValueWrapper
 {
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /** @var array */
+    private $value_wrappers;
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    public function __construct(array $value_wrappers)
+    {
+        $this->value_wrappers = $value_wrappers;
+    }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    {
+        return $visitor->visitInValueWrapper($this, $parameters);
+    }
 
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters);
+    /**
+     * @return array
+     */
+    public function getValueWrappers()
+    {
+        return $this->value_wrappers;
+    }
 }

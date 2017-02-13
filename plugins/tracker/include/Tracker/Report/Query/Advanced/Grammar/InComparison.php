@@ -19,13 +19,38 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface ValueWrapperVisitor
+class InComparison implements Term, Visitable, Comparison
 {
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /** @var string */
+    private $field;
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /** @var InValueWrapper */
+    private $value_wrapper;
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    public function __construct($field, InValueWrapper $value_wrapper)
+    {
+        $this->field         = $field;
+        $this->value_wrapper = $value_wrapper;
+    }
 
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters);
+    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitInComparison($this, $parameters);
+    }
+
+    /**
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @return InValueWrapper
+     */
+    public function getValueWrapper()
+    {
+        return $this->value_wrapper;
+    }
 }

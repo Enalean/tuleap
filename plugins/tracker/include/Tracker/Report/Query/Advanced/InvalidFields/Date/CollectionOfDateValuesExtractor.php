@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
@@ -64,5 +65,9 @@ class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
         $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
 
         return $values;
+    }
+
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)
+    {
     }
 }
