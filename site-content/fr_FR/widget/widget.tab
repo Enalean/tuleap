@@ -16,9 +16,6 @@ widget_add	add	Ajouter
 widget_add	already_used	Déjà utilisé
 widget_add	link_add	Personnaliser les widgets
 
-widget_rss	default_url	http://search.twitter.com/search.atom?q=TuleapEnalean&show_user=1
-widget_imageviewer	default_url	http://upload.wikimedia.org/wikipedia/commons/2/29/Tulipa_celsiana.jpg
-# By Colin Barker [CC-BY-SA-3.0 (www.creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons
 widget_imageviewer	invalid_url	Seules les URLs http:// et https:// sont acceptées.
 
 widget_categ_label	forums	Forums

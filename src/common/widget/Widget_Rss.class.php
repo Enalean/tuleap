@@ -81,7 +81,7 @@ require_once('common/date/DateHelper.class.php');
     function getInstallPreferences() {
         $prefs  = '';
         $prefs .= '<table>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $GLOBALS['Language']->getText('widget_rss', 'default_url') .'" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" placeholder="https://example.com/rss.xml" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
