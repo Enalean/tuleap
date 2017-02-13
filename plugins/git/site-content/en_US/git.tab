@@ -568,4 +568,23 @@ plugin_git	gerrit_servers_allowed_project_back_link_title	Back to Gerrit servers
 plugin_git	gerrit_servers_allowed_project_title	$1 projects restriction
 plugin_git	gerrit_servers_allowed_project_pane_title	Projects allowed to use $1
 plugin_git	gerrit_servers_allowed_project_allow_all	Allow all the projects to use this Gerrit server.
-plugin_git	gerrit_servers_under_implementation	This feature is under implementation.
+plugin_git	gerrit_servers_allowed_project_allow_all_submit	Save
+plugin_git	gerrit_servers_allowed_project_list	List of allowed projects
+plugin_git	gerrit_servers_allowed_project_list_allow_placeholder	Project name
+plugin_git	gerrit_servers_allowed_project_list_allow_project	Allow access
+plugin_git	gerrit_servers_allowed_project_list_revoke_projects	Revoke access to selected
+plugin_git	gerrit_servers_allowed_project_list_filter_placeholder	Filter on project id or name
+plugin_git	gerrit_servers_allowed_project_list_id	Id
+plugin_git	gerrit_servers_allowed_project_list_name	Name
+plugin_git	gerrit_servers_allowed_project_list_empty	Currently, there's no project allowed to use this Gerrit server.
+plugin_git	gerrit_servers_allowed_project_unset_restricted	All projects can now use this Gerrit server.
+plugin_git	gerrit_servers_allowed_project_set_restricted	Now, only the allowed projects are able to use this Gerrit server. Projects with at least one repository using this Gerrit server have been automatically added to the list of allowed projects. This restriction is not yet taken into account.
+plugin_git	gerrit_servers_allowed_project_restricted_error	Something went wrong during the update of the Gerrit server restriction status.
+plugin_git	gerrit_servers_allowed_project_allow_project	Submitted project can now use this Gerrit server.
+plugin_git	gerrit_servers_allowed_project_revoke_projects	Submitted projects will not be able to use this Gerrit server.
+plugin_git	gerrit_servers_allowed_project_update_project_list_error	Something went wrong during the update of the allowed project list.
+plugin_git	gerrit_servers_allowed_project_revoke_title	Warning
+plugin_git	gerrit_servers_allowed_project_revoke_description	You are about to revoke the access to this Gerrit server to one or several projects. Are you sure you want to do this?
+plugin_git	gerrit_servers_allowed_project_revoke_yes	Yes, revoke access
+plugin_git	gerrit_servers_allowed_project_revoke_no	No
+plugin_git	gerrit_servers_under_implementation	This feature is under implementation

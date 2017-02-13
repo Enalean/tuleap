@@ -116,67 +116,56 @@ class AdminAllowedProjectsGerritPresenter
 
     public function resource_allowed_project_allow_all_submit()
     {
-        return '';
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_allow_all_submit');
     }
 
     public function resource_allowed_project_list()
     {
-        return '';
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list');
     }
 
-    public function resource_allowed_project_list_allow_placeholder()
-    {
-        return '';
+    public function resource_allowed_project_list_allow_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_allow_placeholder');
     }
 
-    public function resource_allowed_project_list_filter_placeholder()
-    {
-        return '';
+    public function resource_allowed_project_list_filter_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_filter_placeholder');
     }
 
-    public function resource_allowed_project_list_allow_project()
-    {
-        return '';
+    public function resource_allowed_project_list_allow_project() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_allow_project');
     }
 
-    public function resource_allowed_project_list_revoke_projects()
-    {
-        return '';
+    public function resource_allowed_project_list_revoke_projects() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_revoke_projects');
     }
 
-    public function resource_allowed_project_list_id()
-    {
-        return '';
+    public function resource_allowed_project_list_id() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_id');
     }
 
-    public function resource_allowed_project_list_name()
-    {
-        return '';
+    public function resource_allowed_project_list_name() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_name');
     }
 
-    public function resource_allowed_project_list_empty()
-    {
-        return '';
+    public function resource_allowed_project_list_empty() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_empty');
     }
 
-    public function resource_allowed_project_revoke_title()
-    {
-        return '';
+    public function resource_allowed_project_revoke_title() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_title');
     }
 
-    public function resource_allowed_project_revoke_description()
-    {
-        return '';
+    public function resource_allowed_project_revoke_description() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_description');
     }
 
-    public function resource_allowed_project_revoke_yes()
-    {
-        return '';
+    public function resource_allowed_project_revoke_yes() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_yes');
     }
 
-    public function resource_allowed_project_revoke_no()
-    {
-        return '';
+    public function resource_allowed_project_revoke_no() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_no');
     }
 
     public function resource_allowed_project_filter_empty()

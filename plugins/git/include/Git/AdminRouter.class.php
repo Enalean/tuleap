@@ -23,6 +23,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\GerritServerResourceRestrictor;
 
 /**
  * This routes site admin part of Git
@@ -67,6 +68,11 @@ class Git_AdminRouter {
     /** @var AdminPageRenderer */
     private $admin_page_renderer;
 
+    /**
+     * @var GerritServerResourceRestrictor
+     */
+    private $gerrit_ressource_restrictor;
+
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken                $csrf,
@@ -78,7 +84,8 @@ class Git_AdminRouter {
         RegexpFineGrainedRetriever           $regexp_retriever,
         RegexpFineGrainedEnabler             $regexp_enabler,
         AdminPageRenderer                    $admin_page_renderer,
-        RegexpFineGrainedDisabler            $regexp_disabler
+        RegexpFineGrainedDisabler            $regexp_disabler,
+        GerritServerResourceRestrictor       $gerrit_ressource_restrictor
     ) {
         $this->gerrit_server_factory          = $gerrit_server_factory;
         $this->csrf                           = $csrf;
@@ -91,6 +98,7 @@ class Git_AdminRouter {
         $this->regexp_enabler                 = $regexp_enabler;
         $this->admin_page_renderer            = $admin_page_renderer;
         $this->regexp_disabler                = $regexp_disabler;
+        $this->gerrit_ressource_restrictor    = $gerrit_ressource_restrictor;
     }
 
     public function process(Codendi_Request $request) {
@@ -110,7 +118,8 @@ class Git_AdminRouter {
             return new Git_AdminGerritController(
                 $this->csrf,
                 $this->gerrit_server_factory,
-                $this->admin_page_renderer
+                $this->admin_page_renderer,
+                $this->gerrit_ressource_restrictor
             );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(

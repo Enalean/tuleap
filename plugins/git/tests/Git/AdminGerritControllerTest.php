@@ -31,7 +31,8 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->admin               = new Git_AdminGerritController(
             $this->csrf,
             $this->factory,
-            $this->admin_page_renderer
+            $this->admin_page_renderer,
+            mock('Tuleap\Git\GerritServerResourceRestrictor')
         );
 
         $this->request_update_existing_server = array(

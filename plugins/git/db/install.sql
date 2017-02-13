@@ -258,3 +258,13 @@ CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_regexp_enabled (
     project_id int(11) unsigned NOT NULL PRIMARY KEY
 );
 
+CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers (
+  gerrit_server_id INT(11) unsigned PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers_allowed_projects (
+  gerrit_server_id INT(11) unsigned NOT NULL,
+  project_id INT(11) NOT NULL,
+  PRIMARY KEY idx(gerrit_server_id, project_id)
+);
+
