@@ -2,7 +2,7 @@
 
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
+  * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -406,7 +406,7 @@ class Git extends PluginController {
             $this->fine_grained_builder,
             $this->access_loger,
             $this->regexp_retriever,
-            $this->regexp_enabler
+            $this->gerrit_server_factory
         );
     }
 
@@ -1064,7 +1064,7 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
-                if (! $this->gerrit_can_migrate_checker->canMigrate()) {
+                if (! $this->gerrit_can_migrate_checker->canMigrate($repository)) {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }

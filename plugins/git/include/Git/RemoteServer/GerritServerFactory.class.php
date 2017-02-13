@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -78,6 +78,19 @@ class Git_RemoteServer_GerritServerFactory {
         foreach ($this->dao->searchAll() as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
+        return $servers;
+    }
+
+    /**
+     * @return Git_RemoteServer_GerritServer[]
+     */
+    public function getAvailableServersForProject(Project $project)
+    {
+        $servers = array();
+        foreach ($this->dao->searchAvailableServersForProject($project->getID()) as $row) {
+            $servers[$row['id']] = $this->instantiateFromRow($row);
+        }
+
         return $servers;
     }
 

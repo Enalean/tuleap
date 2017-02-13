@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@ namespace Tuleap\Git;
 
 use EventManager;
 use Git_RemoteServer_GerritServerFactory;
+use GitRepository;
+use Git_RemoteServer_GerritServer;
 
 class GerritCanMigrateChecker
 {
@@ -34,8 +36,10 @@ class GerritCanMigrateChecker
      */
     private $gerrit_server_factory;
 
-    public function __construct(EventManager $event_manager, Git_RemoteServer_GerritServerFactory $gerrit_server_factory)
-    {
+    public function __construct(
+        EventManager $event_manager,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+    ) {
         $this->event_manager         = $event_manager;
         $this->gerrit_server_factory = $gerrit_server_factory;
     }
@@ -43,7 +47,7 @@ class GerritCanMigrateChecker
     /**
      * @return bool
      */
-    public function canMigrate()
+    public function canMigrate(GitRepository $repository)
     {
         $platform_can_use_gerrit = false;
 
@@ -54,7 +58,8 @@ class GerritCanMigrateChecker
             )
         );
 
-        $gerrit_servers = $this->gerrit_server_factory->getServers();
+        $gerrit_servers = $this->gerrit_server_factory->getAvailableServersForProject($repository->getProject());
+
         return $platform_can_use_gerrit && count($gerrit_servers) > 0;
     }
 }

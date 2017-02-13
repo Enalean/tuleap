@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -66,7 +66,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     public function setUp() {
         parent::setUp();
 
-        $this->user = mock('PFUser');
+        $this->user   = mock('PFUser');
+        $this->server = aGerritServer()->withId(1)->build();
     }
 
     public function itThrowsAnExceptionIfRepositoryCannotBeMigrated() {
@@ -93,10 +94,27 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
+    public function itThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer() {
+        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $remote_server_id   = 1;
+        $gerrit_template_id = "none";
+
+        stub($this->server_factory)->getServerById(1)->returns($this->server);
+        stub($this->server_factory)->getAvailableServersForProject()->returns(array());
+
+        $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+
     public function itMigratesRepository() {
         $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $remote_server_id   = 1;
         $gerrit_template_id = "none";
+
+        stub($this->server_factory)->getServerById(1)->returns($this->server);
+        stub($this->server_factory)->getAvailableServersForProject()->returns(array(1 => $this->server));
 
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->once();
 

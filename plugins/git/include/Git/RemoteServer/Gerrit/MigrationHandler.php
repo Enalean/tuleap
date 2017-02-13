@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
 use PFUser;
 
 class MigrationHandler {
@@ -87,7 +88,13 @@ class MigrationHandler {
             throw new RepositoryAlreadyInQueueForMigrationException();
         }
 
-        $this->gerrit_server_factory->getServerById($remote_server_id);
+        $gerrit_server            = $this->gerrit_server_factory->getServerById($remote_server_id);
+        $available_gerrit_servers = $this->gerrit_server_factory->getAvailableServersForProject($repository->getProject());
+
+        if (! array_key_exists($gerrit_server->getId(), $available_gerrit_servers)) {
+            throw new RepositoryCannotBeMigratedOnRestrictedGerritServerException();
+        }
+
         $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id, $user);
 
         $this->history_dao->groupAddHistory(
