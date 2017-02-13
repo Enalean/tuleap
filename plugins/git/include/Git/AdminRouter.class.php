@@ -119,7 +119,8 @@ class Git_AdminRouter {
                 $this->csrf,
                 $this->gerrit_server_factory,
                 $this->admin_page_renderer,
-                $this->gerrit_ressource_restrictor
+                $this->gerrit_ressource_restrictor,
+                $this->project_manager
             );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(

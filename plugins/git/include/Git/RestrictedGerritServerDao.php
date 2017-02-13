@@ -20,12 +20,21 @@
 
 namespace Tuleap\Git;
 
-use Tuleap\User\Password\Reset\DataAccessObject;
+use RestrictedResourceDao;
 
-class RestrictedGerritServerDao extends DataAccessObject
+class RestrictedGerritServerDao extends RestrictedResourceDao
 {
+    public function getResourceAllowedProjectsTableName()
+    {
+        return 'plugin_git_restricted_gerrit_servers_allowed_projects';
+    }
 
-    public function unsetRestriction($gerrit_server_id)
+    public function getResourceFieldName()
+    {
+        return 'gerrit_server_id';
+    }
+
+    public function unsetResourceRestricted($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
 
@@ -34,7 +43,7 @@ class RestrictedGerritServerDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function setRestricted($gerrit_server_id)
+    public function setResourceRestricted($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
 
@@ -56,7 +65,7 @@ class RestrictedGerritServerDao extends DataAccessObject
         return false;
     }
 
-    public function searchAllowedProjects($gerrit_server_id)
+    public function searchAllowedProjectsOnResource($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
 
@@ -68,7 +77,7 @@ class RestrictedGerritServerDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function isRestricted($gerrit_server_id)
+    public function isResourceRestricted($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
 
