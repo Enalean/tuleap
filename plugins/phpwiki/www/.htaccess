@@ -1,6 +1,0 @@
-# Force mime-type for PHP scripts without .php extension
-<Files uploads>
-ForceType application/x-httpd-php
-</Files>
-
-php_flag register_globals off

@@ -1069,26 +1069,6 @@ class Event {
     const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
 
     /**
-     * Event raised to get project's PHPWiki pages information with REST
-     *
-     * Parameters:
-     *     'project'         => Project
-     *     'user'            => PFUser
-     *     'result'          => array
-     *     'limit'           => int
-     *     'offset'          => int
-     */
-    const REST_PROJECT_GET_PHPWIKI = 'rest_project_get_phpwiki';
-
-    /**
-     * Event raised to know if PHPWiki plugin is activated for REST
-     *
-     * Parameters:
-     *     'activated' => boolean
-     */
-    const REST_PROJECT_OPTIONS_PHPWIKI = 'rest_project_options_phpwiki';
-
-    /**
      * Event raised to know if agiledashboard plugin is activated for REST
      *
      * Parameters:

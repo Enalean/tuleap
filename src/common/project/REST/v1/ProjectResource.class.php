@@ -240,9 +240,7 @@ class ProjectResource extends AuthenticatedResource {
 
         $resources_injector = new ResourcesInjector();
         $resources_injector->declareProjectUserGroupResource($resources, $project);
-        if ($this->isLegacyPHPWikiAccessible($project)) {
-            $resources_injector->declarePhpWikiResource($resources, $project);
-        }
+        $resources_injector->declarePhpWikiResource($resources, $project);
 
         $informations = array();
         EventManager::instance()->processEvent(
@@ -257,13 +255,6 @@ class ProjectResource extends AuthenticatedResource {
         $project_representation->build($project, $resources, $informations);
 
         return $project_representation;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isLegacyPHPWikiAccessible(Project $project) {
-        return ! $project->usesService('plugin_phpwiki');
     }
 
     /**
@@ -829,39 +820,19 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function getPhpWiki($id, $limit = 10, $offset = 0, $pagename = '') {
         $this->checkAccess();
-
-        $project = $this->getProjectForUser($id);
-        if (! $this->isLegacyPHPWikiAccessible($project)) {
-            throw new RestException(400, 'PhpWiki service is not available');
-        }
+        $this->getProjectForUser($id);
 
         $current_user = UserManager::instance()->getCurrentUser();
 
+        $this->userCanAccessPhpWikiService($current_user, $id);
+
         $wiki_pages = array(
-            'pages' => $this->getLegacyPhpWiki($current_user, $id, $limit, $offset, $pagename)
+            'pages' => array()
         );
-
-        if ($wiki_pages['pages'] === null) {
-            $wiki_pages['pages'] = $this->getLegacyPhpWiki($current_user, $id, $limit, $offset, $pagename);
-        }
-
-        $this->sendAllowHeadersForProject();
-        $this->sendPaginationHeaders($limit, $offset, count($wiki_pages['pages']));
-
-        return $wiki_pages;
-    }
-
-    /**
-     * @return array {@type Tuleap\REST\v1\PhpWikiPageRepresentation}
-     */
-    private function getLegacyPhpWiki(PFUser $user, $id, $limit, $offset, $pagename) {
-        $this->userCanAccessPhpWikiService($user, $id);
-
-        $pages = array();
 
         $wiki_pages_factory = new PaginatedWikiPagesFactory(new WikiDao());
         $all_pages          = $wiki_pages_factory->getPaginatedUserPages(
-            $user,
+            $current_user,
             $id,
             $limit,
             $offset,
@@ -872,10 +843,13 @@ class ProjectResource extends AuthenticatedResource {
             $representation = new PhpWikiPageRepresentation();
             $representation->build($page);
 
-            $pages[] = $representation;
+            $wiki_pages['pages'][] = $representation;
         }
 
-        return $pages;
+        $this->sendAllowHeadersForProject();
+        $this->sendPaginationHeaders($limit, $offset, $all_pages->getTotalSize());
+
+        return $wiki_pages;
     }
 
     private function userCanAccessPhpWikiService(PFUser $user, $project_id) {
@@ -883,74 +857,6 @@ class ProjectResource extends AuthenticatedResource {
 
         if (! $wiki_service->isAutorized($user->getId())) {
             throw new RestException(403, 'You are not allowed to access to PhpWiki service');
-        }
-    }
-
-    /**
-     * @url OPTIONS {id}/phpwiki_plugin
-     *
-     * @param int $id Id of the project
-     */
-    public function optionsPHPWikiPlugin($id) {
-        $activated = false;
-
-        EventManager::instance()->processEvent(
-            Event::REST_PROJECT_OPTIONS_PHPWIKI,
-            array(
-                'activated' => &$activated
-            )
-        );
-
-        if ($activated) {
-            $this->sendAllowHeadersForProject();
-        } else {
-            throw new RestException(404, 'PHPWiki plugin not activated');
-        }
-    }
-
-    /**
-     * Get PhpWiki pages
-     *
-     * Get info about project non empty PhpWiki pages.
-     *
-     * @url GET {id}/phpwiki_plugin
-     *
-     * @access hybrid
-     *
-     * @param int $id          Id of the project
-     * @param int $limit       Number of elements displayed per page {@from path}
-     * @param int $offset      Position of the first element to display {@from path}
-     * @param string $pagename Part of the pagename or the full pagename to search {@from path}
-     *
-     * @return array {@type Tuleap\REST\v1\PhpWikiPluginPageRepresentation}
-     */
-    public function getPhpWikiPlugin($id, $limit = 10, $offset = 0, $pagename = '') {
-        $this->checkAccess();
-
-        $project      = $this->getProjectForUser($id);
-        $current_user = UserManager::instance()->getCurrentUser();
-        $wiki_pages   = array(
-            'pages' => null
-        );
-
-        EventManager::instance()->processEvent(
-            Event::REST_PROJECT_GET_PHPWIKI,
-            array(
-                'project'        => $project,
-                'user'           => $current_user,
-                'result'         => &$wiki_pages['pages'],
-                'limit'          => $limit,
-                'offset'         => $offset,
-                'pagename'       => $pagename
-            )
-        );
-
-        if ($wiki_pages['pages'] !== null) {
-            $this->sendAllowHeadersForProject();
-            $this->sendPaginationHeaders($limit, $offset, count($wiki_pages['pages']));
-            return $wiki_pages;
-        } else {
-            throw new RestException(404, 'PHPWiki plugin not activated');
         }
     }
 
