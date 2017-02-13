@@ -12,7 +12,8 @@ var gulp        = require('gulp'),
     fs          = require('fs'),
     path        = require('path'),
     scss_lint   = require('gulp-scss-lint'),
-    sass        = require('gulp-sass');
+    sass        = require('gulp-sass'),
+    crossSpawn  = require('cross-spawn');
 
 function get_all_plugins_from_manifests() {
     var plugins_path = './plugins';
@@ -84,15 +85,16 @@ function declare_component_tasks(component_paths) {
         build_tasks   = [];
 
     var promise = find_components_with_package_and_build_script(component_paths).then(function (components) {
+        var yarn_or_npm_binary = yarn_or_npm();
         components.forEach(function(component) {
             gulp.task('install-' + component.name, function (cb) {
-                exec('npm install', {
+                exec(yarn_or_npm_binary + ' install', {
                     cwd: component.path
                 }, cb);
             });
 
             gulp.task('build-' + component.name, ['install-' + component.name], function (cb) {
-                exec('npm run build', {
+                exec(yarn_or_npm_binary + ' run build', {
                     cwd: component.path
                 }, cb);
             });
@@ -241,6 +243,17 @@ function watch_plugins() {
             gulp.watch(files, ['sass-' + name]);
         }
     });
+}
+
+function yarn_or_npm() {
+    var has_yarn = false;
+    try {
+        var cmd = crossSpawn.sync('yarn', ['--version'])
+        var version = cmd.stdout && cmd.stdout.toString().trim();
+        has_yarn = !!version;
+    } finally {
+        return has_yarn ? 'yarn' : 'npm';
+    }
 }
 
 module.exports = {
