@@ -189,5 +189,9 @@ msgstr ""
 msgid "The text field '%s' cannot be compared to NOW()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
 
+#, php-format
+msgid "The value '%s' doesn't exist for the list field '%s'."
+msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
+
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"

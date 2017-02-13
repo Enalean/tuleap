@@ -140,5 +140,9 @@ msgstr ""
 msgid "The text field '%s' cannot be compared to NOW()."
 msgstr ""
 
+#, php-format
+msgid "The value '%s' doesn't exist for the list field '%s'."
+msgstr ""
+
 msgid "This template does not use trackers"
 msgstr ""

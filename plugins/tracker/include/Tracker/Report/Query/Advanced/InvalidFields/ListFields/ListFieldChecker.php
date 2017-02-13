@@ -20,6 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List_Bind;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -59,9 +60,15 @@ class ListFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
             throw new ListToNowComparisonException($field);
         }
 
+        $existing_values = $this->extractLabelValues($field->getAllValues());
+
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
                 throw new ListToEmptyStringComparisonException($comparison, $field);
+            }
+
+            if ($value !== '' && ! in_array($value, $existing_values)) {
+                throw new ListValueDoNotExistComparisonException($field, $value);
             }
         }
     }
@@ -77,5 +84,16 @@ class ListFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
+    }
+
+    private function extractLabelValues(array $list_values)
+    {
+        $list_label_values = array();
+
+        foreach ($list_values as $value) {
+            $list_label_values[] = $value->getLabel();
+        }
+
+        return $list_label_values;
     }
 }
