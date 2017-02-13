@@ -159,6 +159,13 @@ class Git_RemoteServer_GerritServerFactory {
     }
 
     /**
+     * @return bool
+     */
+    public function isServerUsedInProject(Git_RemoteServer_GerritServer $server, $project_id) {
+        return $this->git_dao->isRemoteServerUsedInProject($server->getId(), $project_id);
+    }
+
+    /**
      *
      * @param PFUser $user
      * @return Git_RemoteServer_GerritServer[]

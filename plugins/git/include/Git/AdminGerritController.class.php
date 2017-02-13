@@ -127,10 +127,39 @@ class Git_AdminGerritController {
     }
 
     private function revokeProjectsForGerritServer(Git_RemoteServer_GerritServer $gerrit_server, $project_ids) {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::WARN,
-            $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_under_implementation')
-        );
+
+        $unset_project_ids = array();
+        foreach ($project_ids as $key => $project_id) {
+            if ($this->gerrit_server_factory->isServerUsedInProject($gerrit_server, $project_id)) {
+                $unset_project_ids[] = $project_id;
+                unset($project_ids[$key]);
+            }
+        }
+
+        if (count($unset_project_ids) > 0 ) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText(
+                    'plugin_git',
+                    'gerrit_servers_allowed_project_revoke_projects_not_revoked',
+                    implode(',', $unset_project_ids)
+                )
+            );
+        }
+
+        if (count($project_ids) > 0) {
+            if ($this->gerrit_ressource_restrictor->revokeProject($gerrit_server, $project_ids)) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_projects')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_update_project_list_error')
+                );
+            }
+        }
     }
 
     private function setGerritServerRestriction(Codendi_Request $request)

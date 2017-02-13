@@ -588,3 +588,4 @@ plugin_git	gerrit_servers_allowed_project_revoke_description	You are about to re
 plugin_git	gerrit_servers_allowed_project_revoke_yes	Yes, revoke access
 plugin_git	gerrit_servers_allowed_project_revoke_no	No
 plugin_git	gerrit_servers_under_implementation	This feature is under implementation
+plugin_git	gerrit_servers_allowed_project_revoke_projects_not_revoked	The following projects were not revoked because these projects use this Gerrit server: $1
