@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,6 +41,29 @@ class Git_RemoteServer_Dao extends DataAccessObject {
 
     public function searchAll() {
         $sql = "SELECT * FROM plugin_git_remote_servers";
+        return $this->retrieve($sql);
+    }
+
+    public function searchAvailableServersForProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT plugin_git_remote_servers.*
+                FROM plugin_git_remote_servers
+                  INNER JOIN plugin_git_restricted_gerrit_servers
+                    ON (plugin_git_remote_servers.id = plugin_git_restricted_gerrit_servers.gerrit_server_id)
+                  INNER JOIN plugin_git_restricted_gerrit_servers_allowed_projects
+                    USING (gerrit_server_id)
+                WHERE plugin_git_restricted_gerrit_servers_allowed_projects.project_id = $project_id
+
+                UNION
+
+                SELECT plugin_git_remote_servers.*
+                FROM plugin_git_remote_servers
+                  LEFT JOIN plugin_git_restricted_gerrit_servers
+                    ON (plugin_git_remote_servers.id = plugin_git_restricted_gerrit_servers.gerrit_server_id)
+                WHERE gerrit_server_id IS NULL";
+
         return $this->retrieve($sql);
     }
 

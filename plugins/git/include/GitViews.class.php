@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -76,6 +76,11 @@ class GitViews extends PluginViews {
      */
     private $regexp_retriever;
 
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
@@ -86,7 +91,8 @@ class GitViews extends PluginViews {
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         FineGrainedRepresentationBuilder $fine_grained_builder,
         GitPhpAccessLogger $access_loger,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int)$this->request->get('group_id');
@@ -103,6 +109,7 @@ class GitViews extends PluginViews {
         $this->fine_grained_builder                    = $fine_grained_builder;
         $this->access_loger                            = $access_loger;
         $this->regexp_retriever                        = $regexp_retriever;
+        $this->gerrit_server_factory                   = $gerrit_server_factory;
     }
 
     public function header() {
@@ -239,7 +246,7 @@ class GitViews extends PluginViews {
             $repository,
             $this->controller->getRequest(),
             $params['driver_factory'],
-            $params['gerrit_servers'],
+            $this->gerrit_server_factory->getAvailableServersForProject($this->project),
             $params['gerrit_templates'],
             $this->mirror_data_mapper,
             $params['gerrit_can_migrate_checker'],

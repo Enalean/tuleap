@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,6 +52,7 @@ use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Git_Exec;
@@ -393,6 +394,8 @@ class RepositoryResource extends AuthenticatedResource {
 
         try {
             return $this->migration_handler->migrate($repository, $server_id, $permissions, $user);
+        } catch (RepositoryCannotBeMigratedOnRestrictedGerritServerException $exception) {
+            throw new RestException(403, $exception->getMessage());
         } catch (RepositoryCannotBeMigratedException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (Git_RemoteServer_NotFoundException $exception) {
