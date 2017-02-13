@@ -620,6 +620,23 @@ class GitDao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 
+    /**
+     * @return bool
+     */
+    public function isRemoteServerUsedInProject($remote_server_id, $project_id) {
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $project_id       = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE remote_server_id = $remote_server_id
+                    AND remote_server_disconnect_date IS NULL
+                    AND project_id = $project_id
+                LIMIT 1";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     public function searchGerritRepositoriesWithPermissionsForUGroupAndProject($project_id, $ugroup_ids) {
         $project_id = $this->da->escapeInt($project_id);
         $ugroup_ids = $this->da->escapeIntImplode($ugroup_ids);

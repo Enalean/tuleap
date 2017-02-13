@@ -56,6 +56,11 @@ class GerritServerResourceRestrictor
         return $this->dao->allowProjectOnResource($gerrit_server->getId(), $project->getID());
     }
 
+    public function revokeProject(Git_RemoteServer_GerritServer $gerrit_server, array $project_ids)
+    {
+        return $this->dao->revokeProjectsFromResource($gerrit_server->getId(), $project_ids);
+    }
+
     /**
      * @return Project[]
      */
