@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBu
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 
-class ForList implements FromWhereBuilder
+class ForListBindUsers implements FromWhereBuilder
 {
     /**
      * @var FromWhereEmptyComparisonListFieldBuilder
@@ -60,7 +60,6 @@ class ForList implements FromWhereBuilder
 
         $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
 
         if ($value === '') {
             return $this->getFromWhereForEmptyCondition(
@@ -68,38 +67,7 @@ class ForList implements FromWhereBuilder
                 $field_id,
                 $changeset_value_alias
             );
-        } else {
-            return $this->getFromWhereForNonEmptyCondition(
-                $list_value_alias,
-                $value,
-                $field_id,
-                $changeset_value_alias,
-                $changeset_value_list_alias
-            );
         }
-    }
-
-    /**
-     * @return FromWhere
-     */
-    private function getFromWhereForNonEmptyCondition(
-        $list_value_alias,
-        $value,
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_list_alias
-    ) {
-        $condition = "$list_value_alias.label = " . $this->quoteSmart($value);
-
-        return $this->from_where_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            'tracker_field_list_bind_static_value',
-            $list_value_alias,
-            $condition
-        );
     }
 
     /**
@@ -122,10 +90,5 @@ class ForList implements FromWhereBuilder
     private function escapeInt($value)
     {
         return CodendiDataAccess::instance()->escapeInt($value);
-    }
-
-    private function quoteSmart($value)
-    {
-        return CodendiDataAccess::instance()->quoteSmart($value);
     }
 }

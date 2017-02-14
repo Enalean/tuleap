@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElementFieldListBindVisitor;
+
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
@@ -929,5 +931,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             'label' => $value->getLabel(),
             'id'    => $value->getId(),
         );
+    }
+
+    public function accept(TrackerFormElementFieldListBindVisitor $visitor)
+    {
+        return $visitor->visitListBindStatic($this);
     }
 }
