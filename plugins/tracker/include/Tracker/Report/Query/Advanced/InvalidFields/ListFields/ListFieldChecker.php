@@ -61,7 +61,8 @@ class ListFieldChecker implements InvalidFieldChecker
                 throw new ListToEmptyStringComparisonException($comparison, $field);
             }
 
-            if ($value !== '' && ! in_array($value, $existing_values)) {
+            $lowercase_value = $this->convertToLowerCase($value);
+            if ($value !== '' && ! in_array($lowercase_value, $existing_values)) {
                 throw new ListValueDoNotExistComparisonException($field, $value);
             }
         }
@@ -72,9 +73,14 @@ class ListFieldChecker implements InvalidFieldChecker
         $list_label_values = array();
 
         foreach ($list_values as $value) {
-            $list_label_values[] = $value->getLabel();
+            $list_label_values[] = $this->convertToLowerCase($value->getLabel());
         }
 
         return $list_label_values;
+    }
+
+    private function convertToLowerCase($string)
+    {
+        return mb_strtolower($string, "UTF-8");
     }
 }
