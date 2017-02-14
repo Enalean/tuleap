@@ -84,6 +84,19 @@ class Git_RemoteServer_GerritServerFactory {
     /**
      * @return Git_RemoteServer_GerritServer[]
      */
+    public function getUnrestrictedServers()
+    {
+        $servers = array();
+        foreach ($this->dao->searchAllUnrestricted() as $row) {
+            $servers[$row['id']] = $this->instantiateFromRow($row);
+        }
+
+        return $servers;
+    }
+
+    /**
+     * @return Git_RemoteServer_GerritServer[]
+     */
     public function getAvailableServersForProject(Project $project)
     {
         $servers = array();
