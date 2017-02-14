@@ -43,7 +43,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 
-class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor
+class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor, ComparisonVisitor
 {
     /** @return FromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
