@@ -331,7 +331,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             }
         }
 
-        if (! empty($sql) && $sql[0] != null) {
+        $sql = array_filter($sql);
+        if (! empty($sql)) {
             $dao   = $this->getDefaultValueDao();
             foreach( $dao->retrieve(implode(' UNION ', $sql)) as $row) {
                 $this->values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
