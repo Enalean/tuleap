@@ -185,6 +185,14 @@ msgstr ""
 "Le champ liste '%s' ne peut pas être comparé à une chaîne vide avec "
 "l'opérateur IN()."
 
+#, php-format
+msgid ""
+"The list field '%s' cannot be compared to the empty string with NOT IN() "
+"operator."
+msgstr ""
+"Le champ liste '%s' ne peut pas être comparé à une chaîne vide avec "
+"l'opérateur NOT IN()."
+
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "

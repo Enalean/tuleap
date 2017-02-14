@@ -28,6 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -84,6 +85,11 @@ class SizeValidatorVisitor implements Visitor
     }
 
     public function visitInComparison(InComparison $comparison, SizeValidatorParameters $parameters)
+    {
+        $this->visitComparison($comparison, $parameters);
+    }
+
+    public function visitNotInComparison(NotInComparison $comparison, SizeValidatorParameters $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
