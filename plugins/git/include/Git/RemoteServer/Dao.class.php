@@ -44,6 +44,17 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllUnrestricted()
+    {
+        $sql = "SELECT plugin_git_remote_servers.*
+                FROM plugin_git_remote_servers
+                  LEFT JOIN plugin_git_restricted_gerrit_servers
+                    ON (plugin_git_remote_servers.id = plugin_git_restricted_gerrit_servers.gerrit_server_id)
+                WHERE gerrit_server_id IS NULL";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchAvailableServersForProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);

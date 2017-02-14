@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,6 @@ require_once 'common/autoload.php';
 require_once __DIR__.'/DatabaseInitialization.php';
 
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
-use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\Permissions\RegexpTemplateDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
@@ -41,6 +40,8 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\RestrictedGerritServerDao;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -71,6 +72,11 @@ class GitDataBuilder extends REST_TestDataBuilder {
      */
     private $database_init;
 
+    /**
+     * @var GerritServerResourceRestrictor
+     */
+    private $gerrit_server_restrictor;
+
     public function __construct()
     {
         parent::__construct();
@@ -90,13 +96,17 @@ class GitDataBuilder extends REST_TestDataBuilder {
         );
 
         $server_dao = new Git_RemoteServer_Dao();
-        $git_dao = new GitDao();
+        $git_dao    = new GitDao();
 
         $this->server_factory = new Git_RemoteServer_GerritServerFactory(
             $server_dao,
             $git_dao,
             $this->git_system_event_manager,
             $this->project_manager
+        );
+
+        $this->gerrit_server_restrictor = new GerritServerResourceRestrictor(
+            new RestrictedGerritServerDao()
         );
 
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_GIT_SHORTNAME);
@@ -141,8 +151,26 @@ class GitDataBuilder extends REST_TestDataBuilder {
             'Digest'
         );
 
+        $server_03 = new Git_RemoteServer_GerritServer(
+            0,
+            'restricted',
+            29418,
+            8080,
+            'gerrit-adm',
+            '',
+            '',
+            false,
+            Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            '',
+            '',
+            'Digest'
+        );
+
         $this->server_factory->save($server_01);
         $this->server_factory->save($server_02);
+        $this->server_factory->save($server_03);
+
+        $this->gerrit_server_restrictor->setRestricted($server_03);
     }
 
     private function changeRepositoryUpdate(GitRepository $repository) {

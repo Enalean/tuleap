@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,12 +65,15 @@ class GerritResource extends AuthenticatedResource {
     /**
      * Get Gerrit servers
      *
-     * The route lists Gerrit servers for users that are allowed to see it:<br>
+     * This route lists Gerrit servers for users that are allowed to see it:<br/>
      * <ul>
      * <li> Site admins </li>
      * <li> Project admins of projects that use Git </li>
      * <li> Members of custom ugroups that are Git admins in one or more project </li>
      * </ul>
+     * <br/>
+     * <br/>
+     * /!\ Only unrestricted Gerrit servers are listed here. /!\
      *
      * @access hybrid
      *
@@ -85,7 +88,7 @@ class GerritResource extends AuthenticatedResource {
 
         $this->checkUserCanListGerritServers($current_user);
 
-        $servers = $this->server_factory->getServers();
+        $servers = $this->server_factory->getUnrestrictedServers();
 
         $representations = array();
         foreach($servers as $server) {
