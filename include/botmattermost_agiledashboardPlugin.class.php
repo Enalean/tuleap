@@ -135,7 +135,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
             $logger
         );
 
-        $stand_up_notification_sender->send();
+        $stand_up_notification_sender->send(HTTPRequest::instance());
     }
 
     private function getRenderToString()
