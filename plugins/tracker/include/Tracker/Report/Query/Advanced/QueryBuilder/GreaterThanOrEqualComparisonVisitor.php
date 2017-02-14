@@ -45,7 +45,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 
-class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
+class GreaterThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, ComparisonVisitor
 {
     /** @return FromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)

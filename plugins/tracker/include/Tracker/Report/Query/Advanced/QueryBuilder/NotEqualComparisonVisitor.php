@@ -46,7 +46,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
-class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor
+class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, ComparisonVisitor
 {
     /** @return FromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
