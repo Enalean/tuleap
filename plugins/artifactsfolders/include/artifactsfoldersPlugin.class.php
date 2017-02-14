@@ -335,7 +335,6 @@ class ArtifactsFoldersPlugin extends Plugin
     public function display_copy_of_artifact($params)
     {
         $folder_hierarchy = $this->getHierarchyOfFolderBuilder()->getHierarchyOfFolderForArtifact(
-            $params['current_user'],
             $params['artifact']
         );
         if (! $folder_hierarchy) {

@@ -54,7 +54,7 @@ class ArtifactLinkInformationPrepender
         }
 
         $value            = false;
-        $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolderForArtifact($current_user, $artifact);
+        $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolderForArtifact($artifact);
         if ($read_only) {
             if ($folder_hierarchy) {
                 $value = $this->fetchLinkToFolder($folder_hierarchy);

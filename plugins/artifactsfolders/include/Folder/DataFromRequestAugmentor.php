@@ -76,7 +76,6 @@ class DataFromRequestAugmentor
         }
 
         $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolderForArtifact(
-            $this->request->getCurrentUser(),
             $artifact
         );
 

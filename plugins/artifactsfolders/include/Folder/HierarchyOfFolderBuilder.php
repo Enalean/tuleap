@@ -52,15 +52,13 @@ class HierarchyOfFolderBuilder
         $this->artifact_factory = $artifact_factory;
     }
 
-    public function getHierarchyOfFolderForArtifact(PFUser $user, Tracker_Artifact $artifact)
+    public function getHierarchyOfFolderForArtifact(Tracker_Artifact $artifact)
     {
         $hierarchy = array();
-        foreach ($this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId()) as $row) {
+        $row = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
+        if ($row) {
             $folder    = $this->artifact_factory->getInstanceFromRow($row);
-            if ($folder->userCanView($user)) {
-                $hierarchy = $this->getHierarchyOfFolder($folder);
-                break;
-            }
+            $hierarchy = $this->getHierarchyOfFolder($folder);
         }
 
         return $hierarchy;

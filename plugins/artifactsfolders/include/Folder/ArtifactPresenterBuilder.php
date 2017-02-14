@@ -155,7 +155,7 @@ class ArtifactPresenterBuilder
         foreach ($list_of_artifact_ids as $artifact_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
             if ($artifact) {
-                $folder_hierarchy           = $this->hierarchy_builder->getHierarchyOfFolderForArtifact($user, $artifact);
+                $folder_hierarchy           = $this->hierarchy_builder->getHierarchyOfFolderForArtifact($artifact);
                 $artifact_representations[] = $this->getArtifactRepresentation($user, $artifact, $folder_hierarchy);
             }
         }
