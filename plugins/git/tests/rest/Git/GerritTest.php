@@ -64,6 +64,23 @@ class GerritTest extends RestBase {
         $this->assertEquals($servers[1]['html_url'], 'http://otherhost:8080');
     }
 
+    public function testGetServersForProject() {
+        $url = 'gerrit?for_project=' . GitDataBuilder::PROJECT_TEST_GIT_ID;
+        $response  = $this->getResponse($this->client->get($url));
+
+        $response_servers = $response->json();
+        $this->assertArrayHasKey('servers', $response_servers);
+
+        $servers = $response_servers['servers'];
+        $this->assertCount(3, $servers);
+        $this->assertEquals($servers[0]['id'], 1);
+        $this->assertEquals($servers[0]['html_url'], 'https://localhost:8080');
+        $this->assertEquals($servers[1]['id'], 2);
+        $this->assertEquals($servers[1]['html_url'], 'http://otherhost:8080');
+        $this->assertEquals($servers[2]['id'], 3);
+        $this->assertEquals($servers[2]['html_url'], 'http://restricted:8080');
+    }
+
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */

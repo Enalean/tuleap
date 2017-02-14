@@ -115,10 +115,10 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $repository = $this->generateGitRepository();
         $this->changeRepositoryUpdate($repository);
 
-        $this->addGerritServers();
+        $this->addGerritServers($project);
     }
 
-    private function addGerritServers() {
+    private function addGerritServers(Project $project) {
         echo "Creating Gerrit servers\n";
 
         $server_01 = new Git_RemoteServer_GerritServer(
@@ -171,6 +171,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $this->server_factory->save($server_03);
 
         $this->gerrit_server_restrictor->setRestricted($server_03);
+        $this->gerrit_server_restrictor->allowProject($server_03, $project);
     }
 
     private function changeRepositoryUpdate(GitRepository $repository) {

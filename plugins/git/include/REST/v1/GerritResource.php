@@ -39,26 +39,37 @@ use PFUser;
 
 class GerritResource extends AuthenticatedResource {
 
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
     private $server_factory;
+
+    /**
+     * @var UserManager
+     */
     private $user_manager;
 
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
     public function __construct() {
-        $git_dao = new GitDao();
-        $project_manager = ProjectManager::instance();
-        $repository_factory = new GitRepositoryFactory(
+        $git_dao               = new GitDao();
+        $this->project_manager = ProjectManager::instance();
+        $repository_factory    = new GitRepositoryFactory(
             $git_dao,
-            $project_manager
+            $this->project_manager
         );
 
         $this->server_factory = new Git_RemoteServer_GerritServerFactory(
             new Git_RemoteServer_Dao(),
             $git_dao,
             new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
-            $project_manager
+            $this->project_manager
         );
 
-        $this->user_manager = UserManager::instance();
-
+        $this->user_manager              = UserManager::instance();
         $this->server_permission_manager = new ServerPermissionManager(new ServerPermissionDao());
     }
 
@@ -73,22 +84,34 @@ class GerritResource extends AuthenticatedResource {
      * </ul>
      * <br/>
      * <br/>
-     * /!\ Only unrestricted Gerrit servers are listed here. /!\
+     * The route returns:
+     * <ul>
+     * <li>Only unrestricted Gerrit servers when no option provided</li>
+     * <li>All the project Gerrit servers available for the provided project</li>
+     * </ul>
      *
      * @access hybrid
      *
      * @url GET
      *
+     * @param string $for_project The project ID to search in {@from query} {@type int}
+     *
      * @return array {@type Tuleap\Git\REST\v1\GerritServerRepresentation}
      *
      * @throws 403
+     * @throws 404
      */
-    protected function get() {
+    protected function get($for_project = null) {
         $current_user = $this->user_manager->getCurrentUser();
 
         $this->checkUserCanListGerritServers($current_user);
 
-        $servers = $this->server_factory->getUnrestrictedServers();
+        if ($for_project) {
+            $project = $this->getProjectFromRequest($for_project);
+            $servers = $this->server_factory->getAvailableServersForProject($project);
+        } else {
+            $servers = $this->server_factory->getUnrestrictedServers();
+        }
 
         $representations = array();
         foreach($servers as $server) {
@@ -99,6 +122,20 @@ class GerritResource extends AuthenticatedResource {
 
         $this->sendAllowHeaders();
         return array('servers' => $representations);
+    }
+
+    /**
+     * @return Project
+     */
+    private function getProjectFromRequest($project_id)
+    {
+        $project = $this->project_manager->getProject($project_id);
+
+        if ($project->isError()) {
+            throw new RestException(404, 'The provided project does not exist');
+        }
+
+        return $project;
     }
 
     private function checkUserCanListGerritServers(PFUser $user) {

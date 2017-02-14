@@ -78,7 +78,8 @@ class Git_RemoteServer_GerritServerFactory {
         foreach ($this->dao->searchAll() as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
-        return $servers;
+
+        return $this->getOrderedServerList($servers);
     }
 
     /**
@@ -91,7 +92,7 @@ class Git_RemoteServer_GerritServerFactory {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
 
-        return $servers;
+        return $this->getOrderedServerList($servers);
     }
 
     /**
@@ -104,6 +105,12 @@ class Git_RemoteServer_GerritServerFactory {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
 
+        return $this->getOrderedServerList($servers);
+    }
+
+    private function getOrderedServerList(array $servers)
+    {
+        ksort($servers);
         return $servers;
     }
 
