@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBu
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 
-class ForList implements FromWhereBuilder
+class ForListBindUsers implements FromWhereBuilder
 {
     /**
      * @var FromWhereComparisonFieldBuilder
@@ -54,12 +54,9 @@ class ForList implements FromWhereBuilder
         $comparison_value = $comparison->getValueWrapper();
         $value            = $comparison_value->getValue();
         $field_id         = (int) $field->getId();
-        $tracker_id       = (int) $field->getTrackerId();
 
         $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
-        $filter_alias               = "Filter_{$field_id}_{$suffix}";
 
         if ($value === '') {
             return $this->getFromWhereForEmptyCondition(
@@ -68,43 +65,6 @@ class ForList implements FromWhereBuilder
                 $changeset_value_list_alias
             );
         }
-
-        return $this->getFromWhereForNonEmptyCondition(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            $list_value_alias,
-            $filter_alias,
-            $tracker_id,
-            $value
-        );
-    }
-
-    /**
-     * @return FromWhere
-     */
-    private function getFromWhereForNonEmptyCondition(
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_list_alias,
-        $list_value_alias,
-        $filter_alias,
-        $tracker_id,
-        $value
-    ) {
-        $condition = "$list_value_alias.label = " . $this->quoteSmart($value);
-
-        return $this->comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            'tracker_field_list_bind_static_value',
-            $list_value_alias,
-            $filter_alias,
-            $tracker_id,
-            $condition
-        );
     }
 
     /**
@@ -130,10 +90,5 @@ class ForList implements FromWhereBuilder
     private function escapeInt($value)
     {
         return CodendiDataAccess::instance()->escapeInt($value);
-    }
-
-    private function quoteSmart($value)
-    {
-        return CodendiDataAccess::instance()->quoteSmart($value);
     }
 }
