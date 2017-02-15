@@ -21,6 +21,6 @@
 
 ?><h3>API</h3>
 <ul class="unstyled">
-    <li><?= $GLOBALS['sys_name']?> fournit une <a href="/help/api">API&nbsp;REST</a>.
+    <li><?= $GLOBALS['sys_name']?> fournit une <a href="/help/api.php">API&nbsp;REST</a>.
     </li>
 </ul>

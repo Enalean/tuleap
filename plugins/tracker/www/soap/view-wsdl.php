@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once ('pre.php');
-
-$src = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/?wsdl";
+require_once 'pre.php';
 
 $wsdl_renderer = new SOAP_WSDLRenderer();
-$wsdl_renderer->render($src);
+$wsdl_renderer->render(HTTPRequest::instance()->getServerUrl().'/plugins/tracker/soap/?wsdl');

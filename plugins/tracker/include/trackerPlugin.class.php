@@ -793,7 +793,7 @@ class trackerPlugin extends Plugin {
         $params['end_points'][] = array(
             'title'       => 'Tracker',
             'wsdl'        => $this->getPluginPath().'/soap/?wsdl',
-            'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl',
+            'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl.php',
             'changelog'   => $this->getPluginPath().'/soap/ChangeLog',
             'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
             'description' => 'Query and modify Trackers.',
