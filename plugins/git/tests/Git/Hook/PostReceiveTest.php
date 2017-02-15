@@ -47,7 +47,6 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
         $this->repository                 = mock('GitRepository');
         $this->ci_launcher                = mock('Git_Ci_Launcher');
         $this->parse_log                  = mock('Git_Hook_ParseLog');
-        $this->git_repository_url_manager = mock('Git_GitRepositoryUrlManager');
         $this->system_event_manager       = mock('Git_SystemEventManager');
         $this->mail_builder               = mock('MailBuilder');
         $this->event_manager              = mock('EventManager');
@@ -59,10 +58,10 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
             $this->user_manager,
             $this->ci_launcher,
             $this->parse_log,
-            $this->git_repository_url_manager,
             $this->system_event_manager,
             $this->event_manager,
-            $this->request_sender
+            $this->request_sender,
+            mock('Tuleap\Git\Hook\PostReceiveMailSender')
         );
 
         stub($this->repository)->getNotifiedMails()->returns(array());

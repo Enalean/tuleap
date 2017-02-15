@@ -56,6 +56,11 @@ if ($user_name === false) {
 
 $http_client = new Http_Client();
 
+$mail_builder = new MailBuilder(
+    TemplateRendererFactory::build(),
+    new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+);
+
 $webhook_dao  = new \Tuleap\Git\Webhook\WebhookDao();
 $post_receive = new Git_Hook_PostReceive(
     new Git_Hook_LogAnalyzer(
@@ -81,7 +86,6 @@ $post_receive = new Git_Hook_PostReceive(
         ),
         $logger
     ),
-    $git_repository_url_manager,
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
@@ -89,12 +93,8 @@ $post_receive = new Git_Hook_PostReceive(
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
         $http_client,
         $logger
-    )
-);
-
-$mail_builder = new MailBuilder(
-    TemplateRendererFactory::build(),
-    new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+    ),
+    new \Tuleap\Git\Hook\PostReceiveMailSender($git_repository_url_manager, $mail_builder)
 );
 
 $post_receive->beforeParsingReferences($repository_path);
@@ -104,7 +104,7 @@ while ($count <= COUNT_THRESHOLD && $line = fgets(STDIN)) {
     $count += 1;
     list($old_rev, $new_rev, $refname) = explode(' ', trim($line));
     try {
-        $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname, $mail_builder);
+        $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);
     } catch (Exception $exception) {
         $exit_status_code = 1;
         $logger->error("[git post-receive] $repository_path $user_name $refname $old_rev $new_rev " . $exception->getMessage());
