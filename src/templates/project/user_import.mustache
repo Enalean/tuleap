@@ -1,0 +1,11 @@
+<h2>{{{ title }}}</h2>
+<p>{{{ import_welcome }}}</p>
+
+<form name="importdata" action="?" method="POST" enctype="multipart/form-data" class="form-horizontal" id="project-admin-user-import-form">
+    <input type="hidden" name="group_id" value="{{ project_id}}"/>
+    <input type="hidden" name="func" value="import"/>
+    <input type="hidden" name="mode" value="parse"/>
+    <p><b>{{ upload_file }}</b></p>
+    <input type="file" id="user_filename" name="user_filename" size="50" />
+    <button type="submit" name="submit" class="btn btn-primary project-admin-import-user-submit"/>{{ submit }}</button>
+</form>

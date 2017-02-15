@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
@@ -30,12 +30,7 @@ class UserImport {
     //the group our users is part of
     var $group_id;
 
-    /**
-     * Constructor.
-     * 
-     * @return boolean success.
-     */
-    function UserImport($group_id) {
+    public function __construct($group_id) {
         $this->group_id = $group_id;    
     }
 

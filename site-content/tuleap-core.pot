@@ -43,6 +43,9 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
+msgid "Load users"
+msgstr ""
+
 msgid "Mediawiki"
 msgstr ""
 

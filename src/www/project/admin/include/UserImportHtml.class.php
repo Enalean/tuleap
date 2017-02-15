@@ -2,17 +2,18 @@
 
 /* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -25,18 +26,9 @@
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/user/UserImport.class.php');
 
+use Tuleap\Project\Admin\UserImportPresenter;
 
 class UserImportHtml extends UserImport {
-
-    /**
-     * Constructor.
-     *
-     * @return boolean success.
-     */
-    function UserImportHtml($group) {
-        return $this->UserImport($group);
-    }
-
 
     /**
      * Show the parse report
@@ -124,35 +116,17 @@ class UserImportHtml extends UserImport {
         echo '<hr><h2>'.$Language->getText('project_admin_userimport','format_hdr').'</h2>';
         echo $Language->getText('project_admin_userimport','import_format',array(user_getemail(user_getid())));
     }
-  
-  
-    /**
-     * Display screen accepting the user file to be parsed  
-     *     
-     *     
-     */
-    function displayInput() {
-        global $Language;
-    
-        project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
-                 'help' => 'project-admin.html#adding-removing-users'));
-        
-        echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('project-admin.html#adding-removing-users'))).'</h2>';
-        echo $Language->getText('project_admin_userimport','import_welcome',array('/project/admin/userimport.php?group_id='.$this->group_id.'&mode=showformat&func=import'));
 
-        echo '<FORM NAME="importdata" action="?" method="POST" enctype="multipart/form-data">
-            <INPUT TYPE="hidden" name="group_id" value="'.$this->group_id.'">                
-            <INPUT TYPE="hidden" name="func" value="import">
-            <INPUT TYPE="hidden" name="mode" value="parse"> 
-            <TABLE border="0" width="75%">
-            <TR><B>'.$Language->getText('project_admin_userimport','upload_file').'</B></TR>
-            <TR><TD> <INPUT TYPE="file" name="user_filename" size="50"></TD></TR>
-            </TABLE><P>
-            <INPUT TYPE="submit" name="submit" value="'.$Language->getText('project_admin_userimport','submit').'">
-            </FORM> ';     
+    public function displayInput()
+    {
+        project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
+                 'help' => 'project-admin.html#adding-removing-users'));
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/');
+        $presenter = new UserImportPresenter($this->group_id);
+
+        echo $renderer->renderToString('user_import', $presenter);
+
         project_admin_footer(array());
     }
-
 }
-
-?>

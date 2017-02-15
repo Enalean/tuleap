@@ -614,7 +614,7 @@ project_admin_userperms	write_perms	Write
 # Script: SF/www/project/admin/userimport.php
 #
 project_admin_userimport	import_members	Import Project Members $1
-project_admin_userimport	import_welcome	<P>You can import users into your project, by specifying a text file. <br>See the <a href="$1">Import Format</a> for more details.<P>
+project_admin_userimport	import_welcome	You can import users into your project, by specifying a text file. <br>See the <a href="$1">Import Format</a> for more details.
 project_admin_userimport	upload_file	Upload File :
 project_admin_userimport	submit	Load users
 project_admin_userimport	parse_report	User Parsing Report
