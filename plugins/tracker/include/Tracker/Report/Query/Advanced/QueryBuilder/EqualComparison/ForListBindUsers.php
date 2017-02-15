@@ -34,18 +34,18 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
     /**
      * @var FromWhereEmptyComparisonListFieldBuilder
      */
-    private $from_where_empty_comparison_builder;
+    private $empty_comparison_builder;
     /**
      * @var FromWhereComparisonListFieldBuilder
      */
-    private $from_where_builder;
+    private $comparison_builder;
 
     public function __construct(
-        FromWhereEmptyComparisonListFieldBuilder $from_where_empty_comparison_builder,
-        FromWhereComparisonListFieldBuilder $from_where_comparison_builder
+        FromWhereEmptyComparisonListFieldBuilder $empty_comparison_builder,
+        FromWhereComparisonListFieldBuilder $comparison_builder
     ) {
-        $this->from_where_empty_comparison_builder = $from_where_empty_comparison_builder;
-        $this->from_where_builder                  = $from_where_comparison_builder;
+        $this->comparison_builder       = $comparison_builder;
+        $this->empty_comparison_builder = $empty_comparison_builder;
     }
 
     /**
@@ -60,6 +60,7 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
 
         $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
+        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
 
         if ($value === '') {
             return $this->getFromWhereForEmptyCondition(
@@ -68,6 +69,37 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
                 $changeset_value_alias
             );
         }
+        return $this->getFromWhereForNonEmptyCondition(
+            $list_value_alias,
+            $value,
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias
+        );
+    }
+
+    /**
+     * @return FromWhere
+     */
+    private function getFromWhereForNonEmptyCondition(
+        $list_value_alias,
+        $value,
+        $field_id,
+        $changeset_value_alias,
+        $changeset_value_list_alias
+    ) {
+        $condition = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.user_id
+            AND $list_value_alias.user_name = " . $this->quoteSmart($value);
+
+        return $this->comparison_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias,
+            'tracker_changeset_value_list',
+            'user',
+            $list_value_alias,
+            $condition
+        );
     }
 
     /**
@@ -78,7 +110,7 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
         $where = "$changeset_value_alias.changeset_id IS NULL OR $changeset_value_list_alias.bindvalue_id =" .
             $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
 
-        return $this->from_where_empty_comparison_builder->getFromWhere(
+        return $this->empty_comparison_builder->getFromWhere(
             $field_id,
             $changeset_value_alias,
             $changeset_value_list_alias,
@@ -90,5 +122,10 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
     private function escapeInt($value)
     {
         return CodendiDataAccess::instance()->escapeInt($value);
+    }
+
+    private function quoteSmart($value)
+    {
+        return CodendiDataAccess::instance()->quoteSmart($value);
     }
 }

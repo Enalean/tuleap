@@ -40,8 +40,8 @@ class FromWhereComparisonListFieldBuilder
             INNER JOIN $tracker_changeset_value_table AS $changeset_value_field_alias
              ON ($changeset_value_field_alias.changeset_value_id = $changeset_value_alias.id)
             INNER JOIN $list_value_table AS $list_value_alias
-             ON ($changeset_value_field_alias.bindvalue_id = $list_value_alias.id
-                AND $condition
+             ON (
+                $condition
              )
          ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
 
