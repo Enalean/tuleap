@@ -55,13 +55,13 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindStaticChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindUsersChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
 class NotEqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
-    IProvideTheInvalidFieldCheckerForAComparison,
-    TrackerFormElementFieldListBindVisitor
+    IProvideTheInvalidFieldCheckerForAComparison
 {
     /**
      * @return InvalidFieldChecker
@@ -148,7 +148,14 @@ class NotEqualComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        return $field->getBind()->accept($this);
+        $bind_checker = new ListFieldBindVisitor(
+            new ListFieldChecker(
+                new EmptyStringAllowed(),
+                new CollectionOfListValuesExtractor()
+            )
+        );
+
+        return $bind_checker->getInvalidFieldChecker($field);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
@@ -205,25 +212,5 @@ class NotEqualComparisonVisitor implements
     public function visitExternalField(Tracker_FormElement_Field $field)
     {
         throw new FieldIsNotSupportedAtAllException($field);
-    }
-
-    public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind)
-    {
-        return new ListFieldBindStaticChecker(
-            new ListFieldChecker(
-                new EmptyStringAllowed(),
-                new CollectionOfListValuesExtractor()
-            )
-        );
-    }
-
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind)
-    {
-        return new ListFieldBindUsersChecker(
-            new ListFieldChecker(
-                new EmptyStringAllowed(),
-                new CollectionOfListValuesExtractor()
-            )
-        );
     }
 }

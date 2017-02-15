@@ -33,8 +33,6 @@ use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -46,14 +44,12 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\FormElement\TrackerFormElementFieldListBindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
 class NotEqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
-    ComparisonVisitor,
-    TrackerFormElementFieldListBindVisitor
+    ComparisonVisitor
 {
     /** @return FromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -139,7 +135,23 @@ class NotEqualComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        return $field->getBind()->accept($this);
+        $static_bind_builder = new NotEqualComparison\ForList(
+            new FromWhereComparisonFieldBuilder(),
+            new FromWhereNotEqualComparisonListFieldBuilder()
+        );
+        $users_bind_builder = new NotEqualComparison\ForListBindUsers(
+            new FromWhereComparisonFieldBuilder(),
+            new FromWhereNotEqualComparisonListFieldBuilder()
+        );
+        $ugroups_bind_builder = new NotEqualComparison\ForListBindUgroups();
+
+        $bind_builder = new ListFieldBindVisitor(
+            $static_bind_builder,
+            $users_bind_builder,
+            $ugroups_bind_builder
+        );
+
+        return $bind_builder->getFromWhereBuilder($field);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
@@ -200,21 +212,5 @@ class NotEqualComparisonVisitor implements
     public function visitExternalField(Tracker_FormElement_Field $field)
     {
         return null;
-    }
-
-    public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind)
-    {
-        return new NotEqualComparison\ForList(
-            new FromWhereComparisonFieldBuilder(),
-            new FromWhereNotEqualComparisonListFieldBuilder()
-        );
-    }
-
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind)
-    {
-        return new NotEqualComparison\ForListBindUsers(
-            new FromWhereComparisonFieldBuilder(),
-            new FromWhereNotEqualComparisonListFieldBuilder()
-        );
     }
 }

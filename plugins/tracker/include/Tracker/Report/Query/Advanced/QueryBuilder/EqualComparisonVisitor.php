@@ -33,8 +33,6 @@ use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -46,14 +44,12 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\FormElement\TrackerFormElementFieldListBindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
 class EqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
-    ComparisonVisitor,
-    TrackerFormElementFieldListBindVisitor
+    ComparisonVisitor
 {
     /** @return FromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -139,7 +135,26 @@ class EqualComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        return $field->getBind()->accept($this);
+        $static_bind_builder = new EqualComparison\ForList(
+            new FromWhereEmptyComparisonListFieldBuilder(),
+            new FromWhereComparisonListFieldBuilder()
+        );
+        $users_bind_builder = new EqualComparison\ForListBindUsers(
+            new FromWhereEmptyComparisonListFieldBuilder(),
+            new FromWhereComparisonListFieldBuilder()
+        );
+        $ugroups_bind_builder = new EqualComparison\ForListBindUgroups(
+            new FromWhereEmptyComparisonListFieldBuilder(),
+            new FromWhereComparisonListFieldBuilder()
+        );
+
+        $bind_builder = new ListFieldBindVisitor(
+            $static_bind_builder,
+            $users_bind_builder,
+            $ugroups_bind_builder
+        );
+
+        return $bind_builder->getFromWhereBuilder($field);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
@@ -200,21 +215,5 @@ class EqualComparisonVisitor implements
     public function visitExternalField(Tracker_FormElement_Field $field)
     {
         return null;
-    }
-
-    public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind)
-    {
-        return new EqualComparison\ForList(
-            new FromWhereEmptyComparisonListFieldBuilder(),
-            new FromWhereComparisonListFieldBuilder()
-        );
-    }
-
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind)
-    {
-        return new EqualComparison\ForListBindUsers(
-            new FromWhereEmptyComparisonListFieldBuilder(),
-            new FromWhereComparisonListFieldBuilder()
-        );
     }
 }
