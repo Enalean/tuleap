@@ -1,6 +1,7 @@
 @import '../../default/css/style';
 
 @mixin definitions($main) {
+    #global_notifs > thead > tr > th,
     #siteadmin-config table > thead > tr > th,
     #tracker_report_table > thead > tr > th {
         border-bottom-color: $main;
