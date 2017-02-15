@@ -129,7 +129,7 @@ $loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_manager);
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
 
 if (!IS_SCRIPT) {
-    header('Referrer-Policy: origin, strict-origin, same-origin');
+    header('Referrer-Policy: no-referrer-when-downgrade, strict-origin, same-origin');
 
     // Protection against clickjacking
     header('X-Frame-Options: SAMEORIGIN');
