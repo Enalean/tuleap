@@ -32,6 +32,9 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -43,6 +46,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\TrackerFormElementFieldListBindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
@@ -50,10 +54,14 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValu
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindStaticChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindUsersChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 
-class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
+class NotEqualComparisonVisitor implements
+    Tracker_FormElement_FieldVisitor,
+    IProvideTheInvalidFieldCheckerForAComparison,
+    TrackerFormElementFieldListBindVisitor
 {
     /**
      * @return InvalidFieldChecker
@@ -120,32 +128,27 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
-    private function visitList()
+    private function visitList(Tracker_FormElement_Field_List $field)
     {
-        return new ListFieldBindStaticChecker(
-            new ListFieldChecker(
-                new EmptyStringAllowed(),
-                new CollectionOfListValuesExtractor()
-            )
-        );
+        return $field->getBind()->accept($this);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
@@ -202,5 +205,25 @@ class NotEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IPr
     public function visitExternalField(Tracker_FormElement_Field $field)
     {
         throw new FieldIsNotSupportedAtAllException($field);
+    }
+
+    public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind)
+    {
+        return new ListFieldBindStaticChecker(
+            new ListFieldChecker(
+                new EmptyStringAllowed(),
+                new CollectionOfListValuesExtractor()
+            )
+        );
+    }
+
+    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind)
+    {
+        return new ListFieldBindUsersChecker(
+            new ListFieldChecker(
+                new EmptyStringAllowed(),
+                new CollectionOfListValuesExtractor()
+            )
+        );
     }
 }
