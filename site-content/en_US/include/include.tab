@@ -127,11 +127,6 @@ include_layout	network_gallery	Network Gallery
 include_layout	template_warning	Beware this project is a template project
 #
 #-----------------------------------------------
-# Script: SF/www/include/logger.php
-#
-include_logger	log_err	An error occurred in the logger.\n
-#
-#-----------------------------------------------
 # Script: SF/www/include/menu.php
 #
 include_menu	site_admin	Administration
