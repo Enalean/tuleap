@@ -33,7 +33,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
             $this->factory,
             $this->admin_page_renderer,
             mock('Tuleap\Git\GerritServerResourceRestrictor'),
-            mock('ProjectManager')
+            mock('Tuleap\Git\RemoteServer\Gerrit\Restrictor')
         );
 
         $this->request_update_existing_server = array(

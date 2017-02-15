@@ -64,6 +64,7 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -624,6 +625,9 @@ class GitPlugin extends Plugin {
      * We expect that the check fo access right to this method has already been done by the caller
      */
     public function processAdmin(Codendi_Request $request) {
+        $project_manager             = ProjectManager::instance();
+        $gerrit_ressource_restrictor = new GerritServerResourceRestrictor(new RestrictedGerritServerDao());
+
         $admin = new Git_AdminRouter(
             $this->getGerritServerFactory(),
             new CSRFSynchronizerToken('/plugins/git/admin/'),
@@ -634,15 +638,21 @@ class GitPlugin extends Plugin {
                 $this->getGitSystemEventManager(),
                 new ProjectHistoryDao()
             ),
-            ProjectManager::instance(),
+            $project_manager,
             $this->getManifestManager(),
             $this->getGitSystemEventManager(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getAdminPageRenderer(),
             $this->getRegexpFineGrainedDisabler(),
-            new GerritServerResourceRestrictor(new RestrictedGerritServerDao())
+            $gerrit_ressource_restrictor,
+            new Restrictor(
+                $this->getGerritServerFactory(),
+                $gerrit_ressource_restrictor,
+                $project_manager
+            )
         );
+
         $admin->process($request);
         $admin->display($request);
     }

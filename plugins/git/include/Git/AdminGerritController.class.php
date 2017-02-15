@@ -21,6 +21,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
 use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 
 class Git_AdminGerritController {
 
@@ -41,22 +42,22 @@ class Git_AdminGerritController {
     private $gerrit_ressource_restrictor;
 
     /**
-     * @var ProjectManager
+     * @var Restrictor
      */
-    private $project_manager;
+    private $gerrit_restrictor;
 
     public function __construct(
         CSRFSynchronizerToken                $csrf,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         AdminPageRenderer                    $admin_page_renderer,
         GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
-        ProjectManager                       $project_manager
+        Restrictor                           $gerrit_restrictor
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->csrf                        = $csrf;
         $this->admin_page_renderer         = $admin_page_renderer;
         $this->gerrit_ressource_restrictor = $gerrit_ressource_restrictor;
-        $this->project_manager             = $project_manager;
+        $this->gerrit_restrictor           = $gerrit_restrictor;
     }
 
     public function process(Codendi_Request $request) {
@@ -67,163 +68,10 @@ class Git_AdminGerritController {
         } else if ($request->get('action') == 'delete-gerrit-server') {
             $this->deleteGerritServer($request);
         } elseif ($request->get('action') == 'set-gerrit-server-restriction') {
-            $this->setGerritServerRestriction($request);
+            $this->gerrit_restrictor->setGerritServerRestriction($request);
         } elseif ($request->get('action') == 'update-allowed-project-list') {
-            $this->updateAllowedProjectList($request);
+            $this->gerrit_restrictor->updateAllowedProjectList($request);
         }
-    }
-
-    /**
-     * @return Git_RemoteServer_GerritServer
-     */
-    private function getGerritServerFromRequest(Codendi_Request $request)
-    {
-        $gerrit_server_id = $request->get('gerrit_server_id');
-
-        try {
-            $gerrit_server = $this->gerrit_server_factory->getServerById($gerrit_server_id);
-        }  catch (Git_RemoteServer_NotFoundException $exception) {
-            $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-
-            $this->redirectToGerritServerList($title);
-        }
-
-        return $gerrit_server;
-    }
-
-    private function updateAllowedProjectList(Codendi_Request $request)
-    {
-        $gerrit_server         = $this->getGerritServerFromRequest($request);
-        $project_to_add        = $request->get('project-to-allow');
-        $project_ids_to_remove = $request->get('project-ids-to-revoke');
-
-        if ($request->get('allow-project') && ! empty($project_to_add)) {
-            $this->allowProjectForGerritServer($gerrit_server, $project_to_add);
-
-        } elseif ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
-            $this->revokeProjectsForGerritServer($gerrit_server, $project_ids_to_remove);
-        }
-
-        $GLOBALS['Response']->redirect(
-            '/plugins/git/admin/?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
-            urlencode($gerrit_server->getId())
-        );
-    }
-
-    private function allowProjectForGerritServer(Git_RemoteServer_GerritServer $gerrit_server, $project_to_add) {
-        $project = $this->project_manager->getProjectFromAutocompleter($project_to_add);
-
-        if ($project && $this->gerrit_ressource_restrictor->allowProject($gerrit_server, $project)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_allow_project')
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_update_project_list_error')
-            );
-        }
-    }
-
-    private function revokeProjectsForGerritServer(Git_RemoteServer_GerritServer $gerrit_server, $project_ids) {
-
-        $unset_project_ids = array();
-        foreach ($project_ids as $key => $project_id) {
-            if ($this->gerrit_server_factory->isServerUsedInProject($gerrit_server, $project_id)) {
-                $unset_project_ids[] = $project_id;
-                unset($project_ids[$key]);
-            }
-        }
-
-        if (count($unset_project_ids) > 0 ) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                $GLOBALS['Language']->getText(
-                    'plugin_git',
-                    'gerrit_servers_allowed_project_revoke_projects_not_revoked',
-                    implode(',', $unset_project_ids)
-                )
-            );
-        }
-
-        if (count($project_ids) > 0) {
-            if ($this->gerrit_ressource_restrictor->revokeProject($gerrit_server, $project_ids)) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_projects')
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_update_project_list_error')
-                );
-            }
-        }
-    }
-
-    private function setGerritServerRestriction(Codendi_Request $request)
-    {
-        $gerrit_server = $this->getGerritServerFromRequest($request);
-
-        $this->checkSynchronizerToken(
-            '/plugins/git/admin/?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' .
-            urlencode($gerrit_server->getId())
-        );
-
-        $this->restrictGerritServer($request, $gerrit_server);
-
-        $GLOBALS['Response']->redirect(
-            '/plugins/git/admin/?view=gerrit_servers_restriction&action=manage-allowed-projects&gerrit_server_id=' .
-            urlencode($gerrit_server->getId())
-        );
-    }
-
-    private function restrictGerritServer(Codendi_Request $request, Git_RemoteServer_GerritServer $gerrit_server)
-    {
-        $all_allowed = $request->get('all-allowed');
-
-        if ($all_allowed) {
-            $this->unsetRestriction($gerrit_server);
-        } else {
-            $this->setRestricted($gerrit_server);
-        }
-    }
-
-    private function setRestricted(Git_RemoteServer_GerritServer $gerrit_server)
-    {
-        if ($this->gerrit_ressource_restrictor->setRestricted($gerrit_server)) {
-            $GLOBALS['Response']->addFeedback(
-                'info',
-                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_set_restricted')
-            );
-        }
-    }
-
-    private function unsetRestriction(Git_RemoteServer_GerritServer $gerrit_server)
-    {
-        if ($this->gerrit_ressource_restrictor->unsetRestriction($gerrit_server)) {
-            $GLOBALS['Response']->addFeedback(
-                'info',
-                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_unset_restricted')
-            );
-        }
-    }
-
-    private function redirectToGerritServerList($title)
-    {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_id_does_not_exist')
-        );
-
-        $this->renderGerritServerList($title);
-    }
-
-    private function checkSynchronizerToken($url)
-    {
-        $token = new CSRFSynchronizerToken($url);
-        $token->check();
     }
 
     private function addGerritServer(Codendi_Request $request)
@@ -265,7 +113,12 @@ class Git_AdminGerritController {
                         $presenter
                     );
                 } catch (Git_RemoteServer_NotFoundException $exception) {
-                    $this->redirectToGerritServerList($title);
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_id_does_not_exist')
+                    );
+
+                    $this->renderGerritServerList($title);
                 }
 
                 break;

@@ -24,6 +24,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 
 /**
  * This routes site admin part of Git
@@ -72,6 +73,10 @@ class Git_AdminRouter {
      * @var GerritServerResourceRestrictor
      */
     private $gerrit_ressource_restrictor;
+    /**
+     * @var Restrictor
+     */
+    private $gerrit_restrictor;
 
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -85,7 +90,8 @@ class Git_AdminRouter {
         RegexpFineGrainedEnabler             $regexp_enabler,
         AdminPageRenderer                    $admin_page_renderer,
         RegexpFineGrainedDisabler            $regexp_disabler,
-        GerritServerResourceRestrictor       $gerrit_ressource_restrictor
+        GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
+        Restrictor                           $gerrit_restrictor
     ) {
         $this->gerrit_server_factory          = $gerrit_server_factory;
         $this->csrf                           = $csrf;
@@ -99,6 +105,7 @@ class Git_AdminRouter {
         $this->admin_page_renderer            = $admin_page_renderer;
         $this->regexp_disabler                = $regexp_disabler;
         $this->gerrit_ressource_restrictor    = $gerrit_ressource_restrictor;
+        $this->gerrit_restrictor              = $gerrit_restrictor;
     }
 
     public function process(Codendi_Request $request) {
@@ -120,7 +127,7 @@ class Git_AdminRouter {
                 $this->gerrit_server_factory,
                 $this->admin_page_renderer,
                 $this->gerrit_ressource_restrictor,
-                $this->project_manager
+                $this->gerrit_restrictor
             );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(
