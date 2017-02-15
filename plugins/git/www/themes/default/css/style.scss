@@ -804,7 +804,26 @@ h1, h2, h3 {
 }
 
 #git-notification-mail-list {
+    max-width: 960px;
     margin-bottom: 15px;
+
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
+    }
+}
+
+.git-notification-mail-list-people {
+    width: 100%;
 }
 
 #admin-git-default-access-rights {
