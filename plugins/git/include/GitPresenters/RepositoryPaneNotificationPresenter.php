@@ -99,4 +99,9 @@ class RepositoryPaneNotificationPresenter
     {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
+
+    public function notified_people()
+    {
+        return dgettext('tuleap-git', 'Notified people');
+    }
 }

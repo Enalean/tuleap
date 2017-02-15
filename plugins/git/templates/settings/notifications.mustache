@@ -12,16 +12,22 @@
     <h3>{{ notified_mails_title }}</h3>
 
     {{# has_mails }}
-        <table id="git-notification-mail-list">
+        <table id="git-notification-mail-list" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th><i class="icon-trash"></i></th>
+                    <th class="git-notification-mail-list-people">{{ notified_people }}</th>
+                </tr>
+            </thead>
             <tbody>
             {{# list_of_mails }}
-                <tr class="{{ color }}">
-                    <td>{{ mail }}</td>
+                <tr>
                     <td>
                         <label>
                             <input type="checkbox" name="remove_mail[]" value="{{ mail }}" title="delete" />
                         </label>
                     </td>
+                    <td>{{ mail }}</td>
                 </tr>
             {{/ list_of_mails }}
             </tbody>

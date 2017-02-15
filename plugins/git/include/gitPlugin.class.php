@@ -98,6 +98,8 @@ class GitPlugin extends Plugin {
     public function __construct($id)
     {
         parent::__construct($id);
+        bindtextdomain('tuleap-git', __DIR__.'/../site-content');
+
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('cssfile',                                         'cssFile',                                      false);
