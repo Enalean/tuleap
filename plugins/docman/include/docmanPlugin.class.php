@@ -53,6 +53,7 @@ class DocmanPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
+        bindtextdomain('tuleap-docman', __DIR__.'/../site-content');
 
         $this->_addHook('cssfile',                           'cssFile',                           false);
         $this->_addHook('javascript_file');

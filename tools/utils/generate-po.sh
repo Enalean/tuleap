@@ -19,7 +19,7 @@
 #
 
 basedir=$1
-translated_plugins=(proftpd tracker captcha git)
+translated_plugins=(proftpd tracker captcha git docman)
 
 echo "[core] Generating .pot file"
 find "$basedir/src" -name "*.php" \

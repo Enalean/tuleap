@@ -369,7 +369,6 @@ plugin_docman	details_references	Références
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_listeners	Abonnés
-plugin_docman	details_user_name	Nom de l'utilisateur
 plugin_docman	details_notifications_monitored_doc	Document monitoré
 plugin_docman	details_notifications_help	Les utilisateurs qui ne peuvent pas être enlevés monitorent un parent avec sa sous-hiérarchie.<br />Vous pouvez supprimer ce monitoring uniquement depuis le parent en question.
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
