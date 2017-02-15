@@ -42,6 +42,7 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindStaticChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 
 class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
@@ -104,22 +105,32 @@ class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor, IProv
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return new ListFieldChecker(new EmptyStringForbidden(), new CollectionOfListValuesExtractor());
+        return $this->visitList();
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return new ListFieldChecker(new EmptyStringForbidden(), new CollectionOfListValuesExtractor());
+        return $this->visitList();
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return new ListFieldChecker(new EmptyStringForbidden(), new CollectionOfListValuesExtractor());
+        return $this->visitList();
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return new ListFieldChecker(new EmptyStringForbidden(), new CollectionOfListValuesExtractor());
+        return $this->visitList();
+    }
+
+    private function visitList()
+    {
+        return new ListFieldBindStaticChecker(
+            new ListFieldChecker(
+                new EmptyStringForbidden(),
+                new CollectionOfListValuesExtractor()
+            )
+        );
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)

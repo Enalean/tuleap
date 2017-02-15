@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class ListFieldChecker implements InvalidFieldChecker
+class ListFieldChecker
 {
     /**
      * @var EmptyStringChecker
@@ -46,15 +46,16 @@ class ListFieldChecker implements InvalidFieldChecker
         $this->values_extractor     = $values_extractor;
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
-    {
+    public function checkFieldIsValidForComparison(
+        Comparison $comparison,
+        Tracker_FormElement_Field $field,
+        array $existing_values
+    ) {
         try {
             $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         } catch (NowIsNotSupportedException $exception) {
             throw new ListToNowComparisonException($field);
         }
-
-        $existing_values = $this->extractLabelValues($field->getAllValues());
 
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
@@ -66,17 +67,6 @@ class ListFieldChecker implements InvalidFieldChecker
                 throw new ListValueDoNotExistComparisonException($field, $value);
             }
         }
-    }
-
-    private function extractLabelValues(array $list_values)
-    {
-        $list_label_values = array();
-
-        foreach ($list_values as $value) {
-            $list_label_values[] = $this->convertToLowerCase($value->getLabel());
-        }
-
-        return $list_label_values;
     }
 
     private function convertToLowerCase($string)
