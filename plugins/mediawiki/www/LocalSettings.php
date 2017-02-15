@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2010 Roland Mas, Olaf Lenz
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is part of Tuleap.
  *
@@ -39,16 +39,6 @@ $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 require_once('common/include/Codendi_Request.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once 'pre.php';
-require_once 'common/user/UserManager.class.php';
-require_once 'common/project/Group.class.php';
-require_once __DIR__.'/../include/MediawikiFusionForgeProjectNameRetriever.php';
-require_once __DIR__.'/../include/MediawikiDao.class.php';
-require_once __DIR__.'/../include/MediawikiLanguageDao.php';
-require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
-require_once __DIR__.'/../include/MediawikiSiteAdminResourceRestrictor.php';
-require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
-require_once MEDIAWIKI_BASE_DIR.'/MediawikiLanguageManager.php';
-require_once MEDIAWIKI_BASE_DIR.'/MediawikiMLEBExtensionManagerLoader.php';
 
 /**
  * HACK
