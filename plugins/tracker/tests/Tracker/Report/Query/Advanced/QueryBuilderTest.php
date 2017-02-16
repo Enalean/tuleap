@@ -39,8 +39,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison\ForListBindStatic;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison\ForListBindStatic as InComparisonForListBindStatic;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison\ForListBindStatic as NotInComparisonForListBindStatic;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
@@ -78,9 +80,6 @@ class QueryBuilderTest extends TuleapTestCase
         $this->date_field      = aMockDateWithoutTimeField()->withName('date')->withId(104)->build();
         $this->bind            = mock('Tracker_FormElement_Field_List_Bind_Static');
         $this->selectbox_field = aSelectBoxField()->withName('sb')->withId(105)->withBind($this->bind)->build();
-        stub($this->bind)->accept()->returns(new ForListBindStatic(
-            new FromWhereComparisonListFieldBuilder()
-        ));
 
         $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
         stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);
@@ -407,6 +406,10 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itRetrievesForSelectBoxFieldInInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
+        stub($this->bind)->accept()->returns(new InComparisonForListBindStatic(
+            new FromWhereComparisonListFieldBuilder()
+        ));
+
         $comparison = new InComparison(
             'sb',
             new InValueWrapper(
@@ -424,6 +427,10 @@ class QueryBuilderTest extends TuleapTestCase
 
     public function itRetrievesForSelectBoxFieldInNotInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
+        stub($this->bind)->accept()->returns(new NotInComparisonForListBindStatic(
+            new FromWhereNotEqualComparisonListFieldBuilder()
+        ));
+
         $comparison = new NotInComparison(
             'sb',
             new InValueWrapper(
