@@ -38,7 +38,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison\ForListBindStatic;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
@@ -61,19 +63,24 @@ class QueryBuilderTest extends TuleapTestCase
     /** @var  QueryBuilderVisitor */
     private $query_builder;
     private $parameters;
+    private $bind;
 
     public function setUp()
     {
         parent::setUp();
         CodendiDataAccess::setInstance(mock('CodendiDataAccess'));
 
-        $this->tracker     = aTracker()->withId(101)->build();
-        $this->parameters  = new QueryBuilderParameters($this->tracker);
-        $this->field_text  = aTextField()->withName('field')->withId(101)->build();
-        $this->int_field   = anIntegerField()->withName('int')->withId(102)->build();
-        $this->float_field = aFloatField()->withName('float')->withId(103)->build();
-        $this->date_field  = aMockDateWithoutTimeField()->withName('date')->withId(104)->build();
-        $this->selectbox_field = aSelectBoxField()->withName('sb')->withId(105)->build();
+        $this->tracker         = aTracker()->withId(101)->build();
+        $this->parameters      = new QueryBuilderParameters($this->tracker);
+        $this->field_text      = aTextField()->withName('field')->withId(101)->build();
+        $this->int_field       = anIntegerField()->withName('int')->withId(102)->build();
+        $this->float_field     = aFloatField()->withName('float')->withId(103)->build();
+        $this->date_field      = aMockDateWithoutTimeField()->withName('date')->withId(104)->build();
+        $this->bind            = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->selectbox_field = aSelectBoxField()->withName('sb')->withId(105)->withBind($this->bind)->build();
+        stub($this->bind)->accept()->returns(new ForListBindStatic(
+            new FromWhereComparisonListFieldBuilder()
+        ));
 
         $formelement_factory = stub('Tracker_FormElementFactory')->getUsedFieldByName(101, 'field')->returns($this->field_text);
         stub($formelement_factory)->getUsedFieldByName(101, 'int')->returns($this->int_field);

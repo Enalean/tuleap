@@ -32,7 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
 
-class ForList implements FromWhereBuilder, ValueWrapperVisitor, ListBindStaticFromWhereBuilder
+class ForListBindStatic implements FromWhereBuilder, ValueWrapperVisitor, ListBindStaticFromWhereBuilder
 {
     /**
      * @var FromWhereComparisonListFieldBuilder
