@@ -18,33 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Notifications;
 
-use GitRepository;
-use Tuleap\Git\Notifications\UsersToNotifyDao;
+use UserHelper;
 
-class PostReceiveMailsRetriever
+class UserToBeNotifiedPresenter
 {
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $user_dao;
+    public $has_avatar;
+    public $avatar_url;
+    public $label;
 
-    public function __construct(UsersToNotifyDao $user_dao)
+    public function __construct($user_name, $realname, $has_avatar, $avatar_url)
     {
-        $this->user_dao = $user_dao;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getNotifiedMails(GitRepository $repository)
-    {
-        $emails = $repository->getNotifiedMails();
-        foreach ($this->user_dao->searchUsersByRepositoryId($repository->getId()) as $row) {
-            $emails[] = $row['email'];
-        }
-
-        return array_unique($emails);
+        $this->avatar_url = $avatar_url;
+        $this->has_avatar = $has_avatar;
+        $this->label      = UserHelper::instance()->getDisplayName($user_name, $realname);
     }
 }

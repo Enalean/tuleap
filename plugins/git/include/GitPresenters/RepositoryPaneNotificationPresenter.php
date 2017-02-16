@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,10 +24,13 @@ class RepositoryPaneNotificationPresenter
     private $repository;
     private $identifier;
 
-    public function __construct(GitRepository $repository, $identifier)
+    public $users_to_be_notified;
+
+    public function __construct(GitRepository $repository, $identifier, array $users_to_be_notified)
     {
-        $this->repository = $repository;
-        $this->identifier = $identifier;
+        $this->repository           = $repository;
+        $this->identifier           = $identifier;
+        $this->users_to_be_notified = $users_to_be_notified;
     }
 
     public function title()
@@ -72,7 +75,6 @@ class RepositoryPaneNotificationPresenter
 
         foreach ($this->repository->getNotifiedMails() as $mail) {
             $list_of_mails[] = array(
-                'color' => html_get_alt_row_color(++$i),
                 'mail'  => $mail
             );
         }

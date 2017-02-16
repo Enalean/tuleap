@@ -18,7 +18,8 @@
  */
 @import 'utils/pre-definitions';
 
-body {
+body,
+body.FlamingParrot_Orange {
     @import 'utils/variables-orange';
     @import 'utils/definitions';
 }

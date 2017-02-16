@@ -24,11 +24,11 @@ use DataAccessObject;
 
 class UsersToNotifyDao extends DataAccessObject
 {
-    public function searchUsersEmailByRepositoryId($repository_id)
+    public function searchUsersByRepositoryId($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
 
-        $sql = "SELECT user.email AS email
+        $sql = "SELECT user.*
                 FROM plugin_git_post_receive_notification_user AS notif
                     INNER JOIN user
                     ON (
