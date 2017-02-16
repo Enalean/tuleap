@@ -29,23 +29,23 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFie
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
 
-class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
+class ForListBindStatic implements FromWhereBuilder, ListBindStaticFromWhereBuilder
 {
     /**
      * @var FromWhereEmptyComparisonListFieldBuilder
      */
-    private $from_where_empty_comparison_builder;
+    private $empty_comparison_builder;
     /**
      * @var FromWhereComparisonListFieldBuilder
      */
-    private $from_where_builder;
+    private $comparison_builder;
 
     public function __construct(
-        FromWhereEmptyComparisonListFieldBuilder $from_where_empty_comparison_builder,
-        FromWhereComparisonListFieldBuilder $from_where_comparison_builder
+        FromWhereEmptyComparisonListFieldBuilder $empty_comparison_builder,
+        FromWhereComparisonListFieldBuilder $comparison_builder
     ) {
-        $this->from_where_empty_comparison_builder = $from_where_empty_comparison_builder;
-        $this->from_where_builder                  = $from_where_comparison_builder;
+        $this->comparison_builder       = $comparison_builder;
+        $this->empty_comparison_builder = $empty_comparison_builder;
     }
 
     /**
@@ -68,15 +68,14 @@ class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
                 $field_id,
                 $changeset_value_alias
             );
-        } else {
-            return $this->getFromWhereForNonEmptyCondition(
-                $list_value_alias,
-                $value,
-                $field_id,
-                $changeset_value_alias,
-                $changeset_value_list_alias
-            );
         }
+        return $this->getFromWhereForNonEmptyCondition(
+            $list_value_alias,
+            $value,
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias
+        );
     }
 
     /**
@@ -89,9 +88,10 @@ class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
         $changeset_value_alias,
         $changeset_value_list_alias
     ) {
-        $condition = "$list_value_alias.label = " . $this->quoteSmart($value);
+        $condition = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.id
+            AND $list_value_alias.label = " . $this->quoteSmart($value);
 
-        return $this->from_where_builder->getFromWhere(
+        return $this->comparison_builder->getFromWhere(
             $field_id,
             $changeset_value_alias,
             $changeset_value_list_alias,
@@ -110,7 +110,7 @@ class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
         $where = "$changeset_value_alias.changeset_id IS NULL OR $changeset_value_list_alias.bindvalue_id =" .
             $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
 
-        return $this->from_where_empty_comparison_builder->getFromWhere(
+        return $this->empty_comparison_builder->getFromWhere(
             $field_id,
             $changeset_value_alias,
             $changeset_value_list_alias,

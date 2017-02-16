@@ -55,7 +55,8 @@ class ForList implements FromWhereBuilder, ValueWrapperVisitor, ListBindStaticFr
         $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
 
         $escaped_values = $this->quoteSmartImplode($values);
-        $condition      = "$list_value_alias.label IN($escaped_values)";
+        $condition      = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.id
+            AND $list_value_alias.label IN($escaped_values)";
 
         return $this->from_where_builder->getFromWhere(
             $field_id,
