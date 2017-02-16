@@ -24,6 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
@@ -99,6 +100,11 @@ class Git extends PluginController {
      * @var RegexpPermissionFilter
      */
     private $regexp_filter;
+
+    /**
+     * @var UsersToNotifyDao
+     */
+    private $users_to_notify_dao;
 
     /**
      * Lists all git-related permission types.
@@ -309,7 +315,8 @@ class Git extends PluginController {
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedDisabler $regexp_disabler,
-        RegexpPermissionFilter $regexp_filter
+        RegexpPermissionFilter $regexp_filter,
+        UsersToNotifyDao $users_to_notify_dao
     ) {
         parent::__construct($user_manager, $request);
 
@@ -392,6 +399,7 @@ class Git extends PluginController {
         $this->regexp_enabler                          = $regexp_enabler;
         $this->regexp_disabler                         = $regexp_disabler;
         $this->regexp_filter                           = $regexp_filter;
+        $this->users_to_notify_dao                     = $users_to_notify_dao;
     }
 
     protected function instantiateView() {
@@ -1400,6 +1408,10 @@ class Git extends PluginController {
                 $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails, $pane));
             }
         }
+        $users_to_remove = $this->request->get('remove_user');
+        if (is_array($users_to_remove) && count($users_to_remove) > 0) {
+            $this->addAction('notificationRemoveUser', array($this->groupId, $repoId, $users_to_remove));
+        }
         $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
     }
 
@@ -1475,7 +1487,8 @@ class Git extends PluginController {
             $this->regexp_enabler,
             $this->regexp_disabler,
             $this->regexp_filter,
-            $this->regexp_retriever
+            $this->regexp_retriever,
+            $this->users_to_notify_dao
         );
     }
 

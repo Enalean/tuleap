@@ -39,6 +39,7 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
         $presenters = array();
         foreach ($this->dao->searchUsersByRepositoryId($repository->getId()) as $row) {
             $presenters[] = new UserToBeNotifiedPresenter(
+                $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
                 $row['has_avatar'],

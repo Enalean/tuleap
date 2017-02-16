@@ -27,9 +27,11 @@ class UserToBeNotifiedPresenter
     public $has_avatar;
     public $avatar_url;
     public $label;
+    public $user_id;
 
-    public function __construct($user_name, $realname, $has_avatar, $avatar_url)
+    public function __construct($user_id, $user_name, $realname, $has_avatar, $avatar_url)
     {
+        $this->user_id    = $user_id;
         $this->avatar_url = $avatar_url;
         $this->has_avatar = $has_avatar;
         $this->label      = UserHelper::instance()->getDisplayName($user_name, $realname);
