@@ -20,17 +20,76 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
+use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUgroupsFromWhereBuilder;
 
 class ForListBindUgroups implements FromWhereBuilder, ListBindUgroupsFromWhereBuilder
 {
+    /**
+     * @var FromWhereComparisonFieldBuilder
+     */
+    private $empty_comparison_builder;
+    /**
+     * @var FromWhereNotEqualComparisonListFieldBuilder
+     */
+    private $comparison_builder;
+
+    public function __construct(
+        FromWhereComparisonFieldBuilder $empty_comparison_builder,
+        FromWhereNotEqualComparisonListFieldBuilder $comparison_builder
+    ) {
+        $this->empty_comparison_builder = $empty_comparison_builder;
+        $this->comparison_builder       = $comparison_builder;
+    }
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        return new FromWhere("", "1");
+        $suffix           = spl_object_hash($comparison);
+        $comparison_value = $comparison->getValueWrapper();
+        $value            = $comparison_value->getValue();
+        $field_id         = (int) $field->getId();
+
+        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
+        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
+
+        if ($value === '') {
+            return $this->getFromWhereForEmptyCondition(
+                $field_id,
+                $changeset_value_alias,
+                $changeset_value_list_alias
+            );
+        }
+    }
+
+    /**
+     * @return FromWhere
+     */
+    private function getFromWhereForEmptyCondition(
+        $field_id,
+        $changeset_value_alias,
+        $changeset_value_list_alias
+    ) {
+        $matches_value = " != " . $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $condition     = "$changeset_value_list_alias.bindvalue_id $matches_value";
+
+        return $this->empty_comparison_builder->getFromWhere(
+            $field_id,
+            $changeset_value_alias,
+            $changeset_value_list_alias,
+            'tracker_changeset_value_list',
+            $condition
+        );
+    }
+
+    private function escapeInt($value)
+    {
+        return CodendiDataAccess::instance()->escapeInt($value);
     }
 }
