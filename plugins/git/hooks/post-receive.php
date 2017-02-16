@@ -97,7 +97,9 @@ $post_receive = new Git_Hook_PostReceive(
     new \Tuleap\Git\Hook\PostReceiveMailSender(
         $git_repository_url_manager,
         $mail_builder,
-        new \Tuleap\Git\Hook\PostReceiveMailsRetriever()
+        new \Tuleap\Git\Hook\PostReceiveMailsRetriever(
+            new \Tuleap\Git\Notifications\UsersToNotifyDao()
+        )
     )
 );
 

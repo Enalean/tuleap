@@ -36,21 +36,41 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->repository = aGitRepository()
+        $this->repository   = aGitRepository()
+            ->withId(101)
             ->withNotifiedEmails(array('jdoe@example.com', 'smith@example.com'))
             ->build();
 
-        $this->retriever = new PostReceiveMailsRetriever();
+        $notified_users_dao = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
+        stub($notified_users_dao)
+            ->searchUsersEmailByRepositoryId(101)
+            ->returnsDar(
+                array('email' => 'andrew@example.com'),
+                array('email' => 'smith@example.com')
+            );
+
+        $this->retriever = new PostReceiveMailsRetriever($notified_users_dao);
     }
 
     public function itReturnsMailsForRepository()
     {
-        $this->assertEqual(
-            $this->retriever->getNotifiedMails($this->repository),
-            array(
-                'jdoe@example.com',
-                'smith@example.com'
-            )
-        );
+        $emails = $this->retriever->getNotifiedMails($this->repository);
+
+        $this->assertTrue(in_array('jdoe@example.com', $emails));
+        $this->assertTrue(in_array('smith@example.com', $emails));
+    }
+
+    public function itReturnsMailsOfUsersForRepository()
+    {
+        $emails = $this->retriever->getNotifiedMails($this->repository);
+
+        $this->assertTrue(in_array('andrew@example.com', $emails));
+    }
+
+    public function itRemovesDuplicates()
+    {
+        $emails = $this->retriever->getNotifiedMails($this->repository);
+
+        $this->assertEqual($emails, array_unique($emails));
     }
 }
