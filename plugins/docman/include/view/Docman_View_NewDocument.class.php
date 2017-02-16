@@ -50,7 +50,7 @@ class Docman_View_NewDocument extends Docman_View_New {
         if(isset($params['group_id'])) {
             $pm = ProjectManager::instance();
             $go = $pm->getProject($params['group_id']);
-            $wikiAvailable = $go->usesWiki() || $go->usesService('plugin_phpwiki');
+            $wikiAvailable = $go->usesWiki();
 
         }
         if($wikiAvailable) {
