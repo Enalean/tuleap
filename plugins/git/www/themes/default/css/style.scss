@@ -1128,3 +1128,18 @@ h1, h2, h3 {
         }
     }
 }
+
+td.git-notification-mail-list-user {
+    vertical-align: middle;
+    padding-left: 37px;
+    position: relative;
+}
+
+.avatar.git-notification-mail-list-user-avatar {
+    display: inline-block;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 7px;
+    left: 8px
+}

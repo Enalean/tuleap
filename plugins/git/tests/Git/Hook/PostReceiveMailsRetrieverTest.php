@@ -43,7 +43,7 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
 
         $notified_users_dao = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
         stub($notified_users_dao)
-            ->searchUsersEmailByRepositoryId(101)
+            ->searchUsersByRepositoryId(101)
             ->returnsDar(
                 array('email' => 'andrew@example.com'),
                 array('email' => 'smith@example.com')

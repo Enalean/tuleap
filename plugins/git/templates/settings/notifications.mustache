@@ -20,6 +20,18 @@
                 </tr>
             </thead>
             <tbody>
+            {{# users_to_be_notified }}
+                <tr>
+                    <td>
+                    </td>
+                    <td class="git-notification-mail-list-user">
+                        <div
+                            class="avatar git-notification-mail-list-user-avatar"
+                        >{{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}</div>
+                        {{ label }}
+                    </td>
+                </tr>
+            {{/ users_to_be_notified }}
             {{# list_of_mails }}
                 <tr>
                     <td>

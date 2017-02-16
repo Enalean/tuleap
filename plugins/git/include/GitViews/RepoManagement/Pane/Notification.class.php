@@ -20,14 +20,31 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
+use Codendi_Request;
+use GitRepository;
 use TemplateRendererFactory;
 use RepositoryPaneNotificationPresenter;
 use EventManager;
+use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 
 class Notification extends Pane
 {
 
     const ID = 'mail';
+
+    /**
+     * @var CollectionOfUserToBeNotifiedPresenterBuilder
+     */
+    private $user_to_be_notified_builder;
+
+    public function __construct(
+        GitRepository $repository,
+        Codendi_Request $request,
+        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder
+    ) {
+        parent::__construct($repository, $request);
+        $this->user_to_be_notified_builder = $user_to_be_notified_builder;
+    }
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
@@ -50,12 +67,15 @@ class Notification extends Pane
      */
     public function getContent()
     {
+        $users = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($this->repository);
+
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
         $html     = $renderer->renderToString(
             'notifications',
             new RepositoryPaneNotificationPresenter(
                 $this->repository,
-                $this->getIdentifier()
+                $this->getIdentifier(),
+                $users
             )
         );
         $html    .= $this->getPluginNotifications();
