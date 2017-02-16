@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2016. All rights reserved.
+ * Copyright Enalean (c) 2013-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -50,12 +50,19 @@ class PostReceiveMailSender
      */
     private $mail_builder;
 
+    /**
+     * @var PostReceiveMailsRetriever
+     */
+    private $mails_retriever;
+
     public function __construct(
         Git_GitRepositoryUrlManager $repository_url_manager,
-        MailBuilder $mail_builder
+        MailBuilder $mail_builder,
+        PostReceiveMailsRetriever $mails_retriever
     ) {
         $this->repository_url_manager = $repository_url_manager;
         $this->mail_builder           = $mail_builder;
+        $this->mails_retriever        = $mails_retriever;
     }
 
     /**
@@ -63,7 +70,7 @@ class PostReceiveMailSender
      */
     public function sendMail(GitRepository $repository, $oldrev, $newrev, $refname)
     {
-        $notified_mails = $repository->getNotifiedMails();
+        $notified_mails = $this->mails_retriever->getNotifiedMails($repository);
         if (count($notified_mails) === 0) {
             return true;
         }
@@ -80,7 +87,7 @@ class PostReceiveMailSender
 
         $body          = $this->createMailBody($mail_raw_output);
         $access_link   = $repository->getDiffLink($this->repository_url_manager, $newrev);
-        $notification  = new Notification($repository->getNotifiedMails(), $subject, '', $body, $access_link, 'Git');
+        $notification  = new Notification($notified_mails, $subject, '', $body, $access_link, 'Git');
 
         if ($exit_status_code === self::TIMEOUT_EXIT_CODE) {
             $this->warnSiteAdministratorOfAMisuseOfAGitRepo($repository, $oldrev, $refname);
