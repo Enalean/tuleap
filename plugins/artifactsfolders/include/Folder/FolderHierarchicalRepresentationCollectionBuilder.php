@@ -94,7 +94,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
         $all_folders = new FolderHierarchicalRepresentationCollection();
         foreach ($this->folder_dao->searchFoldersInProject($project->getId()) as $row) {
             $folder = $this->artifact_factory->getInstanceFromRow($row);
-            if ($folder->getId() === $artifact->getId() || ! $folder->userCanView($current_user)) {
+            if ($folder->getId() === $artifact->getId()) {
                 continue;
             }
             $all_folders->add(new FolderHierarchicalRepresentation($folder, $row['parent_id']));
