@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS plugin_git_post_receive_mail;
+DROP TABLE IF EXISTS plugin_git_post_receive_notification_user;
+DROP TABLE IF EXISTS plugin_git_post_receive_notification_ugroup;
 DROP TABLE IF EXISTS plugin_git_log;
 DROP TABLE IF EXISTS plugin_git_ci;
 DROP TABLE IF EXISTS plugin_git;
