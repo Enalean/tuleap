@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -20,7 +20,7 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ *
  */
 require_once('Docman_View_ItemDetailsSection.class.php');
 
@@ -74,32 +74,35 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             $listeners = $this->notificationsManager->getListeningUsers($this->item);
             if (!empty($listeners)) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
+                $content .= '<div class="docman_help plugin-docman-notifications-list-help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div>';
                 $content .= '<form name="remove_monitoring" method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
-                $content .= '<table><tr><td>';
-                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_user_name'), $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
-                $rowBgColor  = 0;
-                $hp = Codendi_HTMLPurifier::instance();
+                $content .= '<table class="table table-bordered plugin-docman-notifications-list">';
+                $content .= '<thead><tr>';
+                $content .= '<th><i class="icon-trash"></i></th>';
+                $content .= '<th class="plugin-docman-notifications-list-user">'. dgettext('tuleap-docman', 'Notified people') .'</th>';
+                $content .= '<th class="plugin-docman-notifications-list-document">'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc') .'</th>';
+                $content .= '</tr></thead>';
                 foreach ($listeners as $userId => $item) {
-                    $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
+                    $content .= '<tr>';
                     $user = $um->getUserById($userId);
-                    $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
-                    $content .= '<td>'.$item->getTitle().'</td><td>';
+                    $content .= '<td>';
                     if ($this->item == $item) {
                         $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
                     } else {
                         $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]" disabled="disabled">';
                     }
-                    $content .= '</td></tr>';
+                    $content .= '</td>';
+                    $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
+                    $content .= '<td>'.$item->getTitle().'</td>';
+                    $content .= '</tr>';
                 }
-                // TODO : ask user if he wants or not to notify the users he remove
-                // TODO : We may ask him also if his name will appear as the guilty one or not
-                $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
-                $content .= '</tbody></table></form>';
-                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr>';
+                $content .= '</tbody></table>';
+                $content .= '<input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'">';
+                $content .= '</form>';
             }
             $content .= $this->addListeningUser($itemId);
-            $content .= '</table></fieldset>';
+            $content .= '</fieldset>';
         }
         return $content;
     }
