@@ -18,33 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Notifications;
 
-use GitRepository;
-use Tuleap\Git\Notifications\UsersToNotifyDao;
+use DataAccessObject;
 
-class PostReceiveMailsRetriever
+class UsersToNotifyDao extends DataAccessObject
 {
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $user_dao;
-
-    public function __construct(UsersToNotifyDao $user_dao)
+    public function searchUsersEmailByRepositoryId($repository_id)
     {
-        $this->user_dao = $user_dao;
-    }
+        $repository_id = $this->da->escapeInt($repository_id);
 
-    /**
-     * @return string[]
-     */
-    public function getNotifiedMails(GitRepository $repository)
-    {
-        $emails = $repository->getNotifiedMails();
-        foreach ($this->user_dao->searchUsersEmailByRepositoryId($repository->getId()) as $row) {
-            $emails[] = $row['email'];
-        }
+        $sql = "SELECT user.email AS email
+                FROM plugin_git_post_receive_notification_user AS notif
+                    INNER JOIN user
+                    ON (
+                        user.user_id = notif.user_id
+                        AND notif.repository_id = $repository_id
+                        AND user.status IN ('A', 'R')
+                    )";
 
-        return array_unique($emails);
+        return $this->retrieve($sql);
     }
 }
