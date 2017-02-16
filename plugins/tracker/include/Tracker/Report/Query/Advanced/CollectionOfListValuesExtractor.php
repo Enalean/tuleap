@@ -17,23 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListToMySelfForAnonymousComparisonException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListToNowComparisonException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedForAnonymousException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
 class CollectionOfListValuesExtractor implements ValueWrapperVisitor
 {
     /** @return array */
     public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
     {
-        return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
+        try {
+            return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
+        } catch (NowIsNotSupportedException $exception) {
+            throw new ListToNowComparisonException($field);
+        } catch (MySelfIsNotSupportedForAnonymousException $exception) {
+            throw new ListToMySelfForAnonymousComparisonException($field);
+        }
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -63,5 +74,16 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
         }
 
         return $values;
+    }
+
+    public function visitCurrentUserValueWrapper(
+        CurrentUserValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        $value = $value_wrapper->getValue();
+        if (! $value) {
+            throw new MySelfIsNotSupportedForAnonymousException();
+        }
+        return $value;
     }
 }

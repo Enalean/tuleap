@@ -407,6 +407,7 @@ class QueryBuilderTest extends TuleapTestCase
     public function itRetrievesForSelectBoxFieldInInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
         stub($this->bind)->accept()->returns(new InComparisonForListBindStatic(
+            new CollectionOfListValuesExtractor(),
             new FromWhereComparisonListFieldBuilder()
         ));
 
@@ -428,6 +429,7 @@ class QueryBuilderTest extends TuleapTestCase
     public function itRetrievesForSelectBoxFieldInNotInComparisonTheExpertFromAndWhereClausesOfTheField()
     {
         stub($this->bind)->accept()->returns(new NotInComparisonForListBindStatic(
+            new CollectionOfListValuesExtractor(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         ));
 

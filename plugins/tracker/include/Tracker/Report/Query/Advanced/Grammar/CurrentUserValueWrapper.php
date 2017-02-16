@@ -19,15 +19,37 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface ValueWrapperVisitor
+use PFUser;
+use UserManager;
+
+class CurrentUserValueWrapper implements ValueWrapper
 {
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @var PFUser
+     */
+    private $value;
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    public function __construct()
+    {
+        $user_manager = UserManager::instance();
+        $this->value  = null;
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+        $current_user = $user_manager->getCurrentUser();
+        if ($current_user) {
+            $this->value = $current_user->getUserName();
+        }
+    }
 
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters);
+    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    {
+        return $visitor->visitCurrentUserValueWrapper($this, $parameters);
+    }
 
-    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @return PFUser
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 }

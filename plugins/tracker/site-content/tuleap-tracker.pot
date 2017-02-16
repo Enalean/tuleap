@@ -8,6 +8,10 @@ msgid "Notified people"
 msgstr ""
 
 #, php-format
+msgid "The date field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
 msgid ""
 "The date field '%s' cannot be compared to the empty string with < operator."
 msgstr ""
@@ -54,6 +58,10 @@ msgid ""
 msgstr ""
 
 #, php-format
+msgid "The float field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
 msgid "The float field '%s' cannot be compared to NOW()."
 msgstr ""
 
@@ -85,6 +93,10 @@ msgstr ""
 
 #, php-format
 msgid "The float field '%s' cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to MYSELF()."
 msgstr ""
 
 #, php-format
@@ -130,6 +142,10 @@ msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 
 #, php-format
+msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
+msgstr ""
+
+#, php-format
 msgid "The list field '%s' cannot be compared to NOW()."
 msgstr ""
 
@@ -149,6 +165,10 @@ msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "
 "to continue."
+msgstr ""
+
+#, php-format
+msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr ""
 
 #, php-format

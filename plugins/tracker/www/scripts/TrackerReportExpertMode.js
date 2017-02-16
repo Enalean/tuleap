@@ -138,7 +138,7 @@
                         token: "keyword"
                     },
                     {
-                        regex: /(?:now|between|in|not)\b/i,
+                        regex: /(?:now|between|in|not|myself)\b/i,
                         token: "variable-2"
                     },
                     {
@@ -178,7 +178,8 @@
                         'BETWEEN(',
                         'NOW()',
                         'IN(',
-                        'NOT'
+                        'NOT',
+                        "MYSELF()"
                     ].concat(allowed_fields);
 
                 CodeMirror.commands.autocomplete = autocomplete;

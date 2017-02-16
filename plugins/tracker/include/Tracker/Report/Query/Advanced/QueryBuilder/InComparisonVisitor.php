@@ -44,6 +44,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 
 class InComparisonVisitor implements
@@ -124,9 +125,11 @@ class InComparisonVisitor implements
     private function visitList(Tracker_FormElement_Field_List $field)
     {
         $static_bind_builder = new InComparison\ForListBindStatic(
+            new CollectionOfListValuesExtractor(),
             new FromWhereComparisonListFieldBuilder()
         );
         $users_bind_builder = new InComparison\ForListBindUsers(
+            new CollectionOfListValuesExtractor(),
             new FromWhereComparisonListFieldBuilder()
         );
         $ugroups_bind_builder = new InComparison\ForListBindUgroups(

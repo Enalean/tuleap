@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -39,22 +40,28 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
      * @var FromWhereNotEqualComparisonListFieldBuilder
      */
     private $comparison_builder;
+    /**
+     * @var CollectionOfListValuesExtractor
+     */
+    private $values_extractor;
 
     public function __construct(
+        CollectionOfListValuesExtractor $values_extractor,
         FromWhereComparisonFieldBuilder $empty_comparison_builder,
         FromWhereNotEqualComparisonListFieldBuilder $comparison_builder
     ) {
+        $this->values_extractor         = $values_extractor;
         $this->empty_comparison_builder = $empty_comparison_builder;
         $this->comparison_builder       = $comparison_builder;
     }
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix           = spl_object_hash($comparison);
-        $comparison_value = $comparison->getValueWrapper();
-        $value            = $comparison_value->getValue();
-        $field_id         = (int) $field->getId();
-        $tracker_id       = (int) $field->getTrackerId();
+        $suffix     = spl_object_hash($comparison);
+        $values     = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        $value      = $values[0];
+        $field_id   = (int) $field->getId();
+        $tracker_id = (int) $field->getTrackerId();
 
         $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";

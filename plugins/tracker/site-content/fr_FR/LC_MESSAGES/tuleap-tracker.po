@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
@@ -20,6 +20,10 @@ msgstr "Erreur pendant l'analyse de la requête experte"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+#, php-format
+msgid "The date field '%s' cannot be compared to MYSELF()."
+msgstr "Le champ date '%s' ne peut pas être comparé à MYSELF()."
 
 #, php-format
 msgid ""
@@ -80,6 +84,10 @@ msgstr ""
 "pour les types de champs autorisés."
 
 #, php-format
+msgid "The float field '%s' cannot be compared to MYSELF()."
+msgstr "Le champ flottant '%s' ne peut pas être comparé à MYSELF()."
+
+#, php-format
 msgid "The float field '%s' cannot be compared to NOW()."
 msgstr "Le champ flottant '%s' ne peut pas être comparé à NOW()."
 
@@ -122,6 +130,10 @@ msgstr ""
 #, php-format
 msgid "The float field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ flottant '%s' ne peut pas être comparé à la chaîne '%s'."
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to MYSELF()."
+msgstr "Le champ entier '%s' ne peut pas être comparé à MYSELF()."
 
 #, php-format
 msgid "The integer field '%s' cannot be compared to NOW()."
@@ -177,6 +189,12 @@ msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 
 #, php-format
+msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
+msgstr ""
+"Le champ liste '%s' ne peut pas être comparé à MYSELF() pour les "
+"utilisateurs anonymes."
+
+#, php-format
 msgid "The list field '%s' cannot be compared to NOW()."
 msgstr "Le champ liste '%s' ne peut pas être comparé à NOW()."
 
@@ -203,6 +221,10 @@ msgid ""
 msgstr ""
 "La requête est estimée trop complexe pour être exécutée par le serveur. "
 "Veuillez la simplifier (ex: enlever des comparaisons) pour pouvoir continuer."
+
+#, php-format
+msgid "The text field '%s' cannot be compared to MYSELF()."
+msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."
 
 #, php-format
 msgid "The text field '%s' cannot be compared to NOW()."

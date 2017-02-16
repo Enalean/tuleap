@@ -20,15 +20,11 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float;
 
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfAlphaNumericValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
 class FloatFieldChecker implements InvalidFieldChecker
@@ -57,6 +53,8 @@ class FloatFieldChecker implements InvalidFieldChecker
             $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         } catch (NowIsNotSupportedException $exception) {
             throw new FloatToNowComparisonException($field);
+        } catch (MySelfIsNotSupportedException $exception) {
+            throw new FloatToMySelfComparisonException($field);
         }
 
         foreach ($values as $value) {

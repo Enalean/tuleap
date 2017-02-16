@@ -44,6 +44,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
@@ -140,6 +141,7 @@ class NotEqualComparisonVisitor implements
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
         $users_bind_builder = new NotEqualComparison\ForListBindUsers(
+            new CollectionOfListValuesExtractor(),
             new FromWhereComparisonFieldBuilder(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
