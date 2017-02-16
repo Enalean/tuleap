@@ -94,7 +94,11 @@ $post_receive = new Git_Hook_PostReceive(
         $http_client,
         $logger
     ),
-    new \Tuleap\Git\Hook\PostReceiveMailSender($git_repository_url_manager, $mail_builder)
+    new \Tuleap\Git\Hook\PostReceiveMailSender(
+        $git_repository_url_manager,
+        $mail_builder,
+        new \Tuleap\Git\Hook\PostReceiveMailsRetriever()
+    )
 );
 
 $post_receive->beforeParsingReferences($repository_path);
