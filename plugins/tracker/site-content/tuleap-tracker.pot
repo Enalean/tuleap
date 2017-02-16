@@ -4,6 +4,9 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+msgid "Notified people"
+msgstr ""
+
 #, php-format
 msgid ""
 "The date field '%s' cannot be compared to the empty string with < operator."
