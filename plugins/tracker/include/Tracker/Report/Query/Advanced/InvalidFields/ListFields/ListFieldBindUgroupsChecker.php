@@ -2,6 +2,8 @@
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -13,20 +15,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class ListFieldBindStaticChecker implements InvalidFieldChecker
+class ListFieldBindUgroupsChecker implements InvalidFieldChecker
 {
     /**
      * @var ListFieldChecker
@@ -50,14 +48,9 @@ class ListFieldBindStaticChecker implements InvalidFieldChecker
         $list_label_values = array();
 
         foreach ($list_values as $value) {
-            $list_label_values[] = $this->convertToLowerCase($value->getLabel());
+            $list_label_values[] = $value->getLabel();
         }
 
         return $list_label_values;
-    }
-
-    private function convertToLowerCase($string)
-    {
-        return mb_strtolower($string, "UTF-8");
     }
 }

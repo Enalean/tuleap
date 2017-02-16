@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 require_once('bootstrap.php');
 
@@ -221,6 +223,10 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
     }
 
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+    }
+
+    public function accept(BindVisitor $visitor)
+    {
     }
 }
 

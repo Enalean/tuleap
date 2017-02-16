@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\TrackerFormElementFieldListBindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Import\Spotter;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
@@ -990,7 +990,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $user_representation;
     }
 
-    public function accept(TrackerFormElementFieldListBindVisitor $visitor)
+    public function accept(BindVisitor $visitor)
     {
         return $visitor->visitListBindUsers($this);
     }

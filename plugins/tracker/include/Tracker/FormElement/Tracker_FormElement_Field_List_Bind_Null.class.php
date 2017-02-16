@@ -1,27 +1,28 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
- * 
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind {
 
     const TYPE = 'null';
-    
+
     public function __construct($field) {
         parent::__construct($field, array(), array());
     }
@@ -54,21 +55,21 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @return array
      */
     public function getChangesetValues($changeset_id) { return array(); }
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
      * @return string
      */
     public function fetchRawValue($value)  { return ''; }
-    
+
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
     public function fetchRawValueFromChangeset($changeset)  { return ''; }
-    
+
     /**
      * @return string
      */
@@ -83,21 +84,21 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @return string
      */
     public function formatChangesetValue($value) { return ''; }
-    
+
     /**
      * @return string
      */
     public function formatChangesetValueForCSV($value) { return ''; }
-    
+
     /**
      * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve 
+     * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      * @param array $criteria_value array of criteria_value (which are array)
      * @return string
      */
     public function getCriteriaFrom($criteria_value) { return ''; }
-    
+
     /**
      * Get the "where" statement to allow search with this field
      * @param array $criteria_value array of id => criteria_value (which are array)
@@ -112,11 +113,11 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @see getQueryFrom
      */
     public function getQuerySelect() { return ''; }
-    
-    
+
+
     /**
      * Get the "from" statement to retrieve field values
-     * You can join on artifact AS a, tracker_changeset AS c 
+     * You can join on artifact AS a, tracker_changeset AS c
      * which tables used to retrieve the last changeset of matching artifacts.
      *
      * @param string $changesetvalue_table The changeset value table to use
@@ -125,7 +126,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list') { return ''; }
 
-    
+
     /**
      * Get a bindvalue by its row
      *
@@ -134,7 +135,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @return Tracker_FormElement_Field_List_BindValue
      */
     public function getValueFromRow($row) { return null; }
-    
+
     /**
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
      * Used by OpenList.
@@ -147,29 +148,29 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *              }
      */
     public function getBindtableSqlFragment() { return array(); }
-    
+
     /**
      * Get the "order by" statement to retrieve field values
      */
     public function getQueryOrderby() { return ''; }
-    
+
     /**
      * Get the "group by" statement to retrieve field values
      */
     public function getQueryGroupby() { return ''; }
-    
-    
+
+
     public function getDao() { return null; }
     public function getValueDao() { return null; }
-    
+
     /**
      * Fetch the form to edit the formElement
      *
      * @return string html
      */
     public function fetchAdminEditForm() { return ''; }
-    
-    
+
+
     /**
      * Allow the user to define the bind
      *
@@ -178,7 +179,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @return string html
      */
     public static function fetchAdminCreateForm($field) { return ''; }
-    
+
     /**
      * Transforms Bind into a SimpleXMLElement
      */
@@ -190,9 +191,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     ) {
         return '';
     }
-    
+
     /**
-     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
      * If the $bindvalue_ids is null then return all values.
      *
      * @param array $bindvalue_ids The ids of BindValue to retrieve
@@ -200,14 +201,14 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @Return array the BindValue(s)
      */
     public function getBindValues($bindvalue_ids = null) { return array(); }
-    
+
     /**
      * Fixes original value ids after field duplication.
-     * 
+     *
      * @param array $value_mapping An array associating old value ids to new value ids.
      */
     public function fixOriginalValueIds(array $value_mapping) { return array(); }
-    
+
     public function getQuerySelectAggregate($functions) { return array(); }
 
     protected function getSoapBindingList() { return array(); }
@@ -226,4 +227,8 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         return;
     }
 
+    public function accept(BindVisitor $visitor)
+    {
+        return $visitor->visitListBindNull($this);
+    }
 }
