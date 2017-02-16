@@ -135,7 +135,7 @@ class NotEqualComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        $static_bind_builder = new NotEqualComparison\ForList(
+        $static_bind_builder = new NotEqualComparison\ForListBindStatic(
             new FromWhereComparisonFieldBuilder(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );

@@ -47,8 +47,7 @@ class FromWhereNotEqualComparisonListFieldBuilder
                 $changeset_value_field_alias.changeset_value_id = $changeset_value_alias.id
               )
               INNER JOIN $list_value_table AS $list_value_alias ON (
-                $changeset_value_field_alias.bindvalue_id = $list_value_alias.id
-                AND $condition
+                $condition
               )
             ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)
             WHERE artifact.tracker_id = $tracker_id AND ( $changeset_value_alias.changeset_id IS NOT NULL )
