@@ -1,29 +1,39 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * ReferenceAdministrationActions
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/mvc/Actions.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-require_once('common/dao/CrossReferenceDao.class.php');
-require_once('common/dao/ArtifactGroupListDao.class.php');
 
-class ReferenceAdministrationActions extends Actions {
+class ReferenceAdministrationActions extends Actions
+{
     
-    function ReferenceAdministrationActions(&$controler, $view=null) {
+    public function __construct($controler, $view=null)
+    {
         $this->Actions($controler);
     }
     
     /** Actions **/
-    
+
     // Create a new reference
-    function do_create() {
+    public function do_create()
+    {
         global $feedback;
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         // Sanity check
         if ((!$request->get('group_id'))
             || (!$request->get('keyword'))
@@ -33,7 +43,7 @@ class ReferenceAdministrationActions extends Actions {
         $force=$request->get('force');
         if (!user_is_super_user()) $force=false;
 
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
         if ($request->get('service_short_name') == 100) { // none
             $service_short_name="";
         } else $service_short_name=$request->get('service_short_name');
@@ -68,15 +78,15 @@ class ReferenceAdministrationActions extends Actions {
     }
 
     // Edit an existing reference
-    function do_edit() {
-        global $feedback;
-        $request =& HTTPRequest::instance();
+    public function do_edit()
+    {
+        $request = HTTPRequest::instance();
         // Sanity check
         if ((!$request->get('group_id'))
             || (!$request->get('reference_id'))) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','missing_parameter'));
         }
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
 
         $force=$request->get('force');
         $su=false;
@@ -85,8 +95,13 @@ class ReferenceAdministrationActions extends Actions {
         } else $force=false;
 
         // Load existing reference from DB
-        $ref=& $reference_manager->loadReference($request->get('reference_id'),$request->get('group_id'));
+        $ref = $reference_manager->loadReference($request->get('reference_id'),$request->get('group_id'));
 
+        if (! $ref) {
+            echo  '<p class="alert alert-error"> '. _('This reference does not exist') .'</p>';
+
+            return;
+        }
 
         if (($ref->isSystemReference())&&($ref->getGroupId()!=100)) {
             // Only update is_active field
@@ -102,7 +117,7 @@ class ReferenceAdministrationActions extends Actions {
                     $service_short_name="";
                 } else { $service_short_name=$request->get('service_short_name');}
             }
-            
+
             $old_keyword = $ref->getKeyword();
             //Update table 'reference'
             $new_ref = new Reference($request->get('reference_id'),
@@ -115,17 +130,17 @@ class ReferenceAdministrationActions extends Actions {
                                      $request->get('is_used'),
                                      $request->get('group_id'));
             $result=$reference_manager->updateReference($new_ref,$force);
- 
+
             if (!$result) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','edit_fail',db_error()));
             } else {
-                
-                if ( $old_keyword != $request->get('keyword')) {                    
+
+                if ( $old_keyword != $request->get('keyword')) {
                      //Update table 'cross_reference'
                     $reference_dao = $this->getCrossReferenceDao();
                     $result = $reference_dao->updateTargetKeyword($old_keyword, $request->get('keyword'), $request->get('group_id'));
                     $result2 = $reference_dao->updateSourceKeyword($old_keyword, $request->get('keyword'), $request->get('group_id'));
-       
+
                     //Update table 'artifact_group_list'
                     $reference_dao = $this->getArtifactGroupListDao();
                     $result = $reference_dao->updateItemName($request->get('group_id'), $old_keyword, $request->get('keyword'));
@@ -134,20 +149,21 @@ class ReferenceAdministrationActions extends Actions {
         }
     }
 
-    // Delete a reference. 
-    // If it is shared by several projects, only delete the reference_group entry. 
+    // Delete a reference.
+    // If it is shared by several projects, only delete the reference_group entry.
     // WARNING: If it is a system reference, delete all occurences of the reference!
-    function do_delete() {
+   public function do_delete()
+   {
         global $feedback;
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         // Sanity check
         if ((!$request->get('group_id'))
             || (!$request->get('reference_id'))) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','missing_parameter'));
         }
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
         // Load existing reference from DB
-        $ref=& $reference_manager->loadReference($request->get('reference_id'),$request->get('group_id'));
+        $ref= $reference_manager->loadReference($request->get('reference_id'),$request->get('group_id'));
 
         if (!$ref) {
             // Already deleted? User reloaded a page?
@@ -169,16 +185,15 @@ class ReferenceAdministrationActions extends Actions {
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','del_fail',db_error()));
         } 
-    }
-    
-    function getCrossReferenceDao() {
-        return new CrossReferenceDao(CodendiDataAccess::instance());
-    }
-    
-    function getArtifactGroupListDao() {
-        return new ArtifactGroupListDao(CodendiDataAccess::instance());
-    }
+   }
+
+   private function getCrossReferenceDao()
+   {
+       return new CrossReferenceDao(CodendiDataAccess::instance());
+   }
+
+   private function getArtifactGroupListDao()
+   {
+       return new ArtifactGroupListDao(CodendiDataAccess::instance());
+   }
 }
-
-
-?>

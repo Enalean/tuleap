@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,33 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/mvc/Views.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-require_once('www/project/admin/project_admin_utils.php');
-
-class ReferenceAdministrationViews extends Views {
-    
+class ReferenceAdministrationViews extends Views
+{
     protected $natures;
     
-    function ReferenceAdministrationViews(&$controler, $view=null) {
+    public function __construct($controler, $view=null)
+    {
         $this->View($controler, $view);
-        $referenceManager =& ReferenceManager::instance();
+        $referenceManager = ReferenceManager::instance();
         $this->natures = $referenceManager->getAvailableNatures();
     }
     
-    function header() {
+    public function header()
+    {
         project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_reference','edit_reference'),
                                    'group'=>$GLOBALS['group_id'],
                                    'help' => 'project-admin.html#reference-pattern-configuration'));
 
     }
-    function footer() {
+
+    public function footer()
+    {
         project_admin_footer(array());
     }
     
     // {{{ Views
-    function browse() {
+    public function browse()
+    {
         $request  = HTTPRequest::instance();
         $pm       = ProjectManager::instance();
         $purifier = Codendi_HTMLPurifier::instance();
@@ -68,8 +68,8 @@ class ReferenceAdministrationViews extends Views {
         /*
          Show the references that this project is using
         */
-        $referenceManager =& ReferenceManager::instance();
-        $references =& $referenceManager->getReferencesByGroupId($request->get('group_id')); // References are sorted by scope first
+        $referenceManager = ReferenceManager::instance();
+        $references = $referenceManager->getReferencesByGroupId($request->get('group_id')); // References are sorted by scope first
 
         echo '
 <HR>
@@ -127,7 +127,8 @@ class ReferenceAdministrationViews extends Views {
      * @param Reference $ref Reference
      * @return String
      */
-    public static function getReferenceDescription(Reference $ref) {
+    public static function getReferenceDescription(Reference $ref)
+    {
         $description = '';
         if (strpos($ref->getDescription(),"_desc_key")!==false) {
             $matches = array();
@@ -144,8 +145,8 @@ class ReferenceAdministrationViews extends Views {
         return $description;
     }
 
-    function _display_reference_row($ref, &$row_num) {
-        global $Language;
+    public function _display_reference_row($ref, $row_num)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
 
         if ($ref->getId()==100) return; // 'None' reference
@@ -167,18 +168,18 @@ class ReferenceAdministrationViews extends Views {
         echo '<TD>'.$description.'</TD>';
         echo '<TD>'.$nature_desc.'</TD>';
         
-        echo '<TD align="center">'.( $ref->isActive() ? $Language->getText('project_reference','enabled') : $Language->getText('project_reference','disabled') ).'</TD>';
+        echo '<TD align="center">'.( $ref->isActive() ? $GLOBALS['Language']->getText('project_reference','enabled') : $GLOBALS['Language']->getText('project_reference','disabled') ).'</TD>';
         if ($ref->getGroupId()==100) {
-            echo'<TD align="center">'. $purifier->purify($Language->getText('project_reference','ref_scope_'.$ref->getScope())) .'</TD>';
+            echo'<TD align="center">'. $purifier->purify($GLOBALS['Language']->getText('project_reference','ref_scope_'.$ref->getScope())) .'</TD>';
             echo'<TD align="center">'. $purifier->purify($ref->getServiceShortName()) .'</TD>';
         }
         
         if (($ref->getScope()!="S")||($ref->getGroupId()==100)) {
             echo '<TD align="center"><a href="/project/admin/reference.php?group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'&action=do_delete" onClick="return confirm(\'';
             if ($ref->getScope()=="S") {
-                echo $purifier->purify($Language->getText('project_reference','warning_del_r',$ref->getKeyword()), CODENDI_PURIFIER_JS_QUOTE);
+                echo $purifier->purify($GLOBALS['Language']->getText('project_reference','warning_del_r',$ref->getKeyword()), CODENDI_PURIFIER_JS_QUOTE);
             } else {
-                echo $Language->getText('project_reference','del_r');
+                echo $GLOBALS['Language']->getText('project_reference','del_r');
             }
             echo '\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
         }
@@ -187,10 +188,9 @@ class ReferenceAdministrationViews extends Views {
     }
 
 
-    function creation() {
-        global $sys_default_domain,$Language;
-
-        $request =& HTTPRequest::instance();
+    public function creation()
+    {
+        $request = HTTPRequest::instance();
         $group_id=$request->get('group_id');
 
         $su=false;
@@ -199,20 +199,20 @@ class ReferenceAdministrationViews extends Views {
         }
  
         echo '
-<h3>'.$Language->getText('project_reference','r_creation').'</h3>
+<h3>'.$GLOBALS['Language']->getText('project_reference','r_creation').'</h3>
 <form name="form_create" method="post" action="/project/admin/reference.php?group_id='.$group_id.'">
 <input type="hidden" name="action" VALUE="do_create">
 <input type="hidden" name="view" VALUE="browse">
 <input type="hidden" name="group_id" VALUE="'.$group_id.'">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
-<tr><td width="10%"><a href="#" title="'.$Language->getText('project_reference','r_keyword_desc').'">'.$Language->getText('project_reference','r_keyword').':</a>&nbsp;<font color="red">*</font></td>
+<tr><td width="10%"><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_keyword_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_keyword').':</a>&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="keyword" size="25" maxlength="25"></td></tr>';
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_desc_in_tooltip').'">'.$Language->getText('project_reference','r_desc').'</a>:&nbsp;</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_desc_in_tooltip').'">'.$GLOBALS['Language']->getText('project_reference','r_desc').'</a>:&nbsp;</td>
 <td><input type="text" name="description" size="70" maxlength="255"></td></tr>';
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_nature_desc').'">'.$Language->getText('project_reference','r_nature').'</a>:&nbsp;</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_nature_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_nature').'</a>:&nbsp;</td>
 <td>';
         echo '<select name="nature" >';
         
@@ -225,13 +225,13 @@ class ReferenceAdministrationViews extends Views {
         echo '
 </td></tr>';
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','url').'">'.$Language->getText('project_reference','r_link').'</a>:&nbsp;<font color="red">*</font></td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','url').'">'.$GLOBALS['Language']->getText('project_reference','r_link').'</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="link" size="70" maxlength="255"> ';
             echo  help_button('project-admin.html#reference-pattern-configuration');
             echo '</td></tr>';
         if (($group_id==100)&&($su)) {
             echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_service_desc').'">'.$Language->getText('project_reference','r_service').'</a>:</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_service_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_service').'</a>:</td>
 <td>';
 # Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
@@ -240,7 +240,7 @@ class ReferenceAdministrationViews extends Views {
             while ($serv = db_fetch_array($result)) {
                 $label=$serv['label'];
                 if ($label == "service_".$serv['short_name']."_lbl_key") {
-                    $label = $Language->getText('project_admin_editservice',$label);
+                    $label = $GLOBALS['Language']->getText('project_admin_editservice',$label);
                 }
                 $serv_short_name[] = $serv['short_name'];
                 $serv_label[]=$label;
@@ -248,8 +248,8 @@ class ReferenceAdministrationViews extends Views {
             echo html_build_select_box_from_arrays($serv_short_name,$serv_label,"service_short_name");
             echo '</td></tr>';
             echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_scope').'">'.$Language->getText('project_reference','scope').':</a></td>
-<td><FONT size="-1">'.$Language->getText('project_reference','system').'
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_scope').'">'.$GLOBALS['Language']->getText('project_reference','scope').':</a></td>
+<td><FONT size="-1">'.$GLOBALS['Language']->getText('project_reference','system').'
         </FONT></td></tr>';
             echo '<input type="hidden" name="scope" VALUE="S">';
         } else {
@@ -257,37 +257,42 @@ class ReferenceAdministrationViews extends Views {
             echo '<input type="hidden" name="scope" VALUE="P">';
         }
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','enabled_desc').'">'.$Language->getText('project_reference','enabled').':</a> </td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','enabled_desc').'">'.$GLOBALS['Language']->getText('project_reference','enabled').':</a> </td>
 <td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>';
-        if ($su) echo '<tr><td><a href="#" title="'.$Language->getText('project_reference','force_desc').'">'.$Language->getText('project_reference','force').'</a> </td><td><input type="CHECKBOX" NAME="force"></td></tr>';
+        if ($su) echo '<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','force_desc').'">'.$GLOBALS['Language']->getText('project_reference','force').'</a> </td><td><input type="CHECKBOX" NAME="force"></td></tr>';
         echo '
 </table>
-<P><INPUT type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">
+<P><INPUT type="submit" name="Create" value="'.$GLOBALS['Language']->getText('global','btn_create').'">
 </form>
-<p><font color="red">*</font>: '.$Language->getText('project_reference','fields_required').'</p>
+<p><font color="red">*</font>: '.$GLOBALS['Language']->getText('project_reference','fields_required').'</p>
 ';
     }
    
 
-    function edit() {
-        global $sys_default_domain,$Language;
-
-        $request =& HTTPRequest::instance();
+    public function edit()
+    {
+        $request = HTTPRequest::instance();
         $group_id=$request->get('group_id');
 
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $pm = ProjectManager::instance();
-        $project=$pm->getProject($group_id);
+        $pm      = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
 
-        $refid=$request->get('reference_id');
+        $refid = $request->get('reference_id');
 
         if (! $refid) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','missing_parameter'));
         }
 
-        $referenceManager =& ReferenceManager::instance();
-        $ref=& $referenceManager->loadReference($refid,$group_id);
+        $referenceManager = ReferenceManager::instance();
+        $ref = $referenceManager->loadReference($refid,$group_id);
+
+        if (! $ref) {
+            echo  '<p class="alert alert-error"> '. _('This reference does not exist') .'</p>';
+
+            return;
+        }
 
         $su=false;
         if (user_is_super_user()) {
@@ -302,7 +307,7 @@ class ReferenceAdministrationViews extends Views {
         }
 
         echo '
-<h3>'.$Language->getText('project_reference','edit_r').'</h3>
+<h3>'.$GLOBALS['Language']->getText('project_reference','edit_r').'</h3>
 <form name="form_create" method="post" action="/project/admin/reference.php?group_id='.$group_id.'">
 <input type="hidden" name="action" VALUE="do_edit">
 <input type="hidden" name="view" VALUE="browse">
@@ -310,7 +315,7 @@ class ReferenceAdministrationViews extends Views {
 <input type="hidden" name="reference_id" VALUE="'.$refid.'">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
-<tr><td width="10%"><a href="#" title="'.$Language->getText('project_reference','r_keyword_desc').'">'.$Language->getText('project_reference','r_keyword').':</a>'.$star.'</td>
+<tr><td width="10%"><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_keyword_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_keyword').':</a>'.$star.'</td>
 <td>';
         if ($ro) {
             echo $purifier->purify($ref->getKeyWord());
@@ -319,11 +324,11 @@ class ReferenceAdministrationViews extends Views {
         }
         echo '</td></tr>';
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_desc_in_tooltip').'">'.$Language->getText('project_reference','r_desc').'</a>:&nbsp;</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_desc_in_tooltip').'">'.$GLOBALS['Language']->getText('project_reference','r_desc').'</a>:&nbsp;</td>
 <td>';
         if ($ro) {
             if ($ref->getDescription() == "reference_".$ref->getKeyWord()."_desc_key") {
-                echo $purifier->purify($Language->getText('project_reference',$ref->getDescription()));
+                echo $purifier->purify($GLOBALS['Language']->getText('project_reference',$ref->getDescription()));
             } else {
                 echo $purifier->purify($ref->getDescription());
             }
@@ -332,7 +337,7 @@ class ReferenceAdministrationViews extends Views {
         }
         echo '</td></tr>';
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_nature_desc').'">'.$Language->getText('project_reference','r_nature').'</a>:&nbsp;</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_nature_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_nature').'</a>:&nbsp;</td>
 <td>';
         if ($ro) {
             echo $purifier->purify($ref->getNature());
@@ -350,7 +355,7 @@ class ReferenceAdministrationViews extends Views {
         }
         echo '</td></tr>';
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','url').'">'.$Language->getText('project_reference','r_link').'</a>:'.$star.'</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','url').'">'.$GLOBALS['Language']->getText('project_reference','r_link').'</a>:'.$star.'</td>
 <td>';
         if ($ro) {
             echo $purifier->purify($ref->getLink());
@@ -361,7 +366,7 @@ class ReferenceAdministrationViews extends Views {
         echo '</td></tr>';
         if ($group_id==100) {
             echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_service_desc').'">'.$Language->getText('project_reference','r_service').'</a>:</td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_service_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_service').'</a>:</td>
 <td>';
             // Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
@@ -370,7 +375,7 @@ class ReferenceAdministrationViews extends Views {
             while ($serv = db_fetch_array($result)) {
                 $label=$serv['label'];
                 if ($label == "service_".$serv['short_name']."_lbl_key") {
-                    $label = $Language->getText('project_admin_editservice',$label);
+                    $label = $GLOBALS['Language']->getText('project_admin_editservice',$label);
                 }
                 $serv_short_name[] = $serv['short_name'];
                 $serv_label[]=$label;
@@ -378,22 +383,22 @@ class ReferenceAdministrationViews extends Views {
             echo html_build_select_box_from_arrays($serv_short_name,$serv_label,"service_short_name",$ref->getServiceShortName());
             echo '</td></tr>';
             echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','r_scope').'">'.$Language->getText('project_reference','scope').':</a></td>
-<td><FONT size="-1">'.($ref->getScope()=='S'?$Language->getText('project_reference','system'):$Language->getText('project_reference','project')).'</FONT></td></tr>';
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_scope').'">'.$GLOBALS['Language']->getText('project_reference','scope').':</a></td>
+<td><FONT size="-1">'.($ref->getScope()=='S'?$GLOBALS['Language']->getText('project_reference','system'):$GLOBALS['Language']->getText('project_reference','project')).'</FONT></td></tr>';
         }
         echo '
-<tr><td><a href="#" title="'.$Language->getText('project_reference','enabled_desc').'">'.$Language->getText('project_reference','enabled').':</a> </td>
+<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','enabled_desc').'">'.$GLOBALS['Language']->getText('project_reference','enabled').':</a> </td>
 <td><input type="CHECKBOX" NAME="is_used" VALUE="1"'.($ref->isActive()?" CHECKED":'').'></td></tr>';
-        if ($su) echo '<tr><td><a href="#" title="'.$Language->getText('project_reference','force_desc').'">'
-                      .$Language->getText('project_reference','force').'</a> </td>
+        if ($su) echo '<tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','force_desc').'">'
+                      .$GLOBALS['Language']->getText('project_reference','force').'</a> </td>
                        <td><input type="CHECKBOX" NAME="force"></td></tr>';
         echo '
 </table>
 
-<P><INPUT type="submit" name="Create" value="'.$Language->getText('global','btn_update').'">
+<P><INPUT type="submit" name="Create" value="'.$GLOBALS['Language']->getText('global','btn_update').'">
 </form>';
         if (!$ro) {
-            echo '<p>'.$star.': '.$Language->getText('project_reference','fields_required').'</p>';
+            echo '<p>'.$star.': '.$GLOBALS['Language']->getText('project_reference','fields_required').'</p>';
         }
     }
 }

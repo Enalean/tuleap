@@ -113,6 +113,9 @@ msgstr "Liste des raccourcis"
 msgid "Sidebar (project)"
 msgstr "Barre de service (projet)"
 
+msgid "This reference does not exist"
+msgstr "La référence demandée n'existe pas"
+
 msgid "Tracker"
 msgstr "Suivi"
 
