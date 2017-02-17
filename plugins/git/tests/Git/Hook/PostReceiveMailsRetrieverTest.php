@@ -22,6 +22,7 @@ namespace Tuleap\Git\Hook;
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
+use PFUser;
 use TuleapTestCase;
 
 class PostReceiveMailsRetrieverTest extends TuleapTestCase
@@ -36,8 +37,11 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
     {
         parent::setUp();
 
+        $project = aMockProject()->withId(42)->build();
+
         $this->repository   = aGitRepository()
             ->withId(101)
+            ->withProject($project)
             ->withNotifiedEmails(array('jdoe@example.com', 'smith@example.com'))
             ->build();
 
@@ -49,7 +53,29 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
                 array('email' => 'smith@example.com')
             );
 
-        $this->retriever = new PostReceiveMailsRetriever($notified_users_dao);
+        $notified_ugroup_dao = mock('Tuleap\Git\Notifications\UgroupsToNotifyDao');
+        stub($notified_ugroup_dao)
+            ->searchUgroupsByRepositoryId(101)
+            ->returnsDar(
+                array('ugroup_id' => 104, 'name' => 'Developers')
+            );
+
+        $developers = aMockUGroup()
+            ->withMembers(
+                array(
+                    aUser()->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
+                    aUser()->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
+                    aUser()->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
+                )
+            )
+            ->build();
+
+        $ugroup_manager = mock('UGroupManager');
+        stub($ugroup_manager)
+            ->getUGroup($project, 104)
+            ->returns($developers);
+
+        $this->retriever = new PostReceiveMailsRetriever($notified_users_dao, $notified_ugroup_dao, $ugroup_manager);
     }
 
     public function itReturnsMailsForRepository()
@@ -65,6 +91,20 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(in_array('andrew@example.com', $emails));
+    }
+
+    public function itReturnsMailsOfUgroupMembersForRepository()
+    {
+        $emails = $this->retriever->getNotifiedMails($this->repository);
+
+        $this->assertTrue(in_array('charles@example.com', $emails));
+    }
+
+    public function itRemovesGroupMembersThatAreNotAlive()
+    {
+        $emails = $this->retriever->getNotifiedMails($this->repository);
+
+        $this->assertTrue(! in_array('suspended@example.com', $emails));
     }
 
     public function itRemovesDuplicates()

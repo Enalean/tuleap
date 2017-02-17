@@ -53,6 +53,12 @@ CREATE TABLE IF NOT EXISTS plugin_git_post_receive_notification_user (
     PRIMARY KEY (repository_id, user_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_git_post_receive_notification_ugroup (
+    repository_id INT(10) UNSIGNED NOT NULL,
+    ugroup_id INT(11) NOT NULL,
+    PRIMARY KEY (repository_id, ugroup_id)
+);
+
 -- Create plugin_git_log table --
 CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `repository_id` int(10) unsigned NOT NULL,
