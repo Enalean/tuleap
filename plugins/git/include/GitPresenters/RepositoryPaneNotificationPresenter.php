@@ -25,12 +25,18 @@ class RepositoryPaneNotificationPresenter
     private $identifier;
 
     public $users_to_be_notified;
+    public $groups_to_be_notified;
 
-    public function __construct(GitRepository $repository, $identifier, array $users_to_be_notified)
-    {
-        $this->repository           = $repository;
-        $this->identifier           = $identifier;
-        $this->users_to_be_notified = $users_to_be_notified;
+    public function __construct(
+        GitRepository $repository,
+        $identifier,
+        array $users_to_be_notified,
+        array $groups_to_be_notified
+    ) {
+        $this->repository            = $repository;
+        $this->identifier            = $identifier;
+        $this->users_to_be_notified  = $users_to_be_notified;
+        $this->groups_to_be_notified = $groups_to_be_notified;
     }
 
     public function title()
@@ -84,7 +90,9 @@ class RepositoryPaneNotificationPresenter
 
     public function has_notifications()
     {
-        return count($this->repository->getNotifiedMails()) > 0 || count($this->users_to_be_notified) > 0;
+        return count($this->repository->getNotifiedMails()) > 0
+            || count($this->users_to_be_notified) > 0
+            || count($this->groups_to_be_notified) > 0;
     }
 
     public function add_mail_title()

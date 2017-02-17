@@ -20,6 +20,16 @@
                 </tr>
             </thead>
             <tbody>
+            {{# groups_to_be_notified }}
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <i class="icon-group git-notification-mail-list-group-icon"></i>
+                        {{ label }}
+                    </td>
+                </tr>
+            {{/ groups_to_be_notified }}
             {{# users_to_be_notified }}
                 <tr>
                     <td>
