@@ -56,6 +56,17 @@ class User_ForgeUserGroupFactory {
         return new User_ForgeUGroup($user_group_id, $row['name'], $row['description']);
     }
 
+    /** @deprecated */
+    public function getProjectUGroupAsForgeUGroupById($user_group_id)
+    {
+        $row = $this->dao->searchProjectUGroup($user_group_id);
+        if (! $row) {
+            throw new User_UserGroupNotFoundException($user_group_id);
+        }
+
+        return new User_ForgeUGroup($user_group_id, $row['name'], $row['description']);
+    }
+
     /**
      * @return User_ForgeUGroup[]
      */

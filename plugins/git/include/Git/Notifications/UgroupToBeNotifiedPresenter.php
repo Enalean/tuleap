@@ -25,9 +25,11 @@ use User_ForgeUGroup;
 class UgroupToBeNotifiedPresenter
 {
     public $label;
+    public $ugroup_id;
 
     public function __construct(User_ForgeUGroup $ugroup)
     {
-        $this->label = $ugroup->getName();
+        $this->label     = $ugroup->getName();
+        $this->ugroup_id = $ugroup->getId();
     }
 }

@@ -16,9 +16,17 @@ msgstr ""
 msgid "Cannot remove user %s from notifications"
 msgstr "Impossible de supprimer l'utilisateur %s des notifications"
 
+#, php-format
+msgid "Cannot remove user group \"%s\" from notifications"
+msgstr "Impossible de supprimer le groupe %s des notifications"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
 #, php-format
 msgid "User %s has been removed from notifications"
 msgstr "L'utilisateur %s a été supprimé des notifications"
+
+#, php-format
+msgid "User group \"%s\" has been removed from notifications"
+msgstr "Le groupe %s a été supprimé des notifications"

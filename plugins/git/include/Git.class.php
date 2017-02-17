@@ -24,6 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -105,6 +106,14 @@ class Git extends PluginController {
      * @var UsersToNotifyDao
      */
     private $users_to_notify_dao;
+    /**
+     * @var UgroupsToNotifyDao
+     */
+    private $ugroups_to_notify_dao;
+    /**
+     * @var User_ForgeUserGroupFactory
+     */
+    private $forge_user_group_factory;
 
     /**
      * Lists all git-related permission types.
@@ -316,7 +325,9 @@ class Git extends PluginController {
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedDisabler $regexp_disabler,
         RegexpPermissionFilter $regexp_filter,
-        UsersToNotifyDao $users_to_notify_dao
+        UsersToNotifyDao $users_to_notify_dao,
+        UgroupsToNotifyDao $ugroups_to_notify_dao,
+        User_ForgeUserGroupFactory $forge_user_group_factory
     ) {
         parent::__construct($user_manager, $request);
 
@@ -400,6 +411,8 @@ class Git extends PluginController {
         $this->regexp_disabler                         = $regexp_disabler;
         $this->regexp_filter                           = $regexp_filter;
         $this->users_to_notify_dao                     = $users_to_notify_dao;
+        $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
+        $this->forge_user_group_factory                = $forge_user_group_factory;
     }
 
     protected function instantiateView() {
@@ -1412,6 +1425,10 @@ class Git extends PluginController {
         if (is_array($users_to_remove) && count($users_to_remove) > 0) {
             $this->addAction('notificationRemoveUser', array($this->groupId, $repoId, $users_to_remove));
         }
+        $ugrops_to_remove = $this->request->get('remove_ugroup');
+        if (is_array($ugrops_to_remove) && count($ugrops_to_remove) > 0) {
+            $this->addAction('notificationRemoveUgroup', array($this->groupId, $repoId, $ugrops_to_remove));
+        }
         $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
     }
 
@@ -1488,7 +1505,9 @@ class Git extends PluginController {
             $this->regexp_disabler,
             $this->regexp_filter,
             $this->regexp_retriever,
-            $this->users_to_notify_dao
+            $this->users_to_notify_dao,
+            $this->ugroups_to_notify_dao,
+            $this->forge_user_group_factory
         );
     }
 
