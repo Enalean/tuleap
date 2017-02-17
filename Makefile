@@ -128,6 +128,10 @@ clean-rng:
 # Tests and all
 #
 
+post-checkout: generate-mo dev-clear-cache ## Clear caches, build assets and generate language files
+	npm run build
+	@$(DOCKER) exec tuleap-web service httpd restart
+
 generate-po: ## Generate translatable strings
 	@tools/utils/generate-po.sh `pwd`
 
