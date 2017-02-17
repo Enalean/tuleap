@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBu
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
 
-class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
+class ForListBindStatic implements FromWhereBuilder, ListBindStaticFromWhereBuilder
 {
     /**
      * @var FromWhereComparisonFieldBuilder
@@ -68,7 +68,6 @@ class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
                 $changeset_value_list_alias
             );
         }
-
         return $this->getFromWhereForNonEmptyCondition(
             $field_id,
             $changeset_value_alias,
@@ -92,7 +91,8 @@ class ForList implements FromWhereBuilder, ListBindStaticFromWhereBuilder
         $tracker_id,
         $value
     ) {
-        $condition = "$list_value_alias.label = " . $this->quoteSmart($value);
+        $condition = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.id
+            AND $list_value_alias.label = " . $this->quoteSmart($value);
 
         return $this->comparison_builder->getFromWhere(
             $field_id,
