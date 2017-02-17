@@ -20,7 +20,25 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-interface BindVisitable
+use Tracker_FormElement_Field_List;
+
+class BindParameters
 {
-    public function accept(BindVisitor $visitor, BindParameters $parameters);
+    /**
+     * @var Tracker_FormElement_Field_List
+     */
+    private $list_field;
+
+    public function __construct(Tracker_FormElement_Field_List $list_field)
+    {
+        $this->list_field = $list_field;
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List
+     */
+    public function getField()
+    {
+        return $this->list_field;
+    }
 }

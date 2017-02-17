@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 require_once('bootstrap.php');
@@ -225,7 +226,7 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
     }
 
-    public function accept(BindVisitor $visitor)
+    public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
     }
 }

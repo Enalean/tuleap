@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
-class ListFieldChecker
+class ListFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var EmptyStringChecker
@@ -37,19 +37,30 @@ class ListFieldChecker
      * @var CollectionOfListValuesExtractor
      */
     private $values_extractor;
+    /**
+     * @var CollectionOfNormalizedBindLabelsExtractor
+     */
+    private $bind_labels_extractor;
+    /**
+     * @var BindValueNormalizer
+     */
+    private $value_normalizer;
 
     public function __construct(
         EmptyStringChecker $empty_string_checker,
-        CollectionOfListValuesExtractor $values_extractor
+        CollectionOfListValuesExtractor $values_extractor,
+        BindValueNormalizer $value_normalizer,
+        CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor
     ) {
-        $this->empty_string_checker = $empty_string_checker;
-        $this->values_extractor     = $values_extractor;
+        $this->empty_string_checker  = $empty_string_checker;
+        $this->values_extractor      = $values_extractor;
+        $this->bind_labels_extractor = $bind_labels_extractor;
+        $this->value_normalizer      = $value_normalizer;
     }
 
     public function checkFieldIsValidForComparison(
         Comparison $comparison,
-        Tracker_FormElement_Field $field,
-        array $existing_values
+        Tracker_FormElement_Field $field
     ) {
         try {
             $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
@@ -57,20 +68,17 @@ class ListFieldChecker
             throw new ListToNowComparisonException($field);
         }
 
+        $normalized_labels  = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);
+
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
                 throw new ListToEmptyStringComparisonException($comparison, $field);
             }
 
-            $lowercase_value = $this->convertToLowerCase($value);
-            if ($value !== '' && ! in_array($lowercase_value, $existing_values)) {
+            $normalized_value = $this->value_normalizer->normalize($value);
+            if ($value !== '' && ! in_array($normalized_value, $normalized_labels)) {
                 throw new ListValueDoNotExistComparisonException($field, $value);
             }
         }
-    }
-
-    private function convertToLowerCase($string)
-    {
-        return mb_strtolower($string, "UTF-8");
     }
 }

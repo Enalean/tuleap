@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
@@ -734,8 +735,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return;
     }
 
-    public function accept(BindVisitor $visitor)
+    public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
-        return $visitor->visitListBindUgroups($this);
+        return $visitor->visitListBindUgroups($this, $parameters);
     }
 }

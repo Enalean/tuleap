@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-interface BindVisitable
+class BindValueNormalizer
 {
-    public function accept(BindVisitor $visitor, BindParameters $parameters);
+    public function normalize($value)
+    {
+        return mb_strtolower($value, "UTF-8");
+    }
 }

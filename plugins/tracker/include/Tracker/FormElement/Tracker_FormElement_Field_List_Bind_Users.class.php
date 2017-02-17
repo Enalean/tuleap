@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Import\Spotter;
 
@@ -990,8 +991,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $user_representation;
     }
 
-    public function accept(BindVisitor $visitor)
+    public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
-        return $visitor->visitListBindUsers($this);
+        return $visitor->visitListBindUsers($this, $parameters);
     }
 }
