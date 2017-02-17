@@ -26,6 +26,7 @@ use TemplateRendererFactory;
 use RepositoryPaneNotificationPresenter;
 use EventManager;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 
 class Notification extends Pane
 {
@@ -37,13 +38,20 @@ class Notification extends Pane
      */
     private $user_to_be_notified_builder;
 
+    /**
+     * @var CollectionOfUgroupToBeNotifiedPresenterBuilder
+     */
+    private $group_to_be_notified_builder;
+
     public function __construct(
         GitRepository $repository,
         Codendi_Request $request,
-        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder
+        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
+        CollectionOfUgroupToBeNotifiedPresenterBuilder $group_to_be_notified_builder
     ) {
         parent::__construct($repository, $request);
         $this->user_to_be_notified_builder = $user_to_be_notified_builder;
+        $this->group_to_be_notified_builder = $group_to_be_notified_builder;
     }
 
     /**
@@ -67,7 +75,8 @@ class Notification extends Pane
      */
     public function getContent()
     {
-        $users = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($this->repository);
+        $users  = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($this->repository);
+        $groups = $this->group_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($this->repository);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
         $html     = $renderer->renderToString(
@@ -75,7 +84,8 @@ class Notification extends Pane
             new RepositoryPaneNotificationPresenter(
                 $this->repository,
                 $this->getIdentifier(),
-                $users
+                $users,
+                $groups
             )
         );
         $html    .= $this->getPluginNotifications();

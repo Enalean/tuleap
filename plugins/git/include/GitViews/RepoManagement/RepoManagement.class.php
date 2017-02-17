@@ -19,7 +19,9 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Webhook\WebhookFactory;
@@ -164,11 +166,20 @@ class GitViews_RepoManagement {
             $panes[]            = new Pane\Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
 
-        $webhook_dao                 = new WebhookDao();
-        $webhook_factory             = new WebhookFactory($webhook_dao);
-        $user_to_be_notified_builder = new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao());
+        $webhook_dao                  = new WebhookDao();
+        $webhook_factory              = new WebhookFactory($webhook_dao);
+        $user_to_be_notified_builder  = new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao());
+        $group_to_be_notified_builder = new CollectionOfUgroupToBeNotifiedPresenterBuilder(
+            new UgroupsToNotifyDao(),
+            new User_ForgeUserGroupFactory(new UserGroupDao())
+        );
 
-        $panes[] = new Pane\Notification($repository, $this->request, $user_to_be_notified_builder);
+        $panes[] = new Pane\Notification(
+            $repository,
+            $this->request,
+            $user_to_be_notified_builder,
+            $group_to_be_notified_builder
+        );
         $panes[] = new Pane\Hooks($repository, $this->request, $webhook_factory, $webhook_dao);
         $panes[] = new Pane\Delete($repository, $this->request);
 

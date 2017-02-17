@@ -76,7 +76,7 @@ class User_ForgeUserGroupFactory {
     /**
      * @return User_ForgeUGroup
      */
-    private function instantiateFromRow($row) {
+    public function instantiateFromRow($row) {
         return new User_ForgeUGroup($row['ugroup_id'], $row['name'], $row['description']);
     }
 
