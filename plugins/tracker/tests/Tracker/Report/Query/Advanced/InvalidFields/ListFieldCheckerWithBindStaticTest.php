@@ -19,19 +19,21 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use BaseLanguageFactory;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class ListFieldCheckerTest extends TuleapTestCase
+class ListFieldCheckerWithBindStaticTest extends TuleapTestCase
 {
     /** @var ListFieldChecker */
     private $list_field_checker;
@@ -46,14 +48,17 @@ class ListFieldCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
             new CollectionOfListValuesExtractor(),
-            new BindValueNormalizer(),
+            $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                new BindValueNormalizer()
+                $list_field_bind_value_normalizer
             )
         );
+
         $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
         $this->bind       = partial_mock('Tracker_FormElement_Field_List_Bind_Static', array(
             'getAllValues'

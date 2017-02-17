@@ -50,7 +50,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
@@ -144,12 +144,14 @@ class EqualComparisonVisitor implements
 
     private function visitList()
     {
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+
         return new ListFieldChecker(
             new EmptyStringAllowed(),
             new CollectionOfListValuesExtractor(),
-            new BindValueNormalizer(),
+            $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                new BindValueNormalizer()
+                $list_field_bind_value_normalizer
             )
         );
     }
