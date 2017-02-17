@@ -82,9 +82,9 @@ class RepositoryPaneNotificationPresenter
         return $list_of_mails;
     }
 
-    public function has_mails()
+    public function has_notifications()
     {
-        return count($this->repository->getNotifiedMails()) > 0;
+        return count($this->repository->getNotifiedMails()) > 0 || count($this->users_to_be_notified) > 0;
     }
 
     public function add_mail_title()

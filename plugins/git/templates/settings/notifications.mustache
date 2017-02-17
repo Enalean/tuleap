@@ -11,7 +11,7 @@
 
     <h3>{{ notified_mails_title }}</h3>
 
-    {{# has_mails }}
+    {{# has_notifications }}
         <table id="git-notification-mail-list" class="table table-bordered">
             <thead>
                 <tr>
@@ -44,7 +44,7 @@
             {{/ list_of_mails }}
             </tbody>
         </table>
-    {{/ has_mails }}
+    {{/ has_notifications }}
 
     <label for="add_mail">{{ add_mail_title }}</label>
     <textarea id="add_mail" name="add_mail" class="text"></textarea>
