@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\GitPresenters;
+
+use GitRepository;
+
 class RepositoryPaneNotificationPresenter
 {
-
-    private $repository;
-    private $identifier;
-
+    public $identifier;
     public $users_to_be_notified;
     public $groups_to_be_notified;
 
@@ -33,85 +34,37 @@ class RepositoryPaneNotificationPresenter
         array $users_to_be_notified,
         array $groups_to_be_notified
     ) {
-        $this->repository            = $repository;
         $this->identifier            = $identifier;
         $this->users_to_be_notified  = $users_to_be_notified;
         $this->groups_to_be_notified = $groups_to_be_notified;
+        $this->list_of_mails         = $this->buildListOfMailsPresenter($repository);
+        $this->has_notifications     = count($this->list_of_mails) > 0
+            || count($users_to_be_notified) > 0
+            || count($groups_to_be_notified) > 0;
+
+        $this->repository_project_id = $repository->getProjectId();
+        $this->repository_id         = $repository->getId();
+        $this->mail_prefix           = $repository->getMailPrefix();
+
+        $this->title                = $GLOBALS['Language']->getText('plugin_git', 'admin_mail');
+        $this->mail_prefix_label    = $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_label');
+        $this->notified_mails_title = $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title');
+        $this->add_mail_title       = $GLOBALS['Language']->getText('plugin_git', 'add_mail_title');
+        $this->add_mail_msg         = $GLOBALS['Language']->getText('plugin_git', 'add_mail_msg');
+        $this->btn_submit           = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->notified_people      = dgettext('tuleap-git', 'Notified people');
     }
 
-    public function title()
+    private function buildListOfMailsPresenter(GitRepository $repository)
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'admin_mail');
-    }
-
-    public function identifier()
-    {
-        return $this->identifier;
-    }
-
-    public function repository_project_id()
-    {
-        return $this->repository->getProjectId();
-    }
-
-    public function repository_id()
-    {
-        return $this->repository->getId();
-    }
-
-    public function mail_prefix_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_label');
-    }
-
-    public function mail_prefix()
-    {
-        return $this->repository->getMailPrefix();
-    }
-
-    public function notified_mails_title()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title');
-    }
-
-    public function list_of_mails()
-    {
-        $i             = 0;
         $list_of_mails = array();
 
-        foreach ($this->repository->getNotifiedMails() as $mail) {
+        foreach ($repository->getNotifiedMails() as $mail) {
             $list_of_mails[] = array(
-                'mail'  => $mail
+                'mail' => $mail
             );
         }
 
         return $list_of_mails;
-    }
-
-    public function has_notifications()
-    {
-        return count($this->repository->getNotifiedMails()) > 0
-            || count($this->users_to_be_notified) > 0
-            || count($this->groups_to_be_notified) > 0;
-    }
-
-    public function add_mail_title()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'add_mail_title');
-    }
-
-    public function add_mail_msg()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'add_mail_msg');
-    }
-
-    public function btn_submit()
-    {
-        return $GLOBALS['Language']->getText('global', 'btn_submit');
-    }
-
-    public function notified_people()
-    {
-        return dgettext('tuleap-git', 'Notified people');
     }
 }

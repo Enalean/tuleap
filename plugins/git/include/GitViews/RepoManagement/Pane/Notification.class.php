@@ -23,7 +23,7 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 use Codendi_Request;
 use GitRepository;
 use TemplateRendererFactory;
-use RepositoryPaneNotificationPresenter;
+use Tuleap\Git\GitPresenters\RepositoryPaneNotificationPresenter;
 use EventManager;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
