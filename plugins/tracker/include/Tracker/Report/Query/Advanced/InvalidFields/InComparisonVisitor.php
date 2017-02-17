@@ -32,6 +32,7 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -43,10 +44,12 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindStaticChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 
-class InComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
+class InComparisonVisitor implements
+    Tracker_FormElement_FieldVisitor,
+    IProvideTheInvalidFieldCheckerForAComparison
 {
     private static $OPERATOR = 'in()';
 
@@ -106,32 +109,34 @@ class InComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideT
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
-    private function visitList()
+    private function visitList(Tracker_FormElement_Field_List $field)
     {
-        return new ListFieldBindStaticChecker(
+        $bind_checker = new ListFieldBindVisitor(
             new ListFieldChecker(
                 new EmptyStringForbidden(),
                 new CollectionOfListValuesExtractor()
             )
         );
+
+        return $bind_checker->getInvalidFieldChecker($field);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)

@@ -32,6 +32,7 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -43,8 +44,11 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 
-class InComparisonVisitor implements Tracker_FormElement_FieldVisitor, ComparisonVisitor
+class InComparisonVisitor implements
+    Tracker_FormElement_FieldVisitor,
+    ComparisonVisitor
 {
     /** @return FromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -99,29 +103,43 @@ class InComparisonVisitor implements Tracker_FormElement_FieldVisitor, Compariso
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList();
+        return $this->visitList($field);
     }
 
-    private function visitList()
+    private function visitList(Tracker_FormElement_Field_List $field)
     {
-        return new InComparison\ForList(
+        $static_bind_builder = new InComparison\ForListBindStatic(
             new FromWhereComparisonListFieldBuilder()
         );
+        $users_bind_builder = new InComparison\ForListBindUsers(
+            new FromWhereComparisonListFieldBuilder()
+        );
+        $ugroups_bind_builder = new InComparison\ForListBindUgroups(
+            new FromWhereComparisonListFieldBuilder()
+        );
+
+        $bind_builder = new ListFieldBindVisitor(
+            $static_bind_builder,
+            $users_bind_builder,
+            $ugroups_bind_builder
+        );
+
+        return $bind_builder->getFromWhereBuilder($field);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
