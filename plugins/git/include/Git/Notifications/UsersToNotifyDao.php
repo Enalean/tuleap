@@ -39,4 +39,17 @@ class UsersToNotifyDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function delete($repository_id, $user_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $user_id       = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE
+                FROM plugin_git_post_receive_notification_user
+                WHERE repository_id = $repository_id
+                  AND user_id = $user_id";
+
+        return $this->update($sql);
+    }
 }

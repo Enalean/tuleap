@@ -25,6 +25,7 @@ use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\Permissions\RegexpTemplateDao;
@@ -1415,7 +1416,8 @@ class GitPlugin extends Plugin {
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getRegexpFineGrainedDisabler(),
-            $this->getRegexpPermissionFilter()
+            $this->getRegexpPermissionFilter(),
+            new UsersToNotifyDao()
         );
     }
 

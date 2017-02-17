@@ -12,5 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
+#, php-format
+msgid "Cannot remove user %s from notifications"
+msgstr "Impossible de supprimer l'utilisateur %s des notifications"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+#, php-format
+msgid "User %s has been removed from notifications"
+msgstr "L'utilisateur %s a été supprimé des notifications"

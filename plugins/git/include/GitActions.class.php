@@ -22,6 +22,7 @@
 require_once('common/layout/Layout.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
@@ -176,6 +177,11 @@ class GitActions extends PluginActions
      */
     private $regexp_retriever;
 
+    /**
+     * @var UsersToNotifyDao
+     */
+    private $users_to_notify_dao;
+
     public function __construct(
         Git $controller,
         Git_SystemEventManager $system_event_manager,
@@ -207,7 +213,8 @@ class GitActions extends PluginActions
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedDisabler $regexp_disabler,
         RegexpPermissionFilter $permission_filter,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
+        UsersToNotifyDao $users_to_notify_dao
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -240,6 +247,7 @@ class GitActions extends PluginActions
         $this->regexp_disabler               = $regexp_disabler;
         $this->permission_filter             = $permission_filter;
         $this->regexp_retriever              = $regexp_retriever;
+        $this->users_to_notify_dao           = $users_to_notify_dao;
     }
 
     protected function getText($key, $params = array()) {
@@ -810,6 +818,47 @@ class GitActions extends PluginActions
         );
 
         return $ret;
+    }
+
+    public function notificationRemoveUser($project_id, $repository_id, array $users_to_remove)
+    {
+        if (empty($project_id) || empty($users_to_remove)) {
+            $this->addError('actions_params_error');
+            return false;
+        }
+        $great_success = true;
+        $controller    = $this->getController();
+        $repository    = $this->_loadRepository($project_id, $repository_id);
+        $user_manager  = UserManager::instance();
+
+        foreach ($users_to_remove as $user_id) {
+            $user = $user_manager->getUserById($user_id);
+            if (! $user) {
+                continue;
+            }
+
+            if ($this->users_to_notify_dao->delete($repository_id, $user_id)) {
+                $feedback = sprintf(
+                    dgettext('tuleap-git', 'User %s has been removed from notifications'),
+                    $user->getUserName()
+                );
+                $controller->addInfo($feedback);
+                $this->history_dao->groupAddHistory(
+                    "git_repo_update",
+                    $repository->getName() . ': '. $feedback,
+                    $repository->getProjectId()
+                );
+            } else {
+                $feedback = sprintf(
+                    dgettext('tuleap-git', 'Cannot remove user %s from notifications'),
+                    $user->getUserName()
+                );
+                $controller->addError($feedback);
+                $great_success = false;
+            }
+        }
+
+        return $great_success;
     }
 
     public function redirectToRepoManagement($projectId, $repositoryId, $pane) {
