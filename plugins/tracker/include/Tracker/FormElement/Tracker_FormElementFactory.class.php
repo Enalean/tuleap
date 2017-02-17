@@ -783,7 +783,8 @@ class Tracker_FormElementFactory {
             $this->getUsedNumericFields($tracker),
             $this->getUsedTextFields($tracker),
             $this->getUsedDateFields($tracker),
-            $this->getUsedClosedListFields($tracker)
+            $this->getUsedClosedListFields($tracker),
+            $this->getUsedSubmittedByFields($tracker)
         );
 
         foreach ($fields as $key => $field) {

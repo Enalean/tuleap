@@ -142,7 +142,7 @@ class NotInComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)

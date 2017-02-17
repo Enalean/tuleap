@@ -111,25 +111,25 @@ class InComparisonVisitor implements
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList($field);
+        return $this->visitList();
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList($field);
+        return $this->visitList();
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList($field);
+        return $this->visitList();
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList($field);
+        return $this->visitList();
     }
 
-    private function visitList(Tracker_FormElement_Field_List $field)
+    private function visitList()
     {
         return new ListFieldChecker(
             new EmptyStringForbidden(),
@@ -143,7 +143,7 @@ class InComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
