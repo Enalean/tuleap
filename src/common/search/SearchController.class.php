@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,7 +49,6 @@ class Search_SearchController {
             Search_SearchProject::NAME   => new Search_SearchProject(new ProjectDao()),
             Search_SearchPeople::NAME    => new Search_SearchPeople(UserManager::instance()),
             Search_SearchForum::NAME     => new Search_SearchForum(new ForumDao()),
-            Search_SearchSnippet::NAME   => new Search_SearchSnippet(new SnippetDao()),
             Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
         );
 
@@ -195,12 +194,6 @@ class Search_SearchController {
                 $GLOBALS['Language']->getText('search_index', Search_SearchPeople::NAME)
             ),
         );
-        if (ForgeConfig::get('sys_use_snippet') === 'force') {
-            $search_types []= new Search_SearchTypePresenter(
-                Search_SearchSnippet::NAME,
-                $GLOBALS['Language']->getText('search_index', Search_SearchSnippet::NAME)
-            );
-        }
 
         return new Search_SearchPanePresenter(
             $GLOBALS['Language']->getText('search_index', 'site_wide_search'),

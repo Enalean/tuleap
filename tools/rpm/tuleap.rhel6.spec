@@ -961,7 +961,6 @@ fi
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
-%{APP_DIR}/src/www/snippet
 %{APP_DIR}/src/www/soap
 %{APP_DIR}/src/www/softwaremap
 %{APP_DIR}/src/www/svn

@@ -5,7 +5,7 @@
  * http://sourceforge.net
  *
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1865,14 +1865,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             $search_entries[] = array(
                 'value' => 'soft',
                 'label' => $GLOBALS['Language']->getText('include_menu', 'software_proj')
-            );
-        }
-
-        if (ForgeConfig::get('sys_use_snippet') === 'force') {
-            $search_entries[] = array(
-                'value'    => 'snippets',
-                'label'    => $GLOBALS['Language']->getText('include_menu', 'code_snippets'),
-                'selected' => strpos($_SERVER['REQUEST_URI'], '/snippet/') === 0
             );
         }
 

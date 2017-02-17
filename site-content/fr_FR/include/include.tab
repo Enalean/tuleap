@@ -140,7 +140,6 @@ include_menu	wiki	Wiki
 include_menu	this_tracker	Cet outil de suivi
 include_menu	all_trackers	Tous les outils de suivi
 include_menu	software_proj	Projets logiciel
-include_menu	code_snippets	Boîte à outils 
 include_menu	people	Utilisateurs
 include_menu	this_wiki	Ce wiki
 include_menu	require_all_words	Tous les mots
@@ -149,7 +148,6 @@ include_menu	software_map	Arbre des projets
 include_menu	software	Logiciels
 include_menu	new_releases	Nouvelles versions
 include_menu	other_site_mirrors	Autres sites miroirs
-include_menu	code_snippet_lib	Boîte à outils
 include_menu	help_index	Index de l'aide
 include_menu	site_doc	Documentation site
 include_menu	dev_channel	Canaux développeurs
@@ -301,15 +299,6 @@ include_session	no_access	Vous essayez d'accéder à une zone du site pour laque
 include_session	hash_err	ERREUR&nbsp;: deux personnes ont la même clé - faîtes un retour en arrière et cela ne devrait plus se produire
 include_session	expired_password	Votre mot de passe est expiré.
 include_session	password_will_expire	Votre mot de passe sera expiré dans $1 jour(s).
-#
-#-----------------------------------------------
-# Script: SF/www/include/snippet_caching.php
-#
-include_snippet_caching	browse_snippet	Parcourir les échantillons 
-include_snippet_caching	browse_explain	Vous pouvez parcourir la bibliothèque d'échantillons par langage ou catégorie. Vous pouvez aussi effectuer une recherche par mots-clés en utilisant la boite de recherche.
-include_snippet_caching	count_update	Dernière mise à jour&nbsp;: $1
-include_snippet_caching	browse_lang	Parcourir par langage
-include_snippet_caching	browse_cat	Parcourir par catégorie
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_exit.php

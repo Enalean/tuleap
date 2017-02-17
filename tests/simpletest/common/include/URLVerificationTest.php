@@ -701,28 +701,6 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 
-    function testRestrictedUserCanNotAccessSearchOnCodeSnippets() {
-        $_REQUEST['type_of_search'] = 'snippets';
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
-        $GLOBALS['group_id'] = 120;
-
-        $urlVerification->setReturnValue('getUrl', '/search/');
-
-        $user = new MockPFUser();
-        $user->setReturnValue('isRestricted', true);
-        $urlVerification->setReturnValue('getCurrentUser', $user);
-
-        $server = array(
-            'REQUEST_URI' => '/search/',
-            'SCRIPT_NAME' => 'blah'
-        );
-
-        stub($urlVerification)->displayRestrictedUserError()->once();
-        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
-
-        $urlVerification->checkRestrictedAccess($server, 'stuff');
-    }
-
     public function testRestrictedUserCanAccessPluginManagedScripts() {
         $user = new MockPFUser();
 

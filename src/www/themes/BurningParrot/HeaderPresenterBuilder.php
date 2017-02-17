@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -97,19 +97,6 @@ class HeaderPresenterBuilder
         $additional_tabs = array();
 
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
-
-        if (ForgeConfig::get('sys_use_snippet') === 'force') {
-            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'), '/snippet/');
-
-            array_unshift(
-                $additional_tabs,
-                array(
-                    'link'      => '/snippet/',
-                    'title'     => $GLOBALS['Language']->getText('include_menu', 'code_snippets'),
-                    'selected'  => $selected,
-                )
-            );
-        }
 
         return $additional_tabs;
     }
