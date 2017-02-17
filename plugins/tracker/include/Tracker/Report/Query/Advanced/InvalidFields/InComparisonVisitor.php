@@ -44,7 +44,8 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 
 class InComparisonVisitor implements
@@ -129,14 +130,14 @@ class InComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        $bind_checker = new ListFieldBindVisitor(
-            new ListFieldChecker(
-                new EmptyStringForbidden(),
-                new CollectionOfListValuesExtractor()
+        return new ListFieldChecker(
+            new EmptyStringForbidden(),
+            new CollectionOfListValuesExtractor(),
+            new BindValueNormalizer(),
+            new CollectionOfNormalizedBindLabelsExtractor(
+                new BindValueNormalizer()
             )
         );
-
-        return $bind_checker->getInvalidFieldChecker($field);
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)

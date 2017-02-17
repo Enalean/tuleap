@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
@@ -933,8 +934,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         );
     }
 
-    public function accept(BindVisitor $visitor)
+    public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
-        return $visitor->visitListBindStatic($this);
+        return $visitor->visitListBindStatic($this, $parameters);
     }
 }

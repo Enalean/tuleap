@@ -42,7 +42,8 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindStaticChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 
 class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
@@ -125,10 +126,12 @@ class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor, IProv
 
     private function visitList()
     {
-        return new ListFieldBindStaticChecker(
-            new ListFieldChecker(
-                new EmptyStringForbidden(),
-                new CollectionOfListValuesExtractor()
+        return new ListFieldChecker(
+            new EmptyStringForbidden(),
+            new CollectionOfListValuesExtractor(),
+            new BindValueNormalizer(),
+            new CollectionOfNormalizedBindLabelsExtractor(
+                new BindValueNormalizer()
             )
         );
     }

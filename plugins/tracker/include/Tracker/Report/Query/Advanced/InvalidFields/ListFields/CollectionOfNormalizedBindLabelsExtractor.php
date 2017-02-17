@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
@@ -27,52 +27,59 @@ use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 
-class ListFieldBindVisitor implements BindVisitor
+class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
 {
     /**
-     * @var ListBindStaticFromWhereBuilder
+     * @var BindValueNormalizer
      */
-    private $static_builder;
-    /**
-     * @var ListBindUsersFromWhereBuilder
-     */
-    private $users_builder;
-    /**
-     * @var ListBindUgroupsFromWhereBuilder
-     */
-    private $ugroups_builder;
+    private $value_normalizer;
 
-    public function __construct(
-        ListBindStaticFromWhereBuilder $static_builder,
-        ListBindUsersFromWhereBuilder $users_builder,
-        ListBindUgroupsFromWhereBuilder $ugroups_builder
-    ) {
-        $this->static_builder  = $static_builder;
-        $this->users_builder   = $users_builder;
-        $this->ugroups_builder = $ugroups_builder;
+    public function __construct(BindValueNormalizer $value_normalizer)
+    {
+        $this->value_normalizer = $value_normalizer;
     }
 
-    /** @return FromWhereBuilder */
-    public function getFromWhereBuilder(Tracker_FormElement_Field_List $field)
+    /** @return array */
+    public function extractCollectionOfNormalizedLabels(Tracker_FormElement_Field_List $field)
     {
-        return $field->getBind()->accept($this, new BindParameters($field));
+        return (array) $field->getBind()->accept($this, new BindParameters($field));
     }
 
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
     {
-        return $this->static_builder;
+        $list_values       = $parameters->getField()->getAllValues();
+        $list_label_values = array();
+
+        foreach ($list_values as $value) {
+            $list_label_values[] = $this->value_normalizer->normalize($value->getLabel());
+        }
+
+        return $list_label_values;
     }
 
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
     {
-        return $this->users_builder;
+        $list_values       = $parameters->getField()->getAllValues();
+        $list_label_values = array();
+
+        foreach ($list_values as $value) {
+            $list_label_values[] = $this->value_normalizer->normalize($value->getUserName());
+        }
+
+        return $list_label_values;
     }
 
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
     {
-        return $this->ugroups_builder;
+        $list_values       = $parameters->getField()->getAllValues();
+        $list_label_values = array();
+
+        foreach ($list_values as $value) {
+            $list_label_values[] = $this->value_normalizer->normalize($value->getLabel());
+        }
+
+        return $list_label_values;
     }
 
     public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters)

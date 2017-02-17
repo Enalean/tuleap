@@ -22,7 +22,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldBindStaticChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindStaticLabelExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
@@ -31,8 +33,8 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class ListFieldCheckerTest extends TuleapTestCase
 {
-    /** @var ListFieldBindStaticChecker */
-    private $list_field_bind_static_checker;
+    /** @var ListFieldChecker */
+    private $list_field_checker;
     /** @var Tracker_FormElement_Field_List */
     private $field;
     /** @var Comparison */
@@ -44,16 +46,20 @@ class ListFieldCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->list_field_bind_static_checker = new ListFieldBindStaticChecker(
-            new ListFieldChecker(
-                new EmptyStringAllowed(),
-                new CollectionOfListValuesExtractor()
+        $this->list_field_checker = new ListFieldChecker(
+            new EmptyStringAllowed(),
+            new CollectionOfListValuesExtractor(),
+            new BindValueNormalizer(),
+            new CollectionOfNormalizedBindLabelsExtractor(
+                new BindValueNormalizer()
             )
         );
         $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
-        $this->bind       = mock('Tracker_FormElement_Field_List_Bind_Static');
-        $this->field      = aCheckboxField()->withBind($this->bind)->build();
-        $list_values      = array(
+        $this->bind       = partial_mock('Tracker_FormElement_Field_List_Bind_Static', array(
+            'getAllValues'
+        ));
+        $this->field              = aCheckboxField()->withBind($this->bind)->build();
+        $list_values              = array(
             100 => aFieldListStaticValue()->withId(100)->withLabel('a')->build(),
             101 => aFieldListStaticValue()->withId(101)->withLabel('b')->build()
         );
@@ -66,7 +72,7 @@ class ListFieldCheckerTest extends TuleapTestCase
 
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
-        $this->list_field_bind_static_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
+        $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
         $this->pass();
     }
 
@@ -76,7 +82,7 @@ class ListFieldCheckerTest extends TuleapTestCase
 
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
-        $this->list_field_bind_static_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
+        $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
         $this->pass();
     }
 
@@ -88,6 +94,6 @@ class ListFieldCheckerTest extends TuleapTestCase
 
         $this->expectException('Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListValueDoNotExistComparisonException');
 
-        $this->list_field_bind_static_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
+        $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
     }
 }
