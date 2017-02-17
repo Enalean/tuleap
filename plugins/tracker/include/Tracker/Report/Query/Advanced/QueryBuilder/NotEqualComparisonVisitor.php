@@ -143,7 +143,10 @@ class NotEqualComparisonVisitor implements
             new FromWhereComparisonFieldBuilder(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
-        $ugroups_bind_builder = new NotEqualComparison\ForListBindUgroups();
+        $ugroups_bind_builder = new NotEqualComparison\ForListBindUgroups(
+            new FromWhereComparisonFieldBuilder(),
+            new FromWhereNotEqualComparisonListFieldBuilder()
+        );
 
         $bind_builder = new ListFieldBindVisitor(
             $static_bind_builder,
