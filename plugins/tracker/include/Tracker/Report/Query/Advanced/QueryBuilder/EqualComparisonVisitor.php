@@ -171,7 +171,11 @@ class EqualComparisonVisitor implements
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return null;
+        return new EqualComparison\ForLastUpdatedBy(
+            UserManager::instance(),
+            new CollectionOfListValuesExtractor(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
+        );
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)

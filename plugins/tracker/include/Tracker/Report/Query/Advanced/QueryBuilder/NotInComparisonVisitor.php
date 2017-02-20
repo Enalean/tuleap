@@ -157,7 +157,11 @@ class NotInComparisonVisitor implements
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return null;
+        return new NotInComparison\ForLastUpdatedBy(
+            UserManager::instance(),
+            new CollectionOfListValuesExtractor(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
+        );
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)

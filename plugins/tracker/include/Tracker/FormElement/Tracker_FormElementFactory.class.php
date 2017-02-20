@@ -619,7 +619,7 @@ class Tracker_FormElementFactory {
      * @return array All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedClosedListFields($tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'cb', 'rb'));
+        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'cb', 'rb', 'subby', 'luby'));
     }
 
     /**
@@ -783,8 +783,7 @@ class Tracker_FormElementFactory {
             $this->getUsedNumericFields($tracker),
             $this->getUsedTextFields($tracker),
             $this->getUsedDateFields($tracker),
-            $this->getUsedClosedListFields($tracker),
-            $this->getUsedSubmittedByFields($tracker)
+            $this->getUsedClosedListFields($tracker)
         );
 
         foreach ($fields as $key => $field) {
