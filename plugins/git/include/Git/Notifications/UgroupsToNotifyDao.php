@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Notifications;
 
 use DataAccessObject;
+use ProjectUGroup;
 
 class UgroupsToNotifyDao extends DataAccessObject
 {
@@ -78,5 +79,61 @@ class UgroupsToNotifyDao extends DataAccessObject
                 WHERE repository_id = $repository_id";
 
         return $this->update($sql);
+    }
+
+    public function disableAnonymousRegisteredAuthenticated($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        return $this->updateNotificationUgroups(
+            $project_id,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+    }
+
+    public function disableAuthenticated($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        return $this->updateNotificationUgroups(
+            $project_id,
+            array(ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
+    {
+        $project_id          = $this->da->escapeInt($project_id);
+        $old_ugroup_ids      = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $this->startTransaction();
+
+        $sql = "UPDATE IGNORE plugin_git_post_receive_notification_ugroup AS notif
+                  INNER JOIN plugin_git AS git USING (repository_id)
+                SET notif.ugroup_id = $new_ugroup_id
+                WHERE notif.ugroup_id IN ($old_ugroup_ids)
+                  AND git.project_id = $project_id
+                ";
+
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        $sql = "DELETE notif.*
+                FROM plugin_git_post_receive_notification_ugroup AS notif
+                  INNER JOIN plugin_git AS git USING (repository_id)
+                WHERE notif.ugroup_id IN ($old_ugroup_ids)
+                  AND git.project_id = $project_id";
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        return $this->commit($sql);
     }
 }

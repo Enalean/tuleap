@@ -68,6 +68,7 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
+use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -2074,6 +2075,9 @@ class GitPlugin extends Plugin {
         $project = ProjectManager::instance()->getProject($params['project_id']);
 
         $this->getGitPermissionsManager()->updateProjectAccess($project, $params['old_access'], $params['access']);
+
+        $updater = new UgroupToNotifyUpdater($this->getUgroupsToNotifyDao());
+        $updater->updateProjectAccess($project, $params['old_access'], $params['access']);
     }
 
     /**
