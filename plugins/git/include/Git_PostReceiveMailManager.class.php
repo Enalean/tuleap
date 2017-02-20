@@ -28,7 +28,7 @@ class Git_PostReceiveMailManager {
      *
      * @return void
      */
-    function __construct() {
+    public function __construct() {
         $this->dao = $this->_getDao();
     }
 
@@ -59,7 +59,7 @@ class Git_PostReceiveMailManager {
      *
      *  @return Boolean
      */
-    function removeMailByRepository($repository, $mail) {
+    public function removeMailByRepository($repository, $mail) {
         if ($this->dao->removeNotification($repository->getId(), $mail)) {
             $repository->loadNotifiedMails();
             return $repository->getBackend()->changeRepositoryMailingList($repository);
@@ -81,34 +81,6 @@ class Git_PostReceiveMailManager {
      */
     public function markRepositoryAsDeleted(GitRepository $repository) {
         return $this->dao->removeNotification($repository->getId(), null);
-    }
-
-    /**
-     * Remove a notified mail address from all private repositories of a project
-     *
-     * @param Integer $groupId Porject ID to remove its repositories notification
-     * @param PFUser    $user    User to exclude from notification
-     *
-     * @return void
-     */
-    function removeMailByProjectPrivateRepository($groupId, $user) {
-        if (!$user->isMember($groupId)) {
-            $gitDao = $this->_getGitDao();
-            $repositoryList = $gitDao->getProjectRepositoryList($groupId);
-
-            if ($repositoryList) {
-                foreach ($repositoryList as $row) {
-                    $repository   = $this->_getGitRepository();
-                    $repository->setId($row['repository_id']);
-                    $repository->load();
-                    if (!$repository->userCanRead($user)) {
-                        if (!$this->removeMailByRepository($repository, $user->getEmail())) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**

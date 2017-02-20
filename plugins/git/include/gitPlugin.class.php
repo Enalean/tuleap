@@ -25,6 +25,7 @@ use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
@@ -766,14 +767,19 @@ class GitPlugin extends Plugin {
      * @return void
      */
     private function projectRemoveUserFromNotification($params) {
-        $groupId = $params['group_id'];
-        $userId = $params['user_id'];
+        $project_id = $params['group_id'];
+        $user_id = $params['user_id'];
 
-        $userManager = UserManager::instance();
-        $user = $userManager->getUserById($userId);
+        $user_manager = UserManager::instance();
 
-        $notificationsManager = new Git_PostReceiveMailManager();
-        $notificationsManager->removeMailByProjectPrivateRepository($groupId, $user);
+        $user    = $user_manager->getUserById($user_id);
+        $project = $this->getProjectManager()->getProject($project_id);
+
+        $cleaner = new NotificationsForProjectMemberCleaner(
+            $this->getRepositoryFactory(),
+            new Git_PostReceiveMailManager()
+        );
+        $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
 
     }
 

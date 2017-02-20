@@ -87,7 +87,7 @@ class GitRepositoryFactory {
      *
      * @param Project $project
      *
-     * @return Array of GitRepository
+     * @return GitRepository[]
      */
     public function getAllRepositories(Project $project) {
         $repositories = array();
