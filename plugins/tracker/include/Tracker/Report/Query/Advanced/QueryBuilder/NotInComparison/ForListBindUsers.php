@@ -30,9 +30,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
 
-class ForList implements FromWhereBuilder, ValueWrapperVisitor, ListBindStaticFromWhereBuilder
+class ForListBindUsers implements FromWhereBuilder, ValueWrapperVisitor, ListBindUsersFromWhereBuilder
 {
     /** @var  FromWhereNotEqualComparisonListFieldBuilder */
     private $from_where_builder;
@@ -55,15 +55,15 @@ class ForList implements FromWhereBuilder, ValueWrapperVisitor, ListBindStaticFr
         $filter_alias               = "Filter_{$field_id}_{$suffix}";
 
         $escaped_values = $this->quoteSmartImplode($values);
-        $condition      = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.id
-            AND $list_value_alias.label IN($escaped_values)";
+        $condition      = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.user_id
+            AND $list_value_alias.user_name IN($escaped_values)";
 
         return $this->from_where_builder->getFromWhere(
             $field_id,
             $changeset_value_alias,
             $changeset_value_list_alias,
             'tracker_changeset_value_list',
-            'tracker_field_list_bind_static_value',
+            'user',
             $list_value_alias,
             $filter_alias,
             $tracker_id,

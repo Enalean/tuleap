@@ -32,6 +32,7 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -44,9 +45,12 @@ use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
+use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 
-class NotInComparisonVisitor implements \Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
+class NotInComparisonVisitor implements
+    Tracker_FormElement_FieldVisitor,
+    IProvideTheInvalidFieldCheckerForAComparison
 {
     private static $OPERATOR = 'not in()';
 
