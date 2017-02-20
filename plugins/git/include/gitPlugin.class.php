@@ -1230,6 +1230,7 @@ class GitPlugin extends Plugin {
         }
 
         $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
+        $this->getUgroupsToNotifyDao()->deleteByUgroupId($project_id, $ugroup->getId());
 
         $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate(array($project_id));
     }
@@ -1419,9 +1420,17 @@ class GitPlugin extends Plugin {
             $this->getRegexpFineGrainedDisabler(),
             $this->getRegexpPermissionFilter(),
             new UsersToNotifyDao(),
-            new UgroupsToNotifyDao(),
+            $this->getUgroupsToNotifyDao(),
             new User_ForgeUserGroupFactory(new UserGroupDao())
         );
+    }
+
+    /**
+     * @return UgroupsToNotifyDao
+     */
+    private function getUgroupsToNotifyDao()
+    {
+        return new UgroupsToNotifyDao();
     }
 
     private function getRegexpPermissionFilter()
