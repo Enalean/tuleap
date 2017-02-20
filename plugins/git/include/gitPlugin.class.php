@@ -777,7 +777,8 @@ class GitPlugin extends Plugin {
 
         $cleaner = new NotificationsForProjectMemberCleaner(
             $this->getRepositoryFactory(),
-            new Git_PostReceiveMailManager()
+            new Git_PostReceiveMailManager(),
+            $this->getUsersToNotifyDao()
         );
         $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
 

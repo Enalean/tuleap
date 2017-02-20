@@ -35,14 +35,21 @@ class NotificationsForProjectMemberCleaner
     /**
      * @var Git_PostReceiveMailManager
      */
-    private $mail_to_be_notified_manager;
+    private $mails_to_notify_manager;
+
+    /**
+     * @var UsersToNotifyDao
+     */
+    private $users_to_notify_dao;
 
     public function __construct(
         GitRepositoryFactory $repository_factory,
-        Git_PostReceiveMailManager $mail_to_be_notified_manager
+        Git_PostReceiveMailManager $mail_to_notify_manager,
+        UsersToNotifyDao $users_to_notify_dao
     ) {
-        $this->repository_factory          = $repository_factory;
-        $this->mail_to_be_notified_manager = $mail_to_be_notified_manager;
+        $this->repository_factory      = $repository_factory;
+        $this->mails_to_notify_manager = $mail_to_notify_manager;
+        $this->users_to_notify_dao     = $users_to_notify_dao;
     }
 
     public function cleanNotificationsAfterUserRemoval(Project $project, PFUser $user)
@@ -54,7 +61,8 @@ class NotificationsForProjectMemberCleaner
         $repositories = $this->repository_factory->getAllRepositories($project);
         foreach ($repositories as $repository) {
             if (! $repository->userCanRead($user)) {
-                $this->mail_to_be_notified_manager->removeMailByRepository($repository, $user->getEmail());
+                $this->mails_to_notify_manager->removeMailByRepository($repository, $user->getEmail());
+                $this->users_to_notify_dao->delete($repository->getId(), $user->getId());
             }
         }
     }
