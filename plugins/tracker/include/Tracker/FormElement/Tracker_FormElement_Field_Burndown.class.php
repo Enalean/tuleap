@@ -813,12 +813,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return null;
         }
 
-        $changeset_value = $artifact->getValue($field);
-        if (! $changeset_value) {
-            return 0;
-        }
+        $user          = $this->getCurrentUser();
+        $artifact_list = array($artifact->getId());
 
-        return $changeset_value->getValue();
+        return $field->getComputedValue($user, $artifact, null, $artifact_list, true);
     }
 
     private function getCapacityField() {
