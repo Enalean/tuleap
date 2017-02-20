@@ -75,8 +75,8 @@ class ForListBindUgroups implements FromWhereBuilder, ListBindUgroupsFromWhereBu
      */
     private function getFromWhereForEmptyCondition($changeset_value_list_alias, $field_id, $changeset_value_alias)
     {
-        $where = "$changeset_value_alias.changeset_id IS NULL OR $changeset_value_list_alias.bindvalue_id =" .
-            $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $where = "($changeset_value_alias.changeset_id IS NULL OR $changeset_value_list_alias.bindvalue_id =" .
+            $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE).")";
 
         return $this->empty_comparison_builder->getFromWhere(
             $field_id,
