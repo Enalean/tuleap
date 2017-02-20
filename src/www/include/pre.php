@@ -147,8 +147,7 @@ if (!IS_SCRIPT) {
     );
     $csp_whitelist_script_scr  = implode(' ', $whitelist_scripts);
     $csp_whitelist_script_scr .= ' ' . ForgeConfig::get('sys_csp_script_scr_whitelist');
-    $csp_rules                .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; "
-        . "reflected-xss block;";
+    $csp_rules                .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; ";
 
     header('Content-Security-Policy: ' . $csp_rules);
 }
