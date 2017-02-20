@@ -379,6 +379,8 @@ class GitPlugin extends Plugin {
                     $this->getRepositoryFactory(),
                     $this->getLogger(),
                     $this->getGitSystemEventManager(),
+                    $this->getUgroupsToNotifyDao(),
+                    $this->getUsersToNotifyDao()
                 );
                 break;
             case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
@@ -1431,6 +1433,14 @@ class GitPlugin extends Plugin {
     private function getUgroupsToNotifyDao()
     {
         return new UgroupsToNotifyDao();
+    }
+
+    /**
+     * @return UsersToNotifyDao
+     */
+    private function getUsersToNotifyDao()
+    {
+        return new UsersToNotifyDao();
     }
 
     private function getRegexpPermissionFilter()

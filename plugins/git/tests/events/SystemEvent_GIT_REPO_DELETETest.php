@@ -44,19 +44,31 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         $this->repository_factory = mock('GitRepositoryFactory');
         stub($this->repository_factory)->getDeletedRepository($this->repository_id)->returns($this->repository);
 
-        $this->system_event_manager = mock('Git_SystemEventManager');
+        $this->system_event_manager  = mock('Git_SystemEventManager');
+        $this->ugroups_to_notify_dao = mock('Tuleap\Git\Notifications\UgroupsToNotifyDao');
+        $this->users_to_notify_dao   = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
 
         $this->event = partial_mock('SystemEvent_GIT_REPO_DELETE', array('done', 'warning', 'error', 'getId'));
         $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
         $this->event->injectDependencies(
             $this->repository_factory,
             mock('Logger'),
-            $this->system_event_manager
+            $this->system_event_manager,
+            $this->ugroups_to_notify_dao,
+            $this->users_to_notify_dao
         );
     }
 
     public function itDeletesTheRepository() {
         expect($this->repository)->delete()->once();
+
+        $this->event->process();
+    }
+
+    public function itDeletesNotifications()
+    {
+        expect($this->ugroups_to_notify_dao)->deleteByRepositoryId(69)->once();
+        expect($this->users_to_notify_dao)->deleteByRepositoryId(69)->once();
 
         $this->event->process();
     }
