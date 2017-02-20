@@ -22,6 +22,7 @@
 require_once('common/layout/Layout.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -181,6 +182,14 @@ class GitActions extends PluginActions
      * @var UsersToNotifyDao
      */
     private $users_to_notify_dao;
+    /**
+     * @var UgroupsToNotifyDao
+     */
+    private $ugroups_to_notify_dao;
+    /**
+     * @var User_ForgeUserGroupFactory
+     */
+    private $forge_user_group_factory;
 
     public function __construct(
         Git $controller,
@@ -214,7 +223,9 @@ class GitActions extends PluginActions
         RegexpFineGrainedDisabler $regexp_disabler,
         RegexpPermissionFilter $permission_filter,
         RegexpFineGrainedRetriever $regexp_retriever,
-        UsersToNotifyDao $users_to_notify_dao
+        UsersToNotifyDao $users_to_notify_dao,
+        UgroupsToNotifyDao $ugroups_to_notify_dao,
+        User_ForgeUserGroupFactory $forge_user_group_factory
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -248,6 +259,8 @@ class GitActions extends PluginActions
         $this->permission_filter             = $permission_filter;
         $this->regexp_retriever              = $regexp_retriever;
         $this->users_to_notify_dao           = $users_to_notify_dao;
+        $this->ugroups_to_notify_dao         = $ugroups_to_notify_dao;
+        $this->forge_user_group_factory      = $forge_user_group_factory;
     }
 
     protected function getText($key, $params = array()) {
@@ -852,6 +865,47 @@ class GitActions extends PluginActions
                 $feedback = sprintf(
                     dgettext('tuleap-git', 'Cannot remove user %s from notifications'),
                     $user->getUserName()
+                );
+                $controller->addError($feedback);
+                $great_success = false;
+            }
+        }
+
+        return $great_success;
+    }
+
+    public function notificationRemoveUgroup($project_id, $repository_id, array $ugroups_to_remove)
+    {
+        if (empty($project_id) || empty($ugroups_to_remove)) {
+            $this->addError('actions_params_error');
+            return false;
+        }
+        $great_success = true;
+        $controller    = $this->getController();
+        $repository    = $this->_loadRepository($project_id, $repository_id);
+
+        foreach ($ugroups_to_remove as $ugroup_id) {
+            try {
+                $ugroup = $this->forge_user_group_factory->getProjectUGroupAsForgeUGroupById($ugroup_id);
+            } catch (User_UserGroupNotFoundException $e) {
+                continue;
+            }
+
+            if ($this->ugroups_to_notify_dao->delete($repository_id, $ugroup_id)) {
+                $feedback = sprintf(
+                    dgettext('tuleap-git', 'User group "%s" has been removed from notifications'),
+                    $ugroup->getName()
+                );
+                $controller->addInfo($feedback);
+                $this->history_dao->groupAddHistory(
+                    "git_repo_update",
+                    $repository->getName() . ': '. $feedback,
+                    $repository->getProjectId()
+                );
+            } else {
+                $feedback = sprintf(
+                    dgettext('tuleap-git', 'Cannot remove user group "%s" from notifications'),
+                    $ugroup->getName()
                 );
                 $controller->addError($feedback);
                 $great_success = false;
