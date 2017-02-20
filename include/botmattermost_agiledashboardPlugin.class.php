@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
+use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
 use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -127,15 +128,16 @@ class botmattermost_agiledashboardPlugin extends Plugin
                     new AgileDashboard_Milestone_MilestoneDao()
                 ),
                 $milestone_status_counter,
-                new MarkdownFormatter(),
                 $planning_factory,
-                new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang'))
+                new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang')),
+                MarkdownTemplateRendererFactory::build()
+                    ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR.'/template')
             ),
             ProjectManager::instance(),
             $logger
         );
 
-        $stand_up_notification_sender->send(HTTPRequest::instance());
+        $stand_up_notification_sender->send($this->getRequest());
     }
 
     private function getRenderToString()

@@ -1,0 +1,42 @@
+{{#  last_plannings }}
+    {{#  milestones }}
+
+### {{ title }}
+***
+
+#### {{ artifact_title }} - _{{ artifact_start_date }} - {{ artifact_end_date }}_
+{{ quick_access_text }} : [Cardwall]({{ cardwall_url }})
+
+| {{ table_header_id }} | {{ table_header_status_open }} | {{ table_header_status_closed }} | {{ table_header_days_remaining }} |
+|:----------------------|:-------------------------------|:---------------------------------|:----------------------------------|
+| {{# milestone_infos }} {{# id }} [{{ name }}]({{ url }}) {{/ id }} | {{ open }} | {{ closed }} | {{ days_remaining }} {{/ milestone_infos }} |
+
+        {{# has_recent_update }}
+
+| {{ table_header_id }} | {{ table_header_title }} | {{ table_header_status }} | {{ table_header_last_update }} |
+|:----------------------|:-------------------------|:--------------------------|:-------------------------------|
+{{# linked_artifacts }}
+    | {{# artifact_link }} [{{ name }}]({{ url }}) {{/ artifact_link }} | {{ title }} | {{ status }} | {{ last_update }} |
+{{/ linked_artifacts }}
+
+        {{/ has_recent_update }}
+        {{^ has_recent_update }}
+
+##### {{ no_update }} {{ artifact_title }}
+
+        {{/ has_recent_update }}
+
+![Burndown]({{ burndown_url }})
+
+    {{/  milestones }}
+    {{^ milestones }}
+
+##### {{ no_current_milestones }}
+
+    {{/ milestones }}
+{{/ last_plannings }}
+{{^ last_plannings }}
+
+##### {{ no_current_plannings }} {{ project_name }}
+
+{{/ last_plannings }}
