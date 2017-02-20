@@ -68,4 +68,15 @@ class UgroupsToNotifyDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function deleteByRepositoryId($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "DELETE
+                FROM plugin_git_post_receive_notification_ugroup
+                WHERE repository_id = $repository_id";
+
+        return $this->update($sql);
+    }
 }
