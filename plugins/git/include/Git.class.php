@@ -1106,6 +1106,8 @@ class Git extends PluginController {
                         }
                     } catch (Git_Driver_Gerrit_Exception $e) {
                         $this->addError($this->getText('gerrit_server_down').' '.$e->getMessage());
+                    } catch (Git_RemoteServer_NotFoundException $e) {
+                        $this->addError($this->getText('gerrit_servers_id_does_not_exist').' '.$e->getMessage());
                     }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repository->getId(), $pane));
                 }
