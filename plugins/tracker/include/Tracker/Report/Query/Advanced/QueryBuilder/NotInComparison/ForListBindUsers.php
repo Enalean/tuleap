@@ -21,31 +21,33 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison;
 
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
 
-class ForListBindUsers implements FromWhereBuilder, ValueWrapperVisitor, ListBindUsersFromWhereBuilder
+class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilder
 {
     /** @var  FromWhereNotEqualComparisonListFieldBuilder */
     private $from_where_builder;
+    /**
+     * @var CollectionOfListValuesExtractor
+     */
+    private $values_extractor;
 
-    public function __construct(FromWhereNotEqualComparisonListFieldBuilder $from_where_builder)
-    {
+    public function __construct(
+        CollectionOfListValuesExtractor $values_extractor,
+        FromWhereNotEqualComparisonListFieldBuilder $from_where_builder
+    ) {
+        $this->values_extractor   = $values_extractor;
         $this->from_where_builder = $from_where_builder;
     }
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix     = spl_object_hash($comparison);
-        $values     = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        $values     = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $field_id   = (int)$field->getId();
         $tracker_id = (int)$field->getTrackerId();
 
@@ -74,28 +76,5 @@ class ForListBindUsers implements FromWhereBuilder, ValueWrapperVisitor, ListBin
     private function quoteSmartImplode($values)
     {
         return CodendiDataAccess::instance()->quoteSmartImplode(',', $values);
-    }
-
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-    }
-
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)
-    {
-        $values = array();
-        foreach ($collection_of_value_wrappers->getValueWrappers() as $value_wrapper) {
-            $values[] = $value_wrapper->accept($this, $parameters);
-        }
-
-        return $values;
     }
 }

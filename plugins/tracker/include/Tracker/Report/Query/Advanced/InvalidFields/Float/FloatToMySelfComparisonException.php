@@ -17,17 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Float;
 
-interface ValueWrapperVisitor
+use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+
+class FloatToMySelfComparisonException extends InvalidFieldException
 {
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
-
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters);
-
-    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    public function __construct(Tracker_FormElement_Field $field)
+    {
+        $message = sprintf(
+            dgettext("tuleap-tracker", "The float field '%s' cannot be compared to MYSELF()."),
+            $field->getName()
+        );
+        parent::__construct($message);
+    }
 }

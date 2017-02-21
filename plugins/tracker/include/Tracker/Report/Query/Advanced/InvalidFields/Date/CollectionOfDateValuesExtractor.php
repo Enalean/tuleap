@@ -22,11 +22,13 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 
 class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 {
@@ -43,7 +45,11 @@ class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
     /** @return array */
     public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
     {
-        return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
+        try {
+            return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
+        } catch (MySelfIsNotSupportedException $exception) {
+            throw new DateToMySelfComparisonException($field);
+        }
     }
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
@@ -69,5 +75,12 @@ class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)
     {
+    }
+
+    public function visitCurrentUserValueWrapper(
+        CurrentUserValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new MySelfIsNotSupportedException();
     }
 }

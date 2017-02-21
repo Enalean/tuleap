@@ -20,10 +20,11 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedForAnonymousException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
 class ListFieldChecker implements InvalidFieldChecker
@@ -62,13 +63,8 @@ class ListFieldChecker implements InvalidFieldChecker
         Comparison $comparison,
         Tracker_FormElement_Field $field
     ) {
-        try {
-            $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
-        } catch (NowIsNotSupportedException $exception) {
-            throw new ListToNowComparisonException($field);
-        }
-
-        $normalized_labels  = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);
+        $values            = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        $normalized_labels = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);
 
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {

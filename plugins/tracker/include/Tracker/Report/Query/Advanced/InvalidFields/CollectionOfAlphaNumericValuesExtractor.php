@@ -22,12 +22,12 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
 class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisitor
 {
@@ -64,5 +64,12 @@ class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisitor
         }
 
         return $values;
+    }
+
+    public function visitCurrentUserValueWrapper(
+        CurrentUserValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new MySelfIsNotSupportedException();
     }
 }

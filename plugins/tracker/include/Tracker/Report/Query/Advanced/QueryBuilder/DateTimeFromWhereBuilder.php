@@ -26,10 +26,12 @@ use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 
 class DateTimeFromWhereBuilder implements FromWhereBuilder, ValueWrapperVisitor
 {
@@ -106,5 +108,12 @@ class DateTimeFromWhereBuilder implements FromWhereBuilder, ValueWrapperVisitor
 
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)
     {
+    }
+
+    public function visitCurrentUserValueWrapper(
+        CurrentUserValueWrapper $value_wrapper,
+        ValueWrapperParameters $parameters
+    ) {
+        throw new MySelfIsNotSupportedException();
     }
 }

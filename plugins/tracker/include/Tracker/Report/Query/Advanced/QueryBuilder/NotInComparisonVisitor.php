@@ -47,6 +47,7 @@ use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\TrackerFormElementFieldListBindVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 
 class NotInComparisonVisitor implements
@@ -127,9 +128,11 @@ class NotInComparisonVisitor implements
     private function visitList(Tracker_FormElement_Field_List $field)
     {
         $static_bind_builder = new NotInComparison\ForListBindStatic(
+            new CollectionOfListValuesExtractor(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
         $users_bind_builder = new NotInComparison\ForListBindUsers(
+            new CollectionOfListValuesExtractor(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
         $ugroups_bind_builder = new NotInComparison\ForListBindUgroups(

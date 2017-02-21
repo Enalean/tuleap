@@ -114,13 +114,13 @@ InComparison
     }
 
 InComparisonValuesList
-    = first_value_wrapper:String value_wrappers:(InComparisonValue *) {
+    = first_value_wrapper:ListValue value_wrappers:(InComparisonValue *) {
         array_unshift($value_wrappers, $first_value_wrapper);
         return $value_wrappers;
     }
 
 InComparisonValue
-    = _ "," _ value_wrapper:String { return $value_wrapper; }
+    = _ "," _ value_wrapper:ListValue { return $value_wrapper; }
 
 Field
     = name:$[a-zA-Z0-9_]+ { return $name; }
@@ -129,7 +129,10 @@ SimpleExpr
     = l:Literal { return $l; }
 
 Literal
-    = String / Float / Integer / CurrentDateTime
+    = String / Float / Integer / CurrentDateTime / CurrentUser
+
+ListValue
+    = String / CurrentUser
 
 String
      = String1
@@ -176,6 +179,11 @@ Float
 CurrentDateTime
     = "now"i _ "(" _ ")" _ period:PeriodCurrentDateTime? {
         return new CurrentDateTimeValueWrapper($period["sign"], $period["duration"]);
+    }
+
+CurrentUser
+    = "myself"i _ "(" _ ")" {
+        return new CurrentUserValueWrapper();
     }
 
 PeriodCurrentDateTime
