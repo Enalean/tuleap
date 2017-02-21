@@ -6,6 +6,9 @@ msgstr ""
 msgid "Cannot remove user group \"%s\" from notifications"
 msgstr ""
 
+msgid "No notifications set"
+msgstr ""
+
 msgid "Notified people"
 msgstr ""
 

@@ -11,15 +11,15 @@
 
     <h3>{{ notified_mails_title }}</h3>
 
-    {{# has_notifications }}
-        <table id="git-notification-mail-list" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th><i class="icon-trash"></i></th>
-                    <th class="git-notification-mail-list-people">{{ notified_people }}</th>
-                </tr>
-            </thead>
-            <tbody>
+    <table id="git-notification-mail-list" class="table table-bordered">
+        <thead>
+            <tr>
+                <th><i class="icon-trash"></i></th>
+                <th class="git-notification-mail-list-people">{{ notified_people }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{# has_notifications }}
             {{# groups_to_be_notified }}
                 <tr>
                     <td>
@@ -54,9 +54,17 @@
                     <td>{{ mail }}</td>
                 </tr>
             {{/ list_of_mails }}
-            </tbody>
-        </table>
-    {{/ has_notifications }}
+        {{/ has_notifications }}
+
+        {{^ has_notifications }}
+            <tr class="empty-table">
+                <td colspan="2">
+                     {{ empty_notification }}
+                </td>
+            </tr>
+        {{/ has_notifications }}
+        </tbody>
+    </table>
 
     <label for="add_mail">{{ add_mail_title }}</label>
     <textarea id="add_mail" name="add_mail" class="text"></textarea>
