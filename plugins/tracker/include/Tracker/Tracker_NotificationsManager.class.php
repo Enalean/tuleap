@@ -119,15 +119,25 @@ class Tracker_NotificationsManager {
             echo '<th class="plugin-tracker-global-notifs-permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','check_perms') .'</th>';
             echo '</tr></thead>';
             echo '<tbody>';
-            foreach($notifs as $key => $nop) {
-                $id                = (int)$nop->getId();
-                $addresses         = $nop->getAddresses();
-                $all_updates       = $nop->isAllUpdates();
-                $check_permissions = $nop->isCheckPermissions();
-                echo '<tr>';
-                echo $this->getGlobalNotificationForm( $id, $addresses, $all_updates, $check_permissions );
+
+            if (count($notifs) === 0) {
+                echo '<tr class="empty-table">';
+                echo '<td colspan="4">';
+                echo dgettext("tuleap-tracker", "No notification set");
+                echo '</td>';
                 echo '</tr>';
+            } else {
+                foreach($notifs as $key => $nop) {
+                    $id                = (int)$nop->getId();
+                    $addresses         = $nop->getAddresses();
+                    $all_updates       = $nop->isAllUpdates();
+                    $check_permissions = $nop->isCheckPermissions();
+                    echo '<tr>';
+                    echo $this->getGlobalNotificationForm( $id, $addresses, $all_updates, $check_permissions );
+                    echo '</tr>';
+                }
             }
+
             echo '</tbody>';
             echo '</table>';
             echo '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_global" id="add_global">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','add') .'</a></p>';

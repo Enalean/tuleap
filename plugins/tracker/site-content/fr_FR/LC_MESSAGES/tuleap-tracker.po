@@ -18,6 +18,9 @@ msgstr "Configurer les trackers"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+msgid "No notification set"
+msgstr "Aucune notification n'a été définie"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
