@@ -1,6 +1,9 @@
 msgid "Configure trackers"
 msgstr ""
 
+msgid "Enter here a comma separated email addresses list to be notified"
+msgstr ""
+
 msgid "Error during parsing expert query"
 msgstr ""
 

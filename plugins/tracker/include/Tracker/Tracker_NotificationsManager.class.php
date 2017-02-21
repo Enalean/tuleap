@@ -41,10 +41,11 @@ class Tracker_NotificationsManager {
 
         if ($global_notification_data = $request->get('global_notification')) {
             if (!empty($global_notification_data)) {
-                $this->processGlobalNotificationData($global_notification_data);
+                $this->processGlobalNotificationDataForUpdate($global_notification_data);
             }
         }
 
+        $this->createNewGlobalNotification($request);
         $this->deleteGlobalNotification($request);
 
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
@@ -57,6 +58,21 @@ class Tracker_NotificationsManager {
         $reminderRenderer->displayFooter($tracker_manager);
     }
 
+    private function createNewGlobalNotification(Codendi_Request $request)
+    {
+        if ($request->exist('new_global_notification')) {
+            $global_notification_data = $request->get('new_global_notification');
+
+            if ($global_notification_data['addresses'] !== '') {
+                $this->addGlobalNotification(
+                    $global_notification_data['addresses'],
+                    $global_notification_data['all_updates'],
+                    $global_notification_data['check_permissions']
+                );
+            }
+        }
+    }
+
     private function deleteGlobalNotification(Codendi_Request $request)
     {
         if ($request->exist('remove_global')) {
@@ -67,24 +83,18 @@ class Tracker_NotificationsManager {
     }
 
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');
         echo '<fieldset><form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
 
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotifications_Global($request);
-        //TODO
-        //$this->displayAdminNotifications_Personnal($current_user);
 
         echo'
-        <HR>
-        <P align="center"><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'">
+        <input class="btn btn-primary" type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>
         </FORM></fieldset>';
     }
 
     protected function displayAdminNotifications_Toggle() {
-        $hp = Codendi_HTMLPurifier::instance();
-
         if ($this->tracker->userIsAdmin()) {
             echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notification').' '.
             help_button('tracker.html#e-mail-notification').'</h3>';
@@ -102,7 +112,6 @@ class Tracker_NotificationsManager {
     }
 
     protected function displayAdminNotifications_Global(HTTPRequest $request) {
-        $hp = Codendi_HTMLPurifier::instance();
         echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','global_mail_notif').' '.
         help_button('tracker.html#e-mail-notification').'</h3>';
 
@@ -120,7 +129,9 @@ class Tracker_NotificationsManager {
             echo '</tr></thead>';
             echo '<tbody>';
 
-            if (count($notifs) === 0) {
+            $has_notification = (bool)(count($notifs) > 0);
+
+            if (! $has_notification) {
                 echo '<tr class="empty-table">';
                 echo '<td colspan="4">';
                 echo dgettext("tuleap-tracker", "No notification set");
@@ -133,35 +144,17 @@ class Tracker_NotificationsManager {
                     $all_updates       = $nop->isAllUpdates();
                     $check_permissions = $nop->isCheckPermissions();
                     echo '<tr>';
-                    echo $this->getGlobalNotificationForm( $id, $addresses, $all_updates, $check_permissions );
+                    echo $this->getGlobalNotificationForm($id, $addresses, $all_updates, $check_permissions);
                     echo '</tr>';
                 }
             }
 
+            echo '<tr>';
+            echo $this->getNewNotificationForm($has_notification);
+            echo '</tr>';
+
             echo '</tbody>';
             echo '</table>';
-            echo '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_global" id="add_global">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','add') .'</a></p>';
-            echo '<script type="text/javascript">'."
-            document.observe('dom:loaded', function() {
-                $('add_global').observe('click', function (evt) {
-                    var self = arguments.callee;
-                    if (!self.counter) {
-                        self.counter = $id;
-                    }
-                    self.counter++;
-                    var number = self.counter;
-                    
-                    var line = new Element('tr');
-                    line.insert('".$this->getGlobalNotificationForm($id="'+number+'", $addresses='', $all_updates=1, $check_permissions=0)."');
-                    
-                    var tbody = document.querySelector('#global_notifs > tbody');
-                    Element.insert(tbody, line);
-                    
-                    Event.stop(evt);
-                    return false;
-                });
-            });
-            </script>";
         } else {
             $ok = false;
             if ( $nb_notifs ) {
@@ -185,6 +178,35 @@ class Tracker_NotificationsManager {
         }
     }
 
+    private function getNewNotificationForm($has_notification)
+    {
+        $output                   = '';
+        $no_notificatoion_class   = '';
+        if (! $has_notification) {
+            $no_notificatoion_class = 'class="tracker-notification-mail-list-add-in-empty-table"';
+        }
+
+        $output .= '<td/>';
+
+        $placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
+
+        $output .= "<td $no_notificatoion_class>";
+        $output .= '<input class="tracker-global-notification-email" type="text" name="new_global_notification[addresses]" placeholder="'.$placeholder.'")/>';
+        $output .= '</td>';
+
+        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
+        $output .= '<input type="hidden" name="new_global_notification[all_updates]" value="0" />';
+        $output .= '<input type="checkbox" name="new_global_notification[all_updates]" value="1"/>';
+        $output .= '</td>';
+
+        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
+        $output .= '<input type="hidden" name="new_global_notification[check_permissions]" value="0" />';
+        $output .= '<input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>';
+        $output .= '</td>';
+
+        return $output;
+    }
+
     protected function getGlobalNotificationForm($id, $addresses, $all_updates, $check_permissions)
     {
         $output  = '';
@@ -193,7 +215,7 @@ class Tracker_NotificationsManager {
         $output .= '</td>';
         //addresses
         $output .= '<td>';
-        $output .= '<input type="text" name="global_notification['.$id.'][addresses]" value="'. Codendi_HTMLPurifier::instance()->purify($addresses, CODENDI_PURIFIER_CONVERT_HTML)  .'" size="55" />';
+        $output .= '<input type="text" class="tracker-global-notification-email" name="global_notification['.$id.'][addresses]" value="'. Codendi_HTMLPurifier::instance()->purify($addresses, CODENDI_PURIFIER_CONVERT_HTML)  .'"/>';
         $output .= '</td>';
         //all_updates
         $output .= '<td class="tracker-global-notifications-checkbox-cell">';
@@ -209,131 +231,30 @@ class Tracker_NotificationsManager {
         return $output;
     }
 
-    protected function displayAdminNotifications_Personnal($current_user) {
-        $user_id = $current_user->getId();
-        $hp = Codendi_HTMLPurifier::instance();
-
-        // Build Wachees UI
-        $arr_watchees = array();
-        foreach($this->getWatcherDao()->searchWatchees($this->tracker->id, $current_user->getId()) as $row) {
-            $arr_watchees[] = user_getname($row['watchee_id']);
-        }
-        $watchees = join(',',$arr_watchees);
-
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','perso_mail_notif').'</h3>';
-
-        if ($this->tracker->userIsAdmin()) {
-            // To watch other users you must have at least admin rights on the tracker
-            echo'
-            <h4>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','users_to_watch').' '.
-            help_button('tracker.html#email-notification-settings').'</h4>
-            <P>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','backup_person').'
-            <p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'. $hp->purify($watchees, CODENDI_PURIFIER_CONVERT_HTML) .'" SIZE="55" MAXLENGTH="255"><br></p>
-            ';
-
-            $watchers="";
-            foreach($this->getWatcherDao()->searchWatchers($this->tracker->id, $current_user->getId()) as $row) {
-                $watcher_name = user_getname($row_watcher['user_id']);
-                $watchers .= '<a href="/users/'.urlencode($watcher_name).'">'. $hp->purify($watcher_name, CODENDI_PURIFIER_CONVERT_HTML) .'</a>,';
-            }
-            $watchers = substr($watchers,0,-1); // remove extra comma at the end
-
-            if ($watchers) {
-                echo "<p>".$GLOBALS['Language']->getText('plugin_tracker_include_type','watchers', $hp->purify($watchers, CODENDI_PURIFIER_CONVERT_HTML) );
-            } else {
-                echo "<p>".$GLOBALS['Language']->getText('plugin_tracker_include_type','no_watcher');
-            }
-            echo '<br><br>';
-        }
-
-        // Build Role/Event table
-        $dar_roles = $this->getNotificationDao()->searchRoles($this->tracker->id);
-        $num_roles  = $dar_roles->rowCount();
-        $dar_events = $this->getNotificationDao()->searchEvents($this->tracker->id);
-        $num_events  = $dar_events->rowCount();
-
-        $arr_notif = array();
-        // By default it's all 'yes'
-        foreach($dar_roles as $role) {
-            foreach($dar_events as $event) {
-                $arr_notif[$role['role_label']][$event['event_label']] = 1;
-            }
-        }
-
-        foreach($this->getNotificationDao()
-                     ->searchNotification($this->tracker->id, $current_user->getId()) as $arr) {
-            $arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
-        }
-
-        // Rk: Can't use html_build_list_table_top because of the specific layout
-        echo '<h4>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','event_settings').' '.
-        help_button('tracker.html#email-notification-settings').'</h4>
-                      <P>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','tune_settings');
-
-        echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">
-        <tr class="boxtitle">
-            <td colspan="'.(int)$num_roles.'" align="center" width="50%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','role_is').'</b></td>
-            <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;'.$GLOBALS['Language']->getText('plugin_tracker_include_type','notify_me').'</b></td>
-        </tr>';
-
-        $dar_roles->rewind();
-        foreach($dar_roles as $role) {
-            echo '<td align="center" width="10%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_common_types',$role['short_description_msg'])."</b></td>\n";
-        }
-        echo "</tr>\n";
-
-        $dar_events->rewind();
-        $dar_roles->rewind();
-        $i = 0;
-        foreach($dar_events as $event) {
-            $event_label = $event['event_label'];
-            echo "<tr class=\"".util_get_alt_row_color($i++)."\">\n";
-            foreach($dar_roles as $role) {
-                $role_label = $role['role_label'];
-                $cbox_name = 'cb_'.$role['role_id'].'_'.$event['event_id'];
-
-                if ( (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
-                    (($event_label == 'ROLE_CHANGE') && ($role_label != 'ASSIGNEE') && ($role_label != 'CC')) ) {
-                    // if the user is not a member then the ASSIGNEE column cannot
-                    // be set. If it's not an assignee or a submitter the new_artifact event is meaningless
-                    echo '   <td align="center"><input type="hidden" name="'.$cbox_name.'" value="1">-</td>'."\n";
-                } else {
-                    echo '   <td align="center"><input type="checkbox" name="'.$cbox_name.'" value="1" '.
-                    ($arr_notif[$role_label][$event_label] ? 'checked':'')."></td>\n";
-                }
-            }
-            echo '   <td>&nbsp;&nbsp;&nbsp;'.$GLOBALS['Language']->getText('plugin_tracker_common_types',$event['description_msg'])."</td>\n";
-            echo "</tr>\n";
-        }
-
-        echo'
-        </table>';
-    }
-
     /**
      * this function process global notification data
      * @param Array<Array> $data
      */
-    protected function processGlobalNotificationData($data) {
+    private function processGlobalNotificationDataForUpdate($data)
+    {
         $global_notifications = $this->getGlobalNotifications();
         foreach ( $data as $id=>$fields ) {
             if ( empty($fields['addresses']) ) {
                 continue;
             }
+
             if ( !isset($fields['all_updates']) ) {
                 continue;
             }
+
             if ( !isset($fields['check_permissions']) ) {
                 continue;
             }
+
             if ( array_key_exists($id, $global_notifications) ) {
                 $this->updateGlobalNotification($id, $fields);
-            } else {
-                $this->addGlobalNotification($fields['addresses'], $fields['all_updates'], $fields['check_permissions']);
             }
         }
-
     }
 
     public function getGlobalNotifications() {
@@ -413,4 +334,3 @@ class Tracker_NotificationsManager {
         return false;
     }
 }
-?>

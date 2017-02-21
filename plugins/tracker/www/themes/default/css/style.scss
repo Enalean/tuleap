@@ -3456,7 +3456,7 @@ select[name='add_notempty_condition[]'] {
 }
 
 #global_notifs {
-    max-width: 960px;
+    max-width: 1200px;
     margin-bottom: 15px;
 
     & > thead > tr {
@@ -3479,6 +3479,16 @@ select[name='add_notempty_condition[]'] {
         color: #AAAAAA;
         text-align: center;
     }
+}
+
+.table-bordered > tbody > tr > td.tracker-notification-mail-list-add-in-empty-table {
+    border-left: none;
+}
+
+input.tracker-global-notification-email {
+    width: 100%;
+    box-sizing: border-box;
+    height: 30px;
 }
 
 td.tracker-global-notifications-checkbox-cell {
