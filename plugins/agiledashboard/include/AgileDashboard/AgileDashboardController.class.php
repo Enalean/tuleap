@@ -144,25 +144,24 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $scrum_activated,
             $this->config_manager->getScrumTitle($group_id),
             $this->getAdditionalPanesAdmin(),
-            $this->isScrumMonoMilestoneAvailable($user, $group_id),
-            $this->isScrumMonoMilestoneEnable($group_id)
+            $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
+            $this->isScrumMonoMilestoneEnable($group_id),
+            $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning)
         );
+    }
+
+    private function doesConfigurationAllowsPlanningCreation(PFUser $user, $project_id, $can_create_planning)
+    {
+        if ($this->isScrumMonoMilestoneEnable($project_id) === false) {
+            return $can_create_planning;
+        }
+
+        return $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($user, $project_id);
     }
 
     private function isScrumMonoMilestoneEnable($project_id)
     {
-        return $this->scrum_mono_milestone_checker->isMonoMilestoneActivated($project_id);
-    }
-
-    private function isScrumMonoMilestoneAvailable(PFUser $user, $project_id)
-    {
-        return $this->isScrumMonoMilestoneEnable($project_id) === true ||
-            ($user->useLabFeatures() == true && $this->isMoreThanOnePlanningDefined($user) === false);
-    }
-
-    private function isMoreThanOnePlanningDefined(PFUser $user)
-    {
-        return count($this->planning_factory->getPlannings($user, $this->group_id)) > 1;
+        return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project_id);
     }
 
     private function getAdminKanbanPresenter(PFUser $user, $project_id)
@@ -291,7 +290,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
                 new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
-                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao)
+                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory)
             );
         }
 

@@ -20,19 +20,28 @@
 
 namespace Tuleap\AgileDashboard;
 
+use PFUser;
+use PlanningFactory;
+
 class ScrumForMonoMilestoneChecker
 {
+    const NUMBER_MAXIMUM_OF_PLANNING = 1;
     /**
      * @var ScrumForMonoMilestoneDao
      */
     private $scrum_mono_milestaone_dao;
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
 
-    public function __construct(ScrumForMonoMilestoneDao $scrum_mono_milestaone_dao)
+    public function __construct(ScrumForMonoMilestoneDao $scrum_mono_milestaone_dao, PlanningFactory $planning_factory)
     {
         $this->scrum_mono_milestaone_dao = $scrum_mono_milestaone_dao;
+        $this->planning_factory          = $planning_factory;
     }
 
-    public function isMonoMilestoneActivated($project_id)
+    public function isMonoMilestoneEnabled($project_id)
     {
         $row = $this->scrum_mono_milestaone_dao->isMonoMilestoneActivatedForProject($project_id);
         if (! $row) {
@@ -40,5 +49,29 @@ class ScrumForMonoMilestoneChecker
         }
 
         return true;
+    }
+
+    public function doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(PFUser $user, $project_id)
+    {
+        if ($this->isMonoMilestoneEnabled($project_id) === false) {
+            return true;
+        }
+
+        return $this->isMonoMilestoneEnabled($project_id) === true
+            && $this->isOneOrLessPlanningDefined($user, $project_id, self::NUMBER_MAXIMUM_OF_PLANNING) === true;
+    }
+
+    public function isOneOrLessPlanningDefined(PFUser $user, $project_id, $maximum_planning_allowed_by_configuration)
+    {
+        return count($this->planning_factory->getPlannings($user, $project_id)) < $maximum_planning_allowed_by_configuration;
+    }
+
+    public function isScrumMonoMilestoneAvailable(PFUser $user, $project_id)
+    {
+        return $this->isMonoMilestoneEnabled($project_id) === true ||
+            (
+                $user->useLabFeatures() == true
+                && $this->isOneOrLessPlanningDefined($user, $project_id, self::NUMBER_MAXIMUM_OF_PLANNING + 1) === true
+            );
     }
 }

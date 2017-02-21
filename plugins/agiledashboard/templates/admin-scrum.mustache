@@ -123,22 +123,32 @@
                         </tbody>
                     </table>
                     {{/ has_plannings }}
-                    {{# can_create_planning }}
+                    {{# does_configuration_allows_planning_creation }}
                         <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=new" id="planning_create">
                             <i class="icon-plus"></i> {{ create_planning }}
                         </a>
-                    {{/ can_create_planning }}
-                    {{^ can_create_planning }}
-                        <div class="alert alert-info">
-                           <i class="icon-info-sign"></i> {{ cannot_create_planning }}
-                           <ul>
-                               <li>{{ cannot_create_planning_no_trackers }}</li>
-                               <li>{{ cannot_create_planning_hierarchy }}</li>
-                           </ul>
-                           {{{ cannot_create_planning_config }}}
-                        </div>
-                    {{/ can_create_planning }}
-                </div>
+                    {{/ does_configuration_allows_planning_creation }}
+
+                    {{^ use_mono_milestone }}
+                        {{^ can_create_planning }}
+                            <div class="alert alert-info">
+                                <i class="icon-info-sign"></i> {{ cannot_create_planning }}
+                                <ul>
+                                    <li>{{ cannot_create_planning_no_trackers }}</li>
+                                    <li>{{ cannot_create_planning_hierarchy }}</li>
+                                </ul>
+                                {{{ cannot_create_planning_config }}}
+                            </div>
+                        {{/ can_create_planning }}
+                    {{/ use_mono_milestone }}
+                    {{# use_mono_milestone }}
+                        {{^ does_configuration_allows_planning_creation }}
+                            <div class="alert alert-info">
+                                <i class="icon-info-sign"></i> {{ cannot_create_planning_in_scrum_v2 }}
+                            </div>
+                        {{/ does_configuration_allows_planning_creation }}
+                    {{/ use_mono_milestone }}
+        </div>
             </section>
         </div>
 
