@@ -3474,8 +3474,15 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
+td.tracker-global-notifications-checkbox-cell {
+    text-align: center;
+}
+
 .plugin-tracker-global-notifs-permissions,
-.plugin-tracker-global-notifs-updates,
+.plugin-tracker-global-notifs-updates {
+    white-space: nowrap;
+}
+
 .plugin-tracker-global-notifs-people {
-    width: 33%;
+    width: 100%;
 }

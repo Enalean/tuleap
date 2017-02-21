@@ -175,14 +175,12 @@ class Tracker_NotificationsManager {
         $output .= '<input type="text" name="global_notification['.$id.'][addresses]" value="'. Codendi_HTMLPurifier::instance()->purify($addresses, CODENDI_PURIFIER_CONVERT_HTML)  .'" size="55" />';
         $output .= '</td>';
         //all_updates
-        $output .= '<td>';
-        $output .= $GLOBALS['Language']->getText('plugin_tracker_include_type','send_all') .' ';
+        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
         $output .= '<input type="hidden" name="global_notification['.$id.'][all_updates]" value="0" />';
         $output .= '<input type="checkbox" name="global_notification['.$id.'][all_updates]" value="1" '.($all_updates ? 'checked="checked"' : '').'/>';
         $output .= '</td>';
         //check_permissions
-        $output .= '<td>';
-        $output .= $GLOBALS['Language']->getText('plugin_tracker_include_type','check_perms') .' ';
+        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
         $output .= '<input type="hidden" name="global_notification['.$id.'][check_permissions]" value="0" />';
         $output .= '<input type="checkbox" name="global_notification['.$id.'][check_permissions]" value="1" '.( $check_permissions ? 'checked="checked"' : '').'/>';
         $output .= '</td>';
