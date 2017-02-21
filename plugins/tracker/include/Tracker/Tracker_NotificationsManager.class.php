@@ -28,31 +28,42 @@ class Tracker_NotificationsManager {
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
-        if ($request->get('submit')) {
-            if ($request->exist('stop_notification')) {
-                if ($this->tracker->stop_notification != $request->get('stop_notification')) {
-                    $this->tracker->stop_notification = $request->get('stop_notification') ? 1 : 0;
-                    $dao = new TrackerDao();
-                    if ($dao->save($this->tracker)) {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification','successfully_updated'));
-                    }
+    public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user) {
+        if ($request->exist('stop_notification')) {
+            if ($this->tracker->stop_notification != $request->get('stop_notification')) {
+                $this->tracker->stop_notification = $request->get('stop_notification') ? 1 : 0;
+                $dao                              = new TrackerDao();
+                if ($dao->save($this->tracker)) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification', 'successfully_updated'));
                 }
             }
-            if ( $global_notification_data = $request->get('global_notification') ) {
-                if ( !empty($global_notification_data) )  {
-                    $this->processGlobalNotificationData($global_notification_data);
-                }
-            }
-        } else if ($request->get('action') == 'remove_global' ) {
-            $this->removeGlobalNotification( $request->get('global_notification_id') );
         }
+
+        if ($global_notification_data = $request->get('global_notification')) {
+            if (!empty($global_notification_data)) {
+                $this->processGlobalNotificationData($global_notification_data);
+            }
+        }
+
+        $this->deleteGlobalNotification($request);
+
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
         $reminderRenderer = new Tracker_DateReminderRenderer($this->tracker);
+
         if ($this->tracker->userIsAdmin($current_user)) {
             $reminderRenderer->displayDateReminders($request);
         }
+
         $reminderRenderer->displayFooter($tracker_manager);
+    }
+
+    private function deleteGlobalNotification(Codendi_Request $request)
+    {
+        if ($request->exist('remove_global')) {
+            foreach ($request->get('remove_global') as $notification_id => $value) {
+                $this->removeGlobalNotification($notification_id);
+            }
+        }
     }
 
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
@@ -168,7 +179,7 @@ class Tracker_NotificationsManager {
     {
         $output  = '';
         $output .= '<td>';
-        $output .= '<a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=remove_global&amp;global_notification_id='.$id.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a>';
+        $output .= '<input type="checkbox" name="remove_global['.$id.']" />';
         $output .= '</td>';
         //addresses
         $output .= '<td>';
@@ -334,10 +345,12 @@ class Tracker_NotificationsManager {
         return $this->getGlobalDao()->create($this->tracker->id, $addresses, $all_updates, $check_permissions);
     }
 
-    protected function removeGlobalNotification($id) {
-        $dao = $this->getGlobalDao();
+    protected function removeGlobalNotification($id)
+    {
+        $dao   = $this->getGlobalDao();
         $notif = $dao->searchById($id);
-        if ( !empty($notif) ) {
+
+        if (! empty($notif)) {
             $dao->delete($id, $this->tracker->id);
         }
     }
