@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Notifications;
 
 use Project;
+use ForgeAccess;
 
 class UgroupToNotifyUpdater
 {
@@ -43,6 +44,17 @@ class UgroupToNotifyUpdater
 
         if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->dao->disableAuthenticated($project->getID());
+        }
+    }
+
+    public function updateSiteAccess($old_value)
+    {
+        if ($old_value == ForgeAccess::ANONYMOUS) {
+            $this->dao->updateAllAnonymousAccessToRegistered();
+        }
+
+        if ($old_value == ForgeAccess::RESTRICTED) {
+            $this->dao->updateAllAuthenticatedAccessToRegistered();
         }
     }
 }

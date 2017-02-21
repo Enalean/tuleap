@@ -136,4 +136,23 @@ class UgroupsToNotifyDao extends DataAccessObject
 
         return $this->commit($sql);
     }
+
+    public function updateAllAnonymousAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+    }
+
+    private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
+    {
+        $sql = "UPDATE plugin_git_post_receive_notification_ugroup
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id";
+
+        return $this->update($sql);
+    }
 }
