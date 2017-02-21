@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Gitolite\SSHKey\MassDumper;
+
 class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent {
     const NAME = 'GIT_DUMP_ALL_SSH_KEYS';
 
     /** @var Logger */
     private $logger;
 
-    /** @var Git_Gitolite_SSHKeyMassDumper */
+    /** @var MassDumper */
     private $mass_dumper;
 
     public function injectDependencies(
-        Git_Gitolite_SSHKeyMassDumper $mass_dumper,
+        MassDumper $mass_dumper,
         Logger $logger
     ) {
         $this->mass_dumper      = $mass_dumper;

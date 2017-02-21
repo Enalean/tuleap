@@ -55,6 +55,12 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllServersWithSSHKey()
+    {
+        $sql = 'SELECT * FROM plugin_git_remote_servers WHERE ssh_key IS NOT NULL OR ssh_key != ""';
+        return $this->retrieve($sql);
+    }
+
     public function searchAvailableServersForProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);

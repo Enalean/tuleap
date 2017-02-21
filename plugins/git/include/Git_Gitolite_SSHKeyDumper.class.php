@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Git\Gitolite\SSHKey\Dumper;
+
 require_once 'common/user/IHaveAnSSHKey.php';
 
-class Git_Gitolite_SSHKeyDumper {
+class Git_Gitolite_SSHKeyDumper implements Dumper
+{
     const KEYDIR       = 'keydir';
     const FIRST_KEY_ID = 0;
 

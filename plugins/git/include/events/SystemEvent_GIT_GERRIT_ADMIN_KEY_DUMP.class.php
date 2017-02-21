@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2014, 2016. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,15 +22,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Gitolite\SSHKey\Dumper;
+
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
     const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
 
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
-    /** @var Git_Gitolite_SSHKeyDumper */
+    /** @var Dumper */
     private $ssh_key_dumper;
 
-    public function injectDependencies(Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Git_Gitolite_SSHKeyDumper $ssh_key_dumper) {
+    public function injectDependencies(Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Dumper $ssh_key_dumper)
+    {
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->ssh_key_dumper        = $ssh_key_dumper;
     }

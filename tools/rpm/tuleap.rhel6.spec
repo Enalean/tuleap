@@ -621,6 +621,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/gitolite3-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
+%{__install} plugins/git/etc/sudoers.d/gitolite3-replace-authorized-keys $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 
 #codendiadm > gitolite sudo
 %{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
@@ -1109,6 +1110,7 @@ fi
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)
