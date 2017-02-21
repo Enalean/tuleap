@@ -2071,12 +2071,13 @@ class GitPlugin extends Plugin {
      * @see Event::PROJECT_ACCESS_CHANGE
      * @param type $params
      */
-    public function project_access_change($params) {
+    public function project_access_change($params)
+    {
         $project = ProjectManager::instance()->getProject($params['project_id']);
 
         $this->getGitPermissionsManager()->updateProjectAccess($project, $params['old_access'], $params['access']);
 
-        $updater = new UgroupToNotifyUpdater($this->getUgroupsToNotifyDao());
+        $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateProjectAccess($project, $params['old_access'], $params['access']);
     }
 
@@ -2084,8 +2085,20 @@ class GitPlugin extends Plugin {
      * @see Event::SITE_ACCESS_CHANGE
      * @param array $params
      */
-    public function site_access_change(array $params) {
+    public function site_access_change(array $params)
+    {
         $this->getGitPermissionsManager()->updateSiteAccess($params['old_value'], $params['new_value']);
+
+        $updater = $this->getUgroupToNotifyUpdater();
+        $updater->updateSiteAccess($params['old_value']);
+    }
+
+    /**
+     * @return UgroupToNotifyUpdater
+     */
+    private function getUgroupToNotifyUpdater()
+    {
+        return new UgroupToNotifyUpdater($this->getUgroupsToNotifyDao());
     }
 
     /**
