@@ -20,6 +20,9 @@ msgstr "Impossible de supprimer l'utilisateur %s des notifications"
 msgid "Cannot remove user group \"%s\" from notifications"
 msgstr "Impossible de supprimer le groupe %s des notifications"
 
+msgid "No notifications set"
+msgstr "Aucune notification n'a été définie"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
