@@ -3472,6 +3472,13 @@ select[name='add_notempty_condition[]'] {
     & > tbody > tr:first-child > td {
         border-top: none;
     }
+
+    & > tbody > tr.empty-table > td {
+        padding: 50px;
+        font-size: 12px;
+        color: #AAAAAA;
+        text-align: center;
+    }
 }
 
 td.tracker-global-notifications-checkbox-cell {
