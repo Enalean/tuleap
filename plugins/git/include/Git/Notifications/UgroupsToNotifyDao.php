@@ -149,9 +149,23 @@ class UgroupsToNotifyDao extends DataAccessObject
 
     private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
     {
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+
         $sql = "UPDATE plugin_git_post_receive_notification_ugroup
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id = $old_ugroup_id";
+
+        return $this->update($sql);
+    }
+
+    public function insert($repository_id, $ugroup_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $ugroup_id     = $this->da->escapeInt($ugroup_id);
+
+        $sql = "REPLACE INTO plugin_git_post_receive_notification_ugroup(repository_id, ugroup_id)
+                VALUES ($repository_id, $ugroup_id)";
 
         return $this->update($sql);
     }

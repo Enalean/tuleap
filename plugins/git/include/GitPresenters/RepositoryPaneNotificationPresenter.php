@@ -49,11 +49,10 @@ class RepositoryPaneNotificationPresenter
         $this->title                = $GLOBALS['Language']->getText('plugin_git', 'admin_mail');
         $this->mail_prefix_label    = $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_label');
         $this->notified_mails_title = $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title');
-        $this->add_mail_title       = $GLOBALS['Language']->getText('plugin_git', 'add_mail_title');
-        $this->add_mail_msg         = $GLOBALS['Language']->getText('plugin_git', 'add_mail_msg');
         $this->btn_submit           = $GLOBALS['Language']->getText('global', 'btn_submit');
         $this->notified_people      = dgettext('tuleap-git', 'Notified people');
         $this->empty_notification   = dgettext('tuleap-git', 'No notifications set');
+        $this->placeholder          = dgettext('tuleap-git', 'User, group, email');
     }
 
     private function buildListOfMailsPresenter(GitRepository $repository)

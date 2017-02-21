@@ -193,7 +193,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
                 mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
                 mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-                mock('User_ForgeUserGroupFactory')
+                mock('User_ForgeUserGroupFactory'),
+                mock('UGroupManager')
             )
         );
         $git->setRequest($request);

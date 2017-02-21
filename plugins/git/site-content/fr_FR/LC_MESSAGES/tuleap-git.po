@@ -13,6 +13,14 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #, php-format
+msgid "Cannot add user \"%s\""
+msgstr "Impossible d'ajouter l'utilisateur \"%s\""
+
+#, php-format
+msgid "Cannot add user group \"%s\""
+msgstr "Impossible d'ajouter le groupe \"%s\""
+
+#, php-format
 msgid "Cannot remove user %s from notifications"
 msgstr "Impossible de supprimer l'utilisateur %s des notifications"
 
@@ -27,9 +35,20 @@ msgid "Notified people"
 msgstr "Personnes notifiées"
 
 #, php-format
+msgid "User \"%s\" successfully added to notifications"
+msgstr "L'utilisateur \"%s\" a été ajouté aux notifications"
+
+#, php-format
 msgid "User %s has been removed from notifications"
 msgstr "L'utilisateur %s a été supprimé des notifications"
 
 #, php-format
 msgid "User group \"%s\" has been removed from notifications"
 msgstr "Le groupe %s a été supprimé des notifications"
+
+#, php-format
+msgid "User group \"%s\" successfully added to notifications"
+msgstr "Le groupe \"%s\" a été ajouté aux notifications"
+
+msgid "User, group, email"
+msgstr "Utilisateur, groupe, email"

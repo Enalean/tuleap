@@ -89,8 +89,7 @@ class Notification extends Pane
             )
         );
         $html    .= $this->getPluginNotifications();
-        $js       = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+        $GLOBALS['Response']->includeFooterJavascriptFile(GIT_BASE_URL .'/scripts/admin-notifications.js');
 
         return $html;
     }

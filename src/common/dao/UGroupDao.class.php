@@ -21,7 +21,7 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for ProjectUGroup 
+ *  Data Access Object for ProjectUGroup
  */
 class UGroupDao extends DataAccessObject {
 
@@ -137,7 +137,7 @@ class UGroupDao extends DataAccessObject {
      * Return all UGroups the user belongs to (cross projects)
      *
      * @param Integrer $user_id Id of user
-     * 
+     *
      * @return DataAccessResult
      */
     public function searchByUserId($user_id) {
@@ -287,5 +287,43 @@ class UGroupDao extends DataAccessObject {
                            VALUES ($new_project_id, $ugroup_id, $new_ugroup_id)";
 
         return $this->update($create_binding);
+    }
+
+    public function searchUgroupsUserIsMemberInProject($user_id, $project_id)
+    {
+        $user_id    = $this->da->escapeInt($user_id);
+        $project_id = $this->da->escapeInt($project_id);
+        $member_id  = $this->da->escapeInt(ProjectUGroup::PROJECT_MEMBERS);
+        $admin_id   = $this->da->escapeInt(ProjectUGroup::PROJECT_ADMIN);
+
+        $sql = "SELECT ugroup.*
+                FROM ugroup
+                    INNER JOIN user_group ON (
+                        ugroup.ugroup_id = $member_id
+                        AND ugroup.group_id = 100
+                        AND user_group.user_id = $user_id
+                        AND user_group.group_id = $project_id
+                    )
+                UNION
+                SELECT ugroup.*
+                FROM ugroup
+                    INNER JOIN user_group ON (
+                        ugroup.ugroup_id = $admin_id
+                        AND ugroup.group_id = 100
+                        AND user_group.user_id = $user_id
+                        AND user_group.group_id = $project_id
+                        AND user_group.admin_flags = 'A'
+                    )
+                UNION
+                SELECT ugroup.*
+                FROM ugroup
+                    INNER JOIN ugroup_user ON (
+                        ugroup.ugroup_id = ugroup_user.ugroup_id
+                        AND ugroup_user.user_id = $user_id
+                        AND ugroup.group_id = $project_id
+                    )
+                ";
+
+        return $this->retrieve($sql);
     }
 }

@@ -63,4 +63,15 @@ class UsersToNotifyDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function insert($repository_id, $user_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $user_id       = $this->da->escapeInt($user_id);
+
+        $sql = "REPLACE INTO plugin_git_post_receive_notification_user(repository_id, user_id)
+                VALUES ($repository_id, $user_id)";
+
+        return $this->update($sql);
+    }
 }

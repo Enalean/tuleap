@@ -24,6 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Notifications\RequestFromAutocompleter;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
@@ -114,6 +115,10 @@ class Git extends PluginController {
      * @var User_ForgeUserGroupFactory
      */
     private $forge_user_group_factory;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     /**
      * Lists all git-related permission types.
@@ -327,7 +332,8 @@ class Git extends PluginController {
         RegexpPermissionFilter $regexp_filter,
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
-        User_ForgeUserGroupFactory $forge_user_group_factory
+        User_ForgeUserGroupFactory $forge_user_group_factory,
+        UGroupManager $ugroup_manager
     ) {
         parent::__construct($user_manager, $request);
 
@@ -413,6 +419,7 @@ class Git extends PluginController {
         $this->users_to_notify_dao                     = $users_to_notify_dao;
         $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
         $this->forge_user_group_factory                = $forge_user_group_factory;
+        $this->ugroup_manager                          = $ugroup_manager;
     }
 
     protected function instantiateView() {
@@ -1388,28 +1395,29 @@ class Git extends PluginController {
         }
         $add_mail = $this->request->getValidated('add_mail');
         if ($add_mail) {
-            $validMails = array();
-            $mails      = array_map('trim', preg_split('/[,;]/', $add_mail));
-            $rule       = new Rule_Email();
-            $um         = UserManager::instance();
-            foreach ($mails as $mail) {
-                if ($rule->isValid($mail)) {
-                    $validMails[] = $mail;
-                } else {
-                    $user = $um->findUser($mail);
-                    if ($user) {
-                        $mail = $user->getEmail();
-                        if ($mail) {
-                            $validMails[] = $mail;
-                        } else {
-                            $this->addError($this->getText('no_user_mail', array($mail)));
-                        }
-                    } else {
-                        $this->addError($this->getText('no_user', array($mail)));
-                    }
-                }
+            $autocompleter = new RequestFromAutocompleter(
+                new Rule_Email(),
+                UserManager::instance(),
+                $this->ugroup_manager,
+                $user,
+                $this->request->getProject(),
+                $add_mail
+            );
+
+            $emails = $autocompleter->getEmails();
+            if ($emails) {
+                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $emails, $pane));
             }
-            $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails, $pane));
+
+            $users = $autocompleter->getUsers();
+            if ($users) {
+                $this->addAction('notificationAddUsers', array($this->groupId, $repoId, $users));
+            }
+
+            $ugroups = $autocompleter->getUgroups();
+            if ($ugroups) {
+                $this->addAction('notificationAddUgroups', array($this->groupId, $repoId, $ugroups));
+            }
         }
         $remove_mail = $this->request->get('remove_mail');
         if (is_array($remove_mail)) {
