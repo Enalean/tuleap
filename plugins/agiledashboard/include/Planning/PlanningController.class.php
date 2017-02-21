@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -73,6 +74,10 @@ class Planning_Controller extends MVC2_PluginController {
 
     /** @var AgileDashboard_HierarchyChecker */
     private $hierarchy_checker;
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
 
     public function __construct(
         Codendi_Request $request,
@@ -87,7 +92,8 @@ class Planning_Controller extends MVC2_PluginController {
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
-        AgileDashboard_HierarchyChecker $hierarchy_checker
+        AgileDashboard_HierarchyChecker $hierarchy_checker,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -104,6 +110,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->kanban_factory               = $kanban_factory;
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->hierarchy_checker            = $hierarchy_checker;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     public function index() {
@@ -112,7 +119,6 @@ class Planning_Controller extends MVC2_PluginController {
 
     private function showHome() {
         $user = $this->request->getCurrentUser();
-
         $plannings = $this->planning_factory->getNonLastLevelPlannings(
             $user,
             $this->group_id
@@ -140,9 +146,15 @@ class Planning_Controller extends MVC2_PluginController {
             $scrum_is_configured,
             $this->config_manager->getScrumTitle($this->group_id),
             $this->config_manager->getKanbanTitle($this->group_id),
-            $this->isUserADmin()
+            $this->isUserAdmin(),
+            $this->isScrumMonoMilestoneEnabled()
         );
         return $this->renderToString('home', $presenter);
+    }
+
+    private function isScrumMonoMilestoneEnabled()
+    {
+        return $this->scrum_mono_milestone_checker->isMonoMilestoneActivated($this->group_id) === true;
     }
 
     private function getKanbanSummaryPresenters() {
@@ -171,7 +183,8 @@ class Planning_Controller extends MVC2_PluginController {
     private function showEmptyHome() {
         $presenter = new Planning_Presenter_BaseHomePresenter(
             $this->group_id,
-            $this->isUserAdmin()
+            $this->isUserAdmin(),
+            $this->isScrumMonoMilestoneEnabled()
         );
         return $this->renderToString('empty-home', $presenter);
     }
@@ -318,6 +331,11 @@ class Planning_Controller extends MVC2_PluginController {
     private function isUserAdmin() {
         return $this->request->getProject()->userIsAdmin($this->request->getCurrentUser());
     }
+
+    private function isLabModeEnableForUser() {
+        return $this->request->getCurrentUser()->useLabFeatures();
+    }
+
 
     /**
      * Redirects a non-admin user to the agile dashboard home page

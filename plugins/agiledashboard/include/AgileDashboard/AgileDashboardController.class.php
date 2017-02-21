@@ -19,6 +19,10 @@
  */
 
 use Tuleap\AgileDashboard\AdminAdditionalPanePresenter;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDisabler;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneEnabler;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FrsPermissionDao;
@@ -47,6 +51,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
     /** @var AgileDashboard_HierarchyChecker */
     private $hierarchy_checker;
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
 
     public function __construct(
         Codendi_Request                     $request,
@@ -56,18 +64,20 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory                      $tracker_factory,
         AgileDashboard_PermissionsManager   $permissions_manager,
-        AgileDashboard_HierarchyChecker     $hierarchy_checker
+        AgileDashboard_HierarchyChecker     $hierarchy_checker,
+        ScrumForMonoMilestoneChecker        $scrum_mono_milestone_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id            = (int) $this->request->get('group_id');
-        $this->planning_factory    = $planning_factory;
-        $this->kanban_manager      = $kanban_manager;
-        $this->kanban_factory      = $kanban_factory;
-        $this->config_manager      = $config_manager;
-        $this->tracker_factory     = $tracker_factory;
-        $this->permissions_manager = $permissions_manager;
-        $this->hierarchy_checker   = $hierarchy_checker;
+        $this->group_id                     = (int) $this->request->get('group_id');
+        $this->planning_factory             = $planning_factory;
+        $this->kanban_manager               = $kanban_manager;
+        $this->kanban_factory               = $kanban_factory;
+        $this->config_manager               = $config_manager;
+        $this->tracker_factory              = $tracker_factory;
+        $this->permissions_manager          = $permissions_manager;
+        $this->hierarchy_checker            = $hierarchy_checker;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     /**
@@ -133,8 +143,26 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $potential_planning_trackers,
             $scrum_activated,
             $this->config_manager->getScrumTitle($group_id),
-            $this->getAdditionalPanesAdmin()
+            $this->getAdditionalPanesAdmin(),
+            $this->isScrumMonoMilestoneAvailable($user, $group_id),
+            $this->isScrumMonoMilestoneEnable($group_id)
         );
+    }
+
+    private function isScrumMonoMilestoneEnable($project_id)
+    {
+        return $this->scrum_mono_milestone_checker->isMonoMilestoneActivated($project_id);
+    }
+
+    private function isScrumMonoMilestoneAvailable(PFUser $user, $project_id)
+    {
+        return $this->isScrumMonoMilestoneEnable($project_id) === true ||
+            ($user->useLabFeatures() == true && $this->isMoreThanOnePlanningDefined($user) === false);
+    }
+
+    private function isMoreThanOnePlanningDefined(PFUser $user)
+    {
+        return count($this->planning_factory->getPlannings($user, $this->group_id)) > 1;
     }
 
     private function getAdminKanbanPresenter(PFUser $user, $project_id)
@@ -236,6 +264,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 EventManager::instance()
             );
 
+            $scrum_mono_milestone_dao = new ScrumForMonoMilestoneDao();
             $updater = new AgileDashboardScrumConfigurationUpdater(
                 $this->request,
                 $this->config_manager,
@@ -259,7 +288,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                             new UGroupDao()
                         )
                     )
-                )
+                ),
+                new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
+                new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
+                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao)
             );
         }
 

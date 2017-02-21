@@ -57,7 +57,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('AgileDashboard_ConfigurationManager'),
             mock('AgileDashboard_KanbanFactory'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker')
+            mock('AgileDashboard_HierarchyChecker'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
@@ -74,7 +75,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $configuration_manager,
             mock('TrackerFactory'),
             mock('AgileDashboard_PermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker')
+            mock('AgileDashboard_HierarchyChecker'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
 
         stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
@@ -185,7 +187,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('AgileDashboard_ConfigurationManager'),
             $kanban_factory,
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker')
+            mock('AgileDashboard_HierarchyChecker'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
 
         $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();
@@ -328,7 +331,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('AgileDashboard_ConfigurationManager'),
                 $kanban_factory,
                 mock('PlanningPermissionsManager'),
-                mock('AgileDashboard_HierarchyChecker')
+                mock('AgileDashboard_HierarchyChecker'),
+                mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
             )
         );
 

@@ -32,6 +32,13 @@ class AdminScrumPresenter {
     /** @var string */
     public $scrum_title;
 
+    /** @var  bool */
+    public $use_mono_milestone;
+
+    /**
+     * @var bool
+     */
+    public $can_scrum_mono_milestone_be_enabled;
 
     private $root_planning_tracker_url;
     private $root_planning_name;
@@ -48,16 +55,20 @@ class AdminScrumPresenter {
         array $hierarchy,
         $scrum_activated,
         $scrum_title,
-        array $additional_panes
+        array $additional_panes,
+        $can_scrum_mono_milestone_be_enabled,
+        $use_mono_milestone
     ) {
-        $this->plannings                 = $plannings;
-        $this->group_id                  = $group_id;
-        $this->can_create_planning       = $can_create_planning;
-        $this->root_planning_tracker_url = $root_planning_tracker_url;
-        $this->root_planning_name        = $root_planning_name;
-        $this->scrum_activated           = $scrum_activated;
-        $this->scrum_title               = $scrum_title;
-        $this->additional_panes          = $additional_panes;
+        $this->plannings                           = $plannings;
+        $this->group_id                            = $group_id;
+        $this->can_create_planning                 = $can_create_planning;
+        $this->root_planning_tracker_url           = $root_planning_tracker_url;
+        $this->root_planning_name                  = $root_planning_name;
+        $this->scrum_activated                     = $scrum_activated;
+        $this->scrum_title                         = $scrum_title;
+        $this->additional_panes                    = $additional_panes;
+        $this->can_scrum_mono_milestone_be_enabled = $can_scrum_mono_milestone_be_enabled;
+        $this->use_mono_milestone                  = $use_mono_milestone;
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
@@ -181,5 +192,20 @@ class AdminScrumPresenter {
     public function additional_panes()
     {
         return array_values($this->additional_panes);
+    }
+
+    public function activate_scrum_mono_milestone_label()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','activate_scrum_mono_milestone_label');
+    }
+
+    public function warning_feature_under_construction()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','warning_feature_under_construction');
+    }
+
+    public function scrum_monomilestone_title()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','scrum_monomilestone_title');
     }
 }

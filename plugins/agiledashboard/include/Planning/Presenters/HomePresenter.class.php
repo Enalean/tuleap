@@ -31,6 +31,9 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     /** @var Planning_Presenter_LastLevelMilestone[] */
     public $last_level_milestone_presenters;
 
+    /** @var bool */
+    public $is_mono_milestone_enabled;
+
     /** @var string */
     private $period;
 
@@ -69,9 +72,10 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $scrum_is_configured,
         $scrum_title,
         $kanban_title,
-        $is_user_admin
+        $is_user_admin,
+        $is_mono_milestone_enabled
     ) {
-        parent::__construct($group_id, $is_user_admin);
+        parent::__construct($group_id, $is_user_admin, $is_mono_milestone_enabled);
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->last_level_milestone_presenters = $last_level_milestone_presenters;
         $this->period                          = $period;

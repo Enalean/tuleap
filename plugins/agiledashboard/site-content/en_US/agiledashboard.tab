@@ -91,6 +91,7 @@ plugin_agiledashboard	nothing_set_up_scrum_admin	No Scrum has been yet configure
 plugin_agiledashboard	nothing_set_up_come_back	Please come back later.
 plugin_agiledashboard	start_kanban	Start Kanban
 plugin_agiledashboard	start_scrum	Start Scrum
+plugin_agiledashboard	activate_scrum_v2	Start Scrum V2
 
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1
@@ -176,6 +177,9 @@ plugin_agiledashboard	no_tracker_available	No tracker is available.
 plugin_agiledashboard	kanban_not_found	Kanban not found.
 plugin_agiledashboard	content_not_found	Content not found.
 plugin_agiledashboard	Milestone	Milestone
+plugin_agiledashboard	activate_scrum_mono_milestone_label	Enable Scrum V2
+plugin_agiledashboard	scrum_monomilestone_title	Scrum mono milestone
+plugin_agiledashboard	warning_feature_under_construction	This feature is under development. Once checked it wont be possible to start scrum with default template.
 
 plugin_agiledashboard_first_kanban	error_existing_tracker	We tried to create a first kanban for you but an existing tracker ($1) prevented it.
 plugin_agiledashboard_first_kanban	internal_error	We tried to create a first kanban for you but an internal error prevented it.
