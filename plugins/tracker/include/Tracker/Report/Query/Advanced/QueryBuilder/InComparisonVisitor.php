@@ -148,19 +148,23 @@ class InComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new InComparison\ForSubmittedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new InComparison\ForSubmittedBy(
+                UserManager::instance()
+            )
         );
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new InComparison\ForLastUpdatedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new InComparison\ForLastUpdatedBy(
+                UserManager::instance()
+            )
         );
     }
 

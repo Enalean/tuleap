@@ -148,19 +148,23 @@ class NotInComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new NotInComparison\ForSubmittedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new NotInComparison\ForSubmittedBy(
+                UserManager::instance()
+            )
         );
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new NotInComparison\ForLastUpdatedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new NotInComparison\ForLastUpdatedBy(
+                UserManager::instance()
+            )
         );
     }
 

@@ -20,45 +20,24 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 
 use CodendiDataAccess;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldReadOnlyBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListReadOnlyConditionBuilder;
 use UserManager;
 
-class ForSubmittedBy implements FromWhereBuilder
+class ForSubmittedBy implements ListReadOnlyConditionBuilder
 {
-    /**
-     * @var FromWhereComparisonFieldReadOnlyBuilder
-     */
-    private $from_where_builder;
     /**
      * @var UserManager
      */
     private $user_manager;
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
 
     public function __construct(
-        UserManager $user_manager,
-        CollectionOfListValuesExtractor $values_extractor,
-        FromWhereComparisonFieldReadOnlyBuilder $from_where_builder
+        UserManager $user_manager
     ) {
-        $this->user_manager       = $user_manager;
-        $this->values_extractor   = $values_extractor;
-        $this->from_where_builder = $from_where_builder;
+        $this->user_manager = $user_manager;
     }
 
-    /**
-     * @return FromWhere
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getCondition(array $values)
     {
-        $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $value  = $values[0];
         if ($value === '') {
             $condition = "1";
@@ -67,7 +46,7 @@ class ForSubmittedBy implements FromWhereBuilder
             $condition = "artifact.submitted_by != " . $this->escapeInt($user->getId());
         }
 
-        return $this->from_where_builder->getFromWhere($condition);
+        return $condition;
     }
 
     private function escapeInt($value)
