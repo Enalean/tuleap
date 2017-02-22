@@ -20,51 +20,34 @@
 
 namespace Tuleap\Configuration\Nginx;
 
-class TuleapWeb
+class BackendWeb
 {
-    const SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
-    const SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
-
     private $tuleap_base_dir;
     private $nginx_base_dir;
     private $server_name;
+    private $common;
 
     public function __construct($tuleap_base_dir, $nginx_base_dir, $server_name)
     {
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
-
-        $this->common = new Common($tuleap_base_dir, $nginx_base_dir, $server_name);
+        $this->common          = new Common($tuleap_base_dir, $nginx_base_dir, $server_name);
     }
 
     public function configure()
     {
         $this->common->deployConfigurationChunks();
         $this->common->deployMainNginxConf();
-
         $this->common->replacePlaceHolderInto(
-            $this->tuleap_base_dir.'/src/etc/nginx18/tuleap.conf.dist',
+            $this->tuleap_base_dir.'/tools/distlp/backend-web/nginx/tuleap.conf',
             $this->nginx_base_dir.'/conf.d/tuleap.conf',
             array(
-                '%ssl_certificate_key_path%',
-                '%ssl_certificate_path%',
-                '%sys_default_domain%',
+                '%sys_default_domain%'
             ),
             array(
-                self::SSL_CERT_KEY_PATH,
-                self::SSL_CERT_CERT_PATH,
-                $this->server_name,
+                $this->server_name
             )
         );
-
-        $this->generateSSLCertificate();
-    }
-
-    private function generateSSLCertificate()
-    {
-        if (! file_exists(self::SSL_CERT_KEY_PATH)) {
-            exec('openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout '.self::SSL_CERT_KEY_PATH.' -out '.self::SSL_CERT_CERT_PATH.' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN='.$this->server_name.'" 2>/dev/null');
-        }
     }
 }

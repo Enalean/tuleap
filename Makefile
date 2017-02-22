@@ -294,6 +294,21 @@ start-php56: ## Start Tuleap web with php56 & nginx18 support - EXPERIMENTAL
 	@echo "Start Tuleap in PHP 5.6"
 	@$(DOCKER_COMPOSE) -f docker-compose-php56.yml up -d web
 
+start-distlp:
+	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
+	-@$(DOCKER_COMPOSE) stop
+	@$(SUDO) docker-compose -f docker-compose-distlp.yml up -d reverse-proxy
+	@ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap_reverse-proxy_1`; \
+		echo "Add '$$ip tuleap-web.tuleap-aio-dev.docker' to /etc/hosts"; \
+		echo "Ensure $$ip is configured as sys_trusted_proxies in /etc/tuleap/conf/local.inc"
+	@echo "You can access :"
+	@echo "* Reverse proxy with: docker exec -ti tuleap_reverse-proxy_1 bash"
+	@echo "* Backend web with: docker exec -ti tuleap_backend-web_1 bash"
+	@echo "* Backend SVN with: docker exec -ti tuleap_backend-svn_1 bash"
+
+stop-distlp:
+	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop
+
 start-es:
 	@$(DOCKER_COMPOSE) up -d es
 
