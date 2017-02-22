@@ -93,23 +93,11 @@ class ProjectSerializerTest extends TuleapTestCase {
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
 
-        // ShowRev + Mail
-        $repo = new GitRepository();
-        $repo->setId(5);
-        $repo->setProject($prj);
-        $repo->setName('test_default');
-        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail.txt'),
-            $this->project_serializer->fetchMailHookConfig($prj, $repo)
-        );
-
         // ShowRev + Mailprefix
         $repo = new GitRepository();
         $repo->setId(5);
         $repo->setProject($prj);
         $repo->setName('test_default');
-        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
         $repo->setMailPrefix('[KOIN] ');
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
@@ -121,7 +109,6 @@ class ProjectSerializerTest extends TuleapTestCase {
         $repo->setId(5);
         $repo->setProject($prj);
         $repo->setName('test_default');
-        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
         $repo->setMailPrefix('["\_o<"] \t');
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
@@ -208,7 +195,6 @@ class ProjectSerializerTest extends TuleapTestCase {
                     ->withName('test_default')
                     ->withNamespace('')
                     ->withMailPrefix('[SCM]')
-                    ->withNotifiedEmails(array('john.doe@enalean.com', 'mme.michue@enalean.com'))
                     ->build(),
                 aGitRepository()
                     ->withId(5)
