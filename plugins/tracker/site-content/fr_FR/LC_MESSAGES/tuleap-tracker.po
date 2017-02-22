@@ -15,6 +15,9 @@ msgstr ""
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
 
+msgid "Enter here a comma separated email addresses list to be notified"
+msgstr "Ajouter ici une liste d'adresses email séparées par des virgules"
+
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
