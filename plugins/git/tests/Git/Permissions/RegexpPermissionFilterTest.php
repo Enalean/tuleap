@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\Permissions;
 
+use Tuleap\User\UserGroup\NameTranslator;
 use TuleapTestCase;
 use User_ForgeUGroup;
 use GitRepository;
@@ -113,8 +114,8 @@ class RegexpPermissionFilterTest extends TuleapTestCase
                 $key,
                 $this->repository->getId(),
                 $pattern,
-                array(User_ForgeUGroup::PROJECT_ADMINS),
-                array(User_ForgeUGroup::PROJECT_MEMBERS)
+                array(NameTranslator::PROJECT_ADMINS),
+                array(NameTranslator::PROJECT_MEMBERS)
             );
         }
 

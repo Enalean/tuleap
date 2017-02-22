@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\User\UserGroup\NameTranslator;
 
 /**
  * ProjectUGroup object
@@ -135,7 +136,7 @@ class ProjectUGroup implements User_UGroup {
         }
         return $this->_ugroupuserdao;
     }
-    
+
     public function setUGroupUserDao(UGroupUserDao $dao) {
         $this->_ugroupuserdao = $dao;
     }
@@ -170,7 +171,7 @@ class ProjectUGroup implements User_UGroup {
     }
 
     public function getTranslatedName() {
-        return util_translate_name_ugroup($this->getName());
+        return NameTranslator::getUserGroupDisplayName($this->name);
     }
 
     /**

@@ -21,6 +21,7 @@
 
 namespace Tuleap\Git\Permissions;
 
+use Tuleap\User\UserGroup\NameTranslator;
 use User_ForgeUGroup;
 
 class DefaultFineGrainedPermission
@@ -78,7 +79,7 @@ class DefaultFineGrainedPermission
         $ugroup_names = array();
 
         foreach ($this->writers_ugroups as $ugroup) {
-            $ugroup_names[] = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+            $ugroup_names[] = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         }
 
         return implode(', ', $ugroup_names);
@@ -89,7 +90,7 @@ class DefaultFineGrainedPermission
         $ugroup_names = array();
 
         foreach ($this->rewinders_ugroups as $ugroup) {
-            $ugroup_names[] = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+            $ugroup_names[] = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         }
 
         return implode(', ', $ugroup_names);

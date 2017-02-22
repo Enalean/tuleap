@@ -1,4 +1,6 @@
 <?php
+use Tuleap\User\UserGroup\NameTranslator;
+
 /**
  * Copyright (c) Enalean, 2014. All rights reserved
  *
@@ -99,27 +101,27 @@ class User_ForgeUserGroupFactory {
         $user_groups = array();
 
         if (ForgeConfig::areAnonymousAllowed() && $project->isPublic()) {
-            $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON);
+            $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::ANON);
         }
         if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
-            $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::AUTHENTICATED);
+            $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::AUTHENTICATED);
         }
         if ($project->isPublic()) {
-            $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED);
+            $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::REGISTERED);
         }
-        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS);
-        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_ADMINS);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
 
-        return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)));
+        return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)));
     }
 
     public function getProjectUGroupsWithAdministratorAndMembers(Project $project) {
         $user_groups = array();
 
-        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS);
-        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_ADMINS);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
 
-        return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)));
+        return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)));
     }
 
     /**

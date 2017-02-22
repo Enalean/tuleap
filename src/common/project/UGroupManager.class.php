@@ -19,11 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\User\UserGroup\NameTranslator;
+
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/include/account.php');
 
 class UGroupManager {
-    
+
     /**
      * @var UGroupDao
      */
@@ -138,7 +140,7 @@ class UGroupManager {
         if (! $row && preg_match('/^ugroup_.*_key$/', $name)) {
             $row = $this->getDao()->searchByGroupIdAndName(100, $name)->getRow();
         }
-        if (! $row && in_array($this->getUnormalisedName($name), User_ForgeUGroup::$names)) {
+        if (! $row && in_array($this->getUnormalisedName($name), NameTranslator::$names)) {
             $row = $this->getDao()->searchByGroupIdAndName(100, $this->getUnormalisedName($name))->getRow();
         }
         if (! $row && $ugroup = $this->getDynamicUGoupByName($project, $name)) {
@@ -201,7 +203,7 @@ class UGroupManager {
      * Returns a ProjectUGroup from its Id
      *
      * @param Integer $ugroupId The UserGroupId
-     * 
+     *
      * @return ProjectUGroup
      */
     public function getById($ugroupId) {
