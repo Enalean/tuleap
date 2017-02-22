@@ -1431,7 +1431,8 @@ class GitPlugin extends Plugin {
             $this->getRegexpPermissionFilter(),
             new UsersToNotifyDao(),
             $this->getUgroupsToNotifyDao(),
-            new User_ForgeUserGroupFactory(new UserGroupDao())
+            new User_ForgeUserGroupFactory(new UserGroupDao()),
+            new UGroupManager()
         );
     }
 

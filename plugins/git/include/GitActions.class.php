@@ -806,6 +806,86 @@ class GitActions extends PluginActions
         return true;
     }
 
+    public function notificationAddUsers($projectId, $repository_id, array $users) {
+        $controller = $this->getController();
+        $repository = $this->_loadRepository($projectId, $repository_id);
+        if (empty($repository_id) || empty($users)) {
+            $this->addError('actions_params_error');
+            return false;
+        }
+
+        $user_helper = UserHelper::instance();
+        $great_success = true;
+        /** @var PFUser $user */
+        foreach ($users as $user) {
+            if ($this->users_to_notify_dao->insert($repository_id, $user->getId())) {
+                $controller->addInfo(
+                    sprintf(
+                        dgettext('plugin-git', 'User "%s" successfully added to notifications'),
+                        $user_helper->getDisplayNameFromUser($user)
+                    )
+                );
+                $this->history_dao->groupAddHistory(
+                    "git_repo_update",
+                    $repository->getName() . ': add notification user '. $user->getName(),
+                    $repository->getProjectId()
+                );
+            } else {
+                $controller->addError(
+                    sprintf(
+                        dgettext('plugin-git', 'Cannot add user "%s"'),
+                        $user_helper->getDisplayNameFromUser($user)
+                    )
+                );
+                $great_success = false;
+            }
+        }
+
+        return $great_success;
+    }
+
+    public function notificationAddUgroups($projectId, $repository_id, array $ugroups) {
+        $controller = $this->getController();
+        $repository = $this->_loadRepository($projectId, $repository_id);
+        if (empty($repository_id) || empty($ugroups)) {
+            $this->addError('actions_params_error');
+            return false;
+        }
+
+        $great_success = true;
+        /** @var ProjectUGroup $ugroup */
+        foreach ($ugroups as $ugroup) {
+            try {
+                $ugroup_for_display = $this->forge_user_group_factory->getProjectUGroupAsForgeUGroupById($ugroup->getId());
+            } catch (User_UserGroupNotFoundException $e) {
+                continue;
+            }
+            if ($this->ugroups_to_notify_dao->insert($repository_id, $ugroup->getId())) {
+                $controller->addInfo(
+                    sprintf(
+                        dgettext('plugin-git', 'User group "%s" successfully added to notifications'),
+                        $ugroup_for_display->getName()
+                    )
+                );
+                $this->history_dao->groupAddHistory(
+                    "git_repo_update",
+                    $repository->getName() . ': add notification user group '. $ugroup->getNormalizedName(),
+                    $repository->getProjectId()
+                );
+            } else {
+                $controller->addError(
+                    sprintf(
+                        dgettext('plugin-git', 'Cannot add user group "%s"'),
+                        $ugroup_for_display->getName()
+                    )
+                );
+                $great_success = false;
+            }
+        }
+
+        return $great_success;
+    }
+
     public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane) {
         $controller = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);

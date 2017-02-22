@@ -462,7 +462,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     var $_ugroups;
-    function getUgroups($group_id, $instances) {
+
+    /**
+     * @return ProjectUGroup[]
+     */
+    public function getUgroups($group_id, $instances) {
         $hash = md5(serialize($instances));
         if (!isset($this->_ugroups)) {
             $this->_ugroups = array();

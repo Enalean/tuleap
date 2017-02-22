@@ -63,11 +63,21 @@
                 </td>
             </tr>
         {{/ has_notifications }}
+            <tr>
+                <td></td>
+                <td {{^ has_notifications }}class="git-notification-mail-list-add-in-empty-table"{{/ has_notifications }}>
+                    <input type="hidden"
+                           id="add_mail"
+                           name="add_mail"
+                           class="git-notification-mail-list-add"
+                           placeholder="{{ placeholder }}"
+                           data-project-id="{{ repository_project_id }}"
+                           multiple
+                    />
+                </td>
+            </tr>
         </tbody>
     </table>
 
-    <label for="add_mail">{{ add_mail_title }}</label>
-    <textarea id="add_mail" name="add_mail" class="text"></textarea>
-    <p class="help-block">{{ add_mail_msg }}</p>
-    <input type="submit" class="btn" value="{{ btn_submit }}" />
+    <input type="submit" class="btn btn-primary git-notification-mail-list-submit" value="{{ btn_submit }}" />
 </form>

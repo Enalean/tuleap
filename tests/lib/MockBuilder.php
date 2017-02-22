@@ -60,7 +60,7 @@ function expect($classname_or_simpletest_mock) {
  * $mock = new MockSomeClass();
  * </code>
  *
- * @param type $classname
+ * @param string $classname
  *
  * @return a simpletest mock
  */

@@ -221,8 +221,6 @@ plugin_git	settings_hooks_remove_webhook_confirm	Confirm deletion
 plugin_git	settings_hooks_generic	Generic webhooks
 
 plugin_git	add_mail_label	Notificated People
-plugin_git	add_mail_title	Add a mail address or a user to notify
-plugin_git	add_mail_msg	You can add more than one mail/user using comma or semi-column as separator.
 plugin_git	add_mail	Mail address/User
 plugin_git	add_mail_submit	Add
 plugin_git	add_mail_existing	There is no users to be notified yet.

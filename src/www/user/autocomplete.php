@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -88,8 +88,40 @@ if(!$pluginAnswered) {
 //
 if ($json_format) {
     $json_entries = array();
+    $with_groups_of_user_in_project_id = $request->get('with-groups-of-user-in-project-id');
+    if ($with_groups_of_user_in_project_id) {
+        $ugroup_dao = new UGroupDao();
+        $ugroups_dar = $ugroup_dao->searchUgroupsUserIsMemberInProject(
+            $current_user->getId(),
+            $with_groups_of_user_in_project_id
+        );
+
+        foreach ($ugroups_dar as $row) {
+            if ($row['ugroup_id'] > 100
+                || in_array($row['ugroup_id'], array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN))
+            ) {
+                $ugroup                = new ProjectUGroup($row);
+                $ugroup_for_nice_label = new User_ForgeUGroup($row['ugroup_id'], $row['name'], '');
+
+                $id   = $ugroup->getNormalizedName();
+                $text = $ugroup_for_nice_label->getName();
+
+                if (mb_stripos($text, $userName) !== false
+                    || mb_stripos($id, $userName) !== false
+                ) {
+                    $json_entries[] = array(
+                        'type' => 'group',
+                        'id'   => '_ugroup:'. $id,
+                        'text' => $text
+                    );
+                }
+            }
+        }
+    }
+
     foreach ($userList as $user) {
         $json_entries[] = array(
+            'type'       => 'user',
             'id'         => $user['display_name'],
             'text'       => $user['display_name'],
             'login'      => $user['login'],
@@ -97,7 +129,7 @@ if ($json_format) {
         );
     }
 
-    $output       = array(
+    $output = array(
         'results' => $json_entries,
         'pagination' => array(
             'more' => $has_more
