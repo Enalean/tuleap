@@ -132,7 +132,7 @@ Literal
     = String / Float / Integer / CurrentDateTime / CurrentUser
 
 ListValue
-    = String / CurrentUser
+    = l:Literal { return $l; }
 
 String
      = String1
