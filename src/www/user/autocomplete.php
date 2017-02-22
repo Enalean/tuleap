@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\User\RequestFromAutocompleter;
+
 require_once('pre.php');
 
 //
@@ -111,7 +113,7 @@ if ($json_format) {
                 ) {
                     $json_entries[] = array(
                         'type' => 'group',
-                        'id'   => '_ugroup:'. $id,
+                        'id'   => RequestFromAutocompleter::UGROUP_PREFIX . $id,
                         'text' => $text
                     );
                 }

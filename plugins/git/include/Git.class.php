@@ -24,7 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\Notifications\RequestFromAutocompleter;
+use Tuleap\User\RequestFromAutocompleter;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;

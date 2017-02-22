@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Notifications;
+namespace Tuleap\User;
 
 use Rule_Email;
 use TuleapTestCase;
