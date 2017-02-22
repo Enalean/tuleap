@@ -12,7 +12,7 @@ plugin_botmattermost_agiledashboard	admin_notification_time_warning	L'heure rens
 
 plugin_botmattermost_agiledashboard	admin_notification_table_col_channels	Salons de discussion
 
-plugin_botmattermost_agiledashboard	notification_builder_no_current_plannings	Aucun plannings dans le projet $1
+plugin_botmattermost_agiledashboard	notification_builder_no_current_plannings	Aucun plannings dans le projet
 plugin_botmattermost_agiledashboard	notification_builder_no_current_milestones	Aucun jalons dans le planning $1 du projet $2
 plugin_botmattermost_agiledashboard	notification_builder_title_stand_up_summary	Résumé du stand-up $1 du projet $2
 plugin_botmattermost_agiledashboard	notification_builder_artifact_id	ID de l'artéfact
