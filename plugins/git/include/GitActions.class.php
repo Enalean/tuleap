@@ -747,26 +747,30 @@ class GitActions extends PluginActions
     }
 
     public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
-        $c = $this->getController();
+        $controller = $this->getController();
+
         if (empty($repositoryId)) {
             $this->addError('actions_params_error');
             return false;
         }
+
         $repository = $this->_loadRepository($projectId, $repositoryId);
+
         if ($repository->getMailPrefix() != $mailPrefix) {
             $repository->setMailPrefix($mailPrefix);
             $repository->save();
             $repository->changeMailPrefix();
-            $c->addInfo($this->getText('mail_prefix_updated'));
-            $this->addData(array('repository'=>$repository));
-        }
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+            $controller->addInfo($this->getText('mail_prefix_updated'));
+            $this->addData(array('repository' => $repository));
 
-        $this->history_dao->groupAddHistory(
-            "git_repo_update",
-            $repository->getName() . ': update notification prefix',
-            $repository->getProjectId()
-        );
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
+
+            $this->history_dao->groupAddHistory(
+                "git_repo_update",
+                $repository->getName() . ': update notification prefix',
+                $repository->getProjectId()
+            );
+        }
 
         return true;
     }
