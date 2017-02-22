@@ -21,11 +21,13 @@
 class Git_Driver_Gerrit_ProjectCreatorStatusDao extends DataAccessObject {
 
     public function getSystemEventForRepository($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $parameters = $this->getDa()->escapeLikeValue($repository_id . '::');
+        $parameters = $this->getDa()->quoteSmart($parameters . '%');
+
         $sql = "SELECT status, UNIX_TIMESTAMP(create_date) create_date, log
                 FROM system_event
                 WHERE type = ".$this->da->quoteSmart(SystemEvent_GIT_GERRIT_MIGRATION::NAME)."
-                AND parameters LIKE '$repository_id::%'
+                AND parameters LIKE $parameters
                 ORDER BY id DESC
                 LIMIT 1";
 
