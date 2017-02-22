@@ -162,19 +162,23 @@ class NotEqualComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new NotEqualComparison\ForSubmittedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new NotEqualComparison\ForSubmittedBy(
+                UserManager::instance()
+            )
         );
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new NotEqualComparison\ForLastUpdatedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new NotEqualComparison\ForLastUpdatedBy(
+                UserManager::instance()
+            )
         );
     }
 

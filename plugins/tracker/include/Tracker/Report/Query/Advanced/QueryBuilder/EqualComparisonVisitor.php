@@ -162,19 +162,23 @@ class EqualComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new EqualComparison\ForSubmittedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new EqualComparison\ForSubmittedBy(
+                UserManager::instance()
+            )
         );
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new EqualComparison\ForLastUpdatedBy(
-            UserManager::instance(),
+        return new ListReadOnlyFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder()
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new EqualComparison\ForLastUpdatedBy(
+                UserManager::instance()
+            )
         );
     }
 
