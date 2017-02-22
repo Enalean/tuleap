@@ -20,44 +20,45 @@
 
 namespace Tuleap\Captcha;
 
-class DataAccessObject extends \DataAccessObject
+use Valid_String;
+
+class ConfigurationSaver
 {
     /**
-     * @return array|false
+     * @var DataAccessObject
      */
-    public function getConfiguration()
-    {
-        $sql = 'SELECT * FROM plugin_captcha_configuration';
+    private $dao;
 
-        return $this->retrieveFirstRow($sql);
+    public function __construct(DataAccessObject $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    /**
+     * @throws ConfigurationMalformedDataException
+     * @throws ConfigurationDataAccessException
+     */
+    public function save($site_key, $secret_key)
+    {
+        if (! $this->isConfigurationValid($site_key, $secret_key)) {
+            throw new ConfigurationMalformedDataException();
+        }
+
+        $is_saved = $this->dao->save($site_key, $secret_key);
+
+        if (! $is_saved) {
+            throw new ConfigurationDataAccessException();
+        }
     }
 
     /**
      * @return bool
      */
-    public function save($site_key, $secret_key)
+    private function isConfigurationValid($site_key, $secret_key)
     {
-        $site_key   = $this->da->quoteSmart($site_key);
-        $secret_key = $this->da->quoteSmart($secret_key);
+        $string_validator = new Valid_String();
+        $string_validator->required();
 
-        $this->startTransaction();
-
-        $sql_delete = "DELETE FROM plugin_captcha_configuration";
-
-        if (! $this->update($sql_delete)) {
-            $this->rollBack();
-            return false;
-        }
-
-        $sql_save = "INSERT INTO plugin_captcha_configuration(site_key, secret_key) VALUES ($site_key, $secret_key)";
-
-        if (! $this->update($sql_save)) {
-            $this->rollBack();
-            return false;
-        }
-
-        $this->commit();
-
-        return true;
+        return $string_validator->validate($site_key) && $string_validator->validate($secret_key);
     }
 }

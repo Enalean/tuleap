@@ -1,9 +1,33 @@
 msgid "Add a captcha protection to sensitive operations"
 msgstr ""
 
+msgid "An error occurred while saving your keys, please retry"
+msgstr ""
+
 msgid "Captcha"
+msgstr ""
+
+msgid "Captcha configuration"
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Secret key"
+msgstr ""
+
+msgid "Site key"
+msgstr ""
+
+msgid "The provided keys are not valid"
 msgstr ""
 
 msgid ""
 "We have not been able to assert that you are not a robot, please try again"
+msgstr ""
+
+msgid "You can get the required keys from the Google reCAPTCHA administration"
+msgstr ""
+
+msgid "Your keys has been successfully saved"
 msgstr ""
