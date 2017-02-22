@@ -244,6 +244,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function fetchBurndownImage(Tracker_Artifact $artifact, PFUser $user) {
         if ($this->userCanRead($user)) {
             $burndown_data = $this->buildBurndownData($user, $artifact);
+
             if ($burndown_data->isBeingCalculated() === true) {
                 throw new BurndownCacheIsCurrentlyCalculatedException();
             } else {
@@ -384,12 +385,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $start->setTimestamp($start_date);
         $start->setTime(0, 0, 0);
 
-        $user_time_period   = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
+        $user_time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {
             $this->addRemainingEffortData(
-                $user_burndown_data, $user_time_period, $artifact, $user, $start->getTimestamp()
+                $user_burndown_data, $user_time_period, $artifact, $user
             );
         }
 
@@ -497,8 +498,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Chart_Data_Burndown $burndown_data,
         TimePeriodWithoutWeekEnd $time_period,
         Tracker_Artifact $artifact,
-        PFUser $user,
-        $start_date
+        PFUser $user
     ) {
         $field = $this->getBurndownRemainingEffortField($artifact, $user);
         if (! $field) {
@@ -506,7 +506,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         $date = new DateTime();
-        $date->setTimestamp($start_date);
+        $date->setTimestamp($time_period->getStartDate());
 
         $tonight = new DateTime();
         $tonight->setTime(0, 0, 0);
@@ -515,10 +515,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         $artifact_list = array($artifact);
         while($offset_days <= $time_period->getDuration()) {
-            if ($time_period->isNotWeekendDay($date->getTimestamp()) && $date < $tonight) {
+            if ($date < $tonight) {
                 $remaining_effort = $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $date->getTimestamp());
-                $burndown_data->addEffortAt($offset_days, $remaining_effort);
-                $offset_days++;
+                if ($remaining_effort !== false) {
+                    $burndown_data->addEffortAt($offset_days, $remaining_effort);
+                    $offset_days++;
+                }
             }
 
             if ($date >= $tonight) {
