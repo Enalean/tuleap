@@ -89,6 +89,7 @@ class Notification extends Pane
             )
         );
         $html    .= $this->getPluginNotifications();
+        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
         $GLOBALS['Response']->includeFooterJavascriptFile(GIT_BASE_URL .'/scripts/admin-notifications.js');
 
         return $html;
