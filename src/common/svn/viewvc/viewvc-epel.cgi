@@ -15,8 +15,9 @@ import sys
 import os
 import string
 import urllib
+from distutils.sysconfig import get_python_lib
 
-LIBRARY_DIR = '/usr/lib/python2.6/site-packages/viewvc/lib'
+LIBRARY_DIR = get_python_lib()+'/viewvc/lib'
 CONF_PATHNAME = '/etc/viewvc/viewvc.conf'
 TULEAP_UTILS = '/usr/share/tuleap/src/utils'
 TULEAP_UTILS_SVN = '/usr/share/tuleap/src/utils/svn'
