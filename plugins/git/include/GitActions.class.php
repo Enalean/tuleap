@@ -791,7 +791,6 @@ class GitActions extends PluginActions
                 }
             }
         }
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
         $this->history_dao->groupAddHistory(
             "git_repo_update",
@@ -902,7 +901,6 @@ class GitActions extends PluginActions
                 $ret = false;
             }
         }
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
         $this->history_dao->groupAddHistory(
             "git_repo_update",
