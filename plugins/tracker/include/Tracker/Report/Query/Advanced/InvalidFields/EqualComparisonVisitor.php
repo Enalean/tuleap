@@ -161,7 +161,7 @@ class EqualComparisonVisitor implements
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        return $this->visitList();
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)

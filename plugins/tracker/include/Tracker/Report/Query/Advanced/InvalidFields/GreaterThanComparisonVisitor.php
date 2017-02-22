@@ -144,7 +144,7 @@ class GreaterThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, 
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        throw new FieldIsNotSupportedAtAllException($field);
+        throw new FieldIsNotSupportedForComparisonException($field, self::$OPERATOR);
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)

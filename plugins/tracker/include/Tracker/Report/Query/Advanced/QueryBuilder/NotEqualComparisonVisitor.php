@@ -171,7 +171,11 @@ class NotEqualComparisonVisitor implements
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return null;
+        return new NotEqualComparison\ForLastUpdatedBy(
+            UserManager::instance(),
+            new CollectionOfListValuesExtractor(),
+            new FromWhereComparisonFieldReadOnlyBuilder()
+        );
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
