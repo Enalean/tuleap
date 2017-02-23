@@ -24,6 +24,7 @@ namespace Tuleap\Git\Permissions;
 use GitRepository;
 use PermissionsManager;
 use Git;
+use Tuleap\User\UserGroup\NameTranslator;
 use UGroupManager;
 use User_ForgeUGroup;
 use ProjectUGroup;
@@ -164,7 +165,7 @@ class HistoryValueFormatter
 
     private function extractUgroupName(ProjectUGroup $ugroup)
     {
-        return User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        return NameTranslator::getUserGroupDisplayName($ugroup->getName());
     }
 
     /**

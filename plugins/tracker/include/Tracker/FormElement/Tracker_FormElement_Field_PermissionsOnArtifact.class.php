@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\UserGroup\NameTranslator;
+
 require_once('common/dao/UGroupDao.class.php');
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
@@ -594,7 +596,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $id = $user_group->getId();
             $selected = (in_array($id, $selected_ids)) ? 'selected="selected"' : '';
             $options .= '<option value="'. $id .'" '.$selected.'>';
-            $options .= User_ForgeUGroup::getUserGroupDisplayName($user_group->getName());
+            $options .= NameTranslator::getUserGroupDisplayName($user_group->getName());
             $options .= '</option>';
         }
 

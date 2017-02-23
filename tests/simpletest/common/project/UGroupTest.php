@@ -330,8 +330,8 @@ class UGroup_GetsNameTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->setText('membre_de_projet', array('project_ugroup', 'ugroup_project_members_name_key'));
-        $this->setText('administrateur_de_le_projet', array('project_ugroup', 'ugroup_project_admins_name_key'));
+        $this->setText('membre_de_projet', array('project_ugroup', 'ugroup_project_members'));
+        $this->setText('administrateur_de_le_projet', array('project_ugroup', 'ugroup_project_admins'));
     }
 
     public function itReturnsProjectMembers() {

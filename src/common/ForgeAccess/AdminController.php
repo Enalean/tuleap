@@ -19,6 +19,7 @@
   */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\User\UserGroup\NameTranslator;
 
 class ForgeAccess_AdminController
 {
@@ -86,8 +87,8 @@ class ForgeAccess_AdminController
             $this->localincfinder->getLocalIncPath(),
             ForgeConfig::get(ForgeAccess::CONFIG),
             count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
-            ForgeConfig::get(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL),
-            ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL),
+            ForgeConfig::get(NameTranslator::CONFIG_AUTHENTICATED_LABEL),
+            ForgeConfig::get(NameTranslator::CONFIG_REGISTERED_LABEL),
             ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
         );
 

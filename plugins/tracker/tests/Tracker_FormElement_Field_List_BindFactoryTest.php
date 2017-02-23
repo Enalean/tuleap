@@ -176,7 +176,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
         $this->bind_factory   = new Tracker_FormElement_Field_List_BindFactory($this->ugroup_manager);
         $this->bind_factory->setUgroupsValueDao($this->value_dao);
 
-        $this->setText('Registered users', array('project_ugroup', 'ugroup_registered_users_name_key'));
+        $this->setText('Registered users', array('project_ugroup', 'ugroup_registered_users'));
     }
 
     public function itImportsStaticUgroups() {

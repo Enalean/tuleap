@@ -19,6 +19,7 @@
 
 namespace Tuleap\Project\REST;
 use \ProjectUGroup;
+use Tuleap\User\UserGroup\NameTranslator;
 use \User_ForgeUGroup;
 use \Exception;
 
@@ -57,7 +58,7 @@ class UserGroupRepresentation {
     public function build($project_id, ProjectUGroup $ugroup) {
         $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
         $this->uri        = UserGroupRepresentation::ROUTE . '/' . $this->id ;
-        $this->label      = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         $this->key        = $ugroup->getName();
         $this->users_uri  = self::ROUTE . '/'. $this->id .'/users';
         $this->short_name = $ugroup->getNormalizedName();
