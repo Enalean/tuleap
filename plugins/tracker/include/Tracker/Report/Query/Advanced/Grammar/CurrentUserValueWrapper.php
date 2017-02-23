@@ -29,10 +29,15 @@ class CurrentUserValueWrapper implements ValueWrapper
      */
     private $value;
 
-    public function __construct()
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    public function __construct($user_manager)
     {
-        $user_manager = UserManager::instance();
-        $this->value  = null;
+        $this->user_manager = $user_manager;
+        $this->value        = null;
 
         $current_user = $user_manager->getCurrentUser();
         if ($current_user) {

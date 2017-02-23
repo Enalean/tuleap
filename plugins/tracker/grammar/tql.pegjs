@@ -183,7 +183,7 @@ CurrentDateTime
 
 CurrentUser
     = "myself"i _ "(" _ ")" {
-        return new CurrentUserValueWrapper();
+        return new CurrentUserValueWrapper(\UserManager::instance());
     }
 
 PeriodCurrentDateTime
