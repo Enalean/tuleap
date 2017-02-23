@@ -102,11 +102,9 @@ if ($json_format) {
             if ($row['ugroup_id'] > 100
                 || in_array($row['ugroup_id'], array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN))
             ) {
-                $ugroup                = new ProjectUGroup($row);
-                $ugroup_for_nice_label = new User_ForgeUGroup($row['ugroup_id'], $row['name'], '');
-
-                $id   = $ugroup->getNormalizedName();
-                $text = $ugroup_for_nice_label->getName();
+                $ugroup = new ProjectUGroup($row);
+                $id     = $ugroup->getNormalizedName();
+                $text   = $ugroup->getTranslatedName();
 
                 if (mb_stripos($text, $userName) !== false
                     || mb_stripos($id, $userName) !== false
