@@ -21,11 +21,10 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedForAnonymousException;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 
 class ListFieldChecker implements InvalidFieldChecker
 {
@@ -43,14 +42,14 @@ class ListFieldChecker implements InvalidFieldChecker
      */
     private $bind_labels_extractor;
     /**
-     * @var BindValueNormalizer
+     * @var ListFieldBindValueNormalizer
      */
     private $value_normalizer;
 
     public function __construct(
         EmptyStringChecker $empty_string_checker,
         CollectionOfListValuesExtractor $values_extractor,
-        BindValueNormalizer $value_normalizer,
+        ListFieldBindValueNormalizer $value_normalizer,
         CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor
     ) {
         $this->empty_string_checker  = $empty_string_checker;
@@ -70,8 +69,8 @@ class ListFieldChecker implements InvalidFieldChecker
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
                 throw new ListToEmptyStringComparisonException($comparison, $field);
             }
-
             $normalized_value = $this->value_normalizer->normalize($value);
+
             if ($value !== '' && ! in_array($normalized_value, $normalized_labels)) {
                 throw new ListValueDoNotExistComparisonException($field, $value);
             }

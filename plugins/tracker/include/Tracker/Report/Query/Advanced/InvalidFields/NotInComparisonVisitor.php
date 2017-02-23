@@ -43,7 +43,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
@@ -130,12 +130,14 @@ class NotInComparisonVisitor implements
 
     private function visitList()
     {
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+
         return new ListFieldChecker(
             new EmptyStringForbidden(),
             new CollectionOfListValuesExtractor(),
-            new BindValueNormalizer(),
+            $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                new BindValueNormalizer()
+                $list_field_bind_value_normalizer
             )
         );
     }

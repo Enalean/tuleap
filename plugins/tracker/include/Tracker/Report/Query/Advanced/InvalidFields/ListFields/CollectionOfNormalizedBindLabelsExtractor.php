@@ -27,15 +27,16 @@ use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 
 class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
 {
     /**
-     * @var BindValueNormalizer
+     * @var ListFieldBindValueNormalizer
      */
     private $value_normalizer;
 
-    public function __construct(BindValueNormalizer $value_normalizer)
+    public function __construct(ListFieldBindValueNormalizer $value_normalizer)
     {
         $this->value_normalizer = $value_normalizer;
     }

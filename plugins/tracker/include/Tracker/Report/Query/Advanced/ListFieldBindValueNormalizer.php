@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-class BindValueNormalizer
+class ListFieldBindValueNormalizer
 {
     public function normalize($value)
     {
