@@ -187,9 +187,9 @@ class GitActions extends PluginActions
      */
     private $ugroups_to_notify_dao;
     /**
-     * @var User_ForgeUserGroupFactory
+     * @var UGroupManager
      */
-    private $forge_user_group_factory;
+    private $ugroup_manager;
 
     public function __construct(
         Git $controller,
@@ -225,7 +225,7 @@ class GitActions extends PluginActions
         RegexpFineGrainedRetriever $regexp_retriever,
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
-        User_ForgeUserGroupFactory $forge_user_group_factory
+        UGroupManager $ugroup_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -260,7 +260,7 @@ class GitActions extends PluginActions
         $this->regexp_retriever              = $regexp_retriever;
         $this->users_to_notify_dao           = $users_to_notify_dao;
         $this->ugroups_to_notify_dao         = $ugroups_to_notify_dao;
-        $this->forge_user_group_factory      = $forge_user_group_factory;
+        $this->ugroup_manager                = $ugroup_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -858,16 +858,11 @@ class GitActions extends PluginActions
         $great_success = true;
         /** @var ProjectUGroup $ugroup */
         foreach ($ugroups as $ugroup) {
-            try {
-                $ugroup_for_display = $this->forge_user_group_factory->getProjectUGroupAsForgeUGroupById($ugroup->getId());
-            } catch (User_UserGroupNotFoundException $e) {
-                continue;
-            }
             if ($this->ugroups_to_notify_dao->insert($repository_id, $ugroup->getId())) {
                 $controller->addInfo(
                     sprintf(
                         dgettext('plugin-git', 'User group "%s" successfully added to notifications'),
-                        $ugroup_for_display->getName()
+                        $ugroup->getTranslatedName()
                     )
                 );
                 $this->history_dao->groupAddHistory(
@@ -879,7 +874,7 @@ class GitActions extends PluginActions
                 $controller->addError(
                     sprintf(
                         dgettext('plugin-git', 'Cannot add user group "%s"'),
-                        $ugroup_for_display->getName()
+                        $ugroup->getTranslatedName()
                     )
                 );
                 $great_success = false;
@@ -967,16 +962,15 @@ class GitActions extends PluginActions
         $repository    = $this->_loadRepository($project_id, $repository_id);
 
         foreach ($ugroups_to_remove as $ugroup_id) {
-            try {
-                $ugroup = $this->forge_user_group_factory->getProjectUGroupAsForgeUGroupById($ugroup_id);
-            } catch (User_UserGroupNotFoundException $e) {
+            $ugroup = $this->ugroup_manager->getUgroup($this->request->getProject(), $ugroup_id);
+            if (! $ugroup) {
                 continue;
             }
 
             if ($this->ugroups_to_notify_dao->delete($repository_id, $ugroup_id)) {
                 $feedback = sprintf(
                     dgettext('tuleap-git', 'User group "%s" has been removed from notifications'),
-                    $ugroup->getName()
+                    $ugroup->getTranslatedName()
                 );
                 $controller->addInfo($feedback);
                 $this->history_dao->groupAddHistory(
@@ -987,7 +981,7 @@ class GitActions extends PluginActions
             } else {
                 $feedback = sprintf(
                     dgettext('tuleap-git', 'Cannot remove user group "%s" from notifications'),
-                    $ugroup->getName()
+                    $ugroup->getTranslatedName()
                 );
                 $controller->addError($feedback);
                 $great_success = false;

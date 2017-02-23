@@ -182,17 +182,6 @@ class UserGroupDao extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
-    /** @deprecated */
-    public function searchProjectUGroup($user_group_id)
-    {
-        $user_group_id = $this->da->escapeInt($user_group_id);
-
-        $sql = "SELECT ugroup.* FROM ugroup
-                WHERE ugroup.ugroup_id = $user_group_id";
-
-        return $this->retrieveFirstRow($sql);
-    }
-
     /**
     * @return bool
     * @throws User_UserGroupNameInvalidException

@@ -89,7 +89,7 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
                 mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
                 mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-                mock('User_ForgeUserGroupFactory')
+                mock('UGroupManager')
             )
         );
     }
@@ -516,7 +516,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
             mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
             mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-            mock('User_ForgeUserGroupFactory')
+            mock('UGroupManager')
         );
     }
 
@@ -591,7 +591,7 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
             mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
             mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-            mock('User_ForgeUserGroupFactory')
+            mock('UGroupManager')
         );
     }
 
@@ -755,7 +755,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
             mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
             mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-            mock('User_ForgeUserGroupFactory')
+            mock('UGroupManager')
         );
 
     }

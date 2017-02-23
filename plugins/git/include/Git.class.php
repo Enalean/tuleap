@@ -112,10 +112,6 @@ class Git extends PluginController {
      */
     private $ugroups_to_notify_dao;
     /**
-     * @var User_ForgeUserGroupFactory
-     */
-    private $forge_user_group_factory;
-    /**
      * @var UGroupManager
      */
     private $ugroup_manager;
@@ -332,7 +328,6 @@ class Git extends PluginController {
         RegexpPermissionFilter $regexp_filter,
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
-        User_ForgeUserGroupFactory $forge_user_group_factory,
         UGroupManager $ugroup_manager
     ) {
         parent::__construct($user_manager, $request);
@@ -418,7 +413,6 @@ class Git extends PluginController {
         $this->regexp_filter                           = $regexp_filter;
         $this->users_to_notify_dao                     = $users_to_notify_dao;
         $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
-        $this->forge_user_group_factory                = $forge_user_group_factory;
         $this->ugroup_manager                          = $ugroup_manager;
     }
 
@@ -1517,7 +1511,7 @@ class Git extends PluginController {
             $this->regexp_retriever,
             $this->users_to_notify_dao,
             $this->ugroups_to_notify_dao,
-            $this->forge_user_group_factory
+            $this->ugroup_manager
         );
     }
 
