@@ -39,7 +39,7 @@ class MarkdownMustacheTest extends TuleapTestCase
 
     public function itVerifiesThatMarkdownEngineConvertSpecialCharactersIntoHtmlEntities()
     {
-        $text   = 'my|text{~}\*+-._$>`';
+        $text   = '![my](text)|{~}\*+-._$>`';
         $result = $this->renderer->renderToString(
             'simple-text',
             array('text' => $text)
@@ -47,7 +47,7 @@ class MarkdownMustacheTest extends TuleapTestCase
 
         $this->assertEqual(
             $result,
-            'my&#124;text&#123;&#126;&#125;&#92;&#42;&#43;&#45;&#46;&#95;&#36;&#62;&#96;'
+            '&#33;&#91;my&#93;&#40;text&#41;&#124;&#123;&#126;&#125;&#92;&#42;&#43;&#45;&#46;&#95;&#36;&#62;&#96;'
         );
     }
 }

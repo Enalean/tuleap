@@ -37,7 +37,12 @@ class MarkdownMustache extends Mustache
         '`'  => '&#96;',
         '>'  => '&#62;',
         '$'  => '&#36;',
-        '~'  => '&#126;'
+        '~'  => '&#126;',
+        '['  => '&#91;',
+        ']'  => '&#93;',
+        '('  => '&#40;',
+        ')'  => '&#41;',
+        '!'  => '&#33;'
     );
 
     protected function _renderEscaped($tag_name, $leading, $trailing)
