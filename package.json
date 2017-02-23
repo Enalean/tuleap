@@ -2,9 +2,7 @@
   "author": "Enalean Team",
   "name": "botmattermost",
   "homepage": "https://www.enalean.com",
-  "licenses": {
-    "type": "GNU General Public License v2"
-  },
+  "license": "GNU General Public License v2",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.5",

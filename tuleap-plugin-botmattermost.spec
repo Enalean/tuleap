@@ -29,7 +29,7 @@ find www/themes -name '*.scss' | xargs rm -f
 %{__rm} -rf $RPM_BUILD_ROOT
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost
-%{__cp} -ar db include site-content template ChangeLog README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost
+%{__cp} -ar db include site-content template README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost
 
 # www
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost/www

@@ -10,7 +10,6 @@ DOCKERIMAGE=build-plugin-botmattermost-rpm
 RELEASE=1
 LAST_TAG=$(git describe --abbrev=0 --tags)
 NB_COMMITS=$(git log --oneline $LAST_TAG..HEAD | wc -l)
-
 if [ $NB_COMMITS -gt 0 ]; then
     RELEASE=$NB_COMMITS
 fi
