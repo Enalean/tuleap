@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use BaseLanguageFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -47,6 +48,7 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 class NotInComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
@@ -131,14 +133,20 @@ class NotInComparisonVisitor implements
     private function visitList()
     {
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new BaseLanguageFactory()
+        );
 
         return new ListFieldChecker(
             new EmptyStringForbidden(),
             new CollectionOfListValuesExtractor(),
             $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                $list_field_bind_value_normalizer
-            )
+                $list_field_bind_value_normalizer,
+                $ugroup_label_converter
+            ),
+            $ugroup_label_converter
         );
     }
 

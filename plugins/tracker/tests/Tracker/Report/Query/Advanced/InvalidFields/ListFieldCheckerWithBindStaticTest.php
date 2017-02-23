@@ -49,14 +49,18 @@ class ListFieldCheckerWithBindStaticTest extends TuleapTestCase
         parent::setUp();
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = mock('Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter');
+        stub($ugroup_label_converter)->isASupportedDynamicUgroup()->returns(false);
 
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
             new CollectionOfListValuesExtractor(),
             $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                $list_field_bind_value_normalizer
-            )
+                $list_field_bind_value_normalizer,
+                $ugroup_label_converter
+            ),
+            $ugroup_label_converter
         );
 
         $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
