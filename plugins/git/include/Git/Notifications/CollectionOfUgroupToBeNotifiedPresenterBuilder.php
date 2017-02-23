@@ -21,7 +21,7 @@
 namespace Tuleap\Git\Notifications;
 
 use GitRepository;
-use User_ForgeUserGroupFactory;
+use ProjectUGroup;
 
 class CollectionOfUgroupToBeNotifiedPresenterBuilder
 {
@@ -30,23 +30,16 @@ class CollectionOfUgroupToBeNotifiedPresenterBuilder
      */
     private $dao;
 
-    /**
-     * @var User_ForgeUserGroupFactory
-     */
-    private $ugroup_factory;
-
-    public function __construct(UgroupsToNotifyDao $dao, User_ForgeUserGroupFactory $ugroup_factory)
+    public function __construct(UgroupsToNotifyDao $dao)
     {
-        $this->dao            = $dao;
-        $this->ugroup_factory = $ugroup_factory;
+        $this->dao = $dao;
     }
 
     public function getCollectionOfUgroupToBeNotifiedPresenter(GitRepository $repository)
     {
         $presenters = array();
         foreach ($this->dao->searchUgroupsByRepositoryId($repository->getId()) as $row) {
-            $ugroup       = $this->ugroup_factory->instantiateFromRow($row);
-            $presenters[] = new UgroupToBeNotifiedPresenter($ugroup);
+            $presenters[] = new UgroupToBeNotifiedPresenter(new ProjectUGroup($row));
         }
         $this->sortUgroupAlphabetically($presenters);
 

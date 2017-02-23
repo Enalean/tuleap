@@ -20,16 +20,16 @@
 
 namespace Tuleap\Git\Notifications;
 
-use User_ForgeUGroup;
+use ProjectUGroup;
 
 class UgroupToBeNotifiedPresenter
 {
     public $label;
     public $ugroup_id;
 
-    public function __construct(User_ForgeUGroup $ugroup)
+    public function __construct(ProjectUGroup $ugroup)
     {
-        $this->label     = $ugroup->getName();
+        $this->label     = $ugroup->getTranslatedName();
         $this->ugroup_id = $ugroup->getId();
     }
 }
