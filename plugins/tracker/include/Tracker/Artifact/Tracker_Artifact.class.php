@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2011 - 2016. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
@@ -1115,6 +1116,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getReferenceManager()
         );
         return $creator->create($this, $fields_data, $comment, $submitter, $submitted_on, $send_notification, $comment_format);
+    }
+
+    public function createNewChangesetWhitoutRequiredValidation(
+        $fields_data,
+        $comment,
+        PFUser $submitter,
+        $send_notification,
+        $comment_format
+    ) {
+        $submitted_on = $_SERVER['REQUEST_TIME'];
+
+        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+            new NewChangesetFieldsWithoutRequiredValidationValidator($this->getFormElementFactory()),
+            $this->getFormElementFactory(),
+            $this->getChangesetDao(),
+            $this->getChangesetCommentDao(),
+            $this->getArtifactFactory(),
+            $this->getEventManager(),
+            $this->getReferenceManager()
+        );
+
+        return $creator->create(
+            $this, $fields_data, $comment, $submitter, $submitted_on, $send_notification, $comment_format
+        );
     }
 
     /**
