@@ -935,7 +935,7 @@ class GitActions extends PluginActions
                 $controller->addInfo($feedback);
                 $this->history_dao->groupAddHistory(
                     "git_repo_update",
-                    $repository->getName() . ': '. $feedback,
+                    $repository->getName() . ': remove user '. $user->getName() .' from notifications',
                     $repository->getProjectId()
                 );
             } else {
@@ -975,7 +975,7 @@ class GitActions extends PluginActions
                 $controller->addInfo($feedback);
                 $this->history_dao->groupAddHistory(
                     "git_repo_update",
-                    $repository->getName() . ': '. $feedback,
+                    $repository->getName() . ': remove user group '. $ugroup->getNormalizedName() .' from notifications',
                     $repository->getProjectId()
                 );
             } else {
