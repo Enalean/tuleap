@@ -170,8 +170,7 @@ class GitViews_RepoManagement {
         $webhook_factory              = new WebhookFactory($webhook_dao);
         $user_to_be_notified_builder  = new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao());
         $group_to_be_notified_builder = new CollectionOfUgroupToBeNotifiedPresenterBuilder(
-            new UgroupsToNotifyDao(),
-            new User_ForgeUserGroupFactory(new UserGroupDao())
+            new UgroupsToNotifyDao()
         );
 
         $panes[] = new Pane\Notification(
