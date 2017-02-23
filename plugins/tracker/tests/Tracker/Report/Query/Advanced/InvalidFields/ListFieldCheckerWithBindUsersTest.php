@@ -26,11 +26,9 @@ use Tuleap\REST\UserManager;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\BindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use TuleapTestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
@@ -58,7 +56,7 @@ class ListFieldCheckerWithBindUsersTest extends TuleapTestCase
         $this->current_user = aUser()->withId(101)->withUserName('admin')->build();
         $this->user_manager = mock('UserManager');
 
-        $list_field_bind_value_normalizer = new BindValueNormalizer();
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
 
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
