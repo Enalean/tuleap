@@ -400,26 +400,4 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
     }
-
-    public function itRetrievesForSelectBoxFieldInNotInComparisonTheExpertFromAndWhereClausesOfTheField()
-    {
-        stub($this->bind)->accept()->returns(new NotInComparisonForListBindStatic(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereNotEqualComparisonListFieldBuilder()
-        ));
-
-        $comparison = new NotInComparison(
-            'sb',
-            new InValueWrapper(
-                array(
-                    new SimpleValueWrapper('third'),
-                    new SimpleValueWrapper('fourth')
-                )
-            )
-        );
-
-        $result = $this->query_builder->visitNotInComparison($comparison, $this->parameters);
-
-        $this->assertPattern('/tracker_changeset_value_list/', $result->getFrom());
-    }
 }
