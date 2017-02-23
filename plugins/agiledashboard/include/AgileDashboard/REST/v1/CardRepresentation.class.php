@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \PFUser;
 use \Tuleap\REST\JsonCast;
 
 class AgileDashboard_CardRepresentation {
