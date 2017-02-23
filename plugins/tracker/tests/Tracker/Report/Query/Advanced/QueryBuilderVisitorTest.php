@@ -26,7 +26,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
@@ -38,10 +37,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison\ForListBindStatic as InComparisonForListBindStatic;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison\ForListBindStatic as NotInComparisonForListBindStatic;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
@@ -53,7 +50,7 @@ use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class QueryBuilderTest extends TuleapTestCase
+class QueryBuilderVisitorTest extends TuleapTestCase
 {
     private $tracker;
     private $field_text;
@@ -402,28 +399,6 @@ class QueryBuilderTest extends TuleapTestCase
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
         $this->assertPattern('/tracker_changeset_value_float/', $result->getFrom());
-    }
-
-    public function itRetrievesForSelectBoxFieldInInComparisonTheExpertFromAndWhereClausesOfTheField()
-    {
-        stub($this->bind)->accept()->returns(new InComparisonForListBindStatic(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonListFieldBuilder()
-        ));
-
-        $comparison = new InComparison(
-            'sb',
-            new InValueWrapper(
-                array(
-                    new SimpleValueWrapper('first'),
-                    new SimpleValueWrapper('second')
-                )
-            )
-        );
-
-        $result = $this->query_builder->visitInComparison($comparison, $this->parameters);
-
-        $this->assertPattern('/tracker_changeset_value_list/', $result->getFrom());
     }
 
     public function itRetrievesForSelectBoxFieldInNotInComparisonTheExpertFromAndWhereClausesOfTheField()
