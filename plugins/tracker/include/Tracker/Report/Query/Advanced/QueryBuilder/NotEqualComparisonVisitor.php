@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
+use BaseLanguageFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -46,7 +47,9 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use UserManager;
 
 class NotEqualComparisonVisitor implements
@@ -147,8 +150,13 @@ class NotEqualComparisonVisitor implements
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
         $ugroups_bind_builder = new NotEqualComparison\ForListBindUgroups(
+            new CollectionOfListValuesExtractor(),
             new FromWhereComparisonFieldBuilder(),
-            new FromWhereNotEqualComparisonListFieldBuilder()
+            new FromWhereNotEqualComparisonListFieldBindUgroupsBuilder(),
+            new UgroupLabelConverter(
+                new ListFieldBindValueNormalizer(),
+                new BaseLanguageFactory()
+            )
         );
 
         $bind_builder = new ListFieldBindVisitor(
