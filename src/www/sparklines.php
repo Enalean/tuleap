@@ -18,6 +18,7 @@
  */
 
 require_once('pre.php');
+session_write_close();
 
 $sparklines = array();
 $reference_manager = ReferenceManager::instance();
