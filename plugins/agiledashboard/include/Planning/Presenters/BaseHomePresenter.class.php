@@ -26,12 +26,19 @@ class Planning_Presenter_BaseHomePresenter {
     /** @var bool */
     public $is_user_admin;
 
+    /**
+     * @var bool
+     */
+    public $is_mono_milestone_enabled;
+
     public function __construct(
         $group_id,
-        $is_user_admin
+        $is_user_admin,
+        $is_mono_milestone_enabled
     ) {
-        $this->group_id      = $group_id;
-        $this->is_user_admin = $is_user_admin;
+        $this->group_id                  = $group_id;
+        $this->is_user_admin             = $is_user_admin;
+        $this->is_mono_milestone_enabled = $is_mono_milestone_enabled;
     }
 
     public function nothing_set_up() {
@@ -56,6 +63,11 @@ class Planning_Presenter_BaseHomePresenter {
 
     public function start_scrum() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'start_scrum');
+    }
+
+    public function activate_scrum_v2()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_scrum_v2');
     }
 
     public function create_scrum_url() {

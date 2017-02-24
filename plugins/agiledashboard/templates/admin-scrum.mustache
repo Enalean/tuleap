@@ -18,6 +18,28 @@
     <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST">
         <input type="hidden" name="activate-scrum" value="0">
 
+        {{# can_scrum_mono_milestone_be_enabled }}
+            <section>
+                <h3><i class="icon-cogs"></i> {{ scrum_monomilestone_title }}</h3>
+                <div class="agiledashboard-section-details">
+                    <div class="alert alert-warning">
+                        {{ warning_feature_under_construction }}
+                    </div>
+                    <label class="checkbox active-scrum">
+                        <input
+                                type="checkbox"
+                                name="activate-scrum-v2"
+                                value="1"
+                            {{# use_mono_milestone }} checked {{/ use_mono_milestone }}
+                        >
+                        {{ activate_scrum_mono_milestone_label }}
+                    </label>
+                    {{{ token }}}
+                    <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
+                </div>
+            </section>
+        {{/ can_scrum_mono_milestone_be_enabled }}
+
         <div class="agiledashboard-admin-section">
             {{# scrum_activated }}
                 <div class="alert alert-success">
@@ -36,6 +58,7 @@
             <section>
                 <h3><i class="icon-cogs"></i> {{ general_settings_section }}</h3>
                 <div class="agiledashboard-section-details">
+
                     <label class="checkbox active-scrum">
                         <input type="checkbox" name="activate-scrum" value="1" {{# scrum_activated }} checked {{/ scrum_activated }}>
                         {{ activate_scrum_label }}

@@ -1,4 +1,8 @@
 <?php
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDisabler;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneEnabler;
+
 /**
  * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
@@ -34,23 +38,43 @@ class AgileDashboardScrumConfigurationUpdater {
 
     /** @var AgileDashboard_FirstScrumCreator */
     private $first_scrum_creator;
+    /**
+     * @var ScrumForMonoMilestoneEnabler
+     */
+    private $scrum_mono_milestone_enabler;
+    /**
+     * @var ScrumForMonoMilestoneDisabler
+     */
+    private $scrum_mono_milestone_disabler;
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
 
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboardConfigurationResponse $response,
-        AgileDashboard_FirstScrumCreator $first_scrum_creator
+        AgileDashboard_FirstScrumCreator $first_scrum_creator,
+        ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
+        ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
-        $this->request             = $request;
-        $this->project_id          = (int) $this->request->get('group_id');
-        $this->config_manager      = $config_manager;
-        $this->response            = $response;
-        $this->first_scrum_creator = $first_scrum_creator;
+        $this->request                       = $request;
+        $this->project_id                    = (int) $this->request->get('group_id');
+        $this->config_manager                = $config_manager;
+        $this->response                      = $response;
+        $this->first_scrum_creator           = $first_scrum_creator;
+        $this->scrum_mono_milestone_enabler  = $scrum_mono_milestone_enabler;
+        $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
+        $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
     }
 
-    public function updateConfiguration() {
+    public function updateConfiguration()
+    {
         if (! $this->request->exist('scrum-title-admin')) {
             $this->response->missingScrumTitle();
+
             return;
         }
 
@@ -64,8 +88,22 @@ class AgileDashboardScrumConfigurationUpdater {
             $this->config_manager->getKanbanTitle($this->project_id)
         );
 
+        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneActivated(
+            $this->project_id
+        );
+        if ($this->request->get('home-ease-onboarding') === false) {
+            if ($this->request->get('activate-scrum-v2') && $is_scrum_mono_milestone_enabled === false) {
+                $this->scrum_mono_milestone_enabler->enableScrumForMonoMilestones($this->project_id);
+            } else if ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === true) {
+                $this->scrum_mono_milestone_disabler->disableScrumForMonoMilestones($this->project_id);
+            }
+        }
+
+
         if ($scrum_is_activated) {
-            $this->first_scrum_creator->createFirstScrum();
+            if ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === false) {
+                $this->first_scrum_creator->createFirstScrum();
+            }
         }
 
         $this->response->scrumConfigurationUpdated();

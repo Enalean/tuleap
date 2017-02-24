@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+
 require_once 'common/plugin/Plugin.class.php';
 
 /**
@@ -319,7 +322,8 @@ class AgileDashboardRouter {
             $this->config_manager,
             $this->kanban_factory,
             $this->planning_permissions_manager,
-            $this->hierarchy_checker
+            $this->hierarchy_checker,
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao())
         );
     }
 
@@ -332,7 +336,8 @@ class AgileDashboardRouter {
             $this->config_manager,
             TrackerFactory::instance(),
             new AgileDashboard_PermissionsManager(),
-            $this->hierarchy_checker
+            $this->hierarchy_checker,
+            new ScrumForMonoMilestoneChecker( new ScrumForMonoMilestoneDao())
         );
     }
 

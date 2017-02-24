@@ -91,6 +91,7 @@ plugin_agiledashboard	nothing_set_up_scrum_admin	Aucune configuration Scrum n'a 
 plugin_agiledashboard	nothing_set_up_come_back	Veuillez revenir plus tard.
 plugin_agiledashboard	start_kanban	Démarrez Kanban
 plugin_agiledashboard	start_scrum	Démarrez Scrum
+plugin_agiledashboard	activate_scrum_v2	Activer Scrum V2
 
 plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
 plugin_agiledashboard_contentpane	closed_items_title	$1 fermé(e)s
@@ -177,6 +178,9 @@ plugin_agiledashboard	no_tracker_available	Aucun tracker n'est disponible.
 plugin_agiledashboard	kanban_not_found	Le Kanban requis n'a pas pu être trouvé.
 plugin_agiledashboard	content_not_found	Aucun contenu n'a été trouvé.
 plugin_agiledashboard	Milestone	Jalon
+plugin_agiledashboard	activate_scrum_mono_milestone_label	Activer Scrum V2
+plugin_agiledashboard	scrum_monomilestone_title	Scrum jalon unique
+plugin_agiledashboard	warning_feature_under_construction	Cette fonctionnalité est en cours de développement. Une fois coché il n'est plus possible de démarrer un mode Scrum avec un template par défaut.
 
 plugin_agiledashboard_first_kanban	error_existing_tracker	Un outil de suivi existant ($1) a empêché la création d'une première instance de kanban.
 plugin_agiledashboard_first_kanban	internal_error	Une erreur interne a empêché la création d'une première instance de kanban.
