@@ -19,6 +19,9 @@
  */
 
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 class AgileDashboardRouterBuilder {
 
@@ -83,6 +86,8 @@ class AgileDashboardRouterBuilder {
             $top_milestone_pane_factory
         );
 
+        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
+
         return new AgileDashboardRouter(
             $plugin,
             $milestone_factory,
@@ -98,7 +103,9 @@ class AgileDashboardRouterBuilder {
             $this->getConfigurationManager(),
             $this->getKanbanFactory(),
             new PlanningPermissionsManager(),
-            $this->getHierarchyChecker()
+            $this->getHierarchyChecker(),
+            $mono_milestone_checker,
+            new ScrumPlanningFilter($this->getHierarchyChecker(), $mono_milestone_checker, $planning_factory)
         );
     }
 

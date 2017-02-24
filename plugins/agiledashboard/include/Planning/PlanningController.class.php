@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\CannotAddMoreThanOnePlanningInScrumMonoMilestone;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -75,10 +76,16 @@ class Planning_Controller extends MVC2_PluginController {
 
     /** @var AgileDashboard_HierarchyChecker */
     private $hierarchy_checker;
+
     /**
      * @var ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
+
+    /**
+     * @var ScrumPlanningFilter
+     */
+    private $scrum_planning_filter;
 
     public function __construct(
         Codendi_Request $request,
@@ -94,11 +101,12 @@ class Planning_Controller extends MVC2_PluginController {
         AgileDashboard_KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_HierarchyChecker $hierarchy_checker,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        ScrumPlanningFilter $scrum_planning_filter
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id                     = (int)$request->get('group_id');
+        $this->group_id                     = (int) $request->get('group_id');
         $this->planning_factory             = $planning_factory;
         $this->planning_shortaccess_factory = $planning_shortaccess_factory;
         $this->milestone_factory            = $milestone_factory;
@@ -112,6 +120,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->scrum_planning_filter        = $scrum_planning_filter;
     }
 
     public function index() {
@@ -333,11 +342,6 @@ class Planning_Controller extends MVC2_PluginController {
         return $this->request->getProject()->userIsAdmin($this->request->getCurrentUser());
     }
 
-    private function isLabModeEnableForUser() {
-        return $this->request->getCurrentUser()->useLabFeatures();
-    }
-
-
     /**
      * Redirects a non-admin user to the agile dashboard home page
      */
@@ -481,22 +485,22 @@ class Planning_Controller extends MVC2_PluginController {
         return $this->renderToString('edit', $presenter);
     }
 
-    private function getFormPresenter(PFUser $user, Planning $planning) {
+    private function getFormPresenter(PFUser $user, Planning $planning)
+    {
         $group_id = $planning->getGroupId();
 
-        $available_trackers            = $this->planning_factory->getAvailableBacklogTrackers($user, $group_id);
-        $available_planning_trackers   = $this->planning_factory->getAvailablePlanningTrackers($user, $group_id);
-        $cardwall_admin                = $this->getCardwallConfiguration($planning);
-        $available_planning_trackers[] = $planning->getPlanningTracker();
-        $kanban_tracker_ids            = $this->kanban_factory->getKanbanTrackerIds($group_id);
+        $available_trackers = $this->planning_factory->getAvailableBacklogTrackers($user, $group_id);
+        $cardwall_admin     = $this->getCardwallConfiguration($planning);
+        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($group_id);
 
-        $planning_trackers_filtered = $this->getPlanningTrackersFiltered(
-            $available_planning_trackers,
+        $planning_trackers_filtered = $this->scrum_planning_filter->getPlanningTrackersFiltered(
             $kanban_tracker_ids,
-            $planning
+            $planning,
+            $user,
+            $this->group_id
         );
 
-        $backlog_trackers_filtered = $this->getBacklogTrackersFiltered(
+        $backlog_trackers_filtered = $this->scrum_planning_filter->getBacklogTrackersFiltered(
             $available_trackers,
             $kanban_tracker_ids,
             $planning
@@ -509,46 +513,6 @@ class Planning_Controller extends MVC2_PluginController {
             $planning_trackers_filtered,
             $cardwall_admin
         );
-    }
-
-    private function getPlanningTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
-        $trackers_filtered = array();
-
-        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker_presenter) {
-            $trackers_filtered[] = array(
-                'name'     => $tracker_presenter->getName(),
-                'id'       => $tracker_presenter->getId(),
-                'selected' => $tracker_presenter->selectedIfPlanningTracker(),
-                'disabled' => in_array($tracker_presenter->getId(), $kanban_tracker_ids) || $this->hierarchy_checker->isKanbanHierarchy($tracker_presenter->getTracker())
-            );
-        }
-
-        return $trackers_filtered;
-    }
-
-    private function getBacklogTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
-        $trackers_filtered = array();
-
-        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker_presenter) {
-            $trackers_filtered[] = array(
-                'name'     => $tracker_presenter->getName(),
-                'id'       => $tracker_presenter->getId(),
-                'selected' => $tracker_presenter->selectedIfBacklogTracker(),
-                'disabled' => in_array($tracker_presenter->getId(), $kanban_tracker_ids) || $this->hierarchy_checker->isKanbanHierarchy($tracker_presenter->getTracker())
-            );
-        }
-
-        return $trackers_filtered;
-    }
-
-    private function getPlanningTrackerPresenters(array $trackers, Planning $planning) {
-        $tracker_presenters = array();
-
-        foreach ($trackers as $tracker) {
-            $tracker_presenters[] = new Planning_TrackerPresenter($planning, $tracker);
-        }
-
-        return $tracker_presenters;
     }
 
     private function hasCardwall(Planning $planning) {

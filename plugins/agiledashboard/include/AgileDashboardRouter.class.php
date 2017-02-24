@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 require_once 'common/plugin/Plugin.class.php';
 
@@ -88,6 +89,16 @@ class AgileDashboardRouter {
     /** @var AgileDashboard_HierarchyChecker */
     private $hierarchy_checker;
 
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+
+    private $scrum_mono_milestone_checker;
+    /**
+     * @var ScrumPlanningFilter
+     */
+    private $planning_filter;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -100,20 +111,24 @@ class AgileDashboardRouter {
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
-        AgileDashboard_HierarchyChecker $hierarchy_checker
+        AgileDashboard_HierarchyChecker $hierarchy_checker,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        ScrumPlanningFilter $planning_filter
     ) {
-        $this->plugin                        = $plugin;
-        $this->milestone_factory             = $milestone_factory;
-        $this->planning_factory              = $planning_factory;
-        $this->planning_shortaccess_factory  = $planning_shortaccess_factory;
-        $this->milestone_controller_factory  = $milestone_controller_factory;
-        $this->project_manager               = $project_manager;
-        $this->xml_exporter                  = $xml_exporter;
-        $this->kanban_manager                = $kanban_manager;
-        $this->config_manager                = $config_manager;
-        $this->kanban_factory                = $kanban_factory;
-        $this->planning_permissions_manager  = $planning_permissions_manager;
-        $this->hierarchy_checker             = $hierarchy_checker;
+        $this->plugin                       = $plugin;
+        $this->milestone_factory            = $milestone_factory;
+        $this->planning_factory             = $planning_factory;
+        $this->planning_shortaccess_factory = $planning_shortaccess_factory;
+        $this->milestone_controller_factory = $milestone_controller_factory;
+        $this->project_manager              = $project_manager;
+        $this->xml_exporter                 = $xml_exporter;
+        $this->kanban_manager               = $kanban_manager;
+        $this->config_manager               = $config_manager;
+        $this->kanban_factory               = $kanban_factory;
+        $this->planning_permissions_manager = $planning_permissions_manager;
+        $this->hierarchy_checker            = $hierarchy_checker;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->planning_filter              = $planning_filter;
     }
 
     /**
@@ -323,7 +338,8 @@ class AgileDashboardRouter {
             $this->kanban_factory,
             $this->planning_permissions_manager,
             $this->hierarchy_checker,
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
+            $this->scrum_mono_milestone_checker,
+            $this->planning_filter
         );
     }
 

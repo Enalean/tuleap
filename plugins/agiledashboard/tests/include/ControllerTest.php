@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
 
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerManager.class.php';
@@ -45,6 +47,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->request                = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
         $this->planning_factory       = new MockPlanningFactory();
         $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->scrum_planning_filter  = mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter');
         $this->planning_controller    = new Planning_Controller(
             $this->request,
             $this->planning_factory,
@@ -59,7 +62,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('AgileDashboard_KanbanFactory'),
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            $this->mono_milestone_checker
+            $this->mono_milestone_checker,
+            $this->scrum_planning_filter
         );
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
@@ -77,7 +81,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            $this->mono_milestone_checker
+            $this->mono_milestone_checker,
+            $this->scrum_planning_filter
         );
 
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
@@ -171,10 +176,12 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
-        $this->group_id            = 123;
-        $this->request             = aRequest()->with('group_id', "$this->group_id")->build();
-        $this->planning_factory    = mock('PlanningFactory');
-        $this->tracker_factory     = mock('TrackerFactory');
+        $this->group_id               = 123;
+        $this->request                = aRequest()->with('group_id', "$this->group_id")->build();
+        $this->planning_factory       = mock('PlanningFactory');
+        $this->tracker_factory        = mock('TrackerFactory');
+        $hierarchy_checker            = mock('AgileDashboard_HierarchyChecker');
+        $scrum_mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
 
         $kanban_factory = stub('AgileDashboard_KanbanFactory')->getKanbanTrackerIds()->returns(array());
 
@@ -191,8 +198,9 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('AgileDashboard_ConfigurationManager'),
             $kanban_factory,
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $hierarchy_checker,
+            $scrum_mono_milestone_checker,
+            new ScrumPlanningFilter($hierarchy_checker, $scrum_mono_milestone_checker, $this->planning_factory)
         );
 
         $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();
@@ -313,9 +321,10 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
         $request          = aRequest()->with('planning_id', $planning_id)
                                       ->with('action', 'edit')->build();
         $planning_factory = mock('PlanningFactory');
+        $planning_filter  = mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter');
         stub($planning_factory)->getPlanning($planning_id)->returns($planning);
-        stub($planning_factory)->getAvailableBacklogTrackers('*', $group_id)->returns(array());
-        stub($planning_factory)->getAvailablePlanningTrackers('*', $group_id)->returns(array());
+        stub($planning_filter)->getPlanningTrackersFiltered()->returns(array());
+        stub($planning_filter)->getBacklogTrackersFiltered()->returns(array());
 
         $kanban_factory = stub('AgileDashboard_KanbanFactory')->getKanbanTrackerIds()->returns(array());
 
@@ -336,7 +345,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 $kanban_factory,
                 mock('PlanningPermissionsManager'),
                 mock('AgileDashboard_HierarchyChecker'),
-                mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+                mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'),
+                $planning_filter
             )
         );
 
