@@ -75,7 +75,8 @@ if (is_array($sparkline_urls)) {
                 default:
                     $res_sparkline = '';
                     //Process to display the reference sparkline (ex: Hudson jobs)
-                    $em->processEvent(
+                    $event_manager = EventManager::instance();
+                    $event_manager->processEvent(
                         Event::AJAX_REFERENCE_SPARKLINE,
                         array(
                             'reference'=> $ref,
