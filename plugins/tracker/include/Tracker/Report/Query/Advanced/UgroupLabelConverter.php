@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use BaseLanguage;
 use BaseLanguageFactory;
 use ForgeConfig;
+use Tuleap\User\UserGroup\NameTranslator;
 
 class UgroupLabelConverter
 {
@@ -48,12 +49,49 @@ class UgroupLabelConverter
         foreach ($this->getAvailableLanguages() as $language) {
             $base_language = $this->base_language_factory->getBaseLanguage($language);
 
-            $long_label                = $this->getNormalizedTranslatedLabel('ugroup_project_members', $base_language);
-            $this->index[$long_label]  = 'ugroup_project_members_name_key';
-
-            $long_label                = $this->getNormalizedTranslatedLabel('ugroup_project_admins', $base_language);
-            $this->index[$long_label]  = 'ugroup_project_admins_name_key';
+            $this->buildDynamicUgroupLabelsIndexForLanguage($base_language);
         }
+    }
+
+    private function buildDynamicUgroupLabelsIndexForLanguage(BaseLanguage $base_language)
+    {
+        $project_members_label               = $this->getNormalizedTranslatedLabel('ugroup_project_members', $base_language);
+        $this->index[$project_members_label] = 'ugroup_project_members_name_key';
+
+        $project_admins_label               = $this->getNormalizedTranslatedLabel('ugroup_project_admins', $base_language);
+        $this->index[$project_admins_label] = 'ugroup_project_admins_name_key';
+
+        $authenticaded_users_label = $this->getNormalizedCustomizedLabel(
+            NameTranslator::CONFIG_AUTHENTICATED_LABEL,
+            'ugroup_authenticated_users',
+            $base_language
+        );
+        $this->index[$authenticaded_users_label] = 'ugroup_authenticated_users_name_key';
+
+        $registered_users_label = $this->getNormalizedCustomizedLabel(
+            NameTranslator::CONFIG_REGISTERED_LABEL,
+            'ugroup_registered_users',
+            $base_language
+        );
+        $this->index[$registered_users_label] = 'ugroup_registered_users_name_key';
+
+        $wiki_admins_label               = $this->getNormalizedTranslatedLabel('ugroup_wiki_admin_name_key', $base_language);
+        $this->index[$wiki_admins_label] = 'ugroup_wiki_admin_name_key';
+
+        $file_manager_admins_label               = $this->getNormalizedTranslatedLabel('ugroup_file_manager_admin_name_key', $base_language);
+        $this->index[$file_manager_admins_label] = 'ugroup_file_manager_admin_name_key';
+    }
+
+    private function getNormalizedCustomizedLabel(
+        $config_key,
+        $ugroup_label_translation_key,
+        BaseLanguage $base_language
+    ) {
+        $customized_label = ForgeConfig::get($config_key);
+        if ($customized_label == false) {
+            $customized_label = $this->getNormalizedTranslatedLabel($ugroup_label_translation_key, $base_language);
+        }
+        return $this->bind_value_normalizer->normalize($customized_label);
     }
 
     private function getNormalizedTranslatedLabel(
