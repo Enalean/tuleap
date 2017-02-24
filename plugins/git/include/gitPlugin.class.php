@@ -23,11 +23,19 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
+use Tuleap\Git\Gitolite\SSHKey\DumperFactory;
+use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
+use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
+use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
+use Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer;
+use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
 use Tuleap\Git\Permissions\PatternValidator;
 use Tuleap\Git\Permissions\RegexpTemplateDao;
@@ -426,7 +434,7 @@ class GitPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP';
                 $params['dependencies'] = array(
                     $this->getGerritServerFactory(),
-                    $this->getGitoliteSSHKeyDumper(),
+                    $this->getSSHKeyDumper(),
                 );
                 break;
             case SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME:
@@ -448,7 +456,7 @@ class GitPlugin extends Plugin {
             case SystemEvent_GIT_USER_RENAME::NAME:
                 $params['class'] = 'SystemEvent_GIT_USER_RENAME';
                 $params['dependencies'] = array(
-                    $this->getGitoliteSSHKeyDumper(),
+                    $this->getSSHKeyDumper(),
                     UserManager::instance()
                 );
                 break;
@@ -1746,14 +1754,6 @@ class GitPlugin extends Plugin {
         );
     }
 
-    private function getGitoliteSSHKeyDumper() {
-        $gitolite_admin_path = $this->getGitoliteAdminPath();
-        return new Git_Gitolite_SSHKeyDumper(
-            $gitolite_admin_path,
-            new Git_Exec($gitolite_admin_path)
-        );
-    }
-
     private function getGitoliteAdminPath() {
         return $GLOBALS['sys_data_dir'] . '/gitolite/admin';
     }
@@ -1894,16 +1894,49 @@ class GitPlugin extends Plugin {
         );
     }
 
-    private function getSSHKeyDumper() {
-        $admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
-        $git_exec   = new Git_Exec($admin_path);
-        return new Git_Gitolite_SSHKeyDumper($admin_path, $git_exec);
+    /**
+     * @return \Tuleap\Git\Gitolite\SSHKey\Dumper
+     */
+    private function getSSHKeyDumper()
+    {
+        $factory = $this->getSSHKeyDumperFactory();
+        return $factory->buildDumper();
     }
 
-    private function getSSHKeyMassDumper() {
-        return new Git_Gitolite_SSHKeyMassDumper(
-            $this->getSSHKeyDumper(),
-            UserManager::instance()
+    /**
+     * @return \Tuleap\Git\Gitolite\SSHKey\MassDumper
+     */
+    private function getSSHKeyMassDumper()
+    {
+        $factory = $this->getSSHKeyDumperFactory();
+        return $factory->buildMassDumper();
+    }
+
+    /**
+     * @return DumperFactory
+     */
+    private function getSSHKeyDumperFactory()
+    {
+        $management_detector = new ManagementDetector(new VersionDetector(), new GlobalParameterDao());
+
+        $user_manager = UserManager::instance();
+
+        $whole_instance_keys = new WholeInstanceKeysAggregator(
+            new GitoliteAdmin(),
+            new GerritServer(new Git_RemoteServer_Dao()),
+            new User($user_manager)
+        );
+
+        $gitolite_admin_path = $this->getGitoliteAdminPath();
+        $git_exec            = new Git_Exec($gitolite_admin_path);
+
+        return new DumperFactory(
+            $management_detector,
+            new AuthorizedKeysFileCreator($whole_instance_keys),
+            new System_Command(),
+            $git_exec,
+            $gitolite_admin_path,
+            $user_manager
         );
     }
 

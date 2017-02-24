@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Gitolite\SSHKey\Dumper;
+
 class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
     const NAME = 'GIT_EDIT_SSH_KEYS';
 
@@ -27,7 +29,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
     /** @var Logger */
     private $logger;
 
-    /** Git_Gitolite_SSHKeyDumper */
+    /** @var Dumper */
     private $sshkey_dumper;
 
     /** @var Git_UserAccountManager */
@@ -38,7 +40,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
 
     public function injectDependencies(
         UserManager $user_manager,
-        Git_Gitolite_SSHKeyDumper $sshkey_dumper,
+        Dumper $sshkey_dumper,
         Git_UserAccountManager $git_user_account_manager,
         Git_SystemEventManager $system_event_manager,
         Logger $logger

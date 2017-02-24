@@ -280,3 +280,9 @@ CREATE TABLE IF NOT EXISTS plugin_git_restricted_gerrit_servers_allowed_projects
   PRIMARY KEY idx(gerrit_server_id, project_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_git_global_parameters (
+    name VARCHAR(255) NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL
+);
+INSERT INTO plugin_git_global_parameters(name, value) VALUES ('authorized_keys_managed', 'tuleap');
+

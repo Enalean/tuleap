@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Git\Gitolite\SSHKey\Dumper;
 
 require_once 'common/backend/BackendLogger.class.php';
 
@@ -55,10 +56,8 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent {
         return $this->parameters;
     }
 
-    public function injectDependencies(Git_Gitolite_SSHKeyDumper $ssh_key_dumper, UserManager $user_manager) {
+    public function injectDependencies(Dumper $ssh_key_dumper, UserManager $user_manager) {
         $this->ssh_key_dumper = $ssh_key_dumper;
         $this->user_manager   = $user_manager;
     }
 }
-
-?>
