@@ -101,13 +101,18 @@ class captchaPlugin extends Plugin
 
     public function checkCaptchaBeforeSubmission(array $params)
     {
+        /** @var HTTPRequest $request */
+        $request = $params['request'];
+        if ($request->getCurrentUser()->isSuperUser()) {
+            return;
+        }
+
         try {
             $configuration = $this->getConfiguration();
         } catch (\Tuleap\Captcha\ConfigurationNotFoundException $ex) {
             return;
         }
         $secret_key  = $configuration->getSecretKey();
-        $request     = $params['request'];
         $challenge   = $request->get('g-recaptcha-response');
         $http_client = new Http_Client();
 
