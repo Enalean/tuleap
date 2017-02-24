@@ -21,6 +21,8 @@
 class Git_RemoteServer_GerritServerPresenter
 {
 
+    public $warning_no_possible_go_back;
+
     public function __construct(Git_RemoteServer_GerritServer $server, $is_used)
     {
         $this->id                             = $server->getId();
@@ -43,6 +45,8 @@ class Git_RemoteServer_GerritServerPresenter
 
         $this->edit_title           = $GLOBALS['Language']->getText('plugin_git', 'edit_gerrit_title', $server->getHost());
         $this->delete_title         = $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_title', $server->getHost());
+
+        $this->warning_no_possible_go_back  = $GLOBALS['Language']->getText('plugin_git', 'warning_no_possible_go_back');
         $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_desc', $server->getHost()),
             CODENDI_PURIFIER_LIGHT

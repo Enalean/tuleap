@@ -22,6 +22,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
+use Tuleap\Git\AdminGerritBuilder;
 
 class Git_AdminGerritController {
 
@@ -35,6 +36,10 @@ class Git_AdminGerritController {
 
     /** @var AdminPageRenderer */
     private $admin_page_renderer;
+    /**
+     * @var AdminGerritBuilder
+     */
+    private $admin_gerrit_builder;
 
     /**
      * @var GerritServerResourceRestrictor
@@ -47,17 +52,19 @@ class Git_AdminGerritController {
     private $gerrit_restrictor;
 
     public function __construct(
-        CSRFSynchronizerToken                $csrf,
+        CSRFSynchronizerToken $csrf,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        AdminPageRenderer                    $admin_page_renderer,
-        GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
-        Restrictor                           $gerrit_restrictor
+        AdminPageRenderer $admin_page_renderer,
+        GerritServerResourceRestrictor $gerrit_ressource_restrictor,
+        Restrictor $gerrit_restrictor,
+        AdminGerritBuilder $admin_gerrit_builder
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->csrf                        = $csrf;
         $this->admin_page_renderer         = $admin_page_renderer;
         $this->gerrit_ressource_restrictor = $gerrit_ressource_restrictor;
         $this->gerrit_restrictor           = $gerrit_restrictor;
+        $this->admin_gerrit_builder        = $admin_gerrit_builder;
     }
 
     public function process(Codendi_Request $request) {
@@ -93,8 +100,10 @@ class Git_AdminGerritController {
     private function updateGerritServer(Codendi_Request $request) {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
-        $this->updateServer($request_gerrit_server);
-        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
+        if ($this->updateServer($request_gerrit_server) === true)
+        {
+            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
+        }
     }
 
     public function display(Codendi_Request $request) {
@@ -175,38 +184,28 @@ class Git_AdminGerritController {
 
     private function addServer($request_gerrit_server)
     {
-        if ($this->allGerritServerParamsRequiredExist($request_gerrit_server)) {
-            $host                 = $request_gerrit_server['host'];
-            $ssh_port             = $request_gerrit_server['ssh_port'];
-            $http_port            = $request_gerrit_server['http_port'];
-            $login                = $request_gerrit_server['login'];
-            $identity_file        = $request_gerrit_server['identity_file'];
-            $replication_ssh_key  = $request_gerrit_server['replication_key'];
-            $use_ssl              = isset($request_gerrit_server['use_ssl'])  ? $request_gerrit_server['use_ssl'] : false;
-            $gerrit_version       = $request_gerrit_server['gerrit_version'];
-            $http_password        = $request_gerrit_server['http_password'];
-            $replication_password = $request_gerrit_server['replication_password'];
-            $auth_type            = $request_gerrit_server['auth_type'];
+        if ($this->allGerritServerParamsRequiredExist($request_gerrit_server) && $this->isHTTPPasswordDefined($request_gerrit_server)) {
 
+            $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
             $server = new Git_RemoteServer_GerritServer(
                 0,
-                $host,
-                $ssh_port,
-                $http_port,
-                $login,
-                $identity_file,
-                $replication_ssh_key,
-                $use_ssl,
-                $gerrit_version,
-                $http_password,
+                $gerrit_server['host'],
+                $gerrit_server['ssh_port'],
+                $gerrit_server['http_port'],
+                $gerrit_server['login'],
+                $gerrit_server['identity_file'],
+                $gerrit_server['replication_ssh_key'],
+                $gerrit_server['use_ssl'],
+                $gerrit_server['gerrit_version'],
+                $gerrit_server['http_password'],
                 '',
-                $auth_type
+                $gerrit_server['auth_type']
             );
 
             $this->gerrit_server_factory->save($server);
             $this->servers[$server->getId()] = $server;
 
-            $this->updateReplicationPassword($server, $replication_password);
+            $this->updateReplicationPassword($server,  $gerrit_server['replication_password']);
         }
     }
 
@@ -226,58 +225,55 @@ class Git_AdminGerritController {
             $server = $this->gerrit_server_factory->getServerById($server_id);
 
             if ($this->allGerritServerParamsRequiredExist($request_gerrit_server)) {
-                $host                 = $request_gerrit_server['host'];
-                $ssh_port             = $request_gerrit_server['ssh_port'];
-                $http_port            = $request_gerrit_server['http_port'];
-                $login                = $request_gerrit_server['login'];
-                $identity_file        = $request_gerrit_server['identity_file'];
-                $replication_ssh_key  = $request_gerrit_server['replication_key'];
-                $use_ssl              = isset($request_gerrit_server['use_ssl'])  ? $request_gerrit_server['use_ssl'] : false;
-                $gerrit_version       = $request_gerrit_server['gerrit_version'];
-                $http_password        = $request_gerrit_server['http_password'];
-                $replication_password = $request_gerrit_server['replication_password'];
-                $auth_type            = $request_gerrit_server['auth_type'];
-
-                if ($host != $server->getHost() ||
-                    $ssh_port != $server->getSSHPort() ||
-                    $http_port != $server->getHTTPPort() ||
-                    $login != $server->getLogin() ||
-                    $identity_file != $server->getIdentityFile() ||
-                    $replication_ssh_key != $server->getReplicationKey() ||
-                    $use_ssl != $server->usesSSL() ||
-                    $gerrit_version != $server->getGerritVersion() ||
-                    $http_password != $server->getHTTPPassword() ||
-                    $auth_type != $server->getAuthType()
+                $gerrit_server = $this->admin_gerrit_builder->buildFromRequestForEdition($request_gerrit_server);
+                if ($gerrit_server['host'] != $server->getHost() ||
+                    $gerrit_server['ssh_port'] != $server->getSSHPort() ||
+                    $gerrit_server['http_port'] != $server->getHTTPPort() ||
+                    $gerrit_server['login'] != $server->getLogin() ||
+                    $gerrit_server['identity_file'] != $server->getIdentityFile() ||
+                    $gerrit_server['replication_ssh_key'] != $server->getReplicationKey() ||
+                    $gerrit_server['use_ssl'] != $server->usesSSL() ||
+                    $gerrit_server['gerrit_version'] != $server->getGerritVersion() ||
+                    $gerrit_server['http_password'] != $server->getHTTPPassword() ||
+                    $gerrit_server['auth_type'] != $server->getAuthType()
                 ) {
                     $server
-                        ->setHost($host)
-                        ->setSSHPort($ssh_port)
-                        ->setHTTPPort($http_port)
-                        ->setLogin($login)
-                        ->setIdentityFile($identity_file)
-                        ->setReplicationKey($replication_ssh_key)
-                        ->setUseSSL($use_ssl)
-                        ->setGerritVersion($gerrit_version)
-                        ->setHTTPPassword($http_password)
-                        ->setAuthType($auth_type);
+                        ->setHost($gerrit_server['host'])
+                        ->setSSHPort($gerrit_server['ssh_port'])
+                        ->setHTTPPort($gerrit_server['http_port'])
+                        ->setLogin($gerrit_server['login'])
+                        ->setIdentityFile($gerrit_server['identity_file'])
+                        ->setReplicationKey($gerrit_server['replication_ssh_key'])
+                        ->setUseSSL($gerrit_server['use_ssl'])
+                        ->setGerritVersion($gerrit_server['gerrit_version'])
+                        ->setAuthType($gerrit_server['auth_type']);
+
+                    if ($gerrit_server['http_password'] !== "") {
+                        $server->setHTTPPassword($gerrit_server['http_password']);
+                    }
 
                     $this->gerrit_server_factory->save($server);
                     $this->servers[$server->getId()] = $server;
                 }
 
-                $this->updateReplicationPassword($server, $replication_password);
+                $this->updateReplicationPassword($server, $gerrit_server['replication_password']);
             }
         }
     }
 
     private function updateReplicationPassword(Git_RemoteServer_GerritServer $server, $replication_password)
     {
-        if (! hash_equals($server->getReplicationPassword(), $replication_password)) {
+        if ($replication_password !== "" && ! hash_equals($server->getReplicationPassword(), $replication_password)) {
             $server->setReplicationPassword($replication_password);
             $this->gerrit_server_factory->updateReplicationPassword($server);
 
             $this->servers[$server->getId()] = $server;
         }
+    }
+
+    private function isHTTPPasswordDefined($request_gerrit_server)
+    {
+        return (isset($request_gerrit_server['http_password']) && ! empty($request_gerrit_server['http_password']));
     }
 
     private function allGerritServerParamsRequiredExist($request_gerrit_server)
@@ -287,10 +283,6 @@ class Git_AdminGerritController {
         (isset($request_gerrit_server['http_port']) && ! empty($request_gerrit_server['http_port'])) &&
         (isset($request_gerrit_server['login']) && ! empty($request_gerrit_server['login'])) &&
         (isset($request_gerrit_server['identity_file']) && ! empty($request_gerrit_server['identity_file'])) &&
-        (isset($request_gerrit_server['replication_key']) && ! empty($request_gerrit_server['replication_key'])) &&
-        (isset($request_gerrit_server['gerrit_version']) && ! empty($request_gerrit_server['gerrit_version'])) &&
-        (isset($request_gerrit_server['http_password']) && ! empty($request_gerrit_server['http_password'])) &&
-        (isset($request_gerrit_server['replication_password']) && ! empty($request_gerrit_server['replication_password'])) &&
         (isset($request_gerrit_server['auth_type']) && ! empty($request_gerrit_server['auth_type']));
     }
 }

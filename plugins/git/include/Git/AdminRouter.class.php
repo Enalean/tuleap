@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GeneralSettingsController;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
@@ -127,7 +128,8 @@ class Git_AdminRouter {
                 $this->gerrit_server_factory,
                 $this->admin_page_renderer,
                 $this->gerrit_ressource_restrictor,
-                $this->gerrit_restrictor
+                $this->gerrit_restrictor,
+                new AdminGerritBuilder()
             );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(

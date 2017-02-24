@@ -71,6 +71,12 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $basic;
 
+    public $gerrit_replication_information;
+
+    public $gerrit_label_http_password_edit;
+
+    public $gerrit_label_replication_password_edit;
+
     public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits) {
         parent::__construct($title, $csrf_token);
 
@@ -98,6 +104,10 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         $this->gerrit_label_http_password        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_password');
         $this->gerrit_label_replication_password = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_password');
         $this->gerrit_label_auth_type            = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_auth_type');
+        $this->gerrit_replication_information    = $GLOBALS['Language']->getText('plugin_git', 'gerrit_replication_information');
+
+        $this->gerrit_label_http_password_edit        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_password_edit');
+        $this->gerrit_label_replication_password_edit = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_password_edit');
 
         $this->yes            = $GLOBALS['Language']->getText('plugin_git', 'yes');
         $this->no             = $GLOBALS['Language']->getText('plugin_git', 'no');
