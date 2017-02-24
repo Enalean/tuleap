@@ -23,6 +23,10 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 class Key
 {
     /**
+     * @var \Rule_UserName
+     */
+    private static $username_rule;
+    /**
      * @var string
      */
     private $username;
@@ -31,10 +35,19 @@ class Key
      */
     private $key;
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function __construct($username, $key)
     {
+        if (! $this->isUsernameValid($username)) {
+            throw new \InvalidArgumentException('The username must be UNIX valid');
+        }
         $this->username = $username;
-        $this->key      = $key;
+        $this->key      = trim($key);
+        if (mb_strpos($this->key, "\n") !== false) {
+            throw new \InvalidArgumentException('Only one key is expected');
+        }
     }
 
     /**
@@ -51,5 +64,16 @@ class Key
     public function getKey()
     {
         return $this->key;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isUsernameValid($username)
+    {
+        if (self::$username_rule === null) {
+            self::$username_rule = new \Rule_UserName();
+        }
+        return self::$username_rule->isUnixValid($username);
     }
 }

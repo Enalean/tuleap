@@ -1930,10 +1930,12 @@ class GitPlugin extends Plugin {
         $gitolite_admin_path = $this->getGitoliteAdminPath();
         $git_exec            = new Git_Exec($gitolite_admin_path);
 
+        $system_command = new System_Command();
+
         return new DumperFactory(
             $management_detector,
-            new AuthorizedKeysFileCreator($whole_instance_keys),
-            new System_Command(),
+            new AuthorizedKeysFileCreator($whole_instance_keys, $system_command, $this->getLogger()),
+            $system_command,
             $git_exec,
             $gitolite_admin_path,
             $user_manager

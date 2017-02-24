@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'UserManager.class.php';
 
 /**
  * Ensure SSH key is valid
@@ -54,11 +53,14 @@ class User_SSHKeyValidator {
     }
 
     private function isValid($key_file, $key) {
+        if ($key === '') {
+            return false;
+        }
         $written = file_put_contents($key_file, $key);
         if ($written === strlen($key)) {
             $return = 1;
             $output = array();
-            exec("ssh-keygen -l -f $key_file 2>&1", $output, $return);
+            exec('/usr/share/tuleap/src/utils/ssh-keys-validity-checker.sh ' . escapeshellarg($key_file), $output, $return);
             if ($return === 0) {
                 return true;
             }
@@ -66,5 +68,3 @@ class User_SSHKeyValidator {
         return false;
     }
 }
-
-?>
