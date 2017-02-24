@@ -68,6 +68,7 @@ class UgroupLabelConverterTest extends TuleapTestCase
     public function tearDown()
     {
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     private function initUgroupLabelConverter()
