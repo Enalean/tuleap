@@ -40,6 +40,11 @@ class AdminScrumPresenter {
      */
     public $can_scrum_mono_milestone_be_enabled;
 
+    /**
+     * @var bool
+     */
+    public $does_configuration_allows_planning_creation;
+
     private $root_planning_tracker_url;
     private $root_planning_name;
     private $planning_hierarchy = array();
@@ -57,18 +62,25 @@ class AdminScrumPresenter {
         $scrum_title,
         array $additional_panes,
         $can_scrum_mono_milestone_be_enabled,
-        $use_mono_milestone
+        $use_mono_milestone,
+        $does_configuration_allows_planning_creation
     ) {
-        $this->plannings                           = $plannings;
-        $this->group_id                            = $group_id;
-        $this->can_create_planning                 = $can_create_planning;
-        $this->root_planning_tracker_url           = $root_planning_tracker_url;
-        $this->root_planning_name                  = $root_planning_name;
-        $this->scrum_activated                     = $scrum_activated;
-        $this->scrum_title                         = $scrum_title;
-        $this->additional_panes                    = $additional_panes;
-        $this->can_scrum_mono_milestone_be_enabled = $can_scrum_mono_milestone_be_enabled;
-        $this->use_mono_milestone                  = $use_mono_milestone;
+        $this->plannings                                   = $plannings;
+        $this->group_id                                    = $group_id;
+        $this->can_create_planning                         = $can_create_planning;
+        $this->root_planning_tracker_url                   = $root_planning_tracker_url;
+        $this->root_planning_name                          = $root_planning_name;
+        $this->scrum_activated                             = $scrum_activated;
+        $this->scrum_title                                 = $scrum_title;
+        $this->additional_panes                            = $additional_panes;
+        $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
+        $this->use_mono_milestone                          = $use_mono_milestone;
+        $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
+
+        $this->cannot_create_planning_in_scrum_v2          = $GLOBALS['Language']->getText(
+            'plugin_agiledashboard',
+            'cannot_create_planning_in_scrum_v2'
+        );
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();

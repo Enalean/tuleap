@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\CannotAddMoreThanOnePlanningInScrumMonoMilestone;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -154,7 +155,7 @@ class Planning_Controller extends MVC2_PluginController {
 
     private function isScrumMonoMilestoneEnabled()
     {
-        return $this->scrum_mono_milestone_checker->isMonoMilestoneActivated($this->group_id) === true;
+        return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->group_id) === true;
     }
 
     private function getKanbanSummaryPresenters() {
@@ -441,8 +442,17 @@ class Planning_Controller extends MVC2_PluginController {
         return $this->xml_exporter->export($project);
     }
 
-    public function create() {
+    public function create()
+    {
         $this->checkUserIsAdmin();
+        if ($this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($this->getCurrentUser(), $this->group_id) === false) {
+            $this->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_in_scrum_v2')
+            );
+            $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
+        }
+
         $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
 
         if ($validator->isValid($this->request)) {
@@ -456,7 +466,10 @@ class Planning_Controller extends MVC2_PluginController {
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         } else {
             // TODO: Error message should reflect validation detail
-            $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
+            $this->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory')
+            );
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
     }

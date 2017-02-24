@@ -38,13 +38,14 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
-        $this->group_id            = 123;
-        $this->project             = stub('Project')->getID()->returns($this->group_id);
-        $this->project_manager     = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
-        $this->current_user        = stub('PFUser')->getId()->returns(666);
-        $this->request             = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
-        $this->planning_factory    = new MockPlanningFactory();
-        $this->planning_controller = new Planning_Controller(
+        $this->group_id               = 123;
+        $this->project                = stub('Project')->getID()->returns($this->group_id);
+        $this->project_manager        = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
+        $this->current_user           = stub('PFUser')->getId()->returns(666);
+        $this->request                = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
+        $this->planning_factory       = new MockPlanningFactory();
+        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->planning_controller    = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             mock('Planning_ShortAccessFactory'),
@@ -58,7 +59,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('AgileDashboard_KanbanFactory'),
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $this->mono_milestone_checker
         );
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
@@ -76,8 +77,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $this->mono_milestone_checker
         );
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->mono_milestone_checker)->isScrumMonoMilestoneAvailable()->returns(false);
 
         stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
         stub($this->planning_factory)->getAvailablePlanningTrackers()->returns(array(1));

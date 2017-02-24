@@ -88,7 +88,7 @@ class AgileDashboardScrumConfigurationUpdater {
             $this->config_manager->getKanbanTitle($this->project_id)
         );
 
-        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneActivated(
+        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
             $this->project_id
         );
         if ($this->request->get('home-ease-onboarding') === false) {

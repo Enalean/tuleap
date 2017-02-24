@@ -323,7 +323,7 @@ class AgileDashboardRouter {
             $this->kanban_factory,
             $this->planning_permissions_manager,
             $this->hierarchy_checker,
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao())
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
         );
     }
 
@@ -337,7 +337,7 @@ class AgileDashboardRouter {
             TrackerFactory::instance(),
             new AgileDashboard_PermissionsManager(),
             $this->hierarchy_checker,
-            new ScrumForMonoMilestoneChecker( new ScrumForMonoMilestoneDao())
+            new ScrumForMonoMilestoneChecker( new ScrumForMonoMilestoneDao(), $this->planning_factory)
         );
     }
 
