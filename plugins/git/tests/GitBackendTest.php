@@ -32,10 +32,11 @@ Mock::generate('SystemEventManager');
 
 class GitBackendTest extends TuleapTestCase {
 
-    protected $_globals;
-
     public function setUp() {
-        $this->_globals = $GLOBALS;
+        parent::setUp();
+        $this->http_request = mock('HTTPRequest');
+        HTTPRequest::setInstance($this->http_request);
+
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
 
         $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
@@ -43,12 +44,14 @@ class GitBackendTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        $GLOBALS = $this->_globals;
         @unlink($this->fixturesPath.'/tmp/hooks/post-receive');
+        HTTPRequest::clearInstance();
+
+        parent::tearDown();
     }
 
-    public function testAddMailingShowRev() {        
-        $GLOBALS['sys_https_host'] = 'codendi.org';
+    public function testAddMailingShowRev() {
+        stub($this->http_request)->getServerUrl()->returns('https://localhost');
 
         $prj = new MockProject($this);
         $prj->setReturnValue('getId', 1750);
@@ -60,7 +63,7 @@ class GitBackendTest extends TuleapTestCase {
         $repo->setId(290);
 
         $driver = new MockGitDriver($this);
-        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
+        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://localhost/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
 
         $backend = new GitBackendTestVersion($this);
         $backend->setUp($this->url_manager);

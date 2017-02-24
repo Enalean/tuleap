@@ -36,7 +36,9 @@ class ProjectSerializerTest extends TuleapTestCase {
 
         $this->_fixDir       = dirname(__FILE__).'/_fixtures';
 
-        $GLOBALS['sys_https_host'] = 'localhost';
+        $this->http_request = mock('HTTPRequest');
+        HTTPRequest::setInstance($this->http_request);
+        stub($this->http_request)->getServerUrl()->returns('https://localhost');
 
         PermissionsManager::setInstance(mock('PermissionsManager'));
         $this->permissions_manager = PermissionsManager::instance();
@@ -72,10 +74,10 @@ class ProjectSerializerTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
-
-        unset($GLOBALS['sys_https_host']);
         PermissionsManager::clearInstance();
+        HTTPRequest::clearInstance();
+
+        parent::tearDown();
     }
 
     public function testGetMailHookConfig() {

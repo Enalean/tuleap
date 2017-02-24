@@ -108,6 +108,16 @@ class HTTPRequest extends Codendi_Request {
         return self::$_instance;
     }
 
+    public static function setInstance($instance)
+    {
+        self::$_instance = $instance;
+    }
+
+    public static function clearInstance()
+    {
+        self::$_instance = null;
+    }
+
     /**
      * Validate file upload.
      *
