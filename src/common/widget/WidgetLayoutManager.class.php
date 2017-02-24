@@ -161,9 +161,6 @@ class WidgetLayoutManager {
             if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::FORUM)) {
                 $sql .= ",($owner_id, '$owner_type', 1, 1, 'mymonitoredforums', 2)";
             }
-            if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::TRACKERV3)) {
-                $sql .= ",($owner_id, '$owner_type', 1, 2, 'myartifacts', 10)";
-            }
             if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::FILE)) {
                 $sql .= ",($owner_id, '$owner_type', 1, 2, 'mymonitoredfp', 20)";
             }
