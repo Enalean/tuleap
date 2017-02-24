@@ -544,9 +544,11 @@ class TrackerFactory {
         $tracker_mapping        = array();
         $field_mapping          = array();
         $trackers_from_template = array();
-
+        $tracker_ids_list = array();
+        $params = array('project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list);
+        EventManager::instance()->processEvent(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
-            if ($tracker->mustBeInstantiatedForNewProjects()) {
+            if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
                 $trackers_from_template[] = $tracker;
                 list($tracker_mapping, $field_mapping) = $this->duplicateTracker(
                         $tracker_mapping, 

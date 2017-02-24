@@ -67,7 +67,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
-
+            $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
+            $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_RESOURCES_V2);
@@ -233,6 +234,24 @@ class AgileDashboardPlugin extends Plugin {
 
     public function tracker_event_include_css_file($params) {
         $params['include_tracker_css_file'] = true;
+    }
+
+    public function tracker_event_general_settings($params) {
+        $hierarchyChecker = new AgileDashboard_HierarchyChecker(
+                                $this->getPlanningFactory(),
+                                $this->getKanbanFactory(),
+                                $this->getTrackerFactory()
+                            );
+        $params['cannot_configure_instantiate_for_new_projects']= $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($params['tracker']);
+    }
+
+    public function tracker_event_project_creation_trackers_required($params) {
+        $hierarchyChecker = new AgileDashboard_HierarchyChecker(
+                                $this->getPlanningFactory(),
+                                $this->getKanbanFactory(),
+                                $this->getTrackerFactory()
+                            );
+        $params['tracker_ids_list'] = $hierarchyChecker->getADTrackerIdsByProjectId($params['project_id']);
     }
 
     public function tracker_event_trackers_duplicated($params) {

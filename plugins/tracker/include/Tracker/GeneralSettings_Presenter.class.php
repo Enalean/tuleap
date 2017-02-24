@@ -36,19 +36,23 @@ class Tracker_GeneralSettings_Presenter {
 
     /** @var Tracker_ArtifactByEmailStatus */
     private $artifactbyemail_status;
+    /** @var bool*/
+    public $cannot_configure_instantiate_for_new_projects;
 
     public function __construct(
         Tracker $tracker,
         $action_url,
         Tracker_ColorPresenterCollection $color_presenter_collection,
         MailGatewayConfig $config,
-        Tracker_ArtifactByEmailStatus $artifactbyemail_status
+        Tracker_ArtifactByEmailStatus $artifactbyemail_status,
+        $cannot_configure_instantiate_for_new_projects
     ) {
         $this->tracker                    = $tracker;
         $this->action_url                 = $action_url;
         $this->color_presenter_collection = $color_presenter_collection;
         $this->config                     = $config;
         $this->artifactbyemail_status     = $artifactbyemail_status;
+        $this->cannot_configure_instantiate_for_new_projects = $cannot_configure_instantiate_for_new_projects;
     }
 
     public function is_insecure_emailgateway_properly_configured() {

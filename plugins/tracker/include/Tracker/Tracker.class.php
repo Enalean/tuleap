@@ -1481,7 +1481,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $this->displayWarningGeneralsettings();
         $this->displayAdminItemHeader($layout, 'editoptions');
-
+        $cannot_configure_instantiate_for_new_projects = false;
+        $params = array('cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker'=>$this);
+        EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
         $this->renderer->renderToPage(
             'tracker-general-settings',
             new Tracker_GeneralSettings_Presenter(
@@ -1489,7 +1491,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&func=admin-editoptions',
                 new Tracker_ColorPresenterCollection($this),
                 $this->getMailGatewayConfig(),
-                $this->getArtifactByMailStatus()
+                $this->getArtifactByMailStatus(),
+                $cannot_configure_instantiate_for_new_projects
             )
         );
 
@@ -1956,7 +1959,9 @@ EOS;
     protected function editOptions($request) {
         $old_item_name = $this->getItemName();
         $old_name      = $this->getName();
-
+        $cannot_configure_instantiate_for_new_projects = false;
+        $params = array('cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker'=>$this);
+        EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
         $this->name                         = trim($request->getValidated('name', 'string', ''));
         $this->description                  = trim($request->getValidated('description', 'text', ''));
         $this->color                        = trim($request->getValidated('tracker_color', 'string', ''));
@@ -1965,7 +1970,7 @@ EOS;
         $this->enable_emailgateway          = $request->getValidated('enable_emailgateway') ? 1 : 0;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
         $this->browse_instructions          = $request->getValidated('browse_instructions', 'text', '');
-        $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
+        $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') || $cannot_configure_instantiate_for_new_projects ? 1 : 0;
         $this->log_priority_changes         = $request->getValidated('log_priority_changes') ? 1 : 0;
 
         if (!$this->name || !$this->description || !$this->color || !$this->item_name) {
