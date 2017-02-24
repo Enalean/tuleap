@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use BaseLanguageFactory;
 use PFUser;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Users;
@@ -57,14 +58,18 @@ class ListFieldCheckerWithBindUsersTest extends TuleapTestCase
         $this->user_manager = mock('UserManager');
 
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = mock('Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter');
+        stub($ugroup_label_converter)->isASupportedDynamicUgroup()->returns(false);
 
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
             new CollectionOfListValuesExtractor(),
             $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                $list_field_bind_value_normalizer
-            )
+                $list_field_bind_value_normalizer,
+                $ugroup_label_converter
+            ),
+            $ugroup_label_converter
         );
 
         $this->comparison = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');

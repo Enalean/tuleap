@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
 {
@@ -35,10 +36,17 @@ class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
      * @var ListFieldBindValueNormalizer
      */
     private $value_normalizer;
+    /**
+     * @var UgroupLabelConverter
+     */
+    private $label_converter;
 
-    public function __construct(ListFieldBindValueNormalizer $value_normalizer)
-    {
+    public function __construct(
+        ListFieldBindValueNormalizer $value_normalizer,
+        UgroupLabelConverter $label_converter
+    ) {
         $this->value_normalizer = $value_normalizer;
+        $this->label_converter  = $label_converter;
     }
 
     /** @return array */
@@ -77,7 +85,12 @@ class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
         $list_label_values = array();
 
         foreach ($list_values as $value) {
-            $list_label_values[] = $this->value_normalizer->normalize($value->getLabel());
+            $value = $value->getLabel();
+            if ($this->label_converter->isASupportedDynamicUgroup($value)) {
+                $list_label_values[] = $this->label_converter->convertLabelToTranslationKey($value);
+            } else {
+                $list_label_values[] = $this->value_normalizer->normalize($value);
+            }
         }
 
         return $list_label_values;

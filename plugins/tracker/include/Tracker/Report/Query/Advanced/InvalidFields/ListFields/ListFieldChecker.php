@@ -25,6 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 class ListFieldChecker implements InvalidFieldChecker
 {
@@ -45,17 +46,23 @@ class ListFieldChecker implements InvalidFieldChecker
      * @var ListFieldBindValueNormalizer
      */
     private $value_normalizer;
+    /**
+     * @var UgroupLabelConverter
+     */
+    private $label_converter;
 
     public function __construct(
         EmptyStringChecker $empty_string_checker,
         CollectionOfListValuesExtractor $values_extractor,
         ListFieldBindValueNormalizer $value_normalizer,
-        CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor
+        CollectionOfNormalizedBindLabelsExtractor $bind_labels_extractor,
+        UgroupLabelConverter $label_converter
     ) {
         $this->empty_string_checker  = $empty_string_checker;
         $this->values_extractor      = $values_extractor;
         $this->bind_labels_extractor = $bind_labels_extractor;
         $this->value_normalizer      = $value_normalizer;
+        $this->label_converter       = $label_converter;
     }
 
     public function checkFieldIsValidForComparison(
@@ -68,6 +75,10 @@ class ListFieldChecker implements InvalidFieldChecker
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
                 throw new ListToEmptyStringComparisonException($comparison, $field);
+            }
+
+            if ($this->label_converter->isASupportedDynamicUgroup($value)) {
+                $value = $this->label_converter->convertLabelToTranslationKey($value);
             }
             $normalized_value = $this->value_normalizer->normalize($value);
 

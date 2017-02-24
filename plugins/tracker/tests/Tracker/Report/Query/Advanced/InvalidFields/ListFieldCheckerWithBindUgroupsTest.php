@@ -42,21 +42,27 @@ class ListFieldCheckerWithBindUgroupsTest extends TuleapTestCase
     /** @var Tracker_FormElement_Field_List_Bind_Ugroups */
     private $bind;
     /** @var UgroupLabelConverter */
-    private $ugroup_label_converter;
+    private $ugroup_label_converter_for_collection;
+    /** @var UgroupLabelConverter */
+    private $ugroup_label_converter_for_list_checker;
 
     public function setUp()
     {
         parent::setUp();
 
-        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $list_field_bind_value_normalizer              = new ListFieldBindValueNormalizer();
+        $this->ugroup_label_converter_for_collection   = mock('Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter');
+        $this->ugroup_label_converter_for_list_checker = mock('Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter');
 
         $this->list_field_checker = new ListFieldChecker(
             new EmptyStringAllowed(),
             new CollectionOfListValuesExtractor(),
             $list_field_bind_value_normalizer,
             new CollectionOfNormalizedBindLabelsExtractor(
-                $list_field_bind_value_normalizer
-            )
+                $list_field_bind_value_normalizer,
+                $this->ugroup_label_converter_for_collection
+            ),
+            $this->ugroup_label_converter_for_list_checker
         );
 
         $this->comparison       = mock('Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison');
@@ -79,10 +85,17 @@ class ListFieldCheckerWithBindUgroupsTest extends TuleapTestCase
             185 => $custom_ugroup_value
         );
         stub($this->bind)->getAllValues()->returns($list_values);
+
+        stub($this->ugroup_label_converter_for_collection)->isASupportedDynamicUgroup('Project members')->returns(true);
+        stub($this->ugroup_label_converter_for_collection)->convertLabelToTranslationKey('Project members')->returns('ugroup_project_members_name_key');
+        stub($this->ugroup_label_converter_for_collection)->isASupportedDynamicUgroup('Mountaineers')->returns(false);
     }
 
     public function itDoesNotThrowWhenDynamicUgroupIsInValuesAndIsSupported()
     {
+        stub($this->ugroup_label_converter_for_list_checker)->isASupportedDynamicUgroup()->returns(true);
+        stub($this->ugroup_label_converter_for_list_checker)->convertLabelToTranslationKey()->returns('ugroup_project_members_name_key');
+
         $value_wrapper = new SimpleValueWrapper('Project Members');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
@@ -92,6 +105,8 @@ class ListFieldCheckerWithBindUgroupsTest extends TuleapTestCase
 
     public function itDoesNotThrowWhenStaticUgroupIsInValues()
     {
+        stub($this->ugroup_label_converter_for_list_checker)->isASupportedDynamicUgroup()->returns(false);
+
         $value_wrapper = new SimpleValueWrapper('MOUNTAINEERS');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
@@ -101,6 +116,8 @@ class ListFieldCheckerWithBindUgroupsTest extends TuleapTestCase
 
     public function itThrowsWhenStaticUgroupIsNotInValues()
     {
+        stub($this->ugroup_label_converter_for_list_checker)->isASupportedDynamicUgroup()->returns(false);
+
         $value_wrapper = new SimpleValueWrapper('herbaceous');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
@@ -111,6 +128,9 @@ class ListFieldCheckerWithBindUgroupsTest extends TuleapTestCase
 
     public function itThrowsWhenDynamicUgroupIsNotInValues()
     {
+        stub($this->ugroup_label_converter_for_list_checker)->isASupportedDynamicUgroup()->returns(true);
+        stub($this->ugroup_label_converter_for_list_checker)->convertLabelToTranslationKey()->returns('ugroup_project_admins_name_key');
+
         $value_wrapper = new SimpleValueWrapper('Project Administrators');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
@@ -121,6 +141,8 @@ class ListFieldCheckerWithBindUgroupsTest extends TuleapTestCase
 
     public function itThrowsWhenDynamicUgroupIsNotSupported()
     {
+        stub($this->ugroup_label_converter_for_list_checker)->isASupportedDynamicUgroup()->returns(false);
+
         $value_wrapper = new SimpleValueWrapper('Registered users');
         stub($this->comparison)->getValueWrapper()->returns($value_wrapper);
 
