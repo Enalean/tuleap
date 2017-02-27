@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2015. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -55,6 +55,7 @@ class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase {
             $this->commit_message_validator,
             $this->svn_look,
             $this->handler,
+            mock('Tuleap\\Svn\\SHA1CollisionDetector'),
             mock('BackendLogger')
         );
     }
@@ -327,6 +328,7 @@ EOS;
             $this->commit_message_validator,
             $svn_look,
             $this->handler,
+            mock('Tuleap\\Svn\\SHA1CollisionDetector'),
             mock('BackendLogger')
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -32,6 +32,7 @@ use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\SHA1CollisionDetector;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PreCommit;
@@ -43,7 +44,8 @@ try {
     $repository_path = $argv[1];
     $transaction     = $argv[2];
 
-    $hook = new PreCommit(
+    $svnlook = new Svnlook(new System_Command());
+    $hook    = new PreCommit(
         $repository_path,
         $transaction,
         new RepositoryManager(
@@ -62,13 +64,16 @@ try {
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             SystemEventManager::instance()
         ),
-        new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
+        new CommitInfoEnhancer($svnlook, new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),
+        $svnlook,
+        new SHA1CollisionDetector(),
         new SvnLogger()
     );
 
     $hook->assertCommitMessageIsValid(ReferenceManager::instance());
     $hook->assertCommitToTagIsAllowed($repository_path, $transaction);
+    $hook->assertCommitDoesNotContainSHA1Collision();
 
     exit(0);
 } catch (Exception $exception) {
