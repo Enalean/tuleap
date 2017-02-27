@@ -9,7 +9,7 @@
     "angular-ui-router": "~0.2.10",
     "restangular": "~1.4.0",
     "angular-moment": "~0.8.0",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#9c3ba33866cb6f614c6e61757215a8e170e03d15",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#d459842d21e0ae2e06de0526def85bc769d1ea6a",
     "lodash": "~2.4.0",
     "dragular": "3.4.0",
     "animate.css": "3.5.2"
