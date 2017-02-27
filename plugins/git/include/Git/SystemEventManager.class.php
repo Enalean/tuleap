@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011-2016. All rights reserved.
+ * Copyright Enalean (c) 2011-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Git\Events\ParseGitolite3Logs;
+use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 
 /**
  * I'm responsible to create system events with the right parameters
@@ -248,6 +249,17 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueMigrateToTuleapSSHKeyManagement()
+    {
+        $this->system_event_manager->createEvent(
+            MigrateToTuleapSSHKeyManagement::NAME,
+            null,
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_ROOT,
+            'Tuleap\\Git\\Gitolite\\SSHKey\\SystemEvent\\MigrateToTuleapSSHKeyManagement'
+        );
+    }
+
     public function isRepositoryUpdateAlreadyQueued(GitRepository $repository) {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
             SystemEvent_GIT_REPO_UPDATE::NAME,
@@ -307,7 +319,8 @@ class Git_SystemEventManager {
      */
     public function getTypesForDefaultQueue() {
         $types = array(
-            ParseGitolite3Logs::NAME
+            ParseGitolite3Logs::NAME,
+            MigrateToTuleapSSHKeyManagement::NAME
         );
 
         if ($this->repository_factory->hasGitShellRepositories()) {

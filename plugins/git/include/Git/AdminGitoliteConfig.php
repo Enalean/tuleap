@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,12 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 
 class Git_AdminGitoliteConfig {
 
-    const ACTION = 'update_config';
+    const ACTION_UPDATE_CONFIG              = 'update_config';
+    const ACTION_MIGRATE_SSH_KEY_MANAGEMENT = 'migrate_to_tuleap_ssh_keys_management';
 
     /**
      * @var Git_SystemEventManager
@@ -42,17 +44,23 @@ class Git_AdminGitoliteConfig {
 
     /** @var AdminPageRenderer */
     private $admin_page_renderer;
+    /**
+     * @var ManagementDetector
+     */
+    private $management_detector;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
         Git_SystemEventManager $system_event_manager,
-        AdminPageRenderer $admin_page_renderer
+        AdminPageRenderer $admin_page_renderer,
+        ManagementDetector $management_detector
     ) {
         $this->csrf                 = $csrf;
         $this->project_manager      = $project_manager;
         $this->system_event_manager = $system_event_manager;
         $this->admin_page_renderer  = $admin_page_renderer;
+        $this->management_detector  = $management_detector;
     }
 
     public function process(Codendi_Request $request) {
@@ -62,15 +70,27 @@ class Git_AdminGitoliteConfig {
             return;
         }
 
-        if ($action !== self::ACTION) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText('plugin_git', 'regenerate_config_bad_request')
-            );
-            return;
+        switch ($action) {
+            case self::ACTION_UPDATE_CONFIG:
+                $this->csrf->check();
+                $this->regenerateGitoliteConfigForAProject($request);
+                break;
+            case self::ACTION_MIGRATE_SSH_KEY_MANAGEMENT:
+                $this->csrf->check();
+                $this->migrateToTuleapSSHKeyManagement();
+                break;
+            default:
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    $GLOBALS['Language']->getText('plugin_git', 'regenerate_config_bad_request')
+                );
         }
 
-        $this->csrf->check();
+        return true;
+    }
+
+    private function regenerateGitoliteConfigForAProject(Codendi_Request $request)
+    {
         $project = $this->getProject($request->get('gitolite_config_project'));
 
         if (! $project) {
@@ -87,7 +107,6 @@ class Git_AdminGitoliteConfig {
             'info',
             $GLOBALS['Language']->getText('plugin_git', 'regenerate_config_waiting', array($project->getPublicName()))
         );
-        return true;
     }
 
     /**
@@ -97,13 +116,26 @@ class Git_AdminGitoliteConfig {
         return $this->project_manager->getProjectFromAutocompleter($project_name_from_autocomplete);
     }
 
+    private function migrateToTuleapSSHKeyManagement()
+    {
+        if (! $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap()) {
+            return;
+        }
+        $this->system_event_manager->queueMigrateToTuleapSSHKeyManagement();
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('plugin_git', 'migrate_to_tuleap_ssh_keys_management_feedback')
+        );
+    }
+
     public function display(Codendi_Request $request) {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
 
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,
-            $this->csrf
+            $this->csrf,
+            $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap()
         );
 
         $this->admin_page_renderer->renderANoFramedPresenter(

@@ -20,6 +20,7 @@
 
 use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GeneralSettingsController;
+use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -78,6 +79,10 @@ class Git_AdminRouter {
      * @var Restrictor
      */
     private $gerrit_restrictor;
+    /**
+     * @var ManagementDetector
+     */
+    private $management_detector;
 
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -92,7 +97,8 @@ class Git_AdminRouter {
         AdminPageRenderer                    $admin_page_renderer,
         RegexpFineGrainedDisabler            $regexp_disabler,
         GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
-        Restrictor                           $gerrit_restrictor
+        Restrictor                           $gerrit_restrictor,
+        ManagementDetector                   $management_detector
     ) {
         $this->gerrit_server_factory          = $gerrit_server_factory;
         $this->csrf                           = $csrf;
@@ -107,6 +113,7 @@ class Git_AdminRouter {
         $this->regexp_disabler                = $regexp_disabler;
         $this->gerrit_ressource_restrictor    = $gerrit_ressource_restrictor;
         $this->gerrit_restrictor              = $gerrit_restrictor;
+        $this->management_detector            = $management_detector;
     }
 
     public function process(Codendi_Request $request) {
@@ -136,7 +143,8 @@ class Git_AdminRouter {
                 $this->csrf,
                 $this->project_manager,
                 $this->git_system_event_manager,
-                $this->admin_page_renderer
+                $this->admin_page_renderer,
+                $this->management_detector
             );
         } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction'){
             return new Git_AdminMirrorController(

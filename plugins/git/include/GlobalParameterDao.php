@@ -35,4 +35,15 @@ class GlobalParameterDao extends DataAccessObject
 
         return $row !== false;
     }
+
+    /**
+     * @return bool
+     */
+    public function enableAuthorizedKeysFileManagementByTuleap()
+    {
+        $sql = 'INSERT INTO plugin_git_global_parameters(name, value) VALUES ("authorized_keys_managed", "tuleap")
+                ON DUPLICATE KEY UPDATE value = "tuleap"';
+
+        return $this->update($sql);
+    }
 }

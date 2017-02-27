@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,10 +27,11 @@ class Git_AdminGitoliteConfigPresenter  extends Git_AdminPresenter {
 
 
 
-    public function __construct($title, CSRFSynchronizerToken $csrf_token) {
+    public function __construct($title, CSRFSynchronizerToken $csrf_token, $migrate_to_tuleap_ssh_keys_management) {
         parent::__construct($title, $csrf_token);
 
-        $this->regenerate_gitolite_configuration = $GLOBALS['Language']->getText('plugin_git', 'regenerate_gitolite_configuration');
+        $this->migrate_to_tuleap_ssh_keys_management = $migrate_to_tuleap_ssh_keys_management;
+        $this->regenerate_gitolite_configuration     = $GLOBALS['Language']->getText('plugin_git', 'regenerate_gitolite_configuration');
     }
 
     public function gitolite_config_title() {
@@ -43,5 +44,20 @@ class Git_AdminGitoliteConfigPresenter  extends Git_AdminPresenter {
 
     public function submit() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_submit_button');
+    }
+
+    public function migrate_to_tuleap_ssh_keys_management_title()
+    {
+        return $GLOBALS['Language']->getText('plugin_git', 'migrate_to_tuleap_ssh_keys_management_title');
+    }
+
+    public function migrate_to_tuleap_ssh_keys_management_description()
+    {
+        return $GLOBALS['Language']->getText('plugin_git', 'migrate_to_tuleap_ssh_keys_management_description');
+    }
+
+    public function migrate_to_tuleap_ssh_keys_management_button()
+    {
+        return $GLOBALS['Language']->getText('plugin_git', 'migrate_to_tuleap_ssh_keys_management_button');
     }
 }

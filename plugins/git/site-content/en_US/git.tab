@@ -516,6 +516,11 @@ plugin_git	admin_gitolite_config_title	Gitolite configuration
 plugin_git	admin_gitolite_config_description	This section allows you to regenerate the Gitolite configuration file of a selected project.
 plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git Plugin</a>.
 
+plugin_git	migrate_to_tuleap_ssh_keys_management_title	Migrate from Gitolite to Tuleap SSH keys management
+plugin_git	migrate_to_tuleap_ssh_keys_management_description	Migrate to Tuleap SSH keys management allows faster keys deployment. Once the migration is done it is not possible to go back to the Gitolite management.
+plugin_git	migrate_to_tuleap_ssh_keys_management_button	Migrate
+plugin_git	migrate_to_tuleap_ssh_keys_management_feedback	The migration to Tuleap SSH keys management has been started and will be done in a few minutes
+
 plugin_git	save_access_control	Save permissions
 plugin_git	template_access_control_saved	Access control template successfully saved.
 plugin_git	template_access_control_missing	Please define Write permissions.

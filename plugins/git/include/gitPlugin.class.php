@@ -30,6 +30,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
+use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -551,6 +552,13 @@ class GitPlugin extends Plugin {
                     $this->getGitolite3Parser()
                 );
                 break;
+            case MigrateToTuleapSSHKeyManagement::NAME:
+                $params['class'] = 'Tuleap\\Git\\Gitolite\\SSHKey\\SystemEvent\\MigrateToTuleapSSHKeyManagement';
+                $params['dependencies'] = array(
+                    new GlobalParameterDao(),
+                    new System_Command()
+                );
+                break;
             default:
                 break;
         }
@@ -666,7 +674,8 @@ class GitPlugin extends Plugin {
                 $this->getGerritServerFactory(),
                 $gerrit_ressource_restrictor,
                 $project_manager
-            )
+            ),
+            $this->getManagementDetector()
         );
 
         $admin->process($request);
@@ -1939,6 +1948,18 @@ class GitPlugin extends Plugin {
             $git_exec,
             $gitolite_admin_path,
             $user_manager
+        );
+    }
+
+    /**
+     * @return ManagementDetector
+     */
+    private function getManagementDetector()
+    {
+        return new ManagementDetector(
+            new VersionDetector(),
+            new GlobalParameterDao(),
+            SystemEventManager::instance()
         );
     }
 
