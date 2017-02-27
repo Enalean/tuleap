@@ -435,6 +435,16 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public abstract function getBindValues($bindvalue_ids = null);
 
     /**
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
+     * If the $bindvalue_ids is empty then return empty array
+     *
+     * @param array $bindvalue_ids The ids of BindValue to retrieve
+     *
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public abstract function getBindValuesForIds(array $bindvalue_ids);
+
+    /**
      * @return string
      */
     public abstract function getType();

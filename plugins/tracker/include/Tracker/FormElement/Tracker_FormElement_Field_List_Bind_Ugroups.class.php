@@ -581,14 +581,36 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if ($bindvalue_ids === null) {
             return $values;
         } else {
-            $bv = array();
-            foreach($bindvalue_ids as $i) {
-                if (isset($values[$i])) {
-                    $bv[$i] = $values[$i];
-                }
-            }
-            return $bv;
+            return $this->extractBindValuesByIds($values, $bindvalue_ids);
         }
+    }
+
+    /**
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
+     * If the $bindvalue_ids is empty then return empty array
+     *
+     * @param array $bindvalue_ids The ids of BindValue to retrieve
+     *
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public function getBindValuesForIds(array $bindvalue_ids)
+    {
+        return $this->extractBindValuesByIds($this->getAllValues(), $bindvalue_ids);
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    private function extractBindValuesByIds(array $values, array $bindvalue_ids)
+    {
+        $list_of_bindvalues = array();
+        foreach($bindvalue_ids as $i) {
+            if (isset($values[$i])) {
+                $list_of_bindvalues[$i] = $values[$i];
+            }
+        }
+
+        return $list_of_bindvalues;
     }
 
     /**

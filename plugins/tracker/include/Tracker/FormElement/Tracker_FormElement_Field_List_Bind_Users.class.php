@@ -246,105 +246,26 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
     protected function getAllValuesByUGroupList($ugroups, $keyword = null) {
+        if ($this->values === null) {
+            $this->values = $this->getUsersValueByKeywordAndIds($ugroups, $keyword, array());
+        }
+
+        return $this->values;
+    }
+
+    /**
+     * If all values for this field are already fetched, then returns the collection. Else perform a lookup to retrieve
+     * only the needed ids. This avoids to load ten thousands of users for nothing.
+     *
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     */
+    private function getValuesCollectionContainingIds(array $bindvalue_ids)
+    {
         if ($this->values) {
             return $this->values;
         }
 
-        $this->values = array();
-        $da           = $this->getDefaultValueDao()->getDa();
-        $sql          = array();
-        $tracker      = $this->field->getTracker();
-        $tracker_id   = $da->escapeInt($tracker->id);
-        $user_helper  = UserHelper::instance();
-
-        foreach($ugroups as $ugroup) {
-            if ($ugroup) {
-                switch ($ugroup) {
-                    case 'group_members':
-                        $sql[] = ugroup_db_get_dynamic_members(
-                            $GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                            $tracker_id,
-                            $tracker->group_id,
-                            true,
-                            $keyword
-                        );
-                        break;
-                    case 'group_admins':
-                        $sql[] = ugroup_db_get_dynamic_members(
-                            $GLOBALS['UGROUP_PROJECT_ADMIN'],
-                            $tracker_id,
-                            $tracker->group_id,
-                            true,
-                            $keyword
-                        );
-                        break;
-                    case 'artifact_submitters':
-                        $display_name_sql = $user_helper->getDisplayNameSQLQuery();
-                        $order_by_sql = $user_helper->getDisplayNameSQLOrder();
-                        if ($keyword) {
-                            $keyword = $da->quoteSmart('%'. $keyword .'%');
-
-                        }
-                        $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
-
-                        $sql[] = "(
-                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
-                                FROM tracker_artifact AS a
-                                INNER JOIN user
-                                    ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker_id )
-                                $keyword_sql
-                                ORDER BY $order_by_sql
-                        )";
-                        break;
-                    case 'artifact_modifiers':
-                        $display_name_sql = $user_helper->getDisplayNameSQLQuery();
-                        $order_by_sql = $user_helper->getDisplayNameSQLOrder();
-                        if ($keyword) {
-                            $keyword = $da->quoteSmart('%'. $keyword .'%');
-                        }
-                        $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
-
-                        $sql[] = "(
-                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
-                                FROM tracker_artifact AS a
-                                INNER JOIN tracker_changeset c ON a.id = c.artifact_id
-                                INNER JOIN user
-                                    ON ( user.user_id = c.submitted_by AND a.tracker_id = $tracker_id )
-                                $keyword_sql
-                                ORDER BY $order_by_sql
-                        )";
-                        break;
-                    default:
-                        if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
-                            if (strlen($matches[1]) > 2) {
-                                $sql[] = ugroup_db_get_members($matches[1], true, $keyword);
-                            } else {
-                                $sql[] = ugroup_db_get_dynamic_members(
-                                    $matches[1],
-                                    $tracker_id,
-                                    $tracker->group_id,
-                                    true,
-                                    $keyword
-                                );
-                            }
-                        }
-                }
-            }
-        }
-
-        $sql = array_filter($sql);
-        if (! empty($sql)) {
-            $dao   = $this->getDefaultValueDao();
-            foreach( $dao->retrieve(implode(' UNION ', $sql)) as $row) {
-                $this->values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
-                    $row['user_id'],
-                    $row['user_name'],
-                    $row['full_name']
-                );
-            }
-        }
-
-        return $this->values;
+        return $this->getUsersValueByKeywordAndIds($this->value_function, null, $bindvalue_ids);
     }
 
     /**
@@ -826,21 +747,45 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         if ($bindvalue_ids === null) {
             return $values;
         } else {
-            $bv = array();
-            foreach($bindvalue_ids as $i) {
-                if (isset($values[$i])) {
-                    $bv[$i] = $values[$i];
-                } else {
-                    // User not found in the binded ugroup. Look for users that are either:
-                    //  1. not anymore active
-                    //  2. not member of the binded ugroup
-                    if ($v = $this->getAdditionnalValue($i)) {
-                        $bv[$i] = $v;
-                    }
+            return $this->extractBindValuesByIds($values, $bindvalue_ids);
+        }
+    }
+
+    /**
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
+     * If the $bindvalue_ids is empty then return empty array
+     *
+     * @param array $bindvalue_ids The ids of BindValue to retrieve
+     *
+     * @Return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public function getBindValuesForIds(array $bindvalue_ids)
+    {
+        $values = $this->getValuesCollectionContainingIds($bindvalue_ids);
+
+        return $this->extractBindValuesByIds($values, $bindvalue_ids);
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    private function extractBindValuesByIds(array $values, array $bindvalue_ids)
+    {
+        $list_of_bindvalues = array();
+        foreach($bindvalue_ids as $i) {
+            if (isset($values[$i])) {
+                $list_of_bindvalues[$i] = $values[$i];
+            } else {
+                // User not found in the binded ugroup. Look for users that are either:
+                //  1. not anymore active
+                //  2. not member of the binded ugroup
+                $value = $this->getAdditionnalValue($i);
+                if ($value) {
+                    $list_of_bindvalues[$i] = $value;
                 }
             }
-            return $bv;
         }
+        return $list_of_bindvalues;
     }
 
     /**
@@ -994,5 +939,115 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
         return $visitor->visitListBindUsers($this, $parameters);
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     */
+    private function getUsersValueByKeywordAndIds($ugroups, $keyword, array $bindvalue_ids)
+    {
+        $da          = $this->getDefaultValueDao()->getDa();
+        $sql         = array();
+        $tracker     = $this->field->getTracker();
+        $tracker_id  = $da->escapeInt($tracker->id);
+        $user_helper = UserHelper::instance();
+        $user_id_sql = $bindvalue_ids ? 'WHERE user.user_id IN ('. $da->escapeIntImplode($bindvalue_ids) .')' : '';
+
+        foreach ($ugroups as $ugroup) {
+            if ($ugroup) {
+                switch ($ugroup) {
+                    case 'group_members':
+                        $sql[] = ugroup_db_get_dynamic_members(
+                            $GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                            $tracker_id,
+                            $tracker->group_id,
+                            true,
+                            $keyword,
+                            $bindvalue_ids
+                        );
+                        break;
+                    case 'group_admins':
+                        $sql[] = ugroup_db_get_dynamic_members(
+                            $GLOBALS['UGROUP_PROJECT_ADMIN'],
+                            $tracker_id,
+                            $tracker->group_id,
+                            true,
+                            $keyword,
+                            $bindvalue_ids
+                        );
+                        break;
+                    case 'artifact_submitters':
+                        $display_name_sql = $user_helper->getDisplayNameSQLQuery();
+                        $order_by_sql     = $user_helper->getDisplayNameSQLOrder();
+                        if ($keyword) {
+                            $keyword = $da->quoteLikeValueSurround($keyword);
+
+                        }
+                        $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
+
+                        $sql[] = "(
+                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
+                                FROM tracker_artifact AS a
+                                INNER JOIN user
+                                    ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker_id )
+                                $user_id_sql
+                                $keyword_sql
+                                ORDER BY $order_by_sql
+                        )";
+                        break;
+                    case 'artifact_modifiers':
+                        $display_name_sql = $user_helper->getDisplayNameSQLQuery();
+                        $order_by_sql     = $user_helper->getDisplayNameSQLOrder();
+                        if ($keyword) {
+                            $keyword = $da->quoteLikeValueSurround($keyword);
+                        }
+                        $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
+
+                        $sql[] = "(
+                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
+                                FROM tracker_artifact AS a
+                                INNER JOIN tracker_changeset c ON a.id = c.artifact_id
+                                INNER JOIN user
+                                    ON ( user.user_id = c.submitted_by AND a.tracker_id = $tracker_id )
+                                $user_id_sql
+                                $keyword_sql
+                                ORDER BY $order_by_sql
+                        )";
+                        break;
+                    default:
+                        if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
+                            if (strlen($matches[1]) > 2) {
+                                $sql[] = ugroup_db_get_members($matches[1], true, $keyword, $bindvalue_ids);
+                            } else {
+                                $sql[] = ugroup_db_get_dynamic_members(
+                                    $matches[1],
+                                    $tracker_id,
+                                    $tracker->group_id,
+                                    true,
+                                    $keyword,
+                                    $bindvalue_ids
+                                );
+                            }
+                        }
+                }
+            }
+        }
+
+        $sql = array_filter($sql);
+        if (empty($sql)) {
+            return array();
+        }
+
+        $values = array();
+        $dao    = $this->getDefaultValueDao();
+        foreach ($dao->retrieve(implode(' UNION ', $sql)) as $row) {
+            $values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
+                $row['user_id'],
+                $row['user_name'],
+                $row['full_name']
+            );
+        }
+
+        return $values;
     }
 }
