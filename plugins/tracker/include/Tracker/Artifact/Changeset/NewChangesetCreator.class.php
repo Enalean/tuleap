@@ -24,7 +24,7 @@
 class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Changeset_NewChangesetCreatorBase {
 
     public function __construct(
-        Tracker_Artifact_Changeset_NewChangesetFieldsValidator $fields_validator,
+        Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Artifact_ChangesetDao $changeset_dao,
         Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,

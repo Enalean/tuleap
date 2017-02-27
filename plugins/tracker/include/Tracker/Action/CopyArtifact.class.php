@@ -222,7 +222,7 @@ class Tracker_Action_CopyArtifact {
                 $original_artifact->getId()
             )
         );
-        $artifact->createNewChangeset(
+        $artifact->createNewChangesetWhitoutRequiredValidation(
             array(),
             implode("\n",$comment),
             $user,

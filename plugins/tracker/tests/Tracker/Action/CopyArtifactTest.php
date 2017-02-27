@@ -89,7 +89,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
 
         $changeset_factory    = mock('Tracker_Artifact_ChangesetFactory');
         $this->tracker        = aMockTracker()->withId(1)->build();
-        $this->new_artifact   = partial_mock('Tracker_Artifact', array('createNewChangeset'));
+        $this->new_artifact   = partial_mock('Tracker_Artifact', array('createNewChangesetWhitoutRequiredValidation'));
         $this->new_artifact->setId($this->new_artifact_id);
         $this->layout         = mock('Tracker_IDisplayTrackerLayout');
         $this->user           = mock('PFUser');
@@ -310,7 +310,7 @@ XML;
         stub($this->tracker_factory)->getTrackerById()->returns($this->tracker);
         stub($this->xml_importer)->importBareArtifact()->returns($this->a_mocked_artifact);
 
-        expect($this->a_mocked_artifact)->createNewChangeset(array(), '*', $this->user, '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
+        expect($this->a_mocked_artifact)->createNewChangesetWhitoutRequiredValidation(array(), '*', $this->user, true, Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
