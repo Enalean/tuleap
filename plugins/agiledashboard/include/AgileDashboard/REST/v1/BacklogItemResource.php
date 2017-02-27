@@ -158,16 +158,22 @@ class BacklogItemResource extends AuthenticatedResource {
         return $backlog_item;
     }
 
-    private function updateBacklogItemInitialEffortSemantic(PFUser $current_user, Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item, Tracker_SemanticCollection $semantics) {
+    private function updateBacklogItemInitialEffortSemantic(
+        PFUser $current_user,
+        Tracker_Artifact $artifact,
+        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
+        Tracker_SemanticCollection $semantics
+    ) {
         $semantic_initial_effort = $semantics[AgileDashBoard_Semantic_InitialEffort::NAME];
         $initial_effort_field    = $semantic_initial_effort->getField();
 
         if ($initial_effort_field && $initial_effort_field->userCanRead($current_user)) {
-
             $rest_value = $initial_effort_field->getFullRESTValue($current_user, $artifact->getLastChangeset());
             if ($rest_value) {
                 if (is_a($initial_effort_field, 'Tracker_FormElement_Field_List')) {
                     $value = $this->getBacklogItemInitialEffortFromList($rest_value);
+                } elseif (is_a($initial_effort_field, 'Tracker_FormElement_Field_Computed')) {
+                    $value = $initial_effort_field->getComputedValue($current_user, $artifact);
                 } else {
                     $value = $rest_value->value;
                 }
