@@ -28,6 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 
 class ForListBindStatic implements FromWhereBuilder, ListBindStaticFromWhereBuilder
 {
@@ -53,70 +54,41 @@ class ForListBindStatic implements FromWhereBuilder, ListBindStaticFromWhereBuil
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix           = spl_object_hash($comparison);
+        $query_presenter = new QueryListFieldPresenter($comparison, $field);
+
         $comparison_value = $comparison->getValueWrapper();
         $value            = $comparison_value->getValue();
-        $field_id         = (int) $field->getId();
-
-        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
 
         if ($value === '') {
-            return $this->getFromWhereForEmptyCondition(
-                $changeset_value_list_alias,
-                $field_id,
-                $changeset_value_alias
-            );
+            return $this->getFromWhereForEmptyCondition($query_presenter);
         }
-        return $this->getFromWhereForNonEmptyCondition(
-            $list_value_alias,
-            $value,
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias
-        );
+        return $this->getFromWhereForNonEmptyCondition($query_presenter, $value);
     }
 
     /**
      * @return FromWhere
      */
-    private function getFromWhereForNonEmptyCondition(
-        $list_value_alias,
-        $value,
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_list_alias
-    ) {
-        $condition = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.id
-            AND $list_value_alias.label = " . $this->quoteSmart($value);
-
-        return $this->comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            'tracker_field_list_bind_static_value',
-            $list_value_alias,
-            $condition
-        );
-    }
-
-    /**
-     * @return FromWhere
-     */
-    private function getFromWhereForEmptyCondition($changeset_value_list_alias, $field_id, $changeset_value_alias)
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value)
     {
-        $where = "($changeset_value_alias.changeset_id IS NULL OR $changeset_value_list_alias.bindvalue_id =" .
+        $condition = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.id
+            AND $query_presenter->list_value_alias.label = " . $this->quoteSmart($value);
+
+        $query_presenter->setCondition($condition);
+
+        return $this->comparison_builder->getFromWhere($query_presenter);
+    }
+
+    /**
+     * @return FromWhere
+     */
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter)
+    {
+        $condition = "($query_presenter->changeset_value_alias.changeset_id IS NULL OR $query_presenter->changeset_value_list_alias.bindvalue_id =" .
             $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE).")";
 
-        return $this->empty_comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            $where
-        );
+        $query_presenter->setCondition($condition);
+
+        return $this->empty_comparison_builder->getFromWhere($query_presenter);
     }
 
     private function escapeInt($value)

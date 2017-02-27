@@ -26,6 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 
 class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilder
 {
@@ -48,27 +49,18 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix   = spl_object_hash($comparison);
-        $values   = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
-        $field_id = (int)$field->getId();
+        $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
-        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
+        $values   = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
         $escaped_values = $this->quoteSmartImplode($values);
-        $condition      = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.user_id
-            AND $list_value_alias.user_name IN($escaped_values)";
+        $condition      = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.user_id
+            AND $query_presenter->list_value_alias.user_name IN($escaped_values)";
 
-        return $this->from_where_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            'user',
-            $list_value_alias,
-            $condition
-        );
+        $query_presenter->setCondition($condition);
+        $query_presenter->setListValueTable('user');
+
+        return $this->from_where_builder->getFromWhere($query_presenter);
     }
 
     private function quoteSmartImplode($values)

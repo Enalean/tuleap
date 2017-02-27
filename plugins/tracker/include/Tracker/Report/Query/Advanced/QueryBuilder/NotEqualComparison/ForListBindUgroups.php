@@ -27,15 +27,16 @@ use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyNotEqualComparisonFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBindUgroupsBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUgroupsFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 class ForListBindUgroups implements FromWhereBuilder, ListBindUgroupsFromWhereBuilder
 {
     /**
-     * @var FromWhereComparisonFieldBuilder
+     * @var FromWhereEmptyNotEqualComparisonFieldBuilder
      */
     private $empty_comparison_builder;
     /**
@@ -53,7 +54,7 @@ class ForListBindUgroups implements FromWhereBuilder, ListBindUgroupsFromWhereBu
 
     public function __construct(
         CollectionOfListValuesExtractor $values_extractor,
-        FromWhereComparisonFieldBuilder $empty_comparison_builder,
+        FromWhereEmptyNotEqualComparisonFieldBuilder $empty_comparison_builder,
         FromWhereNotEqualComparisonListFieldBindUgroupsBuilder $comparison_builder,
         UgroupLabelConverter $label_converter
     ) {
@@ -65,84 +66,42 @@ class ForListBindUgroups implements FromWhereBuilder, ListBindUgroupsFromWhereBu
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix     = spl_object_hash($comparison);
+        $query_presenter = new QueryListFieldPresenter($comparison, $field);
+
         $values     = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $value      = $values[0];
-        $field_id   = (int)$field->getId();
-        $tracker_id = (int)$field->getTrackerId();
-
-        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
-        $bind_value_alias           = "BindValue_{$field_id}_{$suffix}";
-        $filter_alias               = "Filter_{$field_id}_{$suffix}";
 
         if ($value === '') {
-            return $this->getFromWhereForEmptyCondition(
-                $field_id,
-                $changeset_value_alias,
-                $changeset_value_list_alias
-            );
+            return $this->getFromWhereForEmptyCondition($query_presenter);
         }
 
-        return $this->getFromWhereForNonEmptyCondition(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            $list_value_alias,
-            $bind_value_alias,
-            $filter_alias,
-            $tracker_id,
-            $value
-        );
+        return $this->getFromWhereForNonEmptyCondition($query_presenter, $value);
     }
 
-    private function getFromWhereForNonEmptyCondition(
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_field_alias,
-        $ugroup_alias,
-        $bind_value_alias,
-        $filter_alias,
-        $tracker_id,
-        $value
-    ) {
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value)
+    {
         if ($this->label_converter->isASupportedDynamicUgroup($value)) {
             $value = $this->label_converter->convertLabelToTranslationKey($value);
         }
 
-        $condition = "$ugroup_alias.name = " . $this->quoteSmart($value);
+        $condition = "$query_presenter->list_value_alias.name = " . $this->quoteSmart($value);
 
-        return $this->comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_field_alias,
-            $ugroup_alias,
-            $bind_value_alias,
-            $filter_alias,
-            $tracker_id,
-            $condition
-        );
+        $query_presenter->setCondition($condition);
+
+        return $this->comparison_builder->getFromWhere($query_presenter);
     }
 
     /**
      * @return FromWhere
      */
-    private function getFromWhereForEmptyCondition(
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_list_alias
-    ) {
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter)
+    {
         $matches_value = " != " . $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
-        $condition     = "$changeset_value_list_alias.bindvalue_id $matches_value";
+        $condition     = "$query_presenter->changeset_value_list_alias.bindvalue_id $matches_value";
 
-        return $this->empty_comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            $condition
-        );
+        $query_presenter->setCondition($condition);
+
+        return $this->empty_comparison_builder->getFromWhere($query_presenter);
     }
 
     private function escapeInt($value)

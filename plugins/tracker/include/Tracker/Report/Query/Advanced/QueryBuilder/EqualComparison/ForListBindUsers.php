@@ -25,16 +25,11 @@ use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 
 class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilder
 {
@@ -66,70 +61,42 @@ class ForListBindUsers implements FromWhereBuilder, ListBindUsersFromWhereBuilde
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix   = spl_object_hash($comparison);
-        $values   = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
-        $value    = $values[0];
-        $field_id = (int) $field->getId();
+        $parameter_collection = new QueryListFieldPresenter($comparison, $field);
 
-        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $list_value_alias           = "ListValue_{$field_id}_{$suffix}";
+        $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        $value  = $values[0];
 
         if ($value === '') {
-            return $this->getFromWhereForEmptyCondition(
-                $changeset_value_list_alias,
-                $field_id,
-                $changeset_value_alias
-            );
+            return $this->getFromWhereForEmptyCondition($parameter_collection);
         }
-        return $this->getFromWhereForNonEmptyCondition(
-            $list_value_alias,
-            $value,
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias
-        );
+        return $this->getFromWhereForNonEmptyCondition($parameter_collection, $value);
     }
 
     /**
      * @return FromWhere
      */
-    private function getFromWhereForNonEmptyCondition(
-        $list_value_alias,
-        $value,
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_list_alias
-    ) {
-        $condition = "$changeset_value_list_alias.bindvalue_id = $list_value_alias.user_id
-            AND $list_value_alias.user_name = " . $this->quoteSmart($value);
-
-        return $this->comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            'user',
-            $list_value_alias,
-            $condition
-        );
-    }
-
-    /**
-     * @return FromWhere
-     */
-    private function getFromWhereForEmptyCondition($changeset_value_list_alias, $field_id, $changeset_value_alias)
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $parameter_collection, $value)
     {
-        $where = "($changeset_value_alias.changeset_id IS NULL OR $changeset_value_list_alias.bindvalue_id =" .
+        $condition = "$parameter_collection->changeset_value_list_alias.bindvalue_id = $parameter_collection->list_value_alias.user_id
+            AND $parameter_collection->list_value_alias.user_name = " . $this->quoteSmart($value);
+
+        $parameter_collection->setCondition($condition);
+        $parameter_collection->setListValueTable('user');
+
+        return $this->comparison_builder->getFromWhere($parameter_collection);
+    }
+
+    /**
+     * @return FromWhere
+     */
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $parameter_collection)
+    {
+        $condition = "($parameter_collection->changeset_value_alias.changeset_id IS NULL OR $parameter_collection->changeset_value_list_alias.bindvalue_id =" .
             $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE).")";
 
-        return $this->empty_comparison_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            'tracker_changeset_value_list',
-            $where
-        );
+        $parameter_collection->setCondition($condition);
+
+        return $this->empty_comparison_builder->getFromWhere($parameter_collection);
     }
 
     private function escapeInt($value)

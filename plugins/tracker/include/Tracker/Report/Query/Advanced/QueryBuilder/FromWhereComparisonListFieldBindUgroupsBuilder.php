@@ -27,31 +27,25 @@ class FromWhereComparisonListFieldBindUgroupsBuilder
     /**
      * @return FromWhere
      */
-    public function getFromWhere(
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_field_alias,
-        $ugroup_alias,
-        $bind_value_alias,
-        $condition
-    ) {
+    public function getFromWhere(QueryListFieldPresenter $query_presenter)
+    {
         $from = " LEFT JOIN (
-            tracker_changeset_value AS $changeset_value_alias
-            INNER JOIN tracker_changeset_value_list AS $changeset_value_field_alias
-             ON ($changeset_value_field_alias.changeset_value_id = $changeset_value_alias.id)
-            INNER JOIN tracker_field_list_bind_ugroups_value AS $bind_value_alias
+            tracker_changeset_value AS $query_presenter->changeset_value_alias
+            INNER JOIN tracker_changeset_value_list AS $query_presenter->changeset_value_list_alias
+             ON ($query_presenter->changeset_value_list_alias.changeset_value_id = $query_presenter->changeset_value_alias.id)
+            INNER JOIN tracker_field_list_bind_ugroups_value AS $query_presenter->bind_value_alias
              ON (
-                $bind_value_alias.id = $changeset_value_field_alias.bindvalue_id
-                AND $bind_value_alias.field_id = $changeset_value_alias.field_id
+                $query_presenter->bind_value_alias.id = $query_presenter->changeset_value_list_alias.bindvalue_id
+                AND $query_presenter->bind_value_alias.field_id = $query_presenter->changeset_value_alias.field_id
              )
-            INNER JOIN ugroup AS $ugroup_alias
+            INNER JOIN ugroup AS $query_presenter->list_value_alias
              ON (
-                $bind_value_alias.ugroup_id = $ugroup_alias.ugroup_id
-                AND $condition
+                $query_presenter->bind_value_alias.ugroup_id = $query_presenter->list_value_alias.ugroup_id
+                AND $query_presenter->condition
              )
-         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
+         ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = $query_presenter->field_id)";
 
-        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
+        $where = "$query_presenter->changeset_value_alias.changeset_id IS NOT NULL";
 
         return new FromWhere($from, $where);
     }
