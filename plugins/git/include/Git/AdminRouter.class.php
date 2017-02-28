@@ -136,7 +136,7 @@ class Git_AdminRouter {
                 $this->admin_page_renderer,
                 $this->gerrit_ressource_restrictor,
                 $this->gerrit_restrictor,
-                new AdminGerritBuilder()
+                new AdminGerritBuilder(new User_SSHKeyValidator())
             );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(

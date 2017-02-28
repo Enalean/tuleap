@@ -21,9 +21,20 @@
 namespace Tuleap\Git;
 
 use Git_RemoteServer_GerritServer;
+use User_SSHKeyValidator;
 
 class AdminGerritBuilder
 {
+    /**
+     * @var User_SSHKeyValidator
+     */
+    private $ssh_key_validator;
+
+    public function __construct(User_SSHKeyValidator $ssh_key_validator)
+    {
+        $this->ssh_key_validator = $ssh_key_validator;
+    }
+
     public function buildFromRequest(array $request)
     {
 
@@ -49,12 +60,37 @@ class AdminGerritBuilder
         $gerrit_server['http_port']            = $request['http_port'];
         $gerrit_server['login']                = $request['login'];
         $gerrit_server['identity_file']        = $request['identity_file'];
-        $gerrit_server['replication_ssh_key']  = $request['replication_key'];
+        $gerrit_server['replication_ssh_key']  = $this->getValidatedSSHKey($request['replication_key']);
         $gerrit_server['use_ssl']              = isset($request['use_ssl']) ? $request['use_ssl'] : false;
         $gerrit_server['http_password']        = $request['http_password'];
         $gerrit_server['replication_password'] = $request['replication_password'];
         $gerrit_server['auth_type']            = $request['auth_type'];
 
         return $gerrit_server;
+    }
+
+    /**
+     * @return string
+     */
+    private function getValidatedSSHKey($ssh_key)
+    {
+        $ssh_key = trim($ssh_key);
+        if ($ssh_key === '') {
+            return '';
+        }
+        if (strpos($ssh_key, "\n") !== false) {
+            $GLOBALS['Response']->addFeedback(
+                \Feedback::WARN,
+                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_only_one_ssh_replication_key')
+            );
+            return '';
+        }
+        $validated_key = $this->ssh_key_validator->validateAllKeys(array($ssh_key));
+
+        if (empty($validated_key)) {
+            return '';
+        }
+
+        return $ssh_key;
     }
 }
