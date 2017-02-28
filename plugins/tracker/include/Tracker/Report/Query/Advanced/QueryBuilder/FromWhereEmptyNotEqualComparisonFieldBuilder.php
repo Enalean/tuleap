@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 
-class FromWhereEmptyComparisonListFieldBuilder
+class FromWhereEmptyNotEqualComparisonFieldBuilder
 {
     /**
      * @return FromWhere
@@ -31,9 +31,13 @@ class FromWhereEmptyComparisonListFieldBuilder
         $from = " LEFT JOIN (
             tracker_changeset_value AS $query_presenter->changeset_value_alias
             INNER JOIN $query_presenter->tracker_changeset_value_table AS $query_presenter->changeset_value_list_alias
-             ON ($query_presenter->changeset_value_list_alias.changeset_value_id = $query_presenter->changeset_value_alias.id)
+             ON ($query_presenter->changeset_value_list_alias.changeset_value_id = $query_presenter->changeset_value_alias.id
+                 AND $query_presenter->condition
+             )
          ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = $query_presenter->field_id)";
 
-        return new FromWhere($from, $query_presenter->condition);
+        $where = "$query_presenter->changeset_value_alias.changeset_id IS NOT NULL";
+
+        return new FromWhere($from, $where);
     }
 }

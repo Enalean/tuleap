@@ -26,6 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBindUgroupsBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUgroupsFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
 class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
@@ -56,16 +57,9 @@ class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $suffix     = spl_object_hash($comparison);
-        $values     = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
-        $field_id   = (int)$field->getId();
-        $tracker_id = (int)$field->getTrackerId();
+        $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
-        $changeset_value_list_alias = "CVList_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
-        $ugroup_alias               = "ListValue_{$field_id}_{$suffix}";
-        $bind_value_alias           = "BindValue_{$field_id}_{$suffix}";
-        $filter_alias               = "Filter_{$field_id}_{$suffix}";
+        $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
         $normalized_values = array();
         foreach ($values as $value) {
@@ -77,18 +71,11 @@ class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
         }
 
         $escaped_values = $this->quoteSmartImplode($normalized_values);
-        $condition      = "$ugroup_alias.name IN($escaped_values)";
+        $condition      = "$query_presenter->list_value_alias.name IN($escaped_values)";
 
-        return $this->from_where_builder->getFromWhere(
-            $field_id,
-            $changeset_value_alias,
-            $changeset_value_list_alias,
-            $ugroup_alias,
-            $bind_value_alias,
-            $filter_alias,
-            $tracker_id,
-            $condition
-        );
+        $query_presenter->setCondition($condition);
+
+        return $this->from_where_builder->getFromWhere($query_presenter);
     }
 
     private function quoteSmartImplode($values)

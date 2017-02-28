@@ -26,26 +26,19 @@ class FromWhereComparisonListFieldBuilder
     /**
      * @return FromWhere
      */
-    public function getFromWhere(
-        $field_id,
-        $changeset_value_alias,
-        $changeset_value_field_alias,
-        $tracker_changeset_value_table,
-        $list_value_table,
-        $list_value_alias,
-        $condition
-    ) {
+    public function getFromWhere(QueryListFieldPresenter $query_presenter)
+    {
         $from = " LEFT JOIN (
-            tracker_changeset_value AS $changeset_value_alias
-            INNER JOIN $tracker_changeset_value_table AS $changeset_value_field_alias
-             ON ($changeset_value_field_alias.changeset_value_id = $changeset_value_alias.id)
-            INNER JOIN $list_value_table AS $list_value_alias
+            tracker_changeset_value AS $query_presenter->changeset_value_alias
+            INNER JOIN $query_presenter->tracker_changeset_value_table AS $query_presenter->changeset_value_list_alias
+             ON ($query_presenter->changeset_value_list_alias.changeset_value_id = $query_presenter->changeset_value_alias.id)
+            INNER JOIN $query_presenter->list_value_table AS $query_presenter->list_value_alias
              ON (
-                $condition
+                $query_presenter->condition
              )
-         ) ON ($changeset_value_alias.changeset_id = c.id AND $changeset_value_alias.field_id = $field_id)";
+         ) ON ($query_presenter->changeset_value_alias.changeset_id = c.id AND $query_presenter->changeset_value_alias.field_id = $query_presenter->field_id)";
 
-        $where = "$changeset_value_alias.changeset_id IS NOT NULL";
+        $where = "$query_presenter->changeset_value_alias.changeset_id IS NOT NULL";
 
         return new FromWhere($from, $where);
     }
