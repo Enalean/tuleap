@@ -36,7 +36,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
             $this->admin_page_renderer,
             mock('Tuleap\Git\GerritServerResourceRestrictor'),
             mock('Tuleap\Git\RemoteServer\Gerrit\Restrictor'),
-            new AdminGerritBuilder()
+            new AdminGerritBuilder(mock('User_SSHKeyValidator'))
         );
 
         $this->request_update_existing_server = array(

@@ -586,3 +586,4 @@ plugin_git	gerrit_servers_allowed_project_revoke_yes	Oui, interdire l'accès
 plugin_git	gerrit_servers_allowed_project_revoke_no	Non
 plugin_git	gerrit_servers_under_implementation	Cette fonctionnalité est en cours de développement.
 plugin_git	gerrit_servers_allowed_project_revoke_projects_not_revoked	Certains projets n'ont pas été enlevés parce que ces projets utilisent ce serveur Gerrit : $1
+plugin_git	gerrit_servers_only_one_ssh_replication_key	Seulement une clé SSH pour la réplication est acceptée par serveur
