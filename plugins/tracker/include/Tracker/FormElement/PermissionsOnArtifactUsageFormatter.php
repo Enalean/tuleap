@@ -25,11 +25,21 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 class PermissionsOnArtifactUsageFormatter
 {
     /**
+     * @var PermissionsOnArtifactValidator
+     */
+    private $permissions_validator;
+
+    public function __construct(PermissionsOnArtifactValidator $permissions_validator)
+    {
+        $this->permissions_validator = $permissions_validator;
+    }
+
+    /**
      * @return array
      */
-    public function setRestrictAccessForArtifact(array $value, Tracker_FormElement_Field_PermissionsOnArtifact $field)
+    public function setRestrictAccessForArtifact(array $value)
     {
-        if (empty($value) || $field->isRequiredAccessEnabled($value) === false) {
+        if (empty($value) || $this->permissions_validator->isArtifactPermissionChecked($value) === false) {
             $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] = 0;
         }
 
