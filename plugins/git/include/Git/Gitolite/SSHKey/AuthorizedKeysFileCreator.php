@@ -20,6 +20,9 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey;
 
+use Logger;
+use System_Command;
+use System_Command_CommandException;
 use Tuleap\Git\Gitolite\SSHKey\Provider\IProvideKey;
 
 class AuthorizedKeysFileCreator
@@ -28,10 +31,20 @@ class AuthorizedKeysFileCreator
      * @var IProvideKey
      */
     private $keys;
+    /**
+     * @var System_Command
+     */
+    private $system_command;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
-    public function __construct(IProvideKey $keys)
+    public function __construct(IProvideKey $keys, System_Command $system_command, Logger $logger)
     {
-        $this->keys = $keys;
+        $this->keys           = $keys;
+        $this->system_command = $system_command;
+        $this->logger         = $logger;
     }
 
     /**
@@ -39,15 +52,71 @@ class AuthorizedKeysFileCreator
      */
     public function dump($file_path, $shell, $authentication_options)
     {
-        $file = @fopen($file_path, 'wb');
-        if ($file === false) {
-            throw new DumpKeyException('Could not open the authorized keys file');
+        try {
+            $this->dumpAllKeysAtOnce($file_path, $shell, $authentication_options);
+        } catch (MalformedAuthorizedKeysFileException $ex) {
+            $this->dumpKeysFilteringInvalidOnes($file_path, $shell, $authentication_options);
         }
+    }
+
+    /**
+     * @throws MalformedAuthorizedKeysFileException
+     * @throws DumpKeyException
+     */
+    private function dumpAllKeysAtOnce($file_path, $shell, $authentication_options)
+    {
+        $file = $this->openAuthorizedKeysFile($file_path);
 
         foreach ($this->keys as $key) {
             $this->dumpKey($file, $key, $shell, $authentication_options);
         }
 
+        $this->closeAuthorizedKeysFile($file);
+
+        if (! $this->isAuthorizedKeysValid($file_path)) {
+            throw new MalformedAuthorizedKeysFileException('The generated authorized keys file contains invalid entries');
+        }
+    }
+
+    /**
+     * @throws DumpKeyException
+     */
+    private function dumpKeysFilteringInvalidOnes($file_path, $shell, $authentication_options)
+    {
+        $file = $this->openAuthorizedKeysFile($file_path);
+
+        $temporary_authorized_key_line_file = tempnam(\ForgeConfig::get('tmp_dir'), 'gitolite3-authorized-key-line');
+        if ($temporary_authorized_key_line_file === false) {
+            @unlink($temporary_authorized_key_line_file);
+            throw new DumpKeyException('Could not create a temporary file to verify an authorized key line');
+        }
+
+        foreach ($this->keys as $key) {
+            $this->dumpKeyIfValid($file, $temporary_authorized_key_line_file, $key, $shell, $authentication_options);
+        }
+
+        @unlink($temporary_authorized_key_line_file);
+        $this->closeAuthorizedKeysFile($file);
+    }
+
+    /**
+     * @return resource
+     * @throws DumpKeyException
+     */
+    private function openAuthorizedKeysFile($file_path)
+    {
+        $file = @fopen($file_path, 'wb');
+        if ($file === false) {
+            throw new DumpKeyException('Could not open the authorized keys file');
+        }
+        return $file;
+    }
+
+    /**
+     * @throws DumpKeyException
+     */
+    private function closeAuthorizedKeysFile($file)
+    {
         if (fflush($file) === false) {
             throw new DumpKeyException('Could not flush content to the authorized keys file');
         }
@@ -61,13 +130,62 @@ class AuthorizedKeysFileCreator
      */
     private function dumpKey($file, Key $key, $shell, $authentication_options)
     {
-        $result = fwrite(
-            $file,
-            'command="' . $shell . ' ' . $key->getUsername() . '",' . $authentication_options . ' ' .
-            $key->getKey() . PHP_EOL
-        );
+        $result = fwrite($file, $this->getAuthorizedKeyLine($key, $shell, $authentication_options));
         if ($result === null) {
             throw new DumpKeyException('Could not write to the authorized keys file');
         }
+    }
+
+    /**
+     * @throws DumpKeyException
+     */
+    private function dumpKeyIfValid($file, $temporary_authorized_key_line_file, Key $key, $shell, $authentication_options)
+    {
+        $authorized_key_line = $this->getAuthorizedKeyLine($key, $shell, $authentication_options);
+
+        $is_temporary_authorized_key_line_file_written = file_put_contents(
+            $temporary_authorized_key_line_file,
+            $authorized_key_line
+        );
+
+        if ($is_temporary_authorized_key_line_file_written === false) {
+            @unlink($temporary_authorized_key_line_file);
+            throw new DumpKeyException('Could not write to the temporary file to verify an authorized key line');
+        }
+
+        if (! $this->isAuthorizedKeysValid($temporary_authorized_key_line_file)) {
+            $this->logger->warn('The key ' . $key->getKey() . ' of the user ' . $key->getUsername() . ' is malformed');
+            return;
+        }
+
+        $result = fwrite($file, $this->getAuthorizedKeyLine($key, $shell, $authentication_options));
+        if ($result === null) {
+            throw new DumpKeyException('Could not write to the authorized keys file');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getAuthorizedKeyLine(Key $key, $shell, $authentication_options)
+    {
+        return 'command="' . $shell . ' ' . $key->getUsername() . '",' . $authentication_options . ' ' .
+            $key->getKey() . PHP_EOL;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAuthorizedKeysValid($file_path)
+    {
+        try {
+            $this->system_command->exec(
+                '/usr/share/tuleap/src/utils/ssh-keys-validity-checker.sh ' . escapeshellarg($file_path)
+            );
+        } catch (System_Command_CommandException $ex) {
+            return false;
+        }
+
+        return true;
     }
 }
