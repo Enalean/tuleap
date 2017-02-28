@@ -24,5 +24,5 @@ interface MassDumper
     /**
      * @return bool
      */
-    public function dumpSSHKeys();
+    public function dumpSSHKeys(InvalidKeysCollector $invalid_keys_collector);
 }

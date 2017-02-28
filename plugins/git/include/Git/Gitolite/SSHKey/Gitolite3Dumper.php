@@ -47,10 +47,10 @@ class Gitolite3Dumper implements Dumper
     /**
      * @return bool
      */
-    public function dumpSSHKeys(IHaveAnSSHKey $user)
+    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector)
     {
         try {
-            $this->dumpKeys();
+            $this->dumpKeys($invalid_keys_collector);
         } catch (DumpKeyException $ex) {
             return false;
         }
@@ -60,13 +60,13 @@ class Gitolite3Dumper implements Dumper
 
     public function removeAllExistingKeysForUserName($user_name)
     {
-        $this->dumpKeys();
+        $this->dumpKeys(new InvalidKeysCollector());
     }
 
     /**
      * @throws DumpKeyException
      */
-    public function dumpKeys()
+    public function dumpKeys(InvalidKeysCollector $invalid_keys_collector)
     {
         $this->sanityCheck();
         $temporary_authorized_keys_file = tempnam(\ForgeConfig::get('tmp_dir'), 'gitolite3-authorized-keys');
@@ -78,7 +78,8 @@ class Gitolite3Dumper implements Dumper
             $this->authorized_keys_file_creator->dump(
                 $temporary_authorized_keys_file,
                 self::GITOLITE_SHELL,
-                self::AUTH_OPTIONS
+                self::AUTH_OPTIONS,
+                $invalid_keys_collector
             );
         } catch (DumpKeyException $ex) {
             @unlink($temporary_authorized_keys_file);

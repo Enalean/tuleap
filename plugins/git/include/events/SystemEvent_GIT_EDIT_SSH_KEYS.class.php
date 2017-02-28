@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
     const NAME = 'GIT_EDIT_SSH_KEYS';
@@ -74,23 +75,33 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
         $user_id = $this->getUserIdFromParameters();
         $this->logger->debug('Dump key for user '.$user_id);
 
-        $user                = $this->getUserFromParameters();
-        $gitolite_admin_repo = new GitRepositoryGitoliteAdmin();
+        $user                   = $this->getUserFromParameters();
+        $gitolite_admin_repo    = new GitRepositoryGitoliteAdmin();
+        $invalid_keys_collector = new InvalidKeysCollector();
 
-        $this->updateGitolite($user);
+        $this->updateGitolite($user, $invalid_keys_collector);
+        $are_keys_successfuly_deployed = ! $invalid_keys_collector->hasInvalidKeys();
         $this->system_event_manager->queueGrokMirrorManifest($gitolite_admin_repo);
 
+        $warning_message = '';
         try {
             $this->updateGerrit($user);
             $this->done();
         } catch (Git_UserSynchronisationException $e) {
-            $this->warning('Unable to propagate ssh keys on gerrit for user: ' . $user->getUnixName().': '.$e->getMessage());
+            $are_keys_successfuly_deployed = false;
+            $warning_message               = 'Unable to propagate ssh keys on gerrit for user: ' . $user->getUnixName().': '.$e->getMessage();
+        }
+
+        if ($are_keys_successfuly_deployed) {
+            $this->done();
+        } else {
+            $this->warning(trim($warning_message . "\n" .  $invalid_keys_collector->textualizeKeysNotValid()));
         }
     }
 
-    private function updateGitolite(PFUser $user) {
+    private function updateGitolite(PFUser $user, InvalidKeysCollector $invalid_keys_collector) {
         $this->logger->debug('Update ssh keys in Gitolite');
-        $this->sshkey_dumper->dumpSSHKeys($user);
+        $this->sshkey_dumper->dumpSSHKeys($user, $invalid_keys_collector);
     }
 
     private function updateGerrit(PFUser $user) {

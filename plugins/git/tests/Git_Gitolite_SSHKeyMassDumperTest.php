@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,10 +30,11 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itDumpsSshKeysForOneUser() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         stub($this->user_manager)->getUsersWithSshKey()->returnsDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')));
 
         expect($this->gitExec)->push()->once();
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir . '/keydir/john_do@0.pub'), $this->key1);
@@ -42,23 +43,25 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         expect($this->gitExec)->push()->count(2);
 
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
     }
 
     public function itRemovesOnlySshFilesForUsersWithoutKeys() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2, 'user_name' => 'do_john'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key2, 'user_name' => 'do_john'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/do_john@0.pub'));
@@ -67,11 +70,12 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itRemovesSshFilesWhenKeysAreDeleted() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'do_john'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/do_john@1.pub'));
@@ -82,8 +86,9 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itDoesntRemoveTheGitoliteAdminSSHKey() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         touch($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub');
         $this->gitExec->add($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub');
@@ -91,15 +96,16 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertEmptyGitStatus();
 
         $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub'));
     }
 
     public function itDoesntRemoveTheGerritReservedKeys() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $keyfile = 'forge__gerrit_1@0.pub';
         touch($this->_glAdmDir . '/keydir/'.$keyfile);
@@ -108,11 +114,9 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertEmptyGitStatus();
 
         $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
-        $this->mass_dumper->dumpSSHKeys();
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/'.$keyfile));
     }
 }
-
-?>

@@ -18,30 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Gitolite\SSHKey;
+namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
-class Gitolite3MassDumper implements MassDumper
+require_once __DIR__ . '/../../../../bootstrap.php';
+
+class TestProvider extends \ArrayIterator implements IProvideKey
 {
-    /**
-     * @var Gitolite3Dumper
-     */
-    private $dumper;
-
-    public function __construct(Gitolite3Dumper $dumper)
-    {
-        $this->dumper = $dumper;
-    }
-
-    /**
-     * @return bool
-     */
-    public function dumpSSHKeys(InvalidKeysCollector $invalid_keys_collector)
-    {
-        try {
-            $this->dumper->dumpKeys($invalid_keys_collector);
-        } catch (DumpKeyException $ex) {
-            return false;
-        }
-        return true;
-    }
 }

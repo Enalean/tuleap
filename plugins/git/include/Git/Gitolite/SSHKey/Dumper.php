@@ -26,6 +26,6 @@ interface Dumper
     /**
      * @return boolean
      */
-    public function dumpSSHKeys(IHaveAnSSHKey $user);
+    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector);
     public function removeAllExistingKeysForUserName($user_name);
 }

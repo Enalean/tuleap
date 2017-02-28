@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\Git\Gitolite\SSHKey\MassDumper;
 
 class Git_Gitolite_SSHKeyMassDumper implements MassDumper
@@ -34,7 +35,8 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
         $this->user_manager = $user_manager;
     }
 
-    public function dumpSSHKeys() {
+    public function dumpSSHKeys(InvalidKeysCollector $invalid_keys_collector)
+    {
         $this->dumpAllKeys();
         if ($this->dumper->commitKeyDir('SystemEvent update all user keys')) {
             return $this->dumper->getGitExec()->push();
