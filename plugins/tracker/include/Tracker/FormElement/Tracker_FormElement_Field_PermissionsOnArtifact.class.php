@@ -59,45 +59,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * Display the field as a Changeset value.
-     * Used in report table
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
-
-        $values = array();
-        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
-
-        if ($artifact->useArtifactPermissions()) {
-            $dao = new Tracker_Artifact_Changeset_ValueDao();
-            $row = $dao->searchByFieldId($changeset_id, $this->id)->getRow();
-            $changeset_value_id = $row['id'];
-
-            foreach($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {
-                $name = $this->getUGroupDao()->searchByUGroupId($value['ugroup_id'])->getRow();
-                $values[] = util_translate_name_ugroup($name['name']);
-            }
-
-            return implode(', ', $values);
-        }
-        return '';
-    }
-
-    /**
-     * Display the field for CSV export
-     * Used in CSV data export
-     *
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
-     * @return string
-     */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    private function fetchChangesetRegardingPermissions($artifact_id, $changeset_id)
+    {
         $values = array();
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         if ($artifact->useArtifactPermissions()) {
@@ -113,6 +78,20 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             return implode(',', $values);
         }
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+        return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
+    }
+
+    /**
+     * @return string
+     */
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+        return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }
 
     /**
