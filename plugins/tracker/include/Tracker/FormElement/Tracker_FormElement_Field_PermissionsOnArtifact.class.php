@@ -911,6 +911,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                 (($can_user_restrict_permissions_to_nobody == true) ? 'checked="checked"' : '') .
                 (($disabled == true) ? 'disabled="disabled"' : '') .
                 '/>';
+        } else {
+            $html .= '<input type="hidden" name="artifact[' . $this->getId(
+                ) . '][use_artifact_permissions]" value="1" />';
         }
 
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';
