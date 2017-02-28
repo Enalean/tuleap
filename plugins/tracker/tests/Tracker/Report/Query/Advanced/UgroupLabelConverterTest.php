@@ -23,6 +23,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use ForgeConfig;
 use TuleapTestCase;
 
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
 class UgroupLabelConverterTest extends TuleapTestCase
 {
     /** @var  UgroupLabelConverter */
@@ -49,20 +51,53 @@ class UgroupLabelConverterTest extends TuleapTestCase
 
         stub($this->english_base_language)->getText(
             'project_ugroup',
-            'ugroup_project_members_name_key'
-        )->returns('project_members');
-        stub($this->english_base_language)->getText(
-            'project_ugroup',
             'ugroup_project_members'
         )->returns('Project members');
-        stub($this->french_base_language)->getText(
+        stub($this->english_base_language)->getText(
             'project_ugroup',
-            'ugroup_project_members_name_key'
-        )->returns('membres_projet');
+            'ugroup_project_admins'
+        )->returns('Project administrators');
+        stub($this->english_base_language)->getText(
+            'project_ugroup',
+            'ugroup_authenticated_users'
+        )->returns('Registered and restricted users');
+        stub($this->english_base_language)->getText(
+            'project_ugroup',
+            'ugroup_registered_users'
+        )->returns('Registered users');
+        stub($this->english_base_language)->getText(
+            'project_ugroup',
+            'ugroup_file_manager_admin_name_key'
+        )->returns('file_manager_admins');
+        stub($this->english_base_language)->getText(
+            'project_ugroup',
+            'ugroup_wiki_admin_name_key'
+        )->returns('wiki_admins');
+
         stub($this->french_base_language)->getText(
             'project_ugroup',
             'ugroup_project_members'
         )->returns('Membres du projet');
+        stub($this->french_base_language)->getText(
+            'project_ugroup',
+            'ugroup_project_admins'
+        )->returns('Administrateurs du projet');
+        stub($this->french_base_language)->getText(
+            'project_ugroup',
+            'ugroup_authenticated_users'
+        )->returns('Utilisateurs enregistrés + restreints');
+        stub($this->french_base_language)->getText(
+            'project_ugroup',
+            'ugroup_registered_users'
+        )->returns('Utilisateurs enregistrés');
+        stub($this->french_base_language)->getText(
+            'project_ugroup',
+            'ugroup_file_manager_admin_name_key'
+        )->returns('admins_gestionnaire_fichier');
+        stub($this->french_base_language)->getText(
+            'project_ugroup',
+            'ugroup_wiki_admin_name_key'
+        )->returns('admins_wiki');
     }
 
     public function tearDown()
@@ -71,7 +106,7 @@ class UgroupLabelConverterTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    private function initUgroupLabelConverter()
+    private function initUGroupLabelConverter()
     {
         $this->ugroup_label_converter = new UgroupLabelConverter(
             new ListFieldBindValueNormalizer(),
@@ -79,16 +114,26 @@ class UgroupLabelConverterTest extends TuleapTestCase
         );
     }
 
-    public function itSupportsProjectMembersLabels()
+    public function itSupportsAllDynamicUserGroupsLabels()
     {
-        $this->initUgroupLabelConverter();
-
+        $this->initUGroupLabelConverter();
         $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Project MEMBERS'));
         $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Membres du PROJET'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Project ADMINISTRATORS'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Administrateurs du PROJET'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('REGISTERED and restricted users'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Utilisateurs enregistrés + RESTREINTS'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Registered Users'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Utilisateurs Enregistrés'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('File_manager_admins'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Admins_gestionnaire_fichier'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Wiki_admins'));
+        $this->assertTrue($this->ugroup_label_converter->isASupportedDynamicUgroup('Admins_wiki'));
     }
 
     public function itReturnsTheUgroupNameTranslationKeyForEnglishLongLabel()
     {
+        $this->initUGroupLabelConverter();
         $result = $this->ugroup_label_converter->convertLabelToTranslationKey('Project MEMBERS');
 
         $this->assertEqual($result, 'ugroup_project_members_name_key');
@@ -96,8 +141,29 @@ class UgroupLabelConverterTest extends TuleapTestCase
 
     public function itReturnsTheUgroupNameTranslationKeyForFrenchLongLabel()
     {
+        $this->initUGroupLabelConverter();
         $result = $this->ugroup_label_converter->convertLabelToTranslationKey('Membres du PROJET');
 
         $this->assertEqual($result, 'ugroup_project_members_name_key');
+    }
+
+    public function itReturnsTheUgroupNameTranslationKeyForCustomizedAuthenticatedUsersLabel()
+    {
+        ForgeConfig::set('ugroup_authenticated_label', 'Les Faux');
+        $this->initUGroupLabelConverter();
+
+        $result = $this->ugroup_label_converter->convertLabelToTranslationKey('Les FAUX');
+
+        $this->assertEqual($result, 'ugroup_authenticated_users_name_key');
+    }
+
+    public function itReturnsTheUgroupNameTranslationKeyForCustomizedRegisteredUsersLabel()
+    {
+        ForgeConfig::set('ugroup_registered_label', 'Les Vrais');
+        $this->initUGroupLabelConverter();
+
+        $result = $this->ugroup_label_converter->convertLabelToTranslationKey('les VRAIS');
+
+        $this->assertEqual($result, 'ugroup_registered_users_name_key');
     }
 }
