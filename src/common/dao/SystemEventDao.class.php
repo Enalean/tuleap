@@ -169,6 +169,21 @@ class SystemEventDao extends DataAccessObject {
     }
 
     /**
+     * @return DataAccessResult|false
+     */
+    public function searchWithTypeAndStatus(array $type, array $status)
+    {
+        $type   = $this->da->quoteSmartImplode(", ", $type);
+        $status = $this->da->quoteSmartImplode(", ", $status);
+
+        $sql = 'SELECT  * FROM system_event
+                WHERE type   IN ('.$type.')
+                AND status IN ('.$status.')';
+
+        return $this->retrieve($sql);
+    }
+
+    /**
      * @return DataAccessResult
      */
     public function resetStatus($id, $status) {

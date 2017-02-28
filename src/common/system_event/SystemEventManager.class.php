@@ -613,6 +613,19 @@ class SystemEventManager {
     }
 
     /**
+     * @return bool
+     */
+    public function isThereAnEventAlreadyOnGoing($event_type)
+    {
+        $dar = $this->_getDao()->searchWithTypeAndStatus(
+            array($event_type),
+            array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+        );
+
+        return $dar && !$dar->isError() && $dar->rowCount() > 0;
+    }
+
+    /**
      * Return true if there is no pending rename event of this user, otherwise false
      *
      * @param PFUser $user

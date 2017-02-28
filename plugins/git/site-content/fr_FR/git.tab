@@ -511,6 +511,11 @@ plugin_git	admin_gitolite_config_title	Configuration Gitolite
 plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
 plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "polling". Merci de consulter <a href="/help/show_help.php?section=git.html?#jenkins-webhooks">Hudson Git</a>
 
+plugin_git	migrate_to_tuleap_ssh_keys_management_title	Migrer la gestion de la gestion des clés SSH de Gitolite à Tuleap
+plugin_git	migrate_to_tuleap_ssh_keys_management_description	Migrer la gestion des clés SSH de Gitolite à Tuleap permet de deployer les clés des utilisateurs plus rapidement. Une fois la migration réalisée, il n'est plus possible de revenir à la gestion des clés SSH par Gitolite.
+plugin_git	migrate_to_tuleap_ssh_keys_management_button	Migrer
+plugin_git	migrate_to_tuleap_ssh_keys_management_feedback	La migration à la gestion des clés par Tuleap a été démarrée et sera terminée dans quelques instants
+
 plugin_git	save_access_control	Sauvegarder les permissions
 plugin_git	template_access_control_saved	Modèle de permission sauvegardé.
 plugin_git	template_access_control_missing	Veuillez définir les permissions d'Écriture.

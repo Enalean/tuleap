@@ -31,24 +31,89 @@ class ManagementDetectorTest extends TuleapTestCase
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(false);
         $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $system_event_manager = mock('SystemEventManager');
 
-        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao);
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
         $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 
-    public function itUsesGlobalParameterToDetermineIfTuleapManagesAuthorizedKeysFile()
+    public function itIsAbleToFindThatTuleapManagesAuthorizedKeysFile()
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(true);
         $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
-
-        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao);
-
-        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
-        $this->assertTrue($management_detector->isAuthorizedKeysFileManagedByTuleap());
-
         stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
+        $system_event_manager = mock('SystemEventManager');
+
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
+
+        $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
+    }
+
+    public function itIsAbleToDetectThatTuleapManagesAuthorizedKeysFile()
+    {
+        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
+        stub($version_detector)->isGitolite3()->returns(true);
+        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
+        $system_event_manager = mock('SystemEventManager');
+
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
+
         $this->assertTrue($management_detector->isAuthorizedKeysFileManagedByTuleap());
+    }
+
+    public function itCanNotBeRequestedToMigrateToTuleapManagementIfGitolite3IsNotUsed()
+    {
+        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
+        stub($version_detector)->isGitolite3()->returns(false);
+        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $system_event_manager = mock('SystemEventManager');
+
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
+
+        $this->assertFalse($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
+    }
+
+    public function itCanNotBeRequestedToMigrateToTuleapManagementIfTuleapAlreadyManagesTheAuthorizedKeysFile()
+    {
+        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
+        stub($version_detector)->isGitolite3()->returns(true);
+        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
+        $system_event_manager = mock('SystemEventManager');
+
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
+
+        $this->assertFalse($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
+    }
+
+    public function itCanNotBeRequestedToMigrateToTuleapManagementIfThereIsAlreadyAMigrationRunning()
+    {
+        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
+        stub($version_detector)->isGitolite3()->returns(true);
+        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
+        $system_event_manager = mock('SystemEventManager');
+        stub($system_event_manager)->isThereAnEventAlreadyOnGoing()->returns(true);
+
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
+
+        $this->assertFalse($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
+    }
+
+    public function itCanBeRequestedToMigrateToTuleapManagementIfThatsNotAlreadyTheCase()
+    {
+        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
+        stub($version_detector)->isGitolite3()->returns(true);
+        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
+        $system_event_manager = mock('SystemEventManager');
+        stub($system_event_manager)->isThereAnEventAlreadyOnGoing()->returns(false);
+
+        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
+
+        $this->assertTrue($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
     }
 }

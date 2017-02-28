@@ -86,8 +86,8 @@
 
         # These FEATURES are enabled by default.
 
-            # essential (unless you're using smart-http mode)
-            'ssh-authkeys',
+            # SSH keys deployment is managed by Tuleap
+            # 'ssh-authkeys',
 
             # creates git-config enties from gitolite.conf file entries like 'config foo.bar = baz'
             'git-config',
