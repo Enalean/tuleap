@@ -79,12 +79,14 @@
                 }
 
                 > #edit-artifact {
-                    margin-right: 10px;
                     position: relative;
-                    top: 8px;
+                    top: 4px;
+                    margin-right: 5px;
                     float: right;
+                    transition: opacity linear .07s;
+                    color: #ffffff;
+                    text-decoration: none;
                     cursor: pointer;
-                    transition: opacity linear 0.07s;
 
                     &:hover {
                         opacity: 0.8;

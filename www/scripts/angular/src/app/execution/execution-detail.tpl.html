@@ -7,14 +7,16 @@
         <div id="current-execution-title">
             <h2 class="{{ execution.status | dasherize }}">
                 <img id="show-artifact-links-graph-modal"
-                    src="scripts/angular/bin/assets/artifact-link-graph.svg"
-                    type="image/svg+xml"
-                    alt="Graph"
-                    ng-click="showArtifactLinksGraphModal(execution)"
-                    title="{{ 'Show dependencies graph for this test' | translate }}"
+                     src="scripts/angular/bin/assets/artifact-link-graph.svg"
+                     type="image/svg+xml"
+                     alt="Graph"
+                     ng-click="showArtifactLinksGraphModal(execution)"
+                     title="{{ 'Show dependencies graph for this test' | translate }}"
 
                 />
-                <i id="edit-artifact" class="icon-edit" ng-click="showEditArtifactModal(execution.definition)" title="{{ 'Edit this test' | translate }}"></i>
+                <a href="/plugins/tracker/?aid={{ execution.definition.id }}" id="edit-artifact">
+                    <i class="icon-edit" ng-click="showEditArtifactModal($event, execution.definition)" title="{{ 'Edit this test' | translate }}"></i>
+                </a>
                 {{ execution.definition.summary }}
             </h2>
         </div>

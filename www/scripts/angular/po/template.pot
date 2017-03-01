@@ -39,10 +39,6 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr ""
-
 #: src/app/campaign/campaign-new-controller.js
 msgid "Campaign creation"
 msgstr ""
@@ -167,12 +163,12 @@ msgstr ""
 msgid "Test name"
 msgstr ""
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Tests are run in an environment."
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Tests Progression"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Tests are run in an environment."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -199,4 +195,8 @@ msgstr ""
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom out"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
 msgstr ""
