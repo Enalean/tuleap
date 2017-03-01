@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="tql" full-name="Test TQL" description="Test TQL" access="public">
+  <long-description></long-description>
+  <services>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="Contractors" description="">
+      <members/>
+    </ugroup>
+  </ugroups>
+  <trackers>
+    <tracker id="T81" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[TQL]]></name>
+      <item_name>tql</item_name>
+      <description><![CDATA[TQL]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="column" ID="F1858" rank="20">
+          <name>column8</name>
+          <label><![CDATA[Column Top 1]]></label>
+          <formElements>
+            <formElement type="aid" ID="F1859" rank="0">
+              <name>artifact_id</name>
+              <label><![CDATA[Artifact ID]]></label>
+              <description><![CDATA[Unique artifact identifier]]></description>
+            </formElement>
+            <formElement type="subby" ID="F1860" rank="1">
+              <name>submitted_by</name>
+              <label><![CDATA[Submitted by]]></label>
+              <description><![CDATA[User who originally submitted the artifact]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F1861" rank="169">
+          <name>column10</name>
+          <label><![CDATA[Column Top 2]]></label>
+          <formElements>
+            <formElement type="lud" ID="F1862" rank="0">
+              <name>last_update_date</name>
+              <label><![CDATA[Last Modified On]]></label>
+              <description><![CDATA[Date and time of the latest modification in an artifact]]></description>
+            </formElement>
+            <formElement type="subon" ID="F1863" rank="2">
+              <name>open_date</name>
+              <label><![CDATA[Submitted on]]></label>
+              <description><![CDATA[Date and time for the initial artifact submission]]></description>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F1864" rank="180" required="1">
+          <name>fieldset_1</name>
+          <label><![CDATA[Details]]></label>
+          <description><![CDATA[fieldset_default_desc_key]]></description>
+          <formElements>
+            <formElement type="string" ID="F1865" rank="0" required="1">
+              <name>summary</name>
+              <label><![CDATA[Summary]]></label>
+              <description><![CDATA[One line description of the artifact]]></description>
+              <properties maxchars="150" size="61"/>
+            </formElement>
+            <formElement type="text" ID="F1866" rank="7">
+              <name>details</name>
+              <label><![CDATA[Original Submission]]></label>
+              <description><![CDATA[A full description of the artifact]]></description>
+              <properties rows="7" cols="80"/>
+            </formElement>
+            <formElement type="float" ID="F1867" rank="8">
+              <name>remaining_effort</name>
+              <label><![CDATA[Remaining effort]]></label>
+              <properties size="5"/>
+            </formElement>
+            <formElement type="int" ID="F1868" rank="9">
+              <name>story_points</name>
+              <label><![CDATA[Story points]]></label>
+              <properties size="5"/>
+            </formElement>
+            <formElement type="date" ID="F1869" rank="10">
+              <name>timesheeting</name>
+              <label><![CDATA[timesheeting]]></label>
+              <properties default_value="today" display_time="1"/>
+            </formElement>
+            <formElement type="date" ID="F1870" rank="11">
+              <name>due_date</name>
+              <label><![CDATA[Due date]]></label>
+              <properties display_time="0"/>
+            </formElement>
+            <formElement type="date" ID="F1871" rank="24" use_it="0">
+              <name>close_date</name>
+              <label><![CDATA[End Date]]></label>
+              <description><![CDATA[End Date]]></description>
+              <properties default_value="today" display_time="0"/>
+            </formElement>
+            <formElement type="msb" ID="F1872" rank="35" use_it="0">
+              <name>multi_assigned_to</name>
+              <label><![CDATA[Assigned to (multiple)]]></label>
+              <description><![CDATA[Who is in charge of this artifact]]></description>
+              <properties size="7"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="sb" ID="F1873" rank="31440">
+          <name>status</name>
+          <label><![CDATA[Status]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="V2193" label="Todo" is_hidden="0"/>
+              <item ID="V2194" label="Doing" is_hidden="0"/>
+              <item ID="V2195" label="Done" is_hidden="0"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F1874" rank="31441">
+          <name>ugroups</name>
+          <label><![CDATA[ugroups]]></label>
+          <bind type="ugroups">
+            <items>
+              <item ID="V20" label="ugroup_project_members_name_key" is_hidden="0"/>
+              <item ID="V21" label="Contractors" is_hidden="0"/>
+            </items>
+          </bind>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname>title</shortname>
+          <label>Title</label>
+          <description>Define the title of an artifact</description>
+          <field REF="F1865"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F1859"/>
+          <field REF="F1865"/>
+          <field REF="F1870"/>
+        </semantic>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F1859"/>
+                <field REF="F1865"/>
+                <field REF="F1866"/>
+                <field REF="F1867"/>
+                <field REF="F1868"/>
+                <field REF="F1870"/>
+                <field REF="F1869"/>
+                <field REF="F1862"/>
+                <field REF="F1863"/>
+                <field REF="F1873"/>
+                <field REF="F1874"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F1859" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1860" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1862" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1863" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1865" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1865" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1865" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1866" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1866" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1866" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1867" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1867" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1867" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1868" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1868" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1868" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1869" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1869" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1869" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1870" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1870" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1870" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1873" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1873" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1873" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1874" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1874" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1874" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="897">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-03-01T16:43:45+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary" type="string">
+              <value><![CDATA[bug1]]></value>
+            </field_change>
+            <field_change field_name="details" type="text">
+              <value format="text"><![CDATA[original1]]></value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="float">
+              <value>3.1400</value>
+            </field_change>
+            <field_change field_name="story_points" type="int">
+              <value>8</value>
+            </field_change>
+            <field_change field_name="timesheeting" type="date">
+              <value format="ISO8601">2017-01-18T14:35:00+01:00</value>
+            </field_change>
+            <field_change field_name="due_date" type="date">
+              <value format="ISO8601">2017-01-03T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">2193</value>
+            </field_change>
+            <field_change field_name="ugroups" type="list" bind="ugroups">
+              <value format="id">21</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="898">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-03-01T16:43:45+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary" type="string">
+              <value><![CDATA[bug2]]></value>
+            </field_change>
+            <field_change field_name="details" type="text">
+              <value format="text"><![CDATA[original2]]></value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="float">
+              <value>49.3000</value>
+            </field_change>
+            <field_change field_name="story_points" type="int">
+              <value>21</value>
+            </field_change>
+            <field_change field_name="timesheeting" type="date">
+              <value format="ISO8601">2017-01-31T14:37:00+01:00</value>
+            </field_change>
+            <field_change field_name="due_date" type="date">
+              <value format="ISO8601">2017-01-10T00:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="ugroups" type="list" bind="ugroups">
+              <value format="id">20</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="899">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-03-01T16:43:45+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary" type="string">
+              <value><![CDATA[bug3]]></value>
+            </field_change>
+            <field_change field_name="details" type="text">
+              <value format="text"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="remaining_effort" type="float">
+              <value></value>
+            </field_change>
+            <field_change field_name="story_points" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="timesheeting" type="date">
+              <value format="ISO8601">2017-01-31T14:44:00+01:00</value>
+            </field_change>
+            <field_change field_name="due_date" type="date">
+              <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <triggers/>
+  </trackers>
+</project>
