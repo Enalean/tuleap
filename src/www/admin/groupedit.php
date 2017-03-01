@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,8 @@ require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_history.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$pm = ProjectManager::instance();
+$pm            = ProjectManager::instance();
+$event_manager = EventManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || $group->isError()) {
     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit','error_group'));
@@ -47,7 +48,7 @@ if ($request->exist('update')) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_groupedit','invalid_short_name'));
                 $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             } else {
-                $em->processEvent(Event::PROJECT_RENAME, array('group_id' => $group_id,
+                $event_manager->processEvent(Event::PROJECT_RENAME, array('group_id' => $group_id,
                                                            'new_name' => $new_name));
                 //update group history
                 group_add_history('rename_request', $group->getUnixName(false).' :: '.$new_name, $group_id);
@@ -77,15 +78,15 @@ if ($request->exist('update')) {
         if ($group->getStatus() != $form_status && $group->getGroupId() != Project::ADMIN_PROJECT_ID) {
             group_add_history('status', $Language->getText('admin_groupedit', 'status_' . $group->getStatus()) . " :: " . $Language->getText('admin_groupedit', 'status_' . $form_status), $group_id);
             if (isset($form_status) && $form_status && ($form_status == "H" || $form_status == "P")) {
-                $em->processEvent('project_is_suspended_or_pending', array(
+                $event_manager->processEvent('project_is_suspended_or_pending', array(
                     'group_id' => $group_id
                 ));
             } else if (isset($form_status) && $form_status && $form_status == "A") {
-                $em->processEvent('project_is_active', array(
+                $event_manager->processEvent('project_is_active', array(
                     'group_id' => $group_id
                 ));
             } else if (isset($form_status) && $form_status && $form_status == "D") {
-                $em->processEvent('project_is_deleted', array('group_id' => $group_id));
+                $event_manager->processEvent('project_is_deleted', array('group_id' => $group_id));
             }
         }
 
