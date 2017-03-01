@@ -1926,8 +1926,6 @@ class GitPlugin extends Plugin {
      */
     private function getSSHKeyDumperFactory()
     {
-        $management_detector = new ManagementDetector(new VersionDetector(), new GlobalParameterDao());
-
         $user_manager = UserManager::instance();
 
         $whole_instance_keys = new WholeInstanceKeysAggregator(
@@ -1942,7 +1940,7 @@ class GitPlugin extends Plugin {
         $system_command = new System_Command();
 
         return new DumperFactory(
-            $management_detector,
+            $this->getManagementDetector(),
             new AuthorizedKeysFileCreator($whole_instance_keys, $system_command, $this->getLogger()),
             $system_command,
             $git_exec,
