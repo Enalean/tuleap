@@ -74,7 +74,6 @@ module.exports = {
             'vendor/angular-moment/angular-moment.min.js',
             'vendor/angular-sanitize/angular-sanitize.min.js',
             'vendor/restangular/dist/restangular.js',
-            'vendor/angular-ui-tree/dist/angular-ui-tree.min.js',
             'vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             'vendor/angular-animate/angular-animate.min.js',
             'vendor/ng-scrollbar/dist/ng-scrollbar.min.js',
