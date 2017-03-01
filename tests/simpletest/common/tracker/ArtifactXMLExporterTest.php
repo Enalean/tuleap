@@ -575,6 +575,27 @@ class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_
         $this->assertTrue($permissions_are_exported);
     }
 
+    public function itTransformsNobodyIntoProjectAdministrators() {
+        $permissions_are_exported = false;
+        $this->exportTrackerDataFromFixture('artifact_with_full_history_with_perms_on_artifact_with_nobody');
+
+        $nb_of_changesets = count($this->xml->artifact->changeset);
+        $last_changeset   = $this->xml->artifact->changeset[$nb_of_changesets - 1];
+
+        foreach ($last_changeset->field_change as $field_change) {
+            if ((string)$field_change['field_name'] !== 'permissions_on_artifact') {
+                continue;
+            }
+            $this->assertEqual((string)$field_change['type'], 'permissions_on_artifact');
+            $this->assertEqual((string)$field_change['use_perm'], '1');
+            $this->assertCount($field_change->ugroup, 1);
+            $this->assertEqual((string)$field_change->ugroup[0]['ugroup_id'], '4');
+            $permissions_are_exported = true;
+        }
+
+        $this->assertTrue($permissions_are_exported);
+    }
+
     public function itDoesNotExportPermissionsInFirstChangesets() {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
