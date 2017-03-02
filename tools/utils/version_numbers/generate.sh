@@ -24,7 +24,7 @@
 # Usage:
 # $ tools/utils/version_numbers/generate.sh
 
-new_tuleap_version=$(awk -F'.' '{OFS="."; if ($3 == '99') { $NF=$NF+1; print} else { $2=$2+1; print $1, $2 }}' VERSION)
+new_tuleap_version=$(awk -F'.' '{OFS="."; if ($3 == '99') { $NF=$NF+1; print} else { print $0 ".99.1" }}' VERSION)
 echo $new_tuleap_version > VERSION
 
 search_modified_added_or_deleted_files_in_git_staging_area() {
