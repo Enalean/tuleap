@@ -136,7 +136,7 @@ function trove_get_html_allcat_selectfull($group_id) {
     $purifier = Codendi_HTMLPurifier::instance();
     $CATROOTS = trove_getallroots();
     while (list($catroot,$fullname) = each($CATROOTS)) {
-        $html .= "\n<HR>\n<P><B>".$purifier->purify($fullname)."</B> ".help_button('trove_cat',$catroot)."\n";
+        $html .= "\n<HR>\n<P><B>".$purifier->purify($fullname)."</B> \n";
     
         $res_grpcat = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '.
                                'group_id='.db_ei($group_id).' AND trove_cat_root='.db_ei($catroot).
