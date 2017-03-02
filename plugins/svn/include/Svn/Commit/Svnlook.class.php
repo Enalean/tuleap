@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -71,5 +71,17 @@ class Svnlook
         $arg_txn  = escapeshellarg($transaction);
         $arg_repo = escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec("{$this->svnlook} log -t $arg_txn $arg_repo");
+    }
+
+    /**
+     * @return resource|false Returns a process file pointer that should be closed with pclose()
+     */
+    public function getContent(Repository $repository, $transaction, $filename)
+    {
+        $repository_path = escapeshellarg($repository->getSystemPath());
+        $transaction     = escapeshellarg($transaction);
+        $filename        = escapeshellarg($filename);
+
+        return popen("$this->svnlook cat -t $transaction $repository_path $filename", 'rb');
     }
 }

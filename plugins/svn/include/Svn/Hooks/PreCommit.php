@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -30,10 +30,11 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Commit\CommitMessageValidator;
-use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\Commit\SVNLook;
 use ReferenceManager;
 use Logger;
+use Tuleap\Svn\SHA1CollisionDetector;
+use Tuleap\Svn\SHA1CollisionException;
 
 
 class PreCommit {
@@ -41,7 +42,6 @@ class PreCommit {
     private $immutable_tag_factory;
     private $commit_info_enhancer;
     private $logger;
-    private $handler;
 
     /** @var Repository */
     private $repository;
@@ -50,6 +50,14 @@ class PreCommit {
     private $repository_manager;
 
     private $transaction;
+    /**
+     * @var SVNLook
+     */
+    private $svnlook;
+    /**
+     * @var SHA1CollisionDetector
+     */
+    private $sha1_collision_detector;
 
     public function __construct(
         $repository_path,
@@ -57,15 +65,19 @@ class PreCommit {
         RepositoryManager $repository_manager,
         CommitInfoEnhancer $commit_info_enhancer,
         ImmutableTagFactory $immutable_tag_factory,
-        Logger $logger)
+        SVNLook $svnlook,
+        SHA1CollisionDetector $sha1_collision_detector,
+        Logger $logger
+    )
     {
-        $this->repository_manager    = $repository_manager;
-        $this->immutable_tag_factory = $immutable_tag_factory;
-        $this->logger                = $logger;
-        $this->transaction           = $transaction;
-        $this->commit_info_enhancer  = $commit_info_enhancer;
-        $this->repository            = $this->repository_manager
-            ->getRepositoryFromSystemPath($repository_path);
+        $this->repository_manager      = $repository_manager;
+        $this->immutable_tag_factory   = $immutable_tag_factory;
+        $this->logger                  = $logger;
+        $this->transaction             = $transaction;
+        $this->commit_info_enhancer    = $commit_info_enhancer;
+        $this->svnlook                 = $svnlook;
+        $this->sha1_collision_detector = $sha1_collision_detector;
+        $this->repository              = $this->repository_manager->getRepositoryFromSystemPath($repository_path);
 
         $this->commit_info_enhancer->enhanceWithTransaction($this->repository, $transaction);
     }
@@ -85,6 +97,40 @@ class PreCommit {
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
+    }
+
+    /**
+     * @throws SHA1CollisionException
+     * @throws \RuntimeException
+     */
+    public function assertCommitDoesNotContainSHA1Collision()
+    {
+        $changed_paths = $this->svnlook->getTransactionPath($this->repository, $this->transaction);
+        foreach ($changed_paths as $path) {
+            $matches = array();
+            if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
+                continue;
+            }
+            $filename    = $matches[1];
+            $handle_file = $this->svnlook->getContent($this->repository, $this->transaction, $filename);
+            if ($handle_file === false) {
+                throw new \RuntimeException("Can't get the content of the file $filename");
+            }
+            $is_colliding = $this->sha1_collision_detector->isColliding($handle_file);
+            pclose($handle_file);
+            if ($is_colliding) {
+                throw new SHA1CollisionException("Known SHA-1 collision rejected on file $filename");
+            }
+        }
+    }
+
+    /**
+     * @param array $matches
+     * @return bool
+     */
+    private function extractFilenameFromNonDeletedPath($path, array &$matches)
+    {
+        return preg_match('/^[^D]\s+(.*)$/', $path, $matches) !== 1;
     }
 
     private function repositoryUsesImmutableTags() {

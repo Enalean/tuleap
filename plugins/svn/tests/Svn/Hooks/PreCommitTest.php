@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -102,6 +102,8 @@ class PreCommitBaseTest extends TuleapTestCase {
             $this->repository_manager,
             new CommitInfoEnhancer($svn_look, new CommitInfo()),
             $this->immutable_tag_factory,
+            $svn_look,
+            mock('Tuleap\\Svn\\SHA1CollisionDetector'),
             mock('BackendLogger')
         );
         $pre_commit->assertCommitToTagIsAllowed();
@@ -343,6 +345,8 @@ class PreCommitReferenceTest extends TuleapTestCase {
             $this->repo_manager,
             new CommitInfoEnhancer($this->svnlook, new CommitInfo()),
             safe_mock('Tuleap\Svn\Admin\ImmutableTagFactory'),
+            $this->svnlook,
+            mock('Tuleap\\Svn\\SHA1CollisionDetector'),
             safe_mock('Logger'));
     }
 

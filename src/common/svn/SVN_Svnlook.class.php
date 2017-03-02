@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,6 +89,16 @@ class SVN_Svnlook
             throw new SVN_SvnlookException($command, $output, $ret_val);
         }
     }
-}
 
-?>
+    /**
+     * @return resource|false Returns a process file pointer that should be closed with pclose()
+     */
+    public function getContent(Project $project, $transaction, $filename)
+    {
+        $repository_path = escapeshellarg($project->getSVNRootPath());
+        $transaction     = escapeshellarg($transaction);
+        $filename        = escapeshellarg($filename);
+
+        return popen("$this->svnlook cat -t $transaction $repository_path $filename", 'rb');
+    }
+}

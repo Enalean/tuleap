@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2015. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,6 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Svn\SHA1CollisionDetector;
+use Tuleap\Svn\SHA1CollisionException;
 
 /**
  * I'm responsible of handling what happens in pre-commit subversion hook
@@ -36,19 +38,25 @@ class SVN_Hook_PreCommit extends SVN_Hook {
      * @var SVN_Svnlook
      */
     private $svn_look;
+    /**
+     * @var SHA1CollisionDetector
+     */
+    private $sha1_collision_detector;
 
     public function __construct(
         SVN_Hooks $svn_hooks,
         SVN_CommitMessageValidator $message_validator,
         SVN_Svnlook $svn_look,
         SVN_Immutable_Tags_Handler $handler,
+        SHA1CollisionDetector $sha1_collision_detector,
         Logger $logger
     ) {
         parent::__construct($svn_hooks, $message_validator);
 
-        $this->svn_look = $svn_look;
-        $this->handler  = $handler;
-        $this->logger   = $logger;
+        $this->svn_look                = $svn_look;
+        $this->handler                 = $handler;
+        $this->sha1_collision_detector = $sha1_collision_detector;
+        $this->logger                  = $logger;
     }
 
     /**
@@ -86,6 +94,41 @@ class SVN_Hook_PreCommit extends SVN_Hook {
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
+    }
+
+    /**
+     * @throws SHA1CollisionException
+     * @throws \RuntimeException
+     */
+    public function assertCommitDoesNotContainSHA1Collision($repository, $transaction)
+    {
+        $project       = $this->getProjectFromRepositoryPath($repository);
+        $changed_paths = $this->svn_look->getTransactionPath($project, $transaction);
+        foreach ($changed_paths as $path) {
+            $matches = array();
+            if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
+                continue;
+            }
+            $filename     = $matches[1];
+            $handle_file  = $this->svn_look->getContent($project, $transaction, $filename);
+            if ($handle_file === false) {
+                throw new \RuntimeException("Can't get the content of the file $filename");
+            }
+            $is_colliding = $this->sha1_collision_detector->isColliding($handle_file);
+            pclose($handle_file);
+            if ($is_colliding) {
+                throw new SHA1CollisionException("Known SHA-1 collision rejected on file $filename");
+            }
+        }
+    }
+
+    /**
+     * @param array $matches
+     * @return bool
+     */
+    private function extractFilenameFromNonDeletedPath($path, array &$matches)
+    {
+        return preg_match('/^[^D]\s+(.*)$/', $path, $matches) !== 1;
     }
 
    /**
