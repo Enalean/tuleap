@@ -1,0 +1,47 @@
+{
+    "artifact": {
+        "1": [
+            {
+                "artifact_id":  "123",
+                "summary":      "Le artifact with full history",
+                "open_date":    "1234567890",
+                "submitted_by": "goofy"
+            }
+        ]
+    },
+    "artifact_history": {
+        "123": [
+            {
+                "data_type":    "1",
+                "display_type": "TF",
+                "field_name":   "summary",
+                "value_function": "",
+                "old_value":    "Le artifact",
+                "new_value":    "Le artifact with history",
+                "date":         "2234567890",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            },
+            {
+                "data_type":    "1",
+                "display_type": "TF",
+                "field_name":   "summary",
+                "value_function": "",
+                "old_value":    "Le artifact with history",
+                "new_value":    "Le artifact with full history",
+                "date":         "3234567890",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            }
+        ]
+    },
+    "permissions": {
+        "123": [
+            {
+                "ugroup_id": "100"
+            }
+        ]
+    }
+}
