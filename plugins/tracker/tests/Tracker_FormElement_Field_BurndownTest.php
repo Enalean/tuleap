@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
+
 require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends TuleapTestCase {
@@ -88,6 +90,11 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
      * @var Tracker_Artifact_ChangesetValue
      */
     private $changesetValue;
+
+    /**
+     * @var Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever
+     */
+    private $field_retriever;
 
     private $tracker_id;
 
@@ -225,6 +232,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     protected $timestamp;
     protected $duration;
 
+    /**
+     * @var Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever
+     */
+    private $field_retriever;
+
     public function setUp()
     {
         parent::setUp();
@@ -252,8 +264,6 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
 
-        $computed_dao = mock('Tracker_FormElement_Field_ComputedDao');
-
         $this->field = TestHelper::getPartialMock(
             'Tracker_FormElement_Field_Burndown',
             array(
@@ -263,7 +273,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
                 'getProperty',
                 'isCacheBurndownAlreadyAsked',
                 'getLogger',
-                'getComputedDao'
+                'getBurdownConfigurationFieldRetriever'
             )
         );
 
@@ -273,25 +283,15 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->field)->getLogger()->returns($logger);
         stub($this->field)->getBurndown()->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
-        stub($this->field)->getComputedDao()->returns($computed_dao);
+
+        $this->field_retriever = new BurndownConfigurationFieldRetriever(mock('Tracker_FormElementFactory'));
+        stub($this->field)->getBurdownConfigurationFieldRetriever()->returns($this->field_retriever);
+
     }
 
     public function tearDown() {
         parent::tearDown();
         Tracker_FormElementFactory::clearInstance();
-    }
-
-    public function _itFetchDataFromStartDateToDuration() {
-        $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 3, 2011))->returns(10);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 4, 2011))->returns(9);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 5, 2011))->returns(8);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 6, 2011))->returns(7);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 7, 2011))->returns(6);
-        stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
-
-        $data = $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
-        $this->assertEqual($data->getRemainingEffort(), array(10,9,8,7,6));
     }
 
     public function itRetrievesAnEmptyArrayWhenBurndownIsInTheFutur()
@@ -314,14 +314,6 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->field)->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration)->returns($burndown_data);
 
         $this->burndown_view->expectOnce('display');
-        $this->field->fetchBurndownImage($this->sprint, $this->current_user);
-    }
-
-    public function _itDisplaysAMessageWhenThereAreNoLinkedArtifacts() {
-        stub($this->sprint)->getLinkedArtifacts()->returns(array());
-
-        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_no_linked_artifacts'));
-
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
@@ -353,7 +345,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
-    private function GivenFormElementFactoryHasOnlyStartDateField() {
+   private function GivenFormElementFactoryHasOnlyStartDateField() {
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
         stub($form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'start_date', $this->current_user)->returns($this->start_date_field);
@@ -372,7 +364,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
-    public function itDisplaysAMessageWhenStartDateIsEmpty() {
+   public function itDisplaysAMessageWhenStartDateIsEmpty() {
         // Empty timestamp
         $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns('');
 

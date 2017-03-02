@@ -1558,6 +1558,7 @@ plugin_tracker_widget_myartifacts	no_artifacts	Pas d'artefact.
 plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez pas la permission de le modifier, merci de reconfigurer l'outil de suivi
 plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y acceder.
 plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier ou bien vous n'avez pas la permission d'y acceder.
+plugin_tracker	burndown_missing_capacity_warning	L'outil de suivi n'a pas de champ "capacité" de type Entier ou bien vous n'avez pas la permission d'y acceder.
 plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier ou Flottant :
 plugin_tracker	burndown_empty_start_date_warning	Le champ "start date" est vide ou invalide
 plugin_tracker	burndown_empty_duration_warning	Le champ "duration" est vide ou invalide

@@ -21,6 +21,7 @@
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownLogger;
+use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 require_once 'common/chart/ErrorChart.class.php';
@@ -164,7 +165,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         try {
             return $this->getBurndownDuration($artifact, $user) !== null
             && $this->getBurndownStartDate($artifact, $user) !== null;
-        } catch(Tracker_FormElement_Field_BurndownException $e) {
+        } catch (Tracker_FormElement_Field_BurndownException $e) {
             return false;
         }
     }
@@ -338,7 +339,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $logger->info("Start calculating burndown " . $artifact->getId());
 
         $capacity = null;
-        if ($this->doesCapacityFieldExist()) {
+        if ($this->getBurdownConfigurationFieldRetriever()->doesCapacityFieldExist($artifact->getTracker())) {
             $capacity = $this->getCapacity($artifact);
         }
 
@@ -455,10 +456,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $logger = $this->getLogger();
 
         if ($this->doesUserCanReadRemainingEffort($artifact, $user)
-            && $this->doesUserCanReadStartDateAndIsStartDateFilled($artifact, $user)) {
+            && $this->hasStartDate($artifact, $user)) {
             $cached_days = $this->getComputedDao()->getCachedDays(
                 $artifact->getId(),
-                $this->getBurndownRemainingEffortField($artifact, $user)->getId()
+                $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
             if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($burndown_data)) {
@@ -500,7 +501,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $field = $this->getBurndownRemainingEffortField($artifact, $user);
+        $field = $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user);
         if (! $field) {
             return;
         }
@@ -549,17 +550,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return string html
      */
     public function fetchSubmitMasschange() {
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function doesCapacityFieldExist() {
-        if ($this->getCapacityField() === null) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -730,30 +720,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return TRACKER_BASE_URL .'/?'.$url_query;
     }
 
-    private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user) {
-        return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
-    }
-
-    /**
-     * @throws Tracker_FormElement_Field_BurndownException
-     */
-    private function getBurndownStartDateField(Tracker_Artifact $artifact, PFUser $user) {
-        $form_element_factory = $this->getFormElementFactory();
-        $start_date_field     = $form_element_factory->getUsedFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            self::START_DATE_FIELD_NAME,
-            $user
-        );
-
-        if (! $start_date_field) {
-            throw new Tracker_FormElement_Field_BurndownException(
-                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
-            );
-        }
-
-        return $start_date_field;
-    }
-
     /**
      * Returns the sprint start_date as a Timestamp field value of given artifact
      *
@@ -764,7 +730,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @throws Tracker_FormElement_Field_BurndownException
      */
     private function getBurndownStartDate(Tracker_Artifact $artifact, PFUser $user) {
-        $start_date_field = $this->getBurndownStartDateField($artifact, $user);
+        $start_date_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownStartDateField($artifact, $user);
         $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
 
         if (! $timestamp) {
@@ -776,8 +742,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $timestamp;
     }
 
-    private function doesUserCanReadStartDateAndIsStartDateFilled(Tracker_Artifact $artifact, PFUser $user) {
-        $start_date_field = $this->getBurndownStartDateField($artifact, $user);
+    private function hasStartDate(Tracker_Artifact $artifact, PFUser $user) {
+        $start_date_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownStartDateField($artifact, $user);
         $artifact_value   = $artifact->getValue($start_date_field);
 
         if ($artifact_value === null) {
@@ -789,20 +755,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $timestamp !== null;
     }
 
-    /**
-     * @throws Tracker_FormElement_Field_BurndownException
-     */
-    private function getBurndownDurationField(Tracker_Artifact $artifact, PFUser $user) {
-        $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME, $user);
 
-        if (! $field) {
-            throw new Tracker_FormElement_Field_BurndownException(
-                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
-            );
-        }
-
-        return $field;
-    }
 
     /**
      * @param Tracker_Artifact $artifact
@@ -810,8 +763,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return null|int
      */
     public function getCapacity(Tracker_Artifact $artifact) {
-        $field = $this->getCapacityField();
-        if (! $field) {
+        try
+        {
+            $field = $this->getBurdownConfigurationFieldRetriever()->getCapacityField($artifact->getTracker());
+        } catch (Tracker_FormElement_Field_BurndownException $e) {
             return null;
         }
 
@@ -821,25 +776,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $field->getComputedValue($user, $artifact, null, $artifact_list, true);
     }
 
-    private function getCapacityField() {
-        return $this->getFormElementFactory()->getUsedFieldByName(
-            $this->getTrackerId(),
-            self::CAPACITY_FIELD_NAME
-        );
-    }
-
     /**
-     * Returns the sprint duration for burndown rendering
-     *
-     * @param Tracker_Artifact $artifact
-     *
      * @return Integer
-     *
      * @throws Tracker_FormElement_Field_BurndownException
      */
     private function getBurndownDuration(Tracker_Artifact $artifact, PFUser $user)
     {
-        $field = $this->getBurndownDurationField($artifact, $user);
+        $field = $this->getBurdownConfigurationFieldRetriever()->getBurndownDurationField($artifact, $user);
+
 
         if ($artifact->getValue($field) === null) {
             throw new Tracker_FormElement_Field_BurndownException(
@@ -847,6 +791,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             );
 
         }
+
         $duration = $artifact->getValue($field)->getValue();
 
         if ($duration <= 0) {
@@ -974,11 +919,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * @return bool
+     * @return Boolean
      */
     private function doesUserCanReadRemainingEffort(Tracker_Artifact $artifact, PFUser $user)
     {
-        $remaining_effort_field = $this->getBurndownRemainingEffortField($artifact, $user);
+        $remaining_effort_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user);
         if ($remaining_effort_field === null) {
             return false;
         }
@@ -1020,13 +965,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     ) {
 
         try {
-            $start_date_field = $this->getBurndownStartDateField($artifact, $submitter);
-            $duration_field   = $this->getBurndownDurationField($artifact, $submitter);
+            $start_date_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownStartDateField($artifact, $submitter);
+            $duration_field   = $this->getBurdownConfigurationFieldRetriever()->getBurndownDurationField($artifact, $submitter);
 
             if (
                 $previous_changeset !== null &&
                 $this->isCacheBurndownAlreadyAsked($artifact) === false &&
-                $this->getBurndownRemainingEffortField($artifact, $submitter)
+                $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $submitter)
             ) {
                 if ($this->hasFieldChanged($new_changeset, $start_date_field)
                     || $this->hasFieldChanged($new_changeset, $duration_field)
@@ -1043,5 +988,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_FormElement_Field $field
     ) {
         return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
+    }
+
+    /**
+     * @return BurndownConfigurationFieldRetriever
+     */
+    protected function getBurdownConfigurationFieldRetriever()
+    {
+        return new BurndownConfigurationFieldRetriever($this->getFormElementFactory());
     }
 }
