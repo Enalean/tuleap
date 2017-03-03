@@ -93,10 +93,18 @@ if ($json_format) {
     $with_groups_of_user_in_project_id = $request->get('with-groups-of-user-in-project-id');
     if ($with_groups_of_user_in_project_id) {
         $ugroup_dao = new UGroupDao();
-        $ugroups_dar = $ugroup_dao->searchUgroupsUserIsMemberInProject(
-            $current_user->getId(),
-            $with_groups_of_user_in_project_id
-        );
+
+        if ($current_user->isAdmin($with_groups_of_user_in_project_id)) {
+            $ugroups_dar = $ugroup_dao->searchUgroupsForAdministratorInProject(
+                $current_user->getId(),
+                $with_groups_of_user_in_project_id
+            );
+        } else {
+            $ugroups_dar = $ugroup_dao->searchUgroupsUserIsMemberInProject(
+                $current_user->getId(),
+                $with_groups_of_user_in_project_id
+            );
+        }
 
         foreach ($ugroups_dar as $row) {
             if ($row['ugroup_id'] > 100
