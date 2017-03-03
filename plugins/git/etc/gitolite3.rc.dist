@@ -86,8 +86,8 @@
 
         # These FEATURES are enabled by default.
 
-            # SSH keys deployment is managed by Tuleap
-            # 'ssh-authkeys',
+            # SSH keys deployment is managed by Tuleap after the initial installation
+            'ssh-authkeys',
 
             # creates git-config enties from gitolite.conf file entries like 'config foo.bar = baz'
             'git-config',

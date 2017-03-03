@@ -866,6 +866,9 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     # doesn't have DB access .
     perl -pi -e 's/# GROUPLIST_PGM/GROUPLIST_PGM/' /var/lib/gitolite/.gitolite.rc
 
+    # SSH keys are managed by Tuleap
+    sed -i "s/'ssh-authkeys',/#'ssh-authkeys',/" /var/lib/gitolite/.gitolite.rc
+
     # add codendiadm to gitolite group
     if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
 	usermod -a -G gitolite codendiadm
