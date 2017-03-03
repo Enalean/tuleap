@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -60,27 +60,36 @@ class Admin_PermissionDelegationController {
     private $user_group_users_manager;
 
     /**
-     *
      * @var User_ForgeUserGroupManager
      */
     private $user_group_manager;
 
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
-    public function __construct(Codendi_Request $request) {
+
+    public function __construct(
+        Codendi_Request $request,
+        User_ForgeUserGroupPermissionsFactory $user_group_permissions_factory,
+        User_ForgeUserGroupPermissionsManager $user_group_permissions_manager,
+        User_ForgeUserGroupFactory $user_group_factory,
+        User_ForgeUserGroupManager $user_group_manager,
+        User_ForgeUserGroupUsersFactory $user_group_users_factory,
+        User_ForgeUserGroupUsersManager $user_group_users_manager,
+        UserManager $user_manager
+    ) {
         $this->request  = $request;
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
 
-        $permissions_dao                      = new User_ForgeUserGroupPermissionsDao();
-        $this->user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao);
-        $this->user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
-
-        $user_group_dao                       = new UserGroupDao();
-        $this->user_group_factory             = new User_ForgeUserGroupFactory($user_group_dao);
-        $this->user_group_manager             = new User_ForgeUserGroupManager($user_group_dao);
-
-        $user_group_users_dao                 = new User_ForgeUserGroupUsersDao();
-        $this->user_group_users_factory       = new User_ForgeUserGroupUsersFactory($user_group_users_dao);
-        $this->user_group_users_manager       = new User_ForgeUserGroupUsersManager($user_group_users_dao);
+        $this->user_group_permissions_factory = $user_group_permissions_factory;
+        $this->user_group_permissions_manager = $user_group_permissions_manager;
+        $this->user_group_factory             = $user_group_factory;
+        $this->user_group_manager             = $user_group_manager;
+        $this->user_group_users_factory       = $user_group_users_factory;
+        $this->user_group_users_manager       = $user_group_users_manager;
+        $this->user_manager                   = $user_manager;
     }
 
     private function redirect($id = null) {
@@ -298,10 +307,6 @@ class Admin_PermissionDelegationController {
         return ForgeConfig::get('codendi_dir') .'/src/templates/admin/permission_delegation/';
     }
 
-    private function getUserManager() {
-        return UserManager::instance();
-    }
-
     private function manageUsers() {
         if ($this->request->get('remove-users')) {
             $this->removeUsersFromGroup();
@@ -317,7 +322,7 @@ class Admin_PermissionDelegationController {
         $user     = $this->request->get('user');
 
         if ($user) {
-            $user = $this->getUserManager()->findUser($user);
+            $user = $this->user_manager->findUser($user);
         }
 
         if ($group_id && $user) {
@@ -351,7 +356,7 @@ class Admin_PermissionDelegationController {
 
     private function removeUsers($user_group, $user_ids) {
         foreach ($user_ids as $user_id) {
-            $user = $this->getUserManager()->getUserById($user_id);
+            $user = $this->user_manager->getUserById($user_id);
 
             if ($user) {
                 $this->user_group_users_manager->removeUserFromForgeUserGroup($user, $user_group);
@@ -359,4 +364,3 @@ class Admin_PermissionDelegationController {
         }
     }
 }
-?>
