@@ -50,7 +50,7 @@ define([
          * Connection Websocket on namespace trafficlights
          *
          * To do a subscription we need to have:
-         *      - string    version : To connect Client version to NodeJS server version
+         *      - string    version : To connect Client version to Tuleap-realtime server version
          *      - string    token   : To have correct information on user
          *      - string    uuid    : To distinguish each client with the same user id
          *      - string    room_id : Id to broadcast at a specific room
@@ -77,7 +77,7 @@ define([
          * Connection Websocket on default namespace
          *
          * To do a subscription we need to have:
-         *      - string    version : To connect Client version to NodeJS server version
+         *      - string    version : To connect Client version to Tuleap-realtime server version
          *      - string    token   : To have correct information on user
          *      - string    uuid    : To distinguish each client with the same user id
          *      - string    room_id : Id to broadcast at a specific room

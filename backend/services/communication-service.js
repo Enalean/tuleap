@@ -22,16 +22,13 @@ if (typeof define !== 'function') {
 }
 
 define([
-    'lodash',
-    'moment',
-    '../../package.json'
+    'lodash'
 ], function (
-    _,
-    moment,
-    packageJson
+    _
 ) {
     var CommunicationService = function (rooms, jwt) {
-        var self = this;
+        var PROTOCOL_VERSION = '1.1.0';
+        var self             = this;
 
         self.jwt   = jwt;
         self.rooms = rooms;
@@ -51,8 +48,8 @@ define([
                 return;
             }
 
-            if (data.nodejs_server_version !== packageJson.version) {
-                console.error('Client needs an other Node.js version.');
+            if (data.nodejs_server_version !== PROTOCOL_VERSION) {
+                console.error('Client needs protocol version: ', PROTOCOL_VERSION);
                 return;
             }
 
