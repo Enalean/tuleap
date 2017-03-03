@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 
 class User_ForgeUserGroupPermissionsFactory {
 
@@ -46,6 +47,8 @@ class User_ForgeUserGroupPermissionsFactory {
                 return new User_ForgeUserGroupPermission_MediawikiAdminAllProjects();
             case User_ForgeUserGroupPermission_UserManagement::ID :
                 return new User_ForgeUserGroupPermission_UserManagement();
+            case RetrieveSystemEventsInformationApi::ID :
+                return new RetrieveSystemEventsInformationApi();
             default :
                 throw new User_ForgeUserGroupPermission_NotFoundException();
         }
@@ -96,7 +99,8 @@ class User_ForgeUserGroupPermissionsFactory {
             new User_ForgeUserGroupPermission_TrackerAdminAllProjects(),
             new User_ForgeUserGroupPermission_MediawikiAdminAllProjects(),
             new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation(),
-            new User_ForgeUserGroupPermission_UserManagement()
+            new User_ForgeUserGroupPermission_UserManagement(),
+            new RetrieveSystemEventsInformationApi()
         );
     }
 

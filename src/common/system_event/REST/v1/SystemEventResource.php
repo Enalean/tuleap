@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,10 @@ use Tuleap\REST\Header;
 use UserManager;
 use SystemEventDao;
 use SystemEventManager;
+use User_ForgeUserGroupPermissionsManager;
+use User_ForgeUserGroupPermissionsDao;
+use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
+use PFUser;
 
 class SystemEventResource extends AuthenticatedResource
 {
@@ -48,6 +52,10 @@ class SystemEventResource extends AuthenticatedResource
         $this->representation_builder = new PaginatedSystemEventRepresentationsBuilder(
             new SystemEventDao(),
             SystemEventManager::instance()
+        );
+
+        $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
         );
 
         parent::__construct();
@@ -73,7 +81,7 @@ class SystemEventResource extends AuthenticatedResource
     protected function get($status = null, $limit = 10, $offset = 0)
     {
         $this->checkAccess();
-        $this->checkUserIsSuperAdmin();
+        $this->checkUserIsAllowedToSeeSystemEvents();
 
         if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
@@ -114,12 +122,19 @@ class SystemEventResource extends AuthenticatedResource
      *
      * @throws RestException
      */
-    private function checkUserIsSuperAdmin()
+    private function checkUserIsAllowedToSeeSystemEvents()
     {
         $user = $this->user_manager->getCurrentUser();
 
-        if (! $user->isSuperUser()) {
-            throw new RestException(403, 'User is not super user');
+        if (! $user->isSuperUser() && ! $this->isUserIsAllowedToSeeSystemEventThroughTheApi($user)) {
+            throw new RestException(403, 'User is not allowed to see system events');
         }
+    }
+
+    private function isUserIsAllowedToSeeSystemEventThroughTheApi(PFUser $user)
+    {
+        $permission = new RetrieveSystemEventsInformationApi();
+
+        return $this->forge_ugroup_permissions_manager->doesUserHavePermission($user, $permission);
     }
 }

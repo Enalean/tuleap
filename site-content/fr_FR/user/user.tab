@@ -8,3 +8,5 @@ usergroup_forge_permission	user_membership_name	Connaitre les groupes d'un utili
 usergroup_forge_permission	user_membership_description	Cette permission donne le droit d'obtenir l'ensemble des groupes auxquels appartient n'importe quel utilisateur de la plateforme.
 usergroup_forge_permission	user_management_name	Gérer les utilisateurs
 usergroup_forge_permission	user_management_description	Cette permission donne le droit de gérer les utilisateurs: changer le status, le username, etc,.. .
+usergroup_forge_permission	system_event_api_name	Voir via l'API REST les informations sur les évènements système.
+usergroup_forge_permission	system_event_api_description	Cette permission donne le droit d'obtenir l'ensemble des informations des évènements système via l'API REST.

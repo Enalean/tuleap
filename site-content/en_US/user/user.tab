@@ -8,3 +8,5 @@ usergroup_forge_permission	user_membership_name	Retrieve User Membership Informa
 usergroup_forge_permission	user_membership_description	This permission grants the right to know which group any user belongs to.
 usergroup_forge_permission	user_management_name	User Management
 usergroup_forge_permission	user_management_description	This permission grants the right to manage users: change the status, the username, etc,.. .
+usergroup_forge_permission	system_event_api_name	See informations about system events through the REST API.
+usergroup_forge_permission	system_event_api_description	This permission grants the right to see all the informations of system events through the REST API.
