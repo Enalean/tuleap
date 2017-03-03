@@ -326,12 +326,33 @@ class SvnPlugin extends Plugin {
             $project = $this->getProjectFromViewVcURL($request);
         }
 
+        if (! $project) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'include_group', 'g_not_found'
+                )
+            );
+
+            $this->redirectToHomepage();
+        } elseif ($project->isDeleted()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'include_exit', 'project_status_' . $project->getStatus()
+                )
+            );
+
+            $this->redirectToHomepage();
+        }
+
         $project_id = $project->getId();
         if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
             $GLOBALS['Response']->addFeedback(
-                'error', $GLOBALS['Language']->getText(
-                'plugin_svn_manage_repository', 'plugin_not_activated'
-            )
+                'error',
+                $GLOBALS['Language']->getText(
+                    'plugin_svn_manage_repository', 'plugin_not_activated'
+                 )
             );
             $GLOBALS['Response']->redirect('/projects/' . $project->getUnixNameMixedCase() . '/');
         } else {
@@ -339,11 +360,16 @@ class SvnPlugin extends Plugin {
         }
     }
 
+    private function redirectToHomepage()
+    {
+        $GLOBALS['Response']->redirect('/');
+    }
+
     private function getProjectFromViewVcURL(HTTPRequest $request)
     {
         $svn_root          = $request->get('root');
         $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
-        $project           = ProjectManager::instance()->getValidProjectByShortNameOrId($project_shortname);
+        $project = ProjectManager::instance()->getProjectByCaseInsensitiveUnixName($project_shortname);
 
         return $project;
     }
