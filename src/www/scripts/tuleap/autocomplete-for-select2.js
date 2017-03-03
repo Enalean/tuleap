@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,14 +71,14 @@ tuleap.autocomplete_users_for_select2 = function(element, options) {
 
     function formatUser(user) {
         if (user.loading) {
-            return user.text;
+            return tuleap.escaper.html(user.text);
         }
 
         var markup = '<div class="select2-result-user"> \
             <div class="tlp-avatar select2-result-user__avatar"> \
-                ' + (user.has_avatar ? '<img src="/users/' + user.login +'/avatar.png">' : '') +' \
+                ' + (user.has_avatar ? '<img src="/users/' + tuleap.escaper.html(user.login) +'/avatar.png">' : '') +' \
             </div> \
-            ' + user.text +' \
+            ' + tuleap.escaper.html(user.text) +' \
         </div>';
 
         return markup;

@@ -106,6 +106,7 @@ var fat_combined_files = [
         'src/www/themes/FlamingParrot/js/keyboard-navigation.js'
     ],
     burning_parrot_files = [
+        'src/www/scripts/tuleap/escaper.js',
         'src/www/themes/BurningParrot/vendor/smooth-scrollbar/smooth-scrollbar.min.js',
         'src/www/scripts/tuleap/listFilter.js',
         'src/www/themes/BurningParrot/js/navbar-dropdown.js',
