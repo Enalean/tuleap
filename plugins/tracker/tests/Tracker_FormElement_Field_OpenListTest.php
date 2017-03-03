@@ -21,8 +21,8 @@
 require_once('bootstrap.php');
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field_OpenList', 
-    'Tracker_FormElement_Field_OpenListTestVersion', 
+    'Tracker_FormElement_Field_OpenList',
+    'Tracker_FormElement_Field_OpenListTestVersion',
     array(
         'getBind',
         'getBindFactory',
@@ -44,8 +44,8 @@ Mock::generatePartial(
 );
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field_OpenList', 
-    'Tracker_FormElement_Field_OpenListTestVersion_ForImport', 
+    'Tracker_FormElement_Field_OpenList',
+    'Tracker_FormElement_Field_OpenListTestVersion_ForImport',
     array(
         'getBindFactory',
         'getFactoryLabel',
@@ -66,7 +66,7 @@ Mock::generate('Tracker_Artifact_ChangesetValue_OpenList');
 Mock::generate('Tracker_FormElement_Field_List_OpenValueDao');
 
 class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
-    
+
     function __construct($name = 'Open List test') {
         parent::__construct($name);
         $this->field_class            = 'Tracker_FormElement_Field_OpenListTestVersion';
@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_OpenList';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_OpenList';
     }
-    
+
     function testGetChangesetValue() {
         $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
         $odar_10 = mock('DataAccessResult');
@@ -84,7 +84,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $odar_20->setReturnValue('getRow', array('id' => '10', 'field_id' => '1', 'label' => 'Open_2'));
         $open_value_dao->setReturnReference('searchById', $odar_10, array(1, '10'));
         $open_value_dao->setReturnReference('searchById', $odar_20, array(1, '20'));
-        
+
         $value_dao = new $this->dao_class();
         $dar = mock('DataAccessResult');
         $dar->setReturnValueAt(0, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null));
@@ -92,7 +92,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $dar->setReturnValueAt(2, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '10'));
         $dar->setReturnValueAt(3, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '20'));
         $dar->setReturnValueAt(4, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1002', 'openvalue_id' => null));
-        
+
         $dar->setReturnValueAt(5, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null)); //two foreachs
         $dar->setReturnValueAt(6, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null)); //two foreachs
         $dar->setReturnValueAt(7, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '10'));   //two foreachs
@@ -103,15 +103,15 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $dar->setReturnValueAt(5, 'valid', false);
         $dar->setReturnValueAt(11, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
-        
+
         $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
         $bind_values = array(
             1000 => mock('Tracker_FormElement_Field_List_BindValue'),
             1001 => mock('Tracker_FormElement_Field_List_BindValue'),
             1002 => mock('Tracker_FormElement_Field_List_BindValue'),
         );
-        $bind->setReturnValue('getBindValues', $bind_values, array(array('1000', '1001', '1002')));
-        
+        $bind->setReturnValue('getBindValuesForIds', $bind_values, array(array('1000', '1001', '1002')));
+
         $list_field = new $this->field_class();
         $list_field->setReturnValue('getId', 1);
         $list_field->setReturnReference('getValueDao', $value_dao);
@@ -130,13 +130,13 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $this->assertIsA($list_values[3], 'Tracker_FormElement_Field_List_OpenValue');
         $this->assertIsA($list_values[4], 'Tracker_FormElement_Field_List_BindValue');
     }
-    
+
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = new $this->dao_class();
         $dar = mock('DataAccessResult');
         $dar->setReturnValue('valid', false);
         $value_dao->setReturnReference('searchById', $dar);
-        
+
         $list_field = new $this->field_class();
         $list_field->setReturnReference('getValueDao', $value_dao);
 
@@ -145,7 +145,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $this->assertTrue(is_array($changeset_value->getListValues()));
         $this->assertEqual(count($changeset_value->getListValues()), 0);
     }
-    
+
     function testSaveValue() {
         $artifact = null;
         $changeset_id = 666;
@@ -164,10 +164,10 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
         $open_value_dao->setReturnValue('create', 901, array(1, 'new_1'));
         $open_value_dao->setReturnValue('create', 902, array(1, 'new_2'));
-        
+
         $value_dao = new $this->dao_class();
         $value_dao->expect(
-            'create', 
+            'create',
             array(
                 $changeset_id,
                 array(
@@ -181,12 +181,12 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
                 ),
             )
         );
-        
+
         $list_field = new Tracker_FormElement_Field_OpenListTestVersion_for_saveValue();
         $list_field->setReturnValue('getId', 1);
         $list_field->setReturnReference('getValueDao', $value_dao);
         $list_field->setReturnReference('getOpenValueDao', $open_value_dao);
-        
+
         $list_field->saveValue($artifact, $changeset_id, $submitted_value);
     }
 }

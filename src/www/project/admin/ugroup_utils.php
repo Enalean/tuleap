@@ -72,26 +72,40 @@ function ugroup_get_parent($ugroup_id) {
 
 // Return members (user_id + user_name according to user preferences) of given user group
 // * $keword is used to filter the users.
-function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $keyword = null) {
-    $sqlname="user.user_name AS full_name";
-    $sqlorder="user.user_name";
+function ugroup_db_get_members(
+    $ugroup_id,
+    $with_display_preferences = false,
+    $keyword = null,
+    array $user_ids = array()
+) {
+    $data_access = CodendiDataAccess::instance();
+
+    $sqlname  = "user.user_name AS full_name";
+    $sqlorder = "user.user_name";
     if ($with_display_preferences) {
-        $uh = UserHelper::instance();
-        $sqlname=$uh->getDisplayNameSQLQuery();
-        $sqlorder=$uh->getDisplayNameSQLOrder();
+        $uh       = UserHelper::instance();
+        $sqlname  = $uh->getDisplayNameSQLQuery();
+        $sqlorder = $uh->getDisplayNameSQLOrder();
     }
+
     $having_keyword = '';
     if ($keyword) {
-        $data_access    = CodendiDataAccess::instance();
         $keyword        = $data_access->quoteLikeValueSurround($keyword);
         $having_keyword = " AND full_name LIKE $keyword ";
     }
+
+    $user_ids_sql = '';
+    if ($user_ids) {
+        $user_ids_sql = ' AND user.user_id IN ('. $data_access->escapeIntImplode($user_ids) .')';
+    }
+
     $ugroup_id = (int)$ugroup_id;
     $sql="(SELECT user.user_id, $sqlname, user.user_name
             FROM ugroup_user, user 
             WHERE user.user_id = ugroup_user.user_id 
-              AND ugroup_user.ugroup_id = $ugroup_id 
-            $having_keyword
+              AND ugroup_user.ugroup_id = $ugroup_id
+              $user_ids_sql
+              $having_keyword
             ORDER BY $sqlorder)";
     return $sql;
 }
@@ -278,17 +292,27 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * $keword is used to filter the users
  */
-function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_display_preferences=false, $keyword = null, $show_suspended = false) {
-    $sqlname="user.user_name AS full_name";
-    $sqlorder="user.user_name";
+function ugroup_db_get_dynamic_members(
+    $ugroup_id,
+    $atid,
+    $group_id,
+    $with_display_preferences = false,
+    $keyword = null,
+    $show_suspended = false,
+    array $user_ids = array()
+) {
+    $data_access = CodendiDataAccess::instance();
+
+    $sqlname  = "user.user_name AS full_name";
+    $sqlorder = "user.user_name";
     if ($with_display_preferences) {
-        $uh = UserHelper::instance();
-        $sqlname=$uh->getDisplayNameSQLQuery();
-        $sqlorder=$uh->getDisplayNameSQLOrder(); 
+        $uh       = UserHelper::instance();
+        $sqlname  = $uh->getDisplayNameSQLQuery();
+        $sqlorder = $uh->getDisplayNameSQLOrder();
     }
+
     $having_keyword = '';
     if ($keyword) {
-        $data_access    = CodendiDataAccess::instance();
         $keyword        = $data_access->quoteLikeValueSurround($keyword);
         $having_keyword = " HAVING full_name LIKE $keyword ";
     }
@@ -298,12 +322,15 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_displ
         $user_status .= "OR status='S'";
     }
     $user_status .= ")";
+    if ($user_ids) {
+        $user_status .= ' AND user.user_id IN ('. $data_access->escapeIntImplode($user_ids) .')';
+    }
 
 	// Special Cases
-    if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
+    if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
         // Empty group
         return;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) { 
+    } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) {
         // Anonymous user
         return;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {

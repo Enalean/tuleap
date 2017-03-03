@@ -152,6 +152,10 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
 
     }
 
+    public function getBindValuesForIds(array $bindvalue_ids)
+    {
+    }
+
     public function getBindtableSqlFragment() {
 
     }

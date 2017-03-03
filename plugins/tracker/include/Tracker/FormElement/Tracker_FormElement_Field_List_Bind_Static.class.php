@@ -802,14 +802,36 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if ($bindvalue_ids === null) {
             return $this->values;
         } else {
-            $bv = array();
-            foreach($bindvalue_ids as $i) {
-                if (isset($this->values[$i])) {
-                    $bv[$i] = $this->values[$i];
-                }
-            }
-            return $bv;
+            return $this->extractBindValuesByIds($bindvalue_ids);
         }
+    }
+
+    /**
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
+     * If the $bindvalue_ids is empty then return empty array
+     *
+     * @param array $bindvalue_ids The ids of BindValue to retrieve
+     *
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public function getBindValuesForIds(array $bindvalue_ids)
+    {
+        return $this->extractBindValuesByIds($bindvalue_ids);
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    private function extractBindValuesByIds(array $bindvalue_ids)
+    {
+        $list_of_bindvalues = array();
+        foreach($bindvalue_ids as $i) {
+            if (isset($this->values[$i])) {
+                $list_of_bindvalues[$i] = $this->values[$i];
+            }
+        }
+
+        return $list_of_bindvalues;
     }
 
     /**

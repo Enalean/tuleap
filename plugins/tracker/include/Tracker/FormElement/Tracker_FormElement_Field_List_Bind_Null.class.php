@@ -203,6 +203,8 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getBindValues($bindvalue_ids = null) { return array(); }
 
+    public function getBindValuesForIds(array $bindvalue_ids) { return array(); }
+
     /**
      * Fixes original value ids after field duplication.
      *

@@ -319,9 +319,9 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         }
         $bind_values = array();
         if (count($bindvalue_ids)) {
-            $bind_values = $this->getBind()->getBindValues($bindvalue_ids);
+            $bind_values = $this->getBind()->getBindValuesForIds($bindvalue_ids);
         }
-        
+
         $list_values = array();
         foreach($value_ids as $v) {
             if ($v['bindvalue_id']) {
