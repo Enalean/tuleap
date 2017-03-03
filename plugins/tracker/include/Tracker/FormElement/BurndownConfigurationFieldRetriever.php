@@ -131,6 +131,18 @@ class BurndownConfigurationFieldRetriever
 
     /**
      * @param Tracker $tracker
+     * @return Boolean
+     */
+    public function doesRemainingEffortFieldExists(Tracker $tracker)
+    {
+        return ! $this->form_element_field_factory->getNumericFieldByName(
+            $tracker,
+            self::REMAINING_EFFORT_FIELD_NAME
+        );
+    }
+
+    /**
+     * @param Tracker $tracker
      * @return bool
      */
     public function doesCapacityFieldExist(Tracker $tracker)
