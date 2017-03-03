@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\BurndownConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\BurndownMessageFetcher;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 require_once 'common/chart/ErrorChart.class.php';
@@ -578,13 +579,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchAdminFormElement() {
         $html  = '';
-        $html .= $this->fetchErrors();
-        $html .= $this->fetchWarnings();
+        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this->getTracker());
         $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn burndown-button-generate" disabled="disabled">'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate').'</a>';
         return $html;
     }
-
 
     /**
      * Verifies the consistency of the imported Tracker
@@ -653,15 +652,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * Returns the children of the burndown field tracker.
-     *
-     * @return array of Tracker
-     */
-    protected function getChildTrackers() {
-        return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
-    }
-
-    /**
      * Display a png image with the given error message
      *
      * @param String $msg
@@ -718,101 +708,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             'func'        => self::FUNC_SHOW_BURNDOWN,
             'src_aid'     => $artifact->getId()));
         return TRACKER_BASE_URL .'/?'.$url_query;
-    }
-
-    /**
-     * Renders all the possible errors for this field.
-     *
-     * @return String
-     */
-    private function fetchErrors() {
-        $errors  = '';
-
-        if ($errors) {
-            return '<ul class="feedback_error">'.$errors.'</ul>';
-        }
-    }
-
-    /**
-     * Renders all the possible warnings for this field.
-     *
-     * @return String
-     */
-    private function fetchWarnings() {
-        $warnings  = '';
-        $warnings .= $this->fetchMissingFieldWarning(self::START_DATE_FIELD_NAME, 'date');
-        $warnings .= $this->fetchMissingFieldWarning(self::DURATION_FIELD_NAME, 'int');
-        $warnings .= $this->fetchMissingRemainingEffortWarning();
-
-        if ($warnings) {
-            return '<ul class="feedback_warning">'.$warnings.'</ul>';
-        }
-    }
-
-    /**
-     * Renders a warning concerning some missing field in the tracker.
-     *
-     * @param String $name
-     * @param String $type
-     * @return String
-     */
-    private function fetchMissingFieldWarning($name, $type) {
-        if (! $this->getTracker()->hasFormElementWithNameAndType($name, $type)) {
-            $key     = "burndown_missing_${name}_warning";
-            $warning = $GLOBALS['Language']->getText('plugin_tracker', $key);
-
-            return '<li>'.$warning.'</li>';
-        }
-    }
-
-    /**
-     * Renders a warning concerning some child tracker(s) missing a remaining
-     * effort field.
-     *
-     * @return String
-     */
-    private function fetchMissingRemainingEffortWarning() {
-        $tracker_links = implode(', ', $this->getLinksToChildTrackersWithoutRemainingEffort());
-
-        if ($tracker_links) {
-            $warning = $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_remaining_effort_warning');
-            return "<li>$warning $tracker_links.</li>";
-        }
-    }
-
-    /**
-     * Returns the names of child trackers missing a remaining effort.
-     *
-     * @return array of String
-     */
-    private function getLinksToChildTrackersWithoutRemainingEffort() {
-        return array_map(array($this, 'getLinkToTracker'),
-            $this->getChildTrackersWithoutRemainingEffort());
-    }
-
-    /**
-     * Renders a link to the given tracker.
-     *
-     * @param Tracker $tracker
-     * @return String
-     */
-    private function getLinkToTracker(Tracker $tracker) {
-        $tracker_id   = $tracker->getId();
-        $tracker_name = $tracker->getName();
-        $tracker_url  = TRACKER_BASE_URL."/?tracker=$tracker_id&func=admin-formElements";
-
-        $hp = Codendi_HTMLPurifier::instance();
-        return '<a href="'.$tracker_url.'">'.$hp->purify($tracker_name).'</a>';
-    }
-
-    /**
-     * Returns the child trackers missing a remaining effort.
-     *
-     * @return array of Tracker
-     */
-    private function getChildTrackersWithoutRemainingEffort() {
-        return array_filter($this->getChildTrackers(),
-            array($this->getBurdownConfigurationFieldRetriever(), 'doesRemainingEffortFieldExists'));
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
@@ -889,5 +784,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $this->getBurdownConfigurationFieldRetriever(),
             $this->getBurndownConfigurationValueRetriever()
         );
+    }
+
+    private function getBurndownMessageFetcher()
+    {
+        return new BurndownMessageFetcher($this->getHierarchyFactory(), $this->getBurdownConfigurationFieldRetriever());
     }
 }

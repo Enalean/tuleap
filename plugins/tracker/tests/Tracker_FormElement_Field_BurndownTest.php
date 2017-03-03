@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
 
 require_once('bootstrap.php');
@@ -128,7 +129,8 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
             array(
                 'getCurrentUser',
                 'isCacheBurndownAlreadyAsked',
-                'getLogger'
+                'getLogger',
+                'userHasPermission'
             )
         );
 
@@ -136,15 +138,12 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         stub($this->burndown_field)->getLogger()->returns($logger);
 
         $this->user = mock('PFUser');
-        stub($this->user)->isAdmin()->returns(true);
-        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
         stub($this->burndown_field)->isCacheBurndownAlreadyAsked()->returns(false);
         stub($this->burndown_field)->getLogger()->returns(mock('Tuleap\\Tracker\\FormElement\\BurndownLogger'));
     }
 
     private function getAStartDateField($value)
     {
-
         $start_date_field           = stub('Tracker_FormElement_Field_Date');
         $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($value);
         stub($this->artifact)->getValue($start_date_field)->returns($start_date_changeset_value);
@@ -163,7 +162,6 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
 
     private function getADurationField($value)
     {
-
         $duration_field           = stub('Tracker_FormElement_Field_Integer');
         $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($value);
         stub($this->artifact)->getValue($duration_field)->returns($duration_changeset_value);
@@ -178,8 +176,11 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         stub($this->tracker)->hasFormElementWithNameAndType('duration', array('int', 'float', 'computed'))->returns(true);
     }
 
-    public function itTestButtonForceCacheGenreationIsNotPresentWhenStartDateIsNotSet()
+    public function itTestButtonForceCacheGenerationIsNotPresentWhenStartDateIsNotSet()
     {
+        stub($this->user)->isAdmin()->returns(true);
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+
         $timestamp = null;
         $this->getAStartDateField($timestamp);
 
@@ -192,8 +193,11 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         );
     }
 
-    public function itTestButtonForceCacheGenreationIsNotPresentDurationIsNotSet()
+    public function itTestButtonForceCacheGenerationIsNotPresentDurationIsNotSet()
     {
+        stub($this->user)->isAdmin()->returns(true);
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+
         $timestamp = mktime(0, 0, 0, 20, 12, 2016);
         $this->getAStartDateField($timestamp);
 
@@ -208,6 +212,9 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
 
     public function itReturnsTrueWhenBurndownHasAStartDateAndADuration()
     {
+        stub($this->user)->isAdmin()->returns(true);
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+
         $timestamp = mktime(0, 0, 0, 20, 12, 2016);
         $this->getAStartDateField($timestamp);
 
@@ -218,6 +225,59 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         $this->assertNotEqual(
             $result, '<img src="/plugins/tracker/?func=show_burndown" alt="" width="640" height="480" />'
         );
+    }
+
+    public function itRendersABurndownErrorWhenUserCantReadBurndownField()
+    {
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+        stub($this->burndown_field)->userHasPermission()->returns(false);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
+            )
+        );
+        $this->burndown_field->fetchBurndownImage($this->artifact, $this->user);
+    }
+
+    public function itRendersABurndownErrorWhenDurationIsEmpty()
+    {
+        stub($this->user)->isAdmin()->returns(true);
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+
+        $timestamp = mktime(0, 0, 0, 20, 12, 2016);
+        $this->getAStartDateField($timestamp);
+
+        $duration = null;
+        $this->getADurationField($duration);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+            )
+        );
+
+        $this->burndown_field->fetchBurndownImage($this->artifact, $this->user);
+    }
+
+    public function itRendersABurndownErrorWhenDurationIsTooShort()
+    {
+        stub($this->user)->isAdmin()->returns(true);
+        stub($this->burndown_field)->getCurrentUser()->returns($this->user);
+
+        $timestamp = mktime(0, 0, 0, 20, 12, 2016);
+        $this->getAStartDateField($timestamp);
+
+        $duration = 1;
+        $this->getADurationField($duration);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
+            )
+        );
+
+        $this->burndown_field->fetchBurndownImage($this->artifact, $this->user);
     }
 
     public function tearDown()
