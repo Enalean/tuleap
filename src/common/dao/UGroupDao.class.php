@@ -326,4 +326,38 @@ class UGroupDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function searchUgroupsForAdministratorInProject($user_id, $project_id)
+    {
+        $user_id    = $this->da->escapeInt($user_id);
+        $project_id = $this->da->escapeInt($project_id);
+        $member_id  = $this->da->escapeInt(ProjectUGroup::PROJECT_MEMBERS);
+        $admin_id   = $this->da->escapeInt(ProjectUGroup::PROJECT_ADMIN);
+
+        $sql = "SELECT ugroup.*
+                FROM ugroup
+                    INNER JOIN user_group ON (
+                        ugroup.ugroup_id = $member_id
+                        AND ugroup.group_id = 100
+                        AND user_group.user_id = $user_id
+                        AND user_group.group_id = $project_id
+                    )
+                UNION
+                SELECT ugroup.*
+                FROM ugroup
+                    INNER JOIN user_group ON (
+                        ugroup.ugroup_id = $admin_id
+                        AND ugroup.group_id = 100
+                        AND user_group.user_id = $user_id
+                        AND user_group.group_id = $project_id
+                        AND user_group.admin_flags = 'A'
+                    )
+                UNION
+                SELECT ugroup.*
+                FROM ugroup
+                WHERE ugroup.group_id = $project_id
+                ";
+
+        return $this->retrieve($sql);
+    }
 }
