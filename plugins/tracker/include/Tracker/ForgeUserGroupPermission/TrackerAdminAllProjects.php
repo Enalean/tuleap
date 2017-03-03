@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupPermission_MediawikiAdminAllProjects implements User_ForgeUserGroupPermission {
+namespace Tuleap\Tracker\ForgeUserGroupPermission;
 
-    const ID = 3;
+use User_ForgeUserGroupPermission;
 
-    public function getId() {
-        if (self::ID) {
-            return self::ID;
-        }
+class TrackerAdminAllProjects implements User_ForgeUserGroupPermission
+{
+    const ID = 2;
+
+    public function getId()
+    {
+        return self::ID;
     }
 
-    public function getName() {
-        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'mediawiki_admin_name');
+    public function getName()
+    {
+        return $GLOBALS['Language']->getText('plugin_tracker', 'permission_delegation_name');
     }
 
-    public function getDescription() {
-        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'mediawiki_admin_description');
+    public function getDescription()
+    {
+        return $GLOBALS['Language']->getText('plugin_tracker', 'permission_delegation_description');
     }
 }

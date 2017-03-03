@@ -23,7 +23,7 @@ require_once 'pre.php';
 session_require(array('group'=>'1', 'admin_flags'=>'A'));
 
 $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
-$user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao);
+$user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao, EventManager::instance());
 $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
 
 $user_group_dao     = new UserGroupDao();

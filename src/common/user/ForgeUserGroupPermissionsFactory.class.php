@@ -22,13 +22,24 @@ use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 
 class User_ForgeUserGroupPermissionsFactory {
 
+    const GET_PERMISSION_DELEGATION = 'get_permission_delegation';
+
     /**
      * @var User_ForgeUserGroupPermissionsDao
      */
     private $permissions_dao;
 
-    public function __construct(User_ForgeUserGroupPermissionsDao $dao) {
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(
+        User_ForgeUserGroupPermissionsDao $dao,
+        EventManager $event_manager
+    ) {
         $this->permissions_dao = $dao;
+        $this->event_manager   = $event_manager;
     }
 
     /**
@@ -36,22 +47,13 @@ class User_ForgeUserGroupPermissionsFactory {
      * @throws User_ForgeUserGroupPermission_NotFoundException
      */
     public function getForgePermissionById($permission_id) {
-        switch ($permission_id) {
-            case User_ForgeUserGroupPermission_ProjectApproval::ID :
-                return new User_ForgeUserGroupPermission_ProjectApproval();
-            case User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID :
-                return new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
-            case User_ForgeUserGroupPermission_TrackerAdminAllProjects::ID :
-                return new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
-            case User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID :
-                return new User_ForgeUserGroupPermission_MediawikiAdminAllProjects();
-            case User_ForgeUserGroupPermission_UserManagement::ID :
-                return new User_ForgeUserGroupPermission_UserManagement();
-            case RetrieveSystemEventsInformationApi::ID :
-                return new RetrieveSystemEventsInformationApi();
-            default :
-                throw new User_ForgeUserGroupPermission_NotFoundException();
+        $all_permissions = $this->getAllAvailableForgePermissions();
+
+        if (array_key_exists($permission_id, $all_permissions)) {
+            return $all_permissions[$permission_id];
         }
+
+        throw new User_ForgeUserGroupPermission_NotFoundException();
     }
 
     /**
@@ -84,24 +86,35 @@ class User_ForgeUserGroupPermissionsFactory {
     }
 
     private function getAllAvailableForgePermissionIds() {
-        $available_permission_ids = array();
-
-        foreach ($this->getAllAvailableForgePermissions() as $forge_permission) {
-            $available_permission_ids[] = $forge_permission->getId();
-        }
-
-        return $available_permission_ids;
+        return array_keys($this->getAllAvailableForgePermissions());
     }
 
     public function getAllAvailableForgePermissions() {
-        return array(
-            new User_ForgeUserGroupPermission_ProjectApproval(),
-            new User_ForgeUserGroupPermission_TrackerAdminAllProjects(),
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects(),
-            new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation(),
-            new User_ForgeUserGroupPermission_UserManagement(),
-            new RetrieveSystemEventsInformationApi()
+        $plugins_permission = array();
+
+        $params = array(
+            'plugins_permission' => &$plugins_permission
         );
+
+        $this->event_manager->processEvent(
+            self::GET_PERMISSION_DELEGATION,
+            $params
+        );
+
+        $all_permissions = $plugins_permission + array(
+            User_ForgeUserGroupPermission_ProjectApproval::ID
+                => new User_ForgeUserGroupPermission_ProjectApproval(),
+            User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID
+                => new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation(),
+            User_ForgeUserGroupPermission_UserManagement::ID
+                => new User_ForgeUserGroupPermission_UserManagement(),
+            RetrieveSystemEventsInformationApi::ID
+                => new RetrieveSystemEventsInformationApi()
+        );
+
+        ksort($all_permissions);
+
+        return $all_permissions;
     }
 
     /**

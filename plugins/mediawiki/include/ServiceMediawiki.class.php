@@ -1,5 +1,7 @@
 <?php
 
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+
 class ServiceMediawiki extends Service {
 
     public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null) {
@@ -43,7 +45,7 @@ class ServiceMediawiki extends Service {
         );
         $has_special_permission = $forge_user_manager->doesUserHavePermission(
             $user,
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            new MediawikiAdminAllProjects()
         );
 
         return $has_special_permission || $user->isMember($this->project->getID(), 'A');

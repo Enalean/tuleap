@@ -54,3 +54,6 @@ plugin_mediawiki	unsupported_language	La langue $1 n'est pas supportée.
 plugin_mediawiki	alternative_welcome_page_title	Choix de la page d'accueil
 plugin_mediawiki	language_not_set_intro	Veuillez choisir votre page d'accueil
 plugin_mediawiki	language_not_set_admin_warning	Vous avez été redirigé ici car aucune langue n'a été définie pour votre instance de Mediawiki.
+
+plugin_mediawiki	permission_delegation_name	Administrateur d'instances de mediawiki
+plugin_mediawiki	permission_delegation_description	Cette permission donne le droit d'administration sur toutes les instances de mediawiki

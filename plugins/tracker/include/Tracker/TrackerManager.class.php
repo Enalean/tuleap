@@ -19,8 +19,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Tracker\Deprecation\DeprecationRetriever;
-use Tuleap\Tracker\Deprecation\Dao;
+use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     const DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
@@ -1015,7 +1014,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $user = $um->getCurrentUser();
         }
 
-        $permission = new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
+        $permission = new TrackerAdminAllProjects();
         $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );

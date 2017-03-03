@@ -1,9 +1,5 @@
 usergroup_forge_permission	project_approval_name	Approbation Projet
 usergroup_forge_permission	project_approval_description	Cette permission permet d'approuver des projets récemment créés
-usergroup_forge_permission	tracker_admin_name	Administrateur de trackers
-usergroup_forge_permission	tracker_admin_description	Cette permission donne le droit d'adminstration sur tous les trackers
-usergroup_forge_permission	mediawiki_admin_name	Administrateur d'instances de mediawiki
-usergroup_forge_permission	mediawiki_admin_description	Cette permission donne le droit d'administration sur toutes les instances de mediawiki
 usergroup_forge_permission	user_membership_name	Connaitre les groupes d'un utilisateur
 usergroup_forge_permission	user_membership_description	Cette permission donne le droit d'obtenir l'ensemble des groupes auxquels appartient n'importe quel utilisateur de la plateforme.
 usergroup_forge_permission	user_management_name	Gérer les utilisateurs

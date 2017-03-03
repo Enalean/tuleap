@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
-use Tuleap\Admin\AdminSidebarPresenterBuilder;
+use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -112,6 +112,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
     }
 
     public function getHooksAndCallbacks() {
@@ -748,7 +749,7 @@ class trackerPlugin extends Plugin {
         $tracker_manager->displayDeletedTrackers();
     }
 
-   /**
+    /**
      * Process the nightly job to send reminder on artifact correponding to given criteria
      *
      * @param Array $params Hook params
@@ -1260,5 +1261,12 @@ class trackerPlugin extends Plugin {
             'is_disabled' => ! $is_service_used,
             'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : ''
         );
+    }
+
+    public function get_permission_delegation($params)
+    {
+        $permission = new TrackerAdminAllProjects();
+
+        $params['plugins_permission'][TrackerAdminAllProjects::ID] = $permission;
     }
 }
