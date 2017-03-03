@@ -20,7 +20,7 @@ function TrafficlightsCtrl(
     $scope.init = function(nodejs_server, project_id, tracker_ids, lang, current_user) {
         var uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);
-        SharedPropertiesService.setNodeServerVersion("1.0.0");
+        SharedPropertiesService.setNodeServerVersion("1.1.0");
         SharedPropertiesService.setNodeServerAddress(nodejs_server);
         current_user.uuid = uuid;
         SharedPropertiesService.setCurrentUser(current_user);
