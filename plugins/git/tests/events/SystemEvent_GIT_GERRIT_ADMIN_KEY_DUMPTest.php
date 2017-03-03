@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
+
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
@@ -78,7 +80,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
 
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($gerrit_server_id)->setValue($replication_key);
-        expect($this->ssh_key_dumper)->dumpSSHKeys($key)->once();
+        expect($this->ssh_key_dumper)->dumpSSHKeys($key, new InvalidKeysCollector())->once();
 
         $this->event->process();
     }
@@ -91,7 +93,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
 
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($gerrit_server_id)->setValue('');
-        expect($this->ssh_key_dumper)->dumpSSHKeys($key)->once();
+        expect($this->ssh_key_dumper)->dumpSSHKeys($key, new InvalidKeysCollector())->once();
 
         $this->event->process();
     }

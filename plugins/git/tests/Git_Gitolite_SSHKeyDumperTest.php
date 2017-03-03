@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,10 +35,11 @@ class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
 class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase {
 
     public function testAddUserKey() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
+        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
 
         expect($this->gitExec)->push()->once();
-        $this->dumper->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
@@ -47,10 +48,11 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     }
 
     public function testAddUserWithSeveralKeys() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
 
         expect($this->gitExec)->push()->once();
-        $this->dumper->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
@@ -61,15 +63,16 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     }
 
     public function testRemoveUserKey() {
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         expect($this->gitExec)->push()->count(2);
 
         // User has 2 keys
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->dumper->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Now back with only one
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
-        $this->dumper->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Ensure second key was deleted
         $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
@@ -78,22 +81,24 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     }
 
     public function itDeletesAllTheKeys() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->dumper->dumpSSHKeys($user);
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
+        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array())->build();
-        $this->dumper->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
         $this->assertCount(glob($this->_glAdmDir.'/keydir/*.pub'), 0);
 
         $this->assertEmptyGitStatus();
     }
 
     public function itFlipsTheKeys() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->dumper->dumpSSHKeys($user);
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
+        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key2, $this->key1))->build();
-        $this->dumper->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key2);
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $this->key1);
 
@@ -101,16 +106,10 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     }
 
     public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->dumper->dumpSSHKeys($user);
+        $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
+        $user                   = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $this->dumper->dumpSSHKeys($user);
-    }
-
-    public function itRemovesTheKeysWhenUserNoLongerHaveOneDuringSystemCheck() {
-
+        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
     }
 }
-
-
-?>

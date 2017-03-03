@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 require_once 'common/backend/BackendLogger.class.php';
 
@@ -40,7 +41,7 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent {
             $new_user = $this->user_manager->getUserById($new_user_id);
 
             $this->ssh_key_dumper->removeAllExistingKeysForUserName($old_user_name);
-            $this->ssh_key_dumper->dumpSSHKeys($new_user);
+            $this->ssh_key_dumper->dumpSSHKeys($new_user, new InvalidKeysCollector());
         } catch (Exception $e) {
             $this->error($e->getMessage() . $e->getTraceAsString());
         }

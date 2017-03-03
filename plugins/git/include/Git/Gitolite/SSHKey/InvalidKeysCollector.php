@@ -20,28 +20,43 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey;
 
-class Gitolite3MassDumper implements MassDumper
+class InvalidKeysCollector
 {
     /**
-     * @var Gitolite3Dumper
+     * @var Key[]
      */
-    private $dumper;
+    private $collector = array();
 
-    public function __construct(Gitolite3Dumper $dumper)
+    public function add(Key $key)
     {
-        $this->dumper = $dumper;
+        $this->collector[] = $key;
     }
 
     /**
      * @return bool
      */
-    public function dumpSSHKeys(InvalidKeysCollector $invalid_keys_collector)
+    public function hasInvalidKeys()
     {
-        try {
-            $this->dumper->dumpKeys($invalid_keys_collector);
-        } catch (DumpKeyException $ex) {
-            return false;
+        return ! empty($this->collector);
+    }
+
+    /**
+     * @return Key[]
+     */
+    public function getInvalidKeys()
+    {
+        return $this->collector;
+    }
+
+    /**
+     * @return string
+     */
+    public function textualizeKeysNotValid()
+    {
+        $message = '';
+        foreach ($this->collector as $key) {
+            $message .= 'The key ' . $key->getKey() . ' of the user ' . $key->getUsername() . " is not valid\n";
         }
-        return true;
+        return $message;
     }
 }

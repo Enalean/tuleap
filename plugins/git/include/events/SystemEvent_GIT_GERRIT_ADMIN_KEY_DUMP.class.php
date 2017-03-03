@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
     const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
@@ -56,7 +57,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
         $replication_key
             ->setGerritHostId($server->getId())
             ->setValue($server->getReplicationKey());
-        if ($this->ssh_key_dumper->dumpSSHKeys($replication_key)) {
+        if ($this->ssh_key_dumper->dumpSSHKeys($replication_key, new InvalidKeysCollector())) {
             $this->done();
         } else {
             $this->error('Impossible to dump replication ssh key for Gerrit server '.$server->getId());

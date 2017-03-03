@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 require_once 'common/user/IHaveAnSSHKey.php';
 
@@ -59,7 +60,8 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
      *
      * @return Boolean
      */
-    public function dumpSSHKeys(IHaveAnSSHKey $user) {
+    public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector)
+    {
         $this->dumpSSHKeysWithoutCommit($user);
         if ($this->commitKeyDir('Update '.$user->getUserName().' SSH keys')) {
             return $this->git_exec->push();
