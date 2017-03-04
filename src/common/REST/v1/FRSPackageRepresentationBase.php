@@ -27,6 +27,11 @@ class FRSPackageRepresentationBase
     public $id;
 
     /**
+     * @var $uri {@type string}
+     */
+    public $uri;
+
+    /**
      * @var String
      */
     public $label;

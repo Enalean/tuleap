@@ -28,19 +28,10 @@ class PackageRepresentation extends FRSPackageRepresentationBase
 {
     const ROUTE = 'frs_packages';
 
-    /**
-     * @var int ID of the package
-     */
-    public $id;
-
-    /**
-     * @var String
-     */
-    public $label;
-
     public function build(FRSPackage $package)
     {
         $this->id    = JsonCast::toInt($package->getPackageID());
+        $this->uri   = self::ROUTE ."/". urlencode($this->id);
         $this->label = $package->getName();
     }
 }
