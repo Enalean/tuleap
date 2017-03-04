@@ -49,7 +49,7 @@ class ProjectTest extends RestBase {
                 array(
                     $this->project_private_member_id,
                     $this->project_public_id,
-                    REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
+                    $this->project_public_member_id,
                     REST_TestDataBuilder::PROJECT_PBI_ID
                 ),
                 $this->getIds($json_projects)
@@ -859,7 +859,7 @@ class ProjectTest extends RestBase {
                 array(
                     $this->project_private_member_id,
                     $this->project_public_id,
-                    REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
+                    $this->project_public_member_id,
                     REST_TestDataBuilder::PROJECT_PBI_ID
                 ),
                 $this->getIds($json_projects)
