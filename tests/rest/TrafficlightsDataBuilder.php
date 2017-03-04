@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,9 @@ use Tuleap\Trafficlights\Dao;
 
 class TrafficlightsDataBuilder extends REST_TestDataBuilder
 {
+    private $tracker_factory;
 
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
-
-    const CAMPAIGN_TRACKER_ID         = 38;
-    const TEST_DEF_TRACKER_ID         = 39;
-    const TEST_EXEC_TRACKER_ID        = 40;
 
     const USER_TESTER_NAME   = 'rest_api_ttl_1';
     const USER_TESTER_PASS   = 'welcome0';
@@ -38,7 +35,9 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
 
     public function __construct() {
         parent::__construct();
-        $this->template_path = dirname(__FILE__).'/_fixtures/';
+
+        $this->template_path   = dirname(__FILE__).'/_fixtures/';
+        $this->tracker_factory = TrackerFactory::instance();
     }
 
     public function setUp()
@@ -48,12 +47,35 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
 
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
         $this->importTrafficlightsTemplate($project);
-        $this->configureTrafficlightsPluginForProject($project);
+
+        $trackers = $this->tracker_factory->getTrackersByGroupId($project->getID());
+
+        foreach ($trackers as $tracker) {
+            if ($tracker->getItemName() === 'campaign') {
+                $campaign_tracker_id = $tracker->getId();
+            } elseif ($tracker->getItemName() === 'test_def') {
+                $test_def_tracker_id = $tracker->getId();
+            } elseif($tracker->getItemName() === 'test_exec') {
+                $test_exec_tracker_id = $tracker->getId();
+            }
+        }
+
+        $this->configureTrafficlightsPluginForProject(
+            $project,
+            $campaign_tracker_id,
+            $test_def_tracker_id,
+            $test_exec_tracker_id
+        );
     }
 
-    private function configureTrafficlightsPluginForProject(Project $project) {
+    private function configureTrafficlightsPluginForProject(
+        Project $project,
+        $campaign_tracker_id,
+        $test_def_tracker_id,
+        $test_exec_tracker_id
+    ) {
         $config = new Config(new Dao());
-        $config->setProjectConfiguration($project, self::CAMPAIGN_TRACKER_ID, self::TEST_DEF_TRACKER_ID, self::TEST_EXEC_TRACKER_ID);
+        $config->setProjectConfiguration($project, $campaign_tracker_id, $test_def_tracker_id, $test_exec_tracker_id);
     }
 
     private function installPlugin() {
