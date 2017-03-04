@@ -127,7 +127,7 @@ class FRSPackageFactory {
      * @param Integer $group_id
      * @param String  $status_id
      * 
-     * @return Array
+     * @return FRSPackage[]
      */
     function getFRSPackagesFromDb($group_id, $status_id=null) {
         $_id = (int) $group_id;

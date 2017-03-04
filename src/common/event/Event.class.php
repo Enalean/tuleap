@@ -1077,6 +1077,25 @@ class Event {
     const REST_PROJECT_AGILE_ENDPOINTS = 'rest_project_agile_endpoints';
 
     /**
+     * Event raised to know if FRS plugin is activated for REST
+     *
+     * Parameters:
+     *     'available' => boolean
+     */
+    const REST_PROJECT_FRS_ENDPOINTS = 'rest_project_frs_endpoints';
+
+    /**
+     * Event raised to get FRS packages from a project with REST
+     *
+     * Parameters:
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => Tuleap\REST\v1\FRSPackageRepresentationBase[]
+     */
+    const REST_GET_PROJECT_FRS_PACKAGES = 'rest_get_project_frs_packages';
+
+    /**
      * Event raised when we display the trackers link in admin > configuration panel
      *
      * Parameters:

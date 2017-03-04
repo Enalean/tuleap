@@ -57,6 +57,9 @@ class frsPlugin extends \Plugin
         $this->addHook('javascript_file');
         $this->addHook(self::FRS_RELEASE_VIEW);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_FRS_ENDPOINTS);
+        $this->addHook(Event::REST_GET_PROJECT_FRS_PACKAGES);
         $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
 
         if (defined('TRACKER_BASE_URL')) {
@@ -194,6 +197,29 @@ class frsPlugin extends \Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /** @see \Event::REST_PROJECT_FRS_ENDPOINTS */
+    public function rest_project_frs_endpoints(array $params)
+    {
+        $params['available'] = true;
+    }
+
+    /** @see \Event::REST_GET_PROJECT_FRS_PACKAGES */
+    public function rest_get_project_frs_packages(array $params)
+    {
+        $project_resource = new \Tuleap\FRS\REST\v1\ProjectResource(FRSPackageFactory::instance());
+
+        $paginated_packages   = $project_resource->getPackages($params['project']);
+        $params['result']     = $paginated_packages->getPackageRepresentations();
+        $params['total_size'] = $paginated_packages->getTotalSize();
+    }
+
+    /** @see \Event::REST_PROJECT_RESOURCES */
+    public function rest_project_resources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
     public function import_xml_project_tracker_done($params)
