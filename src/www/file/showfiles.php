@@ -183,7 +183,7 @@ while (list ($package_id, $package) = each($packages)) {
         // get the releases of the package
         // Order by release_date and release_id in case two releases
         // are published the same day
-        $res_release = $frsrf->getFRSReleasesFromDb($package_id, null, $group_id);
+        $res_release = $frsrf->getFRSReleasesFromDb($package_id);
         $num_releases = count($res_release);
 
         if (!isset ($proj_stats['releases']))

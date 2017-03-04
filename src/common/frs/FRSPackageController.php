@@ -64,7 +64,7 @@ class FRSPackageController
     {
         $valid_package_id = new Valid_UInt('id');
         if ($request->valid($valid_package_id)) {
-            $res_release  = $this->release_factory->getFRSReleasesFromDb($package->getPackageID(), null, $project->getGroupId());
+            $res_release  = $this->release_factory->getFRSReleasesFromDb($package->getPackageID());
             $num_releases = count($res_release);
 
             if ($num_releases>0) {
