@@ -112,8 +112,6 @@ class User_ForgeUserGroupPermissionsFactory {
                 => new RetrieveSystemEventsInformationApi()
         );
 
-        ksort($all_permissions);
-
         return $all_permissions;
     }
 
