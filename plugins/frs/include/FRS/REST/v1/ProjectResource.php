@@ -43,7 +43,7 @@ class ProjectResource
         }
 
         $packages = array();
-        foreach ($this->package_factory->getFRSPackagesFromDb($project->getID()) as $package) {
+        foreach ($this->package_factory->getActiveFRSPackages($project->getID()) as $package) {
             $representation = new PackageRepresentation();
             $representation->build($package);
 
