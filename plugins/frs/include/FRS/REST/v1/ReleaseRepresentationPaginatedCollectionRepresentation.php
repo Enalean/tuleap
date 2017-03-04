@@ -20,36 +20,21 @@
 
 namespace Tuleap\FRS\REST\v1;
 
-use FRSPackage;
-use Project;
-use Tuleap\Project\REST\ProjectReference;
-
-class PackageRepresentation extends PackageMinimalRepresentation
+class ReleaseRepresentationPaginatedCollectionRepresentation
 {
     /**
-     * @var ProjectReference
+     * @var array {@type \Tuleap\FRS\REST\v1\ReleaseRepresentation}
      */
-    public $project;
+    public $collection;
 
     /**
-     * @var array
+     * @var int
      */
-    public $resources;
+    public $total_size;
 
-    public function build(FRSPackage $package)
+    public function build(array $collection, $total_size)
     {
-        parent::build($package);
-
-        $this->resources = array(
-            'releases' => array(
-                'uri' => $this->uri .'/'. ReleaseRepresentation::ROUTE
-            )
-        );
-    }
-
-    public function setProject(Project $project)
-    {
-        $this->project = new ProjectReference();
-        $this->project->build($project);
+        $this->collection = $collection;
+        $this->total_size = $total_size;
     }
 }

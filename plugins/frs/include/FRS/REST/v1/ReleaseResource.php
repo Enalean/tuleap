@@ -25,7 +25,6 @@ use Tuleap\REST\Header;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use UserManager;
-use FRSPackageFactory;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Dao;
 
