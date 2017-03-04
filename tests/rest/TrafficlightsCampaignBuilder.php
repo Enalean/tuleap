@@ -45,11 +45,11 @@ class TrafficlightsCampaignBuilder {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct(Client $client, RequestWrapper $rest_request) {
+    public function __construct(Client $client, RequestWrapper $rest_request, $project_id) {
         $this->tracker_factory = new TrackerFactory(
             $client,
             $rest_request,
-            TrafficlightsDataBuilder::PROJECT_TEST_MGMT_ID,
+            $project_id,
             TrafficlightsDataBuilder::USER_TESTER_NAME
         );
     }

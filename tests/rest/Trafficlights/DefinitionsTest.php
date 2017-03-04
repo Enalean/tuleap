@@ -47,7 +47,7 @@ class DefinitionsTest extends BaseTest {
     }
 
     private function getFirstCampaign() {
-        $campaigns_request  = $this->client->get('projects/'.TrafficlightsDataBuilder::PROJECT_TEST_MGMT_ID.'/trafficlights_campaigns');
+        $campaigns_request  = $this->client->get("projects/$this->project_id/trafficlights_campaigns");
         $campaigns          = $this->getResponse($campaigns_request)->json();
 
         return $campaigns[0];
