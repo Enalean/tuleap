@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,33 @@
 
 namespace Tuleap\FRS\REST;
 
+use Project;
+use Tuleap\FRS\REST\v1\PackageRepresentation;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
+use Tuleap\Project\REST\ProjectResourceReference;
 
 class ResourcesInjector
 {
     public function populate(\Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\FRS\\REST\\v1\\ReleaseResource', ReleaseRepresentation::ROUTE);
+    }
+
+    public function declareProjectResource(array &$resources, Project $project)
+    {
+        if (! $project->usesFile()) {
+            return;
+        }
+
+        $routes = array(
+            PackageRepresentation::ROUTE,
+        );
+
+        foreach ($routes as $route) {
+            $resource_reference = new ProjectResourceReference();
+            $resource_reference->build($project, $route);
+
+            $resources[] = $resource_reference;
+        }
     }
 }
