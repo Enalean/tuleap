@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -58,11 +58,10 @@ class Regressions_PutSoloCardTest extends RestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->project_id = REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID;
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             $this->client,
             $this->rest_request,
-            $this->project_id,
+            $this->project_private_member_id,
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
@@ -110,7 +109,7 @@ class Regressions_PutSoloCardTest extends RestBase {
     }
 
     private function getSprintPlanningId() {
-        $project_plannings = $this->getResponse($this->client->get("projects/{$this->project_id}/plannings"))->json();
+        $project_plannings = $this->getResponse($this->client->get("projects/$this->project_private_member_id/plannings"))->json();
         foreach ($project_plannings as $planning) {
             if ($planning['label'] == 'Sprint Planning') {
                 return $planning['id'];

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,19 @@ use \Guzzle\Http\Client;
 use \Test\Rest\RequestWrapper;
 
 class RestBase extends PHPUnit_Framework_TestCase {
+
     protected $base_url  = 'http://localhost/api/v1';
+    private   $setup_url = 'http://localhost/api/v1';
 
     /**
      * @var Client
      */
     protected $client;
+
+    /**
+    * @var Client
+    */
+    private $setup_client;
 
     /**
      * @var Client
@@ -42,24 +49,37 @@ class RestBase extends PHPUnit_Framework_TestCase {
      */
     protected $rest_request;
 
+    protected $project_private_member_id;
+
     public function __construct() {
         parent::__construct();
         if (isset($_ENV['TULEAP_HOST'])) {
-            $this->base_url = $_ENV['TULEAP_HOST'].'/api/v1';
+            $this->base_url  = $_ENV['TULEAP_HOST'].'/api/v1';
+            $this->setup_url = $_ENV['TULEAP_HOST'].'/api/v1';
         }
+
         $this->rest_request = new RequestWrapper();
     }
 
     public function setUp() {
         parent::setUp();
-        $this->client = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
-        $this->xml_client = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
+
+        $this->client       = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
+        $this->setup_client = new Client($this->setup_url, array('ssl.certificate_authority' => 'system'));
+        $this->xml_client   = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
 
         $this->client->setDefaultOption('headers/Accept', 'application/json');
         $this->client->setDefaultOption('headers/Content-Type', 'application/json');
 
         $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
         $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
+
+        $this->setup_client->setDefaultOption('headers/Accept', 'application/json');
+        $this->setup_client->setDefaultOption('headers/Content-Type', 'application/json');
+
+        if ($this->project_private_member_id === null) {
+            $this->project_private_member_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        }
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -80,5 +100,28 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     protected function getResponseByBasicAuth($username, $password, $request) {
         return $this->rest_request->getResponseByBasicAuth($username, $password, $request);
+    }
+
+    private function getProjectId($project_short_name)
+    {
+        $query = http_build_query(
+            array(
+                'limit' => 1,
+                'query' => json_encode(
+                    array(
+                        'shortname' => $project_short_name
+                    )
+                )
+            )
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("projects/?$query")
+        );
+
+        $project = $response->json();
+
+        return $project[0]['id'];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -26,18 +26,21 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class ArtifactsChangesetsTest extends RestBase {
 
     private $artifact_resource;
+    private $data_already_created = false;
 
     /** @var Test_Rest_TrackerFactory */
     private $tracker_test_helper;
 
-    public function __construct() {
-        parent::__construct();
+    public function setUp() {
+        parent::setUp();
+
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            new Guzzle\Http\Client($this->base_url, array('ssl.certificate_authority' => 'system')),
+            $this->client,
             $this->rest_request,
-            REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $this->project_private_member_id,
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
+
         $this->createData();
     }
 
@@ -127,13 +130,21 @@ class ArtifactsChangesetsTest extends RestBase {
         );
     }
 
-    private function createData() {
+    private function createData()
+    {
+        if ($this->data_already_created) {
+            return;
+        }
+
         $tracker = $this->tracker_test_helper->getTrackerRest('task');
         $this->artifact_resource = $tracker->createArtifact(array(
             $tracker->getSubmitTextValue('Summary', 'A task to do'),
             $tracker->getSubmitListValue('Status', 'To be done')
         ));
+
         $tracker->addCommentToArtifact($this->artifact_resource, "I do some changes");
         $tracker->addCommentToArtifact($this->artifact_resource, "Awesome changes");
+
+        $this->data_already_created = true;
     }
 }

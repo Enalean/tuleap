@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -79,7 +79,6 @@ class TestDataBuilder {
     const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
     const ADMIN_PROJECT_ID          = 100;
-    const PROJECT_PRIVATE_MEMBER_ID = 101;
     const PROJECT_PRIVATE_ID        = 102;
     const PROJECT_PUBLIC_ID         = 103;
     const PROJECT_PUBLIC_MEMBER_ID  = 104;

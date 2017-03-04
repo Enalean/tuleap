@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class UserGroupTest extends RestBase {
     }
 
     public function testGETId() {
-        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
+        $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
 
         $this->assertEquals(
             $response->json(),
@@ -103,14 +103,14 @@ class UserGroupTest extends RestBase {
     }
 
     public function testOptionsUsers() {
-        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGetUsersFromADynamicGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_3/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_3/users'));
         $this->assertEquals(
             $response->json(),
             array(
@@ -172,7 +172,7 @@ class UserGroupTest extends RestBase {
     }
 
     public function testGetUsersFromAStaticGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
 
         $this->assertEquals(
             $response->json(),
@@ -196,7 +196,7 @@ class UserGroupTest extends RestBase {
     }
 
     public function testGetMultipleUsersFromAStaticGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users'));
 
         $this->assertEquals(
             $response->json(),
@@ -242,7 +242,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
             null,
             $put_resource)
         );
@@ -250,7 +250,7 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse($this->client->get(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users')
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users')
         );
 
         $response_get_json = $response_get->json();
@@ -271,7 +271,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response_put = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
             null,
             $put_resource
         ));
@@ -298,7 +298,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
             null,
             $put_resource
         ));
@@ -316,7 +316,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -324,7 +324,7 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse($this->client->get(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
         );
 
         $response_get_json = $response_get->json();
@@ -344,7 +344,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -352,7 +352,7 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse($this->client->get(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
         );
 
         $response_get_json = $response_get->json();
@@ -373,7 +373,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -392,7 +392,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -400,7 +400,7 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse($this->client->get(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
         );
 
         $response_get_json = $response_get->json();
@@ -423,7 +423,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -443,7 +443,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $response = $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -461,7 +461,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $this->getResponseWithUser2($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
@@ -480,7 +480,7 @@ class UserGroupTest extends RestBase {
         ));
 
         $this->getResponse($this->client->put(
-            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );

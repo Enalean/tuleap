@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -266,6 +266,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->addUserToUserGroup($user_test_rest_1, $project_1, self::STATIC_UGROUP_2_ID);
         $this->addUserToUserGroup($user_test_rest_2, $project_1, self::STATIC_UGROUP_2_ID);
 
+        $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_template.xml');
+        $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_kanban_template.xml');
+
         $project_2 = $this->createProject(
             self::PROJECT_PRIVATE_SHORTNAME,
             'Private',
@@ -274,8 +277,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
             array($user_test_rest_3),
             array()
         );
-        $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
-        $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_kanban_template.xml');
 
         $project_3 = $this->createProject(
             self::PROJECT_PUBLIC_SHORTNAME,
