@@ -50,7 +50,7 @@ class ProjectTest extends RestBase {
                     $this->project_private_member_id,
                     $this->project_public_id,
                     $this->project_public_member_id,
-                    REST_TestDataBuilder::PROJECT_PBI_ID
+                    $this->project_pbi_id
                 ),
                 $this->getIds($json_projects)
             )
@@ -123,7 +123,7 @@ class ProjectTest extends RestBase {
         $json_projects = $response->json();
 
         $this->assertArrayHasKey('id', $json_projects[0]);
-        $this->assertEquals(REST_TestDataBuilder::PROJECT_PBI_ID, $json_projects[0]['id']);
+        $this->assertEquals($this->project_pbi_id, $json_projects[0]['id']);
         $this->assertEquals(1, count($json_projects));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -148,7 +148,7 @@ class ProjectTest extends RestBase {
     }
 
     public function testProjectReprensationContainsShortname() {
-        $response     = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PBI_ID));
+        $response     = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("projects/$this->project_pbi_id"));
         $json_project = $response->json();
 
         $this->assertArrayHasKey('shortname', $json_project);
@@ -860,7 +860,7 @@ class ProjectTest extends RestBase {
                     $this->project_private_member_id,
                     $this->project_public_id,
                     $this->project_public_member_id,
-                    REST_TestDataBuilder::PROJECT_PBI_ID
+                    $this->project_pbi_id
                 ),
                 $this->getIds($json_projects)
             )
