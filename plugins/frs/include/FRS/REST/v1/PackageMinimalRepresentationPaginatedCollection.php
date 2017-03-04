@@ -20,10 +20,10 @@
 
 namespace Tuleap\FRS\REST\v1;
 
-class PackageRepresentationPaginatedCollection
+class PackageMinimalRepresentationPaginatedCollection
 {
     /**
-     * @var PackageRepresentation[]
+     * @var PackageMinimalRepresentation[]
      */
     private $package_representations;
 
@@ -35,11 +35,11 @@ class PackageRepresentationPaginatedCollection
     public function __construct(array $package_representations, $total_size)
     {
         $this->package_representations = $package_representations;
-        $this->total_size = $total_size;
+        $this->total_size              = $total_size;
     }
 
     /**
-     * @return PackageRepresentation[]
+     * @return PackageMinimalRepresentation[]
      */
     public function getPackageRepresentations()
     {

@@ -20,19 +20,18 @@
 
 namespace Tuleap\FRS\REST\v1;
 
-use Project;
-use Tuleap\Project\REST\ProjectReference;
+use FRSPackage;
+use Tuleap\REST\JsonCast;
+use Tuleap\REST\v1\FRSPackageRepresentationBase;
 
-class PackageRepresentation extends PackageMinimalRepresentation
+class PackageMinimalRepresentation extends FRSPackageRepresentationBase
 {
-    /**
-     * @var ProjectReference
-     */
-    public $project;
+    const ROUTE = 'frs_packages';
 
-    public function setProject(Project $project)
+    public function build(FRSPackage $package)
     {
-        $this->project = new ProjectReference();
-        $this->project->build($project);
+        $this->id    = JsonCast::toInt($package->getPackageID());
+        $this->uri   = self::ROUTE ."/". urlencode($this->id);
+        $this->label = $package->getName();
     }
 }
