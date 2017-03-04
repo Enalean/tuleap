@@ -157,21 +157,20 @@ class FRSPackageFactory {
      */
     public function getActiveFRSPackages($group_id)
     {
-        $dao = $this->_getFRSPackageDao();
-        $dar = $dao->searchActivePackagesByGroupId($group_id);
+        $user = UserManager::instance()->getCurrentUser();
+        $dao  = $this->_getFRSPackageDao();
+        $dar  = $dao->searchActivePackagesByGroupId($group_id);
 
-        return $this->instantiateActivePackagesFromDar($group_id, $dar);
+        return $this->instantiateActivePackagesForUserFromDar($group_id, $user, $dar);
     }
 
     /**
      * @return FRSPackage[]
      */
-    private function instantiateActivePackagesFromDar($group_id, DataAccessResult $dar)
+    private function instantiateActivePackagesForUserFromDar($group_id, PFUser $user, DataAccessResult $dar)
     {
         $packages = array();
         if ($dar && !$dar->isError()) {
-            $um    = UserManager::instance();
-            $user  = $um->getCurrentUser();
             $frsrf = new FRSReleaseFactory();
 
             foreach ($dar as $data_array) {
@@ -192,13 +191,13 @@ class FRSPackageFactory {
     /**
      * @return FRSPackagePaginatedCollection
      */
-    public function getPaginatedActivePackages($group_id, $limit, $offset)
+    public function getPaginatedActivePackagesForUser(Project $project, PFUser $user, $limit, $offset)
     {
         $dao        = $this->_getFRSPackageDao();
-        $dar        = $dao->searchPaginatedActivePackagesByGroupId($group_id, $limit, $offset);
+        $dar        = $dao->searchPaginatedActivePackagesByGroupId($project->getID(), $limit, $offset);
         $total_size = $dao->foundRows();
 
-        $packages = $this->instantiateActivePackagesFromDar($group_id, $dar);
+        $packages = $this->instantiateActivePackagesForUserFromDar($project->getID(), $user, $dar);
 
         return new FRSPackagePaginatedCollection($packages, $total_size);
     }

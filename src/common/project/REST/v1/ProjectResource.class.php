@@ -463,11 +463,12 @@ class ProjectResource extends AuthenticatedResource {
         EventManager::instance()->processEvent(
             Event::REST_GET_PROJECT_FRS_PACKAGES,
             array(
-                'project'    => $project,
-                'limit'      => $limit,
-                'offset'     => $offset,
-                'result'     => &$result,
-                'total_size' => &$total_size
+                'project'      => $project,
+                'current_user' => $this->user_manager->getCurrentUser(),
+                'limit'        => $limit,
+                'offset'       => $offset,
+                'result'       => &$result,
+                'total_size'   => &$total_size
             )
         );
 

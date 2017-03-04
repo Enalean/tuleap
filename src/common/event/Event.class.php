@@ -1088,10 +1088,12 @@ class Event {
      * Event raised to get FRS packages from a project with REST
      *
      * Parameters:
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => Tuleap\REST\v1\FRSPackageRepresentationBase[]
+     *     'project'      => Project
+     *     'current_user' => PFUser
+     *     'limit'        => int
+     *     'offset'       => int
+     *     'result'       => (out) Tuleap\REST\v1\FRSPackageRepresentationBase[]
+     *     'total_size'   => (out) integer
      */
     const REST_GET_PROJECT_FRS_PACKAGES = 'rest_get_project_frs_packages';
 
