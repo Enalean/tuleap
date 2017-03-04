@@ -435,19 +435,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic pic");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
     }
 
     /**
@@ -473,19 +473,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic epoc");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic pic");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
     }
 
     public function testPUTbacklogOnlyTwoItems() {
@@ -502,19 +502,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic pic");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => REST_TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
     }
 
     public function testOPTIONSUserGroups() {

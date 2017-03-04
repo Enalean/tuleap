@@ -29,7 +29,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const TEST_USER_4_PASS        = 'welcome0';
     const TEST_USER_4_STATUS      = 'A';
 
-    const EPICS_TRACKER_ID        = 7;
+    const EPICS_TRACKER_SHORTNAME = 'epic';
+
     const RELEASES_TRACKER_ID     = 8;
     const SPRINTS_TRACKER_ID      = 9;
     const TASKS_TRACKER_ID        = 10;
@@ -643,6 +644,21 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this;
     }
 
+    /**
+     * @return Tracker
+     */
+    private function getEpicTracker()
+    {
+        $project    = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $project_id = $project->getID();
+
+        foreach ($this->tracker_factory->getTrackersByGroupId($project_id) as $tracker) {
+            if ($tracker->getItemName() === self::EPICS_TRACKER_SHORTNAME) {
+                return $tracker;
+            }
+        }
+    }
+
     public function generateKanban() {
         echo "Create 'My first kanban'\n";
         $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory, $this->hierarchy_checker);
@@ -746,13 +762,16 @@ class REST_TestDataBuilder extends TestDataBuilder {
     }
 
     private function createEpic(PFUser $user, $field_summary_value, $field_status_value) {
+        $tracker    = $this->getEpicTracker();
+        $tracker_id = $tracker->getId();
+
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::EPICS_TRACKER_ID, 'summary_11')->getId() => $field_summary_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::EPICS_TRACKER_ID, 'status')->getId()  => $field_status_value
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_11')->getId() => $field_summary_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()  => $field_status_value
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::EPICS_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $user,
             '',

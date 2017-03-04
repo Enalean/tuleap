@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -101,8 +101,8 @@ class MilestonesTest extends RestBase {
                 'accept' => array(
                     'trackers' => array(
                         array(
-                            'id'  => REST_TestDataBuilder::EPICS_TRACKER_ID,
-                            'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID,
+                            'id'  => $this->epic_tracker_id,
+                            'uri' => 'trackers/'.$this->epic_tracker_id,
                             'label' => 'Epics'
                         )
                     )

@@ -55,7 +55,10 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $project_public_member_id;
     protected $project_pbi_id;
 
+    protected $epic_tracker_id;
+
     protected $project_ids = array();
+    protected $tracker_ids = array();
 
     public function __construct() {
         parent::__construct();
@@ -87,11 +90,17 @@ class RestBase extends PHPUnit_Framework_TestCase {
             $this->initProjectIds();
         }
 
+        if (! $this->tracker_ids) {
+            $this->initTrackerIds();
+        }
+
         $this->project_private_member_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
         $this->project_private_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
         $this->project_public_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
         $this->project_public_member_id  = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
         $this->project_pbi_id            = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
+
+        $this->getTrackerIdsForProjectPrivateMember();
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -150,5 +159,37 @@ class RestBase extends PHPUnit_Framework_TestCase {
     private function getProjectId($project_short_name)
     {
         return $this->project_ids[$project_short_name];
+    }
+
+    private function initTrackerIds()
+    {
+        foreach ($this->project_ids as $project_id) {
+            $this->extractTrackersForProject($project_id);
+        }
+    }
+
+    private function extractTrackersForProject($project_id)
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("projects/$project_id/trackers")
+        );
+
+        $trackers    = $response->json();
+        $tracker_ids = array();
+
+        foreach ($trackers as $tracker) {
+            $tracker_id        = $tracker['id'];
+            $tracker_shortname = $tracker['item_name'];
+
+            $tracker_ids[$tracker_shortname] = $tracker_id;
+        }
+
+        $this->tracker_ids[$project_id] = $tracker_ids;
+    }
+
+    private function getTrackerIdsForProjectPrivateMember()
+    {
+        $this->epic_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::EPICS_TRACKER_SHORTNAME];
     }
 }

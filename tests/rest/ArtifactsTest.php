@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All rights reserved
+ * Copyright (c) Enalean, 2013-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -47,12 +47,12 @@ class ArtifactsTest extends RestBase {
         $summary_field_value = "This is a new epic";
         $post_resource = json_encode(array(
             'tracker' => array(
-                'id'  => REST_TestDataBuilder::EPICS_TRACKER_ID,
+                'id'  => $this->epic_tracker_id,
                 'uri' => 'whatever'
             ),
             'values' => array(
-               $this->getSubmitTextValue(REST_TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
-               $this->getSubmitListValue(REST_TestDataBuilder::EPICS_TRACKER_ID, 'Status', 103)
+               $this->getSubmitTextValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
+               $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103)
             ),
         ));
 
