@@ -43,13 +43,12 @@ class ProjectBacklogV2Test extends RestBase {
     }
 
     public function testOPTIONSBacklog() {
-        $response = $this->getResponse($this->client->options(
-                'projects/'.REST_TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog'));
+        $response = $this->getResponse($this->client->options("projects/$this->project_public_id/backlog"));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETBacklogNoItems() {
-        $response = $this->getResponse($this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog?limit=0.0&offset=0'));
+        $response = $this->getResponse($this->client->get("projects/$this->project_public_id/backlog?limit=0.0&offset=0"));
 
         $backlog = $response->json();
 

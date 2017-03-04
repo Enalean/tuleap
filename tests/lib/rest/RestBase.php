@@ -51,6 +51,9 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     protected $project_private_member_id;
     protected $project_private_id;
+    protected $project_public_id;
+
+    protected $project_ids = array();
 
     public function __construct() {
         parent::__construct();
@@ -78,13 +81,13 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->setup_client->setDefaultOption('headers/Accept', 'application/json');
         $this->setup_client->setDefaultOption('headers/Content-Type', 'application/json');
 
-        if ($this->project_private_member_id === null) {
-            $this->project_private_member_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        if (! $this->project_ids) {
+            $this->initProjectIds();
         }
 
-        if ($this->project_private_id === null) {
-            $this->project_private_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
-        }
+        $this->project_private_member_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $this->project_private_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
+        $this->project_public_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -107,17 +110,10 @@ class RestBase extends PHPUnit_Framework_TestCase {
         return $this->rest_request->getResponseByBasicAuth($username, $password, $request);
     }
 
-    private function getProjectId($project_short_name)
+    private function initProjectIds()
     {
         $query = http_build_query(
-            array(
-                'limit' => 1,
-                'query' => json_encode(
-                    array(
-                        'shortname' => $project_short_name
-                    )
-                )
-            )
+            array('limit' => 50)
         );
 
         $response = $this->getResponseByName(
@@ -125,8 +121,19 @@ class RestBase extends PHPUnit_Framework_TestCase {
             $this->setup_client->get("projects/?$query")
         );
 
-        $project = $response->json();
+        $projects = $response->json();
 
-        return $project[0]['id'];
+        foreach ($projects as $project) {
+            $project_name = $project['shortname'];
+            $project_id   = $project['id'];
+
+            $this->project_ids[$project_name] = $project_id;
+        }
+
+    }
+
+    private function getProjectId($project_short_name)
+    {
+        return $this->project_ids[$project_short_name];
     }
 }
