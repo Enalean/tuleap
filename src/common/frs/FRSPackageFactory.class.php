@@ -58,12 +58,15 @@ class FRSPackageFactory {
     }
 
     function getFRSPackageFromArray(&$array) {
-        $frs_package = null;
         $frs_package = new FRSPackage($array);
+
         return $frs_package;
     }
 
-    function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0) {
+    /**
+     * @return FRSPackage|void
+     */
+    public function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0) {
         $_id = (int) $package_id;
         $dao = $this->_getFRSPackageDao();
         if($group_id){

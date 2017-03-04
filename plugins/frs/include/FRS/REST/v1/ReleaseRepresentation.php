@@ -85,6 +85,11 @@ class ReleaseRepresentation
      */
     public $license_approval;
 
+    /**
+     * @var PackageRepresentation
+     */
+    public $package;
+
     public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
@@ -92,10 +97,8 @@ class ReleaseRepresentation
         $this->changelog    = $release->getChanges();
         $this->release_note = $release->getNotes();
         $this->name         = $release->getName();
-        $this->package      = array(
-            "id"   => $release->getPackage()->getPackageID(),
-            "name" => $release->getPackage()->getName()
-        );
+        $this->package      = new PackageRepresentation();
+        $this->package->build($release->getPackage());
 
         $this->artifact  = $this->getArtifactRepresentation($release, $link_retriever, $user);
         $this->resources = array(

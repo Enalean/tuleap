@@ -30,6 +30,7 @@ class ResourcesInjector
     public function populate(\Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\FRS\\REST\\v1\\ReleaseResource', ReleaseRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\FRS\\REST\\v1\\PackageResource', PackageRepresentation::ROUTE);
     }
 
     public function declareProjectResource(array &$resources, Project $project)
