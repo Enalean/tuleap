@@ -86,7 +86,7 @@ class ReleaseRepresentation
     public $license_approval;
 
     /**
-     * @var PackageRepresentation
+     * @var PackageMinimalRepresentation
      */
     public $package;
 
@@ -97,7 +97,7 @@ class ReleaseRepresentation
         $this->changelog    = $release->getChanges();
         $this->release_note = $release->getNotes();
         $this->name         = $release->getName();
-        $this->package      = new PackageRepresentation();
+        $this->package      = new PackageMinimalRepresentation();
         $this->package->build($release->getPackage());
 
         $this->artifact  = $this->getArtifactRepresentation($release, $link_retriever, $user);

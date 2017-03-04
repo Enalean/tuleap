@@ -51,12 +51,12 @@ class ProjectResource
             $offset
         );
         foreach ($paginated_packages->getPackages() as $package) {
-            $representation = new PackageRepresentation();
+            $representation = new PackageMinimalRepresentation();
             $representation->build($package);
 
             $packages[] = $representation;
         }
 
-        return new PackageRepresentationPaginatedCollection($packages, $paginated_packages->getTotalSize());
+        return new PackageMinimalRepresentationPaginatedCollection($packages, $paginated_packages->getTotalSize());
     }
 }

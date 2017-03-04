@@ -20,6 +20,7 @@
 
 namespace Tuleap\FRS\REST\v1;
 
+use ProjectManager;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
@@ -29,11 +30,13 @@ use FRSPackageFactory;
 class PackageResource extends AuthenticatedResource
 {
     private $package_factory;
+    private $project_manager;
 
     public function __construct()
     {
         parent::__construct();
         $this->package_factory = FRSPackageFactory::instance();
+        $this->project_manager = ProjectManager::instance();
     }
 
     /**
@@ -65,7 +68,8 @@ class PackageResource extends AuthenticatedResource
         }
 
         $representation = new PackageRepresentation();
-        $representation->build($package);
+        $representation->build($package, $this->project_manager);
+        $representation->setProject($this->project_manager->getProject($package->getGroupID()));
 
         return $representation;
     }
