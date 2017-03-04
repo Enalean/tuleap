@@ -59,7 +59,6 @@ class FRSReleaseFactory {
     }
 
 	function  getFRSReleaseFromArray(& $array) {
-		$frs_release = null;
 		$frs_release = new FRSRelease($array);
 		return $frs_release;
 	}
@@ -105,10 +104,13 @@ class FRSReleaseFactory {
 		return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
 	}
 
-	function  getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
+    /**
+     * @return FRSRelease[]
+     */
+    public function  getFRSReleasesFromDb($package_id, $only_active_releases = false, $group_id = null) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
-		if(isset($status_id) && $status_id == $this->STATUS_ACTIVE && isset($group_id) && $group_id){
+		if($only_active_releases && $group_id){
 			$dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
 		}else{
 			$dar = $dao->searchByPackageId($_id);
@@ -124,7 +126,7 @@ class FRSReleaseFactory {
             $user =& $um->getCurrentUser();
             while ($dar->valid()) {
                 $data_array = & $dar->current();
-                if($status_id && $group_id){			
+                if($only_active_releases && $group_id){
                     if($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())){
                         $releases[] = $this->getFRSReleaseFromArray($data_array);
                     }
