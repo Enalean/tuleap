@@ -107,38 +107,42 @@ class FRSReleaseFactory {
     /**
      * @return FRSRelease[]
      */
-    public function  getFRSReleasesFromDb($package_id, $only_active_releases = false, $group_id = null) {
-		$_id = (int) $package_id;
-		$dao = & $this->_getFRSReleaseDao();
-		if($only_active_releases && $group_id){
-			$dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
-		}else{
-			$dar = $dao->searchByPackageId($_id);
-		}
+    public function  getFRSReleasesFromDb($package_id) {
+        $dao = $this->_getFRSReleaseDao();
 
-		if ($dar->isError()) {
-			return;
-		}
+        $releases = array ();
+        foreach ($dao->searchByPackageId($package_id) as $data_array) {
+            $releases[] = $this->getFRSReleaseFromArray($data_array);
+        }
 
-		$releases = array ();
-		if ($dar->valid()) {		
-            $um =& UserManager::instance();
-            $user =& $um->getCurrentUser();
-            while ($dar->valid()) {
-                $data_array = & $dar->current();
-                if($only_active_releases && $group_id){
-                    if($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())){
-                        $releases[] = $this->getFRSReleaseFromArray($data_array);
-                    }
-                }else{
-                    $releases[] = $this->getFRSReleaseFromArray($data_array);
-                }
-                $dar->next();
+        return $releases;
+    }
+
+    /**
+     * @return FRSRelease[]
+     */
+    public function  getActiveFRSReleases($package_id, $group_id) {
+        $dao  = $this->_getFRSReleaseDao();
+        $dar  = $dao->searchActiveReleasesByPackageId($package_id, $this->STATUS_ACTIVE);
+        $user = UserManager::instance()->getCurrentUser();
+
+        return $this->instantiateActivePackagesFromDar($package_id, $group_id, $dar, $user);
+    }
+
+    /**
+     * @return FRSRelease[]
+     */
+    private function instantiateActivePackagesFromDar($package_id, $group_id, DataAccessResult $dar, PFUser $user)
+    {
+        $releases = array();
+        foreach ($dar as $data_array) {
+            if ($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())) {
+                $releases[] = $this->getFRSReleaseFromArray($data_array);
             }
         }
-        
-		return $releases;
-	}
+
+        return $releases;
+    }
 
     /**
      * Returns the list of releases for a given proejct

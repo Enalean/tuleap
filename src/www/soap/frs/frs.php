@@ -595,7 +595,7 @@ function getReleases($sessionKey,$group_id,$package_id) {
         
         $release_fact = new FRSReleaseFactory();
         // we get only the active releases, even if we are project admin or file admin
-        $releases =& $release_fact->getFRSReleasesFromDb($package_id, 1, $group_id); // 1 for active releases
+        $releases =& $release_fact->getActiveFRSReleases($package_id, $group_id);
         return releases_to_soap($releases);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getReleases');
