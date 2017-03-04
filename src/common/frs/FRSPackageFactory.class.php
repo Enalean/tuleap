@@ -122,45 +122,58 @@ class FRSPackageFactory {
     }
 
     /**
-     * Return the list of Packages for given project
-     * 
+     * Return the list of all Packages for given project
+     *
      * @param Integer $group_id
-     * @param Boolean $only_active_packages
-     * 
+     *
      * @return FRSPackage[]
      */
-    public function getFRSPackagesFromDb($group_id, $only_active_packages = false) {
+    public function getFRSPackagesFromDb($group_id) {
         $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
-        if($only_active_packages){
-            $dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
-        } else {
-            $dar = $dao->searchByGroupId($_id);
+        $dar = $dao->searchByGroupId($_id);
+
+        $packages = array();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $data_array) {
+                $packages[] = $this->getFRSPackageFromArray($data_array);
+            }
         }
 
+        return $packages;
+    }
+
+    /**
+     * Return the list of active Packages for given project
+     *
+     * @param Integer $group_id
+     *
+     * @return FRSPackage[]
+     */
+    public function getActiveFRSPackages($group_id) {
+        $_id = (int) $group_id;
+        $dao = $this->_getFRSPackageDao();
+        $dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
+
+        $packages = array();
         if ($dar && !$dar->isError()) {
-            $packages = array();
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
+            $um    = UserManager::instance();
+            $user  = $um->getCurrentUser();
+            $frsrf = new FRSReleaseFactory();
 
             foreach ($dar as $data_array) {
-                if ($only_active_packages){
-                    if($this->userCanRead($group_id, $data_array['package_id'],$user->getID())){
-                        $packages[] = $this->getFRSPackageFromArray($data_array);
-                    }else{
-                        $frsrf = new FRSReleaseFactory();
-                        $authorised_releases = $frsrf->getFRSReleasesFromDb($data_array['package_id'], 1, $group_id);
-                        if($authorised_releases && count($authorised_releases)>0){
-                            $packages[] = $this->getFRSPackageFromArray($data_array);
-                        }
-                    }
-                }else{
+                if ($this->userCanRead($group_id, $data_array['package_id'],$user->getID())) {
                     $packages[] = $this->getFRSPackageFromArray($data_array);
+                } else {
+                    $authorised_releases = $frsrf->getFRSReleasesFromDb($data_array['package_id'], 1, $group_id);
+                    if ($authorised_releases && count($authorised_releases)>0){
+                        $packages[] = $this->getFRSPackageFromArray($data_array);
+                    }
                 }
             }
-            return $packages;
         }
-        return;
+
+        return $packages;
     }
 
     function getPackageIdByName($package_name, $group_id){
