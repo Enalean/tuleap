@@ -210,7 +210,7 @@ class frsPlugin extends \Plugin
     {
         $project_resource = new \Tuleap\FRS\REST\v1\ProjectResource(FRSPackageFactory::instance());
 
-        $paginated_packages   = $project_resource->getPackages($params['project']);
+        $paginated_packages   = $project_resource->getPackages($params['project'], $params['limit'], $params['offset']);
         $params['result']     = $paginated_packages->getPackageRepresentations();
         $params['total_size'] = $paginated_packages->getTotalSize();
     }

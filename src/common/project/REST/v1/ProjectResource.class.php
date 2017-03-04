@@ -98,10 +98,8 @@ class ProjectResource extends AuthenticatedResource {
     public function get($limit = 10, $offset = 0, $query = '')
     {
         $this->checkAccess();
+        $this->checkLimitValueIsAcceptable($limit);
 
-        if (! $this->limitValueIsAcceptable($limit)) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
-        }
         $query = trim($query);
         $user  = $this->user_manager->getCurrentUser();
 
@@ -151,7 +149,7 @@ class ProjectResource extends AuthenticatedResource {
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
         if (! isset($json_query['shortname'])) {
-            throw new RestException(400, 'You can only search on "shorname"');
+            throw new RestException(400, 'You can only search on "shortname"');
         }
 
         return $this->project_manager->getMyAndPublicProjectsForRESTByShortname(
@@ -455,7 +453,7 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function getFRSPackages($id, $limit = 10, $offset = 0) {
         $this->checkAccess();
-
+        $this->checkLimitValueIsAcceptable($limit);
         $this->checkFRSEndpointsAvailable();
 
         $project    = $this->getProjectForUser($id);
@@ -957,5 +955,12 @@ class ProjectResource extends AuthenticatedResource {
     private function sendAllowHeadersForFRSPackages()
     {
         Header::allowOptionsGet();
+    }
+
+    private function checkLimitValueIsAcceptable($limit)
+    {
+        if (!$this->limitValueIsAcceptable($limit)) {
+            throw new RestException(406, 'Maximum value for limit exceeded');
+        }
     }
 }

@@ -36,20 +36,21 @@ class ProjectResource
         $this->package_factory = $package_factory;
     }
 
-    public function getPackages(Project $project)
+    public function getPackages(Project $project, $limit, $offset)
     {
         if (! $project->usesFile()) {
             throw new RestException(404, 'File Release System service is not used by the project');
         }
 
         $packages = array();
-        foreach ($this->package_factory->getActiveFRSPackages($project->getID()) as $package) {
+        $paginated_packages = $this->package_factory->getPaginatedActivePackages($project->getID(), $limit, $offset);
+        foreach ($paginated_packages->getPackages() as $package) {
             $representation = new PackageRepresentation();
             $representation->build($package);
 
             $packages[] = $representation;
         }
 
-        return new PackageRepresentationPaginatedCollection($packages, count($packages));
+        return new PackageRepresentationPaginatedCollection($packages, $paginated_packages->getTotalSize());
     }
 }
