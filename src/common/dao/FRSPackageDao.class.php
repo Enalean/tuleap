@@ -75,10 +75,30 @@ class FRSPackageDao extends DataAccessObject {
         $_id = (int) $id; 
         return $this->_search(' p.group_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank ASC ');
     }
-    
-    function searchActivePackagesByGroupId($id, $status_active){
-    	$_id = (int) $id;
-    	return $this->_search(' group_id='.$this->da->escapeInt($_id).' AND status_id = '.$this->da->escapeInt($status_active),'','ORDER BY rank');
+
+    public function searchActivePackagesByGroupId($id)
+    {
+        $id        = $this->da->escapeInt($id);
+        $status_id = $this->da->escapeInt(FRSPackage::STATUS_ACTIVE);
+
+        return $this->_search(" group_id = $id AND status_id = $status_id", '', 'ORDER BY rank');
+    }
+
+    public function searchPaginatedActivePackagesByGroupId($id, $limit, $offset)
+    {
+        $id        = $this->da->escapeInt($id);
+        $status_id = $this->da->escapeInt(FRSPackage::STATUS_ACTIVE);
+        $limit     = $this->da->escapeInt($limit);
+        $offset    = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM frs_package
+                WHERE group_id  = $id
+                  AND status_id = $status_id
+                ORDER BY rank
+                LIMIT $offset, $limit";
+
+        return $this->retrieve($sql);
     }
    
     function _search($where, $group = '', $order = '', $from = array(), $extraFlags = 0) {

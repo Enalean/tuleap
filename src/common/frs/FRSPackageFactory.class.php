@@ -27,6 +27,7 @@ require_once('FRSReleaseFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once ('common/frs/FRSLog.class.php');
 
+use Tuleap\FRS\FRSPackagePaginatedCollection;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionDao;
@@ -128,7 +129,8 @@ class FRSPackageFactory {
      *
      * @return FRSPackage[]
      */
-    public function getFRSPackagesFromDb($group_id) {
+    public function getFRSPackagesFromDb($group_id)
+    {
         $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByGroupId($_id);
@@ -150,11 +152,19 @@ class FRSPackageFactory {
      *
      * @return FRSPackage[]
      */
-    public function getActiveFRSPackages($group_id) {
-        $_id = (int) $group_id;
+    public function getActiveFRSPackages($group_id)
+    {
         $dao = $this->_getFRSPackageDao();
-        $dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
+        $dar = $dao->searchActivePackagesByGroupId($group_id);
 
+        return $this->instantiateActivePackagesFromDar($group_id, $dar);
+    }
+
+    /**
+     * @return FRSPackage[]
+     */
+    private function instantiateActivePackagesFromDar($group_id, DataAccessResult $dar)
+    {
         $packages = array();
         if ($dar && !$dar->isError()) {
             $um    = UserManager::instance();
@@ -174,6 +184,20 @@ class FRSPackageFactory {
         }
 
         return $packages;
+    }
+
+    /**
+     * @return FRSPackagePaginatedCollection
+     */
+    public function getPaginatedActivePackages($group_id, $limit, $offset)
+    {
+        $dao        = $this->_getFRSPackageDao();
+        $dar        = $dao->searchPaginatedActivePackagesByGroupId($group_id, $limit, $offset);
+        $total_size = $dao->foundRows();
+
+        $packages = $this->instantiateActivePackagesFromDar($group_id, $dar);
+
+        return new FRSPackagePaginatedCollection($packages, $total_size);
     }
 
     function getPackageIdByName($package_name, $group_id){
