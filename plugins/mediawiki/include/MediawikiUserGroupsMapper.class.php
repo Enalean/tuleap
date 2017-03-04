@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+
 /**
  * This class do the mapping between Tuleap And Mediawiki groups
  */
@@ -195,8 +197,7 @@ class MediawikiUserGroupsMapper {
     private function doesUserHaveSpecialAdminPermissions(PFUser $user) {
         return $this->forge_permissions_dao->doesUserHavePermission(
             $user->getId(),
-            User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID
+            MediawikiAdminAllProjects::ID
         );
     }
-
 }

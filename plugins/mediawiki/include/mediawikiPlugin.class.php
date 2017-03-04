@@ -23,6 +23,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -90,6 +92,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+            $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
 
             /**
              * HACK
@@ -414,7 +417,7 @@ class MediaWikiPlugin extends Plugin {
 
         return $forge_user_manager->doesUserHavePermission(
             $user,
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            new MediawikiAdminAllProjects()
         );
     }
 
@@ -786,5 +789,12 @@ class MediaWikiPlugin extends Plugin {
             EventManager::instance()
         );
         $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+    }
+
+    public function get_permission_delegation($params)
+    {
+        $permission = new MediawikiAdminAllProjects();
+
+        $params['plugins_permission'][MediawikiAdminAllProjects::ID] = $permission;
     }
 }

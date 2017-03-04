@@ -34,7 +34,7 @@ class User_ForgeUserGroupPermssionsFactory_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         $this->dao     = mock('User_ForgeUserGroupPermissionsDao');
-        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao);
+        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao,  mock('EventManager'));
     }
 }
 
@@ -71,16 +71,12 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
     public function itReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions() {
         $user_group     = new User_ForgeUGroup(101, '', '');
         $expected_id1    = User_ForgeUserGroupPermission_ProjectApproval::ID;
-        $expected_id2    = User_ForgeUserGroupPermission_TrackerAdminAllProjects::ID;
-        $expected_id3    = User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID;
         $expected_id4    = User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID;
         $expected_id5    = User_ForgeUserGroupPermission_UserManagement::ID;
         $expected_id6    = RetrieveSystemEventsInformationApi::ID;
 
         $permission_ids = array (
             array('permission_id' => $expected_id1),
-            array('permission_id' => $expected_id2),
-            array('permission_id' => $expected_id3),
             array('permission_id' => $expected_id4),
             array('permission_id' => $expected_id5),
             array('permission_id' => $expected_id6),
@@ -94,7 +90,6 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
 
     public function itReturnsArrayIfAllForgeUserGroupHasNoPermission() {
         $user_group     = new User_ForgeUGroup(101, '', '');
-        $expected_id    = User_ForgeUserGroupPermission_ProjectApproval::ID;
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns(false);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
@@ -103,5 +98,3 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
         $this->assertEqual(count($available_permissions), count($all));
     }
 }
-
-?>

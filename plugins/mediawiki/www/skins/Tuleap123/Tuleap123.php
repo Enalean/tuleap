@@ -10,6 +10,8 @@
  * @ingroup Skins
  */
 
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
 
 if ( !defined( 'MEDIAWIKI' ) ) {
@@ -239,7 +241,7 @@ echo $footerEnd;
         );
         $has_special_permission = $forge_user_manager->doesUserHavePermission(
             $pfuser,
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            new MediawikiAdminAllProjects()
         );
 
         return $pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission;

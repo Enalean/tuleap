@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+
 class MediawikiManager {
 
     const READ_ACCESS  = 'PLUGIN_MEDIAWIKI_READ';
@@ -165,7 +167,7 @@ class MediawikiManager {
     private function hasDelegatedAccess(PFUser $user) {
         return $this->getUpgroupsPermissionsManager()->doesUserHavePermission(
             $user,
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            new MediawikiAdminAllProjects()
         );
     }
     /**

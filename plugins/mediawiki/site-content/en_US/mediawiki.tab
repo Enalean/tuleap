@@ -53,3 +53,6 @@ plugin_mediawiki	unsupported_language	The language $1 is not supported.
 plugin_mediawiki	alternative_welcome_page_title	Choose welcome page
 plugin_mediawiki	language_not_set_intro	Please choose your welcome page
 plugin_mediawiki	language_not_set_admin_warning	You've been redirected here since no language has been set for your Mediawiki instance.
+
+plugin_mediawiki	permission_delegation_name	Global Mediawiki Administrator
+plugin_mediawiki	permission_delegation_description	This permission grants mediawiki administration rights for each mediawiki of every project

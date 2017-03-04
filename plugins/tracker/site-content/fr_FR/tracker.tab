@@ -1788,3 +1788,6 @@ plugin_tracker	tracker_restore_warning	Les outils de suivi suivant ne peuvent ê
 plugin_tracker	file_has_been_removed_meantime	Ce fichier a été supprimé entre temps.
 
 project_admin_utils	tracker_formelement_update	Mise à jour du champ
+
+plugin_tracker	permission_delegation_name	Administrateur de trackers
+plugin_tracker	permission_delegation_description	Cette permission donne le droit d'administration sur tous les trackers
