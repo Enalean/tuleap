@@ -21,6 +21,7 @@
 namespace Tuleap\FRS\REST\v1;
 
 use FRSPackageFactory;
+use PFUser;
 use Project;
 use Luracast\Restler\RestException;
 
@@ -36,14 +37,19 @@ class ProjectResource
         $this->package_factory = $package_factory;
     }
 
-    public function getPackages(Project $project, $limit, $offset)
+    public function getPackages(Project $project, PFUser $user, $limit, $offset)
     {
         if (! $project->usesFile()) {
             throw new RestException(404, 'File Release System service is not used by the project');
         }
 
         $packages = array();
-        $paginated_packages = $this->package_factory->getPaginatedActivePackages($project->getID(), $limit, $offset);
+        $paginated_packages = $this->package_factory->getPaginatedActivePackagesForUser(
+            $project,
+            $user,
+            $limit,
+            $offset
+        );
         foreach ($paginated_packages->getPackages() as $package) {
             $representation = new PackageRepresentation();
             $representation->build($package);
