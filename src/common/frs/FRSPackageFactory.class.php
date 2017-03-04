@@ -125,15 +125,14 @@ class FRSPackageFactory {
      * Return the list of Packages for given project
      * 
      * @param Integer $group_id
-     * @param String  $status_id
+     * @param Boolean $only_active_packages
      * 
      * @return FRSPackage[]
      */
-    function getFRSPackagesFromDb($group_id, $status_id=null) {
+    public function getFRSPackagesFromDb($group_id, $only_active_packages = false) {
         $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
-        if($status_id){
-            $_status_id= (int) $status_id;
+        if($only_active_packages){
             $dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
         } else {
             $dar = $dao->searchByGroupId($_id);
@@ -145,7 +144,7 @@ class FRSPackageFactory {
             $user = $um->getCurrentUser();
 
             foreach ($dar as $data_array) {
-                if ($status_id){
+                if ($only_active_packages){
                     if($this->userCanRead($group_id, $data_array['package_id'],$user->getID())){
                         $packages[] = $this->getFRSPackageFromArray($data_array);
                     }else{
