@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -70,7 +70,7 @@ class Regressions_MilestonesContentOrderTest extends RestBase {
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             $this->client,
             $this->rest_request,
-            REST_TestDataBuilder::PROJECT_PBI_ID,
+            $this->project_pbi_id,
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 

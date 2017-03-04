@@ -53,6 +53,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $project_private_id;
     protected $project_public_id;
     protected $project_public_member_id;
+    protected $project_pbi_id;
 
     protected $project_ids = array();
 
@@ -90,6 +91,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->project_private_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
         $this->project_public_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
         $this->project_public_member_id  = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
+        $this->project_pbi_id            = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
     }
 
     protected function getResponseWithoutAuth($request) {

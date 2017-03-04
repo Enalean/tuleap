@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,7 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             $this->client,
             $this->rest_request,
-            REST_TestDataBuilder::PROJECT_PBI_ID,
+            $this->project_pbi_id,
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
     }
