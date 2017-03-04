@@ -40,6 +40,8 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
         $this->id          = $group->getId();
         $this->name        = $group->getName();
         $this->permissions = $permissions;
+
+        $this->sortPermissionsAlphabetically();
     }
 
     public function id() {
@@ -75,5 +77,15 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
 
     public function permissions_modal_cancel() {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_cancel');
+    }
+
+    private function sortPermissionsAlphabetically()
+    {
+        usort(
+            $this->permissions,
+            function (User_ForgeUserGroupPermission $permission_a, User_ForgeUserGroupPermission $permission_b) {
+                return strnatcasecmp($permission_a->getName(), $permission_b->getName());
+            }
+        );
     }
 }
