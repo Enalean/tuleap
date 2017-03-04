@@ -477,8 +477,7 @@ function getPackages($sessionKey,$group_id) {
         }
         $pkg_fact = new FRSPackageFactory();
         // we get only the active packages, even if we are project admin or file admin
-        $only_active_packages = true;
-        $packages =& $pkg_fact->getFRSPackagesFromDb($group_id, $only_active_packages);
+        $packages =& $pkg_fact->getActiveFRSPackages($group_id);
         return packages_to_soap($packages);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getPackages');
