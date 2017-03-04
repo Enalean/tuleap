@@ -48,7 +48,7 @@ class ProjectTest extends RestBase {
             $this->valuesArePresent(
                 array(
                     $this->project_private_member_id,
-                    REST_TestDataBuilder::PROJECT_PUBLIC_ID,
+                    $this->project_public_id,
                     REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
                     REST_TestDataBuilder::PROJECT_PBI_ID
                 ),
@@ -858,7 +858,7 @@ class ProjectTest extends RestBase {
             $this->valuesArePresent(
                 array(
                     $this->project_private_member_id,
-                    REST_TestDataBuilder::PROJECT_PUBLIC_ID,
+                    $this->project_public_id,
                     REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
                     REST_TestDataBuilder::PROJECT_PBI_ID
                 ),

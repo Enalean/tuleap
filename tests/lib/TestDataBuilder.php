@@ -79,7 +79,6 @@ class TestDataBuilder {
     const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
     const ADMIN_PROJECT_ID          = 100;
-    const PROJECT_PUBLIC_ID         = 103;
     const PROJECT_PUBLIC_MEMBER_ID  = 104;
     const PROJECT_PBI_ID            = 105;
 
