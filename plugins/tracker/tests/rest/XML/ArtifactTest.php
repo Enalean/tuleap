@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -85,7 +85,7 @@ class ArtifactTest extends RestBase {
         $artifact_xml = $response->xml();
 
         $this->assertEquals((int) $artifact_xml->id, REST_TestDataBuilder::RELEASE_ARTIFACT_ID);
-        $this->assertEquals((int) $artifact_xml->project->id, REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->project_private_member_id);
     }
 
     public function testPOSTArtifact()

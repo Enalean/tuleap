@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@ class SOAP_TestDataBuilder extends TestDataBuilder {
 
     const TV3_SERVICE_ID      = 15;
     const TV3_TASK_REPORT_ID  = 102;
+
+    const PROJECT_PRIVATE_MEMBER_ID = 101;
 
     public function __construct() {
         parent::__construct();

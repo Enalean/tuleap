@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -84,8 +84,8 @@ class TrackersTest extends RestBase {
         $this->assertEquals($tracker_uri, $tracker['uri']);
         $this->assertEquals('Releases', $tracker['label']);
         $this->assertEquals('rel', $tracker['item_name']);
-        $this->assertEquals(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['id']);
-        $this->assertEquals('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['uri']);
+        $this->assertEquals($this->project_private_member_id, $tracker['project']['id']);
+        $this->assertEquals('projects/'.$this->project_private_member_id, $tracker['project']['uri']);
         $this->assertArrayHasKey('fields', $tracker);
         foreach ($tracker['fields'] as $field) {
             $this->assertArrayHasKey('required', $field);
@@ -282,7 +282,7 @@ class TrackersTest extends RestBase {
     }
 
     private function getReleaseTrackerUri() {
-        $response_plannings = $this->getResponse($this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
+        $response_plannings = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];
     }
 

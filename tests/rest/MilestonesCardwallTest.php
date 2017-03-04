@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -74,8 +74,8 @@ class MilestonesCardwallTest extends RestBase {
         $this->assertEquals(array(), $first_swimlane_card['values']);
 
         $first_swimlane_card_project_reference = $first_swimlane_card['project'];
-        $this->assertEquals(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $first_swimlane_card_project_reference['id']);
-        $this->assertEquals("projects/".REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $first_swimlane_card_project_reference['uri']);
+        $this->assertEquals($this->project_private_member_id, $first_swimlane_card_project_reference['id']);
+        $this->assertEquals("projects/$this->project_private_member_id", $first_swimlane_card_project_reference['uri']);
 
         $first_swimlane_card_artifact_reference = $first_swimlane_card['artifact'];
         $this->assertEquals(REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card_artifact_reference['id']);
