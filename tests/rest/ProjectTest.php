@@ -108,14 +108,12 @@ class ProjectTest extends RestBase {
 
         $this->assertArrayHasKey('additional_informations', $json_projects[0]);
         $this->assertEquals(
-            REST_TestDataBuilder::RELEASES_TRACKER_ID,
+            $this->releases_tracker_id,
             $json_projects[0]['additional_informations']['agiledashboard']['root_planning']['milestone_tracker']['id']
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
-
-
 
     public function testGETByShortname()
     {

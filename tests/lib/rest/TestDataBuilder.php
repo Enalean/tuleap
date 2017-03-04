@@ -29,10 +29,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const TEST_USER_4_PASS        = 'welcome0';
     const TEST_USER_4_STATUS      = 'A';
 
-    const EPICS_TRACKER_SHORTNAME = 'epic';
+    const EPICS_TRACKER_SHORTNAME    = 'epic';
+    const RELEASES_TRACKER_SHORTNAME = 'rel';
+    const SPRINTS_TRACKER_SHORTNAME  = 'sprint';
 
-    const RELEASES_TRACKER_ID     = 8;
-    const SPRINTS_TRACKER_ID      = 9;
     const TASKS_TRACKER_ID        = 10;
     const USER_STORIES_TRACKER_ID = 11;
     const DELETED_TRACKER_ID      = 12;
@@ -649,14 +649,37 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getEpicTracker()
     {
+        return $this->getTracker(self::EPICS_TRACKER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getReleaseTracker()
+    {
+        return $this->getTracker(self::RELEASES_TRACKER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getSprintTracker()
+    {
+        return $this->getTracker(self::SPRINTS_TRACKER_SHORTNAME);
+    }
+
+    private function getTracker($tracker_shortname)
+    {
         $project    = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
         $project_id = $project->getID();
 
         foreach ($this->tracker_factory->getTrackersByGroupId($project_id) as $tracker) {
-            if ($tracker->getItemName() === self::EPICS_TRACKER_SHORTNAME) {
+            if ($tracker->getItemName() === $tracker_shortname) {
                 return $tracker;
             }
         }
+
+        throw new RuntimeException('Data seems not correctly initialized');
     }
 
     public function generateKanban() {
@@ -747,13 +770,16 @@ class REST_TestDataBuilder extends TestDataBuilder {
     }
 
     private function createRelease(PFUser $user, $field_name_value, $field_status_value) {
+        $tracker    = $this->getReleaseTracker();
+        $tracker_id = $tracker->getId();
+
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::RELEASES_TRACKER_ID, 'name')->getId() => $field_name_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::RELEASES_TRACKER_ID, 'status')->getId()  => $field_status_value
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'name')->getId() => $field_name_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()  => $field_status_value
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::RELEASES_TRACKER_ID),
+            $tracker,
             $fields_data,
             $user,
             '',
@@ -771,7 +797,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById($tracker_id),
+            $tracker,
             $fields_data,
             $user,
             '',
@@ -787,16 +813,19 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $field_duration_value,
         $field_capacity_value
     ) {
+        $tracker    = $this->getSprintTracker();
+        $tracker_id = $tracker->getId();
+
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::SPRINTS_TRACKER_ID, 'name')->getId()       => $field_name_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::SPRINTS_TRACKER_ID, 'status')->getId()     => $field_status_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::SPRINTS_TRACKER_ID, 'start_date')->getId() => $field_start_date_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::SPRINTS_TRACKER_ID, 'duration')->getId()   => $field_duration_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::SPRINTS_TRACKER_ID, 'capacity')->getId()   => $field_capacity_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'name')->getId()       => $field_name_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()     => $field_status_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'start_date')->getId() => $field_start_date_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'duration')->getId()   => $field_duration_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'capacity')->getId()   => $field_capacity_value,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::SPRINTS_TRACKER_ID),
+            $tracker,
             $fields_data,
             $user,
             '',

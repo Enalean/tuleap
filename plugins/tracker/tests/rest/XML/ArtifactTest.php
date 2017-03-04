@@ -90,7 +90,7 @@ class ArtifactTest extends RestBase {
 
     public function testPOSTArtifact()
     {
-        $xml = "<request><tracker><id>" . REST_TestDataBuilder::RELEASES_TRACKER_ID . "</id></tracker><values><item><field_id>" .
+        $xml = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
             REST_TestDataBuilder::RELEASE_FIELD_NAME_ID . "</field_id><value>Test Release</value></item><item><field_id>" .
             REST_TestDataBuilder::RELEASE_FIELD_STATUS_ID . "</field_id><bind_value_ids><item>" .
             REST_TestDataBuilder::RELEASE_STATUS_CURRENT_ID . "</item></bind_value_ids></item></values></request>";
@@ -112,7 +112,7 @@ class ArtifactTest extends RestBase {
     public function testPUTArtifact($artifact_id)
     {
         $new_value = 'Test Release Updated';
-        $xml       = "<request><tracker><id>" . REST_TestDataBuilder::RELEASES_TRACKER_ID . "</id></tracker><values><item><field_id>" .
+        $xml       = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
             REST_TestDataBuilder::RELEASE_FIELD_NAME_ID . "</field_id><value>" . $new_value . "</value></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->put('artifacts/' . $artifact_id, null, $xml));
