@@ -112,24 +112,35 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     private function initProjectIds()
     {
-        $query = http_build_query(
-            array('limit' => 50)
+        $offset = 0;
+        $limit  = 50;
+        $query  = http_build_query(
+            array('limit' => $limit, 'offset' => $offset)
         );
 
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("projects/?$query")
-        );
+        do {
+            $response = $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->setup_client->get("projects/?$query")
+            );
 
-        $projects = $response->json();
+            $projects          = $response->json();
+            $number_of_project = (int) (string) $response->getHeader('X-Pagination-Size');
 
+            $this->addProjectIdFromDRequestData($projects);
+
+            $offset += $limit;
+        } while ($offset < $number_of_project);
+    }
+
+    private function addProjectIdFromDRequestData(array $projects)
+    {
         foreach ($projects as $project) {
             $project_name = $project['shortname'];
             $project_id   = $project['id'];
 
             $this->project_ids[$project_name] = $project_id;
         }
-
     }
 
     private function getProjectId($project_short_name)
