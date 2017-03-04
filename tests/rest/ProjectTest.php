@@ -161,11 +161,11 @@ class ProjectTest extends RestBase {
         $admin_projects = $response->json();
 
         foreach ($admin_projects as $project) {
-            if ($project['id'] !== REST_TestDataBuilder::PROJECT_PRIVATE_ID) {
+            if ($project['id'] !== $this->project_private_id) {
                 continue;
             }
 
-            $project_members_uri = 'user_groups/'. REST_TestDataBuilder::PROJECT_PRIVATE_ID .'_3/users';
+            $project_members_uri = "user_groups/$this->project_private_id"."_3/users";
             $project_members = $this
                 ->getResponseByName(
                     REST_TestDataBuilder::ADMIN_USER_NAME,
