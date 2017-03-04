@@ -50,6 +50,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $rest_request;
 
     protected $project_private_member_id;
+    protected $project_private_id;
 
     public function __construct() {
         parent::__construct();
@@ -79,6 +80,10 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
         if ($this->project_private_member_id === null) {
             $this->project_private_member_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        }
+
+        if ($this->project_private_id === null) {
+            $this->project_private_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
         }
     }
 
