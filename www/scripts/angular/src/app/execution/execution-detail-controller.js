@@ -83,11 +83,36 @@ function ExecutionDetailCtrl(
         ArtifactLinksGraphService.showGraphModal(execution);
     }
 
-    function showEditArtifactModal(definition) {
+    function showEditModal($event, backlog_item, milestone) {
+        var when_left_mouse_click = 1;
+
+        function callback(item_id) {
+            return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function() {
+                if (milestone) {
+                    MilestoneService.updateInitialEffort(milestone);
+                }
+            });
+        }
+
+        if ($event.which === when_left_mouse_click) {
+            $event.preventDefault();
+
+            NewTuleapArtifactModalService.showEdition(
+                SharedPropertiesService.getUserId(),
+                backlog_item.artifact.tracker.id,
+                backlog_item.artifact.id,
+                callback
+            );
+        }
+    }
+
+    function showEditArtifactModal($event, definition) {
+        var when_left_mouse_click = 1;
+
         var old_category    = $scope.execution.definition.category;
         var current_user_id = SharedPropertiesService.getCurrentUser().id;
 
-        var callback = function(artifact_id) {
+        function callback(artifact_id) {
             var executions = ExecutionService.getExecutionsByDefinitionId(artifact_id);
 
             return DefinitionService.getDefinitionById(artifact_id).then(function(definition) {
@@ -103,16 +128,20 @@ function ExecutionDetailCtrl(
 
                 retrieveCurrentExecution();
             });
-        };
+        }
 
-        DefinitionService.getArtifactById(definition.id).then(function(artifact) {
-            NewTuleapArtifactModalService.showEdition(
-                current_user_id,
-                artifact.tracker.id,
-                artifact.id,
-                callback
-            );
-        });
+        if ($event.which === when_left_mouse_click) {
+            $event.preventDefault();
+
+            DefinitionService.getArtifactById(definition.id).then(function(artifact) {
+                NewTuleapArtifactModalService.showEdition(
+                    current_user_id,
+                    artifact.tracker.id,
+                    artifact.id,
+                    callback
+                );
+            });
+        }
     }
 
     function waitForExecutionToBeLoaded() {
