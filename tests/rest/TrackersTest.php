@@ -278,7 +278,7 @@ class TrackersTest extends RestBase {
     }
 
     private function getDeletedTrackerId() {
-        return 'trackers/' . REST_TestDataBuilder::DELETED_TRACKER_ID;
+        return "trackers/$this->deleted_tracker_id";
     }
 
     private function getReleaseTrackerUri() {

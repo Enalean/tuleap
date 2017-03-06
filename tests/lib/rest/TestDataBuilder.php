@@ -34,8 +34,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const SPRINTS_TRACKER_SHORTNAME      = 'sprint';
     const TASKS_TRACKER_SHORTNAME        = 'task';
     const USER_STORIES_TRACKER_SHORTNAME = 'story';
+    const DELETED_TRACKER_SHORTNAME      = 'delete';
 
-    const DELETED_TRACKER_ID      = 12;
     const KANBAN_TRACKER_ID       = 13;
     const LEVEL_ONE_TRACKER_ID    = 31;
     const LEVEL_TWO_TRACKER_ID    = 32;
@@ -553,7 +553,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
     public function deleteTracker() {
         echo "Delete tracker\n";
 
-        $this->tracker_factory->markAsDeleted(self::DELETED_TRACKER_ID);
+        $tracker = $this->getDeletedTracker();
+
+        $this->tracker_factory->markAsDeleted($tracker->getId());
 
         return $this;
     }
@@ -674,6 +676,14 @@ class REST_TestDataBuilder extends TestDataBuilder {
     private function getUserStoryTracker()
     {
         return $this->getTracker(self::USER_STORIES_TRACKER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getDeletedTracker()
+    {
+        return $this->getTracker(self::DELETED_TRACKER_SHORTNAME);
     }
 
     private function getTracker($tracker_shortname)

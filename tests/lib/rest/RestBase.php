@@ -60,6 +60,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $sprints_tracker_id;
     protected $tasks_tracker_id;
     protected $user_stories_tracker_id;
+    protected $deleted_tracker_id;
 
     protected $project_ids = array();
     protected $tracker_ids = array();
@@ -199,5 +200,9 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->sprints_tracker_id      = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::SPRINTS_TRACKER_SHORTNAME];
         $this->tasks_tracker_id        = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::TASKS_TRACKER_SHORTNAME];
         $this->user_stories_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::USER_STORIES_TRACKER_SHORTNAME];
+
+        if (isset($this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::DELETED_TRACKER_SHORTNAME])) {
+            $this->deleted_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::DELETED_TRACKER_SHORTNAME];
+        }
     }
 }
