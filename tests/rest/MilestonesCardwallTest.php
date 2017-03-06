@@ -82,7 +82,7 @@ class MilestonesCardwallTest extends RestBase {
         $this->assertEquals("artifacts/".REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card_artifact_reference['uri']);
 
         $first_swimlane_card_artifact_tracker_reference = $first_swimlane_card_artifact_reference['tracker'];
-        $this->assertEquals(REST_TestDataBuilder::USER_STORIES_TRACKER_ID, $first_swimlane_card_artifact_tracker_reference['id']);
-        $this->assertEquals('trackers/'.REST_TestDataBuilder::USER_STORIES_TRACKER_ID, $first_swimlane_card_artifact_tracker_reference['uri']);
+        $this->assertEquals($this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['id']);
+        $this->assertEquals('trackers/'.$this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['uri']);
     }
 }

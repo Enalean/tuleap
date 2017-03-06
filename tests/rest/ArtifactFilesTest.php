@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -261,7 +261,7 @@ class ArtifactFilesTest extends RestBase {
         $response = $this->getResponse($request);
         $file_representation = $response->json();
 
-        $request = $this->client->get('trackers/'. REST_TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $request = $this->client->get('trackers/'. $this->user_stories_tracker_id);
         $structure = json_decode($this->getResponse($request)->getBody(true), true);
         foreach ($structure['fields'] as $field) {
             if ($field['type'] == 'file') {
@@ -280,8 +280,8 @@ class ArtifactFilesTest extends RestBase {
 
         $params = json_encode(array(
             'tracker' => array(
-                'id'  => REST_TestDataBuilder::USER_STORIES_TRACKER_ID,
-                'uri' => 'trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID
+                'id'  => $this->user_stories_tracker_id,
+                'uri' => 'trackers/' . $this->user_stories_tracker_id
             ),
             'values' => array(
                 array(
@@ -373,7 +373,7 @@ class ArtifactFilesTest extends RestBase {
     public function testAttachFileToPutArtifact($file_id) {
         $artifact_id = REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
 
-        $request = $this->client->get('trackers/'. REST_TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $request = $this->client->get('trackers/'. $this->user_stories_tracker_id);
         $structure = json_decode($this->getResponse($request)->getBody(true), true);
         foreach ($structure['fields'] as $field) {
             if ($field['type'] == 'file') {
