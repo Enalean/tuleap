@@ -29,12 +29,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const TEST_USER_4_PASS        = 'welcome0';
     const TEST_USER_4_STATUS      = 'A';
 
-    const EPICS_TRACKER_SHORTNAME    = 'epic';
-    const RELEASES_TRACKER_SHORTNAME = 'rel';
-    const SPRINTS_TRACKER_SHORTNAME  = 'sprint';
+    const EPICS_TRACKER_SHORTNAME        = 'epic';
+    const RELEASES_TRACKER_SHORTNAME     = 'rel';
+    const SPRINTS_TRACKER_SHORTNAME      = 'sprint';
+    const TASKS_TRACKER_SHORTNAME        = 'task';
+    const USER_STORIES_TRACKER_SHORTNAME = 'story';
 
-    const TASKS_TRACKER_ID        = 10;
-    const USER_STORIES_TRACKER_ID = 11;
     const DELETED_TRACKER_ID      = 12;
     const KANBAN_TRACKER_ID       = 13;
     const LEVEL_ONE_TRACKER_ID    = 31;
@@ -668,6 +668,14 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this->getTracker(self::SPRINTS_TRACKER_SHORTNAME);
     }
 
+    /**
+     * @return Tracker
+     */
+    private function getUserStoryTracker()
+    {
+        return $this->getTracker(self::USER_STORIES_TRACKER_SHORTNAME);
+    }
+
     private function getTracker($tracker_shortname)
     {
         $project    = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
@@ -834,13 +842,16 @@ class REST_TestDataBuilder extends TestDataBuilder {
     }
 
     private function createUserStory(PFUser $user, $field_i_want_to_value, $field_status_value) {
+        $tracker    = $this->getUserStoryTracker();
+        $tracker_id = $tracker->getId();
+
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::USER_STORIES_TRACKER_ID, 'i_want_to')->getId() => $field_i_want_to_value,
-            $this->tracker_formelement_factory->getFormElementByName(self::USER_STORIES_TRACKER_ID, 'status')->getId()  => $field_status_value
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'i_want_to')->getId() => $field_i_want_to_value,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()    => $field_status_value
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::USER_STORIES_TRACKER_ID),
+            $tracker,
             $fields_data,
             $user,
             '',

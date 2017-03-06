@@ -58,6 +58,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $epic_tracker_id;
     protected $releases_tracker_id;
     protected $sprints_tracker_id;
+    protected $tasks_tracker_id;
+    protected $user_stories_tracker_id;
 
     protected $project_ids = array();
     protected $tracker_ids = array();
@@ -192,8 +194,10 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     private function getTrackerIdsForProjectPrivateMember()
     {
-        $this->epic_tracker_id     = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::EPICS_TRACKER_SHORTNAME];
-        $this->releases_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::RELEASES_TRACKER_SHORTNAME];
-        $this->sprints_tracker_id  = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::SPRINTS_TRACKER_SHORTNAME];
+        $this->epic_tracker_id         = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::EPICS_TRACKER_SHORTNAME];
+        $this->releases_tracker_id     = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::RELEASES_TRACKER_SHORTNAME];
+        $this->sprints_tracker_id      = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::SPRINTS_TRACKER_SHORTNAME];
+        $this->tasks_tracker_id        = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::TASKS_TRACKER_SHORTNAME];
+        $this->user_stories_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::USER_STORIES_TRACKER_SHORTNAME];
     }
 }

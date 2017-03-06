@@ -68,7 +68,7 @@ class TrackersTest extends RestBase {
     }
 
     public function testOptionsGetParentArtifacts() {
-        $response = $this->getResponse($this->client->options('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/parent_artifacts'));
+        $response = $this->getResponse($this->client->options('trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -208,7 +208,7 @@ class TrackersTest extends RestBase {
     public function testGetTrackerArtifactsExpertQuery()
     {
         $query     = "i_want_to='Believe'";
-        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query='.$query);
         $response  = $this->getResponse($request);
         $artifacts = $response->json();
 
@@ -225,7 +225,7 @@ class TrackersTest extends RestBase {
     public function testGetTrackerArtifactsExpertQueryWithNonexistentFieldReturnsError()
     {
         $query     = "nonexistent='Believe'";
-        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query='.$query);
         $response  = $this->getResponse($request);
         $this->assertEquals($response->getStatusCode(), 400);
     }
@@ -236,7 +236,7 @@ class TrackersTest extends RestBase {
     public function testGetTrackerArtifactsExpertQueryWithNotSupportedFieldReturnsError()
     {
         $query     = "openlist='On going'";
-        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query='.$query);
         $response  = $this->getResponse($request);
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -248,7 +248,7 @@ class TrackersTest extends RestBase {
     public function testGetTrackerArtifactsExpertQueryWithASyntaxErrorInQueryReturnsError()
     {
         $query     = "i_want_to='On going";
-        $request   = $this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/artifacts?values=all&expert_query='.$query);
+        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query='.$query);
         $response  = $this->getResponse($request);
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -265,7 +265,7 @@ class TrackersTest extends RestBase {
     }
 
     public function testGetParentArtifacts() {
-        $response         = $this->getResponse($this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/parent_artifacts'));
+        $response         = $this->getResponse($this->client->get('trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
         $parent_artifacts = $response->json();
 
         $this->assertEquals($response->getStatusCode(), 200);
