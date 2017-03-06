@@ -42,4 +42,12 @@ class NoArchive implements ArchiveInterface
     public function addFromString($localname, $contents)
     {
     }
+
+    public function getArchivePath()
+    {
+    }
+
+    public function isADirectory()
+    {
+    }
 }

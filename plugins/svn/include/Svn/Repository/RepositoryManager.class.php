@@ -301,7 +301,7 @@ class RepositoryManager
 
     public function dumpRepository(Repository $repository)
     {
-        return $this->svnadmin->dumpRepository($repository);
+        return $this->svnadmin->dumpRepository($repository, $repository->getSystemBackupPath());
     }
 
     public function purgeArchivedRepositories()

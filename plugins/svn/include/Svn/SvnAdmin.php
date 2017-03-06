@@ -43,35 +43,51 @@ class SvnAdmin
         $this->logger         = $logger;
     }
 
-    public function dumpRepository(Repository $repository)
+    public function dumpRepository(Repository $repository, $dump_path)
     {
-        $system_path = escapeshellarg($repository->getSystemPath());
-        $dump_name   = escapeshellarg($repository->getBackupFileName());
-        $dump_path   = escapeshellarg($repository->getSystemBackupPath());
-
         try {
-            $command = "umask 77 && mkdir -p $dump_path";
-            $this->system_command->exec($command);
+            $this->createDumpPath($dump_path);
+            $this->svnAdminDumpRepository($repository, $dump_path);
+            $this->removeReadPermissions($repository, $dump_path);
 
-            $command = "chown ". ForgeConfig::get('sys_http_user') .":".ForgeConfig::get('sys_http_user') .
-                " $dump_path && chmod 750 $dump_path";
-            $this->system_command->exec($command);
-
-            $command = "umask 77 && svnadmin dump --quiet $system_path > $dump_path/$dump_name";
-            $this->system_command->exec($command);
-            $this->logger->info('[svn '.$repository->getName().'] svnadmin: dump success');
-
-            $command = "chown ". ForgeConfig::get('sys_http_user') .":".ForgeConfig::get('sys_http_user') .
-                " $dump_path/$dump_name && chmod 640 $dump_path/$dump_name";
-            $this->system_command->exec($command);
-
-            $this->logger->debug('[svn '.$repository->getName().'] Backup done in [ '."$dump_path/$dump_name".']');
+            $dump_name = $repository->getBackupFileName();
+            $this->logger->debug('[svn ' . $repository->getName() . '] Backup done in [ ' . "$dump_path/$dump_name" . ']');
         } catch (System_Command_CommandException $e) {
             foreach ($e->output as $line) {
                 $this->logger->error('[svn '.$repository->getName().'] svnadmin: '.$line);
             }
             $this->logger->error('[svn '.$repository->getName().'] svnadmin returned with status '.$e->return_value);
         }
+    }
+
+    private function removeReadPermissions(Repository $repository, $dump_path)
+    {
+        $dump_name = escapeshellarg($dump_path . "/" . $repository->getBackupFileName());
+        $command   = "chown " . ForgeConfig::get('sys_http_user') . ":" . ForgeConfig::get('sys_http_user') .
+            " $dump_name && chmod 640 $dump_name";
+        $this->system_command->exec($command);
+    }
+
+    private function svnAdminDumpRepository(Repository $repository, $dump_path)
+    {
+        $system_path = escapeshellarg($repository->getSystemPath());
+        $dump_name   = escapeshellarg($dump_path ."/". $repository->getBackupFileName());
+
+        $command = "umask 77 && svnadmin dump --quiet $system_path > $dump_name";
+        $this->system_command->exec($command);
+        $this->logger->info('[svn ' . $repository->getName() . '] svnadmin: dump success');
+    }
+
+    private function createDumpPath($dump_path)
+    {
+        $dump_path = escapeshellarg($dump_path);
+
+        $command = "umask 77 && mkdir -p $dump_path";
+        $this->system_command->exec($command);
+
+        $command = "chown " . ForgeConfig::get('sys_http_user') . ":" . ForgeConfig::get('sys_http_user') .
+            " $dump_path && chmod 750 $dump_path";
+        $this->system_command->exec($command);
     }
 
     public function importRepository(Repository $repository)

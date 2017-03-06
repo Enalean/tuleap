@@ -49,4 +49,14 @@ class DirectoryArchive implements ArchiveInterface {
     public function addFromString($localname, $contents) {
         file_put_contents($this->archive_path.DIRECTORY_SEPARATOR.$localname, $contents);
     }
+
+    public function getArchivePath()
+    {
+        return $this->archive_path;
+    }
+
+    public function isADirectory()
+    {
+        return true;
+    }
 }

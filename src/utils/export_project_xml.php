@@ -130,8 +130,9 @@ try {
     $xml_security->enableExternalLoadOfEntities();
 
     $user = UserManager::instance()->forceLogin($username);
+    $temporary_dump_path_on_filesystem = $archive->getArchivePath() . time();
 
-    $xml_content       = $xml_exporter->export($project, $options, $user, $archive);
+    $xml_content       = $xml_exporter->export($project, $options, $user, $archive, $temporary_dump_path_on_filesystem);
     $users_xml_content = $users_collection->toXML();
 
     if ($display_xml) {
@@ -146,6 +147,10 @@ try {
     $xml_security->disableExternalLoadOfEntities();
 
     $archive->close();
+
+    $system_command = new System_Command();
+    $command = "rm -rf $temporary_dump_path_on_filesystem";
+    $system_command->exec($command);
 
     fwrite(STDOUT, "Archive $output created." . PHP_EOL);
 
