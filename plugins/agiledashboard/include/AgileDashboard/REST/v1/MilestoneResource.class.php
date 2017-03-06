@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
@@ -382,8 +383,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int    $offset Position of the first element to display {@from path}
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
-     * @return Array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
+     * @thorws 400
      * @throws 403
      * @throws 404
      */
@@ -405,8 +407,14 @@ class MilestoneResource extends AuthenticatedResource {
             throw new RestException(400, $exception->getMessage());
         }
 
-        $paginated_milestones_representations = $this->milestone_representation_builder
-            ->getPaginatedSubMilestonesRepresentations($milestone, $user, $fields, $criterion, $limit, $offset, $order);
+        try {
+            $paginated_milestones_representations = $this->milestone_representation_builder
+                ->getPaginatedSubMilestonesRepresentations(
+                    $milestone, $user, $fields, $criterion, $limit, $offset, $order
+                );
+        } catch (ScrumForMonoMilestoneDifferentThanOnePlanningException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
         $this->sendAllowHeaderForSubmilestones();
         $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());
