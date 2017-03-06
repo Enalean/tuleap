@@ -43,6 +43,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
         list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion);
 
+        $nature = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
                 FROM tracker_artifact AS parent
                     INNER JOIN tracker_field AS f ON (
@@ -56,16 +58,13 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
                     )
                     INNER JOIN tracker_changeset_value_artifactlink AS cva ON (
                         cva.changeset_value_id = cv.id
+                        AND cva.nature = $nature
                     )
                     INNER JOIN tracker_artifact AS submilestones ON (
                         submilestones.id = cva.artifact_id
                     )
                     INNER JOIN plugin_agiledashboard_planning AS planning ON (
                         planning.planning_tracker_id = submilestones.tracker_id
-                    )
-                    INNER JOIN tracker_hierarchy AS hierarchy ON (
-                        hierarchy.parent_id = parent.tracker_id
-                        AND hierarchy.child_id = submilestones.tracker_id
                     )
                     $from_status_statement
 
