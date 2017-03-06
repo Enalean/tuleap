@@ -24,7 +24,7 @@ require_once 'pre.php';
 require_once 'admin_utils.php';
 
 $controller = new Admin_Homepage_Controller(
-    new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
+    new CSRFSynchronizerToken($_SERVER['SCRIPT_NAME']),
     new Admin_Homepage_Dao(),
     $request,
     $GLOBALS['Response'],

@@ -24,7 +24,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 
 $controller = new ForgeAccess_AdminController(
-    new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
+    new CSRFSynchronizerToken($_SERVER['SCRIPT_NAME']),
     new ForgeAccess_ForgePropertiesManager(
         new ConfigDao(),
         ProjectManager::instance(),

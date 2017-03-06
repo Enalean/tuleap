@@ -116,8 +116,8 @@ class ForgeAccess_AdminController
         $this->redirectToIndex();
     }
 
-    public function notSiteAdmin() {
-        $this->response->redirect(get_server_url());
+    public function notSiteAdmin(HTTPRequest $request) {
+        $this->response->redirect($request->getServerUrl());
     }
 
     private function getTemplateDir()
@@ -126,7 +126,7 @@ class ForgeAccess_AdminController
     }
 
     private function redirectToIndex() {
-        $this->response->redirect($_SERVER['SCRIPT_URL']);
+        $this->response->redirect($_SERVER['SCRIPT_NAME']);
     }
 
     /** @return bool true if updated */
