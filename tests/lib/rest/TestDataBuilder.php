@@ -32,8 +32,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const EPICS_TRACKER_SHORTNAME    = 'epic';
     const RELEASES_TRACKER_SHORTNAME = 'rel';
     const SPRINTS_TRACKER_SHORTNAME  = 'sprint';
+    const TASKS_TRACKER_SHORTNAME    = 'task';
 
-    const TASKS_TRACKER_ID        = 10;
     const USER_STORIES_TRACKER_ID = 11;
     const DELETED_TRACKER_ID      = 12;
     const KANBAN_TRACKER_ID       = 13;
