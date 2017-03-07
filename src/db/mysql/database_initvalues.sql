@@ -1,22 +1,22 @@
 #
 # Copyright (c) Enalean 2014-2017. All rights reserved
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# 
+#
 # This file is a part of Tuleap.
-# 
+#
 # Tuleap is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # Tuleap is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 #
 # Purpose:
@@ -58,11 +58,11 @@ INSERT INTO user SET \
         theme = '', \
         language_id = 'en_US', \
         last_pwd_update = '0';
-        
+
 INSERT INTO user_access SET \
         user_id = 100, \
         last_access_date = '0';
-        
+
 INSERT INTO user SET \
         user_id = 101, \
         user_name = 'admin', \
@@ -89,30 +89,10 @@ INSERT INTO user SET \
         theme = '', \
         language_id = 'en_US', \
         last_pwd_update = '0';
-        
+
 INSERT INTO user_access SET \
         user_id = 101, \
         last_access_date = '0';
-        
-
-#
-# Default Data for 'group_desc'
-#
-INSERT INTO group_desc SET \
-		group_desc_id='101' , \
-		desc_required='1' , \
-		desc_name='project_desc_name:full_desc' , \
-		desc_description='project_desc_desc:full_desc' , \
-		desc_rank='10' , \
-		desc_type='text';
-		
-INSERT INTO group_desc SET \
-		group_desc_id='104' , \
-		desc_required='0' , \
-		desc_name='project_desc_name:other_comments' , \
-		desc_description='project_desc_desc:other_comments' , \
-		desc_rank='100' , \
-		desc_type='text';
 
 #
 # Default Data for 'groups'
@@ -291,7 +271,7 @@ INSERT INTO frs_processor VALUES ('9999','Other','90','100');
 #
 # Default data for Software Map
 #
-    
+
 
 INSERT INTO trove_cat (trove_cat_id, version, parent, root_parent, shortname, fullname, description, count_subcat, count_subproj, fullpath, fullpath_ids, mandatory) VALUES (1, 2000031601, 0, 0, 'topic', 'Topic', 'Topic categorization.', 0, 0, 'Topic', '1', 0);
 INSERT INTO trove_cat (trove_cat_id, version, parent, root_parent, shortname, fullname, description, count_subcat, count_subproj, fullpath, fullpath_ids, mandatory) VALUES (2, 2000031601, 0, 0, 'license', 'License', 'License terms under which the resource is distributed.', 0, 0, 'License', '2', 0);
@@ -336,7 +316,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 --
 -- Insert special ugroup values
 --
--- Apart from the mandatory 'nobody', 'anonymous_users', 'registered_users', 'project_members' and  
+-- Apart from the mandatory 'nobody', 'anonymous_users', 'registered_users', 'project_members' and
 -- 'project_admins', the table lists all possible roles in the 'User Permissions' matrix.
 -- If you modify anything here, check also www/project/admin/ugroup_utils.php
 
@@ -628,10 +608,10 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help',1 ,'Get Help');
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers',0 ,'Project Developer Discussion');
 
--- 
+--
 -- Layouts
--- 
-INSERT INTO layouts (id, name, description, scope) VALUES 
+--
+INSERT INTO layouts (id, name, description, scope) VALUES
 (1, '2 columns', 'Simple layout made of 2 columns', 'S'),
 (2, '3 columns', 'Simple layout made of 3 columns', 'S'),
 (3, 'Left', 'Simple layout made of a main column and a small, left sided, column', 'S'),
@@ -642,43 +622,43 @@ INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (
 
 -- Users
 
-INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
-SELECT user_id, 'u', 1, 1 
+INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default)
+SELECT user_id, 'u', 1, 1
 FROM user;
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT user_id, 'u', 1, 1, 'myprojects', 0
 FROM user;
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT user_id, 'u', 1, 1, 'mybookmarks', 1
 FROM user;
 
 -- Add mydocman only if docman is installed
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT user_id, 'u', 1, 1, 'mydocman', 2
 FROM user, plugin
 WHERE plugin.name = 'docman';
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 3
 FROM user;
 
 -- Add myadmin only to current admins
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT DISTINCT user_id, 'u', 1, 2, 'myadmin', -2
 FROM user_group
 WHERE group_id = 1
   AND admin_flags = 'A';
 
 -- Add mysystemevent only to current admins
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT DISTINCT user_id, 'u', 1, 2, 'mysystemevent', -3
 FROM user_group
 WHERE group_id = 1
   AND admin_flags = 'A';
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT user_id, 'u', 1, 2, 'mymonitoredfp', 1
 FROM user;
 
@@ -686,48 +666,48 @@ FROM user;
 
 -- Projects
 
-INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
-SELECT group_id, 'g', 1, 1 
+INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default)
+SELECT group_id, 'g', 1, 1
 FROM groups;
 
 -- First column
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectdescription', 0
 FROM groups;
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectclassification', 1
 FROM groups;
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectpublicareas', 2
 FROM groups;
 
 -- Second column
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 2, 'projectmembers', 0
 FROM groups;
 
 -- only if News is used
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 2, 'projectlatestnews', 1
 FROM service
 WHERE short_name = 'news' AND is_active = 1 AND is_used = 1;
 
 -- only if FRS is used
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 2, 'projectlatestfilereleases', 2
 FROM service
 WHERE short_name = 'file' AND is_active = 1 AND is_used = 1;
 
 -- only if SVN is used
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 2, 'projectlatestsvncommits', 3
 FROM service
 WHERE short_name = 'svn' AND is_active = 1 AND is_used = 1;
 
 -- only if CVS is used
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 4
 FROM service
 WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
