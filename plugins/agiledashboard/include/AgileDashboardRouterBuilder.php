@@ -267,7 +267,8 @@ class AgileDashboardRouterBuilder {
         return new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->getMilestoneFactory(),
             $this->getBacklogStrategyFactory(),
-            EventManager::instance()
+            EventManager::instance(),
+            $this->getMonoMileStoneChecker()
         );
     }
 

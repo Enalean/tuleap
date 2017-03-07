@@ -41,7 +41,8 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         array $status_count,
         array $backlog_trackers,
         $has_user_priority_change_permission,
-        $representation_type
+        $representation_type,
+        $is_mono_milestone_enabled
     ) {
         $this->id                   = JsonCast::toInt($milestone->getArtifactId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
@@ -52,7 +53,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->submitted_on         = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity             = JsonCast::toFloat($milestone->getCapacity());
         $this->remaining_effort     = JsonCast::toFloat($milestone->getRemainingEffort());
-        $this->sub_milestone_type   = $this->getSubmilestoneType($milestone);
+        $this->sub_milestone_type   = $this->getSubmilestoneType($milestone, $is_mono_milestone_enabled);
 
         $this->planning = new PlanningReference();
         $this->planning->build($milestone->getPlanning());
@@ -163,17 +164,33 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         );
     }
 
-    private function getSubmilestoneType(Planning_Milestone $milestone) {
+    private function getSubmilestoneType(Planning_Milestone $milestone, $is_mono_milestone_enabled)
+    {
         $submilestone_type = null;
-        $child_planning    = PlanningFactory::build()->getChildrenPlanning($milestone->getPlanning());
 
-        if ($child_planning) {
+        if ($is_mono_milestone_enabled === true) {
+            $planning = $this->getPlanning($milestone);
+        } else {
+            $planning = $this->getChildrenPlanning($milestone);
+        }
+
+        if ($planning) {
             $tracker_reference = new TrackerReference();
-            $tracker_reference->build($child_planning->getPlanningTracker());
+            $tracker_reference->build($planning->getPlanningTracker());
 
             $submilestone_type = $tracker_reference;
         }
 
         return $submilestone_type;
+    }
+
+    private function getChildrenPlanning(Planning_Milestone $milestone)
+    {
+        return PlanningFactory::build()->getChildrenPlanning($milestone->getPlanning());
+    }
+
+    private function getPlanning(Planning_Milestone $milestone)
+    {
+        return PlanningFactory::build()->getPlanning($milestone->getPlanning()->getId());
     }
 }

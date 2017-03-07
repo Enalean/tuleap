@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 
 class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
 
@@ -31,14 +32,21 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
     /** @var EventManager */
     private $event_manager;
 
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory,
-        EventManager $event_manager
+        EventManager $event_manager,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
-        $this->milestone_factory        = $milestone_factory;
-        $this->backlog_strategy_factory = $backlog_strategy_factory;
-        $this->event_manager            = $event_manager;
+        $this->milestone_factory            = $milestone_factory;
+        $this->backlog_strategy_factory     = $backlog_strategy_factory;
+        $this->event_manager                = $event_manager;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type) {
@@ -47,13 +55,18 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
             $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
         }
 
+        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
+            $milestone->getProject()->getID()
+        );
+
         $milestone_representation = new MilestoneRepresentation();
         $milestone_representation->build(
             $milestone,
             $status_count,
             $this->getBacklogTrackers($milestone),
             $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
-            $representation_type
+            $representation_type,
+            $is_scrum_mono_milestone_enabled
         );
 
         $this->event_manager->processEvent(

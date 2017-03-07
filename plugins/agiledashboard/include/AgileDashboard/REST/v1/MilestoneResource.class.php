@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
@@ -53,7 +55,7 @@ use AgileDashboard_Milestone_MilestoneDao;
 use MilestoneParentLinker;
 use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
-use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+
 
 /**
  * Wrapper for milestone related REST methods
@@ -159,10 +161,16 @@ class MilestoneResource extends AuthenticatedResource {
 
         $this->event_manager = EventManager::instance();
 
+        $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
+            new ScrumForMonoMilestoneDao(),
+            $planning_factory
+        );
+
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $this->backlog_strategy_factory,
-            $this->event_manager
+            $this->event_manager,
+            $scrum_for_mono_milestone_checker
         );
 
         $this->milestone_parent_linker = new MilestoneParentLinker(

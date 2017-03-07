@@ -28,6 +28,8 @@ use \Planning_MilestoneFactory;
 use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use \Tuleap\REST\Header;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
@@ -99,7 +101,8 @@ class ProjectMilestonesResource {
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $backlog_strategy_factory,
-            EventManager::instance()
+            EventManager::instance(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionConverter();
