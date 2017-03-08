@@ -95,7 +95,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
 
@@ -107,7 +107,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfDateFieldIsUsedForEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(aMockDateWithoutTimeField()->build());
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns(aMockDateWithoutTimeField()->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
 
@@ -119,7 +119,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
         $expr = new NotEqualComparison('field', new SimpleValueWrapper('value'));
 
@@ -131,7 +131,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new LesserThanComparison('int', new SimpleValueWrapper(20));
 
@@ -143,7 +143,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new GreaterThanComparison('int', new SimpleValueWrapper(20));
 
@@ -155,7 +155,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanOrEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new LesserThanOrEqualComparison('int', new SimpleValueWrapper(20));
 
@@ -167,7 +167,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanOrEqualComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new GreaterThanOrEqualComparison('int', new SimpleValueWrapper(20));
 
@@ -179,7 +179,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForBetweenComparison()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new BetweenComparison(
             'int',
@@ -197,7 +197,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
     public function itCollectsNonExistentFieldsIfFieldIsUnknown()
     {
-        stub($this->formelement_factory)->getUsedFieldByNameForUser(101, "field", $this->user)->returns(null);
+        stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns(null);
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
 
@@ -210,7 +210,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
@@ -226,7 +226,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumeric()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper(20));
@@ -242,7 +242,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotDate()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
@@ -258,7 +258,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotClosedList()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
         $expr = new EqualComparison('field', new SimpleValueWrapper('planned'));
@@ -274,7 +274,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new LesserThanComparison('field', new SimpleValueWrapper('value'));
@@ -290,7 +290,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new GreaterThanComparison('field', new SimpleValueWrapper('value'));
@@ -306,7 +306,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanOrEqualComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new LesserThanOrEqualComparison('field', new SimpleValueWrapper('value'));
@@ -322,7 +322,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanOrEqualComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new GreaterThanOrEqualComparison('field', new SimpleValueWrapper('value'));
@@ -338,7 +338,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotNumericForBetweenComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new BetweenComparison(
@@ -360,7 +360,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotListForInComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new InComparison(
@@ -384,7 +384,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     public function itCollectsUnsupportedFieldsIfFieldIsNotListForNotInComparison()
     {
         stub($this->formelement_factory)
-            ->getUsedFieldByNameForUser(101, "field", $this->user)
+            ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new NotInComparison(

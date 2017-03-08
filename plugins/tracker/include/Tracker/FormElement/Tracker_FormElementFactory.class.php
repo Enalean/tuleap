@@ -300,6 +300,19 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * @return null|\Tracker_FormElement_Field
+     */
+    public function getUsedFormElementFieldByNameForUser($tracker_id, $field_name, PFUser $user)
+    {
+        $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
+        if ($field && array_search(get_class($field), array_merge($this->classnames, $this->special_classnames))) {
+            return $field;
+        }
+
+        return null;
+    }
+
+    /**
      * Return a selectbox field. This field is used and the user can see its value.
      *
      * @param int    $tracker_id

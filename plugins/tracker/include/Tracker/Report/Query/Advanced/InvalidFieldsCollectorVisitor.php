@@ -207,7 +207,7 @@ class InvalidFieldsCollectorVisitor implements Visitor
     ) {
         $field_name = $comparison->getField();
 
-        $field = $this->formelement_factory->getUsedFieldByNameForUser(
+        $field = $this->formelement_factory->getUsedFormElementFieldByNameForUser(
             $parameters->getTracker()->getId(),
             $field_name,
             $parameters->getUser()
