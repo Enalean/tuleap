@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All rights reserved
+ * Copyright (c) Enalean, 2014-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,7 @@ class KanbanTest extends RestBase {
         $kanban   = $response->json();
 
         $this->assertEquals('My first kanban', $kanban['label']);
-        $this->assertEquals(REST_TestDataBuilder::KANBAN_TRACKER_ID, $kanban['tracker']['id']);
+        $this->assertEquals($this->kanban_tracker_id, $kanban['tracker']['id']);
 
         $this->assertEquals('Archive', $kanban['archive']['label']);
         $this->assertArrayHasKey('user_can_add_in_place', $kanban['backlog']);
