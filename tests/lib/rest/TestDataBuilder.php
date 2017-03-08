@@ -35,8 +35,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const TASKS_TRACKER_SHORTNAME        = 'task';
     const USER_STORIES_TRACKER_SHORTNAME = 'story';
     const DELETED_TRACKER_SHORTNAME      = 'delete';
+    const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
 
-    const KANBAN_TRACKER_ID       = 13;
     const LEVEL_ONE_TRACKER_ID    = 31;
     const LEVEL_TWO_TRACKER_ID    = 32;
     const LEVEL_THREE_TRACKER_ID  = 33;
@@ -686,6 +686,14 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this->getTracker(self::DELETED_TRACKER_SHORTNAME);
     }
 
+    /**
+     * @return Tracker
+     */
+    private function getKanbanTracker()
+    {
+        return $this->getTracker(self::KANBAN_TRACKER_SHORTNAME);
+    }
+
     private function getTracker($tracker_shortname)
     {
         $project    = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
@@ -702,17 +710,21 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     public function generateKanban() {
         echo "Create 'My first kanban'\n";
+
+        $tracker    = $this->getKanbanTracker();
+        $tracker_id = $tracker->getId();
+
         $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory, $this->hierarchy_checker);
-        $kanban_manager->createKanban('My first kanban', self::KANBAN_TRACKER_ID);
+        $kanban_manager->createKanban('My first kanban', $tracker_id);
 
         echo "Populate kanban\n";
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Do something',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => 100,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_1')->getId() => 'Do something',
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId() => 100,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
             '',
@@ -720,12 +732,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
 
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Do something v2',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => 100,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_1')->getId() => 'Do something v2',
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId() => 100,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
             '',
@@ -733,12 +745,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
 
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Doing something',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_1')->getId() => 'Doing something',
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
             '',
@@ -746,12 +758,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
 
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Doing something v2',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_1')->getId() => 'Doing something v2',
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
             '',
@@ -759,12 +771,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
 
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Something archived',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_DONE_VALUE_ID,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_1')->getId() => 'Something archived',
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId() => self::KANBAN_DONE_VALUE_ID,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
             '',
@@ -772,12 +784,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
         );
 
         $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Something archived v2',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_DONE_VALUE_ID,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'summary_1')->getId() => 'Something archived v2',
+            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId() => self::KANBAN_DONE_VALUE_ID,
         );
 
         $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $this->tracker_factory->getTrackerById($tracker_id),
             $fields_data,
             $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
             '',

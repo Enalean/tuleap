@@ -61,6 +61,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $tasks_tracker_id;
     protected $user_stories_tracker_id;
     protected $deleted_tracker_id;
+    protected $kanban_tracker_id;
 
     protected $project_ids = array();
     protected $tracker_ids = array();
@@ -204,5 +205,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         if (isset($this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::DELETED_TRACKER_SHORTNAME])) {
             $this->deleted_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::DELETED_TRACKER_SHORTNAME];
         }
+
+        $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
     }
 }
