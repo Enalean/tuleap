@@ -776,6 +776,7 @@ admin_project	access_label	Accès au projet
 admin_project	description_label	Description
 admin_project	more_label	Plus d'information
 admin_project	admin_label	Administration du projet
+admin_project	homepage_label	Page d'accueil du projet
 admin_project	members_label	Membres du projet
 admin_project	pending_label	Docs supprimés en attente
 admin_project	manage_access_label	Gérer l'accès

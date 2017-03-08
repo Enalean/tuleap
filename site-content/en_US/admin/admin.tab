@@ -783,6 +783,7 @@ admin_project	project_details_label	Project details
 admin_project	access_label	Project access
 admin_project	description_label	Description
 admin_project	more_label	More information
+admin_project	homepage_label	Project homepage
 admin_project	admin_label	Project administration
 admin_project	members_label	Project members
 admin_project	pending_label	Pending deleted docs
