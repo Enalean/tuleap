@@ -265,19 +265,47 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Clone a given user group from another one
      *
-     * @param Integer $sourceUgroupId Id of the user group from which we will copy users
-     * @param Integer $targetUgroupId Id of the target user group
+     * @param Integer $source_ugroup_id Id of the user group from which we will copy users
+     * @param Integer $target_ugroup_id Id of the target user group
      *
      * @return Boolean
      */
-    public function cloneUgroup($sourceUgroupId, $targetUgroupId) {
-        $sourceUgroupId = $this->da->escapeInt($sourceUgroupId);
-        $targetUgroupId = $this->da->escapeInt($targetUgroupId);
-        $sql            = "INSERT INTO ugroup_user (ugroup_id, user_id)
-                             SELECT $targetUgroupId, user_id
-                             FROM ugroup_user
-                             WHERE ugroup_id = $sourceUgroupId";
+    public function cloneUgroup($source_ugroup_id, $target_ugroup_id) {
+        $source_ugroup_id = $this->da->escapeInt($source_ugroup_id);
+        $target_ugroup_id = $this->da->escapeInt($target_ugroup_id);
+
+        if ($this->isTargetProjectPrivate($target_ugroup_id)) {
+            $sql = "INSERT INTO ugroup_user (ugroup_id, user_id)
+                    SELECT $target_ugroup_id, user_id
+                    FROM ugroup_user
+                      INNER JOIN user_group USING (user_id)
+                      INNER JOIN ugroup ON (ugroup.source_id = $source_ugroup_id)
+                    WHERE ugroup_user.ugroup_id = $source_ugroup_id
+                      AND ugroup.ugroup_id = $target_ugroup_id
+                      AND user_group.group_id = ugroup.group_id";
+        } else {
+            $sql = "INSERT INTO ugroup_user (ugroup_id, user_id)
+                    SELECT $target_ugroup_id, user_id
+                    FROM ugroup_user
+                    WHERE ugroup_id = $source_ugroup_id";
+        }
+
         return $this->update($sql);
+    }
+
+    private function isTargetProjectPrivate($target_ugroup_id)
+    {
+        $private_access = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+
+        $sql = "SELECT *
+                FROM ugroup
+                INNER JOIN groups USING (group_id)
+                WHERE groups.access = $private_access
+                AND ugroup.ugroup_id = $target_ugroup_id";
+
+        $dar = $this->retrieve($sql);
+
+        return $dar->rowCount() === 1;
     }
 
     /**
@@ -293,5 +321,3 @@ class UGroupUserDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
-?>

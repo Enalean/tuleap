@@ -250,8 +250,8 @@ class UGroupBinding {
             return false;
         }
         try {
-            $this->reloadUgroupBinding($ugroupId, $sourceId);
             $this->updateUgroupBinding($ugroupId, $sourceId);
+            $this->reloadUgroupBinding($ugroupId, $sourceId);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             return false;
