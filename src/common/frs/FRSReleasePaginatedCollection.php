@@ -18,38 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\FRS\REST\v1;
+namespace Tuleap\FRS;
 
-use FRSPackage;
-use Project;
-use Tuleap\Project\REST\ProjectReference;
-
-class PackageRepresentation extends PackageMinimalRepresentation
+class FRSReleasePaginatedCollection
 {
     /**
-     * @var ProjectReference
+     * @var \FRSRelease[]
      */
-    public $project;
+    private $releases;
 
     /**
-     * @var array
+     * @var integer
      */
-    public $resources;
+    private $total_size;
 
-    public function build(FRSPackage $package)
+    public function __construct(array $release, $total_size)
     {
-        parent::build($package);
-
-        $this->resources = array(
-            'releases' => array(
-                'uri' => $this->uri .'/'. ReleaseRepresentation::ROUTE
-            )
-        );
+        $this->releases   = $release;
+        $this->total_size = $total_size;
     }
 
-    public function setProject(Project $project)
+    /**
+     * @return \FRSRelease[]
+     */
+    public function getReleases()
     {
-        $this->project = new ProjectReference();
-        $this->project->build($project);
+        return $this->releases;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalSize()
+    {
+        return $this->total_size;
     }
 }

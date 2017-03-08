@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSReleasePaginatedCollection;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 
@@ -142,6 +143,20 @@ class FRSReleaseFactory {
         }
 
         return $releases;
+    }
+
+    /**
+     * @return FRSReleasePaginatedCollection
+     */
+    public function  getPaginatedActiveFRSReleasesForUser(FRSPackage $package, PFUser $user, $limit, $offset) {
+        $dao        = $this->_getFRSReleaseDao();
+        $dar        = $dao->searchPaginatedActiveReleasesByPackageId($package->getPackageID(), $limit, $offset);
+        $total_size = $dao->foundRows();
+
+        return new FRSReleasePaginatedCollection(
+            $this->instantiateActivePackagesFromDar($package->getPackageID(), $package->getGroupID(), $dar, $user),
+            $total_size
+        );
     }
 
     /**
