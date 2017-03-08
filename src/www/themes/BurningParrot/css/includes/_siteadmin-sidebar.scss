@@ -86,6 +86,8 @@
 }
 
 .admin-sidebar-section-title {
+    display: flex;
+    align-items: center;
     margin: 0 0 $tlp-spacing / 2;
     color: transparentize(#ffffff, .65);
     font-size: 14px;
@@ -100,6 +102,10 @@
     > .fa-cubes {
         margin: 0 5px 0 0;
     }
+
+    > .tlp-badge-primary {
+        margin: 0 0 0 10px;
+    }
 }
 
 // scss-lint:disable VendorPrefix
@@ -110,15 +116,15 @@
     color: transparentize(#ffffff, .2);
 
     &::-webkit-input-placeholder {
-        color: transparentize(#ffffff, .8);
+        color: transparentize(#ffffff, .65);
     }
 
     &::-moz-placeholder {
-        color: transparentize(#ffffff, .8);
+        color: transparentize(#ffffff, .65);
     }
 
     &:-ms-input-placeholder {
-        color: transparentize(#ffffff, .8);
+        color: transparentize(#ffffff, .65);
         opacity: 1;
     }
 }
