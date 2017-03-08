@@ -27,6 +27,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/d3/v4/d3.min.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/statistics-chart-factory.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/generate-pie-charts.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/system-events-admin-homepage.js');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

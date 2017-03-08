@@ -140,6 +140,7 @@
 
 .siteadmin-homepage-system-events-queue {
     text-decoration: none;
+    cursor: pointer;
 
     &:hover {
         background: transparentize($tlp-theme-color, .95);
@@ -277,7 +278,7 @@
 }
 
 .siteadmin-homepage-users-slice-text,
-.siteadmin-homepage-projects-slice-text{
+.siteadmin-homepage-projects-slice-text {
     font-weight: 600;
 }
 
