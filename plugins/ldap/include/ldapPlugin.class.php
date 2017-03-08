@@ -716,7 +716,7 @@ class LdapPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_deletion($params) {
-        $ldap_usergroup_manager = new LDAP_UserGroupManager($this->getLdap());
+        $ldap_usergroup_manager = $this->getLdapUserGroupManager();
         $ldap_usergroup_manager->setId($params['ugroup_id']);
 
         $ldap_usergroup_manager->unbindFromBindLdap();
@@ -775,9 +775,7 @@ class LdapPlugin extends Plugin {
             // No ldap for project 100
             if($params['row']['group_id'] != 100) {
                 $hp = Codendi_HTMLPurifier::instance();
-                $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
-
-                $baseUrl = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'];
+                $ldapUserGroupManager = $this->getLdapUserGroupManager();
 
                 $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
                 $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a><br/>';
@@ -867,7 +865,7 @@ class LdapPlugin extends Plugin {
      */
     function ugroup_update_users_allowed(array $params) {
         if ($params['ugroup_id']) {
-            $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+            $ldapUserGroupManager = $this->getLdapUserGroupManager();
             if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['ugroup_id'])) {
                 $params['allowed'] = false;
             }
@@ -929,27 +927,36 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function codendi_daily_start($params) {
+    public function codendi_daily_start($params)
+    {
         if ($this->isLdapAuthType() && $this->isDailySyncEnabled()) {
-                $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap(), $this->getLogger());
-                $ldapQuery->syncAll();
+            $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap(), $this->getLogger());
+            $ldapQuery->syncAll();
 
-                $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
-                if($retentionPeriod != NULL && $retentionPeriod!= "") {
-                    $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
-                    $ldapCleanUpManager->cleanAll();
-                }
-
-                //Synchronize the ugroups with the ldap ones
-                $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
-                $ldapUserGroupManager->synchronizeUgroups();
-
-                $ldap_project_group_manager = new LDAP_ProjectGroupManager($this->getLdap());
-                $ldap_project_group_manager->synchronize();
-
-                return true;
+            $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
+            if($retentionPeriod != NULL && $retentionPeriod!= "") {
+                $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+                $ldapCleanUpManager->cleanAll();
             }
+
+            $this->synchronizeProjectMembers();
+            $this->synchronizeStaticUgroupMembers();
+
+            return true;
         }
+    }
+
+    private function synchronizeProjectMembers()
+    {
+        $ldap_project_group_manager = new LDAP_ProjectGroupManager($this->getLdap());
+        $ldap_project_group_manager->synchronize();
+    }
+
+    private function synchronizeStaticUgroupMembers()
+    {
+        $ldapUserGroupManager = $this->getLdapUserGroupManager();
+        $ldapUserGroupManager->synchronizeUgroups();
+    }
 
     public function root_daily_start($params) {
         if ($this->isLdapAuthType()) {
@@ -1129,5 +1136,13 @@ class LdapPlugin extends Plugin {
         $new_ugroup_id    = $params['new_ugroup_id'];
 
         $dao->duplicateLdapBinding($source_ugroup_id, $new_ugroup_id);
+    }
+
+    /**
+     * @return LDAP_UserGroupManager
+     */
+    private function getLdapUserGroupManager()
+    {
+        return new LDAP_UserGroupManager($this->getLdap(), ProjectManager::instance(), $this->getLogger());
     }
 }

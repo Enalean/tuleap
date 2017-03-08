@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -29,6 +29,7 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
 
     public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding, $ldap_plugin) {
         parent::__construct($ugroup, $ugroup_binding);
+
         $this->plugin_binding = $plugin_binding;
         $this->ldap_plugin    = $ldap_plugin;
     }
@@ -105,7 +106,12 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
     private function getLDAPTitle() {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $ldapUserGroupManager = new LDAP_UserGroupManager($this->ldap_plugin->getLdap());
+        $ldapUserGroupManager = new LDAP_UserGroupManager(
+            $this->ldap_plugin->getLdap(),
+            ProjectManager::instance(),
+            $this->ldap_plugin->getLogger()
+        );
+
         $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($this->ugroup->getId());
 
         if($ldapGroup !== null) {
@@ -118,5 +124,3 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
         return $title;
     }
 }
-
-?>

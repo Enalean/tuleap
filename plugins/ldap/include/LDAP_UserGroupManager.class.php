@@ -1,24 +1,22 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet, 2008
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'LDAP_UserGroupDao.class.php';
@@ -27,9 +25,37 @@ require_once 'LDAP_GroupManager.class.php';
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
-class LDAP_UserGroupManager 
-extends LDAP_GroupManager
+class LDAP_UserGroupManager extends LDAP_GroupManager
 {
+    private $project_id;
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var LDAP
+     */
+    private $ldap;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(LDAP $ldap, ProjectManager $project_manager, Logger $logger)
+    {
+        parent::__construct($ldap);
+
+        $this->project_manager = $project_manager;
+        $this->logger          = $logger;
+    }
+
+    public function setProjectId($project_id) {
+        $this->project_id = $project_id;
+    }
+
     /**
      * Add (by name) new users into a user group.
      * 
@@ -141,18 +167,64 @@ extends LDAP_GroupManager
      *
      * @return void
      */
-    function synchronizeUgroups() {
+    public function synchronizeUgroups()
+    {
         $dar = $this->getSynchronizedUgroups();
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
         foreach($dar as $row) {
                 $this->setId($row['ugroup_id']);
                 $this->setGroupDn($row['ldap_group_dn']);
+                $this->setProjectId($row['project_id']);
                 $isNightlySynchronized = self::AUTO_SYNCHRONIZATION;
                 $displayFeedback       = false;
                 $this->bindWithLdap($row['bind_option'], $isNightlySynchronized, $displayFeedback);
             }
         }
     }
-}
 
-?>
+    protected function diffDbAndDirectory($option)
+    {
+        parent::diffDbAndDirectory($option);
+
+        $project = $this->project_manager->getProject($this->project_id);
+        if (! $project->isPublic()) {
+            $this->logger->warn("The synchornisation for ugroup #$this->id is done in a private projects.");
+            $this->logger->warn("Non project members will not be added or will be removed of this ugroup.");
+
+            $project_member_ids = $project->getMembersId();
+
+            $this->clearUsersToAddInPrivateProjectContext($project_member_ids);
+            $this->addInUsersToRemoveUsersThatAreNotProjectMember($project_member_ids);
+        }
+    }
+
+    private function clearUsersToAddInPrivateProjectContext(array $project_member_ids)
+    {
+        foreach ($this->usersToAdd as $key => $user_id) {
+            if (! in_array($user_id, $project_member_ids)) {
+                $this->logger->warn("The user #$user_id will not be added to this ugroup because he/she is not project member.");
+
+                unset($this->usersToAdd[$key]);
+            }
+        }
+    }
+
+    private function addInUsersToRemoveUsersThatAreNotProjectMember(array $project_member_ids)
+    {
+        $ugroup_members = $this->getDbGroupMembersIds($this->id);
+        foreach ($ugroup_members as $user_id) {
+            if (! in_array($user_id, $project_member_ids)) {
+                $this->logger->warn("The user #$user_id will be removed of this ugroup because he/she is not project member.");
+                $this->usersToRemove[$user_id] = $user_id;
+                $this->removeUserFromNotImpactedAsItWillBeDeleted($user_id);
+            }
+        }
+    }
+
+    private function removeUserFromNotImpactedAsItWillBeDeleted($user_id)
+    {
+        if (isset($this->usersNotImpacted[$user_id])) {
+            unset($this->usersNotImpacted[$user_id]);
+        }
+    }
+}
