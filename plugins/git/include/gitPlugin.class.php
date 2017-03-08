@@ -78,6 +78,8 @@ use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
+use Tuleap\Git\DiskUsage\Collector;
+use Tuleap\Git\DiskUsage\Retriever;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -736,23 +738,24 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * Hook to collect docman disk size usage per project
+     * Hook to collect Git disk size usage per project
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_collect_project($params) {
-        $row = $params['project_row'];
-        $sum = 0;
+    public function plugin_statistics_disk_usage_collect_project($params)
+    {
+        $row            = $params['project_row'];
+        $disk_usage_dao = $params['DiskUsageManager']->_getDao();
+        $retriever      = new Retriever($disk_usage_dao);
+        $collector      = new Collector($params['DiskUsageManager'], new Git_LogDao(), $retriever);
+        $project        = new Project($row);
 
-        // Git-Shell backend
-        $path = $GLOBALS['sys_data_dir'].'/gitroot/'.strtolower($row['unix_group_name']);
-        $sum += $params['DiskUsageManager']->getDirSize($path);
-
-        // Gitolite backend
-        $path = $GLOBALS['sys_data_dir'].'/gitolite/repositories/'.strtolower($row['unix_group_name']);
-        $sum += $params['DiskUsageManager']->getDirSize($path);
-
-        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], self::SERVICE_SHORTNAME, $sum, $_SERVER['REQUEST_TIME']);
+        $disk_usage_dao->addGroup(
+            $row['group_id'],
+            self::SERVICE_SHORTNAME,
+            $collector->collectForGitoliteRepositories($project),
+            $_SERVER['REQUEST_TIME']
+        );
     }
 
     /**

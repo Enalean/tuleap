@@ -277,7 +277,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
    }
    
-     /**
+    /**
      * Compute average size of user_id
      * 
      * @param int $user_id
@@ -315,16 +315,17 @@ class Statistics_DiskUsageDao extends DataAccessObject {
             ' WHERE '.$this->returnDateStatement($date).
             ' AND group_id = '.$this->da->escapeInt($groupId);
         return $this->retrieve($sql);
-    }
-    
-    public function returnTotalSizeProjectNearDate($group_id, $date) {
+   }
+
+   public function returnTotalSizeProjectNearDate($group_id, $date) {
         $sql = 'SELECT sum(size) as size'.
             ' FROM plugin_statistics_diskusage_group '.
             ' WHERE '.$this->findFirstDateLowerThan($date, 'plugin_statistics_diskusage_group').
             ' AND group_id = '.$this->da->escapeInt($group_id);
         return $this->retrieve($sql);
-    }
-     /**
+   }
+
+    /**
      * Compute evolution size of  project for a given period
      * 
      * @param date $endDate , date $startDate
@@ -369,7 +370,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    
+
     /**
      * Compute evolution size of  user for a given period
      * 
@@ -469,6 +470,19 @@ class Statistics_DiskUsageDao extends DataAccessObject {
 
         return $this->update($sql);
     }
-}
 
-?>
+    public function getLastSizeForService($project_id, $service_name)
+    {
+        $project_id   = $this->da->escapeInt($project_id);
+        $service_name = $this->da->quoteSmart($service_name);
+
+        $sql = "SELECT size
+                FROM plugin_statistics_diskusage_group
+                WHERE group_id = $project_id
+                  AND service = $service_name
+                ORDER BY date
+                DESC LIMIT 1";
+
+        return $this->retrieveFirstRow($sql);
+    }
+}

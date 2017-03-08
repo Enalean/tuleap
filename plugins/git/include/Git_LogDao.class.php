@@ -122,6 +122,21 @@ class Git_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function hasRepositoriesUpdatedAfterGivenDate($project_id, $date)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $date       = $this->da->escapeInt($date);
+
+        $sql = "SELECT NULL
+                FROM plugin_git_log l
+                INNER JOIN plugin_git r USING(repository_id)
+                WHERE r.project_id = $project_id
+                  AND r.repository_deletion_date  = '0000-00-00 00:00:00'
+                  AND l.push_date > $date";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
+
     /**
      * Return the SQL Statement for logs daily pushs
      *
