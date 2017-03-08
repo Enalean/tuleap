@@ -735,7 +735,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null)
     {
         if (isset($value['value'][self::GRANTED_GROUPS])) {
-            if (isset($value['value']['is_used_by_default']) === true && count($value['value'][self::GRANTED_GROUPS]) === 0) {
+            if (isset($value['value']['is_used_by_default']) === true
+                && $value['value']['is_used_by_default'] === true
+                && count($value['value'][self::GRANTED_GROUPS]) === 0
+            ) {
                 throw new Tracker_FormElement_InvalidFieldException(
                     'Permission field is required please choose a group in list'
                 );
