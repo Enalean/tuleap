@@ -37,6 +37,7 @@ class ProjectDetailsPresenter
     const GET_MORE_INFO_LINKS = 'get_more_info_links';
 
     public $public_name;
+    public $short_name;
     public $id;
     public $description;
     public $information_label;
@@ -45,6 +46,7 @@ class ProjectDetailsPresenter
     public $access_label;
     public $description_label;
     public $more_label;
+    public $homepage_label;
     public $admin_label;
     public $members_label;
     public $pending_label;
@@ -75,6 +77,7 @@ class ProjectDetailsPresenter
         $this->id          = $project->getID();
         $this->public_name = $project->getUnconvertedPublicName();
         $this->unix_name   = $project->getUnixNameMixedCase();
+        $this->short_name  = $project->getUnixName();
         $this->description = $project->getDescription();
         $this->is_system   = $project->getStatus() === Project::STATUS_SYSTEM;
         $this->is_active   = $project->isActive();
@@ -104,6 +107,7 @@ class ProjectDetailsPresenter
         $this->access_label          = $GLOBALS['Language']->getText('admin_project', 'access_label');
         $this->description_label     = $GLOBALS['Language']->getText('admin_project', 'description_label');
         $this->more_label            = $GLOBALS['Language']->getText('admin_project', 'more_label');
+        $this->homepage_label        = $GLOBALS['Language']->getText('admin_project', 'homepage_label');
         $this->admin_label           = $GLOBALS['Language']->getText('admin_project', 'admin_label');
         $this->members_label         = $GLOBALS['Language']->getText('admin_project', 'members_label');
         $this->pending_label         = $GLOBALS['Language']->getText('admin_project', 'pending_label');
