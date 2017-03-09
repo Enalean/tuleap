@@ -1335,4 +1335,9 @@ class Event {
      * 'request'   => HTTPRequest (IN)
      */
     const HIT = 'hit';
+
+    /**
+     * Event sent at the beginning of display the homepage
+     */
+    const DISPLAYING_HOMEPAGE = 'displaying_homepage';
 }
