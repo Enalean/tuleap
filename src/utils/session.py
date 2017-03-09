@@ -43,7 +43,7 @@ def session_setglobals(user_id):
 
     if user_id > 0:
         cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * from user WHERE user_id = %s", user_id)
+        cursor.execute("SELECT * from user WHERE user_id = %s", (user_id,))
         row = cursor.fetchone()
         cursor.close()
 
