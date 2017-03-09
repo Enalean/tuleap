@@ -55,7 +55,7 @@ class TQLTest extends RestBase
             'story_points != ""'                                           => array('bug1', 'bug2'),
             'due_date = "2017-01-10"'                                      => array('bug2'),
             'timesheeting < "2017-01-18 14:36"'                            => array('bug1'),
-            'last_update_date between(now() - 1w, now())'                  => array('bug1', 'bug2', 'bug3'),
+            'last_update_date between("2017-01-01", now() + 1w)'           => array('bug1', 'bug2', 'bug3'),
             'submitted_by = MYSELF()'                                      => array('bug1', 'bug2', 'bug3'),
             'submitted_by != MYSELF()'                                     => array(),
             'submitted_by IN (MYSELF())'                                   => array('bug1', 'bug2', 'bug3'),
