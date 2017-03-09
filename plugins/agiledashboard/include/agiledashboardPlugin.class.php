@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -84,6 +87,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_PATCH_PROJECT_BACKLOG);
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
+            $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(ITEM_PRIORITY_CHANGE);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
         }
@@ -115,6 +119,16 @@ class AgileDashboardPlugin extends Plugin {
             $this->getConfigurationManager()->duplicate(
                 $params['group_id'],
                 $params['template_id']
+            );
+        }
+    }
+
+    public function collect_errors_without_importing_xml_project($params)
+    {
+        if (count($params['xml_content']->agiledashboard->plannings->planning) > 1) {
+            $params['errors'] = $GLOBALS['Language']->getText(
+                'plugin_agiledashboard',
+                'cannot_import_planning_in_scrum_v2'
             );
         }
     }

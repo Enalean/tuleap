@@ -11,6 +11,7 @@ plugin_agiledashboard	AdminAdditionalPane	Administration du dashboard agile
 plugin_agiledashboard	cannot_create_planning	Vous ne pouvez plus créer de planning soit:
 plugin_agiledashboard	cannot_create_planning_no_trackers	parce qu'il n'y a pas de trackers
 plugin_agiledashboard	cannot_create_planning_in_scrum_v2	Vous ne pouvez pas créer plus d'un planning en utilisant scrum V2.
+plugin_agiledashboard	cannot_import_planning_in_scrum_v2	Vous ne pouvez pas importer plus d'un planning en utilisant scrum V2, merci de vérifier votre XML.
 plugin_agiledashboard	cannot_create_planning_hierarchy	ou alors tous les trackers "planning" potentiels ($1) sont déjà utilisés par une configuration (ci-dessous).
 plugin_agiledashboard	cannot_create_planning_config	Les trackers "planning" potentiels sont déterminés à partir de la configuration de $1 et de sa <a href="$2">hiérarchie</a>.
 plugin_agiledashboard	planning_out_of_hierarchy	Ce planning n'appartient pas à la hierarchie du planning racine ($1). Cette configuration n'est pas supportée. Vous devriez supprimer ce planning.
