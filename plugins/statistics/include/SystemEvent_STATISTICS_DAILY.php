@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -35,16 +35,23 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
      */
     private $configuration_manager;
 
+    /**
+     * @var Statistics_DiskUsageManager
+     */
+    private $disk_usage_manager;
+
     const NAME = 'STATISTICS_DAILY';
 
     public function injectDependencies(
         Logger $logger,
         Statistics_ConfigurationManager $configuration_manager,
-        Statistics_DiskUsagePurger $disk_usage_purger
+        Statistics_DiskUsagePurger $disk_usage_purger,
+        Statistics_DiskUsageManager $disk_usage_manager
     ) {
         $this->logger                = $logger;
         $this->configuration_manager = $configuration_manager;
         $this->disk_usage_purger     = $disk_usage_purger;
+        $this->disk_usage_manager    = $disk_usage_manager;
     }
 
     public function process() {
@@ -73,8 +80,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
 
     private function diskUsage() {
         $this->logger->debug(__METHOD__);
-        $dum = new Statistics_DiskUsageManager();
-        $dum->collectAll();
+        $this->disk_usage_manager->collectAll();
     }
 
     /**

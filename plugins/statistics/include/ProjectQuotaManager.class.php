@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SVN\DiskUsage\Retriever;
+use Tuleap\SVN\DiskUsage\Collector;
+
 require_once 'Statistics_ProjectQuotaDao.class.php';
 
 /**
@@ -45,9 +48,15 @@ class ProjectQuotaManager {
      * ProjectQuotaManager constructor
      */
     public function __construct() {
-        $this->dao              = $this->getDao();
-        $this->diskUsageManager = new Statistics_DiskUsageManager();
-        $this->pm               = ProjectManager::instance();
+        $this->dao = $this->getDao();
+        $this->pm  = ProjectManager::instance();
+
+        $disk_usage_dao = new Statistics_DiskUsageDao();
+        $svn_log_dao    = new SVN_LogDao();
+        $retriever      = new Retriever($disk_usage_dao);
+        $collector      = new Collector($svn_log_dao, $retriever);
+        $this->diskUsageManager = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+
     }
 
     /**

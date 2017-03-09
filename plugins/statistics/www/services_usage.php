@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,9 @@ require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.c
 require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
 require_once('www/project/export/project_export_utils.php');
+
+use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Retriever;
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -181,8 +184,14 @@ if ($request->exist('export') && $startDate && $endDate) {
 
 }
 
-function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name) {
-    $disk_usage_manager = new Statistics_DiskUsageManager();
+function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name)
+{
+    $disk_usage_dao     = new Statistics_DiskUsageDao();
+    $svn_log_dao        = new SVN_LogDao();
+    $retriever          = new Retriever($disk_usage_dao);
+    $collector          = new Collector($svn_log_dao, $retriever);
+    $disk_usage_manager = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+
     $disk_usage = $disk_usage_manager->returnTotalSizeOfProjects($date);
     $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
     $csv_exporter->buildDatas($disk_usage, $column_name);

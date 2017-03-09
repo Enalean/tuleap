@@ -22,6 +22,9 @@ require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
 require_once dirname(__FILE__).'/../include/ProjectQuotaManager.class.php';
 
+use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Retriever;
+
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -41,7 +44,11 @@ if ($request->valid($vGroupId)) {
 $func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');
 
 //Get dates for start and end period to watch statistics
-$duMgr  = new Statistics_DiskUsageManager();
+$disk_usage_dao = new Statistics_DiskUsageDao();
+$svn_log_dao    = new SVN_LogDao();
+$retriever      = new Retriever($disk_usage_dao);
+$collector      = new Collector($svn_log_dao, $retriever);
+$duMgr          = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
 $statPeriod = $duMgr->getProperty('statistics_period');
 if (!$statPeriod) {
     $statPeriod = 3;
