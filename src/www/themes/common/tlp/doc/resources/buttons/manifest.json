@@ -1,8 +1,7 @@
 {
-  "label": "Buttons & Dropdowns",
+  "label": "Buttons & Switch",
   "children": [
-    "btn" ,
-    "switch" ,
-    "dropdowns"
+    "btn",
+    "switch"
   ]
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+$tlp-tabs-radius: 3px;
+$tlp-tabs-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+$tlp-tabs-transition: 75ms ease-out;
 
 .tlp-tabs {
     display: flex;
@@ -35,10 +39,11 @@
     min-width: 100%;
     padding: $tlp-spacing / 2 0;
     transform: translateY(100%);
-    transition: bottom 150ms, opacity 150ms, box-shadow 150ms;
+    transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition, box-shadow $tlp-tabs-transition;
     border: 1px solid $tlp-ui-border-normal;
     border-top: 0;
-    border-radius: 0 0 3px 3px;
+    border-bottom: 0;
+    border-radius: 0 0 $tlp-tabs-radius $tlp-tabs-radius;
     background: $tlp-ui-white;
     box-shadow: none;
     opacity: 0;
@@ -101,8 +106,8 @@
 
     &:hover > .tlp-tab-menu {
         bottom: -2px;
-        transition: bottom 100ms, opacity 100ms;
-        box-shadow: 0 4px 20px 3px rgba(0, 0, 0, .05);
+        transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition;
+        box-shadow: $tlp-tabs-shadow;
         opacity: 1;
         pointer-events: auto;
     }

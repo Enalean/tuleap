@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,113 @@
 
 $tlp-dropdown-radius: 3px;
 $tlp-dropdown-arrow-size: 10px;
-$tlp-dropdown-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-$tlp-dropdown-animation: 100ms ease-in-out showDropdown;
+$tlp-dropdown-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+$tlp-dropdown-transition: 75ms ease-out;
+
+.tlp-dropdown {
+    position: relative;
+}
+
+.tlp-dropdown-menu {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    margin: $tlp-dropdown-arrow-size 0 0;
+    padding: $tlp-spacing / 2 0;
+    transform: translateY(-10px);
+    transition: opacity $tlp-dropdown-transition,
+        transform $tlp-dropdown-transition,
+        box-shadow $tlp-dropdown-transition;
+    border: 1px solid $tlp-ui-border-normal;
+    border-bottom: 0;
+    border-radius: $tlp-dropdown-radius;
+    background: $tlp-ui-white;
+    box-shadow: none;
+    opacity: 0;
+    z-index: 10000;
+    pointer-events: none;
+
+    &::before,
+    &::after {
+        display: block;
+        position: absolute;
+        left: 20px;
+        width: 0;
+        height: 0;
+        margin: 0 #{-$tlp-dropdown-arrow-size};
+        border: solid transparent;
+        border-width: $tlp-dropdown-arrow-size;
+        content: '';
+    }
+
+    &::before {
+        bottom: calc(100% + 1px);
+        border-bottom-color: darken($tlp-ui-border-normal, 7%);
+    }
+
+    &::after {
+        bottom: 100%;
+        border-bottom-color: $tlp-ui-white;
+    }
+
+    &.tlp-dropdown-shown {
+        transform: translateY(0);
+        box-shadow: $tlp-dropdown-shadow;
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.tlp-dropdown-menu-title {
+    margin: $tlp-spacing / 2 0 0;
+    padding: $tlp-spacing $tlp-spacing $tlp-spacing / 2;
+    border-top: 1px solid $tlp-ui-border-light;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    &:first-child {
+        margin: 0;
+        padding: $tlp-spacing / 2 $tlp-spacing;
+        border-top: 0;
+    }
+}
+
+.tlp-dropdown-menu-item {
+    padding: $tlp-spacing / 2 $tlp-spacing;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-decoration: none;
+    text-transform: none;
+    white-space: nowrap;
+
+    &:hover {
+        background: $tlp-ui-border-light;
+    }
+}
+
+
 
 $flatpickr-day-hover: #f3f3f3;
 $flatpickr-day-dimmed: #d0d0d0;
+$flatpickr-animation: 100ms ease-in-out showFlatPickr;
+
+@keyframes showFlatPickr {
+    0% {
+        transform: translateY(-10px);
+        box-shadow: 0 0 0;
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        box-shadow: $tlp-dropdown-shadow;
+        opacity: 1;
+    }
+}
 
 // scss-lint:disable QualifyingElement
 div.flatpickr-wrapper.inline div.flatpickr-calendar,
@@ -38,7 +140,7 @@ div.flatpickr-calendar {
     border: 0;
     font-family: $tlp-font-family;
     box-shadow: $tlp-dropdown-shadow;
-    animation: $tlp-dropdown-animation;
+    animation: $flatpickr-animation;
 
     &:before {
         display: none;
@@ -183,19 +285,5 @@ div.flatpickr-calendar {
         > .flatpickr-hour:hover {
             background: 0;
         }
-    }
-}
-
-@keyframes showDropdown {
-    0% {
-        transform: translateY(-10px);
-        box-shadow: 0 0 0;
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0);
-        box-shadow: $tlp-dropdown-animation;
-        opacity: 1;
     }
 }

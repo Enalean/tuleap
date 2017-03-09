@@ -154,6 +154,22 @@
                     modal.toggle();
                 });
             });
+
+            var dropdown_trigger = document.getElementById('dropdown-example');
+            if (dropdown_trigger) {
+                tlp.dropdown(dropdown_trigger);
+            }
+
+            var dropdown_trigger_options = document.getElementById('dropdown-example-options');
+            if (dropdown_trigger_options) {
+                tlp.dropdown(
+                    dropdown_trigger_options,
+                    {
+                        keyboard     : false,
+                        dropdown_menu: document.getElementById('dropdown-menu-example-options'),
+                    }
+                );
+            }
         }
         setTimeout(updatePreview, 10);
     });
