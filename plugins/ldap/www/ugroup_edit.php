@@ -72,9 +72,10 @@ if(!$request->valid($vFunc)) {
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
 }
 
-$ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+$ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap(), ProjectManager::instance(), $ldapPlugin->getLogger());
 $ldapUserGroupManager->setGroupName($request->get('bind_with_group'));
 $ldapUserGroupManager->setId($ugroupId);
+$ldapUserGroupManager->setProjectId($group_id);
 
 // Check if user have choosen the preserve members option.
 $bindOption = LDAP_GroupManager::BIND_OPTION;
@@ -87,7 +88,6 @@ $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
 if ($request->existAndNonEmpty('synchronize')) {
     $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
 }
-
 
 $hp = Codendi_HTMLPurifier::instance();
 
@@ -104,16 +104,14 @@ if($request->isPost() && $request->valid($vSubmit)) {
         $vBindWithGroup = new Valid_String('bind_with_group');
         $vBindWithGroup->required();
         if($request->valid($vBindWithGroup)) {
-            if($request->existAndNonEmpty('confirm')) {
+            if ($request->existAndNonEmpty('confirm')) {
                 //
                 // Perform ProjectUGroup <-> LDAP Group synchro
                 //
                 $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
 
-            } elseif($request->exist('cancel')) {
+            } elseif ($request->exist('cancel')) {
                 // Display the screen below!
-                continue;
-
             } else {
                 //
                 // Display to user what will be done with ProjectUGroup members.

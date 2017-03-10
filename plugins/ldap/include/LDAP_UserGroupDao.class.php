@@ -155,9 +155,14 @@ extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    function getSynchronizedUgroups() {
-        $sql = "SELECT * FROM plugin_ldap_ugroup
-                WHERE synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+    public function getSynchronizedUgroups()
+    {
+        $policy = $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+
+        $sql = "SELECT plugin_ldap_ugroup.*, ugroup.group_id AS project_id
+                FROM plugin_ldap_ugroup INNER JOIN ugroup USING (ugroup_id)
+                WHERE synchro_policy = $policy";
+
         return $this->retrieve($sql);
     }
 

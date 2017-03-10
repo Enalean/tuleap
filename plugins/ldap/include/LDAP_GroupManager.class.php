@@ -144,16 +144,19 @@ abstract class LDAP_GroupManager
             $this->syncMembersWithLdap($option);
         } else {
             if ($displayFeedback) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $groupName));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $this->groupName)
+                );
             }
         }
     }
 
     /**
-     * Synchronize Codendi Group members and a given LDAP group.
+     * Synchronize Tuleap Group members and a given LDAP group.
      *
-     * Add all users in LDAP group not members of Codendi Group.
-     * Remove all users members of Codendi group, not members of LDAP group if $option param is equal to 'bind'.
+     * Add all users in LDAP group not members of Tuleap Group.
+     * Remove all users members of Tuleap group, not members of LDAP group if $option param is equal to 'bind'.
      *
      * @param string $option tells whether it is a complete bind with the ldap group or user wants to preserve
      * @return Boolean
@@ -166,12 +169,10 @@ abstract class LDAP_GroupManager
             }
         }
 
-        if($option == self::BIND_OPTION) {
-            $toRemove = $this->getUsersToBeRemoved(self::BIND_OPTION);
-            if ($toRemove) {
-                foreach($toRemove as $userId) {
-                    $this->removeUserFromGroup($this->id, $userId);
-                }
+        $toRemove = $this->getUsersToBeRemoved($option);
+        if ($toRemove) {
+            foreach($toRemove as $userId) {
+                $this->removeUserFromGroup($this->id, $userId);
             }
         }
 
@@ -196,20 +197,20 @@ abstract class LDAP_GroupManager
     {
         if ($this->getGroupDn()) {
             $ldapGroupMembers = $this->getLdapGroupMembersIds($this->groupDn);
-            $projectMembers   = $this->getDbGroupMembersIds($this->id);
+            $ugroup_members   = $this->getDbGroupMembersIds($this->id);
 
             $this->usersToAdd       = array();
             $this->usersToRemove    = array();
             $this->usersNotImpacted = array();
 
-            foreach($projectMembers as $userId) {
-                if (!isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
+            foreach ($ugroup_members as $userId) {
+                if (! isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
                     $this->usersToRemove[$userId] = $userId;
                 } else {
                     $this->usersNotImpacted[$userId] = $userId;
                 }
             }
-            foreach($ldapGroupMembers as $userId) {
+            foreach ($ldapGroupMembers as $userId) {
                 if (!isset($this->usersNotImpacted[$userId])) {
                     $this->usersToAdd[$userId] = $userId;
                 }
@@ -412,5 +413,3 @@ abstract class LDAP_GroupManager
      */
     protected abstract function getDao();
 }
-
-?>

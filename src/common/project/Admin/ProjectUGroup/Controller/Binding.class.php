@@ -61,15 +61,16 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
             exit_error($GLOBALS['Language']->getText('global','error'), "Cannot modify this ugroup with LDAP plugin");
         }
 
-        $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $ugroupId);
+        $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $this->ugroup);
         $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath, $this->bindOption,  $this->synchro);
         $this->render($view);
     }
 
-    private function setldapUserGroupManager($ldapPlugin, $ugroupId) {
-        $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+    private function setldapUserGroupManager(Plugin $ldapPlugin, ProjectUGroup $ugroup) {
+        $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap(), ProjectManager::instance(), $ldapPlugin->getLogger());
         $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
-        $ldapUserGroupManager->setId($ugroupId);
+        $ldapUserGroupManager->setId($ugroup->getId());
+        $ldapUserGroupManager->setProjectId($ugroup->getProjectId());
 
         return $ldapUserGroupManager;
     }
@@ -152,9 +153,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     public function edit_directory() {
         $ldapPlugin = $this->getLdapPlugin();
 
-        $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
-        $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
-        $ldapUserGroupManager->setId($this->ugroup->getId());
+        $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $this->ugroup);
 
         $btn_update = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_update');
         $btn_unlink = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_unlink');
@@ -199,10 +198,8 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
                 $this->launchEditBindingUgroupEvent();
                 $this->redirect();
 
-            } elseif($this->request->exist('cancel')) {
+            } elseif ($this->request->exist('cancel')) {
                 // Display the screen below!
-                continue;
-
             } else {
                 if ($ldapUserGroupManager->getGroupDn()) {
                     $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $this->ugroup_binding, $ldapUserGroupManager, $this->request, $this->bindOption, $this->synchro);
