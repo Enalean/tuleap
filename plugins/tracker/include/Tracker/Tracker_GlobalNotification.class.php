@@ -20,35 +20,43 @@
  */
 
 class Tracker_GlobalNotification {
-    
-    private $data;
-	
-    public function __construct($data) {
-        $this->data = $data;
+    private $id;
+    private $tracker_id;
+    private $addresses;
+    private $all_updates;
+    private $check_permissions;
+
+    public function __construct(
+        $id,
+        $tracker_id,
+        $addresses,
+        $all_updates,
+        $check_permissions
+    ) {
+        $this->id                = $id;
+        $this->tracker_id        = $tracker_id;
+        $this->addresses         = $addresses;
+        $this->all_updates       = $all_updates;
+        $this->check_permissions = $check_permissions;
     }
 
     public function getId() {
-        return $this->data['id'];
+        return $this->id;
     }
 
     public function getTrackerId() {
-        return $this->data['tracker_id'];
+        return $this->tracker_id;
     }
 
-    public function getAddresses($asArray=false) {
-        $data = $this->data['addresses'];
-        if ( $asArray )  {
-            $data = preg_split('/[,;]/', $this->data['addresses']);
-            $data = array_map('trim', $data);
-        }
-        return $data;
+    public function getAddresses() {
+        return $this->addresses;
     }
 
     public function isAllUpdates() {
-        return $this->data['all_updates'];
+        return $this->all_updates;
     }
 
     public function isCheckPermissions() {
-        return $this->data['check_permissions'];
+        return $this->check_permissions;
     }
 }

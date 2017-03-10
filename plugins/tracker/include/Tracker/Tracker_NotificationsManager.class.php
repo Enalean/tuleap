@@ -257,10 +257,19 @@ class Tracker_NotificationsManager {
         }
     }
 
+    /**
+     * @return Tracker_GlobalNotification[]
+     */
     public function getGlobalNotifications() {
         $notifs = array();
         foreach($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
-            $notifs[$row['id']] = new Tracker_GlobalNotification($row);
+            $notifs[$row['id']] = new Tracker_GlobalNotification(
+                $row['id'],
+                $this->tracker->id,
+                $row['addresses'],
+                $row['all_updates'],
+                $row['check_permissions']
+            );
         }
         return $notifs;
     }

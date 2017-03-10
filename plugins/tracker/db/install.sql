@@ -572,6 +572,12 @@ CREATE TABLE tracker_global_notification(
     INDEX tracker_id(tracker_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS tracker_global_notification_users (
+    notification_id INT(11) UNSIGNED NOT NULL,
+    user_id INT(11) NOT NULL,
+    PRIMARY KEY (notification_id, user_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS    tracker_watcher;
 CREATE TABLE tracker_watcher(
     user_id int(11) NOT NULL default '0',

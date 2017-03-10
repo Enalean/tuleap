@@ -26,6 +26,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
+use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 require_once('common/date/DateHelper.class.php');
@@ -3149,11 +3152,13 @@ EOS;
      * @return array
      */
     public function getRecipients() {
-        $recipients = array();
-        $nm = new Tracker_NotificationsManager($this);
-        $notifs = $nm->getGlobalNotifications();
-        foreach ( $notifs as $id=>$notif ) {
-            $recipients[$id] = array( 'recipients'=>$notif->getAddresses(true), 'on_updates'=> $notif->isAllUpdates(), 'check_permissions'=> $notif->isCheckPermissions()  );
+        $recipients            = array();
+        $notifications_manager = new Tracker_NotificationsManager($this);
+        $notifications         = $notifications_manager->getGlobalNotifications();
+        $email_retriever       = new GlobalNotificationsEmailRetriever(new UsersToNotifyDao());
+        foreach ($notifications as $id => $notification) {
+            $notified_emails = $email_retriever->getNotifiedEmails($notification);
+            $recipients[$id] = array( 'recipients'=>$notified_emails, 'on_updates'=> $notification->isAllUpdates(), 'check_permissions'=> $notification->isCheckPermissions()  );
         }
         return $recipients;
     }
