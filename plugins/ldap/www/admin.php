@@ -64,7 +64,9 @@ if($request->exist('synchronize') && $request->get('synchronize') == 'on') {
 $vLdapGroup = new Valid_String('ldap_group');
 $vLdapGroup->required();
 if($request->isPost() && $request->valid($vLdapGroup)) {
-    $ldapGroupManager = new LDAP_ProjectGroupManager($ldapPlugin->getLdap());
+    $ldap_user_manager = $ldapPlugin->getLdapUserManager();
+    $ldapGroupManager  = new LDAP_ProjectGroupManager($ldapPlugin->getLdap(), $ldap_user_manager);
+
     $ldapGroupManager->setId($groupId);
     $ldapGroupManager->setGroupName($request->get('ldap_group'));
 

@@ -64,7 +64,14 @@ $group_id = $row['group_id'];
 $ugroupUpdateUsersAllowed = true;
 $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
 if ($ugroupUpdateUsersAllowed) {
-    $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap(), ProjectManager::instance(), $ldapPlugin->getLogger());
+    $ldap_user_manager    = $ldapPlugin->getLdapUserManager();
+    $ldapUserGroupManager = new LDAP_UserGroupManager(
+        $ldapPlugin->getLdap(),
+        $ldap_user_manager,
+        ProjectManager::instance(),
+        $ldapPlugin->getLogger()
+    );
+
     $ldapUserGroupManager->setId($ugroupId);
     $ldapUserGroupManager->setProjectId($group_id);
 

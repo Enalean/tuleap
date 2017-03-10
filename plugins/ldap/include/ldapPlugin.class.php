@@ -808,7 +808,7 @@ class LdapPlugin extends Plugin {
      */
     function project_admin_add_user_form(array $params) {
         if ($this->isLDAPGroupsUsageEnabled()) {
-            $projectMembersManager = new LDAP_ProjectGroupManager($this->getLdap());
+            $projectMembersManager = $this->getLdapProjectGroupManager();
             $project_id            = $params['groupId'];
             $ldapGroup             = $projectMembersManager->getLdapGroupByGroupId($project_id);
 
@@ -948,7 +948,7 @@ class LdapPlugin extends Plugin {
 
     private function synchronizeProjectMembers()
     {
-        $ldap_project_group_manager = new LDAP_ProjectGroupManager($this->getLdap());
+        $ldap_project_group_manager = $this->getLdapProjectGroupManager();
         $ldap_project_group_manager->synchronize();
     }
 
@@ -1143,6 +1143,19 @@ class LdapPlugin extends Plugin {
      */
     private function getLdapUserGroupManager()
     {
-        return new LDAP_UserGroupManager($this->getLdap(), ProjectManager::instance(), $this->getLogger());
+        return new LDAP_UserGroupManager(
+            $this->getLdap(),
+            $this->getLdapUserManager(),
+            ProjectManager::instance(),
+            $this->getLogger()
+        );
+    }
+
+    /**
+     * @return LDAP_ProjectGroupManager
+     */
+    private function getLdapProjectGroupManager()
+    {
+        return new LDAP_ProjectGroupManager($this->getLdap(), $this->getLdapUserManager());
     }
 }
