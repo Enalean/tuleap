@@ -42,8 +42,6 @@ Mock::generate('Project');
 
 Mock::generate('Feedback');
 
-Mock::generate('NotificationsDao');
-
 Mock::generate('BaseLanguage');
 
 class Docman_NotificationsManagerTest extends TuleapTestCase
@@ -71,21 +69,26 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
 
     public function testSendNotificationsSuccess()
     {
-        $mail         = new MockMail($this);
+        $mail              = new MockMail($this);
         $mail->setReturnValue('send', true);
-        $feedback     = new MockFeedback($this);
-        $project      = new MockProject($this);
-        $project->    setReturnValue('getPublicName', 'Guinea Pig');
-        $itemFty      = new MockDocman_ItemFactory($this);
-        $notifDao     = new MockNotificationsDao($this);
-        $project      = aMockProject()->withId(101)->build();
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $feedback          = new MockFeedback($this);
+        $project           = new MockProject($this);
+        $project->setReturnValue('getPublicName', 'Guinea Pig');
+        $itemFty           = new MockDocman_ItemFactory($this);
+        $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
+        $project           = aMockProject()->withId(101)->build();
+        $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
 
         $nm = new Docman_NotificationsManager_TestVersion($this);
-        $nm->setReturnValue('_getDao', $notifDao);
         $nm->setReturnValue('_getItemFactory', $itemFty);
         $nm->setReturnValue('_groupGetObject', $project);
-        $nm->__construct($project, '/toto', $feedback, $mail_builder);
+        $nm->__construct(
+            $project,
+            '/toto',
+            $feedback,
+            $mail_builder,
+            $notifications_dao
+        );
 
         $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'foo@codendi.org');
@@ -103,12 +106,19 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
         $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
         $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
 
-        $project      = aMockProject()->withId(101)->build();
-        $feedback     = new MockFeedback($this);
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $project           = aMockProject()->withId(101)->build();
+        $feedback          = new MockFeedback($this);
+        $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
 
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
-        $notificationsManager->__construct($project, '/toto', $feedback, $mail_builder);
+        $notificationsManager->__construct(
+            $project,
+            '/toto',
+            $feedback,
+            $mail_builder,
+            $notifications_dao
+        );
         $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');
@@ -142,12 +152,19 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
         $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
         $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
 
-        $project      = aMockProject()->withId(101)->build();
-        $feedback     = new MockFeedback($this);
-        $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $project           = aMockProject()->withId(101)->build();
+        $feedback          = new MockFeedback($this);
+        $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
 
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
-        $notificationsManager->__construct($project, '/toto', $feedback, $mail_builder);
+        $notificationsManager->__construct(
+            $project,
+            '/toto',
+            $feedback,
+            $mail_builder,
+            $notifications_dao
+        );
         $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');

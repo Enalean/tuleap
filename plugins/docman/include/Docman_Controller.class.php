@@ -4,7 +4,7 @@
  * Copyright (c) Enalean, 2015 - 2017.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 
@@ -81,7 +82,7 @@ class Docman_Controller extends Controler {
         $this->feedback = $GLOBALS['Response']->_feedback;
 
         $event_manager = $this->_getEventManager();
-        
+
         // Events that will call the Docman Logger
         $logEvents = array (
                          'plugin_docman_event_add',
@@ -100,28 +101,58 @@ class Docman_Controller extends Controler {
                          'plugin_docman_event_lock_del',
                          'plugin_docman_event_perms_change',
                      );
-                     
+
         $this->logger  = new Docman_Log();
         foreach ($logEvents as $event) {
             $event_manager->addListener($event, $this->logger, 'log', true);
         }
 
         // Other events
-        $this->notificationsManager = new Docman_NotificationsManager($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
+        $this->notificationsManager = new Docman_NotificationsManager(
+            $this->getProject(),
+            get_server_url().$this->getDefaultUrl(),
+            $this->feedback,
+            $this->getMailBuilder(),
+            $this->getNotificationsDao()
+        );
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_metadata_update', $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager, 'sendNotifications', true);
-        $this->notificationsManager_Add = new Docman_NotificationsManager_Add($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
+        $this->notificationsManager_Add = new Docman_NotificationsManager_Add(
+            $this->getProject(),
+            get_server_url().$this->getDefaultUrl(),
+            $this->feedback,
+            $this->getMailBuilder(),
+            $this->getNotificationsDao()
+        );
         $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true);
-        $this->notificationsManager_Delete = new Docman_NotificationsManager_Delete($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
+        $this->notificationsManager_Delete = new Docman_NotificationsManager_Delete(
+            $this->getProject(),
+            get_server_url().$this->getDefaultUrl(),
+            $this->feedback,
+            $this->getMailBuilder(),
+            $this->getNotificationsDao()
+        );
         $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true);
-        $this->notificationsManager_Move = new Docman_NotificationsManager_Move($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
+        $this->notificationsManager_Move = new Docman_NotificationsManager_Move(
+            $this->getProject(),
+            get_server_url().$this->getDefaultUrl(),
+            $this->feedback,
+            $this->getMailBuilder(),
+            $this->getNotificationsDao()
+        );
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true);
-        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
+        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers(
+            $this->getProject(),
+            get_server_url().$this->getDefaultUrl(),
+            $this->feedback,
+            $this->getMailBuilder(),
+            $this->getNotificationsDao()
+        );
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true);
     }
 
@@ -186,7 +217,7 @@ class Docman_Controller extends Controler {
     function logsDaily($params) {
         $this->logger->logsDaily($params);
     }
-    
+
     function _getEventManager() {
         return EventManager::instance();
     }
@@ -207,7 +238,7 @@ class Docman_Controller extends Controler {
         }
         return $this->user;
     }
-    
+
     /***************** PERMISSIONS ************************/
     function userCanRead($item_id) {
         $dPm  = $this->_getPermissionsManager();
@@ -230,11 +261,11 @@ class Docman_Controller extends Controler {
         return $dPm->userCanAdmin($user);
     }
     /******************************************************/
-    
+
     function setRequest($request) {
         $this->request = $request;
     }
-    
+
     function getGroupId() {
         if($this->groupId === null) {
             $_gid = (int) $this->request->get('group_id');
@@ -254,11 +285,11 @@ class Docman_Controller extends Controler {
         $_gid = $this->getGroupId();
         return $this->pluginPath.'/admin/?group_id='.$_gid;
     }
-    
+
     function getThemePath() {
         return $this->themePath;
     }
-    
+
     function setReportId($id) {
         $this->reportId = $id;
     }
@@ -268,7 +299,7 @@ class Docman_Controller extends Controler {
 
     function _initReport($item) {
         $reportFactory = new Docman_ReportFactory($this->getGroupId());
-        
+
         if($this->reportId === null && $this->request->exist('report_id')) {
             $this->reportId = (int) $this->request->get('report_id');
         }
@@ -303,7 +334,7 @@ class Docman_Controller extends Controler {
         $mdIter->rewind();
         while($mdIter->valid()) {
             $md = $mdIter->current();
-            
+
             $value = $this->getValueInArrays($md->getLabel(), $itemArray, $metadataArray);
             if($value !== null) {
                 $mdv = $mdvFactory->newMetadataValue($item->getId(), $md->getId(), $md->getType(), $value);
@@ -346,10 +377,10 @@ class Docman_Controller extends Controler {
         }
         return $new_item;
     }
-    
+
     function updateMetadataFromUserInput(&$item) {
-        $this->setMetadataValuesFromUserInput($item, 
-                                             $this->request->get('item'), 
+        $this->setMetadataValuesFromUserInput($item,
+                                             $this->request->get('item'),
                                              $this->request->get('metadata'));
     }
 
@@ -369,8 +400,8 @@ class Docman_Controller extends Controler {
     }
 
     function request() {
-        if ($this->request->exist('action') 
-            && ($this->request->get('action') == 'plugin_docman_approval_reviewer' 
+        if ($this->request->exist('action')
+            && ($this->request->get('action') == 'plugin_docman_approval_reviewer'
                 || $this->request->get('action') == 'plugin_docman_approval_requester'
                 )
             )
@@ -394,10 +425,10 @@ class Docman_Controller extends Controler {
                 $this->_setView('Error');
                 return;
             }
-            
+
             // Browser alert
             $this->_checkBrowserCompliance();
-            
+
             //token for redirection
             $tok = new Docman_Token();
 
@@ -423,7 +454,7 @@ class Docman_Controller extends Controler {
             if($this->request->exist('start')) {
                 $this->_viewParams['start']       = (int) $this->request->get('start');
             }
-            
+
             if($this->request->exist('pv')) {
                 $this->_viewParams['pv']       = (int) $this->request->get('pv');
             }
@@ -442,7 +473,7 @@ class Docman_Controller extends Controler {
             if (!$root) {
                 // Install
                 $_gid = (int) $this->request->get('group_id');
-                
+
                 $pm = ProjectManager::instance();
                 $project = $pm->getProject($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
@@ -462,7 +493,7 @@ class Docman_Controller extends Controler {
                 }
                 if ($id) {
                     $item = $item_factory->getItemFromDb($id);
-                    
+
                     if (!$item) {
                         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_deleted'));
                         $this->_setView('DocmanError');
@@ -476,7 +507,7 @@ class Docman_Controller extends Controler {
                     // If the item (folder) defined in the report is not the
                     // same than the current one, replace it.
                     $this->_initReport($item);
-                    if($this->_viewParams['filter'] !== null 
+                    if($this->_viewParams['filter'] !== null
                        && $this->_viewParams['filter']->getItemId() !== null
                        && $this->_viewParams['filter']->getItemId() != $item->getId()) {
                         $reportItem = $item_factory->getItemFromDb($this->_viewParams['filter']->getItemId());
@@ -489,7 +520,7 @@ class Docman_Controller extends Controler {
                             $item = $reportItem;
                         }
                     }
-                    
+
                     if ($this->request->get('action') == 'ajax_reference_tooltip') {
                         $this->groupId = $item->getGroupId();
                     }
@@ -512,7 +543,7 @@ class Docman_Controller extends Controler {
                         } else {
                             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                             $mdFactory->appendItemMetadataList($item);
-                                                        
+
                             $get_show_view             = new Docman_View_GetShowViewVisitor();
                             $this->_viewParams['item'] = $item;
                             if (strpos($view, 'admin') === 0 && !$this->userCanAdmin()) {
@@ -595,13 +626,13 @@ class Docman_Controller extends Controler {
         case 'admin_md_details':
             // Sanitize
             $_mdLabel = $this->request->get('md');
-    
+
             $md = null;
             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
             $valid = $this->validateMetadata($_mdLabel, $md);
-    
+
             if(!$valid) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman',
                                                                             'error_invalid_md'));
                 $this->view = 'RedirectAfterCrud';
                 $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
@@ -615,7 +646,7 @@ class Docman_Controller extends Controler {
         case 'admin_md_details_update':
             $_name = trim($this->request->get('name'));
             $_label = $this->request->get('label');
-            
+
             $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
             if($mdFactory->isValidLabel($_label)) {
                 $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details', 'md' => $_label);
@@ -630,11 +661,11 @@ class Docman_Controller extends Controler {
         case 'admin_create_metadata':
             $_name = trim($this->request->get('name'));
             $valid = $this->validateNewMetadata($_name);
-            
+
             if ($valid) {
                 $this->action = $view;
             }
-            
+
             $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
             $this->view = 'RedirectAfterCrud';
             break;
@@ -643,7 +674,7 @@ class Docman_Controller extends Controler {
             // md
             // Sanitize
             $_mdLabel = $this->request->get('md');
-                                        
+
             // Valid
             $logmsg = '';
             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
@@ -654,15 +685,15 @@ class Docman_Controller extends Controler {
                     $valid = true;
                 }
                 else {
-                    $logmsg = $GLOBALS['Language']->getText('plugin_docman', 
+                    $logmsg = $GLOBALS['Language']->getText('plugin_docman',
                                                             'error_cannot_delete_hc_md');
                 }
             }
             else {
-                $logmsg = $GLOBALS['Language']->getText('plugin_docman', 
+                $logmsg = $GLOBALS['Language']->getText('plugin_docman',
                                                         'error_invalid_md');
             }
-    
+
             if(!$valid) {
                 if($logmsg != '') {
                     $this->feedback->log('error', $logmsg);
@@ -674,7 +705,7 @@ class Docman_Controller extends Controler {
                 $this->action = $view;
                 $this->_actionParams['md'] = $md;
             }
-                                        
+
             break;
         case 'admin_create_love':
             $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
@@ -703,11 +734,11 @@ class Docman_Controller extends Controler {
             // Required params:
             // md (string [a-z_]+)
             // loveid (int)
-    
+
             // Sanitize
             $_mdLabel = $this->request->get('md');
             $_loveId = (int) $this->request->get('loveid');
-    
+
             // Valid
             $md = null;
             $love = null;
@@ -715,7 +746,7 @@ class Docman_Controller extends Controler {
             if($md !== null && $md->getLabel() !== 'status') {
                 $valid = $this->validateLove($_loveId, $md, $love);
             }
-    
+
             if(!$valid) {
                 $this->view = 'RedirectAfterCrud';
                 $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
@@ -723,7 +754,7 @@ class Docman_Controller extends Controler {
             else {
                 $mdFactory = new Docman_MetadataFactory($this->groupId);
                 $mdFactory->appendMetadataValueList($md, false);
-    
+
                 $this->view = 'Admin_MetadataDetailsUpdateLove';
                 $this->_viewParams['md'] = $md;
                 $this->_viewParams['love'] = $love;
@@ -738,7 +769,7 @@ class Docman_Controller extends Controler {
             // rank (beg, end, [0-9]+)
             // name
             // descr
-    
+
             // Sanitize
             /// @todo sanitize md, rank, name, descr
             $_mdLabel = $this->request->get('md');
@@ -746,7 +777,7 @@ class Docman_Controller extends Controler {
             $_rank = $this->request->get('rank');
             $_name = $this->request->get('name');
             $_descr = $this->request->get('descr');
-    
+
             // Valid
             $md = null;
             $love = null;
@@ -754,7 +785,7 @@ class Docman_Controller extends Controler {
             if($md !== null && $md->getLabel() !== 'status') {
                 $valid = $this->validateLove($_loveId, $md, $love);
             }
-    
+
             if(!$valid) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_md_or_love'));
                 $this->view = 'RedirectAfterCrud';
@@ -765,7 +796,7 @@ class Docman_Controller extends Controler {
                 $love->setRank($_rank);
                 $love->setName($_name);
                 $love->setDescription($_descr);
-    
+
                 // define action
                 $this->action = $view;
                 $this->_actionParams['md'] = $md;
@@ -792,7 +823,7 @@ class Docman_Controller extends Controler {
 
         case 'admin_import_metadata':
             if($this->request->existAndNonEmpty('confirm')) {
-                                            
+
                 if($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
                     $pm = ProjectManager::instance();
                     $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
@@ -943,7 +974,7 @@ class Docman_Controller extends Controler {
                     } else {
                         $this->action = 'move';
                     }
-                } 
+                }
                 if (!$this->view) {
                     $this->_set_redirectView();
                 }
@@ -1033,7 +1064,7 @@ class Docman_Controller extends Controler {
             $item_factory->delCopyPreference();
             $item_factory->delCutPreference();
             break;
-            
+
         case 'paste':
             if($this->request->exist('cancel')) {
                 $this->_viewParams['default_url_params'] = array('action'  => 'show');
@@ -1058,7 +1089,7 @@ class Docman_Controller extends Controler {
                     $this->_viewParams['itemToPaste'] = $itemToPaste;
                     $this->_viewParams['srcMode']     = $mode;
                     /*$this->action = $view;
-                                                
+
                     $this->_viewParams['default_url_params'] = array('action'  => 'show',
                                                                      'id'      => $item->getId());
                     $this->view = 'RedirectAfterCrud';*/
@@ -1079,7 +1110,7 @@ class Docman_Controller extends Controler {
                 $this->view = 'ApprovalCreate';
             }
             break;
-                                        
+
         case 'approval_delete':
             if (!$this->userCanWrite($item->getId())) {
                 $this->feedback->log('error', $this->txt('error_perms_edit'));
@@ -1098,7 +1129,7 @@ class Docman_Controller extends Controler {
                         $this->_actionParams['version'] = null;
                     }
                 }
-                                            
+
                 $this->_viewParams['default_url_params'] = array('action'  => 'details',
                                                                  'section' => 'approval',
                                                                  'id'      => $item->getId());
@@ -1270,7 +1301,7 @@ class Docman_Controller extends Controler {
             } else {
                 $this->action = $view;
                 $this->_actionParams['item'] = $item;
-                                            
+
                 $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
                                                                  'id'      => $item->getId());
                 $this->view = 'RedirectAfterCrud';
@@ -1329,10 +1360,10 @@ class Docman_Controller extends Controler {
                     } else {
                         //Validations
                         $new_item = $this->createItemFromUserInput();
-        
-                        $valid = $this->_validateRequest(array_merge($new_item->accept(new Docman_View_GetFieldsVisitor()), 
+
+                        $valid = $this->_validateRequest(array_merge($new_item->accept(new Docman_View_GetFieldsVisitor()),
                                                                      $new_item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request))));
-                                                    
+
                         if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
                             $news = $this->request->get('news');
                             if ($news) {
@@ -1489,7 +1520,7 @@ class Docman_Controller extends Controler {
             }
             $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
             $this->view = 'RedirectAfterCrud';
-                                        
+
             break;
         case 'report_upd':
             if($this->request->exist('report_id')) {
@@ -1523,7 +1554,7 @@ class Docman_Controller extends Controler {
                     $this->action = $view;
                 }
             }
-                                        
+
             $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
             $this->view = 'RedirectAfterCrud';
             break;
@@ -1541,7 +1572,7 @@ class Docman_Controller extends Controler {
         case 'ajax_reference_tooltip':
             $this->view = 'AjaxReferenceTooltip';
             break;
-            
+
         default:
             $purifier = Codendi_HTMLPurifier::instance();
             die($purifier->purify($view) . ' is not supported');
@@ -1560,7 +1591,7 @@ class Docman_Controller extends Controler {
         }
         return $this->item_factory;
     }
-    
+
     var $metadataFactory;
     private function _getMetadataFactory($groupId) {
         if(!isset($metadataFactory[$groupId])) {
@@ -1572,7 +1603,7 @@ class Docman_Controller extends Controler {
     function forceView($view) {
         $this->view = $view;
     }
- 
+
     function _validateApprovalTable($request, $item) {
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
         if($atf && $atf->tableExistsForItem()) {
@@ -1611,7 +1642,7 @@ class Docman_Controller extends Controler {
                     }
                 }
             }
-            
+
             if($validatorList !== null) {
                 foreach($validatorList as $v) {
                     if (!$v->isValid()) {
@@ -1621,27 +1652,27 @@ class Docman_Controller extends Controler {
                         }
                     }
                 }
-            }            
+            }
         }
         return $valid;
     }
-    
+
     function validateMetadata($label, &$md) {
         $valid = false;
-        
+
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         if($mdFactory->isValidLabel($label)) {
             $_md = $mdFactory->getFromLabel($label);
-            if($_md !== null 
+            if($_md !== null
                && $_md->getGroupId() == $this->groupId) {
                 $valid = true;
                 $md = $_md;
             }
         }
-        
+
         return $valid;
     }
-    
+
     /**
     * Checks that the new property have a non-empty name,
     * and also checks that the same name is not already taken by
@@ -1654,7 +1685,7 @@ class Docman_Controller extends Controler {
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_missing'));
         } else {
             $mdFactory = new Docman_MetadataFactory($this->groupId);
-            
+
             if($mdFactory->findByName($name)->count() == 0) {
                 $valid = true;
             } else {
@@ -1662,10 +1693,10 @@ class Docman_Controller extends Controler {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_exists', $name));
             }
         }
-        
+
         return $valid;
     }
-    
+
     /**
     * Checks that the updating property have a non-empty name,
     * and if the name have been changed, also checks that the same
@@ -1678,7 +1709,7 @@ class Docman_Controller extends Controler {
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_missing'));
         } else {
             $mdFactory = new Docman_MetadataFactory($this->groupId);
-            
+
             $md = $mdFactory->getFromLabel($label);
             // name has changed
             if ($md !== null && $md->getName() != $name) {
@@ -1692,13 +1723,13 @@ class Docman_Controller extends Controler {
                 $valid = true;
             }
         }
-        
+
         return $valid;
     }
-    
+
     function validateLove($loveId, $md, &$love) {
         $valid = false;
-        
+
         $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
         $_love = $loveFactory->getByElementId($loveId, $md->getLabel());
         if($_love !== null) {
@@ -1706,31 +1737,31 @@ class Docman_Controller extends Controler {
             $valid = true;
             $love = $_love;
         }
-        
+
         return $valid;
     }
-    
+
     function checkPasteIsAllowed($item, &$itemToPaste, &$mode) {
         $isAllowed = false;
-        
+
         $itemFactory = $this->getItemFactory();
         $user        = $this->getUser();
-        
+
         $type = $itemFactory->getItemTypeForItem($item);
         if(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER != $type) {
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_in_document'));
         }
         elseif (!$this->userCanWrite($item->getId())) {
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
-        } 
+        }
         else {
             $copiedItemId = $itemFactory->getCopyPreference($user);
             $cutItemId    = $itemFactory->getCutPreference($user, $item->getGroupId());
             $itemToPaste  = null;
-            
+
             if ($copiedItemId !== false && $cutItemId === false) {
                 $itemToPaste = $itemFactory->getItemFromDb($copiedItemId);
-                $mode        = 'copy'; 
+                $mode        = 'copy';
             }
             elseif ($item->getId() == $cutItemId) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_same_Item'));
@@ -1743,12 +1774,12 @@ class Docman_Controller extends Controler {
                 }
                 $itemToPaste = $itemFactory->getItemFromDb($cutItemId);
                 $mode        = 'cut';
-            } 
+            }
             else {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_no_valid_item'));
                 return false;
             }
-            
+
             if($itemToPaste == null) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_no_valid_item'));
             }
@@ -1756,10 +1787,10 @@ class Docman_Controller extends Controler {
                 $isAllowed = true;
             }
         }
-        
+
         return $isAllowed;
     }
-    
+
     function actionsManagement() {
         // Redefine actions classes names building.
         $className = get_class($this);
@@ -1796,7 +1827,7 @@ class Docman_Controller extends Controler {
         }
         return $nb;
     }
-    
+
     function &getItemHierarchy($rootItem) {
         if(!isset($this->hierarchy[$rootItem->getId()])) {
             $itemFactory = new Docman_ItemFactory($rootItem->getGroupId());
@@ -1823,5 +1854,13 @@ class Docman_Controller extends Controler {
     public function userCannotDelete(PFUser $user, Docman_Item $item)
     {
         return ! $this->_getPermissionsManager()->userCanDelete($user, $item);
+    }
+
+    /**
+     * @return Dao
+     */
+    private function getNotificationsDao()
+    {
+        return new Dao();
     }
 }

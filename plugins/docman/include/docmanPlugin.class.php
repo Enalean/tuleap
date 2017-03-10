@@ -24,6 +24,7 @@
  *
  */
 
+use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -31,7 +32,8 @@ use Tuleap\Mail\MailLogger;
 require_once 'autoload.php';
 require_once 'constants.php';
 
-class DocmanPlugin extends Plugin {
+class DocmanPlugin extends Plugin
+{
 
     const TRUNCATED_SERVICE_NAME = 'Documents';
     const SYSTEM_NATURE_NAME     = 'document';
@@ -851,7 +853,13 @@ class DocmanPlugin extends Plugin {
             $root = $docmanItemFactory->getRoot($groupId);
             if ($root) {
                 require_once('Docman_NotificationsManager.class.php');
-                $notificationsManager = new Docman_NotificationsManager($project, null, null, $this->getMailBuilder());
+                $notificationsManager = new Docman_NotificationsManager(
+                    $project,
+                    null,
+                    null,
+                    $this->getMailBuilder(),
+                    $this->getNotificationsDao()
+                );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
                 if($dar && !$dar->isError()) {
                     foreach ($dar as $row) {
@@ -880,7 +888,13 @@ class DocmanPlugin extends Plugin {
             $root = $docmanItemFactory->getRoot($groupId);
             if ($root) {
                 require_once('Docman_NotificationsManager.class.php');
-                $notificationsManager = new Docman_NotificationsManager($this->getProject($groupId), null, null, $this->getMailBuilder());
+                $notificationsManager = new Docman_NotificationsManager(
+                    $this->getProject($groupId),
+                    null,
+                    null,
+                    $this->getMailBuilder(),
+                    $this->getNotificationsDao()
+                );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId);
                 if($dar && !$dar->isError()) {
                     $userManager = UserManager::instance();
@@ -1031,5 +1045,10 @@ class DocmanPlugin extends Plugin {
         }
 
         return $result->getRow();
+    }
+
+    private function getNotificationsDao()
+    {
+        return new Dao();
     }
 }
