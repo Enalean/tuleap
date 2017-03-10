@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -89,7 +89,8 @@ class ProjectMilestonesResource {
             $this->tracker_factory,
             $this->status_counter,
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao, $this->planning_factory)
         );
 
         $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(

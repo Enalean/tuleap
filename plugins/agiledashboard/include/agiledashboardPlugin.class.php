@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -448,7 +448,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory())
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2014. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,6 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 
 /**
  * I am the backlog of the first descendant of the current milestone
@@ -132,8 +134,9 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
 
     private function canUserPrioritizeBacklog(Planning_Milestone $milestone, PFUser $user) {
         $artifact_factory  = Tracker_ArtifactFactory::instance();
+        $planning_factory  = PlanningFactory::build();
         $milestone_factory = new Planning_MilestoneFactory(
-            PlanningFactory::build(),
+            $planning_factory,
             $artifact_factory,
             Tracker_FormElementFactory::instance(),
             TrackerFactory::instance(),
@@ -143,7 +146,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
                 $artifact_factory
             ),
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
         );
 
         return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,11 @@ function aMilestone() {
 }
 
 class Test_Planning_MilestoneBuilder {
-    
+    /**
+     * @var \Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
     /**
      * @var Project
      */
@@ -47,12 +51,14 @@ class Test_Planning_MilestoneBuilder {
      * @var array of Planning_Milestone
      */
     private $sub_milestones;
-    
-    public function __construct() {
-        $this->project           = mock('Project');
-        $this->planning          = aPlanning()->build();
-        $this->sub_milestones    = array();
-        $this->artifact          = anArtifact()->build();
+
+    public function __construct()
+    {
+        $this->project                      = mock('Project');
+        $this->planning                     = aPlanning()->build();
+        $this->sub_milestones               = array();
+        $this->artifact                     = anArtifact()->build();
+        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
     }
     
     public function withinTheSameProjectAs(Planning_Milestone $other_milestone) {
@@ -83,12 +89,16 @@ class Test_Planning_MilestoneBuilder {
         $this->planning = $planning;
         return $this;
     }
-    
-    public function build() {
-        $milestone = new Planning_ArtifactMilestone($this->project,
-                                            $this->planning,
-                                            $this->artifact);
+
+    public function build()
+    {
+        $milestone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->planning,
+            $this->artifact,
+            $this->scrum_mono_milestone_checker
+        );
+
         return $milestone;
     }
 }
-?>

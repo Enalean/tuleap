@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,6 @@ abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
         
     }    
 }
-
 abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_MilestoneBaseTest {
     protected $project;
     protected $planning_factory;
@@ -78,9 +77,10 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
             $this->tracker_factory,
             $this->status_counter,
             $this->planning_permissions_manager,
-            $this->dao
+            $this->dao,
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
-        
+
         stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());
         stub($this->artifact)->getTracker()->returns($this->milestone_tracker);
         stub($this->artifact)->userCanView()->returns(true);
@@ -209,7 +209,8 @@ abstract class MilestoneFactory_MilestoneAsComputedValues extends Planning_Miles
                 $this->tracker_factory,
                 $this->status_counter,
                 $this->planning_permissions_manager,
-                $this->dao
+                $this->dao,
+                mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
             )
         );
         stub($this->milestone_factory)->getSubMilestones()->returns(array());
@@ -302,34 +303,48 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
         $this->assertEqual(2, count($factory->getAllMilestones($this->user, $this->planning)));
     }
-    
-    public function itReturnsMilestones() {
+
+    public function itReturnsMilestones()
+    {
         $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
-        $mile_stone       = new Planning_ArtifactMilestone($this->project, $this->planning, $artifact);
+        $mile_stone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->planning,
+            $artifact,
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
         $this->assertIdentical(array($mile_stone), $factory->getAllMilestones($this->user, $this->planning));
     }
-    
-    public function itReturnsMilestonesWithPlannedArtifacts() {
+
+    public function itReturnsMilestonesWithPlannedArtifacts()
+    {
         $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $tracker_id       = 7777777;
         stub($this->planning_tracker)->getId()->returns($tracker_id);
         $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
-        
+
         $planned_artifacts= new ArtifactNode($artifact);
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
         stub($factory)->getPlannedArtifacts()->returns($planned_artifacts);
-        
-        $milestone       = new Planning_ArtifactMilestone($this->project, $planning, $artifact, $planned_artifacts);
-        $milestones       = $factory->getAllMilestones($this->user, $planning);
+
+        $milestone  = new Planning_ArtifactMilestone(
+            $this->project,
+            $planning,
+            $artifact,
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'),
+            $planned_artifacts
+        );
+        $milestones = $factory->getAllMilestones($this->user, $planning);
         $this->assertEqual($milestone, $milestones[0]);
     }
 
-    public function itReturnsMilestonesWithoutPlannedArtifacts() {
+    public function itReturnsMilestonesWithoutPlannedArtifacts()
+    {
         $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $tracker_id       = 7777777;
         stub($this->planning_tracker)->getId()->returns($tracker_id);
@@ -337,12 +352,18 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
 
-        $planned_artifacts= new ArtifactNode($artifact);
-        $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
+        $planned_artifacts = new ArtifactNode($artifact);
+        $factory           = $this->newMileStoneFactory($planning_factory, $artifact_factory);
         stub($factory)->getPlannedArtifacts()->returns($planned_artifacts);
 
-        $milestone       = new Planning_ArtifactMilestone($this->project, $planning, $artifact, null);
-        $milestones      = $factory->getAllMilestonesWithoutPlannedElement($this->user, $planning);
+        $milestone  = new Planning_ArtifactMilestone(
+            $this->project,
+            $planning,
+            $artifact,
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'),
+            null
+        );
+        $milestones = $factory->getAllMilestonesWithoutPlannedElement($this->user, $planning);
         $this->assertEqual($milestone, $milestones[0]);
     }
 
@@ -355,7 +376,8 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao')
+            mock('AgileDashboard_Milestone_MilestoneDao'),
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
         return $factory;
     }
@@ -376,7 +398,8 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
             mock('TrackerFactory'),
             mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao')
+            mock('AgileDashboard_Milestone_MilestoneDao'),
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
         $planning_items_tree = $factory->getPlannedArtifacts(mock('PFUser'), $root_artifact);
 
@@ -410,7 +433,8 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao')
+            mock('AgileDashboard_Milestone_MilestoneDao'),
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
     }
 
@@ -419,8 +443,14 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
         $this->assertEqualToReleaseMilestone($release_milestone);
     }
 
-    private function assertEqualToReleaseMilestone($actual_release_milestone) {
-        $expected_release_milestone = new Planning_ArtifactMilestone($this->project, $this->release_planning, $this->release_artifact);
+    private function assertEqualToReleaseMilestone($actual_release_milestone)
+    {
+        $expected_release_milestone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->release_planning,
+            $this->release_artifact,
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
         $this->assertEqual($actual_release_milestone, $expected_release_milestone);
     }
 
@@ -443,7 +473,8 @@ class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends 
                 mock('TrackerFactory'),
                 mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
                 mock('PlanningPermissionsManager'),
-                mock('AgileDashboard_Milestone_MilestoneDao')
+                mock('AgileDashboard_Milestone_MilestoneDao'),
+                mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
             )
         );
 
@@ -589,7 +620,8 @@ class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
                 mock('TrackerFactory'),
                 mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
                 mock('PlanningPermissionsManager'),
-                mock('AgileDashboard_Milestone_MilestoneDao')
+                mock('AgileDashboard_Milestone_MilestoneDao'),
+                mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
             )
         );
 
@@ -643,7 +675,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao')
+            mock('AgileDashboard_Milestone_MilestoneDao'),
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
         
         $planning = mock('Planning');
@@ -749,7 +782,8 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao')
+            mock('AgileDashboard_Milestone_MilestoneDao'),
+            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
         $this->user = aUser()->build();
         $this->artifact_id = 112;
@@ -799,5 +833,3 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
         );
     }
 }
-
-?>

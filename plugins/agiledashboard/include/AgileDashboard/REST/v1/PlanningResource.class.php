@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use \PlanningFactory;
 use \Luracast\Restler\RestException;
 use \Planning;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\AuthenticatedResource;
@@ -47,14 +49,16 @@ class PlanningResource extends AuthenticatedResource {
             new Tracker_ArtifactDao(),
             $artifact_factory
         );
+        $planning_factory = PlanningFactory::build();
         $this->milestone_factory = new \Planning_MilestoneFactory(
-            PlanningFactory::build(),
+            $planning_factory,
             $artifact_factory,
             \Tracker_FormElementFactory::instance(),
             \TrackerFactory::instance(),
             $status_counter,
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
         );
     }
 

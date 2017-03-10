@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -63,12 +64,10 @@ class Planning_MilestoneFactory {
     private $milestone_dao;
 
     /**
-     * Instanciates a new milestone factory.
-     *
-     * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
-     * @param Tracker_ArtifactFactory    $artifact_factory    The factory to delegate artifacts retrieval.
-     * @param Tracker_FormElementFactory $formelement_factory The factory to delegate artifacts retrieval.
+     * @var ScrumForMonoMilestoneChecker
      */
+    private $scrum_mono_milestone_checker;
+
     public function __construct(
         PlanningFactory $planning_factory,
         Tracker_ArtifactFactory $artifact_factory,
@@ -76,7 +75,8 @@ class Planning_MilestoneFactory {
         TrackerFactory $tracker_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
         PlanningPermissionsManager $planning_permissions_manager,
-        AgileDashboard_Milestone_MilestoneDao $milestone_dao
+        AgileDashboard_Milestone_MilestoneDao $milestone_dao,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
 
         $this->planning_factory             = $planning_factory;
@@ -86,6 +86,7 @@ class Planning_MilestoneFactory {
         $this->status_counter               = $status_counter;
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->milestone_dao                = $milestone_dao;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     /**
@@ -185,7 +186,8 @@ class Planning_MilestoneFactory {
         $milestone = new Planning_ArtifactMilestone(
             $artifact->getTracker()->getProject(),
             $planning,
-            $artifact
+            $artifact,
+            $this->scrum_mono_milestone_checker
         );
         $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
         $this->updateMilestoneContextualInfo($user, $milestone);
@@ -477,7 +479,8 @@ class Planning_MilestoneFactory {
             $sub_milestone = new Planning_ArtifactMilestone(
                 $milestone->getProject(),
                 $planning,
-                $sub_milestone_artifact
+                $sub_milestone_artifact,
+                $this->scrum_mono_milestone_checker
             );
             $this->addMilestoneAncestors($user, $sub_milestone);
             $this->updateMilestoneContextualInfo($user, $sub_milestone);
@@ -505,7 +508,8 @@ class Planning_MilestoneFactory {
                 $milestone = new Planning_ArtifactMilestone(
                     $top_milestone->getProject(),
                     $root_planning,
-                    $artifact
+                    $artifact,
+                    $this->scrum_mono_milestone_checker
                 );
                 $this->addMilestoneAncestors($user, $milestone);
                 $this->updateMilestoneContextualInfo($user, $milestone);
@@ -548,13 +552,23 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone[]
      */
-    public function getAllBareMilestones(PFUser $user, Planning $planning) {
+    public function getAllBareMilestones(PFUser $user, Planning $planning)
+    {
         $milestones = array();
         $project    = $planning->getPlanningTracker()->getProject();
-        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView(
+            $user,
+            $planning->getPlanningTrackerId()
+        );
         foreach ($artifacts as $artifact) {
-            $milestones[] = new Planning_ArtifactMilestone($project, $planning, $artifact);
+            $milestones[] = new Planning_ArtifactMilestone(
+                $project,
+                $planning,
+                $artifact,
+                $this->scrum_mono_milestone_checker
+            );
         }
+
         return $milestones;
     }
 
@@ -581,22 +595,37 @@ class Planning_MilestoneFactory {
      *
      * @return Array of Planning_Milestone
      */
-    public function getAllMilestonesWithoutPlannedElement(PFUser $user, Planning $planning) {
+    public function getAllMilestonesWithoutPlannedElement(PFUser $user, Planning $planning)
+    {
         $project    = $planning->getPlanningTracker()->getProject();
-        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView(
+            $user,
+            $planning->getPlanningTrackerId()
+        );
         $milestones = array();
 
         foreach ($artifacts as $artifact) {
             if ($artifact->getLastChangeset()) {
-                $milestones[] = new Planning_ArtifactMilestone($project, $planning, $artifact, null);
+                $milestones[] = new Planning_ArtifactMilestone(
+                    $project,
+                    $planning,
+                    $artifact,
+                    $this->scrum_mono_milestone_checker,
+                    null
+                );
             }
         }
+
         return $milestones;
     }
 
-    private function getAllMilestonesWithoutCaching(PFUser $user, Planning $planning) {
+    private function getAllMilestonesWithoutCaching(PFUser $user, Planning $planning)
+    {
         $project    = $planning->getPlanningTracker()->getProject();
-        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView(
+            $user,
+            $planning->getPlanningTrackerId()
+        );
         $milestones = array();
 
         foreach ($artifacts as $artifact) {
@@ -607,9 +636,16 @@ class Planning_MilestoneFactory {
              */
             if ($artifact->getLastChangeset()) {
                 $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-                $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+                $milestones[]      = new Planning_ArtifactMilestone(
+                    $project,
+                    $planning,
+                    $artifact,
+                    $this->scrum_mono_milestone_checker,
+                    $planned_artifacts
+                );
             }
         }
+
         return $milestones;
     }
 
@@ -632,14 +668,21 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifacts = null) {
-        $tracker  = $artifact->getTracker();
+    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifacts = null)
+    {
+        $tracker = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
-        if ( ! $planning) {
+        if (! $planning) {
             return null;
         }
 
-        return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact, $planned_artifacts);
+        return new Planning_ArtifactMilestone(
+            $tracker->getProject(),
+            $planning,
+            $artifact,
+            $this->scrum_mono_milestone_checker,
+            $planned_artifacts
+        );
     }
 
     /**
