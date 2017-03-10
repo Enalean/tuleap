@@ -42,9 +42,10 @@ class PlanningResource extends AuthenticatedResource {
     private $milestone_factory;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $artifact_factory = \Tracker_ArtifactFactory::instance();
-        $status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(
+        $status_counter   = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
             $artifact_factory

@@ -90,7 +90,7 @@ class ProjectMilestonesResource {
             $this->status_counter,
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao, $this->planning_factory)
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
         );
 
         $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
