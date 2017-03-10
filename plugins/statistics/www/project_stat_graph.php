@@ -21,6 +21,9 @@
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
 
+use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Retriever;
+
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -43,7 +46,12 @@ if (! $user->isAdmin($groupId)) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$duMgr  = new Statistics_DiskUsageManager();
+$disk_usage_dao = new Statistics_DiskUsageDao();
+$svn_log_dao    = new SVN_LogDao();
+$retriever      = new Retriever($disk_usage_dao);
+$collector      = new Collector($svn_log_dao, $retriever);
+$duMgr          = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+
 $vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices(false)));
 $vServices->required();
 if ($request->validArray($vServices)) {

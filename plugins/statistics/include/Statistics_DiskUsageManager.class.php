@@ -1,11 +1,9 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet, 2009
- *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +16,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Statistics_DiskUsageDao.class.php';
-require_once('common/dao/include/DataAccessObject.class.php');
+use Tuleap\SVN\DiskUsage\Collector;
 
 class Statistics_DiskUsageManager {
-    private $_dao = null;
 
     private $_services = array();
 
@@ -45,7 +40,27 @@ class Statistics_DiskUsageManager {
     const BACKUP_OLD = 'backup_old';
     const PATH = 'path_';
 
-    public function __construct() {
+    /**
+     * @var Statistics_DiskUsageDao
+     */
+    private $dao;
+    /**
+     * @var Collector
+     */
+    private $collector;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(
+        Statistics_DiskUsageDao $dao,
+        Collector $collector,
+        EventManager $event_manager
+    ) {
+        $this->dao           = $dao;
+        $this->collector     = $collector;
+        $this->event_manager = $event_manager;
     }
 
     /**
@@ -68,9 +83,9 @@ class Statistics_DiskUsageManager {
             if ($siteAdminView) {
                 $this->_services[self::PLUGIN_WEBDAV] = 'SVN/Webdav';
             }
-            $em     = EventManager::instance();
+
             $params = array('services' => &$this->_services);
-            $em->processEvent('plugin_statistics_disk_usage_service_label', $params);
+            $this->event_manager->processEvent('plugin_statistics_disk_usage_service_label', $params);
         }
         return $this->_services;
     }
@@ -114,8 +129,7 @@ class Statistics_DiskUsageManager {
                 // If plugins don't want to color themselves they are white
                 $color = 'white';
                 $params = array('service' => $service, 'color' => &$color);
-                $em = EventManager::instance();
-                $em->processEvent('plugin_statistics_color', $params);
+                $this->event_manager->processEvent('plugin_statistics_color', $params);
                 return $color;
         }
     }
@@ -414,8 +428,7 @@ class Statistics_DiskUsageManager {
     public function storeForGroup($groupId, $service, $path) {
         $size = $this->getDirSize($path.'/');
         if ($size) {
-            $dao = $this->_getDao();
-            $dao->addGroup($groupId, $service, $size, $_SERVER['REQUEST_TIME']);
+            $this->dao->addGroup($groupId, $service, $size, $_SERVER['REQUEST_TIME']);
         }
     }
 
@@ -445,16 +458,13 @@ class Statistics_DiskUsageManager {
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
     public function collectProjects() {
-
-        $em  = EventManager::instance();
-
-        $dao = $this->_getDao();
-        $dar = $dao->searchAllGroups();
+        $dar = $this->dao->searchAllGroups();
         foreach($dar as $row) {
-            //We start the transaction, it is not stored in the DB unless we COMMIT
-            //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK.
-            $sql = db_query('START TRANSACTION');
-            $this->storeForGroup($row['group_id'], 'svn', $GLOBALS['svn_prefix']."/".$row['unix_group_name']);
+            $this->dao->getDa()->startTransaction();
+
+            $project = new Project($row);
+            $this->collectSVNDiskUsage($project);
+
             $this->storeForGroup($row['group_id'], 'cvs', $GLOBALS['cvs_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'frs', $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'ftp', $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name']);
@@ -464,14 +474,32 @@ class Statistics_DiskUsageManager {
             $this->storeForGroup($row['group_id'], 'plugin_webdav', '/var/lib/codendi/webdav'."/".$row['unix_group_name']);
 
             $params = array('DiskUsageManager' => $this, 'project_row' => $row);
-            $em->processEvent('plugin_statistics_disk_usage_collect_project', $params);
+            $this->event_manager->processEvent('plugin_statistics_disk_usage_collect_project', $params);
 
-            $sql = db_query('COMMIT');
+            $this->dao->getDa()->commit();
         }
+
         $this->collectMailingLists();
     }
 
-    public function collectMailingLists() {
+    private function collectSVNDiskUsage(Project $project)
+    {
+        $size = $this->collector->collectForSubversionRepositories($project);
+        if (! $size) {
+            $path = ForgeConfig::get('svn_prefix').'/'.$project->getUnixName();
+            $size = $this->getDirSize($path.'/');
+        }
+
+        $this->dao->addGroup(
+            $project->getID(),
+            self::SVN,
+            $size,
+            $_SERVER['REQUEST_TIME']
+        );
+    }
+
+    private function collectMailingLists()
+    {
         $mmArchivesPath = '/var/lib/mailman/archives/private';
         $sql = db_query('START TRANSACTION');
         $dao = $this->_getDao();
@@ -545,10 +573,7 @@ class Statistics_DiskUsageManager {
     /**
      */
     public function _getDao() {
-        if (!$this->_dao) {
-            $this->_dao = new Statistics_DiskUsageDao(CodendiDataAccess::instance());
-        }
-        return $this->_dao;
+        return $this->dao;
     }
 
     /**
@@ -565,5 +590,3 @@ class Statistics_DiskUsageManager {
         return $info->getPropertyValueForName($name);
     }
 }
-
-?>

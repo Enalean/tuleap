@@ -29,6 +29,8 @@ use Tuleap\Statistics\DiskUsageServicesPresenterBuilder;
 use Tuleap\Statistics\DiskUsageTopUsersPresenterBuilder;
 use Tuleap\Statistics\DiskUsageProjectsPresenterBuilder;
 use Tuleap\Statistics\DiskUsageUserDetailsPresenterBuilder;
+use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Retriever;
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
@@ -45,7 +47,12 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$duMgr  = new Statistics_DiskUsageManager();
+$disk_usage_dao = new Statistics_DiskUsageDao();
+$svn_log_dao    = new SVN_LogDao();
+$retriever      = new Retriever($disk_usage_dao);
+$collector      = new Collector($svn_log_dao, $retriever);
+
+$duMgr  = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
 $disk_usage_output = new Statistics_DiskUsageOutput(

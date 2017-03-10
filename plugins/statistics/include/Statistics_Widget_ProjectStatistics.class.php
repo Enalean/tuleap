@@ -22,6 +22,9 @@ require_once('common/widget/Widget.class.php');
 require_once('Statistics_DiskUsageHtml.class.php');
 require_once ('Statistics_DiskUsageGraph.class.php');
 
+use Tuleap\SVN\DiskUsage\Retriever;
+use Tuleap\SVN\DiskUsage\Collector;
+
 /**
  * Statisitics_Widget_ProjectStatistics
  */
@@ -58,7 +61,12 @@ class Statistics_Widget_ProjectStatistics extends Widget {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
 
-        $duMgr  = new Statistics_DiskUsageManager();
+        $disk_usage_dao = new Statistics_DiskUsageDao();
+        $svn_log_dao    = new SVN_LogDao();
+        $retriever      = new Retriever($disk_usage_dao);
+        $collector      = new Collector($svn_log_dao, $retriever);
+
+        $duMgr  = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
         $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
         return $duHtml->getTotalProjectSize($group_id);

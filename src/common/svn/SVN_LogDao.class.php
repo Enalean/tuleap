@@ -58,6 +58,17 @@ class SVN_LogDao extends DataAccessObject {
                 AND date <= $end_date";
         return $sql;
     }
-}
 
-?>
+    public function hasRepositoriesUpdatedAfterGivenDate($project_id, $date)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $date       = $this->da->escapeInt($date);
+
+        $sql = "SELECT NULL
+                FROM svn_commits
+                WHERE group_id = $project_id
+                  AND date > $date";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
+}

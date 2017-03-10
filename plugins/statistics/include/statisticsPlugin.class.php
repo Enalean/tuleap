@@ -23,6 +23,8 @@
  */
 
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
+use Tuleap\SVN\DiskUsage\Retriever;
+use Tuleap\SVN\DiskUsage\Collector;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -65,7 +67,8 @@ class StatisticsPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $queue->getLogger(),
                     $this->getConfigurationManager(),
-                    $this->getDiskUsagePurger($queue->getLogger())
+                    $this->getDiskUsagePurger($queue->getLogger()),
+                    $this->getDiskUsageManager()
                 );
                 break;
             default:
@@ -256,12 +259,25 @@ class StatisticsPlugin extends Plugin {
         $user_manager           = UserManager::instance();
         $project_manager        = ProjectManager::instance();
         $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
-        $disk_usage_manager     = new Statistics_DiskUsageManager();
+        $disk_usage_manager     = $this->getDiskUsageManager();
         $project_quota_manager  = new ProjectQuotaManager();
 
         $server = new TuleapSOAPServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
         $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
         $server->handle();
+    }
+
+    /**
+     * @return Statistics_DiskUsageManager
+     */
+    private function getDiskUsageManager()
+    {
+        $disk_usage_dao         = new Statistics_DiskUsageDao();
+        $svn_log_dao            = new SVN_LogDao();
+        $retriever              = new Retriever($disk_usage_dao);
+        $collector              = new Collector($svn_log_dao, $retriever);
+
+        return new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
     }
 
     private function getSoapUri() {

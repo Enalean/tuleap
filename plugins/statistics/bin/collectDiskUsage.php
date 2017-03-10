@@ -3,10 +3,14 @@
   // This script is for development use only
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_DiskUsageManager.class.php';
 
+use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Retriever;
 
-$dum = new Statistics_DiskUsageManager();
-$dum->collectAll();
+$disk_usage_dao = new Statistics_DiskUsageDao();
+$svn_log_dao    = new SVN_LogDao();
+$retriever      = new Retriever($disk_usage_dao);
+$collector      = new Collector($svn_log_dao, $retriever);
 
-?>
+$disk_usage_manager = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+$disk_usage_manager->collectAll();
