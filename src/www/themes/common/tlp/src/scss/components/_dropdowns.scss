@@ -23,6 +23,7 @@ $tlp-dropdown-shadow: 0 4px 15px rgba(0, 0, 0, .175);
 $tlp-dropdown-transition: 75ms ease-out;
 
 .tlp-dropdown {
+    display: inline-block;
     position: relative;
 }
 
@@ -68,6 +69,16 @@ $tlp-dropdown-transition: 75ms ease-out;
         border-bottom-color: $tlp-ui-white;
     }
 
+    &.tlp-dropdown-menu-right {
+        right: 0;
+
+        &::before,
+        &::after {
+            right: 20px;
+            left: auto;
+        }
+    }
+
     &.tlp-dropdown-shown {
         transform: translateY(0);
         box-shadow: $tlp-dropdown-shadow;
@@ -104,6 +115,10 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &:hover {
         background: $tlp-ui-border-light;
+    }
+
+    > .tlp-dropdown-menu-item-icon {
+        margin: 0 5px 0 0;
     }
 }
 

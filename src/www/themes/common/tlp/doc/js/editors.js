@@ -170,6 +170,11 @@
                     }
                 );
             }
+
+            var dropdown_trigger = document.getElementById('dropdown-right-example');
+            if (dropdown_trigger) {
+                tlp.dropdown(dropdown_trigger);
+            }
         }
         setTimeout(updatePreview, 10);
     });

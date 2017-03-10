@@ -26,7 +26,7 @@
     }
 </script>
 
-<br />
+<br><br>
 
 <button type="button" id="dropdown-example-options" class="tlp-dropdown-trigger tlp-button-primary tlp-button-outline">
     Using options
@@ -49,4 +49,27 @@
             dropdown_menu: document.getElementById('dropdown-menu-example-options'),
         }
     );
+</script>
+
+
+<br>
+
+Check out this right aligned dropdown menu <span class="tlp-text-danger">with icons</span>
+<div class="tlp-dropdown">
+    <button type="button" id="dropdown-right-example" class="tlp-dropdown-trigger tlp-button-primary">
+        Right aligned
+        <i class="fa fa-caret-down tlp-button-icon-right"></i>
+    </button>
+    <div class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
+        <a href="javascript:;" class="tlp-dropdown-menu-item">
+            <i class="tlp-dropdown-menu-item-icon fa fa-rebel"></i> Send a email to the Rebel Alliance
+        </a>
+        <a href="javascript:;" class="tlp-dropdown-menu-item">
+            <i class="tlp-dropdown-menu-item-icon fa fa-empire"></i> Send a email to the Empire
+        </a>
+    </div>
+</div>
+
+<script>
+    tlp.dropdown(document.getElementById('dropdown-right-example'));
 </script>
