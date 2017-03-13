@@ -106,8 +106,10 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
     private function getLDAPTitle() {
         $hp = Codendi_HTMLPurifier::instance();
 
+        $ldap_user_manager    = $this->ldap_plugin->getLdapUserManager();
         $ldapUserGroupManager = new LDAP_UserGroupManager(
             $this->ldap_plugin->getLdap(),
+            $ldap_user_manager,
             ProjectManager::instance(),
             $this->ldap_plugin->getLogger()
         );

@@ -44,9 +44,13 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      */
     private $logger;
 
-    public function __construct(LDAP $ldap, ProjectManager $project_manager, Logger $logger)
-    {
-        parent::__construct($ldap);
+    public function __construct(
+        LDAP $ldap,
+        LDAP_UserManager $ldap_user_manager,
+        ProjectManager $project_manager,
+        Logger $logger
+    ) {
+        parent::__construct($ldap, $ldap_user_manager);
 
         $this->project_manager = $project_manager;
         $this->logger          = $logger;

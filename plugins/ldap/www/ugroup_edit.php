@@ -72,7 +72,14 @@ if(!$request->valid($vFunc)) {
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
 }
 
-$ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap(), ProjectManager::instance(), $ldapPlugin->getLogger());
+$ldap_user_manager    = $ldapPlugin->getLdapUserManager();
+$ldapUserGroupManager = new LDAP_UserGroupManager(
+    $ldapPlugin->getLdap(),
+    $ldap_user_manager,
+    ProjectManager::instance(),
+    $ldapPlugin->getLogger()
+);
+
 $ldapUserGroupManager->setGroupName($request->get('bind_with_group'));
 $ldapUserGroupManager->setId($ugroupId);
 $ldapUserGroupManager->setProjectId($group_id);
