@@ -63,6 +63,7 @@ DROP TABLE IF EXISTS tracker_artifact_priority_rank;
 DROP TABLE IF EXISTS tracker_artifact_priority_history;
 DROP TABLE IF EXISTS tracker_tooltip;
 DROP TABLE IF EXISTS tracker_global_notification;
+DROP TABLE IF EXISTS tracker_global_notification_users;
 DROP TABLE IF EXISTS tracker_watcher;
 DROP TABLE IF EXISTS tracker_notification_role;
 DROP TABLE IF EXISTS tracker_notification_event;
