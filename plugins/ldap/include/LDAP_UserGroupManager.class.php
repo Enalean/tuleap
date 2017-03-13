@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'LDAP_UserGroupDao.class.php';
-require_once 'LDAP_GroupManager.class.php';
-
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
@@ -44,9 +41,15 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      */
     private $logger;
 
+    /**
+     * @var LDAP_UserGroupDao
+     */
+    private $dao;
+
     public function __construct(
         LDAP $ldap,
         LDAP_UserManager $ldap_user_manager,
+        LDAP_UserGroupDao $dao,
         ProjectManager $project_manager,
         Logger $logger
     ) {
@@ -54,6 +57,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
 
         $this->project_manager = $project_manager;
         $this->logger          = $logger;
+        $this->dao             = $dao;
     }
 
     public function setProjectId($project_id) {
@@ -161,9 +165,9 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      *
      * @return LDAP_UserGroupDao
      */
-    function getDao() 
+    public function getDao()
     {
-        return new LDAP_UserGroupDao(CodendiDataAccess::instance());
+        return $this->dao;
     }
 
     /**

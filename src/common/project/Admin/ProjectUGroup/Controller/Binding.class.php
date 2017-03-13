@@ -67,13 +67,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     }
 
     private function setldapUserGroupManager(Plugin $ldapPlugin, ProjectUGroup $ugroup) {
-        $ldap_user_manager    = $ldapPlugin->getLdapUserManager();
-        $ldapUserGroupManager = new LDAP_UserGroupManager(
-            $ldapPlugin->getLdap(),
-            $ldap_user_manager,
-            ProjectManager::instance(),
-            $ldapPlugin->getLogger()
-        );
+        $ldapUserGroupManager = $ldapPlugin->getLdapUserGroupManager();
 
         $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
         $ldapUserGroupManager->setId($ugroup->getId());

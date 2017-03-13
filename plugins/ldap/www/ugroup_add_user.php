@@ -21,14 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once(dirname(__FILE__).'/../include/LDAP_UserGroupManager.class.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('www/project/admin/project_admin_utils.php');
-
-//
-// Verify common requirement
-//
 
 // LDAP plugin enabled
 $pluginManager = PluginManager::instance();
@@ -64,13 +56,7 @@ $group_id = $row['group_id'];
 $ugroupUpdateUsersAllowed = true;
 $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
 if ($ugroupUpdateUsersAllowed) {
-    $ldap_user_manager    = $ldapPlugin->getLdapUserManager();
-    $ldapUserGroupManager = new LDAP_UserGroupManager(
-        $ldapPlugin->getLdap(),
-        $ldap_user_manager,
-        ProjectManager::instance(),
-        $ldapPlugin->getLogger()
-    );
+    $ldapUserGroupManager = $ldapPlugin->getLdapUserGroupManager();
 
     $ldapUserGroupManager->setId($ugroupId);
     $ldapUserGroupManager->setProjectId($group_id);
@@ -123,5 +109,3 @@ if ($ugroupUpdateUsersAllowed) {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
 }
-
-?>
