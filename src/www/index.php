@@ -4,13 +4,16 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-$hp = Codendi_HTMLPurifier::instance();
+$hp            = Codendi_HTMLPurifier::instance();
+$event_manager = EventManager::instance();
+
+$event_manager->processEvent(Event::DISPLAYING_HOMEPAGE, array());
 
 $current_user              = UserManager::instance()->getCurrentUser();
 $current_user_display_name = '';
@@ -27,7 +30,6 @@ $login_form_url .= '/account/login.php';
 $display_homepage_boxes      = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
 $display_homepage_news       = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
 $display_homepage_login_form = true;
-$event_manager               = EventManager::instance();
 $event_manager->processEvent(Event::DISPLAY_HOMEPAGE_LOGIN_FORM, array('is_displayed' => &$display_homepage_login_form));
 $header_params = array(
     'title' => $Language->getText('homepage', 'title'),
