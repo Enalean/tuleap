@@ -2071,9 +2071,11 @@ EOS;
      * @return Tracker_NotificationsManager
      */
     public function getNotificationsManager() {
+        $user_to_notify_dao = new UsersToNotifyDao();
         return new Tracker_NotificationsManager(
             $this,
-            new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao())
+            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            $user_to_notify_dao
         );
     }
 

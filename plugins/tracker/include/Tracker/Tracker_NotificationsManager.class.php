@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
+use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 
 class Tracker_NotificationsManager {
 
@@ -30,10 +31,19 @@ class Tracker_NotificationsManager {
      * @var CollectionOfUserToBeNotifiedPresenterBuilder
      */
     private $user_to_be_notified_builder;
+    /**
+     * @var UsersToNotifyDao
+     */
+    private $user_to_notify_dao;
 
-    public function __construct($tracker, CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder) {
+    public function __construct(
+        $tracker,
+        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
+        UsersToNotifyDao $user_to_notify_dao
+    ) {
         $this->tracker                     = $tracker;
         $this->user_to_be_notified_builder = $user_to_be_notified_builder;
+        $this->user_to_notify_dao          = $user_to_notify_dao;
     }
 
     public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user) {
@@ -214,7 +224,11 @@ class Tracker_NotificationsManager {
         $notif = $dao->searchById($id);
 
         if (! empty($notif)) {
-            $dao->delete($id, $this->tracker->id);
+            $deletion_result = $dao->delete($id, $this->tracker->id);
+
+            if ($deletion_result) {
+                $this->user_to_notify_dao->deleteByNotificationId($id);
+            }
         }
     }
 
