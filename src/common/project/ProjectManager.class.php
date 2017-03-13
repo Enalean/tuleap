@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Project\Webhook\WebhookDao;
+use Tuleap\Project\Webhook\Retriever;
 
 /**
  * Provide access to projects
@@ -349,6 +351,12 @@ class ProjectManager {
 
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
+
+            $webhooks = $this->getProjectWebhooks();
+            foreach ($webhooks as $webhook) {
+                $webhook->send($project, $_SERVER['REQUEST_TIME']);
+            }
+
             return true;
         }
 
@@ -848,6 +856,15 @@ class ProjectManager {
         }
 
         return $this->hierarchy_manager;
+    }
+
+    /**
+     * @return \Tuleap\Project\Webhook\Webhook[]
+     */
+    private function getProjectWebhooks()
+    {
+        $webhook_retriever = new Retriever(new WebhookDao());
+        return $webhook_retriever->getWebhooks();
     }
 
     /**
