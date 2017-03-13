@@ -1,37 +1,35 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2015. All rights reserved
+ * Copyright (c) Enalean 2015 - 2017. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/event/NotificationsManager.class.php');
-require_once('common/mail/Mail.class.php');
-require_once('Docman_ItemFactory.class.php');
-require_once('Docman_Path.class.php');
-require_once('DocmanConstants.class.php');
-require_once('Docman_NotificationsDao.class.php');
+use Tuleap\Docman\Notifications\Dao;
 
-class Docman_NotificationsManager extends NotificationsManager {
+require_once('common/mail/Mail.class.php');
+
+class Docman_NotificationsManager
+{
 
     const MESSAGE_MODIFIED        = 'modified';
     const MESSAGE_NEWVERSION      = 'new_version';
     const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
-    
+
     var $_listeners;
     var $_feedback;
     var $_item_factory;
@@ -50,20 +48,29 @@ class Docman_NotificationsManager extends NotificationsManager {
      * @var MailBuilder
      */
     private $mail_builder;
+    /**
+     * @var Dao
+     */
+    private $dao;
 
-    function __construct(Project $project, $url, $feedback, MailBuilder $mail_builder) {
-        parent::__construct();
-
-        $this->project       =  $project;
-        $this->_url          =  $url;
-        $this->_listeners    =  array();
+    public function __construct(
+        Project $project,
+        $url,
+        $feedback,
+        MailBuilder $mail_builder,
+        Dao $dao
+    ) {
+        $this->project       = $project;
+        $this->_url          = $url;
+        $this->_listeners    = array();
         $this->_feedback     = $feedback;
-        $this->_item_factory =  $this->_getItemFactory();
-        $this->notifications =  array();
+        $this->_item_factory = $this->_getItemFactory();
+        $this->notifications = array();
         $this->mail_builder  = $mail_builder;
         if ($project && !$project->isError()) {
             $this->_group_name = $project->getPublicName();
         }
+        $this->dao = $dao;
     }
     function _getItemFactory() {
         return new Docman_ItemFactory();
@@ -302,9 +309,32 @@ class Docman_NotificationsManager extends NotificationsManager {
      * @return Boolean
      */
     function listAllMonitoredItems($groupId, $userId = null) {
-        $notificationsDao = new Docman_NotificationsDao(CodendiDataAccess::instance());
-        return $notificationsDao->searchDocmanMonitoredItems($groupId, $userId);
+        return $this->dao->searchDocmanMonitoredItems($groupId, $userId);
+    }
+
+    public function add($user_id, $object_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        return $this->dao->create($user_id, $object_id, $type);
+    }
+
+    public function remove($user_id, $object_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        return $this->dao->delete($user_id, $object_id, $type);
+    }
+
+    public function exist($user_id, $object_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        $dar = $this->dao->search($user_id, $object_id, $type);
+        return $dar->valid();
     }
 
 }
-?>

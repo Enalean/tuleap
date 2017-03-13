@@ -31,7 +31,6 @@ Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsM
         '_getUserManager',
         '_getPermissionsManager',
         '_getDocmanPath',
-        '_getDao',
         '_buildMessage',
     )
 );
@@ -56,9 +55,8 @@ Mock::generate('Docman_PermissionsManager');
 
 Mock::generate('Docman_Path');
 
-Mock::generate('NotificationsDao');
-
-class NotificationsManager_MoveTest extends TuleapTestCase {
+class NotificationsManager_MoveTest extends TuleapTestCase
+{
     var $groupId;
 
     /**
@@ -277,7 +275,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase {
 
         $docman_path = new MockDocman_Path();
 
-        $dao = new MockNotificationsDao();
+        $dao = mock('Tuleap\Docman\Notifications\Dao');
+        stub($dao)->searchUserIdByObjectIdAndType($d->getId(), 'plugin_docman')->returns($dar_d);
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_d, array($d->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_c, array($c->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_b, array($b->getId(), 'plugin_docman'));
@@ -288,7 +287,6 @@ class NotificationsManager_MoveTest extends TuleapTestCase {
         $dnmm->setReturnReference('_getUserManager', $user_manager);
         $dnmm->setReturnReference('_getPermissionsManager', $permissions_manager);
         $dnmm->setReturnReference('_getDocmanPath', $docman_path);
-        $dnmm->setReturnReference('_getDao', $dao);
 
         if ($res != 'none') {
             $dnmm->expectOnce('_buildMessage', false, $msg);
@@ -299,7 +297,13 @@ class NotificationsManager_MoveTest extends TuleapTestCase {
         $mail_builder = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
 
         //C'est parti
-        $dnmm->__construct($project, 'my_url', $feedback, $mail_builder);
+        $dnmm->__construct(
+            $project,
+            'my_url',
+            $feedback,
+            $mail_builder,
+            $dao
+        );
         $dnmm->somethingHappen('plugin_docman_event_move', array(
             'group_id' => $group_id,
             'item'    => &$d,
