@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
@@ -214,7 +217,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->artifact_factory,
-            $this->planning_factory
+            $this->planning_factory,
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
         );
 
         return $backlog_item_collection_factory->getAllCollection(

@@ -71,7 +71,8 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
             $tracker_form_element_factory,
             $backlog_strategy_factory,
             $milestone_factory,
-            $backlog_row_collection_factory
+            $backlog_row_collection_factory,
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
         );
     }
 

@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 
 /**
  * I build AgileDashboard_Milestone_Backlog_BacklogStrategy
@@ -36,14 +37,21 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
     /** @var PlanningFactory */
     private $planning_factory;
 
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
-        PlanningFactory $planning_factory
+        PlanningFactory $planning_factory,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
-        $this->dao              = $dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->planning_factory = $planning_factory;
+        $this->dao                          = $dao;
+        $this->artifact_factory             = $artifact_factory;
+        $this->planning_factory             = $planning_factory;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     /**
@@ -80,6 +88,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
             $milestone->getPlanning()->getBacklogTrackers(),
             $backlog_trackers_children_can_manage,
             $this->dao,
+            $this->scrum_mono_milestone_checker,
             $limit,
             $offset
         );

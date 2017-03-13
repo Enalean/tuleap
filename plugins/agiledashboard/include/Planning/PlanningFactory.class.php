@@ -518,6 +518,16 @@ class PlanningFactory {
         return $tracker_ids;
     }
 
+    public function getBacklogTrackersIdsIndexedByTrackerId($planning_id) {
+        $tracker_ids = array();
+        $rows = $this->dao->searchBacklogTrackersById($planning_id);
+        foreach ($rows as $row) {
+            $tracker_ids[$row['tracker_id']] = true;
+        }
+
+        return $tracker_ids;
+    }
+
     /**
      * @return Tracker
      */

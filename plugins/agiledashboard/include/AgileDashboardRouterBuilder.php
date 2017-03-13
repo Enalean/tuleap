@@ -296,7 +296,8 @@ class AgileDashboardRouterBuilder {
         return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            $this->getPlanningFactory()
+            $this->getPlanningFactory(),
+            $this->getMonoMileStoneChecker()
         );
     }
 

@@ -465,7 +465,8 @@ class AgileDashboardPlugin extends Plugin {
         return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            PlanningFactory::build()
+            PlanningFactory::build(),
+            $this->getMonoMilestoneChecker()
         );
     }
 
