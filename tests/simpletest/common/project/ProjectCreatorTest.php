@@ -24,8 +24,10 @@ class ProjectCreatorTest extends TuleapTestCase
 
     public function setUp()
     {
-        $GLOBALS['Language']   = mock('BaseLanguage');
-        $GLOBALS['svn_prefix'] = 'whatever';
+        parent::setUp();
+
+        $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__) . '/_fixtures';
+        $GLOBALS['svn_prefix']         = 'whatever';
 
         $this->event_manager = stub('SystemEventManager')->isUserNameAvailable()->returns(true);
         stub($this->event_manager)->isProjectNameAvailable()->returns(true);
