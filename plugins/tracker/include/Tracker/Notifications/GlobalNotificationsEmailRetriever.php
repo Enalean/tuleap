@@ -20,7 +20,10 @@
 
 namespace Tuleap\Tracker\Notifications;
 
+use ProjectUGroup;
 use Tracker_GlobalNotification;
+use TrackerFactory;
+use UGroupManager;
 
 class GlobalNotificationsEmailRetriever
 {
@@ -28,10 +31,29 @@ class GlobalNotificationsEmailRetriever
      * @var UsersToNotifyDao
      */
     private $user_dao;
+    /**
+     * @var UgroupsToNotifyDao
+     */
+    private $ugroup_dao;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
-    public function __construct(UsersToNotifyDao $user_dao)
-    {
-        $this->user_dao = $user_dao;
+    public function __construct(
+        UsersToNotifyDao $user_dao,
+        UgroupsToNotifyDao $ugroup_dao,
+        UGroupManager $ugroup_manager,
+        TrackerFactory $tracker_factory
+    ) {
+        $this->user_dao        = $user_dao;
+        $this->ugroup_dao      = $ugroup_dao;
+        $this->ugroup_manager  = $ugroup_manager;
+        $this->tracker_factory = $tracker_factory;
     }
 
     /**
@@ -40,11 +62,40 @@ class GlobalNotificationsEmailRetriever
     public function getNotifiedEmails(Tracker_GlobalNotification $notification)
     {
         $emails = $this->transformNotificationAddressesStringAsArray($notification);
+        $this->addUsers($notification, $emails);
+        $this->addUgroups($notification, $emails);
+
+        return array_unique($emails);
+    }
+
+    private function addUsers(Tracker_GlobalNotification $notification, array &$emails)
+    {
         foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
             $emails[] = $row['email'];
         }
+    }
 
-        return array_unique($emails);
+    private function addUgroups(Tracker_GlobalNotification $notification, array &$emails)
+    {
+        $tracker = $this->tracker_factory->getTrackerById($notification->getTrackerId());
+        if ($tracker) {
+            $project = $tracker->getProject();
+            foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
+                $ugroup = $this->ugroup_manager->getUGroup($project, $row['ugroup_id']);
+                if ($ugroup) {
+                    $this->addUgroupMembers($ugroup, $emails);
+                }
+            }
+        }
+    }
+
+    private function addUgroupMembers(ProjectUGroup $ugroup, array &$emails)
+    {
+        foreach ($ugroup->getMembers() as $user) {
+            if ($user->isAlive()) {
+                $emails[] = $user->getEmail();
+            }
+        }
     }
 
     /**
