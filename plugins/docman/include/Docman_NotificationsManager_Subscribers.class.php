@@ -61,15 +61,14 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     */
     function _buildMessage($event, $params, $user) {
         $type = '';
-        $language = $this->_getLanguageForUser($user);
         switch($event) {
         case 'plugin_docman_add_monitoring':
             $type = self::MESSAGE_ADDED;
-            $subject = $language->getText('plugin_docman', 'notifications_added_to_monitoring_list_subject', array($params['item']->getTitle()));
+            $subject = $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_to_monitoring_list_subject', array($params['item']->getTitle()));
             break;
         case 'plugin_docman_remove_monitoring':
             $type = self::MESSAGE_REMOVED;
-            $subject = $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list_subject', array($params['item']->getTitle()));
+            $subject = $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_monitoring_list_subject', array($params['item']->getTitle()));
             break;
         default:
             $subject = $params['item']->getTitle();
@@ -94,24 +93,23 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     */
     function _getMessageForUser($user, $message_type, $params) {
         $msg = '';
-        $language = $this->_getLanguageForUser($user);
         $separator = "\n\n--------------------------------------------------------------------\n";
         $itemUrl = $this->getMessageLink($message_type, $params);
         switch($message_type) {
         case self::MESSAGE_ADDED:
-            $msg .= $language->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
+            $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
             $msg .= $itemUrl;
             $msg .= $separator;
-            $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
+            $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_footer_message_link')."\n";
             break;
         case self::MESSAGE_REMOVED:
-            $msg .= $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list')."\n";
+            $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_monitoring_list')."\n";
             $msg .= $itemUrl;
             $msg .= $separator;
-            $msg .= $language->getText('plugin_docman', 'notif_footer_message_restore_link')."\n";
+            $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_footer_message_restore_link')."\n";
             break;
         default:
-            $msg .= $language->getText('plugin_docman', 'notif_something_happen')."\n";
+            $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_something_happen')."\n";
             break;
         }
         $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();

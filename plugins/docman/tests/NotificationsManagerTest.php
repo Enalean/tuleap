@@ -27,8 +27,7 @@ Mock::generatePartial('Docman_NotificationsManager',
                             '_getItemFactory',
                             '_groupGetObject',
                             '_getDao',
-                            'getListeningUsers',
-                            '_getLanguageForUser'));
+                            'getListeningUsers'));
 
 Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_Item');
@@ -99,12 +98,11 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
 
     public function testGetMessageForUserSameListenedItem()
     {
-        $language = new MockBaseLanguage();
-        $language->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
-        $language->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
-        $language->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
-        $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
-        $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
 
         $project           = aMockProject()->withId(101)->build();
         $feedback          = new MockFeedback($this);
@@ -119,7 +117,6 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             $mail_builder,
             $notifications_dao
         );
-        $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');
         $user->setReturnValue('getRealName', 'John Doe');
@@ -145,12 +142,11 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
 
     public function testGetMessageForUserParentListened()
     {
-        $language = new MockBaseLanguage();
-        $language->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
-        $language->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
-        $language->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
-        $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
-        $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
+        $GLOBALS['Language']->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
 
         $project           = aMockProject()->withId(101)->build();
         $feedback          = new MockFeedback($this);
@@ -165,7 +161,6 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             $mail_builder,
             $notifications_dao
         );
-        $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');
         $user->setReturnValue('getRealName', 'John Doe');
