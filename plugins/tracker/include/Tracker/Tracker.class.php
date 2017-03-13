@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
+use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
@@ -3159,7 +3160,12 @@ EOS;
         $recipients            = array();
         $notifications_manager = $this->getNotificationsManager();
         $notifications         = $notifications_manager->getGlobalNotifications();
-        $email_retriever       = new GlobalNotificationsEmailRetriever(new UsersToNotifyDao());
+        $email_retriever       = new GlobalNotificationsEmailRetriever(
+            new UsersToNotifyDao(),
+            new UgroupsToNotifyDao(),
+            new UGroupManager(),
+            TrackerFactory::instance()
+        );
         foreach ($notifications as $id => $notification) {
             $notified_emails = $email_retriever->getNotifiedEmails($notification);
             $recipients[$id] = array( 'recipients'=>$notified_emails, 'on_updates'=> $notification->isAllUpdates(), 'check_permissions'=> $notification->isCheckPermissions()  );
