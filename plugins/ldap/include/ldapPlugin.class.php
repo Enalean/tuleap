@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -1131,7 +1131,7 @@ class LdapPlugin extends Plugin {
 
     public function ugroup_duplication($params)
     {
-        $dao              = new LDAP_UserGroupDao(CodendiDataAccess::instance());
+        $dao              = $this->getUserGroupDao();
         $source_ugroup_id = $params['source_ugroup']->getId();
         $new_ugroup_id    = $params['new_ugroup_id'];
 
@@ -1141,14 +1141,23 @@ class LdapPlugin extends Plugin {
     /**
      * @return LDAP_UserGroupManager
      */
-    private function getLdapUserGroupManager()
+    public function getLdapUserGroupManager()
     {
         return new LDAP_UserGroupManager(
             $this->getLdap(),
             $this->getLdapUserManager(),
+            $this->getUserGroupDao(),
             ProjectManager::instance(),
             $this->getLogger()
         );
+    }
+
+    /**
+     * @return LDAP_UserGroupDao
+     */
+    private function getUserGroupDao()
+    {
+        return new LDAP_UserGroupDao(CodendiDataAccess::instance());
     }
 
     /**

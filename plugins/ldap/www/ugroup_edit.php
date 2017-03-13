@@ -22,17 +22,9 @@
  */
 
 require_once('pre.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('www/project/admin/project_admin_utils.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once(dirname(__FILE__).'/../include/LDAP_UserGroupManager.class.php');
 
 // Import very long user group may takes very long time.
 ini_set('max_execution_time', 0);
-
-//
-// Verify common requirement
-//
 
 // LDAP plugin enabled
 $pluginManager = PluginManager::instance();
@@ -72,13 +64,7 @@ if(!$request->valid($vFunc)) {
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
 }
 
-$ldap_user_manager    = $ldapPlugin->getLdapUserManager();
-$ldapUserGroupManager = new LDAP_UserGroupManager(
-    $ldapPlugin->getLdap(),
-    $ldap_user_manager,
-    ProjectManager::instance(),
-    $ldapPlugin->getLogger()
-);
+$ldapUserGroupManager = $ldapPlugin->getLdapUserGroupManager();
 
 $ldapUserGroupManager->setGroupName($request->get('bind_with_group'));
 $ldapUserGroupManager->setId($ugroupId);
@@ -274,4 +260,3 @@ $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 echo '</form>';
 
 project_admin_footer(array());
-?>

@@ -25,9 +25,13 @@
 class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Binding {
 
     private $plugin_binding;
+
+    /**
+     * @var LdapPlugin
+     */
     private $ldap_plugin;
 
-    public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding, $ldap_plugin) {
+    public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding, LdapPlugin $ldap_plugin) {
         parent::__construct($ugroup, $ugroup_binding);
 
         $this->plugin_binding = $plugin_binding;
@@ -106,13 +110,7 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
     private function getLDAPTitle() {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $ldap_user_manager    = $this->ldap_plugin->getLdapUserManager();
-        $ldapUserGroupManager = new LDAP_UserGroupManager(
-            $this->ldap_plugin->getLdap(),
-            $ldap_user_manager,
-            ProjectManager::instance(),
-            $this->ldap_plugin->getLogger()
-        );
+        $ldapUserGroupManager = $this->ldap_plugin->getLdapUserGroupManager();
 
         $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($this->ugroup->getId());
 
