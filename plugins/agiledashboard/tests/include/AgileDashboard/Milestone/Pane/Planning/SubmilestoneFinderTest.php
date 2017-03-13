@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,7 +23,97 @@
  */
 
 require_once dirname(__FILE__) .'/../../../../../common.php';
-class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends TuleapTestCase {
+
+class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends TuleapTestCase
+{
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
+     * @var Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'
+     */
+    private $mono_milestone_checker;
+
+    /**
+     * @var Project
+     */
+    private $project;
+
+    /**
+     * @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
+     */
+    private $finder;
+
+    /**
+     * @var Tracker
+     */
+    private $user_story_tracker;
+
+    /**
+     * @var Tracker
+     */
+    private $release_tracker;
+
+    /**
+     * @var Tracker
+     */
+    private $sprint_tracker;
+
+    /**
+     * @var Tracker
+     */
+    private $epic_tracker;
+
+    /**
+     * @var Tracker
+     */
+    private $theme_tracker;
+
+    /**
+     * @var Tracker
+     */
+    private $team_tracker;
+
+    /**
+     * @var Tracker
+     */
+    private $requirement_tracker;
+
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $tracker_hierarchy_factory;
+
+    /**
+     * @var Planning
+     */
+    private  $sprint_planning;
+
+    /**
+     * @var Planning
+     */
+    private $release_planning;
+
+    /**
+     * @var Planning
+     */
+    private $requirement_planning;
+
+    /**
+     * @var Planning_Milestone
+     */
+    private $release_milestone;
+    /**
+     * @var Planning_Milestone
+     */
+    private $sprint_milestone;
 
     private $user_story_tracker_id  = 1;
     private $release_tracker_id     = 2;
@@ -48,29 +138,40 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         $this->release_planning     = stub('Planning')->getId()->returns(12);
         $this->requirement_planning = stub('Planning')->getId()->returns(13);
 
-        $this->requirement_milestone = stub('Planning_Milestone')->getTrackerId()->returns($this->requirement_tracker_id);
         $this->release_milestone     = stub('Planning_Milestone')->getTrackerId()->returns($this->release_tracker_id);
         $this->sprint_milestone      = stub('Planning_Milestone')->getTrackerId()->returns($this->sprint_tracker_id);
 
-        stub($this->requirement_milestone)->getPlanning()->returns($this->requirement_planning);
         stub($this->release_milestone)->getPlanning()->returns($this->release_planning);
         stub($this->sprint_milestone)->getPlanning()->returns($this->sprint_planning);
 
         $this->tracker_hierarchy_factory = mock('Tracker_HierarchyFactory');
         $this->planning_factory          = mock('PlanningFactory');
 
+        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->tracker_factory = mock('TrackerFactory');
+
         $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $this->tracker_hierarchy_factory,
-            $this->planning_factory
+            $this->planning_factory,
+            $this->mono_milestone_checker,
+            $this->tracker_factory
         );
+
+        $this->project = aMockProject()->withId(101)->build();
+
     }
 
     /**
      * user_story  ----> sprint*
      */
-    public function itReturnsNullIfThereIsNoChildTracker() {
+    public function itReturnsNullIfThereIsNoChildTrackerForMultiMilestoneConfiguration()
+    {
         stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->sprint_tracker_id)->returns(array());
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->sprint_milestone)->getProject()->returns($this->project);
+        stub($this->release_milestone)->getProject()->returns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->sprint_milestone);
 
@@ -81,11 +182,15 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * user_story  ----> release*
      *              `-->  ` sprint
      */
-    public function itReturnsSprintWhenBothPlanningsHaveSameBacklogTracker() {
+    public function itReturnsSprintWhenBothPlanningsHaveSameBacklogTrackerForMultiMilestoneConfiguration()
+    {
         stub($this->release_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->release_milestone)->getProject()->returns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
@@ -96,10 +201,14 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * user_story  ----> release*
      *                    ` sprint
      */
-    public function itReturnsNullWhenChildHaveNoPlanning() {
+    public function itReturnsNullWhenChildHaveNoPlanningForMultiMilestoneConfiguration()
+    {
         stub($this->release_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns(null);
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->release_milestone)->getProject()->returns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
@@ -110,12 +219,16 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * epic          ----> release*
      *  ` user_story  `-->  ` sprint
      */
-    public function itReturnsSprintWhenTheBacklogTrackerIsParent() {
+    public function itReturnsSprintWhenTheBacklogTrackerIsParentForMultiMilestoneConfiguration()
+    {
         stub($this->release_planning)->getBacklogTrackers()->returns(array($this->epic_tracker));
         stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array($this->epic_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->release_milestone)->getProject()->returns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
@@ -128,12 +241,16 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      *
      * (no hierarchy between epic and team)
      */
-    public function itReturnsNullWhenTheBacklogTrackerIsNotRelated() {
+    public function itReturnsNullWhenTheBacklogTrackerIsNotRelatedForMultiMilestoneConfiguration()
+    {
         stub($this->release_planning)->getBacklogTrackers()->returns(array($this->epic_tracker));
         stub($this->requirement_planning)->getBacklogTrackers()->returns(array($this->team_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->requirement_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->team_tracker)->returns(array());
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->requirement_tracker)->returns($this->requirement_planning);
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->release_milestone)->getProject()->returns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
@@ -145,12 +262,16 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      *  ` epic            ,->  ` sprint
      *     ` user_story -'
       */
-    public function itReturnsSprintWhenTheBacklogTrackerIsAncestor() {
+    public function itReturnsSprintWhenTheBacklogTrackerIsAncestorForMultiMilestoneConfiguration()
+    {
         stub($this->release_planning)->getBacklogTrackers()->returns(array($this->theme_tracker));
         stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array($this->epic_tracker, $this->theme_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
+
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->release_milestone)->getProject()->returns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
@@ -165,7 +286,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * (no hierarchy between epic and team)
      * (requirement and sprint are siblings)
      */
-    public function itReturnsSprintEvenIfThereIsSiblingWithoutMatchingBacklogTracker() {
+    public function itReturnsSprintEvenIfThereIsSiblingWithoutMatchingBacklogTrackerForMultiMilestoneConfiguration()
+    {
         stub($this->release_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->requirement_planning)->getBacklogTrackers()->returns(array($this->team_tracker));
         stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
@@ -175,10 +297,37 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->requirement_tracker)->returns($this->requirement_planning);
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
 
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
+        stub($this->release_milestone)->getProject()->returns($this->project);
+
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertEqual($tracker, $this->sprint_tracker);
     }
 
+    public function itThrowsAnExceptionWhenNoTrackerIsFoundInMonoMilestoneConfiguration()
+    {
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(true);
+        stub($this->planning_factory)->getBacklogTrackersIds()->returns(array());
+
+        stub($this->release_milestone)->getProject()->returns($this->project);
+
+        $this->expectException('Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException');
+
+        $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
+    }
+
+    public function itRetrievesTheTrackerInMonoMilestoneConfiguration()
+    {
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(true);
+        stub($this->planning_factory)->getBacklogTrackersIds()->returns(array($this->user_story_tracker_id));
+
+        stub($this->release_milestone)->getProject()->returns($this->project);
+
+        stub($this->tracker_factory)->getTrackerById($this->user_story_tracker_id)->returns($this->user_story_tracker);
+
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
+
+        $this->assertEqual($tracker, $this->user_story_tracker);
+    }
 }
-?>

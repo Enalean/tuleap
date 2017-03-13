@@ -45,7 +45,13 @@ class AgileDashboardRouterBuilder {
         $planning_factory                                = $this->getPlanningFactory();
         $milestone_factory                               = $this->getMilestoneFactory();
         $hierarchy_factory                               = $this->getHierarchyFactory();
-        $submilestone_finder                             = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory);
+        $mono_milestone_checker                          = $this->getMonoMileStoneChecker();
+        $submilestone_finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+            $hierarchy_factory,
+            $planning_factory,
+            $mono_milestone_checker,
+            $this->getTrackerFactory()
+        );
         $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
         $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
 
@@ -290,6 +296,11 @@ class AgileDashboardRouterBuilder {
             $this->getArtifactFactory(),
             $this->getPlanningFactory()
         );
+    }
+
+    private function getMonoMileStoneChecker()
+    {
+        return new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory());
     }
 
 }

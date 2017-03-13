@@ -12,6 +12,7 @@ plugin_agiledashboard	cannot_create_planning	You cannot create new planning beca
 plugin_agiledashboard	cannot_create_planning_no_trackers	there is no trackers in tracker service
 plugin_agiledashboard	cannot_create_planning_in_scrum_v2	You cannot create more than one planning in scrum V2.
 plugin_agiledashboard	cannot_import_planning_in_scrum_v2	You cannot import more than one planning in scrum V2, please check your XML.
+plugin_agiledashboard	planning_count_different_from_one	Configuration is incorrect, more than one planning is defined.
 plugin_agiledashboard	cannot_create_planning_hierarchy	all potential planning trackers ($1) are already used by a planning configuration (see below).
 plugin_agiledashboard	cannot_create_planning_config	The potential planning trackers are computed out of $1 configuration and its <a href="$2">hierarchy</a>.
 plugin_agiledashboard	planning_out_of_hierarchy	This planning doesn't belong to root planning ($1) hierarchy. This configuration is not supported. You should remove this planning.

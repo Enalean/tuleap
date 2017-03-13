@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,9 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use TrackerFactory;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Planning_Milestone;
@@ -26,9 +29,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 use Tuleap\REST\JsonCast;
 use PlanningFactory;
-
 use AgileDashboard_MilestonesCardwallRepresentation;
-use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
  * Representation of a milestone
@@ -99,7 +100,9 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
 
         $finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             \Tracker_HierarchyFactory::instance(),
-            PlanningFactory::build()
+            PlanningFactory::build(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build()),
+            TrackerFactory::instance()
         );
         $submilestone_tracker = $finder->findFirstSubmilestoneTracker($milestone);
 

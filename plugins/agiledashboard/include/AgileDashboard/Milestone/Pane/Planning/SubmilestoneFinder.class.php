@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,11 +21,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException;
 
 /**
  * I find the suitable submilestone for planning
  */
-class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder {
+class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
+{
 
     /** @var PlanningFactory */
     private $planning_factory;
@@ -33,12 +36,49 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder {
     /** @var Tracker_HierarchyFactory */
     private $hierarchy_factory;
 
-    public function __construct(Tracker_HierarchyFactory $hierarchy_factory, PlanningFactory $planning_factory) {
-        $this->hierarchy_factory = $hierarchy_factory;
-        $this->planning_factory  = $planning_factory;
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $mono_milestone_checker;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    public function __construct(
+        Tracker_HierarchyFactory $hierarchy_factory,
+        PlanningFactory $planning_factory,
+        ScrumForMonoMilestoneChecker $mono_milestone_checker,
+        TrackerFactory $tracker_factory
+    ) {
+        $this->hierarchy_factory      = $hierarchy_factory;
+        $this->planning_factory       = $planning_factory;
+        $this->mono_milestone_checker = $mono_milestone_checker;
+        $this->tracker_factory        = $tracker_factory;
     }
 
-    public function findFirstSubmilestoneTracker(Planning_Milestone $milestone) {
+    public function findFirstSubmilestoneTracker(Planning_Milestone $milestone)
+    {
+        if ($this->mono_milestone_checker->isMonoMilestoneEnabled($milestone->getProject()->getID()) === false) {
+            return $this->findTrackersForMultiMilestonesConfiguration($milestone);
+        } else {
+            return $this->findTrackersForMonoMilestonesConfiguration($milestone);
+        }
+    }
+
+    private function findTrackersForMonoMilestonesConfiguration(Planning_Milestone $milestone)
+    {
+        $trackers_backlog = $this->planning_factory->getBacklogTrackersIds($milestone->getPlanningId());
+
+        if (count($trackers_backlog) === 0) {
+            throw new ScrumForMonoMilestoneDifferentThanOnePlanningException();
+        }
+
+        return $this->tracker_factory->getTrackerById($trackers_backlog[0]);
+    }
+
+    private function findTrackersForMultiMilestonesConfiguration(Planning_Milestone $milestone)
+    {
         $children = $this->hierarchy_factory->getChildren($milestone->getTrackerId());
 
         if (! $children) {
@@ -51,7 +91,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder {
             foreach ($children as $tracker) {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
 
-                if (!$planning) {
+                if (! $planning) {
                     continue;
                 }
 
@@ -70,4 +110,3 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder {
         }
     }
 }
-?>
