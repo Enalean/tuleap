@@ -27,10 +27,10 @@ class Dao extends DataAccessObject
 {
     public function searchDocmanMonitoredItems($project_id, $user_id)
     {
-        $sql = "SELECT n.user_id, n.object_id, n.type ".
-               " FROM notifications AS n ".
+        $sql = "SELECT n.user_id, n.item_id, n.type ".
+               " FROM plugin_docman_notifications AS n ".
                " JOIN plugin_docman_item AS i ".
-               " ON n.object_id = i.item_id ".
+               " ON n.item_id = i.item_id ".
                " WHERE i.group_id = ".$this->da->quoteSmart($project_id);
         if ($user_id) {
             $sql .= " AND n.user_id = ".$this->da->quoteSmart($user_id);
@@ -42,12 +42,12 @@ class Dao extends DataAccessObject
     /**
      * @return DataAccessResult|false
      */
-    public function search($user_id, $object_id, $type)
+    public function search($user_id, $item_id, $type)
     {
         $sql = sprintf(
-            "SELECT user_id, object_id, type FROM notifications WHERE user_id = %s AND object_id = %s AND type = %s",
-            $this->da->quoteSmart($user_id),
-            $this->da->quoteSmart($object_id),
+            "SELECT * FROM plugin_docman_notifications WHERE user_id = %s AND item_id = %s AND type = %s",
+            $this->da->escapeInt($user_id),
+            $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
         );
         return $this->retrieve($sql);
@@ -56,35 +56,11 @@ class Dao extends DataAccessObject
     /**
      * @return DataAccessResult|false
      */
-    public function searchByUserId($user_id)
+    public function searchUserIdByObjectIdAndType($item_id, $type)
     {
         $sql = sprintf(
-            "SELECT user_id, object_id, type FROM notifications WHERE user_id = %s",
-            $this->da->quoteSmart($user_id)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @return DataAccessResult|false
-     */
-    public function searchByObjectId($object_id)
-    {
-        $sql = sprintf(
-            "SELECT user_id, object_id, type FROM notifications WHERE object_id = %s",
-            $this->da->quoteSmart($object_id)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @return DataAccessResult|false
-     */
-    public function searchUserIdByObjectIdAndType($object_id, $type)
-    {
-        $sql = sprintf(
-            "SELECT user_id, object_id, type FROM notifications WHERE object_id = %s AND type = %s",
-            $this->da->quoteSmart($object_id),
+            "SELECT * FROM plugin_docman_notifications WHERE item_id = %s AND type = %s",
+            $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
         );
         return $this->retrieve($sql);
@@ -93,12 +69,12 @@ class Dao extends DataAccessObject
     /**
      * @return bool
      */
-    public function create($user_id, $object_id, $type)
+    public function create($user_id, $item_id, $type)
     {
         $sql = sprintf(
-            "INSERT INTO notifications (user_id, object_id, type) VALUES (%s, %s, %s)",
-            $this->da->quoteSmart($user_id),
-            $this->da->quoteSmart($object_id),
+            "INSERT INTO plugin_docman_notifications (user_id, item_id, type) VALUES (%s, %s, %s)",
+            $this->da->escapeInt($user_id),
+            $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
         );
         return $this->update($sql);
@@ -107,12 +83,12 @@ class Dao extends DataAccessObject
     /**
      * @return bool
      */
-    public function delete($user_id, $object_id, $type)
+    public function delete($user_id, $item_id, $type)
     {
         $sql = sprintf(
-            "DELETE FROM notifications WHERE user_id = %s AND object_id = %s AND type = %s",
-            $this->da->quoteSmart($user_id),
-            $this->da->quoteSmart($object_id),
+            "DELETE FROM plugin_docman_notifications WHERE user_id = %s AND item_id = %s AND type = %s",
+            $this->da->escapeInt($user_id),
+            $this->da->escapeInt($item_id),
             $this->da->quoteSmart($type)
         );
         return $this->update($sql);

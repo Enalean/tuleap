@@ -10,11 +10,12 @@ DROP TABLE IF EXISTS plugin_docman_metadata_love_md;
 DROP TABLE IF EXISTS plugin_docman_report;
 DROP TABLE IF EXISTS plugin_docman_report_filter;
 DROP TABLE IF EXISTS plugin_docman_item_lock;
+DROP TABLE IF EXISTS plugin_docman_notifications;
 
 DELETE FROM service WHERE short_name='docman';
 
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_DOCMAN_%';
-            
+
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_DOCMAN_%';
 
 DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman%';

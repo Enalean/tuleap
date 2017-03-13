@@ -386,6 +386,14 @@ CREATE TABLE plugin_docman_item_lock (
   PRIMARY KEY (item_id)
 );
 
+DROP TABLE IF EXISTS plugin_docman_notifications;
+CREATE TABLE plugin_docman_notifications (
+    item_id int(11) NOT NULL default '0',
+    user_id int(11) NOT NULL default '0',
+    type varchar(100) NOT NULL default '',
+    PRIMARY KEY (item_id, user_id, type)
+);
+
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
 

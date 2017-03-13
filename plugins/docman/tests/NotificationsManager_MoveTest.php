@@ -250,7 +250,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         if ($ld) {
             $dar_d->setReturnValueAt(0, 'valid', true);
             $dar_d->setReturnValueAt(1, 'valid', false);
-            $dar_d->setReturnValue('current', array('user_id' => $listener->getId(), 'object_id' => $d->getId()));
+            $dar_d->setReturnValue('current', array('user_id' => $listener->getId(), 'item_id' => $d->getId()));
         } else {
             $dar_d->setReturnValue('valid', false);
         }
@@ -259,7 +259,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         if ($lc) {
             $dar_c->setReturnValueAt(0, 'valid', true);
             $dar_c->setReturnValueAt(1, 'valid', false);
-            $dar_c->setReturnValue('current', array('user_id' => $listener->getId(), 'object_id' => $c->getId()));
+            $dar_c->setReturnValue('current', array('user_id' => $listener->getId(), 'item_id' => $c->getId()));
         } else {
             $dar_c->setReturnValue('valid', false);
         }
@@ -268,7 +268,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         if ($lb) {
             $dar_b->setReturnValueAt(0, 'valid', true);
             $dar_b->setReturnValueAt(1, 'valid', false);
-            $dar_b->setReturnValue('current', array('user_id' => $listener->getId(), 'object_id' => $b->getId()));
+            $dar_b->setReturnValue('current', array('user_id' => $listener->getId(), 'item_id' => $b->getId()));
         } else {
             $dar_b->setReturnValue('valid', false);
         }
