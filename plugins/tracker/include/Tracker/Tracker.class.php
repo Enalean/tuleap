@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
@@ -2069,7 +2070,10 @@ EOS;
      * @return Tracker_NotificationsManager
      */
     public function getNotificationsManager() {
-        return new Tracker_NotificationsManager($this);
+        return new Tracker_NotificationsManager(
+            $this,
+            new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao())
+        );
     }
 
     /**
@@ -3153,7 +3157,7 @@ EOS;
      */
     public function getRecipients() {
         $recipients            = array();
-        $notifications_manager = new Tracker_NotificationsManager($this);
+        $notifications_manager = $this->getNotificationsManager();
         $notifications         = $notifications_manager->getGlobalNotifications();
         $email_retriever       = new GlobalNotificationsEmailRetriever(new UsersToNotifyDao());
         foreach ($notifications as $id => $notification) {

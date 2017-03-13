@@ -572,13 +572,10 @@ plugin_tracker_include_type	no_hidden_val	---- AUCUNE VALEUR CACHÉE ----
 plugin_tracker_include_type	hidden_val	---- VALEURS CACHÉES ----
 plugin_tracker_include_type	toggle_notification	Suspension des notifications
 plugin_tracker_include_type	notification_suspended	Notifications Suspendues
-plugin_tracker_include_type	toggle_notif_note	<B>En tant qu'administrateur de l'outil de suivi</B>, vous pouvez temporairement suspendre toutes les notifications par e-mail de cet outil de suivi, quels que soient les paramètres de notification spécifiés ci-dessous.
+plugin_tracker_include_type	toggle_notif_note	En tant qu'administrateur de l'outil de suivi, vous pouvez temporairement suspendre toutes les notifications par e-mail de cet outil de suivi, quels que soient les paramètres de notification spécifiés ci-dessous.
 plugin_tracker_include_type	toggle_notif_warn	L'administrateur de l'outi de suivi a temporairement suspendu les notifications par e-mail de cet outil de suivi. Les paramètres ci-dessous ne sont donc pas pris en compte.
 plugin_tracker_include_type	stop_notification	Suspendre les notifications par e-mail
 plugin_tracker_include_type	global_mail_notif	Notification e-mail globale
-plugin_tracker_include_type	admin_note	<B>En tant qu'administrateur de l'outil de suivi</B> vous pouvez spécifier des adresses e-mail (séparées par des virgules) qui recevront systématiquement les notifications de soumission (et éventuellement de modification) d'artefacts.
-plugin_tracker_include_type	send_all	Envoyer à chaque modification ?
-plugin_tracker_include_type	check_perms	Vérifier les permissions ?
 plugin_tracker_include_type	admin_conf	<P>L'administrateur de l'outil de suivi a spécifié que les adresses e-mails suivantes reçoivent les notifications de soumissions (et éventuellement de modification) d'artefacts.<P><u>Destinataires</u>&nbsp;:
 plugin_tracker_include_type	send_all_or_not	(Envoyer à chaque modification&nbsp;: $1)
 plugin_tracker_include_type	admin_not_conf	<P>L'administrateur de l'outil de suivi n'a pas encore spécifié d'adresses e-mail qui recevront systématiquement une notification par e-mail des nouveaux artefacts soumis.

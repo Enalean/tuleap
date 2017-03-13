@@ -1,0 +1,69 @@
+<p>{{ admin_note }}</p>
+<table id="global_notifs" class="table table-bordered">
+    <thead>
+        <tr>
+            <th><i class="icon-trash"></i></th>
+            <th class="plugin-tracker-global-notifs-people"> {{ notified_people }}</th>
+            <th class="plugin-tracker-global-notifs-updates"> {{ send_all }}</th>
+            <th class="plugin-tracker-global-notifs-permissions">{{ check_perms }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{# has_notifications }}
+            {{# notifications }}
+                {{# has_notified }}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="remove_global[{{ notification_id }}]" />
+                        </td>
+                        <td>
+                            {{# has_users_to_be_notified }}
+                                <div class="tracker-notification-email-list-user">
+                                    {{# users_to_be_notified }}
+                                        <div class="avatar tracker-notification-user-avatar">
+                                            {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                        </div>
+                                        {{ label }}
+                                    {{/ users_to_be_notified }}
+                                </div>
+                            {{/ has_users_to_be_notified }}
+                            {{# list_of_mails }}
+                                <input type="text" class="tracker-global-notification-email" name="global_notification[{{ notification_id }}][addresses]" value="{{ list_of_mails }}"/>
+                            {{/ list_of_mails }}
+                        </td>
+                        <td class="tracker-global-notifications-checkbox-cell">
+                            <input type="hidden" name="global_notification[{{ notification_id }}][all_updates]" value="0" />
+                            <input type="checkbox" name="global_notification[{{ notification_id }}][all_updates]" value="1" {{# all_updates }}checked{{/ all_updates }} />
+                        </td>
+                        <td class="tracker-global-notifications-checkbox-cell">
+                            <input type="hidden" name="global_notification[{{ notification_id }}][check_permissions]" value="0" />
+                            <input type="checkbox" name="global_notification[{{ notification_id }}][check_permissions]" value="1" {{# check_permissions }}checked{{/ check_permissions }} />
+                        </td>
+                    </tr>
+                {{/ has_notified }}
+            {{/ notifications }}
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <input class="tracker-global-notification-email" type="text" name="new_global_notification[addresses]" placeholder="{{ new_notification_placeholder }}" )="">
+                </td>
+                <td class="tracker-global-notifications-checkbox-cell">
+                    <input type="hidden" name="new_global_notification[all_updates]" value="0" />
+                    <input type="checkbox" name="new_global_notification[all_updates]" value="1"/>
+                </td>
+                <td class="tracker-global-notifications-checkbox-cell">
+                    <input type="hidden" name="new_global_notification[check_permissions]" value="0" />
+                    <input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>
+                </td>
+            </tr>
+        {{/ has_notifications }}
+        {{^ has_notifications }}
+            <tr class="empty-table">
+                <td colspan="4">
+                    {{ empty_notification }}
+                </td>
+            </tr>
+        {{/ has_notifications }}
+    </tbody>
+</table>

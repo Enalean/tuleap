@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Notifications;
+namespace Tuleap\Tracker\Notifications;
 
-use GitRepository;
+use Tracker_GlobalNotification;
 use Tuleap\Notifications\UserToBeNotifiedPresenter;
 
 class CollectionOfUserToBeNotifiedPresenterBuilder
@@ -35,10 +35,10 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
         $this->dao = $dao;
     }
 
-    public function getCollectionOfUserToBeNotifiedPresenter(GitRepository $repository)
+    public function getCollectionOfUserToBeNotifiedPresenter(Tracker_GlobalNotification $notification)
     {
         $presenters = array();
-        foreach ($this->dao->searchUsersByRepositoryId($repository->getId()) as $row) {
+        foreach ($this->dao->searchUsersByNotificationId($notification->getId()) as $row) {
             $presenters[] = new UserToBeNotifiedPresenter(
                 $row['user_id'],
                 $row['user_name'],

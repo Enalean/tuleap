@@ -1,3 +1,12 @@
+msgid ""
+"As a tracker administrator you can provide email addresses (comma separated) "
+"to which new Artifact submissions (and possibly updates) will be "
+"systematically sent."
+msgstr ""
+
+msgid "Check permissions?"
+msgstr ""
+
 msgid "Configure trackers"
 msgstr ""
 
@@ -11,6 +20,9 @@ msgid "No notification set"
 msgstr ""
 
 msgid "Notified people"
+msgstr ""
+
+msgid "Send on all updates?"
 msgstr ""
 
 #, php-format
