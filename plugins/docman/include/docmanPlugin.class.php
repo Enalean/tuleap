@@ -25,6 +25,7 @@
  */
 
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -858,7 +859,8 @@ class DocmanPlugin extends Plugin
                     null,
                     null,
                     $this->getMailBuilder(),
-                    $this->getNotificationsDao()
+                    $this->getNotificationsDao(),
+                    $this->getUsersRetriever()
                 );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
                 if($dar && !$dar->isError()) {
@@ -893,7 +895,8 @@ class DocmanPlugin extends Plugin
                     null,
                     null,
                     $this->getMailBuilder(),
-                    $this->getNotificationsDao()
+                    $this->getNotificationsDao(),
+                    $this->getUsersRetriever()
                 );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId);
                 if($dar && !$dar->isError()) {
@@ -1050,5 +1053,13 @@ class DocmanPlugin extends Plugin
     private function getNotificationsDao()
     {
         return new Dao();
+    }
+
+    private function getUsersRetriever()
+    {
+        return new UsersRetriever(
+            $this->getNotificationsDao(),
+            new Docman_ItemFactory()
+        );
     }
 }

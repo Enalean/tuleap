@@ -21,6 +21,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 
@@ -113,7 +114,8 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao()
+            $this->getNotificationsDao(),
+            $this->getUsersRetriever()
         );
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true);
@@ -124,7 +126,8 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao()
+            $this->getNotificationsDao(),
+            $this->getUsersRetriever()
         );
         $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true);
@@ -133,7 +136,8 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao()
+            $this->getNotificationsDao(),
+            $this->getUsersRetriever()
         );
         $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true);
@@ -142,7 +146,8 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao()
+            $this->getNotificationsDao(),
+            $this->getUsersRetriever()
         );
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true);
@@ -151,7 +156,8 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao()
+            $this->getNotificationsDao(),
+            $this->getUsersRetriever()
         );
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true);
     }
@@ -1862,5 +1868,13 @@ class Docman_Controller extends Controler {
     private function getNotificationsDao()
     {
         return new Dao();
+    }
+
+    private function getUsersRetriever()
+    {
+        return new UsersRetriever(
+            $this->getNotificationsDao(),
+            new Docman_ItemFactory()
+        );
     }
 }
