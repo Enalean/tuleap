@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Notifications;
+namespace Tuleap\Notifications;
 
 use UserHelper;
 
@@ -29,11 +29,16 @@ class UserToBeNotifiedPresenter
     public $label;
     public $user_id;
 
-    public function __construct($user_id, $user_name, $realname, $has_avatar, $avatar_url)
-    {
+    public function __construct(
+        $user_id,
+        $user_name,
+        $real_name,
+        $has_avatar,
+        $avatar_url
+    ) {
         $this->user_id    = $user_id;
         $this->avatar_url = $avatar_url;
         $this->has_avatar = $has_avatar;
-        $this->label      = UserHelper::instance()->getDisplayName($user_name, $realname);
+        $this->label      = UserHelper::instance()->getDisplayName($user_name, $real_name);
     }
 }

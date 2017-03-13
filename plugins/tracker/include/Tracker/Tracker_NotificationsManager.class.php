@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright Enalean (c) 2017. All rights reserved.
  *
  * This file is a part of Codendi.
  *
@@ -18,14 +19,21 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 
 class Tracker_NotificationsManager {
 
     protected $tracker;
 
-    public function __construct($tracker) {
-        $this->tracker = $tracker;
+    /**
+     * @var CollectionOfUserToBeNotifiedPresenterBuilder
+     */
+    private $user_to_be_notified_builder;
+
+    public function __construct($tracker, CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder) {
+        $this->tracker                     = $tracker;
+        $this->user_to_be_notified_builder = $user_to_be_notified_builder;
     }
 
     public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user) {
@@ -118,43 +126,11 @@ class Tracker_NotificationsManager {
         $notifs    = $this->getGlobalNotifications();
         $nb_notifs = count($notifs);
         if ($this->tracker->userIsAdmin()) {
-            echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_include_type','admin_note') .'</p>';
-            $id        = 0;
-            echo '<table id="global_notifs" class="table table-bordered">';
-            echo '<thead><tr>';
-            echo '<th><i class="icon-trash"></i></th>';
-            echo '<th class="plugin-tracker-global-notifs-people">'. dgettext('tuleap-tracker', 'Notified people') .'</th>';
-            echo '<th class="plugin-tracker-global-notifs-updates">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','send_all') .'</th>';
-            echo '<th class="plugin-tracker-global-notifs-permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','check_perms') .'</th>';
-            echo '</tr></thead>';
-            echo '<tbody>';
-
-            $has_notification = (bool)(count($notifs) > 0);
-
-            if (! $has_notification) {
-                echo '<tr class="empty-table">';
-                echo '<td colspan="4">';
-                echo dgettext("tuleap-tracker", "No notification set");
-                echo '</td>';
-                echo '</tr>';
-            } else {
-                foreach($notifs as $key => $nop) {
-                    $id                = (int)$nop->getId();
-                    $addresses         = $nop->getAddresses();
-                    $all_updates       = $nop->isAllUpdates();
-                    $check_permissions = $nop->isCheckPermissions();
-                    echo '<tr>';
-                    echo $this->getGlobalNotificationForm($id, $addresses, $all_updates, $check_permissions);
-                    echo '</tr>';
-                }
-            }
-
-            echo '<tr>';
-            echo $this->getNewNotificationForm($has_notification);
-            echo '</tr>';
-
-            echo '</tbody>';
-            echo '</table>';
+            $renderer = TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates/notifications');
+            $renderer->renderToPage(
+                'notifications',
+                new PaneNotificationListPresenter($notifs, $this->user_to_be_notified_builder)
+            );
         } else {
             $ok = false;
             if ( $nb_notifs ) {
@@ -176,59 +152,6 @@ class Tracker_NotificationsManager {
                 echo $GLOBALS['Language']->getText('plugin_tracker_include_type','admin_not_conf');
             }
         }
-    }
-
-    private function getNewNotificationForm($has_notification)
-    {
-        $output                   = '';
-        $no_notificatoion_class   = '';
-        if (! $has_notification) {
-            $no_notificatoion_class = 'class="tracker-notification-mail-list-add-in-empty-table"';
-        }
-
-        $output .= '<td/>';
-
-        $placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
-
-        $output .= "<td $no_notificatoion_class>";
-        $output .= '<input class="tracker-global-notification-email" type="text" name="new_global_notification[addresses]" placeholder="'.$placeholder.'")/>';
-        $output .= '</td>';
-
-        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
-        $output .= '<input type="hidden" name="new_global_notification[all_updates]" value="0" />';
-        $output .= '<input type="checkbox" name="new_global_notification[all_updates]" value="1"/>';
-        $output .= '</td>';
-
-        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
-        $output .= '<input type="hidden" name="new_global_notification[check_permissions]" value="0" />';
-        $output .= '<input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>';
-        $output .= '</td>';
-
-        return $output;
-    }
-
-    protected function getGlobalNotificationForm($id, $addresses, $all_updates, $check_permissions)
-    {
-        $output  = '';
-        $output .= '<td>';
-        $output .= '<input type="checkbox" name="remove_global['.$id.']" />';
-        $output .= '</td>';
-        //addresses
-        $output .= '<td>';
-        $output .= '<input type="text" class="tracker-global-notification-email" name="global_notification['.$id.'][addresses]" value="'. Codendi_HTMLPurifier::instance()->purify($addresses, CODENDI_PURIFIER_CONVERT_HTML)  .'"/>';
-        $output .= '</td>';
-        //all_updates
-        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
-        $output .= '<input type="hidden" name="global_notification['.$id.'][all_updates]" value="0" />';
-        $output .= '<input type="checkbox" name="global_notification['.$id.'][all_updates]" value="1" '.($all_updates ? 'checked="checked"' : '').'/>';
-        $output .= '</td>';
-        //check_permissions
-        $output .= '<td class="tracker-global-notifications-checkbox-cell">';
-        $output .= '<input type="hidden" name="global_notification['.$id.'][check_permissions]" value="0" />';
-        $output .= '<input type="checkbox" name="global_notification['.$id.'][check_permissions]" value="1" '.( $check_permissions ? 'checked="checked"' : '').'/>';
-        $output .= '</td>';
-
-        return $output;
     }
 
     /**

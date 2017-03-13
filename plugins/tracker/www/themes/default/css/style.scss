@@ -3503,3 +3503,22 @@ td.tracker-global-notifications-checkbox-cell {
 .plugin-tracker-global-notifs-people {
     width: 100%;
 }
+
+.tracker-notification-email-list-user {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 10px;
+}
+
+.tracker-notification-email-user {
+    display: flex;
+}
+
+.avatar.tracker-notification-user-avatar {
+    display: inline-block;
+    top: 7px;
+    left: 8px;
+    width: 22px;
+    height: 22px;
+    margin: 0 3px 0 5px;
+}
