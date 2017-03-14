@@ -498,6 +498,11 @@ CREATE TABLE groups (
   KEY idx_groups_register_time (register_time)
 );
 
+CREATE TABLE project_webhook_url (
+  id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  url TEXT NOT NULL
+);
+
 CREATE TABLE svn_accessfile_history (
     id INT(11) AUTO_INCREMENT,
     version_number INT(11) NOT NULL,
