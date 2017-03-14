@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Notifications;
+namespace Tuleap\Tracker\Notifications;
 
-use GitRepository;
 use ProjectUGroup;
+use Tracker_GlobalNotification;
 use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
 
 class CollectionOfUgroupToBeNotifiedPresenterBuilder
@@ -36,10 +36,10 @@ class CollectionOfUgroupToBeNotifiedPresenterBuilder
         $this->dao = $dao;
     }
 
-    public function getCollectionOfUgroupToBeNotifiedPresenter(GitRepository $repository)
+    public function getCollectionOfUgroupToBeNotifiedPresenter(Tracker_GlobalNotification $notification)
     {
         $presenters = array();
-        foreach ($this->dao->searchUgroupsByRepositoryId($repository->getId()) as $row) {
+        foreach ($this->dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
             $presenters[] = new UgroupToBeNotifiedPresenter(new ProjectUGroup($row));
         }
         $this->sortUgroupAlphabetically($presenters);
