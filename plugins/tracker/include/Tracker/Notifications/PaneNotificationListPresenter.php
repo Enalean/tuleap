@@ -30,6 +30,9 @@ class PaneNotificationListPresenter
     public $send_all;
     public $check_perms;
     public $new_notification_placeholder;
+    public $edit;
+    public $save;
+    public $cancel;
 
     /**
      * @var CollectionOfUserToBeNotifiedPresenterBuilder
@@ -59,6 +62,9 @@ class PaneNotificationListPresenter
         $this->notified_people = dgettext('tuleap-tracker', 'Notified people');
         $this->send_all        = dgettext('tuleap-tracker', 'Send on all updates?');
         $this->check_perms     = dgettext('tuleap-tracker', 'Check permissions?');
+        $this->edit            = dgettext('tuleap-tracker', 'Edit');
+        $this->save            = dgettext('tuleap-tracker', 'Save');
+        $this->cancel          = dgettext('tuleap-tracker', 'Cancel');
 
         $this->new_notification_placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
     }

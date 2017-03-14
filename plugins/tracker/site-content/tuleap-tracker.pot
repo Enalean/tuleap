@@ -4,10 +4,16 @@ msgid ""
 "systematically sent."
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Check permissions?"
 msgstr ""
 
 msgid "Configure trackers"
+msgstr ""
+
+msgid "Edit"
 msgstr ""
 
 msgid "Enter here a comma separated email addresses list to be notified"
@@ -20,6 +26,9 @@ msgid "No notification set"
 msgstr ""
 
 msgid "Notified people"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Send on all updates?"

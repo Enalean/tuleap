@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
 
 msgid ""
 "As a tracker administrator you can provide email addresses (comma separated) "
@@ -22,11 +22,17 @@ msgstr ""
 "les notifications de soumission (et éventuellement de modification) "
 "d'artefacts."
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
 
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
+
+msgid "Edit"
+msgstr "Éditer"
 
 msgid "Enter here a comma separated email addresses list to be notified"
 msgstr "Ajouter ici une liste d'adresses email séparées par des virgules"
@@ -39,6 +45,9 @@ msgstr "Aucune notification n'a été définie"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+msgid "Save"
+msgstr "Sauvegarder"
 
 msgid "Send on all updates?"
 msgstr "Envoyer à chaque modification ?"
