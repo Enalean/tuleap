@@ -20,7 +20,14 @@
                                    {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
                             >
                         </td>
-                        <td>{{# user }}{{ label }}{{/ user }}</td>
+                        <td class="docman-notification-user">
+                            {{# user }}
+                                <div class="avatar docman-notification-user-avatar">
+                                    {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                </div>
+                                {{ label }}
+                            {{/ user }}
+                        </td>
                         <td>{{ item_title }}</td>
                     </tr>
                 {{/ notifications }}

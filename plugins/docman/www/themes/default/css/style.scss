@@ -517,3 +517,18 @@ a img {
 .plugin-docman-notifications-list-help {
     margin: 0 0 20px;
 }
+
+td.docman-notification-user {
+    vertical-align: middle;
+    padding-left: 37px;
+    position: relative;
+}
+
+.avatar.docman-notification-user-avatar {
+    display: inline-block;
+    position: absolute;
+    top: 7px;
+    left: 8px;
+    width: 22px;
+    height: 22px;
+}
