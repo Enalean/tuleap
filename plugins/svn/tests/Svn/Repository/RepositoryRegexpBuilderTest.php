@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright (c) Enalean, 2016. All Rights Reserved.
+* Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -33,13 +33,21 @@ class RepositoryRegexpBuilderTest extends TuleapTestCase {
         $this->regexp = new RepositoryRegexpBuilder();
     }
 
-    public function itReturnsAValidRegexpForARepository(){
-        $path = '/directory';
-        $this->assertEqual($this->regexp->generateRegexpFromPath($path), "^(/(directory|\\*))$|^(/(directory|\\*)/)$");
+    public function itReturnsAValidRegexpForARepository()
+    {
+        $path        = '/directory';
+        $data_access = mock('DataAccess');
+        stub($data_access)->escapeLikeValue('directory')->returns('directory');
+        $this->assertEqual($this->regexp->generateRegexpFromPath($path, $data_access), "^(/(directory|\\*))$|^(/(directory|\\*)/)$");
     }
 
-    public function itReturnsAValidRegexpForARepositoryWithSubdirectories(){
-        $path = '/directory/subdirectory1/subdirectory2';
-        $this->assertEqual($this->regexp->generateRegexpFromPath($path), "^(/(directory|\\*))$|^(/(directory|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*)/)$");
+    public function itReturnsAValidRegexpForARepositoryWithSubdirectories()
+    {
+        $path        = '/directory/subdirectory1/subdirectory2';
+        $data_access = mock('DataAccess');
+        stub($data_access)->escapeLikeValue('directory')->returns('directory');
+        stub($data_access)->escapeLikeValue('subdirectory1')->returns('subdirectory1');
+        stub($data_access)->escapeLikeValue('subdirectory2')->returns('subdirectory2');
+        $this->assertEqual($this->regexp->generateRegexpFromPath($path, $data_access), "^(/(directory|\\*))$|^(/(directory|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/)$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*))$|^(/(directory|\\*)/(subdirectory1|\\*)/(subdirectory2|\\*)/)$");
     }
 }

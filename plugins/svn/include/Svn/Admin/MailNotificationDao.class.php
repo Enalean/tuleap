@@ -86,7 +86,7 @@ class MailNotificationDao extends DataAccessObject {
     public function searchByPath($repository_id, $path) {
         $repository_id        = $this->da->escapeInt($repository_id);
         $sub_paths_expression = '';
-        $pattern_matcher      = $this->regexp_builder->generateRegexpFromPath($path);
+        $pattern_matcher      = $this->regexp_builder->generateRegexpFromPath($path, $this->da);
 
         if ($pattern_matcher !== '') {
             $pattern_matcher      = $this->da->quoteSmart($pattern_matcher);

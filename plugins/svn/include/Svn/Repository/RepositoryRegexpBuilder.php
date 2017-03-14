@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -22,7 +22,8 @@ namespace Tuleap\Svn\Repository;
 
 
 class RepositoryRegexpBuilder {
-    public function generateRegexpFromPath($path) {
+    public function generateRegexpFromPath($path, \DataAccess $data_access)
+    {
         # Split a given path into subpathes according to depth, then build a regular expression like below:
         # Path: '/trunk/src/common/' =>
         # Regex: '^(/(trunk|\\*))$|^(/(trunk|\\*)/)$|^(/(trunk|\\*)/(src|\\*))$|^(/(trunk|\\*)/(src|\\*)/)$|^(/(trunk|\\*)/(src|\\*)/(common|\\*))$|^(/(trunk|\\*)/(src|\\*)/(common|\\*)/)$'
@@ -34,7 +35,7 @@ class RepositoryRegexpBuilder {
         $pattern_builder = '';
         foreach ($list_repositories as $dir_val) {
             if ($dir_val !== "") {
-                $pattern_builder .= $root.'('.$dir_val.'|'. $star_operator .')';
+                $pattern_builder .= $root.'('.$data_access->escapeLikeValue($dir_val).'|'. $star_operator .')';
 
                 if ($pattern_matcher !== '') {
                     $pattern_matcher .= '|^('.$pattern_builder.')$|^('.$pattern_builder.'/)$';

@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -144,7 +144,7 @@ class Dao extends DataAccessObject
     public function getRestorableRepositoriesByProject($project_id)
     {
         $project_id     = $this->da->escapeInt($project_id);
-        $svn_type       = $this->da->quoteSmart('%' . SystemEvent_SVN_RESTORE_REPOSITORY::NAME);
+        $svn_type       = $this->da->quoteLikeValuePrefix(SystemEvent_SVN_RESTORE_REPOSITORY::NAME);
         $status_new     = $this->da->quoteSmart(SystemEvent::STATUS_NEW);
         $status_running = $this->da->quoteSmart(SystemEvent::STATUS_RUNNING);
 
