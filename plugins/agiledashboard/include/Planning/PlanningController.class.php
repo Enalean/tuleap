@@ -142,6 +142,8 @@ class Planning_Controller extends MVC2_PluginController {
             return $this->showEmptyHome();
         }
 
+        $this->redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled();
+
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),
             $this->group_id,
@@ -160,6 +162,13 @@ class Planning_Controller extends MVC2_PluginController {
             $this->isScrumMonoMilestoneEnabled()
         );
         return $this->renderToString('home', $presenter);
+    }
+
+    private function redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled()
+    {
+        if ($this->isScrumMonoMilestoneEnabled() === true && $this->config_manager->kanbanIsActivatedForProject($this->group_id) == '0') {
+            $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL . "/?action=show-top&group_id=" . $this->group_id . "&pane=topplanning-v2");
+        }
     }
 
     private function isScrumMonoMilestoneEnabled()
