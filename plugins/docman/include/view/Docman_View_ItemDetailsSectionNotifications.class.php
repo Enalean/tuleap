@@ -23,6 +23,8 @@
  *
  *
  */
+use Tuleap\Docman\Notifications\NotificationListPresenter;
+
 require_once('Docman_View_ItemDetailsSection.class.php');
 
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection {
@@ -75,34 +77,13 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content    = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
             $listeners = $this->notificationsManager->getListeningUsers($this->item);
+            $content .= '<fieldset><legend>'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'details_listeners')) .'</legend>';
             if (!empty($listeners)) {
-                $content .= '<fieldset><legend>'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'details_listeners')) .'</legend>';
-                $content .= '<div class="docman_help plugin-docman-notifications-list-help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div>';
-                $content .= '<form name="remove_monitoring" method="POST" action="">';
-                $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
-                $content .= '<table class="table table-bordered plugin-docman-notifications-list">';
-                $content .= '<thead><tr>';
-                $content .= '<th><i class="icon-trash"></i></th>';
-                $content .= '<th class="plugin-docman-notifications-list-user">'. $purifier->purify(dgettext('tuleap-docman', 'Notified people')) .'</th>';
-                $content .= '<th class="plugin-docman-notifications-list-document">'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc')) .'</th>';
-                $content .= '</tr></thead>';
-                foreach ($listeners as $userId => $item) {
-                    $content .= '<tr>';
-                    $user = $um->getUserById($userId);
-                    $content .= '<td>';
-                    if ($this->item == $item) {
-                        $content .= '<input type="checkbox" value="'. $purifier->purify($userId) .'" name="listeners_to_delete[]">';
-                    } else {
-                        $content .= '<input type="checkbox" value="'. $purifier->purify($userId) .'" name="listeners_to_delete[]" disabled="disabled">';
-                    }
-                    $content .= '</td>';
-                    $content .= '<td>'. $purifier->purify($userHelper->getDisplayName($user->getName(), $user->getRealName())) .'</td>';
-                    $content .= '<td>'. $purifier->purify($item->getTitle()) .'</td>';
-                    $content .= '</tr>';
-                }
-                $content .= '</tbody></table>';
-                $content .= '<input type="submit" value="'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'action_delete')) .'">';
-                $content .= '</form>';
+                $renderer = TemplateRendererFactory::build()->getRenderer(dirname(PLUGIN_DOCMAN_BASE_DIR).'/templates');
+                $content .= $renderer->renderToString(
+                    'item-details-notifications',
+                    new NotificationListPresenter($listeners, $this->item)
+                );
             }
             $content .= $this->addListeningUser($itemId);
             $content .= '</fieldset>';
@@ -117,8 +98,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
      *
      * @return String
      */
-    function addListeningUser($itemId) {
-        $content = '<tr><td colspan="2"><hr width="100%" size="1" NoShade></td></tr>';
+    private function addListeningUser($itemId) {
+        $content = '';
         $content .= '<tr><form name="add_monitoring" method="POST" action="">';
         $content .= '<input type="hidden" name="action" value="add_monitoring">';
         $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';

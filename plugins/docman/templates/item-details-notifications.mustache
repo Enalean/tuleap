@@ -1,0 +1,32 @@
+{{# has_listeners }}
+    <div class="docman_help plugin-docman-notifications-list-help">{{{ purified_help }}}</div>
+    <form name="remove_monitoring" method="POST" action="">
+        <input type="hidden" name="action" value="remove_monitoring" />
+        <table class="table table-bordered plugin-docman-notifications-list">
+            <thead>
+                <tr>
+                    <th><i class="icon-trash"></i></th>
+                    <th class="plugin-docman-notifications-list-user">{{ notified_people }}</th>
+                    <th class="plugin-docman-notifications-list-document">{{ monitored_doc }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# notifications }}
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   value="{{# user }}{{ user_id }}{{/ user}}"
+                                   name="listeners_to_delete[]"
+                                   {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
+                            >
+                        </td>
+                        <td>{{# user }}{{ label }}{{/ user }}</td>
+                        <td>{{ item_title }}</td>
+                    </tr>
+                {{/ notifications }}
+            </tbody>
+        </table>
+        <input type="submit" value="{{ delete_button }}">
+    </form>
+    <hr width="100%" size="1" noshade>
+{{/ has_listeners }}
