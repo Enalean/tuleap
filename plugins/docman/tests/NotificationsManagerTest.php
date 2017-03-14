@@ -77,6 +77,7 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
         $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
         $project           = aMockProject()->withId(101)->build();
         $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $users_retriever   = mock('Tuleap\Docman\Notifications\UsersRetriever');
 
         $nm = new Docman_NotificationsManager_TestVersion($this);
         $nm->setReturnValue('_getItemFactory', $itemFty);
@@ -86,7 +87,8 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             '/toto',
             $feedback,
             $mail_builder,
-            $notifications_dao
+            $notifications_dao,
+            $users_retriever
         );
 
         $user = mock('PFUser');
@@ -108,6 +110,7 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
         $feedback          = new MockFeedback($this);
         $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
         $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
+        $users_retriever   = mock('Tuleap\Docman\Notifications\UsersRetriever');
 
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->__construct(
@@ -115,7 +118,8 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             '/toto',
             $feedback,
             $mail_builder,
-            $notifications_dao
+            $notifications_dao,
+            $users_retriever
         );
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');
@@ -152,6 +156,7 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
         $feedback          = new MockFeedback($this);
         $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
         $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
+        $users_retriever   = mock('Tuleap\Docman\Notifications\UsersRetriever');
 
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->__construct(
@@ -159,7 +164,8 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             '/toto',
             $feedback,
             $mail_builder,
-            $notifications_dao
+            $notifications_dao,
+            $users_retriever
         );
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');

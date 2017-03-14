@@ -31,12 +31,16 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
                 $params['path'] = $this->_getDocmanPath();
-                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getId()), self::MESSAGE_MOVED, $params);
-                $this->_buildMessagesForUsers($this->_getListeningUsers($params['parent']->getId()), self::MESSAGE_MOVED_TO, $params);
-                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getParentId()), self::MESSAGE_MOVED_FROM, $params);
+                $users = $this->users_retriever->getNotifiedUsers($params['item']->getId());
+                $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED, $params);
+                $users = $this->users_retriever->getNotifiedUsers($params['parent']->getId());
+                $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED_TO, $params);
+                $users = $this->users_retriever->getNotifiedUsers($params['item']->getParentId());
+                $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED_FROM, $params);
             }
         }
     }
+
     var $do_not_send_notifications_to;
     function _buildMessagesForUsers(&$users, $type, $params) {
         if ($users) {

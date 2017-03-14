@@ -23,7 +23,6 @@ require_once('Docman_Path.class.php');
 
 class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
 {
-
     const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
     const MESSAGE_REMOVED      = 'removed'; // X has been removed
 
@@ -152,8 +151,8 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     function _storeEvents($id, $message_type, $params)
     {
         $dpm   = $this->_getPermissionsManager();
-        $users = $this->_getListeningUsers($id);
-        while ($users->valid()) {
+        $users = $this->users_retriever->getNotifiedUsers($id);
+        while($users->valid()) {
             $row  = $users->current();
             if (!isset($this->_listeners[$row['user_id']])) {
                 $um   = $this->_getUserManager();

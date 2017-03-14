@@ -23,7 +23,6 @@ Mock::generatePartial(
     'Docman_NotificationsManager_DeleteTestVersion',
     array(
         '_getPermissionsManager',
-        '_getListeningUsers',
         '_getUserManager'
     )
 );
@@ -71,16 +70,30 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         $item->setReturnValue('getId', 1);
         $params = array('item' => $item);
 
-        $nm = new Docman_NotificationsManager_DeleteTestVersion();
-        $nm->setReturnValue('_getListeningUsers', $listeningUsers);
-        $nm->setReturnValue('_getUserManager', $um);
-        $nm->setReturnValue('_getPermissionsManager', $dpm);
-        $nm->_listeners = array();
+        $project           = aMockProject()->withId(101)->build();
+        $feedback          = mock('Feedback');
+        $mail_builder      = mock('MailBuilder');
+        $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
+        $users_retriever   = mock('Tuleap\Docman\Notifications\UsersRetriever');
+        stub($users_retriever)->getNotifiedUsers()->returns($listeningUsers);
 
-        $nm->_storeEvents(1, 'removed', $params);
+        $notifications_manager = new Docman_NotificationsManager_DeleteTestVersion();
+        $notifications_manager->__construct(
+            $project,
+            '/toto',
+            $feedback,
+            $mail_builder,
+            $notifications_dao,
+            $users_retriever
+        );
+        $notifications_manager->setReturnValue('_getUserManager', $um);
+        $notifications_manager->setReturnValue('_getPermissionsManager', $dpm);
+        $notifications_manager->_listeners = array();
 
-        $this->assertEqual($user1, $nm->_listeners[1]['user']);
-        $this->assertEqual($user2, $nm->_listeners[2]['user']);
-        $this->assertEqual($user3, $nm->_listeners[3]['user']);
+        $notifications_manager->_storeEvents(1, 'removed', $params);
+
+        $this->assertEqual($user1, $notifications_manager->_listeners[1]['user']);
+        $this->assertEqual($user2, $notifications_manager->_listeners[2]['user']);
+        $this->assertEqual($user3, $notifications_manager->_listeners[3]['user']);
     }
 }

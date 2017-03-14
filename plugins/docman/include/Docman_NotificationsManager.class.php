@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once('common/mail/Mail.class.php');
 
@@ -52,13 +53,18 @@ class Docman_NotificationsManager
      * @var Dao
      */
     private $dao;
+    /**
+     * @var UsersRetriever
+     */
+    protected $users_retriever;
 
     public function __construct(
         Project $project,
         $url,
         $feedback,
         MailBuilder $mail_builder,
-        Dao $dao
+        Dao $dao,
+        UsersRetriever $users_retriever
     ) {
         $this->project       = $project;
         $this->_url          = $url;
@@ -70,7 +76,8 @@ class Docman_NotificationsManager
         if ($project && !$project->isError()) {
             $this->_group_name = $project->getPublicName();
         }
-        $this->dao = $dao;
+        $this->dao             = $dao;
+        $this->users_retriever = $users_retriever;
     }
     function _getItemFactory() {
         return new Docman_ItemFactory();
@@ -87,7 +94,7 @@ class Docman_NotificationsManager
     function somethingHappen($event, $params) {
         $um             = $this->_getUserManager();
         $params['path'] = $this->_getDocmanPath();
-        $users          = $this->_getListeningUsers($this->_getListeningUsersItemId($params));
+        $users          = $this->users_retriever->getNotifiedUsers($this->_getListeningUsersItemId($params));
         if ($users) {
             while($users->valid()) {
                 $u    = $users->current();
@@ -118,35 +125,6 @@ class Docman_NotificationsManager
 
     /* protected */ function _getType() {
         return PLUGIN_DOCMAN_NOTIFICATION;
-    }
-    function _getListeningUsers($id) {
-        //search for users who monitor the item or its parent
-        $users = array();
-        $this->_getListeningUsersForAscendantHierarchy($id, $users, $this->_getType());
-        return new ArrayIterator($users);
-    }
-   /**
-    * Retrieve list of users that are monitoring a given item.
-    *
-    * @param Integer $id    ID of the item that we are looking for its listeners.
-    * @param Array   $users Array where listeners are inserted.
-    * @param String  $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
-    *
-    * @return void
-    */
-    function _getListeningUsersForAscendantHierarchy($id, &$users, $type = null) {
-        if ($id) {
-            $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            if ($u) {
-                while ($u->valid()) {
-                    $users[] = $u->current();
-                    $u->next();
-                }
-            }
-            if ($item = $this->_item_factory->getItemFromDb($id)) {
-                $this->_getListeningUsersForAscendantHierarchy($item->getParentId(), $users, $type);
-            }
-        }
     }
 
    /**
