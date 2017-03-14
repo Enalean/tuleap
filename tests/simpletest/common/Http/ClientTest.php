@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,5 +63,38 @@ class Http_ClientTest extends TuleapTestCase {
         $client = new Http_Client();
         $this->assertEqual($client->getOption(CURLOPT_TIMEOUT), 5);
     }
+
+    public function itRetrievesStatusCodeAndReasonPhrase()
+    {
+        $client = partial_mock('Http_Client', array('getLastResponse', 'getOption'));
+
+        stub($client)->getOption(CURLOPT_HEADER)->returns(1);
+        stub($client)->getLastResponse()->returns('HTTP/1.1 200 OK
+Date: Tue, 14 Mar 2017 15:15:05 GMT
+OtherHeader: Tuleap');
+
+        $this->assertEqual($client->getStatusCodeAndReasonPhrase(), '200 OK');
+    }
+
+    public function itDoesNotRetrieveStatusCodeAndReasonPhraseWhenHeadersHasNotBeenRequested()
+    {
+        $client = partial_mock('Http_Client', array('getLastResponse', 'getOption'));
+
+        stub($client)->getOption(CURLOPT_HEADER)->returns(0);
+        stub($client)->getLastResponse()->returns('HTTP/1.1 200 OK
+Date: Tue, 14 Mar 2017 15:15:05 GMT
+OtherHeader: Tuleap');
+
+        $this->assertEqual($client->getStatusCodeAndReasonPhrase(), null);
+    }
+
+    public function itDoesNotRetrieveStatusCodeAndReasonPhraseWhenThereIsNotLastResponse()
+    {
+        $client = partial_mock('Http_Client', array('getLastResponse', 'getOption'));
+
+        stub($client)->getOption(CURLOPT_HEADER)->returns(1);
+        stub($client)->getLastResponse()->returns(null);
+
+        $this->assertEqual($client->getStatusCodeAndReasonPhrase(), null);
+    }
 }
-?>

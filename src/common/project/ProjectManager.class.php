@@ -20,6 +20,8 @@
 
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
+use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
 
@@ -352,9 +354,10 @@ class ProjectManager {
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
 
-            $webhooks = $this->getProjectWebhooks();
+            $webhook_status_logger = new WebhookStatusLogger(new WebhookLoggerDao());
+            $webhooks              = $this->getProjectWebhooks();
             foreach ($webhooks as $webhook) {
-                $webhook->send($project, $_SERVER['REQUEST_TIME']);
+                $webhook->send($project, $_SERVER['REQUEST_TIME'], $webhook_status_logger);
             }
 
             return true;
@@ -863,7 +866,7 @@ class ProjectManager {
      */
     private function getProjectWebhooks()
     {
-        $webhook_retriever = new Retriever(new WebhookDao());
+        $webhook_retriever = new Retriever(new WebhookDao(), new WebhookStatusLogger(new WebhookLoggerDao()));
         return $webhook_retriever->getWebhooks();
     }
 

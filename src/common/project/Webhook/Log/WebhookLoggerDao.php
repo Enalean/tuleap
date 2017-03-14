@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Webhook;
+namespace Tuleap\Project\Webhook\Log;
 
-class WebhookResponseReceiver
+class WebhookLoggerDao extends \DataAccessObject
 {
-
     /**
-     * @var WebhookDao
+     * @return bool
      */
-    private $dao;
-
-    public function __construct(WebhookDao $dao)
+    public function save($webhook_id, $created_on, $status)
     {
-        $this->dao = $dao;
-    }
+        $webhook_id = $this->da->escapeInt($webhook_id);
+        $created_on = $this->da->escapeInt($created_on);
+        $status     = $this->da->quoteSmart($status);
 
-    public function receive(Webhook $webhook, $response)
-    {
-        $this->dao->addLog($webhook->getId(), $response);
-    }
+        $sql = "INSERT INTO project_webhook_log(webhook_id, created_on, status)
+                VALUES ($webhook_id, $created_on, $status)";
 
-    public function receiveError(Webhook $webhook, $error)
-    {
-        $this->dao->addLog($webhook->getId(), $error);
+        return $this->update($sql);
     }
 }

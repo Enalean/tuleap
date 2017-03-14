@@ -22,6 +22,7 @@ namespace Tuleap\Project\Webhook;
 
 use Http_Client;
 use Project;
+use Tuleap\Project\Webhook\Log\StatusLogger;
 
 class Webhook
 {
@@ -37,12 +38,25 @@ class Webhook
      * @var Http_Client
      */
     private $http_client;
+    /**
+     * @var StatusLogger
+     */
+    private $logger;
 
-    public function __construct($id, $url, Http_Client $http_client)
+    public function __construct($id, $url, Http_Client $http_client, StatusLogger $logger)
     {
         $this->http_client = $http_client;
+        $this->logger      = $logger;
         $this->id          = $id;
         $this->url         = $url;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function send(Project $project, $update_time)
@@ -51,7 +65,9 @@ class Webhook
 
         try {
             $this->http_client->doRequest();
+            $this->logger->log($this, $this->http_client->getStatusCodeAndReasonPhrase());
         } catch (\Http_ClientException $ex) {
+            $this->logger->log($this, $ex->getMessage());
         }
 
         $this->http_client->close();
