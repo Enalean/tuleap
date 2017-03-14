@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -113,6 +114,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
+        $this->addHook('project_admin_ugroup_deletion');
     }
 
     public function getHooksAndCallbacks() {
@@ -1268,5 +1270,13 @@ class trackerPlugin extends Plugin {
         $permission = new TrackerAdminAllProjects();
 
         $params['plugins_permission'][TrackerAdminAllProjects::ID] = $permission;
+    }
+
+    public function project_admin_ugroup_deletion($params) {
+        $project_id = $params['group_id'];
+        $ugroup     = $params['ugroup'];
+
+        $ugroups_to_notify_dao = new UgroupsToNotifyDao();
+        $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
     }
 }
