@@ -802,6 +802,8 @@ admin_projectlist	title	Administration - Liste des projets
 admin_projectlist	project_list	Projets
 admin_projectlist	new_project	Ajouter un projet
 admin_projectlist	detail_button_label	Détails
+admin_projectlist	more_button_project_dashboard	Aller au dashboard du projet
+admin_projectlist	more_button_project_administration	Aller à l'administration du projet
 admin_projectlist	filter_name	Nom du Projet
 admin_projectlist	status	Statut
 admin_projectlist	filter	Filtrer

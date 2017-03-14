@@ -29,6 +29,8 @@ class ProjectListPresenter
     public $results;
     public $new_project;
     public $detail_button_label;
+    public $more_button_project_dashboard;
+    public $more_button_project_administration;
     public $purified_pending_projects_text;
     public $are_there_pending_projects;
 
@@ -38,11 +40,13 @@ class ProjectListPresenter
         ProjectListResultsPresenter $results,
         $pending_projects_count
     ) {
-        $this->title               = $title;
-        $this->search_fields       = $search_fields;
-        $this->results             = $results;
-        $this->new_project         = $GLOBALS['Language']->getText('admin_projectlist', 'new_project');
-        $this->detail_button_label = $GLOBALS['Language']->getText('admin_projectlist', 'detail_button_label');
+        $this->title                              = $title;
+        $this->search_fields                      = $search_fields;
+        $this->results                            = $results;
+        $this->new_project                        = $GLOBALS['Language']->getText('admin_projectlist', 'new_project');
+        $this->detail_button_label                = $GLOBALS['Language']->getText('admin_projectlist', 'detail_button_label');
+        $this->more_button_project_dashboard      = $GLOBALS['Language']->getText('admin_projectlist', 'more_button_project_dashboard');
+        $this->more_button_project_administration = $GLOBALS['Language']->getText('admin_projectlist', 'more_button_project_administration');
 
         $this->are_there_pending_projects     = $pending_projects_count > 0;
         $this->purified_pending_projects_text = Codendi_HTMLPurifier::instance()->purify(

@@ -810,6 +810,8 @@ admin_projectlist	title	Administration - Project List
 admin_projectlist	project_list	Projects
 admin_projectlist	new_project	Add project
 admin_projectlist	detail_button_label	Details
+admin_projectlist	more_button_project_dashboard	Go to project dashboard
+admin_projectlist	more_button_project_administration	Go to project administration
 admin_projectlist	filter_name	Project Name
 admin_projectlist	status	Status
 admin_projectlist	filter	Filter

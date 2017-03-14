@@ -31,6 +31,8 @@ require_once('www/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-list.js');
+
 //EXPORT-CSV
 if ($request->exist('export')) {
     //Validate group_name_search
