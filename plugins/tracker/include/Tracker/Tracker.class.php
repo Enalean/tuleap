@@ -784,7 +784,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $token->check();
                     $artifact_id = $request->getValidated('id', 'uint', 0);
                     $artifact    = $this->getTrackerArtifactFactory()->getArtifactById($artifact_id);
-                    if ($artifact) {
+                    if ($artifact && $artifact->getTrackerId() == $this->id) {
                         $this->displayAdminConfirmDelete($layout, $artifact);
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_error_noart', array($request->get('id'))));
