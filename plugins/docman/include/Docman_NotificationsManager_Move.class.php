@@ -31,11 +31,11 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
                 $params['path'] = $this->_getDocmanPath();
-                $users = $this->users_retriever->getNotifiedUsers($params['item']->getId());
+                $users = $this->users_retriever->getNotifiedUsers($this->project, $params['item']->getId());
                 $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED, $params);
-                $users = $this->users_retriever->getNotifiedUsers($params['parent']->getId());
+                $users = $this->users_retriever->getNotifiedUsers($this->project, $params['parent']->getId());
                 $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED_TO, $params);
-                $users = $this->users_retriever->getNotifiedUsers($params['item']->getParentId());
+                $users = $this->users_retriever->getNotifiedUsers($this->project, $params['item']->getParentId());
                 $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED_FROM, $params);
             }
         }

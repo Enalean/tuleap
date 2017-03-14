@@ -209,7 +209,7 @@ CREATE TABLE plugin_docman_metadata_value (
 
 --
 -- Table structure for table 'plugin_docman_metadata_love'
--- 
+--
 -- 'love' stands for ListOfValuesElement
 --
 -- value_id        : the id of the value
@@ -221,7 +221,7 @@ CREATE TABLE plugin_docman_metadata_value (
 --                   H the value is hidden (not shown in select boxes but
 --                   it is still here for old artifacts using it
 --                   P the value is permanent. It means that it is active and
---                   it cannot be changed to hidden by the project even if 
+--                   it cannot be changed to hidden by the project even if
 --                   artifact field has a 'project' scope (very useful to force
 --                   some commonly accepted values to appear in the select
 --                   box. The 'None' values are good examples of that)
@@ -267,8 +267,8 @@ CREATE TABLE plugin_docman_metadata_love_md (
 -- item_id     Id of the item (FK plugin_docman_item (item_id))
 -- version_id  Id of the item version (FK plugin_docman_version (id))
 -- wiki_version_Id Id of the wiki page version (FK wiki_version(version))
--- table_owner User who creates the table (FK user (user_id)) 
--- date        Table creation date 
+-- table_owner User who creates the table (FK user (user_id))
+-- date        Table creation date
 -- description A text that describe why the approval is required.
 -- status      Table activation state: 0 - Disabled / 1 - Enabled / 2 - Closed
 -- notification Type of notification: 0 - Disabled / 1 - Once at all / 2 - Sequential
@@ -319,9 +319,9 @@ CREATE TABLE plugin_docman_approval_user (
 --
 -- Table structure for table 'plugin_docman_report'
 --
--- report_id         
+-- report_id
 -- name             Name of the search (listed in 'Search' select box)
--- title            Title of the report (if set, replace the default 
+-- title            Title of the report (if set, replace the default
 --                  Prjname - Project Doc)
 -- group_id         (FK groups.group_id)
 -- user_id          Owner of the report (FK user.user_id)
@@ -343,7 +343,7 @@ CREATE TABLE plugin_docman_report (
   is_default      tinyint(1) NOT NULL default 0,
   advanced_search tinyint(1) NOT NULL default 0,
   description     text NULL,
-  image           int(11)NULL, 
+  image           int(11)NULL,
   PRIMARY KEY (report_id),
   INDEX group_idx (group_id),
   INDEX user_idx (user_id)
@@ -394,6 +394,14 @@ CREATE TABLE plugin_docman_notifications (
     PRIMARY KEY (item_id, user_id, type)
 );
 
+DROP TABLE IF EXISTS plugin_docman_notification_ugroups;
+CREATE TABLE plugin_docman_notification_ugroups (
+    item_id   INT(11) NOT NULL default 0,
+    ugroup_id INT(11) NOT NULL default 0,
+    type varchar(100) NOT NULL default '',
+    PRIMARY KEY (item_id, ugroup_id, type)
+);
+
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
 
@@ -419,40 +427,40 @@ DELETE FROM reference WHERE id='17';
 DELETE FROM reference WHERE id='18';
 
 -- Create new references
-INSERT INTO reference SET 
-    id='10',        
-    keyword='doc', 
-    description='reference_doc_desc_key', 
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
-    scope='S', 
-    service_short_name='docman', 
+INSERT INTO reference SET
+    id='10',
+    keyword='doc',
+    description='reference_doc_desc_key',
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1',
+    scope='S',
+    service_short_name='docman',
     nature='document';
 
-INSERT INTO reference SET 
-    id='11',        
-    keyword='document', 
-    description='reference_doc_desc_key', 
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
-    scope='S', 
-    service_short_name='docman', 
+INSERT INTO reference SET
+    id='11',
+    keyword='document',
+    description='reference_doc_desc_key',
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1',
+    scope='S',
+    service_short_name='docman',
     nature='document';
 
-INSERT INTO reference SET 
-    id='17',        
-    keyword='folder', 
-    description='reference_doc_desc_key', 
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
-    scope='S', 
-    service_short_name='docman', 
+INSERT INTO reference SET
+    id='17',
+    keyword='folder',
+    description='reference_doc_desc_key',
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1',
+    scope='S',
+    service_short_name='docman',
     nature='document';
 
-INSERT INTO reference SET 
-    id='18',        
-    keyword='dossier', 
-    description='reference_doc_desc_key', 
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
-    scope='S', 
-    service_short_name='docman', 
+INSERT INTO reference SET
+    id='18',
+    keyword='dossier',
+    description='reference_doc_desc_key',
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1',
+    scope='S',
+    service_short_name='docman',
     nature='document';
 
 -- Enable document references for project 1 and 100
@@ -474,7 +482,7 @@ INSERT INTO reference_group SET reference_id='17', group_id='1', is_active='1';
 INSERT INTO reference_group SET reference_id='18', group_id='1', is_active='1';
 
 
-                              
+
 INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 1, 0);
 INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 2, 1);
 INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 3, 0);
@@ -497,24 +505,24 @@ INSERT INTO plugin_docman_metadata_love(value_id, name, description, rank, statu
 -- Instanciate docman in default template project
 INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (0, 100, 'roottitle_lbl_key', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
 
-INSERT INTO  plugin_docman_project_settings (group_id, view, use_obsolescence_date, use_status) 
+INSERT INTO  plugin_docman_project_settings (group_id, view, use_obsolescence_date, use_status)
 VALUES (100, 'Tree', 0, 0);
 
-INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+INSERT INTO permissions(permission_type, ugroup_id, object_id)
 SELECT 'PLUGIN_DOCMAN_READ', 2, item_id
 FROM plugin_docman_item
 WHERE group_id = 100;
 
-INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+INSERT INTO permissions(permission_type, ugroup_id, object_id)
 SELECT 'PLUGIN_DOCMAN_WRITE', 3, item_id
 FROM plugin_docman_item
 WHERE group_id = 100;
 
-INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+INSERT INTO permissions(permission_type, ugroup_id, object_id)
 SELECT 'PLUGIN_DOCMAN_MANAGE', 4, item_id
 FROM plugin_docman_item
 WHERE group_id = 100;
 
-INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+INSERT INTO permissions(permission_type, ugroup_id, object_id)
 VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 100);
 

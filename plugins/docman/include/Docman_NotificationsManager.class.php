@@ -94,7 +94,10 @@ class Docman_NotificationsManager
     function somethingHappen($event, $params) {
         $um             = $this->_getUserManager();
         $params['path'] = $this->_getDocmanPath();
-        $users          = $this->users_retriever->getNotifiedUsers($this->_getListeningUsersItemId($params));
+        $users          = $this->users_retriever->getNotifiedUsers(
+            $this->project,
+            $this->_getListeningUsersItemId($params)
+        );
         if ($users) {
             while($users->valid()) {
                 $u    = $users->current();

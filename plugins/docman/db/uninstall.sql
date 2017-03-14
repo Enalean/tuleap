@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS plugin_docman_report;
 DROP TABLE IF EXISTS plugin_docman_report_filter;
 DROP TABLE IF EXISTS plugin_docman_item_lock;
 DROP TABLE IF EXISTS plugin_docman_notifications;
+DROP TABLE IF EXISTS plugin_docman_notification_ugroups;
 
 DELETE FROM service WHERE short_name='docman';
 

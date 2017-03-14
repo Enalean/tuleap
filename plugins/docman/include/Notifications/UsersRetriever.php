@@ -22,6 +22,9 @@ namespace Tuleap\Docman\Notifications;
 
 use ArrayIterator;
 use Docman_ItemFactory;
+use Project;
+use ProjectUGroup;
+use UGroupManager;
 
 class UsersRetriever
 {
@@ -33,37 +36,113 @@ class UsersRetriever
      * @var Docman_ItemFactory
      */
     private $item_factory;
+    /**
+     * @var UgroupsToNotifyDao
+     */
+    private $ugroup_dao;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     public function __construct(
         Dao $user_dao,
-        Docman_ItemFactory $item_factory
+        UgroupsToNotifyDao $ugroup_dao,
+        Docman_ItemFactory $item_factory,
+        UGroupManager $ugroup_manager
     ) {
-        $this->user_dao     = $user_dao;
-        $this->item_factory = $item_factory;
+        $this->user_dao       = $user_dao;
+        $this->item_factory   = $item_factory;
+        $this->ugroup_dao     = $ugroup_dao;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function getNotifiedUsers($item_id)
+    public function getNotifiedUsers(Project $project, $item_id)
     {
         //search for users who monitor the item or its parent
-        $type  = PLUGIN_DOCMAN_NOTIFICATION;
-        $users = array();
-        $this->getNotifiedUsersForAscendantHierarchy($item_id, $users, $type);
+        $type    = PLUGIN_DOCMAN_NOTIFICATION;
+        $users   = array();
+        $this->getNotifiedUsersForAscendantHierarchy(
+            $project,
+            $item_id,
+            $users,
+            $type
+        );
+
         return new ArrayIterator($users);
     }
 
-    private function getNotifiedUsersForAscendantHierarchy($item_id, &$users, $type = null)
+    private function getNotifiedUsersForAscendantHierarchy(
+        Project $project,
+        $item_id,
+        array &$users,
+        $type = null
+    ) {
+        if ($item_id === 0) {
+            return;
+        }
+
+        if ($item = $this->item_factory->getItemFromDb($item_id)) {
+            $ugroups = array();
+            $this->aggregateUsers($item_id, $users, $type);
+            $this->aggregateUgroups($item_id, $ugroups, $type);
+            $this->addNotifedUgroupMembersToUsers(
+                $project,
+                $users,
+                $ugroups,
+                $item_id,
+                $type
+            );
+
+            $this->getNotifiedUsersForAscendantHierarchy(
+                $project,
+                $item->getParentId(),
+                $users,
+                $type
+            );
+        }
+    }
+
+    private function addNotifedUgroupMembersToUsers(
+        Project $project,
+        array &$users,
+        array $ugroups,
+        $item_id,
+        $type
+    ) {
+        foreach ($ugroups as $ugroup) {
+            $ugroup_data = $this->ugroup_manager->getUGroup($project, $ugroup['ugroup_id']);
+            if ($ugroup_data === null) {
+                continue;
+            }
+
+            foreach ($ugroup_data->getMembers() as $user) {
+                $users[$user->getId()] = array(
+                    'item_id' => (string) $item_id,
+                    'user_id' => $user->getId(),
+                    'type'    => $type
+                );
+            }
+        }
+    }
+
+    private function aggregateUgroups($item_id, array &$ugroups, $type)
     {
-        if ($item_id) {
-            $u = $this->user_dao->searchUserIdByObjectIdAndType($item_id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            if ($u) {
-                while ($u->valid()) {
-                    $users[] = $u->current();
-                    $u->next();
-                }
+        $ugroups_iterator = $this->ugroup_dao->searchUgroupsByItemIdAndType($item_id, $type);
+        if ($ugroups_iterator) {
+            foreach ($ugroups_iterator as $ugroup) {
+                $ugroups[] = $ugroup;
             }
-            if ($item = $this->item_factory->getItemFromDb($item_id)) {
-                $this->getNotifiedUsersForAscendantHierarchy($item->getParentId(), $users, $type);
-            }
+        }
+    }
+
+    private function aggregateUsers($item_id, array &$users, $type)
+    {
+        $type_for_user_dao = $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE;
+        $users_iterator    = $this->user_dao->searchUserIdByObjectIdAndType($item_id, $type_for_user_dao);
+        foreach ($users_iterator as $user) {
+            $user_id         = $user['user_id'];
+            $users[$user_id] = $user;
         }
     }
 }

@@ -151,7 +151,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     function _storeEvents($id, $message_type, $params)
     {
         $dpm   = $this->_getPermissionsManager();
-        $users = $this->users_retriever->getNotifiedUsers($id);
+        $users = $this->users_retriever->getNotifiedUsers($this->project, $id);
         while($users->valid()) {
             $row  = $users->current();
             if (!isset($this->_listeners[$row['user_id']])) {
