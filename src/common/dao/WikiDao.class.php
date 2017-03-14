@@ -190,7 +190,7 @@ class WikiDao extends DataAccessObject {
         $project_id = $this->da->escapeInt($project_id);
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
-        $pagename   = $this->da->quoteSmart('%'.$pagename.'%');
+        $pagename   = $this->da->quoteLikeValueSurround($pagename);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS wiki_page.pagename
                 FROM wiki_page, wiki_nonempty
