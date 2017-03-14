@@ -38,4 +38,15 @@ class UgroupsToNotifyDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function deleteByNotificationId($notification_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+
+        $sql = "DELETE
+                FROM tracker_global_notification_ugroups
+                WHERE notification_id = $notification_id";
+
+        return $this->update($sql);
+    }
 }
