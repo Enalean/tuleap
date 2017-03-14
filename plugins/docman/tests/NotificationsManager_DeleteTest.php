@@ -18,7 +18,9 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_NotificationsManager_Delete', 'Docman_NotificationsManager_DeleteTestVersion',
+Mock::generatePartial(
+    'Docman_NotificationsManager_Delete',
+    'Docman_NotificationsManager_DeleteTestVersion',
     array(
         '_getPermissionsManager',
         '_getListeningUsers',
@@ -34,19 +36,21 @@ Mock::generate('PFUser');
 
 Mock::generate('Docman_PermissionsManager');
 
-class NotificationsManager_DeleteTest extends TuleapTestCase {
+class NotificationsManager_DeleteTest extends TuleapTestCase
+{
 
     /*
      * Test the case when deleting a docman item the notification mail
      * is sent to all monitoring users not only one of them
      */
-    function testStoreEventsDoNotOverrideUsers() {
-        $listeningUsers = new ArrayIterator(array(array('user_id'   => 1,
-                                                        'object_id' => 1),
-                                                  array('user_id'   => 2,
-                                                        'object_id' => 1),
-                                                  array('user_id'   => 3,
-                                                        'object_id' => 1)));
+    function testStoreEventsDoNotOverrideUsers()
+    {
+        $listeningUsers = new ArrayIterator(array(array('user_id' => 1,
+                                                        'item_id' => 1),
+                                                  array('user_id' => 2,
+                                                        'item_id' => 1),
+                                                  array('user_id' => 3,
+                                                        'item_id' => 1)));
 
         $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 1);
@@ -79,5 +83,4 @@ class NotificationsManager_DeleteTest extends TuleapTestCase {
         $this->assertEqual($user2, $nm->_listeners[2]['user']);
         $this->assertEqual($user3, $nm->_listeners[3]['user']);
     }
-
 }

@@ -863,7 +863,7 @@ class DocmanPlugin extends Plugin
                 $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
                 if($dar && !$dar->isError()) {
                     foreach ($dar as $row) {
-                        $notificationsManager->remove($row['user_id'], $row['object_id'], $row['type']);
+                        $notificationsManager->remove($row['user_id'], $row['item_id'], $row['type']);
                     }
                 }
             }
@@ -902,7 +902,7 @@ class DocmanPlugin extends Plugin
                     foreach ($dar as $row) {
                         $user = $userManager->getUserById($row['user_id']);
                         if (!$user->isMember($groupId)) {
-                            $notificationsManager->remove($row['user_id'], $row['object_id'], $row['type']);
+                            $notificationsManager->remove($row['user_id'], $row['item_id'], $row['type']);
                         }
                     }
                 }

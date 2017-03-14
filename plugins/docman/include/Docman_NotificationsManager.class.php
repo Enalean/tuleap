@@ -94,7 +94,7 @@ class Docman_NotificationsManager
                 $user = $um->getUserById($u['user_id']);
                 if ($user->isActive() || $user->isRestricted()) {
                     $dpm = $this->_getPermissionsManager();
-                    if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['object_id'])) {
+                    if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['item_id'])) {
                         $this->_buildMessage($event, $params, $user);
                     }
                 }
@@ -299,28 +299,28 @@ class Docman_NotificationsManager
         return $this->dao->searchDocmanMonitoredItems($groupId, $userId);
     }
 
-    public function add($user_id, $object_id, $type = null)
+    public function add($user_id, $item_id, $type = null)
     {
         if ($type === null) {
             $type = $this->_getType();
         }
-        return $this->dao->create($user_id, $object_id, $type);
+        return $this->dao->create($user_id, $item_id, $type);
     }
 
-    public function remove($user_id, $object_id, $type = null)
+    public function remove($user_id, $item_id, $type = null)
     {
         if ($type === null) {
             $type = $this->_getType();
         }
-        return $this->dao->delete($user_id, $object_id, $type);
+        return $this->dao->delete($user_id, $item_id, $type);
     }
 
-    public function exist($user_id, $object_id, $type = null)
+    public function exist($user_id, $item_id, $type = null)
     {
         if ($type === null) {
             $type = $this->_getType();
         }
-        $dar = $this->dao->search($user_id, $object_id, $type);
+        $dar = $this->dao->search($user_id, $item_id, $type);
         return $dar->valid();
     }
 
