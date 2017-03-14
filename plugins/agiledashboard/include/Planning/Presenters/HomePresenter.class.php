@@ -212,4 +212,14 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     public function no_tracker_available() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','no_tracker_available');
     }
+
+    public function top_backlog_planning()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','top_planning_link');
+    }
+
+    public function content()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','content_pane_title');
+    }
 }
