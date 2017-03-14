@@ -3,6 +3,7 @@
   "children": [
     "tooltips",
     "popovers",
+    "dropdowns",
     "modals"
   ]
 }
