@@ -17,6 +17,14 @@
                             <input type="checkbox" name="remove_global[{{ notification_id }}]" />
                         </td>
                         <td>
+                            {{# has_ugroups_to_be_notified }}
+                                <div class="tracker-notification-email-list-user">
+                                    {{# ugroups_to_be_notified }}
+                                        <i class="icon-group tracker-notification-email-list-group-icon"></i>
+                                        {{ label }}
+                                    {{/ ugroups_to_be_notified }}
+                                </div>
+                            {{/ has_ugroups_to_be_notified }}
                             {{# has_users_to_be_notified }}
                                 <div class="tracker-notification-email-list-user">
                                     {{# users_to_be_notified }}
@@ -42,21 +50,6 @@
                     </tr>
                 {{/ has_notified }}
             {{/ notifications }}
-            <tr>
-                <td>
-                </td>
-                <td>
-                    <input class="tracker-global-notification-email" type="text" name="new_global_notification[addresses]" placeholder="{{ new_notification_placeholder }}" )="">
-                </td>
-                <td class="tracker-global-notifications-checkbox-cell">
-                    <input type="hidden" name="new_global_notification[all_updates]" value="0" />
-                    <input type="checkbox" name="new_global_notification[all_updates]" value="1"/>
-                </td>
-                <td class="tracker-global-notifications-checkbox-cell">
-                    <input type="hidden" name="new_global_notification[check_permissions]" value="0" />
-                    <input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>
-                </td>
-            </tr>
         {{/ has_notifications }}
         {{^ has_notifications }}
             <tr class="empty-table">
@@ -65,5 +58,20 @@
                 </td>
             </tr>
         {{/ has_notifications }}
+        <tr>
+            <td>
+            </td>
+            <td>
+                <input class="tracker-global-notification-email" type="text" name="new_global_notification[addresses]" placeholder="{{ new_notification_placeholder }}" )="">
+            </td>
+            <td class="tracker-global-notifications-checkbox-cell">
+                <input type="hidden" name="new_global_notification[all_updates]" value="0" />
+                <input type="checkbox" name="new_global_notification[all_updates]" value="1"/>
+            </td>
+            <td class="tracker-global-notifications-checkbox-cell">
+                <input type="hidden" name="new_global_notification[check_permissions]" value="0" />
+                <input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>
+            </td>
+        </tr>
     </tbody>
 </table>

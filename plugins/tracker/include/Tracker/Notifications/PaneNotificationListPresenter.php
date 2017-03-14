@@ -31,11 +31,22 @@ class PaneNotificationListPresenter
     public $check_perms;
     public $new_notification_placeholder;
 
+    /**
+     * @var CollectionOfUserToBeNotifiedPresenterBuilder
+     */
     private $user_to_be_notified_builder;
+    /**
+     * @var CollectionOfUgroupToBeNotifiedPresenterBuilder
+     */
+    private $ugroup_to_be_notified_builder;
 
-    public function __construct($notifications, CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder)
-    {
-        $this->user_to_be_notified_builder = $user_to_be_notified_builder;
+    public function __construct(
+        $notifications,
+        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
+        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder
+    ) {
+        $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
+        $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
 
         $this->notifications      = $this->getNotificationsPresenter($notifications);
         $this->empty_notification = dgettext('tuleap-tracker', 'No notification set');
@@ -56,10 +67,12 @@ class PaneNotificationListPresenter
     {
         $notifications_presenters = array();
         foreach ($notifications as $notification) {
-            $user_presenters = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
+            $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
+            $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
             $notifications_presenters[] = new PaneNotificationPresenter(
                 $notification,
-                $user_presenters
+                $user_presenters,
+                $ugroup_presenters
             );
         }
         return $notifications_presenters;

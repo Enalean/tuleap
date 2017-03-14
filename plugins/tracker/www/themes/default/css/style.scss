@@ -3507,6 +3507,7 @@ td.tracker-global-notifications-checkbox-cell {
 .tracker-notification-email-list-user {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     margin: 0 0 10px;
 }
 
@@ -3521,4 +3522,9 @@ td.tracker-global-notifications-checkbox-cell {
     width: 22px;
     height: 22px;
     margin: 0 3px 0 5px;
+}
+
+.tracker-notification-email-list-group-icon {
+    margin: 0 3px 0 5px;
+    color: #666666;
 }
