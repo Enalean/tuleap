@@ -35,6 +35,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
+use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 
 require_once('common/plugin/Plugin.class.php');
@@ -121,6 +122,7 @@ class trackerPlugin extends Plugin {
 
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('project_admin_remove_user');
+        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
     }
 
     public function getHooksAndCallbacks() {
@@ -1299,6 +1301,12 @@ class trackerPlugin extends Plugin {
 
         $cleaner = $this->getNotificationForProjectMemberCleaner();
         $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
+    }
+
+    public function project_access_change($params)
+    {
+        $updater = new UgroupsToNotifyUpdater($this->getUgroupToNotifyDao());
+        $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);
     }
 
     /**
