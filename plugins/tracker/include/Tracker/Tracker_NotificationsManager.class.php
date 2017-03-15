@@ -121,9 +121,7 @@ class Tracker_NotificationsManager {
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotifications_Global($request);
 
-        echo'
-        <input class="btn btn-primary" type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>
-        </FORM></fieldset>';
+        echo '</form></fieldset>';
     }
 
     protected function displayAdminNotifications_Toggle() {
@@ -141,6 +139,8 @@ class Tracker_NotificationsManager {
             echo '
             <P><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_warn').'</b><BR>';
         }
+
+        echo '<input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>';
     }
 
     protected function displayAdminNotifications_Global(HTTPRequest $request) {

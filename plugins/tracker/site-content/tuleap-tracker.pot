@@ -1,3 +1,6 @@
+msgid "Add notification"
+msgstr ""
+
 msgid ""
 "As a tracker administrator you can provide email addresses (comma separated) "
 "to which new Artifact submissions (and possibly updates) will be "
@@ -11,6 +14,12 @@ msgid "Check permissions?"
 msgstr ""
 
 msgid "Configure trackers"
+msgstr ""
+
+msgid "Confirm deletion"
+msgstr ""
+
+msgid "Delete"
 msgstr ""
 
 msgid "Edit"
@@ -28,10 +37,10 @@ msgstr ""
 msgid "Notified people"
 msgstr ""
 
-msgid "Save"
+msgid "On all updates?"
 msgstr ""
 
-msgid "Send on all updates?"
+msgid "Save"
 msgstr ""
 
 #, php-format
@@ -207,4 +216,10 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
 msgid "This template does not use trackers"
+msgstr ""
+
+msgid "Wait a minute..."
+msgstr ""
+
+msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""

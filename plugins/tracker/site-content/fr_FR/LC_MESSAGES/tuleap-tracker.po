@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
+msgid "Add notification"
+msgstr "Ajouter une notification"
+
 msgid ""
 "As a tracker administrator you can provide email addresses (comma separated) "
 "to which new Artifact submissions (and possibly updates) will be "
@@ -31,6 +34,12 @@ msgstr "Vérifier les permissions ?"
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
 
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
+
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid "Edit"
 msgstr "Éditer"
 
@@ -46,11 +55,11 @@ msgstr "Aucune notification n'a été définie"
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
+msgid "On all updates?"
+msgstr "À chaque modification ?"
+
 msgid "Save"
 msgstr "Sauvegarder"
-
-msgid "Send on all updates?"
-msgstr "Envoyer à chaque modification ?"
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
@@ -267,3 +276,11 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
+
+msgid "Wait a minute..."
+msgstr "Attendez une minute..."
+
+msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer la notification. Merci de confirmer "
+"votre action."

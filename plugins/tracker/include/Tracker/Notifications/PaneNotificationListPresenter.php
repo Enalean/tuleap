@@ -33,6 +33,10 @@ class PaneNotificationListPresenter
     public $edit;
     public $save;
     public $cancel;
+    public $add_notification;
+    public $remove_notif_desc;
+    public $remove_notif_title;
+    public $remove_notif_confirm;
 
     /**
      * @var CollectionOfUserToBeNotifiedPresenterBuilder
@@ -60,12 +64,17 @@ class PaneNotificationListPresenter
             'As a tracker administrator you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.'
         );
         $this->notified_people = dgettext('tuleap-tracker', 'Notified people');
-        $this->send_all        = dgettext('tuleap-tracker', 'Send on all updates?');
+        $this->send_all        = dgettext('tuleap-tracker', 'On all updates?');
         $this->check_perms     = dgettext('tuleap-tracker', 'Check permissions?');
         $this->edit            = dgettext('tuleap-tracker', 'Edit');
         $this->save            = dgettext('tuleap-tracker', 'Save');
         $this->cancel          = dgettext('tuleap-tracker', 'Cancel');
+        $this->delete          = dgettext('tuleap-tracker', 'Delete');
 
+        $this->remove_notif_title           = dgettext('tuleap-tracker', 'Wait a minute...');
+        $this->remove_notif_desc            = dgettext('tuleap-tracker', 'You are about to remove the notification. Please confirm your action.');
+        $this->remove_notif_confirm         = dgettext('tuleap-tracker', 'Confirm deletion');
+        $this->add_notification             = dgettext('tuleap-tracker', 'Add notification');
         $this->new_notification_placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
     }
 
