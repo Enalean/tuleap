@@ -221,8 +221,8 @@ class pullrequestPlugin extends Plugin
             $dest_branches[] = array('repo_id' => $repository->getId(), 'repo_name' => null, 'branch_name' => $branch);
         }
 
-        if ($repository->getParentId() != 0) {
-            $parent_repo     = $repository->getParent();
+        $parent_repo = $repository->getParent();
+        if ($parent_repo) {
             $git_exec        = new GitExec($parent_repo->getFullPath(), $parent_repo->getFullPath());
             $parent_branches = $git_exec->getAllBranchNames();
             foreach ($parent_branches as $branch) {
