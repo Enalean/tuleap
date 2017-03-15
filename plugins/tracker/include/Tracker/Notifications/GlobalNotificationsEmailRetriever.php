@@ -43,17 +43,23 @@ class GlobalNotificationsEmailRetriever
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var GlobalNotificationsAddressesBuilder
+     */
+    private $addresses_builder;
 
     public function __construct(
         UsersToNotifyDao $user_dao,
         UgroupsToNotifyDao $ugroup_dao,
         UGroupManager $ugroup_manager,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        GlobalNotificationsAddressesBuilder $addresses_builder
     ) {
-        $this->user_dao        = $user_dao;
-        $this->ugroup_dao      = $ugroup_dao;
-        $this->ugroup_manager  = $ugroup_manager;
-        $this->tracker_factory = $tracker_factory;
+        $this->user_dao          = $user_dao;
+        $this->ugroup_dao        = $ugroup_dao;
+        $this->ugroup_manager    = $ugroup_manager;
+        $this->tracker_factory   = $tracker_factory;
+        $this->addresses_builder = $addresses_builder;
     }
 
     /**
@@ -61,7 +67,7 @@ class GlobalNotificationsEmailRetriever
      */
     public function getNotifiedEmails(Tracker_GlobalNotification $notification)
     {
-        $emails = $this->transformNotificationAddressesStringAsArray($notification);
+        $emails = $this->addresses_builder->transformNotificationAddressesStringAsArray($notification->getAddresses());
         $this->addUsers($notification, $emails);
         $this->addUgroups($notification, $emails);
 
@@ -96,16 +102,5 @@ class GlobalNotificationsEmailRetriever
                 $emails[] = $user->getEmail();
             }
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    private function transformNotificationAddressesStringAsArray(Tracker_GlobalNotification $notification)
-    {
-        $addresses = $notification->getAddresses();
-        $addresses = preg_split('/[,;]/', $addresses);
-        $addresses = array_map('trim', $addresses);
-        return $addresses;
     }
 }

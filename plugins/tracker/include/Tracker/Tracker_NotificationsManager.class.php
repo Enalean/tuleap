@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
@@ -283,12 +284,40 @@ class Tracker_NotificationsManager {
         return new Tracker_GlobalNotificationDao();
     }
 
+    public function removeAddressByTrackerId($tracker_id, PFUser $user)
+    {
+        $dao               = $this->getGlobalDao();
+        $addresses_builder = $this->getGlobalNotificationsAddressesBuilder();
+
+        foreach($dao->searchByTrackerId($tracker_id) as $row) {
+            $notification_id   = $row['id'];
+            $addresses         = $row['addresses'];
+            $updated_addresses = $addresses_builder->removeAddressFromString($addresses, $user);
+
+            if (empty($updated_addresses)) {
+                $users_to_notify_exist   = $this->user_to_notify_dao->searchUsersByNotificationId($notification_id);
+                $ugroups_to_notify_exist = $this->ugroup_to_notify_dao->searchUgroupsByNotificationId($notification_id);
+
+                if ($users_to_notify_exist->count() === 0 && $ugroups_to_notify_exist->count() === 0) {
+                    $dao->delete($notification_id, $tracker_id);
+                }
+            } else if ($addresses !== $updated_addresses) {
+                $dao->updateAddressById($notification_id, $updated_addresses);
+            }
+        }
+    }
+
     protected function getWatcherDao() {
         return new Tracker_WatcherDao();
     }
 
     protected function getNotificationDao() {
         return new Tracker_NotificationDao();
+    }
+
+    protected function getGlobalNotificationsAddressesBuilder()
+    {
+        return new GlobalNotificationsAddressesBuilder();
     }
 
     public static function isMailingList($email_address) {

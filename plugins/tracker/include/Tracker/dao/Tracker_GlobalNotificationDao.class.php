@@ -126,6 +126,18 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
                 WHERE tracker_id = $from_tracker_id";
         return $this->update($sql);
     }
+
+    public function updateAddressById($id, $addresses)
+    {
+        $id        = $this->da->escapeInt($id);
+        $addresses = $this->da->quoteSmart($addresses);
+
+        $sql = "UPDATE tracker_global_notification
+                SET tracker_global_notification.addresses = $addresses
+                WHERE tracker_global_notification.id = $id";
+
+        return $this->update($sql);
+    }
 }
 
 

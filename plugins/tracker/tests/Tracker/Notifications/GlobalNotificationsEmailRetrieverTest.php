@@ -84,11 +84,14 @@ class GlobalNotificationsEmailRetrieverTest extends TuleapTestCase
             ->getUGroup($project, 104)
             ->returns($developers);
 
+        $addresses_builder = new GlobalNotificationsAddressesBuilder();
+
         $this->retriever = new GlobalNotificationsEmailRetriever(
             $notified_users_dao,
             $notified_ugroups_dao,
             $ugroup_manager,
-            $tracker_factory
+            $tracker_factory,
+            $addresses_builder
         );
     }
 
