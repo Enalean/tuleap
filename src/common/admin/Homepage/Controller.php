@@ -111,8 +111,8 @@ class Admin_Homepage_Controller {
         $this->redirectToIndex();
     }
 
-    public function notSiteAdmin() {
-        $this->response->redirect(get_server_url());
+    public function notSiteAdmin(HTTPRequest $request) {
+        $this->response->redirect($request->getServerUrl());
     }
 
     private function getTemplateDir() {
@@ -132,7 +132,7 @@ class Admin_Homepage_Controller {
     }
 
     private function redirectToIndex() {
-        $this->response->redirect($_SERVER['SCRIPT_URL']);
+        $this->response->redirect($_SERVER['SCRIPT_NAME']);
     }
 
     private function removeCustomLogo() {

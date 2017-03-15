@@ -330,7 +330,7 @@ class openidconnectclientPlugin extends Plugin {
     {
         $params['plugins'][] = array(
             'label' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name'),
-            'href'  => $this->getPluginPath() . '/admin/'
+            'href'  => $this->getPluginPath() . '/admin/index.php'
         );
     }
 

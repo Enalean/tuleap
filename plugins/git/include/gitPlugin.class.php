@@ -241,7 +241,7 @@ class GitPlugin extends Plugin {
     {
         $params['plugins'][] = array(
             'label' => $GLOBALS['Language']->getText('plugin_git', 'descriptor_name'),
-            'href'  => $this->getPluginPath() . '/admin/'
+            'href'  => $this->getPluginPath() . '/admin/index.php'
         );
     }
 

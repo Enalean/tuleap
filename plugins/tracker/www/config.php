@@ -54,7 +54,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $admin_page_renderer = new AdminPageRenderer();
 
     $router = new ConfigRouter(
-        new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
+        new CSRFSynchronizerToken($_SERVER['SCRIPT_NAME']),
         new MailGatewayConfigController(
             new MailGatewayConfig(
                 new MailGatewayConfigDao()

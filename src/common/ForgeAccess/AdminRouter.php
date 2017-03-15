@@ -40,7 +40,7 @@ class ForgeAccess_AdminRouter {
 
     public function route() {
         if (! $this->request->getCurrentUser()->isSuperUser()) {
-            $this->controller->notSiteAdmin();
+            $this->controller->notSiteAdmin($this->request);
         } elseif ($this->request->get('update')) {
             $this->controller->update();
         } else {
