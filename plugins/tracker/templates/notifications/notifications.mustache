@@ -16,30 +16,30 @@
                         <tr>
                             <td>
                                 <div class="tracker-global-notifications-checkbox-cell-read">
-                                    {{# has_ugroups_to_be_notified }}
-                                        <div class="tracker-notification-email-list-user">
-                                            {{# ugroups_to_be_notified }}
-                                                <i class="icon-group tracker-notification-email-list-group-icon"></i>
-                                                {{ label }}
-                                            {{/ ugroups_to_be_notified }}
-                                        </div>
-                                    {{/ has_ugroups_to_be_notified }}
-                                    {{# has_users_to_be_notified }}
-                                        <div class="tracker-notification-email-list-user">
-                                            {{# users_to_be_notified }}
-                                                <div class="avatar tracker-notification-user-avatar">
-                                                    {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
-                                                </div>
-                                                {{ label }}
-                                            {{/ users_to_be_notified }}
-                                        </div>
-                                    {{/ has_users_to_be_notified }}
-                                    <div>{{ list_of_mails }}</div>
+                                    <div class="tracker-notification-email-list">
+                                        {{# ugroups_to_be_notified }}
+                                            <i class="icon-group tracker-notification-email-list-group-icon"></i>
+                                            {{ label }}
+                                            <span class="tracker-notification-email-list-separator">, </span>
+                                        {{/ ugroups_to_be_notified }}
+                                        {{# users_to_be_notified }}
+                                            <div class="avatar tracker-notification-user-avatar">
+                                                {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                            </div>
+                                            {{ label }}
+                                            <span class="tracker-notification-email-list-separator">, </span>
+                                        {{/ users_to_be_notified }}
+                                        {{# emails_to_be_notified }}
+                                            {{ . }}
+                                            <span class="tracker-notification-email-list-separator">, </span>
+                                        {{/ emails_to_be_notified }}
+                                    </div>
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    {{# list_of_mails }}
-                                        <input type="text" class="tracker-global-notification-email" name="global_notification[{{ notification_id }}][addresses]" value="{{ list_of_mails }}"/>
-                                    {{/ list_of_mails }}
+                                    <input type="text"
+                                           class="tracker-global-notification-email"
+                                           name="global_notification[{{ notification_id }}][addresses]"
+                                           value="{{# emails_to_be_notified }}{{ . }}, {{/ emails_to_be_notified }}">
                                 </div>
                             </td>
                             <td class="tracker-global-notifications-checkbox-cell">

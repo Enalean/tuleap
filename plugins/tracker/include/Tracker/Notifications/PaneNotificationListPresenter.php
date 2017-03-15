@@ -48,14 +48,15 @@ class PaneNotificationListPresenter
     private $ugroup_to_be_notified_builder;
 
     public function __construct(
-        $notifications,
+        array $notifications,
         CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
-        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder
+        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
+        GlobalNotificationsAddressesBuilder $addresses_builder
     ) {
         $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
         $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
 
-        $this->notifications      = $this->getNotificationsPresenter($notifications);
+        $this->notifications      = $this->getNotificationsPresenter($notifications, $addresses_builder);
         $this->empty_notification = dgettext('tuleap-tracker', 'No notification set');
         $this->has_notifications  = (bool)(count($notifications) > 0);
 
@@ -78,14 +79,18 @@ class PaneNotificationListPresenter
         $this->new_notification_placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
     }
 
-    private function getNotificationsPresenter($notifications)
+    private function getNotificationsPresenter(array $notifications, GlobalNotificationsAddressesBuilder $addresses_builder)
     {
         $notifications_presenters = array();
         foreach ($notifications as $notification) {
+            $emails_to_be_notified = $addresses_builder->transformNotificationAddressesStringAsArray(
+                $notification->getAddresses()
+            );
             $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
             $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
             $notifications_presenters[] = new PaneNotificationPresenter(
                 $notification,
+                $emails_to_be_notified,
                 $user_presenters,
                 $ugroup_presenters
             );

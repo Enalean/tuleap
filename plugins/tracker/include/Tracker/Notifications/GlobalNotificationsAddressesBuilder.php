@@ -38,7 +38,8 @@ class GlobalNotificationsAddressesBuilder
     public function transformNotificationAddressesStringAsArray($addresses)
     {
         $addresses = preg_split('/[,;]/', $addresses);
-        $addresses = array_map('trim', $addresses);
+        $addresses = array_filter(array_map('trim', $addresses));
+
         return $addresses;
     }
 }

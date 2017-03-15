@@ -3504,11 +3504,18 @@ td.tracker-global-notifications-checkbox-cell {
     width: 100%;
 }
 
-.tracker-notification-email-list-user {
+.tracker-notification-email-list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 0 0 10px;
+}
+
+.tracker-notification-email-list-separator {
+    margin: 0 3px 0 0;
+
+    &:last-child {
+        display: none;
+    }
 }
 
 .tracker-notification-email-user {
@@ -3521,13 +3528,14 @@ td.tracker-global-notifications-checkbox-cell {
     left: 8px;
     width: 22px;
     height: 22px;
-    margin: 0 3px 0 5px;
+    margin: 0 3px 0 0;
 }
 
 .tracker-notification-email-list-group-icon {
-    margin: 0 3px 0 5px;
+    margin: 0 3px 0 0;
     color: #666666;
 }
+
 
 .tracker-global-notifications-add,
 .tracker-notification-edit {

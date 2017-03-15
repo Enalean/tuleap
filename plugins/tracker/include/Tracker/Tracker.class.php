@@ -2079,7 +2079,8 @@ EOS;
             new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
             $user_to_notify_dao,
-            $ugroup_to_notify_dao
+            $ugroup_to_notify_dao,
+            new GlobalNotificationsAddressesBuilder()
         );
     }
 

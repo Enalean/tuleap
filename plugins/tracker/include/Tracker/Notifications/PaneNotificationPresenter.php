@@ -28,31 +28,28 @@ class PaneNotificationPresenter
     public $all_updates;
     public $check_permissions;
 
-    public $list_of_mails;
+    public $emails_to_be_notified;
     public $users_to_be_notified;
     public $ugroups_to_be_notified;
 
     public $has_notified;
-    public $has_users_to_be_notified;
-    public $has_ugroups_to_be_notified;
 
     public function __construct(
         Tracker_GlobalNotification $notification,
+        array $emails_to_be_notified,
         array $users_to_be_notified,
         array $ugroups_to_be_notified
     ) {
-        $this->notification_id          = $notification->getId();
-        $this->all_updates              = $notification->isAllUpdates();
-        $this->check_permissions        = $notification->isCheckPermissions();
+        $this->notification_id   = $notification->getId();
+        $this->all_updates       = $notification->isAllUpdates();
+        $this->check_permissions = $notification->isCheckPermissions();
 
-        $this->users_to_be_notified     = $users_to_be_notified;
-        $this->ugroups_to_be_notified   = $ugroups_to_be_notified;
-        $this->list_of_mails            = $notification->getAddresses();
+        $this->users_to_be_notified   = $users_to_be_notified;
+        $this->ugroups_to_be_notified = $ugroups_to_be_notified;
+        $this->emails_to_be_notified  = $emails_to_be_notified;
 
-        $this->has_notified               = count($this->list_of_mails) > 0
+        $this->has_notified = count($this->emails_to_be_notified) > 0
             || count($this->users_to_be_notified) > 0
             || count($this->ugroups_to_be_notified) > 0;
-        $this->has_users_to_be_notified   = count($this->users_to_be_notified) > 0;
-        $this->has_ugroups_to_be_notified = count($this->ugroups_to_be_notified) > 0;
     }
 }
