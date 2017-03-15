@@ -304,7 +304,7 @@ class HTTPRequest extends Codendi_Request {
      */
     public function getPathInfoFromFCGI()
     {
-        $path = $this->stripQueryString($this->getFromServer('REQUEST_URI'));
+        $path = $this->stripQueryString(urldecode($this->getFromServer('REQUEST_URI')));
         $path = $this->stripScriptNameBase($path, $this->getFromServer('SCRIPT_NAME'));
         return $this->stripScriptName($path, $this->getFromServer('SCRIPT_NAME'));
     }
