@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 
 require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
 
@@ -107,20 +109,23 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      private $has_useable_burndown_field;
 
     /**
-     * @param Project $project
-     * @param Planning $planning
-     * @param Tracker_Artifact $artifact
-     * @param TreeNode $planned_artifacts
+     * @var ScrumForMonoMilestoneChecker
      */
-    public function __construct(Project          $project,
-                                Planning         $planning,
-                                Tracker_Artifact $artifact,
-                                ArtifactNode     $planned_artifacts = null) {
+    private $scrum_mono_milestone_checker;
 
-        $this->project           = $project;
-        $this->planning          = $planning;
-        $this->artifact          = $artifact;
-        $this->planned_artifacts = $planned_artifacts;
+    public function __construct(
+        Project $project,
+        Planning $planning,
+        Tracker_Artifact $artifact,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        ArtifactNode $planned_artifacts = null
+    ) {
+
+        $this->project                      = $project;
+        $this->planning                     = $planning;
+        $this->artifact                     = $artifact;
+        $this->planned_artifacts            = $planned_artifacts;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     /**
@@ -310,7 +315,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      * @return Boolean True if nothing went wrong
      */
     public function solveInconsistencies(PFUser $user, array $artifacts_ids) {
-        $success  = true;
         $artifact = $this->getArtifact();
 
         return $artifact->linkArtifacts($artifacts_ids, $user);
@@ -334,10 +338,20 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     }
 
     public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone) {
+        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($potential_submilestone->getProject()->getID()) === true) {
+            return $this->acceptOnlySameTrackerInMonoMilestoneCofiguration($potential_submilestone);
+        }
+
         if ($potential_submilestone->getArtifact()->getTracker()->getParent()) {
             return $potential_submilestone->getArtifact()->getTracker()->getParent()->getId() == $this->getArtifact()->getTracker()->getId();
         }
+
         return false;
+    }
+
+    private function acceptOnlySameTrackerInMonoMilestoneCofiguration(Planning_Milestone $potential_submilestone)
+    {
+        return $potential_submilestone->getArtifact()->getTracker()->getId()  == $this->getArtifact()->getTracker()->getId();
     }
 
     /**

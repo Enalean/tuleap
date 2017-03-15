@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -184,7 +184,8 @@ class AgileDashboardRouterBuilder {
             $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            $this->getMonoMileStoneChecker()
         );
     }
 

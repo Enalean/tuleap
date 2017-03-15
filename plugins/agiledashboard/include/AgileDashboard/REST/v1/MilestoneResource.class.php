@@ -110,6 +110,11 @@ class MilestoneResource extends AuthenticatedResource {
             $this->tracker_artifact_factory
         );
 
+        $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
+            new ScrumForMonoMilestoneDao(),
+            $planning_factory
+        );
+
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
             $this->tracker_artifact_factory,
@@ -117,7 +122,8 @@ class MilestoneResource extends AuthenticatedResource {
             TrackerFactory::instance(),
             $status_counter,
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            $scrum_for_mono_milestone_checker
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
@@ -160,11 +166,6 @@ class MilestoneResource extends AuthenticatedResource {
         );
 
         $this->event_manager = EventManager::instance();
-
-        $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $planning_factory
-        );
 
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,

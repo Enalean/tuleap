@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,8 @@ use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Tracker_ArtifactDao;
 use IdsFromBodyAreNotUniqueException;
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\REST\Header;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityManager;
@@ -90,14 +92,17 @@ class ProjectBacklogResource {
             $tracker_artifact_factory
         );
 
+        $planning_factory = PlanningFactory::build();
+
         $this->milestone_factory = new Planning_MilestoneFactory(
-            PlanningFactory::build(),
+            $planning_factory,
             Tracker_ArtifactFactory::instance(),
             Tracker_FormElementFactory::instance(),
             TrackerFactory::instance(),
             $status_counter,
             $this->planning_permissions_manager,
-            new AgileDashboard_Milestone_MilestoneDao()
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
