@@ -3528,3 +3528,15 @@ td.tracker-global-notifications-checkbox-cell {
     margin: 0 3px 0 5px;
     color: #666666;
 }
+
+.tracker-notification-edit {
+    white-space: nowrap;
+}
+
+.tracker-global-notifications-checkbox-cell-hidden {
+    display: none;
+}
+
+#global_notifs td {
+    vertical-align: middle;
+}
