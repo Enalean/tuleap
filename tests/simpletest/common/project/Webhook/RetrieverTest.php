@@ -29,8 +29,9 @@ class RetrieverTest extends \TuleapTestCase
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
         $dao                = mock('Tuleap\\Project\\Webhook\\WebhookDao');
         stub($dao)->searchWebhooks()->returns($data_access_result);
+        $status_logger = mock('Tuleap\\Project\\Webhook\\Log\\StatusLogger');
 
-        $retriever = new Retriever($dao);
+        $retriever = new Retriever($dao, $status_logger);
 
         $webhooks = $retriever->getWebhooks();
 
@@ -41,8 +42,9 @@ class RetrieverTest extends \TuleapTestCase
     {
         $dao = mock('Tuleap\\Project\\Webhook\\WebhookDao');
         stub($dao)->searchWebhooks()->returns(false);
+        $status_logger = mock('Tuleap\\Project\\Webhook\\Log\\StatusLogger');
 
-        $retriever = new Retriever($dao);
+        $retriever = new Retriever($dao, $status_logger);
 
         $this->expectException('Tuleap\\Project\\Webhook\\WebhookDataAccessException');
         $retriever->getWebhooks();

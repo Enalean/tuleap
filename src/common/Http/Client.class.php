@@ -169,5 +169,24 @@ class Http_Client
         curl_setopt_array($this->curl_handle, $this->curl_options);
         return curl_exec($this->curl_handle);
     }
+
+    /**
+     * status-line = HTTP-version SP status-code SP reason-phrase CRLF
+     * @see https://tools.ietf.org/html/rfc7230#section-3.1.2
+     *
+     * @return null | string
+     */
+    public function getStatusCodeAndReasonPhrase()
+    {
+        $last_response = $this->getLastResponse();
+        if ($last_response === false || $last_response === null || ! $this->getOption(CURLOPT_HEADER)) {
+            return null;
+        }
+
+        $response_lines       = explode(PHP_EOL, $last_response);
+        $status_line          = $response_lines[0];
+        $status_code_position = strpos($status_line, ' ') + 1;
+
+        return substr($status_line, $status_code_position);
+    }
 }
-?>

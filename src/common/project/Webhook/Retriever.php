@@ -20,16 +20,23 @@
 
 namespace Tuleap\Project\Webhook;
 
+use Tuleap\Project\Webhook\Log\StatusLogger;
+
 class Retriever
 {
     /**
      * @var WebhookDao
      */
     private $dao;
+    /**
+     * @var StatusLogger
+     */
+    private $status_logger;
 
-    public function __construct(WebhookDao $dao)
+    public function __construct(WebhookDao $dao, StatusLogger $status_logger)
     {
-        $this->dao = $dao;
+        $this->dao           = $dao;
+        $this->status_logger = $status_logger;
     }
 
     /**
@@ -57,6 +64,6 @@ class Retriever
      */
     private function instantiateFromRow(array $row)
     {
-        return new Webhook($row['id'], $row['url'], new \Http_Client());
+        return new Webhook($row['id'], $row['url'], new \Http_Client(), $this->status_logger);
     }
 }

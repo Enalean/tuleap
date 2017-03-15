@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Webhook;
+namespace Tuleap\Project\Webhook\Log;
 
-class WebhookResponseReceiver
+class WebhookLoggerDataAccessException extends \DataAccessException
 {
-
-    /**
-     * @var WebhookDao
-     */
-    private $dao;
-
-    public function __construct(WebhookDao $dao)
-    {
-        $this->dao = $dao;
-    }
-
-    public function receive(Webhook $webhook, $response)
-    {
-        $this->dao->addLog($webhook->getId(), $response);
-    }
-
-    public function receiveError(Webhook $webhook, $error)
-    {
-        $this->dao->addLog($webhook->getId(), $error);
-    }
 }
