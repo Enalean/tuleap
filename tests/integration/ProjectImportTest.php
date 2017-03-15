@@ -48,6 +48,9 @@ class ProjectImportTest extends TuleapDbTestCase
         PluginManager::instance()->invalidateCache();
         PluginFactory::clearInstance();
         UserManager::clearInstance();
+        $user_manager = UserManager::instance();
+        $user_admin = $user_manager->getUserByUserName('admin');
+        $user_manager->setCurrentUser($user_admin);
         $this->old_globals = $GLOBALS;
         $GLOBALS['feedback'] = '';
         $GLOBALS['svn_prefix'] = '/tmp';

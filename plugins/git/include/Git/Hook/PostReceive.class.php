@@ -124,6 +124,6 @@ class Git_Hook_PostReceive
 
     private function processGitWebhooks(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
-        return $this->webhook_request_sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
+        $this->webhook_request_sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
     }
 }

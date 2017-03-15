@@ -18,31 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Webhook\Log;
+namespace Tuleap\Webhook;
 
-class StatusLogger implements \Tuleap\Webhook\StatusLogger
+interface Webhook
 {
     /**
-     * @var WebhookLoggerDao
+     * @return int
      */
-    private $dao;
-
-    public function __construct(WebhookLoggerDao $dao)
-    {
-        $this->dao = $dao;
-    }
-
+    public function getId();
     /**
-     * @param \Tuleap\Webhook\Webhook $webhook
-     * @param $status
-     * @throws WebhookLoggerDataAccessException
+     * @return string
      */
-    public function log(\Tuleap\Webhook\Webhook $webhook, $status)
-    {
-        $has_been_saved = $this->dao->save($webhook->getId(), $_SERVER['REQUEST_TIME'], $status);
-
-        if (! $has_been_saved) {
-            throw new WebhookLoggerDataAccessException();
-        }
-    }
+    public function getUrl();
 }

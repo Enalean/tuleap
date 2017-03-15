@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,11 +43,11 @@ class WebhookRequestSenderTest extends TuleapTestCase
 
     public function itSendsOneRequestPerDefinedHook()
     {
-        $factory     = mock('Tuleap\Git\Webhook\WebhookFactory');
-        $http_client = mock('Http_Client');
-        $logger      = mock('Logger');
-        $receiver    = mock('Tuleap\Git\Webhook\WebhookResponseReceiver');
-        $sender      = new WebhookRequestSender($receiver, $factory, $http_client, $logger);
+        $webhook_factory = mock('Tuleap\\Git\\Webhook\\WebhookFactory');
+        $webhook_emitter = mock('Tuleap\\Webhook\\Emitter');
+        $logger          = mock('Logger');
+
+        $sender = new WebhookRequestSender($webhook_emitter, $webhook_factory, $logger);
 
         $repository = mock('GitRepository');
         $user       = mock('PFUser');
@@ -58,12 +58,12 @@ class WebhookRequestSenderTest extends TuleapTestCase
         $web_hook_01 = new Webhook(1, 1, 'url_01');
         $web_hook_02 = new Webhook(2, 1, 'url_02');
 
-        stub($factory)->getWebhooksForRepository()->returns(array(
+        stub($webhook_factory)->getWebhooksForRepository()->returns(array(
             $web_hook_01,
             $web_hook_02,
         ));
 
-        $http_client->expectCallCount('doRequest', 2);
+        $webhook_emitter->expectCallCount('emit', 2);
 
         $sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
     }

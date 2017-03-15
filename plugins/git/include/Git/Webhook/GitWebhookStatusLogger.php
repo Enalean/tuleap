@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,31 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Webhook\Log;
+namespace Tuleap\Git\Webhook;
 
-class StatusLogger implements \Tuleap\Webhook\StatusLogger
+use Tuleap\Webhook\StatusLogger;
+use Tuleap\Webhook\Webhook;
+
+class GitWebhookStatusLogger implements StatusLogger
 {
     /**
-     * @var WebhookLoggerDao
+     * @var WebhookDao
      */
     private $dao;
 
-    public function __construct(WebhookLoggerDao $dao)
+    public function __construct(WebhookDao $dao)
     {
         $this->dao = $dao;
     }
 
-    /**
-     * @param \Tuleap\Webhook\Webhook $webhook
-     * @param $status
-     * @throws WebhookLoggerDataAccessException
-     */
-    public function log(\Tuleap\Webhook\Webhook $webhook, $status)
+    public function log(Webhook $webhook, $status)
     {
-        $has_been_saved = $this->dao->save($webhook->getId(), $_SERVER['REQUEST_TIME'], $status);
-
-        if (! $has_been_saved) {
-            throw new WebhookLoggerDataAccessException();
-        }
+        $this->dao->addLog($webhook->getId(), $status);
     }
 }
