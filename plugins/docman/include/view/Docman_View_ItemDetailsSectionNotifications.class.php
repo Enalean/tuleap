@@ -71,20 +71,19 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     private function displayListeningUsers($itemId)
     {
         $dpm        = Docman_PermissionsManager::instance($this->item->getGroupId());
-        $userHelper = new UserHelper();
         $um         = UserManager::instance();
         $purifier   = Codendi_HTMLPurifier::instance();
         $content    = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
             $listeners = $this->notificationsManager->getListeningUsers($this->item);
             $content .= '<fieldset><legend>'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'details_listeners')) .'</legend>';
-            if (!empty($listeners)) {
-                $renderer = TemplateRendererFactory::build()->getRenderer(dirname(PLUGIN_DOCMAN_BASE_DIR).'/templates');
-                $content .= $renderer->renderToString(
-                    'item-details-notifications',
-                    new NotificationListPresenter($listeners, $this->item)
-                );
-            }
+
+            $renderer = TemplateRendererFactory::build()->getRenderer(dirname(PLUGIN_DOCMAN_BASE_DIR).'/templates');
+            $content .= $renderer->renderToString(
+                'item-details-notifications',
+                new NotificationListPresenter($listeners, $this->item)
+            );
+
             $content .= $this->addListeningUser($itemId);
             $content .= '</fieldset>';
         }

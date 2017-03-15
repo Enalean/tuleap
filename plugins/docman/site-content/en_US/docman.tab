@@ -370,6 +370,7 @@ plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_listeners	Subscribers
 plugin_docman	details_notifications_monitored_doc	Monitored document
+plugin_docman	empty_state	No notifications set
 plugin_docman	details_notifications_help	Users that could not be removed are monitoring a parent folder with its sub hierarchy.<br />You can delete that monitoring only from the parent itself.
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
 plugin_docman	details_notifications_cascade_sendemail	...and for the whole sub-hierarchy.
