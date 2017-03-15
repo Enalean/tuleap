@@ -128,7 +128,7 @@ clean-rng:
 # Tests and all
 #
 
-post-checkout: generate-mo dev-clear-cache ## Clear caches, build assets and generate language files
+post-checkout: generate-mo dev-clear-cache dev-forgeupgrade ## Clear caches, run forgeupgrade, build assets and generate language files
 	npm run build
 	@$(DOCKER) exec tuleap-web service httpd restart
 
