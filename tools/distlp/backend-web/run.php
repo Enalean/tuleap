@@ -36,6 +36,8 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 $fpm   = new Tuleap\Configuration\FPM\TuleapWeb('codendiadm');
 $nginx = new \Tuleap\Configuration\Nginx\BackendWeb('/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'tuleap-web.tuleap-aio-dev.docker');
+$rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
 
 $fpm->configure();
 $nginx->configure();
+$rabbitmq->configure();

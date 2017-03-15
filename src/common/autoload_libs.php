@@ -73,3 +73,7 @@ spl_autoload_register('autoload_zend');
 
 // Load PHP compatibility libraries
 require_once('common/include/compat/hash_equals.php');
+
+if (file_exists('/usr/share/php/php-amqplib/autoload.php')) {
+    require_once '/usr/share/php/php-amqplib/autoload.php';
+}

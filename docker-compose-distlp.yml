@@ -10,7 +10,7 @@ services:
       - backend-svn
 
   backend-web:
-    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.1
+    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.5
     environment:
       RUN_COMMAND: "php /usr/share/tuleap/tools/distlp/backend-web/run.php"
     volumes:
@@ -23,9 +23,10 @@ services:
     depends_on:
       - ldap
       - db
+      - rabbitmq
 
   backend-svn:
-    image: enalean/tuleap-dev
+    image: enalean/tuleap-dev:1.3
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes_from:
       - container:tuleap_data
@@ -34,6 +35,7 @@ services:
     depends_on:
       - ldap
       - db
+      - rabbitmq
 
   ldap:
     image: enalean/ldap
@@ -48,3 +50,13 @@ services:
       - .env
     volumes_from:
       - container:tuleap_db_data
+
+  rabbitmq:
+    image: rabbitmq:3.6
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq-data:
