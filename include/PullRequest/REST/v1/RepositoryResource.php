@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ use GitRepositoryFactory;
 use GitRepository;
 use ProjectManager;
 use UserManager;
-use PFUser;
+use Git_Command_Exception;
 use GitDao;
 use ReferenceManager;
 
@@ -85,8 +85,18 @@ class RepositoryResource
             $executor                  = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
             $pr_representation_factory = new PullRequestRepresentationFactory($executor);
 
-            $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user);
-            $collection[] = $pull_request_representation;
+            try {
+                $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation(
+                    $pull_request,
+                    $repository_src,
+                    $repository_dest,
+                    $user
+                );
+
+                $collection[] = $pull_request_representation;
+            } catch (Git_Command_Exception $exception) {
+                continue;
+            }
         }
 
         $representation = new RepositoryPullRequestRepresentation();
