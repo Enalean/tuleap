@@ -64,6 +64,6 @@ class Retriever
      */
     private function instantiateFromRow(array $row)
     {
-        return new Webhook($row['id'], $row['url'], new \Http_Client(), $this->status_logger);
+        return new Webhook($row['id'], $row['url']);
     }
 }

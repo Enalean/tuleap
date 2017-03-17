@@ -22,8 +22,10 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
+use Tuleap\Project\Webhook\ProjectCreatedPayload;
 use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
+use Tuleap\Webhook\Emitter;
 
 /**
  * Provide access to projects
@@ -354,16 +356,23 @@ class ProjectManager {
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
 
-            $webhook_status_logger = new WebhookStatusLogger(new WebhookLoggerDao());
-            $webhooks              = $this->getProjectWebhooks();
-            foreach ($webhooks as $webhook) {
-                $webhook->send($project, $_SERVER['REQUEST_TIME'], $webhook_status_logger);
-            }
+            $this->launchWebhooksProjectCreated($project);
 
             return true;
         }
 
         return false;
+    }
+
+    private function launchWebhooksProjectCreated(Project $project)
+    {
+        $webhook_status_logger   = new WebhookStatusLogger(new WebhookLoggerDao());
+        $webhook_emitter         = new Emitter(new Http_Client(), $webhook_status_logger);
+        $project_created_payload = new ProjectCreatedPayload($project, $_SERVER['REQUEST_TIME']);
+        $webhooks                = $this->getProjectWebhooks();
+        foreach ($webhooks as $webhook) {
+            $webhook_emitter->emit($webhook, $project_created_payload);
+        }
     }
 
     public function updateStatus(Project $project, $status)

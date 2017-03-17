@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,111 +20,43 @@
 
 namespace Tuleap\Git\Webhook;
 
-use Tuleap\User\REST\MinimalUserRepresentation;
 use GitRepository;
-use Http_Client;
-use Http_ClientException;
 use PFUser;
 use Logger;
+use Tuleap\Webhook\Emitter;
 
 class WebhookRequestSender
 {
-
     /**
-     * @var WebhookResponseReceiver
+     * @var Emitter
      */
-    private $receiver;
-
+    private $webhook_emitter;
     /**
      * @var Logger
      */
     private $logger;
-
-    /**
-     * @var HttpClient
-     */
-    private $http_client;
-
     /**
      * @var WebhookFactory
      */
-    private $factory;
+    private $webhook_factory;
 
     public function __construct(
-        WebhookResponseReceiver $receiver,
-        WebhookFactory $factory,
-        Http_Client $http_client,
+        Emitter $webhook_emitter,
+        WebhookFactory $webhook_factory,
         Logger $logger
     ) {
-        $this->factory     = $factory;
-        $this->http_client = $http_client;
-        $this->logger      = $logger;
-        $this->receiver    = $receiver;
+        $this->webhook_emitter = $webhook_emitter;
+        $this->webhook_factory = $webhook_factory;
+        $this->logger          = $logger;
     }
 
     public function sendRequests(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
-        $web_hooks = $this->factory->getWebhooksForRepository($repository);
+        $web_hooks = $this->webhook_factory->getWebhooksForRepository($repository);
+        $payload   = new PushPayload($repository, $user, $oldrev, $newrev, $refname);
         foreach ($web_hooks as $web_hook) {
             $this->logger->info("Processing webhook at ". $web_hook->getUrl() ." for repository #" . $repository->getId());
-            $this->buildRequest($repository, $user, $web_hook, $oldrev, $newrev, $refname);
-
-            try {
-                $this->http_client->doRequest();
-                $this->receiver->receive($web_hook, $this->http_client->getStatusCodeAndReasonPhrase());
-            } catch (Http_ClientException $e) {
-                $this->receiver->receiveError($web_hook, $e->getMessage());
-            }
+            $this->webhook_emitter->emit($web_hook, $payload);
         }
-    }
-
-    private function buildRequest(
-        GitRepository $repository,
-        PFUser $user,
-        Webhook $web_hook,
-        $oldrev,
-        $newrev,
-        $refname
-    ) {
-        $options = array(
-            CURLOPT_URL             => $web_hook->getUrl(),
-            CURLOPT_SSL_VERIFYPEER  => true,
-            CURLOPT_POST            => true,
-            CURLOPT_HEADER          => true,
-            CURLOPT_FAILONERROR     => false,
-            CURLOPT_POSTFIELDS      => $this->getRequestBody($repository, $user, $oldrev, $newrev, $refname)
-        );
-
-        $this->http_client->addOptions($options);
-    }
-
-    private function getRequestBody(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
-    {
-        $repository_representation = array(
-            "id"        => $repository->getId(),
-            "name"      => $repository->getName(),
-            "full_name" => $repository->getFullName(),
-        );
-
-        $pusher_representation = array(
-            "name"  => $user->getUserName(),
-            "email" => $user->getEmail(),
-        );
-
-        $sender_representation = new MinimalUserRepresentation();
-        $sender_representation->build($user);
-
-        $body = array(
-            "ref"        => $refname,
-            "after"      => $newrev,
-            "before"     => $oldrev,
-            "repository" => $repository_representation,
-            "pusher"     => $pusher_representation,
-            "sender"     => $sender_representation,
-        );
-
-        return http_build_query(array(
-            'payload' => json_encode($body)
-        ));
     }
 }

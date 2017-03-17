@@ -20,11 +20,7 @@
 
 namespace Tuleap\Project\Webhook;
 
-use Http_Client;
-use Project;
-use Tuleap\Project\Webhook\Log\StatusLogger;
-
-class Webhook
+class Webhook implements \Tuleap\Webhook\Webhook
 {
     /**
      * @var int
@@ -34,21 +30,11 @@ class Webhook
      * @var string
      */
     private $url;
-    /**
-     * @var Http_Client
-     */
-    private $http_client;
-    /**
-     * @var StatusLogger
-     */
-    private $logger;
 
-    public function __construct($id, $url, Http_Client $http_client, StatusLogger $logger)
+    public function __construct($id, $url)
     {
-        $this->http_client = $http_client;
-        $this->logger      = $logger;
-        $this->id          = $id;
-        $this->url         = $url;
+        $this->id  = $id;
+        $this->url = $url;
     }
 
     /**
@@ -59,60 +45,11 @@ class Webhook
         return $this->id;
     }
 
-    public function send(Project $project, $update_time)
-    {
-        $this->buildRequest($project, $update_time);
-
-        try {
-            $this->http_client->doRequest();
-            $this->logger->log($this, $this->http_client->getStatusCodeAndReasonPhrase());
-        } catch (\Http_ClientException $ex) {
-            $this->logger->log($this, $ex->getMessage());
-        }
-
-        $this->http_client->close();
-    }
-
-    private function buildRequest(Project $project, $update_time)
-    {
-        $options = array(
-            CURLOPT_URL         => $this->url,
-            CURLOPT_POST        => true,
-            CURLOPT_HEADER      => true,
-            CURLOPT_FAILONERROR => false,
-            CURLOPT_POSTFIELDS  => $this->getRequestBody($project, $update_time)
-        );
-        $this->http_client->addOptions($options);
-    }
-
-    private function getRequestBody(Project $project, $update_time)
-    {
-        $creation_date = new \DateTime('@' . $project->getStartDate());
-        $update_date   = new \DateTime("@$update_time");
-        $owner         = $this->extractOwner($project);
-        $payload = array(
-            'created_at'          => $creation_date->format('c'),
-            'updated_at'          => $update_date->format('c'),
-            'event_name'          => 'project_create',
-            'name'                => $project->getUnconvertedPublicName(),
-            'owner_id'            => (int) $owner->getId(),
-            'owner_email'         => $owner->getEmail(),
-            'owner_name'          => $owner->getRealName(),
-            'path'                => $project->getUnixName(),
-            'path_with_namespace' => $project->getUnixName(),
-            'project_id'          => (int) $project->getID(),
-            'project_visibility'  => $project->getAccess()
-        );
-
-        return http_build_query(array('payload' => json_encode($payload)));
-    }
-
     /**
-     * @return \PFUser
+     * @return string
      */
-    private function extractOwner(Project $project)
+    public function getUrl()
     {
-        $admins = $project->getAdmins();
-        return $admins[0];
+        return $this->url;
     }
 }

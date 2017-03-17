@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 namespace Tuleap\Git\Webhook;
 
-class Webhook
+class Webhook implements \Tuleap\Webhook\Webhook
 {
 
     private $url;

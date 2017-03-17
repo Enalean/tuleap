@@ -89,9 +89,8 @@ $post_receive = new Git_Hook_PostReceive(
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
-        new \Tuleap\Git\Webhook\WebhookResponseReceiver($webhook_dao),
+        new \Tuleap\Webhook\Emitter(new Http_Client(), new \Tuleap\Git\Webhook\GitWebhookStatusLogger($webhook_dao)),
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
-        $http_client,
         $logger
     ),
     new \Tuleap\Git\Hook\PostReceiveMailSender(

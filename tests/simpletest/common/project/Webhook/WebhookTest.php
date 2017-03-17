@@ -22,28 +22,11 @@ namespace Tuleap\project\Webhook;
 
 class WebhookTest extends \TuleapTestCase
 {
-    public function itSendsInformation()
+    public function itUsesGivenIdAndUrl()
     {
-        $http_client   = mock('Http_Client');
-        $status_logger = mock('Tuleap\\Project\\Webhook\\Log\\StatusLogger');
-        $webhook       = new Webhook(1, 'https://example.com', $http_client, $status_logger);
-
-        $project = mock('Project');
-        stub($project)->getStartDate()->returns(1489414628);
-        $admin = mock('PFUser');
-        stub($project)->getAdmins()->returns(array($admin));
-
-        $http_client->expectOnce('doRequest');
-        $status_logger->expectOnce('log');
-        $webhook->send($project, 1489414628);
-    }
-
-    public function itUsesGivenId()
-    {
-        $http_client   = mock('Http_Client');
-        $status_logger = mock('Tuleap\\Project\\Webhook\\Log\\StatusLogger');
-        $webhook       = new Webhook(1, 'https://example.com', $http_client, $status_logger);
+        $webhook = new Webhook(1, 'https://example.com');
 
         $this->assertEqual($webhook->getId(), 1);
+        $this->assertEqual($webhook->getUrl(), 'https://example.com');
     }
 }
