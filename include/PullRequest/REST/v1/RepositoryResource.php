@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Luracast\Restler\RestException;
 use GitRepositoryFactory;
@@ -51,6 +52,11 @@ class RepositoryResource
     /** @var QueryToCriterionConverter */
     private $query_to_criterion_converter;
 
+    /**
+     * @var Tuleap\PullRequest\Logger
+     */
+    private $logger;
+
     public function __construct()
     {
         $this->pull_request_dao       = new PullRequestDao();
@@ -61,6 +67,8 @@ class RepositoryResource
         );
         $this->user_manager                 = UserManager::instance();
         $this->query_to_criterion_converter = new QueryToCriterionConverter();
+
+        $this->logger = new Logger();
     }
 
     public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset)
@@ -71,10 +79,10 @@ class RepositoryResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $result   = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criterion, $limit, $offset);
-        $user     = $this->user_manager->getCurrentUser();
-
+        $result     = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criterion, $limit, $offset);
+        $user       = $this->user_manager->getCurrentUser();
         $total_size = (int) $this->pull_request_dao->foundRows();
+
         $collection = array();
         foreach ($result as $row) {
             $pull_request      = $this->pull_request_factory->getInstanceFromRow($row);
@@ -95,6 +103,9 @@ class RepositoryResource
 
                 $collection[] = $pull_request_representation;
             } catch (Git_Command_Exception $exception) {
+                $pull_request_id = $pull_request->getId();
+                $this->logger->warn("The pullrequest #$pull_request_id cannot be displayed because of a missing reference");
+
                 continue;
             }
         }

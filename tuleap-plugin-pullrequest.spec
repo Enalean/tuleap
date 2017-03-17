@@ -1,3 +1,5 @@
+%define APP_USER codendiadm
+
 Summary: Pullrequest management for Tuleap
 Name: tuleap-plugin-pullrequest
 Version: @@VERSION@@
@@ -45,6 +47,11 @@ npm run build
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest
 %{__cp} -ar include db templates README.mkd VERSION ChangeLog site-content $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest
 
+# logrotate
+%{__mkdir} -p $RPM_BUILD_ROOT/etc/logrotate.d
+%{__install} etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+
 # www
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www/js/angular
 %{__cp} -ar www/index.php www/themes $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www
@@ -69,6 +76,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/pullrequest
+%config(noreplace) /etc/logrotate.d/tuleap_pullrequest
 
 %changelog
 * Tue Feb 9 2016 Manuel VACELET <manuel.vacelet@enalean.com> -

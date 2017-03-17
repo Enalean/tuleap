@@ -1,0 +1,7 @@
+/var/log/tuleap/pullrequest_syslog {
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 640 %APP_USER% %APP_USER%
+}
