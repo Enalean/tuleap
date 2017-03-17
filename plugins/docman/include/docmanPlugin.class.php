@@ -25,6 +25,7 @@
  */
 
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -1059,7 +1060,13 @@ class DocmanPlugin extends Plugin
     {
         return new UsersRetriever(
             $this->getNotificationsDao(),
-            new Docman_ItemFactory()
+            new UgroupsToNotifyDao(),
+            new Docman_ItemFactory(),
+            new UGroupManager(
+                new UGroupDao(),
+                new EventManager(),
+                new UGroupUserDao()
+            )
         );
     }
 }

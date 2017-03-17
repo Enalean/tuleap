@@ -296,11 +296,22 @@ class NotificationsManager_MoveTest extends TuleapTestCase
             $dnmm->expectNever('_buildMessage', $msg);
         }
 
-        $mail_builder    = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
-        $users_retriever = new UsersRetriever(
+        $ugroups_to_notify_dao = mock('Tuleap\Docman\Notifications\UgroupsToNotifyDao');
+        stub($ugroups_to_notify_dao)->searchUgroupsByItemIdAndType()->returns(false);
+        $docman_itemfactory    = mock('Docman_ItemFactory');
+        $ugroup_manager        = mock('UGroupManager');
+        $mail_builder          = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $users_retriever       = new UsersRetriever(
             $dao,
-            mock('Docman_ItemFactory')
+            $ugroups_to_notify_dao,
+            $docman_itemfactory,
+            $ugroup_manager
         );
+
+        $docman_item = mock('Docman_EmbeddedFile');
+        stub($docman_itemfactory)->getItemFromDb('b')->returns($docman_item);
+        stub($docman_itemfactory)->getItemFromDb('c')->returns($docman_item);
+        stub($docman_itemfactory)->getItemFromDb('d')->returns($docman_item);
 
         //C'est parti
         $dnmm->__construct(

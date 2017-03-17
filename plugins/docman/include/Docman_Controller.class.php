@@ -21,6 +21,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -1874,7 +1875,13 @@ class Docman_Controller extends Controler {
     {
         return new UsersRetriever(
             $this->getNotificationsDao(),
-            new Docman_ItemFactory()
+            new UgroupsToNotifyDao(),
+            new Docman_ItemFactory(),
+            new UGroupManager(
+                new UGroupDao(),
+                new EventManager(),
+                new UGroupUserDao()
+            )
         );
     }
 }
