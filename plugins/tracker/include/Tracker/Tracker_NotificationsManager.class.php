@@ -46,19 +46,25 @@ class Tracker_NotificationsManager {
      * @var UgroupsToNotifyDao
      */
     private $ugroup_to_notify_dao;
+    /**
+     * @var GlobalNotificationsAddressesBuilder
+     */
+    private $addresses_builder;
 
     public function __construct(
         $tracker,
         CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
         CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
         UsersToNotifyDao $user_to_notify_dao,
-        UgroupsToNotifyDao $ugroup_to_notify_dao
+        UgroupsToNotifyDao $ugroup_to_notify_dao,
+        GlobalNotificationsAddressesBuilder $addresses_builder
     ) {
         $this->tracker                       = $tracker;
         $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
         $this->user_to_notify_dao            = $user_to_notify_dao;
         $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
         $this->ugroup_to_notify_dao          = $ugroup_to_notify_dao;
+        $this->addresses_builder             = $addresses_builder;
     }
 
     public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user) {
@@ -157,7 +163,8 @@ class Tracker_NotificationsManager {
                 new PaneNotificationListPresenter(
                     $notifs,
                     $this->user_to_be_notified_builder,
-                    $this->ugroup_to_be_notified_builder
+                    $this->ugroup_to_be_notified_builder,
+                    $this->addresses_builder
                 )
             );
         } else {
@@ -254,7 +261,7 @@ class Tracker_NotificationsManager {
 
     protected function updateGlobalNotification($global_notification_id, $data) {
         $feedback = '';
-        $arr_email_address = preg_split('/[,;]/', $data['addresses']);
+        $arr_email_address = $this->addresses_builder->transformNotificationAddressesStringAsArray($data['addresses']);
         if (!util_validateCCList($arr_email_address, $feedback, false)) {
           $GLOBALS['Response']->addFeedback('error', $feedback);
         } else {

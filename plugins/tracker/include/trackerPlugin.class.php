@@ -33,6 +33,7 @@ use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
@@ -1337,7 +1338,8 @@ class trackerPlugin extends Plugin {
             new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
             $user_to_notify_dao,
-            $ugroup_to_notify_dao
+            $ugroup_to_notify_dao,
+            new GlobalNotificationsAddressesBuilder()
         );
     }
 }
