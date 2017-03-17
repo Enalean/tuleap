@@ -1,6 +1,9 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2011. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,12 +73,12 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         $item->setReturnValue('getId', 1);
         $params = array('item' => $item);
 
-        $project           = aMockProject()->withId(101)->build();
-        $feedback          = mock('Feedback');
-        $mail_builder      = mock('MailBuilder');
-        $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
-        $users_retriever   = mock('Tuleap\Docman\Notifications\UsersRetriever');
-        stub($users_retriever)->getNotifiedUsers()->returns($listeningUsers);
+        $project                   = aMockProject()->withId(101)->build();
+        $feedback                  = mock('Feedback');
+        $mail_builder              = mock('MailBuilder');
+        $notifications_dao         = mock('Tuleap\Docman\Notifications\Dao');
+        $notified_people_retriever = mock('Tuleap\Docman\Notifications\NotifiedPeopleRetriever');
+        stub($notified_people_retriever)->getNotifiedUsers()->returns($listeningUsers);
 
         $notifications_manager = new Docman_NotificationsManager_DeleteTestVersion();
         $notifications_manager->__construct(
@@ -84,7 +87,9 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
             $feedback,
             $mail_builder,
             $notifications_dao,
-            $users_retriever
+            mock('Tuleap\Docman\Notifications\UsersRetriever'),
+            mock('Tuleap\Docman\Notifications\UGroupsRetriever'),
+            $notified_people_retriever
         );
         $notifications_manager->setReturnValue('_getUserManager', $um);
         $notifications_manager->setReturnValue('_getPermissionsManager', $dpm);

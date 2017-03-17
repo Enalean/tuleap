@@ -20,13 +20,14 @@
  */
 
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
+use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once('common/mail/Mail.class.php');
 
 class Docman_NotificationsManager
 {
-
     const MESSAGE_MODIFIED        = 'modified';
     const MESSAGE_NEWVERSION      = 'new_version';
     const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
@@ -53,10 +54,20 @@ class Docman_NotificationsManager
      * @var Dao
      */
     private $dao;
+
     /**
      * @var UsersRetriever
      */
-    protected $users_retriever;
+    private $users_retriever;
+
+    /**
+     * @var UGroupsRetriever
+     */
+    private $ugroups_retriever;
+    /**
+     * @var NotifiedPeopleRetriever
+     */
+    protected $notified_people_retriever;
 
     public function __construct(
         Project $project,
@@ -64,7 +75,9 @@ class Docman_NotificationsManager
         $feedback,
         MailBuilder $mail_builder,
         Dao $dao,
-        UsersRetriever $users_retriever
+        UsersRetriever $users_retriever,
+        UGroupsRetriever $ugroups_retriever,
+        NotifiedPeopleRetriever $notified_people_retriever
     ) {
         $this->project       = $project;
         $this->_url          = $url;
@@ -73,12 +86,15 @@ class Docman_NotificationsManager
         $this->_item_factory = $this->_getItemFactory();
         $this->notifications = array();
         $this->mail_builder  = $mail_builder;
-        if ($project && !$project->isError()) {
+        if ($project && ! $project->isError()) {
             $this->_group_name = $project->getPublicName();
         }
-        $this->dao             = $dao;
-        $this->users_retriever = $users_retriever;
+        $this->dao                       = $dao;
+        $this->users_retriever           = $users_retriever;
+        $this->ugroups_retriever         = $ugroups_retriever;
+        $this->notified_people_retriever = $notified_people_retriever;
     }
+
     function _getItemFactory() {
         return new Docman_ItemFactory();
     }
@@ -94,7 +110,7 @@ class Docman_NotificationsManager
     function somethingHappen($event, $params) {
         $um             = $this->_getUserManager();
         $params['path'] = $this->_getDocmanPath();
-        $users          = $this->users_retriever->getNotifiedUsers(
+        $users          = $this->notified_people_retriever->getNotifiedUsers(
             $this->project,
             $this->_getListeningUsersItemId($params)
         );
@@ -144,20 +160,16 @@ class Docman_NotificationsManager
     *
     * @return Array
     */
-    public function getListeningUsers(Docman_Item $item, $users = array(), $type = PLUGIN_DOCMAN_NOTIFICATION) {
-        $dar = $this->dao->searchUserIdByObjectIdAndType($item->getId(), $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-        if ($dar) {
-            foreach ($dar as $user) {
-                if (!array_key_exists($user['user_id'], $users)) {
-                    $users[$user['user_id']] = $item;
-                }
-            }
-        }
-        if ($id = $item->getParentId()) {
-            $item = $this->_item_factory->getItemFromDb($id);
-            $users = $this->getListeningUsers($item, $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-        }
-        return $users;
+    public function getListeningUsers(Docman_Item $item)
+    {
+        $users = array();
+        return $this->users_retriever->getListeningUsers($item, $users, PLUGIN_DOCMAN_NOTIFICATION);
+    }
+
+    public function getListeningUGroups(Docman_Item $item)
+    {
+        $ugroups = array();
+        return $this->ugroups_retriever->getListeningUGroups($item, $ugroups, PLUGIN_DOCMAN_NOTIFICATION);
     }
 
     function _buildMessage($event, $params, $user) {

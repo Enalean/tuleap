@@ -10,35 +10,57 @@
             </tr>
         </thead>
         <tbody>
-            {{# notifications }}
-                <tr>
-                    <td>
-                        <input type="checkbox"
-                               value="{{# user }}{{ user_id }}{{/ user}}"
-                               name="listeners_to_delete[]"
-                               {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
-                        >
-                    </td>
-                    <td class="docman-notification-user">
-                        {{# user }}
-                            <div class="avatar docman-notification-user-avatar">
-                                {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
-                            </div>
-                            {{ label }}
-                        {{/ user }}
-                    </td>
-                    <td>{{ item_title }}</td>
-                </tr>
-            {{/ notifications }}
-            {{^ notifications }}
+            {{# has_listeners }}
+                 {{# ugroups_to_be_notified }}
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   value="{{# ugroup }}{{ ugroup_id }}{{/ ugroup }}"
+                                   name="listeners_to_delete[]"
+                                   {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
+                            >
+                        </td>
+                        <td>
+                            {{# ugroup }}
+                               <i class="icon-group docman-notification-email-list-group-icon"></i>
+                               {{ label }}
+                            {{/ ugroup }}
+                        </td>
+                        <td>{{ item_title }}</td>
+                    </tr>
+                 {{/ ugroups_to_be_notified }}
+                 {{# users_to_be_notified }}
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   value="{{# user }}{{ user_id }}{{/ user}}"
+                                   name="listeners_to_delete[]"
+                                   {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
+                            >
+                        </td>
+                        <td class="docman-notification-user">
+                            {{# user }}
+                                <div class="avatar docman-notification-user-avatar">
+                                    {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                </div>
+                                {{ label }}
+                            {{/ user }}
+                        </td>
+                        <td>{{ item_title }}</td>
+                    </tr>
+                {{/ users_to_be_notified }}
+            {{/ has_listeners }}
+
+            {{^ has_listeners }}
                 <tr class="empty-table">
                     <td colspan="3">{{ empty_state }}</td>
                 </tr>
-            {{/ notifications }}
-        </tbody>
+             {{/ has_listeners }}
+      </tbody>
     </table>
-    {{# notifications }}
+
+    {{# has_listeners }}
         <input type="submit" value="{{ delete_button }}">
-    {{/ notifications }}
+    {{/ has_listeners }}
 </form>
 <hr width="100%" size="1" noshade>

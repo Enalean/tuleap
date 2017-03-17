@@ -25,6 +25,8 @@
  */
 
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
+use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Layout\PaginationPresenter;
@@ -861,7 +863,9 @@ class DocmanPlugin extends Plugin
                     null,
                     $this->getMailBuilder(),
                     $this->getNotificationsDao(),
-                    $this->getUsersRetriever()
+                    $this->getUsersNotificationRetriever(),
+                    $this->getUGroupsRetriever(),
+                    $this->getNotifiedPeopleRetriever()
                 );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
                 if($dar && !$dar->isError()) {
@@ -897,7 +901,9 @@ class DocmanPlugin extends Plugin
                     null,
                     $this->getMailBuilder(),
                     $this->getNotificationsDao(),
-                    $this->getUsersRetriever()
+                    $this->getUsersNotificationRetriever(),
+                    $this->getUGroupsRetriever(),
+                    $this->getNotifiedPeopleRetriever()
                 );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId);
                 if($dar && !$dar->isError()) {
@@ -1056,17 +1062,39 @@ class DocmanPlugin extends Plugin
         return new Dao();
     }
 
-    private function getUsersRetriever()
+    private function getUGroupManager()
+    {
+        return new UGroupManager(
+            new UGroupDao(),
+            new EventManager(),
+            new UGroupUserDao()
+        );
+    }
+
+    private function getUGroupToNotifyDao()
+    {
+        return new UgroupsToNotifyDao();
+    }
+
+    private function getUsersNotificationRetriever()
     {
         return new UsersRetriever(
             $this->getNotificationsDao(),
-            new UgroupsToNotifyDao(),
+            new Docman_ItemFactory()
+        );
+    }
+    private function getUGroupsRetriever()
+    {
+        return new UGroupsRetriever($this->getUGroupToNotifyDao(), new Docman_ItemFactory());
+    }
+
+    private function getNotifiedPeopleRetriever()
+    {
+        return new NotifiedPeopleRetriever(
+            $this->getNotificationsDao(),
+            $this->getUGroupToNotifyDao(),
             new Docman_ItemFactory(),
-            new UGroupManager(
-                new UGroupDao(),
-                new EventManager(),
-                new UGroupUserDao()
-            )
+            $this->getUGroupManager()
         );
     }
 }
