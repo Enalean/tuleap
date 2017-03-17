@@ -31,7 +31,11 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
+use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -114,7 +118,9 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
+
         $this->addHook('project_admin_ugroup_deletion');
+        $this->addHook('project_admin_remove_user');
     }
 
     public function getHooksAndCallbacks() {
@@ -1272,11 +1278,66 @@ class trackerPlugin extends Plugin {
         $params['plugins_permission'][TrackerAdminAllProjects::ID] = $permission;
     }
 
-    public function project_admin_ugroup_deletion($params) {
+    public function project_admin_ugroup_deletion($params)
+    {
         $project_id = $params['group_id'];
         $ugroup     = $params['ugroup'];
 
         $ugroups_to_notify_dao = new UgroupsToNotifyDao();
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
+    }
+
+    public function project_admin_remove_user($params)
+    {
+        $project_id = $params['group_id'];
+        $user_id    = $params['user_id'];
+
+        $user_manager = UserManager::instance();
+
+        $user    = $user_manager->getUserById($user_id);
+        $project = $this->getProjectManager()->getProject($project_id);
+
+        $cleaner = $this->getNotificationForProjectMemberCleaner();
+        $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
+    }
+
+    /**
+     * @return NotificationsForProjectMemberCleaner
+     */
+    private function getNotificationForProjectMemberCleaner() {
+        return  new NotificationsForProjectMemberCleaner(
+            $this->getTrackerFactory(),
+            $this->getTrackerNotificationManager(),
+            $this->getUserToNotifyDao()
+        );
+    }
+
+    /**
+     * @return UsersToNotifyDao
+     */
+    private function getUserToNotifyDao() {
+        return new UsersToNotifyDao();
+    }
+
+    /**
+     * @return UgroupsToNotifyDao
+     */
+    private function getUgroupToNotifyDao() {
+        return new UgroupsToNotifyDao();
+    }
+
+    /**
+     * @return Tracker_NotificationsManager
+     */
+    private function getTrackerNotificationManager() {
+        $user_to_notify_dao   = $this->getUserToNotifyDao();
+        $ugroup_to_notify_dao = $this->getUgroupToNotifyDao();
+        return new Tracker_NotificationsManager(
+            $this,
+            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
+            $user_to_notify_dao,
+            $ugroup_to_notify_dao
+        );
     }
 }

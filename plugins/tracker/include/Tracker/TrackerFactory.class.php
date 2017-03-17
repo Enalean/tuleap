@@ -119,7 +119,7 @@ class TrackerFactory {
     /**
      * @param int $group_id the project id the trackers to retrieve belong to
      *
-     * @return Array of Tracker
+     * @return Tracker[]
      */
     public function getTrackersByGroupId($group_id) {
         $trackers = array();

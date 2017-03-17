@@ -53,4 +53,25 @@ class UsersToNotifyDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function deleteByTrackerIdAndUserId($tracker_id, $user_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $user_id    = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE notification.*
+                FROM tracker
+                    INNER JOIN tracker_global_notification AS global_notification
+                    ON (
+                      tracker.id = global_notification.tracker_id
+                      AND tracker.id = $tracker_id
+                    )
+                    INNER JOIN tracker_global_notification_users AS notification
+                    ON (
+                      global_notification.id = notification.notification_id
+                      AND notification.user_id = $user_id
+                    )";
+
+        return $this->update($sql);
+    }
 }

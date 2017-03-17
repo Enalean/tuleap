@@ -3170,7 +3170,8 @@ EOS;
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),
             new UGroupManager(),
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            new GlobalNotificationsAddressesBuilder()
         );
         foreach ($notifications as $id => $notification) {
             $notified_emails = $email_retriever->getNotifiedEmails($notification);
