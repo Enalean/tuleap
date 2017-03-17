@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,7 +52,7 @@ class LayoutTest extends TuleapTestCase
         $l = TestHelper::getPartialMock('Layout', array('header', 'getEventManager', 'getStylesheetTheme'));
         $l->setReturnValue('getEventManager', new MockEventManager());
 
-        $css = '/viewvc-static/styles.css';
+        $css = '/vendor-css/styles.css';
 
         $l->addStylesheet($css);
         ob_start();
