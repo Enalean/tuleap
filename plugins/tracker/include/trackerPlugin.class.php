@@ -124,6 +124,7 @@ class trackerPlugin extends Plugin {
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('project_admin_remove_user');
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook(Event::SITE_ACCESS_CHANGE);
     }
 
     public function getHooksAndCallbacks() {
@@ -1306,8 +1307,22 @@ class trackerPlugin extends Plugin {
 
     public function project_access_change($params)
     {
-        $updater = new UgroupsToNotifyUpdater($this->getUgroupToNotifyDao());
+        $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);
+    }
+
+    public function site_access_change(array $params)
+    {
+        $updater = $this->getUgroupToNotifyUpdater();
+        $updater->updateSiteAccess($params['old_value']);
+    }
+
+    /**
+     * @return UgroupsToNotifyUpdater
+     */
+    private function getUgroupToNotifyUpdater()
+    {
+        return new UgroupsToNotifyUpdater($this->getUgroupToNotifyDao());
     }
 
     /**
