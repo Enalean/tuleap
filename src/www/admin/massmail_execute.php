@@ -46,7 +46,8 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
     }
 
     if ($destination != 'preview') {
-        $em->processEvent(
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent(
             Event::MASSMAIL,
             array(
                 'destination' => $destination,
