@@ -507,6 +507,15 @@ a img {
     & > tbody > tr:first-child > td {
         border-top: none;
     }
+
+    > tbody > tr {
+        &.empty-table > td {
+            padding: 50px;
+            color: #AAAAAA;
+            text-align: center;
+            font-size: 12px;
+        }
+    }
 }
 
 .plugin-docman-notifications-list-document,

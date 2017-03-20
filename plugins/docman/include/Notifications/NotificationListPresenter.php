@@ -33,6 +33,7 @@ class NotificationListPresenter
     public $delete_button;
     public $monitored_doc;
     public $purified_help;
+    public $empty_state;
 
     public function __construct(array $listeners, Docman_Item $item)
     {
@@ -43,6 +44,7 @@ class NotificationListPresenter
         $this->notified_people = dgettext('tuleap-docman', 'Notified people');
         $this->delete_button   = $GLOBALS['Language']->getText('plugin_docman', 'action_delete');
         $this->monitored_doc   = $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc');
+        $this->empty_state     = $GLOBALS['Language']->getText('plugin_docman', 'empty_state');
         $this->purified_help   = Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help'),
             CODENDI_PURIFIER_LIGHT
