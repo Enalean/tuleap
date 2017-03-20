@@ -1579,6 +1579,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (count($artlink_fields)) {
             $comment       = '';
             $artlink_field = $artlink_fields[0];
+
+            $linked_artifact_id = $this->filterArtifactIdsIAmAlreadyLinkedTo($artlink_field, $linked_artifact_id);
+            if (! $linked_artifact_id) {
+                return true;
+            }
+
             $fields_data   = array();
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
@@ -1629,6 +1635,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         } catch (Tracker_Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
+    }
+
+    private function filterArtifactIdsIAmAlreadyLinkedTo(Tracker_FormElement_Field_ArtifactLink $field, $linked_artifact_id)
+    {
+        $linked_artifact_id_as_array = explode(',', $linked_artifact_id);
+
+        $last_changeset = $this->getLastChangeset();
+        if (! $last_changeset) {
+            return $linked_artifact_id;
+        }
+
+        /** @var Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value */
+        $changeset_value = $last_changeset->getValue($field);
+        if (! $changeset_value) {
+            return $linked_artifact_id;
+        }
+
+        $existing_links              = $changeset_value->getArtifactIds();
+        $linked_artifact_id_as_array = array_diff($linked_artifact_id_as_array, $existing_links);
+
+        return implode(',', $linked_artifact_id_as_array);
     }
 
     /**

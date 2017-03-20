@@ -71,14 +71,14 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
     public function itCreatesANewChangesetWithANewAssociation() {
         $artifact = partial_mock('Tracker_Artifact',
-                array(
-                    'getFormElementFactory',
-                    'getTracker',
-                    'createNewChangeset',
-                    'getUserManager'
-                    )
-                );
-
+            array(
+                'getFormElementFactory',
+                'getTracker',
+                'createNewChangeset',
+                'getUserManager',
+                'getLastChangeset'
+            )
+        );
 
         $factory  = mock('Tracker_FormElementFactory');
         stub($artifact)->getFormElementFactory()->returns($factory);
@@ -94,6 +94,40 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
         $no_comment = '';
 
         $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user));
+
+        $artifact->process(mock('TrackerManager'), $this->request, $this->user);
+    }
+
+    public function itDoesNotCreateANewChangesetWithANewAssociationIfTheLinkAlreadyExists()
+    {
+        $artifact = partial_mock('Tracker_Artifact',
+            array(
+                'getFormElementFactory',
+                'getTracker',
+                'createNewChangeset',
+                'getUserManager',
+                'getLastChangeset'
+            )
+        );
+
+        $factory  = mock('Tracker_FormElementFactory');
+        stub($artifact)->getFormElementFactory()->returns($factory);
+
+        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        stub($artifact)->getUserManager()->returns($user_manager);
+        stub($artifact)->getTracker()->returns(mock('Tracker'));
+
+        $field = anArtifactLinkField()->withId(1002)->build();
+        stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
+
+        $changeset = mock('Tracker_Artifact_Changeset');
+        stub($artifact)->getLastChangeset()->returns($changeset);
+
+        $changeset_value = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
+        stub($changeset)->getValue($field)->returns($changeset_value);
+        stub($changeset_value)->getArtifactIds()->returns(array(987));
+
+        expect($artifact)->createNewChangeset()->never();
 
         $artifact->process(mock('TrackerManager'), $this->request, $this->user);
     }
