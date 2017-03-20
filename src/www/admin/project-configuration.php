@@ -18,51 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Webhook;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Project\Admin\WebhooksPresenter;
 
-class Webhook implements \Tuleap\Webhook\Webhook
-{
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $url;
+require_once('pre.php');
+require_once('www/admin/admin_utils.php');
 
-    public function __construct($id, $name, $url)
-    {
-        $this->id   = $id;
-        $this->name = $name;
-        $this->url  = $url;
-    }
+session_require(array('group'=>'1','admin_flags'=>'A'));
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+$title = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+$webhook_retriever = new \Tuleap\Project\Webhook\Retriever(new \Tuleap\Project\Webhook\WebhookDao());
+$webhooks          = $webhook_retriever->getWebhooks();
 
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-}
+$presenter = new WebhooksPresenter($title, $webhooks);
+
+$admin_page = new AdminPageRenderer();
+$admin_page->renderANoFramedPresenter(
+    $title,
+    ForgeConfig::get('codendi_dir') .'/src/templates/admin/projects/',
+    'configuration',
+    $presenter
+);

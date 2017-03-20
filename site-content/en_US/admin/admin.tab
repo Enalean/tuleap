@@ -22,6 +22,7 @@ admin_sidebar	projects_section_title	Projects
 admin_sidebar	projects_search_placeholder	Id, unix name…
 admin_sidebar	projects_nav_all_projects	All projects
 admin_sidebar	projects_nav_pending_projects	Pending projects
+admin_sidebar	projects_nav_configuration	Projects configuration
 admin_sidebar	configuration_section_title	Global configuration
 admin_sidebar	configuration_nav_global_access_rights	Global access rights
 admin_sidebar	configuration_nav_homepage	Homepage
@@ -835,3 +836,10 @@ admin_projectlist	public	Public
 admin_projectlist	pending_projects_text	For your information, there are <a href="$1">$2 projects waiting for validation</a>.
 
 admin	allowed_projects_filter_empty	There isn't any projects matching your filter.
+
+admin_project_configuration	webhook_tab_title	Webhooks
+admin_project_configuration	webhook_pane_title	Project creation webhooks
+admin_project_configuration	webhook_project_creation_description	Following webhooks are called every time a new project is validated.
+admin_project_configuration	webhook_name	Name
+admin_project_configuration	webhook_url	URL
+admin_project_configuration	no_webhooks	There isn't any webhooks

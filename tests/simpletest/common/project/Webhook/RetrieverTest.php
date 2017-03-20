@@ -18,20 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\project\Webhook;
+namespace Tuleap\Project\Webhook;
 
 class RetrieverTest extends \TuleapTestCase
 {
     public function itRetrievesWebhooks()
     {
-        $row_1              = array('id' => 1, 'url' => 'https://example.com');
-        $row_2              = array('id' => 2, 'url' => 'https://webhook2.example.com');
+        $row_1              = array('id' => 1, 'name' => 'W1', 'url' => 'https://example.com');
+        $row_2              = array('id' => 2, 'name' => 'W2', 'url' => 'https://webhook2.example.com');
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
         $dao                = mock('Tuleap\\Project\\Webhook\\WebhookDao');
         stub($dao)->searchWebhooks()->returns($data_access_result);
-        $status_logger = mock('Tuleap\\Project\\Webhook\\Log\\StatusLogger');
 
-        $retriever = new Retriever($dao, $status_logger);
+        $retriever = new Retriever($dao);
 
         $webhooks = $retriever->getWebhooks();
 
@@ -42,9 +41,8 @@ class RetrieverTest extends \TuleapTestCase
     {
         $dao = mock('Tuleap\\Project\\Webhook\\WebhookDao');
         stub($dao)->searchWebhooks()->returns(false);
-        $status_logger = mock('Tuleap\\Project\\Webhook\\Log\\StatusLogger');
 
-        $retriever = new Retriever($dao, $status_logger);
+        $retriever = new Retriever($dao);
 
         $this->expectException('Tuleap\\Project\\Webhook\\WebhookDataAccessException');
         $retriever->getWebhooks();

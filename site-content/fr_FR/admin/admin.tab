@@ -14,6 +14,7 @@ admin_sidebar	projects_section_title	Projets
 admin_sidebar	projects_search_placeholder	Id, nom unix…
 admin_sidebar	projects_nav_all_projects	Tous les projets
 admin_sidebar	projects_nav_pending_projects	Projets en attente
+admin_sidebar	projects_nav_configuration	Configuration des projets
 admin_sidebar	configuration_section_title	Configuration globale
 admin_sidebar	configuration_nav_global_access_rights	Droits d'accès globaux
 admin_sidebar	configuration_nav_homepage	Page d'accueil
@@ -827,3 +828,10 @@ admin_projectlist	public	Public
 admin_projectlist	pending_projects_text	Pour votre information, <a href="$1">$2 projets attendent d'être validés</a>.
 
 admin	allowed_projects_filter_empty	Il n'y a pas de projets correspondant au filtre.
+
+admin_project_configuration	webhook_tab_title	Webhooks
+admin_project_configuration	webhook_pane_title	Webhooks de création de projet
+admin_project_configuration	webhook_project_creation_description	Les webhooks suivants sont appelés lors de chaque validation d'un nouveau projet.
+admin_project_configuration	webhook_name	Nom
+admin_project_configuration	webhook_url	URL
+admin_project_configuration	no_webhooks	Il n'y a aucun webhook

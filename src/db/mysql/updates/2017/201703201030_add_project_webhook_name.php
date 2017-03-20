@@ -18,51 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Webhook;
-
-class Webhook implements \Tuleap\Webhook\Webhook
+class b201703201030_add_project_webhook_name extends ForgeUpgrade_Bucket
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $url;
-
-    public function __construct($id, $name, $url)
+    public function description()
     {
-        $this->id   = $id;
-        $this->name = $name;
-        $this->url  = $url;
+        return 'Add a new for the project creation webhooks';
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function preUp()
     {
-        return $this->id;
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function up()
     {
-        return $this->name;
-    }
+        $sql = 'ALTER TABLE project_webhook_url ADD COLUMN name TEXT NOT NULL';
 
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                'An error occurred while adding the column name to the project_webhook_url table.'
+            );
+        }
     }
 }

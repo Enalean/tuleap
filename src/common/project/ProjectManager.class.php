@@ -875,7 +875,7 @@ class ProjectManager {
      */
     private function getProjectWebhooks()
     {
-        $webhook_retriever = new Retriever(new WebhookDao(), new WebhookStatusLogger(new WebhookLoggerDao()));
+        $webhook_retriever = new Retriever(new WebhookDao());
         return $webhook_retriever->getWebhooks();
     }
 
