@@ -80,14 +80,8 @@ class Repository {
     }
 
     public function getSvnDomain() {
-      $host = ForgeConfig::get('sys_default_domain');
-        if (ForgeConfig::get('sys_force_ssl')) {
-            $svn_url = 'https://'. $host;
-        } else {
-            $svn_url = 'http://'. $host;
-        }
         // Domain name must be lowercase (issue with some SVN clients)
-        return strtolower($svn_url);
+        return strtolower(get_server_url());
     }
 
     public function canBeDeleted()
