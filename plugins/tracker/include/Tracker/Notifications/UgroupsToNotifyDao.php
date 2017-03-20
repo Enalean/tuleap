@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Notifications;
 
 use DataAccessObject;
+use ProjectUGroup;
 
 class UgroupsToNotifyDao extends DataAccessObject
 {
@@ -69,5 +70,77 @@ class UgroupsToNotifyDao extends DataAccessObject
                     )";
 
         return $this->update($sql);
+    }
+
+    public function disableAnonymousRegisteredAuthenticated($project_id)
+    {
+        return $this->updateNotificationUgroups(
+            $project_id,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+    }
+
+    public function disableAuthenticated($project_id)
+    {
+        return $this->updateNotificationUgroups(
+            $project_id,
+            array(ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
+        $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $this->startTransaction();
+
+        $sql = $this->getQueryToReplaceUgroups($project_id, $old_ugroup_ids, $new_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        /**
+         * Ugroups to be removed if new_ugroup_id already exists in
+         * tracker_global_notification_ugroups table for the same
+         * notification_id
+         */
+        $sql = $this->getQueryToRemoveRemainingUgroups($project_id, $old_ugroup_ids);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return true;
+    }
+
+    private function getQueryToReplaceUgroups($project_id, $old_ugroup_ids, $new_ugroup_id)
+    {
+        $sql = "UPDATE IGNORE tracker_global_notification_ugroups AS notification
+                INNER JOIN tracker_global_notification AS global_notification
+                  ON global_notification.id = notification.notification_id
+                INNER JOIN tracker ON tracker.id = global_notification.tracker_id
+                SET notification.ugroup_id = $new_ugroup_id
+                WHERE tracker.group_id = $project_id AND notification.ugroup_id IN ($old_ugroup_ids)";
+        return $sql;
+    }
+
+    private function getQueryToRemoveRemainingUgroups($project_id, $old_ugroup_ids)
+    {
+        $sql = "DELETE notification.*
+                    FROM tracker_global_notification_ugroups AS notification
+                    INNER JOIN tracker_global_notification AS global_notification
+                     ON (global_notification.id = notification.notification_id)
+                    INNER JOIN tracker
+                     ON (tracker.id = global_notification.tracker_id)
+                    WHERE tracker.group_id = $project_id AND notification.ugroup_id IN ($old_ugroup_ids)";
+        return $sql;
     }
 }
