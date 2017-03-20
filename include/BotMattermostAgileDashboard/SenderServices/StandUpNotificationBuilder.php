@@ -105,25 +105,31 @@ class StandUpNotificationBuilder
         PFUser $user
     ) {
         $linked_artifacts = $this->getLinkedArtifactsWithRecentModification($milestone, $user);
+        $tracker_artifact = $milestone->getArtifact();
+        $burndown_url     = $this->getBurndownUrl($http_request, $tracker_artifact->getParent($user), $user);
+        if ($burndown_url === null) {
+            $burndown_url = $this->getBurndownUrl($http_request, $tracker_artifact, $user);
+        }
 
         return array(
             'cardwall_url'        => $this->getPlanningCardwallUrl($http_request, $milestone),
             'artifact_title'      => $milestone->getArtifactTitle(),
             'artifact_start_date' => $this->getDate($milestone->getStartDate()),
             'artifact_end_date'   => $this->getDate($milestone->getEndDate()),
-            'burndown_url'        => $this->getBurndownUrl($http_request, $milestone, $user),
+            'has_burndown'        => $burndown_url !== null,
+            'burndown_url'        => $burndown_url,
             'milestone_infos'     => $this->buildMilestoneInformation($http_request, $milestone, $user),
             'linked_artifacts'    => $this->buildLinkedArtifactTable($http_request, $linked_artifacts),
             'has_recent_update'   => (! empty($linked_artifacts))
         );
     }
 
-    private function getBurndownUrl(HTTPRequest $http_request, Planning_Milestone $milestone, PFUser $user)
+    private function getBurndownUrl(HTTPRequest $http_request, Tracker_Artifact $artifact, PFUser $user)
     {
         $user_timezone = date_default_timezone_get();
 
         date_default_timezone_set(TimezoneRetriever::getServerTimezone());
-        $burndown = $this->buildBurndownUrl($http_request, $milestone->getArtifact(), $user);
+        $burndown = $this->buildBurndownUrl($http_request, $artifact, $user);
         date_default_timezone_set($user_timezone);
 
         return $burndown;
@@ -131,15 +137,19 @@ class StandUpNotificationBuilder
 
     private function buildBurndownUrl(HTTPRequest $http_request, Tracker_Artifact $artifact, PFUser $user)
     {
-        $url_query = http_build_query(
-            array(
-                'formElement' => $artifact->getABurndownField($user)->getId(),
-                'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                'src_aid'     => $artifact->getId()
-            )
-        );
+        if ($artifact->getABurndownField($user)) {
+            $url_query = http_build_query(
+                array(
+                    'formElement' => $artifact->getABurndownField($user)->getId(),
+                    'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                    'src_aid'     => $artifact->getId()
+                )
+            );
 
-        return $http_request->getServerUrl().TRACKER_BASE_URL.'/?'.$url_query;
+            return $http_request->getServerUrl().TRACKER_BASE_URL.'/?'.$url_query;
+        }
+
+        return null;
     }
 
     private function getLinkedArtifactsWithRecentModification(Planning_Milestone $milestone, PFUser $user)
