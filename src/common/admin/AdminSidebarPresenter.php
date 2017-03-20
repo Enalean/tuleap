@@ -45,6 +45,7 @@ class AdminSidebarPresenter
     public $projects_search_placeholder;
     public $projects_nav_all_projects;
     public $projects_nav_pending_projects;
+    public $projects_nav_configuration;
     public $projects_nav_incomplete_projects;
     public $projects_nav_deleted_projects;
 
@@ -99,6 +100,7 @@ class AdminSidebarPresenter
         $this->projects_search_placeholder             = $GLOBALS['Language']->getText('admin_sidebar', 'projects_search_placeholder');
         $this->projects_nav_all_projects               = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_all_projects');
         $this->projects_nav_pending_projects           = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_pending_projects');
+        $this->projects_nav_configuration              = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
 
         $this->configuration_section_title             = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_section_title');
         $this->configuration_nav_global_access_rights  = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_global_access_rights');

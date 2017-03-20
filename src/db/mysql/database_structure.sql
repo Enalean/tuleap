@@ -500,6 +500,7 @@ CREATE TABLE groups (
 
 CREATE TABLE project_webhook_url (
   id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  name TEXT NOT NULL,
   url TEXT NOT NULL
 );
 

@@ -22,11 +22,12 @@ namespace Tuleap\project\Webhook;
 
 class WebhookTest extends \TuleapTestCase
 {
-    public function itUsesGivenIdAndUrl()
+    public function itUsesGivenInformation()
     {
-        $webhook = new Webhook(1, 'https://example.com');
+        $webhook = new Webhook(1, 'Name', 'https://example.com');
 
         $this->assertEqual($webhook->getId(), 1);
+        $this->assertEqual($webhook->getName(), 'Name');
         $this->assertEqual($webhook->getUrl(), 'https://example.com');
     }
 }

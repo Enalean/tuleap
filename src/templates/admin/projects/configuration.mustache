@@ -1,0 +1,41 @@
+<div class="tlp-framed">
+    <h1>{{ title }}</h1>
+</div>
+
+<nav class="tlp-tabs">
+    <a href="#" class="tlp-tab tlp-tab-active">{{ tab_title }}</a>
+</nav>
+
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i>{{ pane_title }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                <p>{{ project_creation_description }}</p>
+
+                <table class="tlp-table">
+                    <thead><tr>
+                        <th>{{ name }}</th>
+                        <th>{{ url }}</th>
+                    </tr></thead>
+                    <tbody>
+                    {{# has_webhooks }}
+                        {{# webhooks }}
+                            <tr>
+                                <td>{{ getName }}</td>
+                                <td>{{ getUrl }}</td>
+                            </tr>
+                        {{/ webhooks }}
+                    {{/ has_webhooks }}
+                    {{^ has_webhooks }}
+                        <tr><td colspan="2" class="tlp-table-cell-empty">{{ no_webhooks }}</td></tr>
+                    {{/has_webhooks}}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>
