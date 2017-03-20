@@ -19,7 +19,12 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Project\Admin\WebhookPresenter;
 use Tuleap\Project\Admin\WebhooksPresenter;
+use Tuleap\Project\Webhook\Log\StatusRetriever;
+use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
+use Tuleap\Project\Webhook\Retriever;
+use Tuleap\Project\Webhook\WebhookDao;
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
@@ -28,10 +33,21 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $title = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
 
-$webhook_retriever = new \Tuleap\Project\Webhook\Retriever(new \Tuleap\Project\Webhook\WebhookDao());
-$webhooks          = $webhook_retriever->getWebhooks();
+$webhook_retriever        = new Retriever(new WebhookDao());
+$webhooks                 = $webhook_retriever->getWebhooks();
+$webhook_status_retriever = new StatusRetriever(new WebhookLoggerDao());
+$webhooks_presenter       = array();
 
-$presenter = new WebhooksPresenter($title, $webhooks);
+foreach ($webhooks as $webhook) {
+    $webhooks_presenter[] = new WebhookPresenter(
+        $webhook,
+        $webhook_status_retriever->getMostRecentStatus($webhook)
+    );
+}
+
+$presenter = new WebhooksPresenter($title, $webhooks_presenter);
+
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-configuration.js');
 
 $admin_page = new AdminPageRenderer();
 $admin_page->renderANoFramedPresenter(

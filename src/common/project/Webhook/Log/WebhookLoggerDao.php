@@ -31,9 +31,40 @@ class WebhookLoggerDao extends \DataAccessObject
         $created_on = $this->da->escapeInt($created_on);
         $status     = $this->da->quoteSmart($status);
 
-        $sql = "INSERT INTO project_webhook_log(webhook_id, created_on, status)
+        $this->startTransaction();
+        $sql_update     = "INSERT INTO project_webhook_log(webhook_id, created_on, status)
                 VALUES ($webhook_id, $created_on, $status)";
+        $has_been_saved = $this->update($sql_update);
+        if (! $has_been_saved) {
+            $this->rollBack();
+            return false;
+        }
 
-        return $this->update($sql);
+        $sql_clean_logs = "DELETE FROM project_webhook_log WHERE webhook_id = $webhook_id AND created_on <= (
+              SELECT created_on FROM (
+                SELECT created_on FROM project_webhook_log WHERE webhook_id = $webhook_id ORDER BY created_on DESC LIMIT 1 OFFSET 10
+              ) oldest_entry_to_keep
+        )";
+        $has_logs_been_cleaned = $this->update($sql_clean_logs);
+
+        if (! $has_logs_been_cleaned) {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return true;
+    }
+
+    /**
+     * @return \DataAccessResult|false
+     */
+    public function searchLogsByWebhookId($webhook_id)
+    {
+        $webhook_id = $this->da->escapeInt($webhook_id);
+
+        $sql = "SELECT * FROM project_webhook_log WHERE webhook_id = $webhook_id ORDER BY created_on DESC";
+
+        return $this->retrieve($sql);
     }
 }

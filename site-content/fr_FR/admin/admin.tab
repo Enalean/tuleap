@@ -834,4 +834,10 @@ admin_project_configuration	webhook_pane_title	Webhooks de création de projet
 admin_project_configuration	webhook_project_creation_description	Les webhooks suivants sont appelés lors de chaque validation d'un nouveau projet.
 admin_project_configuration	webhook_name	Nom
 admin_project_configuration	webhook_url	URL
+admin_project_configuration	webhook_last_push_date	Dernière date de push
+admin_project_configuration	webhook_last_push_status	Dernier status de push
 admin_project_configuration	no_webhooks	Il n'y a aucun webhook
+admin_project_configuration	show_logs	Voir les logs
+admin_project_configuration	close_modal	Fermer
+admin_project_configuration	date_modal	Date
+admin_project_configuration	status_modal	Status
