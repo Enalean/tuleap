@@ -90,6 +90,16 @@ class UgroupsToNotifyDao extends DataAccessObject
         );
     }
 
+    public function updateAllAnonymousAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+    }
+
     private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
     {
         $project_id     = $this->da->escapeInt($project_id);
@@ -98,7 +108,7 @@ class UgroupsToNotifyDao extends DataAccessObject
 
         $this->startTransaction();
 
-        $sql = $this->getQueryToReplaceUgroups($project_id, $old_ugroup_ids, $new_ugroup_id);
+        $sql = $this->getQueryToReplaceUgroupsByProjectId($project_id, $old_ugroup_ids, $new_ugroup_id);
 
         if (! $this->update($sql)) {
             $this->rollBack();
@@ -110,7 +120,7 @@ class UgroupsToNotifyDao extends DataAccessObject
          * tracker_global_notification_ugroups table for the same
          * notification_id
          */
-        $sql = $this->getQueryToRemoveRemainingUgroups($project_id, $old_ugroup_ids);
+        $sql = $this->getQueryToRemoveRemainingUgroupsByProjectId($project_id, $old_ugroup_ids);
 
         if (! $this->update($sql)) {
             $this->rollBack();
@@ -121,7 +131,37 @@ class UgroupsToNotifyDao extends DataAccessObject
         return true;
     }
 
-    private function getQueryToReplaceUgroups($project_id, $old_ugroup_ids, $new_ugroup_id)
+    private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
+    {
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+
+        $this->startTransaction();
+
+        $sql = $this->getQueryToReplaceUgroup($old_ugroup_id, $new_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        /**
+         * Ugroups to be removed if new_ugroup_id already exists in
+         * tracker_global_notification_ugroups table for the same
+         * notification_id
+         */
+        $sql = $this->getQueryToRemoveRemainingUgroup($old_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return true;
+    }
+
+    private function getQueryToReplaceUgroupsByProjectId($project_id, $old_ugroup_ids, $new_ugroup_id)
     {
         $sql = "UPDATE IGNORE tracker_global_notification_ugroups AS notification
                 INNER JOIN tracker_global_notification AS global_notification
@@ -132,7 +172,7 @@ class UgroupsToNotifyDao extends DataAccessObject
         return $sql;
     }
 
-    private function getQueryToRemoveRemainingUgroups($project_id, $old_ugroup_ids)
+    private function getQueryToRemoveRemainingUgroupsByProjectId($project_id, $old_ugroup_ids)
     {
         $sql = "DELETE notification.*
                     FROM tracker_global_notification_ugroups AS notification
@@ -141,6 +181,22 @@ class UgroupsToNotifyDao extends DataAccessObject
                     INNER JOIN tracker
                      ON (tracker.id = global_notification.tracker_id)
                     WHERE tracker.group_id = $project_id AND notification.ugroup_id IN ($old_ugroup_ids)";
+        return $sql;
+    }
+
+    private function getQueryToReplaceUgroup($old_ugroup_id, $new_ugroup_id)
+    {
+        $sql = "UPDATE IGNORE tracker_global_notification_ugroups
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id";
+        return $sql;
+    }
+
+    private function getQueryToRemoveRemainingUgroup($old_ugroup_id)
+    {
+        $sql = "DELETE notification.*
+                FROM tracker_global_notification_ugroups AS notification
+                WHERE notification.ugroup_id = $old_ugroup_id";
         return $sql;
     }
 }
