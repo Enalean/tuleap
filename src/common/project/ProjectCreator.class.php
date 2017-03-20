@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,9 +76,9 @@ class ProjectCreator {
     private $ugroup_duplicator;
 
     /**
-     * @var bool true to bypass manual activation
+     * @var bool
      */
-    private $force_activation;
+    private $can_auto_activate_project;
 
     /**
      * @var ProjectManager
@@ -113,16 +113,16 @@ class ProjectCreator {
         UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
         FRSPermissionCreator $frs_permissions_creator,
-        $force_activation = false
+        $can_auto_activate_project = true
     ) {
-        $this->send_notifications      = $send_notifications;
-        $this->force_activation        = $force_activation;
-        $this->reference_manager       = $reference_manager;
-        $this->ruleShortName           = new Rule_ProjectName();
-        $this->ruleFullName            = new Rule_ProjectFullName();
-        $this->projectManager          = $projectManager;
-        $this->frs_permissions_creator = $frs_permissions_creator;
-        $this->ugroup_duplicator       = $ugroup_duplicator;
+        $this->send_notifications        = $send_notifications;
+        $this->can_auto_activate_project = $can_auto_activate_project;
+        $this->reference_manager         = $reference_manager;
+        $this->ruleShortName             = new Rule_ProjectName();
+        $this->ruleFullName              = new Rule_ProjectFullName();
+        $this->projectManager            = $projectManager;
+        $this->frs_permissions_creator   = $frs_permissions_creator;
+        $this->ugroup_duplicator         = $ugroup_duplicator;
     }
 
     /**
@@ -654,12 +654,14 @@ class ProjectCreator {
     {
         $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
-        if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
-            if ($this->send_notifications) {
-                $this->projectManager->activate($group);
-            } else {
-                $this->projectManager->activateWithoutNotifications($group);
-            }
+        if (! $this->can_auto_activate_project || $auto_approval !== PROJECT_APPROVAL_AUTO) {
+            return;
+        }
+
+        if ($this->send_notifications) {
+            $this->projectManager->activate($group);
+        } else {
+            $this->projectManager->activateWithoutNotifications($group);
         }
     }
 
