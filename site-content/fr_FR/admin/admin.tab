@@ -841,3 +841,9 @@ admin_project_configuration	show_logs	Voir les logs
 admin_project_configuration	close_modal	Fermer
 admin_project_configuration	date_modal	Date
 admin_project_configuration	status_modal	Status
+admin_project_configuration	add_new_webhook	Ajouter un webhook de création de projet
+admin_project_configuration	add_webhook_modal	Ajouter le webhook
+admin_project_configuration	add_webhook_description_modal	Le nouveau webhook sera appelé lors de chaque validation d'un nouveau projet avec la charge utile suivante:
+admin_project_configuration	webhook_name_placeholder_modal	Mon nouveau webhook
+admin_project_configuration	webhook_add_error	Une erreur est survenue lors de la création du webhook
+admin_project_configuration	webhook_add_success	Le nouveau webhook a été créé avec succès

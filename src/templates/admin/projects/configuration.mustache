@@ -15,7 +15,11 @@
 
             <section class="tlp-pane-section">
                 <p>{{ project_creation_description }}</p>
-
+                <div class="tlp-table-actions">
+                    <button class="add-modal-button tlp-button-primary project-webhook-modal" data-modal-id="add-project-webhook">
+                        <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook }}
+                    </button>
+                </div>
                 <table class="tlp-table">
                     <thead><tr>
                         <th>{{ name }}</th>
@@ -44,7 +48,7 @@
                                         <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
                                             <div class="tlp-modal-header">
                                                 <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title">{{ name }}</h1>
-                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">x</div>
+                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
                                             </div>
                                             <div class="tlp-modal-body">
                                                 <table class="tlp-table">
@@ -84,3 +88,45 @@
         </div>
     </section>
 </div>
+
+
+<form id="add-project-webhook" class="tlp-modal" role="dialog" aria-labelledby="add-modal-label" method="post">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="add-modal-label"><i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_webhook }}</h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{ add_webhook_description_modal }}</p>
+        <pre class="project-webhook-payload"><code>{
+  "created_at": "2017-01-01T10:00:00+00:00",
+  "updated_at": "2017-01-01T11:00:00+00:00",
+  "event_name": "project_create",
+  "name": "Project public name",
+  "owner_id": 102,
+  "owner_email": "john.doe@example.com",
+  "owner_name": "John Doe",
+  "path": "projectshortname",
+  "path_with_namespace": "projectshortname",
+  "project_id": 126,
+  "project_visibility": "public"
+}</code></pre>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="name">{{ name }}<i class="fa fa-asterisk"></i></label>
+            <input type="text" class="tlp-input" id="name" name="name" placeholder="{{ name_placeholder_modal }}" required>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="url">{{ url }}<i class="fa fa-asterisk"></i></label>
+            <input type="url" pattern="https?://.+" class="tlp-input" id="url" name="url" placeholder="https://" required>
+        </div>
+    </div>
+    <input type="hidden" name="action" value="add">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ close_modal }}</button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook_modal }}
+        </button>
+    </div>
+</form>
