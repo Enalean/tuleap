@@ -44,4 +44,18 @@ class WebhookDao extends \DataAccessObject
 
         return $this->update($sql);
     }
+
+    /**
+     * @return bool
+     */
+    public function editWebhook($id, $name, $url)
+    {
+        $id   = $this->da->escapeInt($id);
+        $name = $this->da->quoteSmart($name);
+        $url  = $this->da->quoteSmart($url);
+
+        $sql = "UPDATE project_webhook_url SET name = $name, url = $url WHERE id = $id";
+
+        return $this->update($sql);
+    }
 }

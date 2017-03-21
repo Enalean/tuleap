@@ -41,24 +41,45 @@ if ($request->isPost()) {
 
     $webhook_updater = new \Tuleap\Project\Webhook\WebhookUpdater($webhook_dao);
 
-    if ($request->get('action') === 'add') {
-        try {
-            $webhook_updater->add($request->get('name'), $request->get('url'));
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_success')
-            );
-        } catch (\Tuleap\Project\Webhook\WebhookDataAccessException $ex) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_error')
-            );
-        } catch (\Tuleap\Project\Webhook\WebhookMalformedDataException $ex) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_error')
-            );
-        }
+    switch ($request->get('action')) {
+        case 'add':
+            try {
+                $webhook_updater->add($request->get('name'), $request->get('url'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_success')
+                );
+            } catch (\Tuleap\Project\Webhook\WebhookDataAccessException $ex) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_error')
+                );
+            } catch (\Tuleap\Project\Webhook\WebhookMalformedDataException $ex) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_error')
+                );
+            }
+            break;
+        case 'update':
+            try {
+                $webhook_updater->edit($request->get('id'), $request->get('name'), $request->get('url'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_edit_success')
+                );
+            } catch (\Tuleap\Project\Webhook\WebhookDataAccessException $ex) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_edit_error')
+                );
+            } catch (\Tuleap\Project\Webhook\WebhookMalformedDataException $ex) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_edit_error')
+                );
+            }
+            break;
     }
 
     $GLOBALS['Response']->redirect('/admin/project-configuration.php');

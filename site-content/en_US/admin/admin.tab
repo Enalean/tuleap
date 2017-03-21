@@ -847,6 +847,7 @@ admin_project_configuration	webhook_last_push_status	Last push status
 admin_project_configuration	no_webhooks	There isn't any webhooks
 admin_project_configuration	show_logs	Show logs
 admin_project_configuration	close_modal	Close
+admin_project_configuration	cancel_modal	Cancel
 admin_project_configuration	date_modal	Date
 admin_project_configuration	status_modal	Status
 admin_project_configuration	add_new_webhook	Add a project creation webhook
@@ -855,3 +856,9 @@ admin_project_configuration	add_webhook_description_modal	The new webhook will b
 admin_project_configuration	webhook_name_placeholder_modal	My new webhook
 admin_project_configuration	webhook_add_error	An error occurred while creating the webhook
 admin_project_configuration	webhook_add_success	The new webhook has been successfully created
+admin_project_configuration	edit	Edit
+admin_project_configuration	show_logs_title_modal	Logs of "$1"
+admin_project_configuration	update_title_modal	Update webhook "$1"
+admin_project_configuration	update_webhook_modal	Update webhook
+admin_project_configuration	webhook_edit_error	An error occurred while updating the webhook
+admin_project_configuration	webhook_edit_success	The webhook has been successfully updated
