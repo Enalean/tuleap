@@ -545,31 +545,39 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     /**
-     * Returns true if there are changes in fields_data regarding this changeset, false if nothing has changed
-     *
      * @param array $fields_data The data submitted (array of 'field_id' => 'value')
      *
      * @return boolean true if there are changes in fields_data regarding this changeset, false if nothing has changed
      */
-    public function hasChanges($fields_data) {
+    public function hasChanges(array $fields_data)
+    {
         $has_changes = false;
         $used_fields = $this->getFormElementFactory()->getUsedFields($this->artifact->getTracker());
-        reset($used_fields);
-        while (!$has_changes && (list(,$field) = each($used_fields))) {
-            if (!is_a($field, 'Tracker_FormElement_Field_ReadOnly')) {
-               if (array_key_exists($field->id, $fields_data)) {
-                   $current_value = $this->getValue($field);
-                    if ($current_value) {
-                        $has_changes = $field->hasChanges($this->getArtifact(), $current_value, $fields_data[$field->id]);
-                    } else {
-                        //There is no current value in the changeset for the submitted field
-                        //It means that the field has been added afterwards.
-                        //Then consider that there is at least one change (the value of the new field).
-                        $has_changes = true;
-                    }
-                }
+        foreach ($used_fields as $field) {
+            if (is_a($field, 'Tracker_FormElement_Field_ReadOnly')) {
+                continue;
+            }
+
+            $is_field_part_of_submitted_data = array_key_exists($field->id, $fields_data);
+            if (! $is_field_part_of_submitted_data) {
+                continue;
+            }
+
+            $current_value = $this->getValue($field);
+            if ($current_value) {
+                $has_changes = $field->hasChanges($this->getArtifact(), $current_value, $fields_data[$field->id]);
+            } else {
+                //There is no current value in the changeset for the submitted field
+                //It means that the field has been added afterwards.
+                //Then consider that there is at least one change (the value of the new field).
+                $has_changes = true;
+            }
+
+            if ($has_changes) {
+                break;
             }
         }
+
         return $has_changes;
     }
 
