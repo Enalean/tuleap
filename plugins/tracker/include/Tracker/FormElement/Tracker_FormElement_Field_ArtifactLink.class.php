@@ -1629,7 +1629,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         $value = $this->getNormalizedSubmittedValue($value);
 
-        $convertor      = $this->getSubmittedValueConvertor();
+        $convertor       = $this->getSubmittedValueConvertor();
         $submitted_value = $convertor->convert(
             $value,
             $this->getSourceOfAssociationCollection(),
