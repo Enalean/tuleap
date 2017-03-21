@@ -20,28 +20,6 @@
 
 namespace Tuleap\Project\Webhook;
 
-class WebhookDao extends \DataAccessObject
+class WebhookMalformedDataException extends \Exception
 {
-    /**
-     * @return \DataAccessResult|false
-     */
-    public function searchWebhooks()
-    {
-        $sql = 'SELECT * FROM project_webhook_url';
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @return bool
-     */
-    public function createWebhook($name, $url)
-    {
-        $name = $this->da->quoteSmart($name);
-        $url  = $this->da->quoteSmart($url);
-
-        $sql = "INSERT INTO project_webhook_url(name, url) VALUES ($name, $url)";
-
-        return $this->update($sql);
-    }
 }

@@ -20,28 +20,45 @@
 
 namespace Tuleap\Project\Webhook;
 
-class WebhookDao extends \DataAccessObject
+class WebhookUpdater
 {
     /**
-     * @return \DataAccessResult|false
+     * @var WebhookDao
      */
-    public function searchWebhooks()
-    {
-        $sql = 'SELECT * FROM project_webhook_url';
+    private $dao;
 
-        return $this->retrieve($sql);
+    public function __construct(WebhookDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    /**
+     * @throws WebhookDataAccessException
+     * @throws WebhookMalformedDataException
+     */
+    public function add($name, $url)
+    {
+        $is_data_valid = $this->isDataValid($name, $url);
+
+        if (! $is_data_valid) {
+            throw new WebhookMalformedDataException();
+        }
+
+        $has_been_created = $this->dao->createWebhook($name, $url);
+
+        if (! $has_been_created) {
+            throw new WebhookDataAccessException();
+        }
     }
 
     /**
      * @return bool
      */
-    public function createWebhook($name, $url)
+    private function isDataValid($name, $url)
     {
-        $name = $this->da->quoteSmart($name);
-        $url  = $this->da->quoteSmart($url);
+        $string_validator = new \Valid_String();
+        $uri_validator    = new \Valid_HTTPURI();
 
-        $sql = "INSERT INTO project_webhook_url(name, url) VALUES ($name, $url)";
-
-        return $this->update($sql);
+        return $string_validator->validate($name) && $uri_validator->validate($url);
     }
 }

@@ -31,9 +31,42 @@ require_once('www/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+$request    = HTTPRequest::instance();
+$csrf_token = new CSRFSynchronizerToken('/admin/project-configuration.php');
+
+$webhook_dao = new WebhookDao();
+
+if ($request->isPost()) {
+    $csrf_token->check();
+
+    $webhook_updater = new \Tuleap\Project\Webhook\WebhookUpdater($webhook_dao);
+
+    if ($request->get('action') === 'add') {
+        try {
+            $webhook_updater->add($request->get('name'), $request->get('url'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_success')
+            );
+        } catch (\Tuleap\Project\Webhook\WebhookDataAccessException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_error')
+            );
+        } catch (\Tuleap\Project\Webhook\WebhookMalformedDataException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_add_error')
+            );
+        }
+    }
+
+    $GLOBALS['Response']->redirect('/admin/project-configuration.php');
+}
+
 $title = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
 
-$webhook_retriever        = new Retriever(new WebhookDao());
+$webhook_retriever        = new Retriever($webhook_dao);
 $webhooks                 = $webhook_retriever->getWebhooks();
 $webhook_status_retriever = new StatusRetriever(new WebhookLoggerDao());
 $webhooks_presenter       = array();
@@ -45,7 +78,7 @@ foreach ($webhooks as $webhook) {
     );
 }
 
-$presenter = new WebhooksPresenter($title, $webhooks_presenter);
+$presenter = new WebhooksPresenter($title, $webhooks_presenter, $csrf_token);
 
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-configuration.js');
 
