@@ -1,8 +1,6 @@
 <?php
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,6 +21,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 
 class Tracker_Migration_MigrationManager {
 
@@ -172,7 +175,16 @@ class Tracker_Migration_MigrationManager {
             $changeset_comment_dao,
             $this->artifact_factory,
             EventManager::instance(),
-            ReferenceManager::instance()
+            ReferenceManager::instance(),
+            new SourceOfAssociationCollectionBuilder(
+                new SubmittedValueConvertor(
+                    Tracker_ArtifactFactory::instance(),
+                    new SourceOfAssociationDetector(
+                        Tracker_HierarchyFactory::instance()
+                    )
+                ),
+                Tracker_FormElementFactory::instance()
+            )
         );
     }
 

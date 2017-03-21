@@ -28,6 +28,9 @@ require_once(dirname(__FILE__).'/../../constants.php');
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
@@ -1105,16 +1108,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         $submitted_on = $_SERVER['REQUEST_TIME'];
+        $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory());
+        $creator      = $this->getNewChangesetCreator($validator);
 
-        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
-            new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory()),
-            $this->getFormElementFactory(),
-            $this->getChangesetDao(),
-            $this->getChangesetCommentDao(),
-            $this->getArtifactFactory(),
-            $this->getEventManager(),
-            $this->getReferenceManager()
-        );
         return $creator->create($this, $fields_data, $comment, $submitter, $submitted_on, $send_notification, $comment_format);
     }
 
@@ -1126,16 +1122,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $comment_format
     ) {
         $submitted_on = $_SERVER['REQUEST_TIME'];
-
-        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
-            new NewChangesetFieldsWithoutRequiredValidationValidator($this->getFormElementFactory()),
-            $this->getFormElementFactory(),
-            $this->getChangesetDao(),
-            $this->getChangesetCommentDao(),
-            $this->getArtifactFactory(),
-            $this->getEventManager(),
-            $this->getReferenceManager()
-        );
+        $validator    = new NewChangesetFieldsWithoutRequiredValidationValidator($this->getFormElementFactory());
+        $creator      = $this->getNewChangesetCreator($validator);
 
         return $creator->create(
             $this, $fields_data, $comment, $submitter, $submitted_on, $send_notification, $comment_format
@@ -2127,5 +2115,34 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         return $email_domain;
+    }
+
+    private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator)
+    {
+        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+            $fields_validator,
+            $this->getFormElementFactory(),
+            $this->getChangesetDao(),
+            $this->getChangesetCommentDao(),
+            $this->getArtifactFactory(),
+            $this->getEventManager(),
+            $this->getReferenceManager(),
+            $this->getSourceOfAssociationCollectionBuilder()
+        );
+
+        return $creator;
+    }
+
+    private function getSourceOfAssociationCollectionBuilder()
+    {
+        return new SourceOfAssociationCollectionBuilder(
+            new SubmittedValueConvertor(
+                Tracker_ArtifactFactory::instance(),
+                new SourceOfAssociationDetector(
+                    Tracker_HierarchyFactory::instance()
+                )
+            ),
+            Tracker_FormElementFactory::instance()
+        );
     }
 }

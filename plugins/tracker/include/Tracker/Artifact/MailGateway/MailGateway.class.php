@@ -161,7 +161,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         $this->incoming_mail_dao->save($changeset->getId(), $raw_mail_utf8);
     }
 
-    /** @return Tracker_Artifact_Changeset */
+    /** @return Tracker_Artifact_Changeset|null */
     private function addFollowUp(PFUser $user, Tracker_Artifact $artifact, $body) {
         $this->logger->debug("Receiving new follow-up comment from ". $user->getUserName());
 

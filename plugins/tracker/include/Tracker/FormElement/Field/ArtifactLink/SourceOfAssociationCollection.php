@@ -23,7 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Tracker_Artifact;
 use PFUser;
 
-class SourceOfAssociationCollection {
+class SourceOfAssociationCollection implements \Countable
+{
 
     private $artifacts = array();
 
@@ -35,5 +36,10 @@ class SourceOfAssociationCollection {
         foreach ($this->artifacts as $source_artifact) {
             $source_artifact->linkArtifact($artifact->getId(), $submitter);
         }
+    }
+
+    public function count()
+    {
+        return count($this->artifacts);
     }
 }

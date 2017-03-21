@@ -1,8 +1,6 @@
 <?php
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +17,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 
 class Tracker_Artifact_XMLImportBuilder {
 
@@ -55,7 +58,16 @@ class Tracker_Artifact_XMLImportBuilder {
             $changeset_comment_dao,
             $artifact_factory,
             EventManager::instance(),
-            ReferenceManager::instance()
+            ReferenceManager::instance(),
+            new SourceOfAssociationCollectionBuilder(
+                new SubmittedValueConvertor(
+                    Tracker_ArtifactFactory::instance(),
+                    new SourceOfAssociationDetector(
+                        Tracker_HierarchyFactory::instance()
+                    )
+                ),
+                Tracker_FormElementFactory::instance()
+            )
         );
 
         return new Tracker_Artifact_XMLImport(

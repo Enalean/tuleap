@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -26,6 +26,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -3443,7 +3446,16 @@ EOS;
             $changeset_comment_dao,
             $this->getTrackerArtifactFactory(),
             EventManager::instance(),
-            ReferenceManager::instance()
+            ReferenceManager::instance(),
+            new SourceOfAssociationCollectionBuilder(
+                new SubmittedValueConvertor(
+                    Tracker_ArtifactFactory::instance(),
+                    new SourceOfAssociationDetector(
+                        Tracker_HierarchyFactory::instance()
+                    )
+                ),
+                Tracker_FormElementFactory::instance()
+            )
         );
 
         return new Tracker_Artifact_XMLImport(

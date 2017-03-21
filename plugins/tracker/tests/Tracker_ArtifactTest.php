@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -144,7 +144,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $this->field->setReturnValue('getName', 'summary');
         $factory->setReturnValue('getUsedFields', array($this->field));
         $factory->setReturnValue('getAllFormElementsForTracker', array());
-        
+
         $this->artifact = new Tracker_ArtifactTestVersion();
         $this->artifact->setReturnReference('getFormElementFactory', $factory);
         $this->artifact->setReturnReference('getTracker', $tracker);
@@ -310,7 +310,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             $comment_dao,
             $art_factory,
             mock('EventManager'),
-            $reference_manager
+            $reference_manager,
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder')
         );
 
         $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
@@ -498,7 +499,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '456',
         );
-        
+
         $this->expectException('Tracker_Exception');
 
         $artifact->createNewChangeset($fields_data, $comment, $user);
@@ -529,7 +530,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
-        
+
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -605,7 +606,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
         stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow, $factory)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
-        
+
         $this->expectException('Tracker_Exception');
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
@@ -903,7 +904,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         $this->changeset_with_comment_with_empty_body             = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
         $this->changeset_with_different_submitted_by              = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
         $this->changeset_which_has_been_modified_by_another_user  = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
-        
+
         $comment1 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by1, 2, 3, $this->submitted_by1,  $this->timestamp1, $this->body1, 'text', 0);
         $comment2 = new Tracker_Artifact_Changeset_Comment(2, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body2, 'text', 0);
         $comment3 = new Tracker_Artifact_Changeset_Comment(3, $this->changeset_without_submitted_by, 2, 3, null,  $this->timestamp3, $this->body3, 'text', 0);
@@ -1071,7 +1072,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             $comment_dao,
             $this->artifact_factory,
             mock('EventManager'),
-            mock('ReferenceManager')
+            mock('ReferenceManager'),
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder')
         );
     }
 
