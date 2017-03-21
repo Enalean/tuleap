@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+
 /**
  * I am a Template Method to create a new changeset (update of an artifact)
  */
@@ -28,6 +30,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
     /** @var Tracker_Artifact_Changeset_CommentDao */
     protected $changeset_comment_dao;
+    /**
+     * @var SourceOfAssociationCollectionBuilder
+     */
+    private $source_of_association_collection_builder;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -36,12 +42,15 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
-        ReferenceManager $reference_manager
+        ReferenceManager $reference_manager,
+        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
     ) {
         parent::__construct($fields_validator, $formelement_factory, $artifact_factory, $event_manager);
-        $this->changeset_dao         = $changeset_dao;
-        $this->changeset_comment_dao = $changeset_comment_dao;
-        $this->reference_manager     = $reference_manager;
+
+        $this->changeset_dao                            = $changeset_dao;
+        $this->changeset_comment_dao                    = $changeset_comment_dao;
+        $this->reference_manager                        = $reference_manager;
+        $this->source_of_association_collection_builder = $source_of_association_collection_builder;
     }
 
     /**
@@ -56,7 +65,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
      *
-     * @return Tracker_Artifact_Changeset|Boolean The new changeset if update is done without error, false otherwise
+     * @return Tracker_Artifact_Changeset|null
      */
     public function create(
         Tracker_Artifact $artifact,
@@ -76,53 +85,66 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $email = $submitter->getEmail();
         }
 
-        $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
-        $previous_changeset = $artifact->getLastChangeset();
+        try {
+            $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
+            $previous_changeset = $artifact->getLastChangeset();
 
-        /*
-         * Post actions were run by validateNewChangeset but they modified a
-         * different set of $fields_data in the case of massChange or soap requests;
-         * we run them again for the current $fields_data
-         */
-        $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);
+            /*
+             * Post actions were run by validateNewChangeset but they modified a
+             * different set of $fields_data in the case of massChange or soap requests;
+             * we run them again for the current $fields_data
+             */
+            $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);
 
-        $changeset_id = $this->changeset_dao->create($artifact->getId(), $submitter->getId(), $email, $submitted_on);
-        if(! $changeset_id) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
-            $this->changeset_dao->rollBack();
-            throw new Tracker_ChangesetNotCreatedException();
+            $changeset_id = $this->changeset_dao->create($artifact->getId(), $submitter->getId(), $email, $submitted_on);
+            if (! $changeset_id) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
+                $this->changeset_dao->rollBack();
+                throw new Tracker_ChangesetNotCreatedException();
+            }
+
+            if (! $this->storeComment($artifact, $comment, $submitter, $submitted_on, $comment_format, $changeset_id)) {
+                $this->changeset_dao->rollBack();
+                throw new Tracker_CommentNotStoredException();
+            }
+
+            $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
+
+            $new_changeset = new Tracker_Artifact_Changeset(
+                $changeset_id,
+                $artifact,
+                $submitter->getId(),
+                $submitted_on,
+                $email
+            );
+            $artifact->addChangeset($new_changeset);
+
+            $save_after_ok = $this->saveArtifactAfterNewChangeset(
+                $artifact,
+                $fields_data,
+                $submitter,
+                $new_changeset,
+                $previous_changeset
+            );
+
+            if (! $save_after_ok) {
+                $this->changeset_dao->rollBack();
+                throw new Tracker_AfterSaveException();
+            }
+
+            $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
+        } catch (Tracker_NoChangeException $exception) {
+            $collection = $this->source_of_association_collection_builder->getSourceOfAssociationCollection(
+                $artifact,
+                $fields_data
+            );
+            if (count($collection) > 0) {
+                $collection->linkToArtifact($artifact, $submitter);
+                return null;
+            } else {
+                throw $exception;
+            }
         }
-
-        if (! $this->storeComment($artifact, $comment, $submitter, $submitted_on, $comment_format, $changeset_id)) {
-            $this->changeset_dao->rollBack();
-            throw new Tracker_CommentNotStoredException();
-        }
-
-        $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
-
-        $new_changeset = new Tracker_Artifact_Changeset(
-            $changeset_id,
-            $artifact,
-            $submitter->getId(),
-            $submitted_on,
-            $email
-        );
-        $artifact->addChangeset($new_changeset);
-
-        $save_after_ok = $this->saveArtifactAfterNewChangeset(
-            $artifact,
-            $fields_data,
-            $submitter,
-            $new_changeset,
-            $previous_changeset
-        );
-
-        if (! $save_after_ok) {
-            $this->changeset_dao->rollBack();
-            throw new Tracker_AfterSaveException();
-        }
-
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
 
         try {
             $this->changeset_dao->commit();
