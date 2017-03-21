@@ -20,18 +20,63 @@
                     <thead><tr>
                         <th>{{ name }}</th>
                         <th>{{ url }}</th>
+                        <th>{{ last_push_date }}</th>
+                        <th>{{ last_push_status }}</th>
+                        <th></th>
                     </tr></thead>
                     <tbody>
                     {{# has_webhooks }}
                         {{# webhooks }}
                             <tr>
-                                <td>{{ getName }}</td>
-                                <td>{{ getUrl }}</td>
+                                <td>{{ name }}</td>
+                                <td>{{ url }}</td>
+                                <td>{{# lastStatus }} {{ getDate }} {{/ lastStatus }}</td>
+                                <td>{{# lastStatus }}
+                                    <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
+                                        {{ getStatus }}
+                                    </span>
+                                {{/ lastStatus }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    {{# lastStatus }}
+                                        <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="logs-modal-{{ id }}">
+                                            <i class="fa fa-list tlp-button-icon"></i> {{ button_show_logs }}
+                                        </button>
+                                        <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
+                                            <div class="tlp-modal-header">
+                                                <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title">{{ name }}</h1>
+                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">x</div>
+                                            </div>
+                                            <div class="tlp-modal-body">
+                                                <table class="tlp-table">
+                                                    <thead><tr>
+                                                        <th>{{ date_modal }}</th>
+                                                        <th>{{ status_modal }}</th>
+                                                    </tr></thead>
+                                                    <tbody>
+                                                    {{# status}}
+                                                        <tr>
+                                                            <td>{{ getDate }}</td>
+                                                            <td>
+                                                                <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
+                                                                    {{ getStatus }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/status}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tlp-modal-footer">
+                                                <button class="tlp-button-primary tlp-modal-action" type="button" data-dismiss="modal">{{ close_modal }}</button>
+                                            </div>
+                                        </div>
+                                    {{/ lastStatus }}
+                                </td>
                             </tr>
                         {{/ webhooks }}
                     {{/ has_webhooks }}
                     {{^ has_webhooks }}
-                        <tr><td colspan="2" class="tlp-table-cell-empty">{{ no_webhooks }}</td></tr>
+                        <tr><td colspan="4" class="tlp-table-cell-empty">{{ no_webhooks }}</td></tr>
                     {{/has_webhooks}}
                     </tbody>
                 </table>

@@ -20,8 +20,6 @@
 
 namespace Tuleap\Project\Admin;
 
-use Tuleap\Project\Webhook\Webhook;
-
 class WebhooksPresenter
 {
     public $title;
@@ -30,7 +28,7 @@ class WebhooksPresenter
      */
     public $has_webhooks;
     /**
-     * @var Webhook[]
+     * @var WebhookPresenter[]
      */
     public $webhooks;
     public $tab_title;
@@ -38,7 +36,13 @@ class WebhooksPresenter
     public $project_creation_description;
     public $name;
     public $url;
+    public $last_push_date;
+    public $last_push_status;
     public $no_webhooks;
+    public $button_show_logs;
+    public $close_modal;
+    public $date_modal;
+    public $status_modal;
 
     public function __construct($title, array $webhooks)
     {
@@ -52,6 +56,12 @@ class WebhooksPresenter
         $this->project_creation_description = $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_project_creation_description');
         $this->name                         = $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_name');
         $this->url                          = $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_url');
+        $this->last_push_date               = $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_last_push_date');
+        $this->last_push_status             = $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_last_push_status');
         $this->no_webhooks                  = $GLOBALS['Language']->getText('admin_project_configuration', 'no_webhooks');
+        $this->button_show_logs             = $GLOBALS['Language']->getText('admin_project_configuration', 'show_logs');
+        $this->close_modal                  = $GLOBALS['Language']->getText('admin_project_configuration', 'close_modal');
+        $this->date_modal                   = $GLOBALS['Language']->getText('admin_project_configuration', 'date_modal');
+        $this->status_modal                 = $GLOBALS['Language']->getText('admin_project_configuration', 'status_modal');
     }
 }
