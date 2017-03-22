@@ -32,6 +32,16 @@ class WebhookUpdaterTest extends \TuleapTestCase
         $updater->add('Webhook name', 'https://example.com');
     }
 
+    public function itUpdatesAWebhook()
+    {
+        $dao     = mock('Tuleap\\Project\\Webhook\\WebhookDao');
+        stub($dao)->editWebhook()->returns(true);
+        $updater = new WebhookUpdater($dao);
+
+        $dao->expectOnce('editWebhook');
+        $updater->edit(1, 'Webhook name', 'https://example.com');
+    }
+
     public function itChecksDataBeforeManipulatingIt()
     {
         $dao     = mock('Tuleap\\Project\\Webhook\\WebhookDao');
@@ -39,8 +49,10 @@ class WebhookUpdaterTest extends \TuleapTestCase
 
         $this->expectException('Tuleap\\Project\\Webhook\\WebhookMalformedDataException');
         $dao->expectNever('createWebhook');
+        $dao->expectNever('editWebhook');
 
         $updater->add('Webhook name', 'Not an URL');
+        $updater->edit(1, 'Webhook name', 'Not an URL');
     }
 
     public function itThrowsAnExceptionWhenDataCanNotBeProperlyAccessed()
