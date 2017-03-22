@@ -68,6 +68,13 @@ class Planning_MilestoneFactory {
      */
     private $scrum_mono_milestone_checker;
 
+    /**
+     * Instanciates a new milestone factory.
+     *
+     * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
+     * @param Tracker_ArtifactFactory    $artifact_factory    The factory to delegate artifacts retrieval.
+     * @param Tracker_FormElementFactory $formelement_factory The factory to delegate artifacts retrieval.
+     */
     public function __construct(
         PlanningFactory $planning_factory,
         Tracker_ArtifactFactory $artifact_factory,
@@ -441,17 +448,27 @@ class Planning_MilestoneFactory {
         $total_size     = 0;
 
         $virtual_milestone = $this->getVirtualTopMilestone($user, $project);
-        $root_planning = $this->planning_factory->getRootPlanning($user, $virtual_milestone->getProject()->getID());
         $milestone_planning_tracker_id = $virtual_milestone->getPlanning()->getPlanningTrackerId();
 
         if ($milestone_planning_tracker_id) {
-            $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
-                $milestone_planning_tracker_id,
-                $criterion,
-                $limit,
-                $offset,
-                $order
-            );
+            if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project->getID()) === true) {
+                $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
+                    $milestone_planning_tracker_id,
+                    $criterion,
+                    $limit,
+                    $offset,
+                    $order
+                );
+
+            } else {
+                $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
+                    $milestone_planning_tracker_id,
+                    $criterion,
+                    $limit,
+                    $offset,
+                    $order
+                );
+            }
 
             $total_size     = $this->milestone_dao->foundRows();
             $top_milestones = $this->convertDarToArrayOfMilestones($user, $virtual_milestone, $top_milestone_artifacts);

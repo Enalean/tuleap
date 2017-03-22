@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,15 +77,12 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedTopMilestones(
-        $milestone_tracker_id,
+    private function getPaginationAndStatusStatements(
         Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
     ) {
-        $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
-
         $limit_statement = '';
         if ($limit > 0) {
             $limit  = $this->da->escapeInt($limit);
@@ -100,15 +97,63 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
         list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion);
 
+
+        return array(
+            'from_statement'         => $from_status_statement,
+            'where_status_statement' => $where_status_statement,
+            'order'                  => $order,
+            'limit_statement'        => $limit_statement
+        );
+    }
+
+    public function searchPaginatedTopMilestones(
+        $milestone_tracker_id,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
+        $built_sql            = $this->getPaginationAndStatusStatements($criterion, $limit, $offset, $order);
+        $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
                 FROM tracker_artifact AS submilestones
-                    $from_status_statement
+                    " . $built_sql['from_statement'] . "
 
                 WHERE submilestones.tracker_id = $milestone_tracker_id
-                  AND $where_status_statement
+                  AND  " . $built_sql['where_status_statement'] . "
 
-                ORDER BY submilestones.id $order
-                $limit_statement";
+                ORDER BY submilestones.id " . $built_sql['order'] . "
+                " . $built_sql['limit_statement'];
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
+        $milestone_tracker_id,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
+        $built_sql            = $this->getPaginationAndStatusStatements($criterion, $limit, $offset, $order);
+        $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
+        $nature               = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.id  AS submilestone_id, submilestones.*
+                FROM tracker_artifact AS submilestones
+                LEFT JOIN ( tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                ) ON (submilestones.id = child_art.id AND artlink.nature = $nature)
+                " . $built_sql['from_statement'] . "
+                WHERE submilestones.tracker_id = $milestone_tracker_id
+                    AND " . $built_sql['where_status_statement'] . "
+                    AND child_art.id IS NULL
+                ORDER BY submilestone_id " . $built_sql['order'] . "
+                " . $built_sql['limit_statement'];
 
         return $this->retrieve($sql);
     }

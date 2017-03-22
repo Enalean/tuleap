@@ -47,7 +47,12 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
     protected $user;
     protected $request;
     protected $status_counter;
-    
+
+    /**
+     * @var Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker
+     */
+    protected $mono_milestone_checker;
+
     public function setUp() {
         parent::setUp();
         
@@ -70,6 +75,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->status_counter               = mock('AgileDashboard_Milestone_MilestoneStatusCounter');
         $this->planning_permissions_manager = mock('PlanningPermissionsManager');
         $this->dao                          = mock('AgileDashboard_Milestone_MilestoneDao');
+        $this->mono_milestone_checker       = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
         $this->milestone_factory            = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
@@ -78,7 +84,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
             $this->status_counter,
             $this->planning_permissions_manager,
             $this->dao,
-            mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $this->mono_milestone_checker
         );
 
         stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());

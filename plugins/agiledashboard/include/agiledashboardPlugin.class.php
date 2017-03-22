@@ -449,7 +449,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory())
+            $this->getMonoMilestoneChecker()
         );
     }
 
@@ -925,5 +925,13 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_KanbanDao()
 
         );
+    }
+
+    /**
+     * @return ScrumForMonoMilestoneChecker
+     */
+    private function getMonoMilestoneChecker()
+    {
+        return new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory());
     }
 }
