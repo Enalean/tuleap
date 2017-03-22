@@ -22,3 +22,28 @@
     margin: 0 0 20px;
     overflow-y: scroll;
 }
+
+.siteadmin-project-webhook-url-tooltip {
+    display: none;
+}
+
+@media screen and (max-width: 1600px) {
+    .siteadmin-project-webhook-url {
+        display: none;
+    }
+
+    .siteadmin-project-webhook-url-tooltip {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .siteadmin-project-webhook-actions {
+        white-space: normal;
+
+        > .tlp-table-cell-actions-button {
+            width: 100%;
+            margin: 0 0 5px;
+        }
+    }
+}

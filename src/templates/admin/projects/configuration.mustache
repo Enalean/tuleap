@@ -33,14 +33,23 @@
                         {{# webhooks }}
                             <tr>
                                 <td>{{ name }}</td>
-                                <td>{{ url }}</td>
+                                <td>
+                                    <span class="siteadmin-project-webhook-url">
+                                        {{ url }}
+                                    </span>
+                                    <span class="siteadmin-project-webhook-url-tooltip tlp-tooltip tlp-tooltip-top"
+                                          data-tlp-tooltip="{{ url }}"
+                                    >
+                                        <i class="fa fa-ellipsis-h"></i>
+                                    </span>
+                                </td>
                                 <td>{{# lastStatus }} {{ getDate }} {{/ lastStatus }}</td>
                                 <td>{{# lastStatus }}
                                     <span class="{{# isInError }}tlp-badge-warning{{/ isInError }}{{^ isInError }}tlp-badge-success tlp-badge-outline{{/ isInError }}">
                                         {{ getStatus }}
                                     </span>
                                 {{/ lastStatus }}</td>
-                                <td class="tlp-table-cell-actions">
+                                <td class="tlp-table-cell-actions siteadmin-project-webhook-actions">
                                     {{# lastStatus }}
                                         <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="logs-modal-{{ id }}">
                                             <i class="fa fa-list tlp-button-icon"></i> {{ button_show_logs }}
