@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,10 +26,9 @@ use Feedback;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\Exception\CannotCreateBotException;
-use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
 use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
-use Valid_UInt;
 
 class Controller
 {
@@ -40,121 +39,110 @@ class Controller
     private $bot_factory;
 
     public function __construct(
-        HTTPRequest              $request,
-        CSRFSynchronizerToken    $csrf,
-        BotAgileDashboardFactory $bot_agiledashboard_factory,
-        BotFactory               $bot_factory
+        HTTPRequest $request,
+        CSRFSynchronizerToken $csrf,
+        Factory $bot_agiledashboard_factory,
+        BotFactory $bot_factory,
+        Validator $validator
     ) {
         $this->request                    = $request;
         $this->csrf                       = $csrf;
         $this->bot_agiledashboard_factory = $bot_agiledashboard_factory;
         $this->bot_factory                = $bot_factory;
+        $this->validator                  = $validator;
+    }
+
+    public function process()
+    {
+        $action = $this->request->get('action');
+
+        try {
+            switch ($action) {
+                case 'add_bot':
+                    $this->addBotNotification();
+                    break;
+                case 'edit_bot':
+                    $this->editBotNotification();
+                    break;
+                case 'delete_bot':
+                    $this->deleteBotNotification();
+                    break;
+                default:
+                    $this->displayIndex();
+            }
+
+            $this->displayIndex();
+        } catch (Exception $exception) {
+            $this->redirectWithErrorFeedback($exception);
+        }
     }
 
     public function render()
     {
-        $renderer       = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR.'/template');
-        $presenter_bots = array();
-        $project_id     = $this->request->getProject()->getID();
-        $send_time     = null;
+        $renderer   = TemplateRendererFactory::build()->getRenderer(
+            PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR.'/template'
+        );
+        $project_id = $this->request->getProject()->getID();
+        $bots       = $this->bot_factory->getBots();
 
-        foreach ($this->bot_agiledashboard_factory->getBotsForTimePeriod($project_id) as $bot) {
-            if ($bot->getSendTime()) {
-                $send_time = $this->getHoursMinutesFromDate($bot->getSendTime());
-            }
-            $presenter_bots[] = $bot->toArray($project_id);
+        if ($bot_assigned = $this->bot_agiledashboard_factory->getBotNotification($project_id)) {
+            $bot_assigned = $bot_assigned->toArray($project_id);
         }
 
         return $renderer->renderToString(
             'adminConfiguration',
-            new AdminNotificationPresenter($this->csrf, $presenter_bots, $project_id, $send_time)
+            new AdminNotificationPresenter($this->csrf, $bots, $project_id, $bot_assigned)
         );
     }
 
-    public function save()
+    private function addBotNotification()
     {
-        $this->csrf->check();
-        $project_id = $this->request->getProject()->getID();
+        if ($this->validator->isValid($this->csrf, $this->request, 'add')) {
+            $project_id = $this->request->getProject()->getID();
+            $bot_id     = $this->request->get('bot_id');
+            $channels   = explode(',', $this->request->get('channels'));
+            $send_time  = $this->request->get('send_time');
 
-        if ($this->isValidPostValues()) {
-            $bots_ids   = $this->request->get('bots_ids') ? $this->request->get('bots_ids') : array();
-            $send_time = $this->request->get('send_time');
-            $this->saveInDao($bots_ids, $project_id, $send_time);
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'alert_success_update')
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'alert_invalid_post')
-            );
-        }
-        $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
-            'group_id'  => $project_id,
-            'action'    => 'admin',
-            'pane'      => 'notification'
-        )));
-    }
-
-    private function saveInDao(array $bots_ids, $project_id, $send_time)
-    {
-        try {
-            $this->bot_agiledashboard_factory->saveBotsAgileDashboard($bots_ids, $project_id, $send_time);
-        } catch (CannotCreateBotException $ex) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $ex->getMessage()
-            );
+            $this->bot_agiledashboard_factory->addBotNotification($channels, $bot_id, $project_id, $send_time);
         }
     }
 
-    private function isValidPostValues()
+    private function editBotNotification()
     {
-        if ($this->request->existAndNonEmpty('send_time')) {
-            if ($this->request->get('bots_ids')) {
-                $bots_ids = $this->request->get('bots_ids');
-                return $this->validBotsIds($bots_ids);
-            }
-            return true;
-        }
+        if ($this->validator->isValid($this->csrf, $this->request, 'edit')) {
+            $project_id = $this->request->getProject()->getID();
+            $channels   = explode(',', $this->request->get('channels'));
+            $send_time  = $this->request->get('send_time');
 
-        return false;
+            $this->bot_agiledashboard_factory->saveBotNotification($channels, $project_id, $send_time);
+        }
     }
 
-    private function validBotsIds(array $bots_ids)
+    private function deleteBotNotification()
     {
-        $valid_uint = new Valid_UInt();
-        try {
-            $bots = $this->bot_factory->getBots();
-        } catch (Exception $e) {
-            return false;
-        }
-        foreach ($bots_ids as $bot_id) {
-            if (!$valid_uint->validate($bot_id) || !$this->validBotId($bots, $bot_id)) {
-                return false;
-            }
-        }
+        if ($this->validator->isValid($this->csrf, $this->request, 'delete')) {
+            $project_id = $this->request->getProject()->getID();
 
-        return true;
+            $this->bot_agiledashboard_factory->deleteBotNotification($project_id);
+        }
     }
 
-    /**
-     * @param Bot[]
-     */
-    private function validBotId(array $bots, $bot_id)
+    private function displayIndex()
     {
-        foreach ($bots as $bot) {
-            if ($bot->getId() === $bot_id) {
-                return true;
-            }
-        }
-
-        return false;
+        $GLOBALS['Response']->redirect(
+            AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(
+                array(
+                    'group_id' => $this->request->getProject()->getID(),
+                    'action'   => 'admin',
+                    'pane'     => 'notification'
+                )
+            )
+        );
     }
 
-    private function getHoursMinutesFromDate($date)
+    private function redirectWithErrorFeedback(Exception $e)
     {
-        return date("H:i", strtotime($date));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+        $this->displayIndex();
     }
 }

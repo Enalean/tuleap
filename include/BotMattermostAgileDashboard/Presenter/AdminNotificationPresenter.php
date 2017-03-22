@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\Presenter;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 
 class AdminNotificationPresenter
@@ -31,65 +32,80 @@ class AdminNotificationPresenter
     public $csrf_token;
     public $bots;
     public $project_id;
-    public $send_time;
+    public $bot_assigned;
+    public $title;
+    public $description;
+    public $table_col_name;
+    public $table_col_webhook_url;
+    public $table_col_channels;
+    public $button_config;
+    public $button_update;
+    public $button_close;
+    public $button_delete;
+    public $button_edit;
+    public $button_confirm;
+    public $modal_add_title;
+    public $modal_edit_title;
+    public $modal_delete_title;
+    public $modal_delete_content;
+    public $label_send_time;
+    public $label_channels_handles;
+    public $input_channels_handles;
+    public $purified_info_channels_handles;
+    public $alert_time_warning;
+    public $has_send_time;
+    public $bot_list_is_empty;
+    public $empty_bot_list;
+    public $any_configured_notification;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, array $bots, $project_id, $send_time)
-    {
-        $this->csrf_token = $csrf_token;
-        $this->bots       = $bots;
-        $this->project_id = $project_id;
-        $this->send_time  = $send_time;
-    }
+    public function __construct(
+        CSRFSynchronizerToken $csrf_token,
+        array $bots,
+        $project_id,
+        $bot_assigned
+    ){
+        $this->csrf_token   = $csrf_token;
+        $this->bots         = $bots;
+        $this->project_id   = $project_id;
+        $this->bot_assigned = $bot_assigned;
 
-    public function title()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
-    }
+        $this->title           = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
+        $this->description     = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
 
-    public function label_send_time()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_send_time');
-    }
+        $this->table_col_name        = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
+        $this->table_col_webhook_url = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
+        $this->table_col_channels    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels');
 
-    public function botListIsEmpty()
-    {
-        return count($this->bots) === 0;
-    }
+        $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_configure_notification');
+        $this->button_update  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_update');
+        $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
+        $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
+        $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');
+        $this->button_confirm = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_confirm');
 
-    public function empty_bot_list()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
-    }
+        $this->modal_add_title      = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_configure_notification');
+        $this->modal_edit_title     = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_edit_configure_notification');
+        $this->modal_delete_title   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_delete_configure_notification');
+        $this->modal_delete_content = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_delete_content');
 
-    public function table_col_name()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-    }
+        $this->label_send_time        = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_send_time');
+        $this->label_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_label_channels_handles');
+        $this->input_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_input_channels_handles');
 
-    public function table_col_webhook_url()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
-    }
-
-    public function table_col_channels()
-    {
-        return $GLOBALS['Language']->getText(
-            'plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels'
+        $this->purified_info_channels_handles = Codendi_HTMLPurifier::instance()->purify(
+                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_info_channels_handles'),
+                CODENDI_PURIFIER_LIGHT
+            );
+        $this->alert_time_warning             = $GLOBALS['Language']->getText(
+            'plugin_botmattermost_agiledashboard',
+            'admin_notification_time_warning',
+            array(date_default_timezone_get())
         );
-    }
 
-    public function description()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
-    }
+        $this->has_send_time     = isset($this->send_time);
+        $this->bot_list_is_empty = count($this->bots) === 0;
+        $this->empty_bot_list    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
 
-    public function has_send_time()
-    {
-        return isset($this->send_time);
-    }
-
-    public function alert_time_warning()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_time_warning', array(date_default_timezone_get()));
+        $this->any_configured_notification = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification');
     }
 }

@@ -1,3 +1,4 @@
 *.css
+*.css.map
 /www/assets/*
 nbproject

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermostAgileDashboard\BotAgileDashboard;
+namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 
 use Tuleap\BotMattermost\Bot\Bot;
 
-class BotAgileDashboard
+class BotMattermostStandUpSummary
 {
     private $bot;
+    private $channels;
     private $project_id;
     private $send_time;
 
     public function __construct(
         Bot $bot,
+        array $channels,
         $project_id,
         $send_time
     ) {
         $this->bot        = $bot;
+        $this->channels   = $channels;
         $this->project_id = $project_id;
         $this->send_time  = $send_time;
     }
@@ -55,11 +58,19 @@ class BotAgileDashboard
             'name'           => $this->bot->getName(),
             'webhook_url'    => $this->bot->getWebhookUrl(),
             'avatar'         => $this->bot->getAvatarUrl(),
-            'channels_names' => $this->bot->getChannelsNamesInOneRow(),
+            'channels'       => implode(', ', $this->channels),
             'project_id'     => $this->project_id,
-            'send_time'      => $this->send_time,
+            'send_time'      => date("H:i", strtotime($this->send_time)),
             'is_assigned'    => $this->isAssigned()
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getChannels()
+    {
+        return $this->channels;
     }
 
     public function getSendTime()
