@@ -1,24 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Sabri LABBENE, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -36,8 +36,8 @@ Mock::generate('UserManager');
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem','getItemFromDb','isRoot'));
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', array('_getItemDao', '_getVersionFactory', 'getItemTypeForItem', '_getUserManager', '_getEventManager'));
 
-class Docman_ItemFactoryTest extends TuleapTestCase {
-
+class Docman_ItemFactoryTest extends TuleapTestCase
+{
     /**
      * 140
      * `-- 150
@@ -618,5 +618,42 @@ class Docman_ItemFactoryTest extends TuleapTestCase {
         $itemFactory->expectNever('_getEventManager');
 
         $this->assertFalse($itemFactory->restore($item));
+    }
+
+    public function itDeletesNotificationsWhenDeletingItem()
+    {
+        $lock_factory          = mock('Docman_LockFactory');
+        $item_dao              = mock('Docman_ItemDao');
+        $ugroups_to_notify_dao = mock('Tuleap\Docman\Notifications\UgroupsToNotifyDao');
+        $users_to_notify_dao   = mock('Tuleap\Docman\Notifications\Dao');
+
+        $item_id = 183;
+        $item    = new MockDocman_File($this);
+        $item->setReturnValue('getId', $item_id);
+
+        $item_factory = partial_mock(
+            'Docman_ItemFactory',
+            array(
+                'getUgroupsToNotifyDao',
+                'getUsersToNotifyDao',
+                'getItemFromDb',
+                '_getUserManager',
+                'getLockFactory',
+                'delCutPreferenceForAllUsers',
+                'delCopyPreferenceForAllUsers',
+                '_getItemDao'
+            ),
+            array(0)
+        );
+        $item_factory->setReturnValue('getUgroupsToNotifyDao', $ugroups_to_notify_dao);
+        $ugroups_to_notify_dao->expectOnce('deleteByItemId', array($item_id));
+        $item_factory->setReturnValue('getUsersToNotifyDao', $users_to_notify_dao);
+        $users_to_notify_dao->expectOnce('deleteByItemId', array($item_id));
+        $item_factory->setReturnValue('getItemFromDb', null);
+        $item_factory->setReturnValue('_getUserManager', new MockUserManager($this));
+        $item_factory->setReturnValue('getLockFactory', $lock_factory);
+        $item_factory->setReturnValue('_getItemDao', $item_dao);
+
+        $item_factory->delete($item);
     }
 }
