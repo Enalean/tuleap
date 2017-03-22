@@ -42,6 +42,16 @@ class WebhookUpdaterTest extends \TuleapTestCase
         $updater->edit(1, 'Webhook name', 'https://example.com');
     }
 
+    public function itDeletesAWebhook()
+    {
+        $dao     = mock('Tuleap\\Project\\Webhook\\WebhookDao');
+        stub($dao)->deleteWebhookById()->returns(true);
+        $updater = new WebhookUpdater($dao);
+
+        $dao->expectOnce('deleteWebhookById');
+        $updater->delete(1);
+    }
+
     public function itChecksDataBeforeManipulatingIt()
     {
         $dao     = mock('Tuleap\\Project\\Webhook\\WebhookDao');

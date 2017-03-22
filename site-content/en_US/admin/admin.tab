@@ -862,3 +862,9 @@ admin_project_configuration	update_title_modal	Update webhook "$1"
 admin_project_configuration	update_webhook_modal	Update webhook
 admin_project_configuration	webhook_edit_error	An error occurred while updating the webhook
 admin_project_configuration	webhook_edit_success	The webhook has been successfully updated
+admin_project_configuration	webhook_delete_error	An error occurred while removing the webhook
+admin_project_configuration	webhook_delete_success	The webhook has been successfully removed
+admin_project_configuration	delete	Delete
+admin_project_configuration	delete_title_modal	Delete webhook "$1"
+admin_project_configuration	delete_webhook_modal	Delete webhook
+admin_project_configuration	delete_webhook_warning_modal	You are about to delete the webhook "$1". Please confirm your action.

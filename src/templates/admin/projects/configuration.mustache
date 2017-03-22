@@ -47,7 +47,7 @@
                                         </button>
                                         <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
                                             <div class="tlp-modal-header">
-                                                <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title">{{ show_logs_title }}</h1>
+                                                <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title"><i class="fa fa-list tlp-modal-title-icon"></i> {{ show_logs_title }}</h1>
                                                 <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
                                             </div>
                                             <div class="tlp-modal-body">
@@ -80,7 +80,7 @@
                                     </button>
                                     <form id="edit-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="edit-modal-label-{{ id }}" method="post">
                                         <div class="tlp-modal-header">
-                                            <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}">{{ update_title }}</h1>
+                                            <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}"><i class="fa fa-pencil tlp-modal-title-icon"></i> {{ update_title }}</h1>
                                             <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
                                         </div>
                                         <div class="tlp-modal-body">
@@ -101,6 +101,29 @@
                                         </div>
                                         <input type="hidden" name="id" value="{{ id }}">
                                         <input type="hidden" name="action" value="update">
+                                        {{# csrf_token }}
+                                            {{> csrf_token_input }}
+                                        {{/ csrf_token }}
+                                    </form>
+                                    <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="delete-modal-{{ id }}">
+                                        <i class="fa fa-trash-o tlp-button-icon"></i> {{ button_delete }}
+                                    </button>
+                                    <form id="delete-modal-{{ id }}" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="delete-modal-label-{{ id }}" method="post">
+                                        <div class="tlp-modal-header">
+                                            <h1 class="tlp-modal-title" id="delete-modal-label-{{ id }}"><i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_title }}</h1>
+                                            <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
+                                        </div>
+                                        <div class="tlp-modal-body">
+                                            <p>{{ delete_warning }}</p>
+                                        </div>
+                                        <div class="tlp-modal-footer">
+                                            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel_modal }}</button>
+                                            <button type="submit" class="tlp-button-danger tlp-modal-action">
+                                                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_webhook }}
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="id" value="{{ id }}">
+                                        <input type="hidden" name="action" value="delete">
                                         {{# csrf_token }}
                                             {{> csrf_token_input }}
                                         {{/ csrf_token }}

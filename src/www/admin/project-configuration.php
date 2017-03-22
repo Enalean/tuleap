@@ -80,6 +80,20 @@ if ($request->isPost()) {
                 );
             }
             break;
+        case 'delete':
+            try {
+                $webhook_updater->delete($request->get('id'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_delete_success')
+                );
+            } catch (\Tuleap\Project\Webhook\WebhookDataAccessException $ex) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_delete_error')
+                );
+            }
+            break;
     }
 
     $GLOBALS['Response']->redirect('/admin/project-configuration.php');
