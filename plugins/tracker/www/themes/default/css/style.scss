@@ -3510,12 +3510,16 @@ td.tracker-global-notifications-checkbox-cell {
     align-items: center;
 }
 
-.tracker-notification-email-list-separator {
-    margin: 0 3px 0 0;
+.tracker-notification-email-list-entry {
+    white-space: nowrap;
 
-    &:last-child {
+    &:last-child > .tracker-notification-email-list-separator {
         display: none;
     }
+}
+
+.tracker-notification-email-list-separator {
+    margin: 0 3px 0 0;
 }
 
 .tracker-notification-email-user {
