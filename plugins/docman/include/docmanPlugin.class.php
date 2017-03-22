@@ -113,6 +113,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
         $this->addHook(Event::GET_REFERENCE);
+        $this->addHook('project_admin_ugroup_deletion');
     }
 
     public function getHooksAndCallbacks() {
@@ -1055,6 +1056,15 @@ class DocmanPlugin extends Plugin
         }
 
         return $result->getRow();
+    }
+
+    public function project_admin_ugroup_deletion($params)
+    {
+        $project_id = $params['group_id'];
+        $ugroup     = $params['ugroup'];
+
+        $ugroups_to_notify_dao = $this->getUGroupToNotifyDao();
+        $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
     }
 
     private function getNotificationsDao()

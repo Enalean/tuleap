@@ -40,4 +40,22 @@ class UgroupsToNotifyDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function deleteByUgroupId($project_id, $ugroup_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql = "DELETE notification.*
+            FROM plugin_docman_item AS item
+            INNER JOIN plugin_docman_notification_ugroups AS notification
+            ON (
+                item.item_id = notification.item_id
+                AND item.group_id = $project_id
+                AND notification.ugroup_id = $ugroup_id
+            )
+        ";
+
+        return $this->update($sql);
+    }
 }
