@@ -51,6 +51,10 @@ class WebhookUpdater
         }
     }
 
+    /**
+     * @throws WebhookDataAccessException
+     * @throws WebhookMalformedDataException
+     */
     public function edit($id, $name, $url)
     {
         $is_data_valid = $this->isDataValid($name, $url);
@@ -62,6 +66,18 @@ class WebhookUpdater
         $has_been_updated = $this->dao->editWebhook($id, $name, $url);
 
         if (! $has_been_updated) {
+            throw new WebhookDataAccessException();
+        }
+    }
+
+    /**
+     * @throws WebhookDataAccessException
+     */
+    public function delete($id)
+    {
+        $has_been_removed = $this->dao->deleteWebhookById($id);
+
+        if (! $has_been_removed) {
             throw new WebhookDataAccessException();
         }
     }

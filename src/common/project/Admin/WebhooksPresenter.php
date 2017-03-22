@@ -54,6 +54,8 @@ class WebhooksPresenter
     public $name_placeholder_modal;
     public $button_edit;
     public $update_webhook;
+    public $button_delete;
+    public $delete_webhook;
 
     public function __construct($title, array $webhooks, \CSRFSynchronizerToken $csrf_token)
     {
@@ -83,5 +85,7 @@ class WebhooksPresenter
         $this->name_placeholder_modal        = $GLOBALS['Language']->getText('admin_project_configuration', 'webhook_name_placeholder_modal');
         $this->button_edit                   = $GLOBALS['Language']->getText('admin_project_configuration', 'edit');
         $this->update_webhook                = $GLOBALS['Language']->getText('admin_project_configuration', 'update_webhook_modal');
+        $this->button_delete                 = $GLOBALS['Language']->getText('admin_project_configuration', 'delete');
+        $this->delete_webhook                = $GLOBALS['Language']->getText('admin_project_configuration', 'delete_webhook_modal');
     }
 }

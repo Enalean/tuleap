@@ -854,3 +854,9 @@ admin_project_configuration	update_title_modal	Mettre à jour le webhook "$1"
 admin_project_configuration	update_webhook_modal	Mettre à jour le webhook
 admin_project_configuration	webhook_edit_error	Une erreur est survenue lors de la mise à jour du webhook
 admin_project_configuration	webhook_edit_success	Le webhook a été mis à jour avec succès
+admin_project_configuration	webhook_delete_error	Une erreur est survenue lors de la suppression du webhook
+admin_project_configuration	webhook_delete_success	Le webhook a été supprimé avec succès
+admin_project_configuration	delete	Supprimer
+admin_project_configuration	delete_title_modal	Supprimer le webhook "$1"
+admin_project_configuration	delete_webhook_modal	Supprimer le webhook
+admin_project_configuration	delete_webhook_warning_modal	Vous êtes sur le point de supprimer le webhook "$1". Veuillez confirmer votre action.

@@ -58,4 +58,19 @@ class WebhookDao extends \DataAccessObject
 
         return $this->update($sql);
     }
+
+    /**
+     * @return bool
+     */
+    public function deleteWebhookById($id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "DELETE project_webhook_url, project_webhook_log
+                FROM project_webhook_url
+                LEFT JOIN project_webhook_log ON project_webhook_url.id = project_webhook_log.webhook_id
+                WHERE project_webhook_url.id = $id";
+
+        return $this->update($sql);
+    }
 }
